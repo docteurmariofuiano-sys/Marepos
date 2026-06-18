@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "agent-browser": {
+      "source": "qu-skills/skills",
+      "sourceType": "github",
+      "skillPath": "tools/utilities/agent-browser/SKILL.md",
+      "computedHash": "79b1fcbdd43bfdf56780c31daac551b6c28734afef3ec37816122ba1e6fb4cfa"
+    },
     "caveman-compress": {
       "source": "juliusbrussee/caveman",
       "sourceType": "github",
