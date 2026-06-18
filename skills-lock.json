@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "youtube-transcript": {
+      "source": "michalparkola/tapestry-skills-for-claude-code",
+      "sourceType": "github",
+      "skillPath": "youtube-transcript/SKILL.md",
+      "computedHash": "e5e29eb320d2e31eb0f0d628500d8839baac3494a1a7a51be8387d948098d3a3"
+    }
+  }
+}
