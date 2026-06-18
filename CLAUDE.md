@@ -10,8 +10,7 @@ Dépôt perso: skills, agents, outils Claude Code. Tout commité (conteneurs ép
 - **canvas-design** — Art statique (posters, PDF/PNG), design philosophy. Fonts: `canvas-fonts/`. ✅
 
 ### Génération d'images (Gemini)
-- **banana** — IA créatif via Gemini Nano Banana (MCP `@ycse/nanobanana-mcp`). Agent: `brief-constructor`. ⚠️ Requiert `GEMINI_API_KEY` + facturation GCloud.
-- **nano-banana** — Même but, Gemini CLI + nanobanana. ⚠️ Requiert `NANOBANANA_GEMINI_API_KEY`. Doublon `banana` (dédup à décider).
+- **banana** — IA créatif via Gemini Nano Banana (MCP `@ycse/nanobanana-mcp`). Agent: `brief-constructor`. ⚠️ Requiert `GEMINI_API_KEY` + facturation GCloud (activée ✅).
 
 ### Vidéo
 - **remotion-best-practices** — Remotion (vidéo React): 37 règles. Fichiers: `.agents/skills/`, symlink: `.claude/skills/`. ✅ Doc pure, no key.
@@ -34,7 +33,7 @@ Dépôt perso: skills, agents, outils Claude Code. Tout commité (conteneurs ép
 ## Configuration requise côté utilisateur
 | Composant | À faire sur ta machine |
 |---|---|
-| banana / nano-banana | Clé Google AI Studio + facturation activée ; `export GEMINI_API_KEY=…` |
+| banana | Clé Google AI Studio + facturation activée ; `export GEMINI_API_KEY=…` |
 | nlm-skill | `uv tool install notebooklm-mcp-cli` ; `nlm login` ; `nlm setup add claude-code` |
 | memory-compiler | `uv sync` après clonage |
 
