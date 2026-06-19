@@ -59,6 +59,9 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
 .symptom-card:hover{border-color:var(--brand);background:#f1f8f9;transform:translateY(-1px)}
 .sc-title{font-weight:700}
 .sc-spec{font-size:.78rem;color:var(--soft)}
+.symptom-card.is-urg{border-color:#f3c0bb}
+.symptom-card.is-urg:hover{border-color:var(--u3)}
+.sc-urg{display:inline-block;font-size:.6rem;font-weight:800;color:#fff;background:var(--u3);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;letter-spacing:.03em}
 
 /* quiz */
 .quiz-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px}

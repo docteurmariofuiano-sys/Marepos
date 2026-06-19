@@ -22,11 +22,19 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (exemple fonctionnel)
+## Symptômes couverts (15 fiches)
 
-`acouphène` · `adénopathie superficielle` · `algie faciale` · `algie pelvienne` ·
-`asthénie`. La base est conçue pour **monter en charge jusqu'aux 64 fiches**
-(voir `docs/guide-ajout-fiches.md`).
+**Motifs courants** : `acouphène` · `adénopathie superficielle` · `algie faciale` ·
+`algie pelvienne` · `asthénie`.
+
+**Fiches URGENCE (10)** : `douleur thoracique` · `dyspnée aiguë` · `déficit
+neurologique transitoire` · `fièvre au retour des tropiques` · `grosse bourse` ·
+`grosse jambe rouge aiguë` · `hématémèse / méléna` · `hémoptysie` · `malaise /
+perte de connaissance` · `épanchement pleural`.
+
+La base est conçue pour **monter en charge jusqu'aux 64 fiches**
+(voir `docs/guide-ajout-fiches.md`). Les symptômes marqués `urgence: true`
+affichent un badge **URGENCE** dans l'interface.
 
 ## Lancer
 

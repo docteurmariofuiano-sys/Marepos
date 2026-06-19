@@ -427,5 +427,672 @@ window.KB = {
       "Palpation thyroïdienne et des aires ganglionnaires",
       "Examen général orienté par les réponses"
     ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 18 — DOULEURS THORACIQUES (URGENCE)
+  // -------------------------------------------------------------------------
+  douleur_thoracique: {
+    id: "douleur_thoracique",
+    symptome: "Douleur dans la poitrine",
+    specialite: ["Cardiologie", "Pneumologie"],
+    urgence: true,
+    questions: [
+      { id: "dt_type", label: "Type de douleur", type: "single_choice",
+        question: "Comment décririez-vous la douleur ?",
+        options: ["Serrement / étau dans la poitrine", "Pointe qui augmente en respirant", "Déchirure intense qui passe dans le dos", "Brûlure qui remonte derrière le sternum"] },
+      { id: "dt_duree", label: "Durée", type: "single_choice",
+        question: "Depuis combien de temps et comment évolue-t-elle ?",
+        options: ["Plus de 20 minutes sans s'arrêter", "Quelques minutes, par crises", "Permanente depuis des heures ou des jours"] },
+      { id: "dt_effort", label: "Liée à l'effort", type: "boolean",
+        question: "Est-elle apparue ou aggravée par un effort ?" },
+      { id: "dt_irrad", label: "Irradiation", type: "boolean",
+        question: "Se propage-t-elle vers la mâchoire, le bras gauche ou le dos ?" },
+      { id: "dt_brutal", label: "Début brutal", type: "boolean",
+        question: "Est-elle apparue brutalement, d'un seul coup ?" },
+      { id: "dt_dyspnee", label: "Essoufflement associé", type: "boolean",
+        question: "Êtes-vous essoufflé en même temps ?" },
+      { id: "dt_anteflexion", label: "Soulagée penché en avant", type: "boolean",
+        question: "Est-elle soulagée lorsque vous vous penchez en avant ?" },
+      { id: "dt_palpation", label: "Reproduite à la palpation", type: "boolean",
+        question: "Pouvez-vous reproduire la douleur en appuyant sur la poitrine ou en bougeant le bras ?" },
+      { id: "dt_thrombo", label: "Contexte thrombo-embolique", type: "boolean",
+        question: "Avez-vous récemment été alité, opéré, plâtré, fait un long voyage, ou eu une phlébite ?" },
+      { id: "dt_fdr", label: "Facteurs de risque CV", type: "boolean",
+        question: "Avez-vous des facteurs de risque cardiovasculaire (tabac, diabète, cholestérol, hypertension, antécédent cardiaque) ?" }
+    ],
+    red_flags: [
+      { id: "dt_rf_sca", niveau: 3,
+        when: { all: [{ q: "dt_type", eq: "Serrement / étau dans la poitrine" }, { any: [{ q: "dt_effort", eq: true }, { q: "dt_duree", eq: "Plus de 20 minutes sans s'arrêter" }] }] },
+        message_medecin: "Suspicion de SCA (douleur constrictive d'effort/prolongée) : ECG + troponine en urgence, appeler le 15.",
+        message_patient: "Cette douleur nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "dt_rf_dissection", niveau: 3,
+        when: { q: "dt_type", eq: "Déchirure intense qui passe dans le dos" },
+        message_medecin: "Douleur transfixiante migratrice : dissection aortique à éliminer (asymétrie tensionnelle, angioscanner urgent).",
+        message_patient: "Cette douleur nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "dt_rf_ep_pno", niveau: 3,
+        when: { all: [{ q: "dt_brutal", eq: true }, { q: "dt_dyspnee", eq: true }] },
+        message_medecin: "Douleur brutale + dyspnée : embolie pulmonaire ou pneumothorax à éliminer en urgence.",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dt_sca", diagnostic: "Syndrome coronarien aigu (SCA)",
+        arguments: [{ label: "douleur en étau", w: 3, when: { q: "dt_type", eq: "Serrement / étau dans la poitrine" } },
+                    { label: "déclenchée à l'effort", w: 2, when: { q: "dt_effort", eq: true } },
+                    { label: "> 20 min", w: 2, when: { q: "dt_duree", eq: "Plus de 20 minutes sans s'arrêter" } },
+                    { label: "irradiation mâchoire/bras", w: 2, when: { q: "dt_irrad", eq: true } },
+                    { label: "facteurs de risque CV", w: 1, when: { q: "dt_fdr", eq: true } }],
+        examens_a_discuter: ["ECG immédiat", "Troponine", "Appel SAMU / avis cardiologique"] },
+      { id: "dt_ep", diagnostic: "Embolie pulmonaire",
+        arguments: [{ label: "début brutal", w: 2, when: { q: "dt_brutal", eq: true } },
+                    { label: "dyspnée", w: 2, when: { q: "dt_dyspnee", eq: true } },
+                    { label: "douleur pleurale", w: 1, when: { q: "dt_type", eq: "Pointe qui augmente en respirant" } },
+                    { label: "contexte thrombo-embolique", w: 2, when: { q: "dt_thrombo", eq: true } }],
+        examens_a_discuter: ["Score de probabilité clinique", "D-dimères / angio-TDM thoracique"] },
+      { id: "dt_dissection", diagnostic: "Dissection aortique",
+        arguments: [{ label: "douleur transfixiante dorsale", w: 3, when: { q: "dt_type", eq: "Déchirure intense qui passe dans le dos" } },
+                    { label: "début brutal", w: 1, when: { q: "dt_brutal", eq: true } }],
+        examens_a_discuter: ["TA aux deux bras (asymétrie)", "Angioscanner aortique en urgence"] },
+      { id: "dt_pericardite", diagnostic: "Péricardite",
+        arguments: [{ label: "soulagée en antéflexion", w: 3, when: { q: "dt_anteflexion", eq: true } },
+                    { label: "douleur respiro-dépendante", w: 1, when: { q: "dt_type", eq: "Pointe qui augmente en respirant" } }],
+        examens_a_discuter: ["ECG (sus-décalage diffus concave)", "Auscultation (frottement péricardique)"] },
+      { id: "dt_parietal", diagnostic: "Cause pariétale / œsophagienne (élimination)",
+        arguments: [{ label: "reproduite à la palpation", w: 3, when: { q: "dt_palpation", eq: true } },
+                    { label: "brûlure type RGO", w: 2, when: { q: "dt_type", eq: "Brûlure qui remonte derrière le sternum" } }],
+        examens_a_discuter: ["Diagnostic d'élimination APRÈS avoir écarté les 5 urgences"] }
+    ],
+    examens_clinique: [
+      "ECG 12 dérivations immédiat",
+      "Pression artérielle aux DEUX bras",
+      "Auscultation cardiaque et pulmonaire",
+      "SpO2, fréquence cardiaque et respiratoire",
+      "Palpation pariétale, recherche de signes de TVP aux membres inférieurs"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 21 — DYSPNÉE AIGUË (URGENCE)
+  // -------------------------------------------------------------------------
+  dyspnee_aigue: {
+    id: "dyspnee_aigue",
+    symptome: "Essoufflement soudain (dyspnée aiguë)",
+    specialite: ["Pneumologie", "Cardiologie"],
+    urgence: true,
+    questions: [
+      { id: "dy_vitesse", label: "Vitesse d'installation", type: "single_choice",
+        question: "En combien de temps l'essoufflement est-il apparu ?",
+        options: ["En quelques minutes", "En quelques heures", "En quelques jours"] },
+      { id: "dy_gravite", label: "Signes de gravité", type: "boolean",
+        question: "Avez-vous les lèvres ou extrémités bleues, des sueurs, du mal à finir vos phrases, ou somnolez-vous ?" },
+      { id: "dy_orthopnee", label: "Orthopnée", type: "boolean",
+        question: "Êtes-vous plus gêné allongé, obligé de vous redresser pour respirer ?" },
+      { id: "dy_bruit", label: "Bruit respiratoire", type: "single_choice",
+        question: "Entendez-vous un bruit quand vous respirez ?",
+        options: ["Sifflement (comme l'asthme)", "Bruit aigu en inspirant (gorge)", "Aucun bruit particulier"] },
+      { id: "dy_douleur", label: "Douleur thoracique", type: "boolean",
+        question: "Avez-vous une douleur dans la poitrine ?" },
+      { id: "dy_fievre", label: "Fièvre / expectoration", type: "boolean",
+        question: "Avez-vous de la fièvre et/ou crachez-vous ?" },
+      { id: "dy_allergie", label: "Contexte allergique / fausse route", type: "boolean",
+        question: "Y a-t-il un contexte d'allergie, de piqûre, un gonflement du visage/de la gorge, ou une fausse route ?" },
+      { id: "dy_terrain", label: "Terrain cardio-respiratoire", type: "boolean",
+        question: "Avez-vous une maladie du cœur, de l'asthme ou une BPCO connue ?" }
+    ],
+    red_flags: [
+      { id: "dy_rf_gravite", niveau: 3,
+        when: { any: [{ q: "dy_gravite", eq: true }, { q: "dy_vitesse", eq: "En quelques minutes" }] },
+        message_medecin: "Détresse respiratoire / installation suraiguë : urgence vitale (SpO2, oxygène, 15). Les signes de gravité priment sur le diagnostic.",
+        message_patient: "Cet essoufflement nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "dy_rf_anaphylaxie", niveau: 3,
+        when: { q: "dy_allergie", eq: true },
+        message_medecin: "Angio-œdème / anaphylaxie ou corps étranger : urgence (adrénaline IM si anaphylaxie, manœuvres si obstruction).",
+        message_patient: "Ce contexte nécessite une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dy_oap", diagnostic: "OAP cardiogénique",
+        arguments: [{ label: "orthopnée", w: 3, when: { q: "dy_orthopnee", eq: true } },
+                    { label: "terrain cardiaque", w: 1, when: { q: "dy_terrain", eq: true } }],
+        examens_a_discuter: ["Auscultation (crépitants bilatéraux)", "ECG, BNP", "Radiographie thoracique"] },
+      { id: "dy_ep", diagnostic: "Embolie pulmonaire",
+        arguments: [{ label: "installation en minutes", w: 2, when: { q: "dy_vitesse", eq: "En quelques minutes" } },
+                    { label: "douleur thoracique", w: 2, when: { q: "dy_douleur", eq: true } }],
+        examens_a_discuter: ["Score clinique", "D-dimères / angio-TDM"] },
+      { id: "dy_asthme", diagnostic: "Crise d'asthme / BPCO",
+        arguments: [{ label: "sibilants", w: 3, when: { q: "dy_bruit", eq: "Sifflement (comme l'asthme)" } },
+                    { label: "terrain asthme/BPCO", w: 1, when: { q: "dy_terrain", eq: true } }],
+        examens_a_discuter: ["Débit expiratoire de pointe", "Auscultation", "Aérosols bronchodilatateurs"] },
+      { id: "dy_pno", diagnostic: "Pneumothorax",
+        arguments: [{ label: "installation en minutes", w: 2, when: { q: "dy_vitesse", eq: "En quelques minutes" } },
+                    { label: "douleur thoracique", w: 2, when: { q: "dy_douleur", eq: true } }],
+        examens_a_discuter: ["Auscultation (abolition unilatérale)", "Radiographie / échographie thoracique"] },
+      { id: "dy_pneumopathie", diagnostic: "Pneumopathie",
+        arguments: [{ label: "fièvre + expectoration", w: 3, when: { q: "dy_fievre", eq: true } }],
+        examens_a_discuter: ["Auscultation (foyer)", "Radiographie thoracique, CRP"] },
+      { id: "dy_obstacle", diagnostic: "Obstacle laryngé / anaphylaxie",
+        arguments: [{ label: "stridor inspiratoire", w: 2, when: { q: "dy_bruit", eq: "Bruit aigu en inspirant (gorge)" } },
+                    { label: "contexte allergique", w: 2, when: { q: "dy_allergie", eq: true } }],
+        examens_a_discuter: ["Urgence : avis ORL / réanimation", "Adrénaline si anaphylaxie"] }
+    ],
+    examens_clinique: [
+      "SpO2, fréquence respiratoire, signes de lutte",
+      "Auscultation pulmonaire (crépitants, sibilants, abolition)",
+      "Auscultation cardiaque, TA, fréquence cardiaque",
+      "Recherche de cyanose, marbrures",
+      "Recherche de signes de TVP aux membres inférieurs"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 23 — DÉFICIT NEUROLOGIQUE TRANSITOIRE (URGENCE)
+  // -------------------------------------------------------------------------
+  deficit_neuro: {
+    id: "deficit_neuro",
+    symptome: "Trouble neurologique passager (déficit transitoire)",
+    specialite: ["Neurologie"],
+    urgence: true,
+    questions: [
+      { id: "dn_install", label: "Mode d'installation", type: "single_choice",
+        question: "Comment les troubles sont-ils apparus ?",
+        options: ["D'un coup, maximum d'emblée", "Progressivement en quelques minutes, en s'étendant"] },
+      { id: "dn_type", label: "Type de symptômes", type: "single_choice",
+        question: "De quel type de trouble s'agissait-il ?",
+        options: ["Perte de force, de la parole ou de la vue (signes « en moins »)", "Picotements qui montent, taches lumineuses (signes « en plus »)"] },
+      { id: "dn_territoire", label: "Territoire", type: "single_choice",
+        question: "Quels signes principalement ?",
+        options: ["Faiblesse d'un côté, parole difficile, perte de vue d'un œil", "Vision double, vertige, perte d'équilibre, parole pâteuse", "Autre / je ne sais pas"] },
+      { id: "dn_duree", label: "Régression < 1 h", type: "boolean",
+        question: "Tout est-il rentré dans l'ordre en moins d'une heure ?" },
+      { id: "dn_diabete", label: "Diabète traité", type: "boolean",
+        question: "Êtes-vous diabétique sous traitement (insuline ou comprimés) ?" },
+      { id: "dn_sueurs", label: "Signes d'hypoglycémie", type: "boolean",
+        question: "Aviez-vous des sueurs, tremblements, une faim, soulagés en mangeant ou en vous resucrant ?" },
+      { id: "dn_cephalee", label: "Aura migraineuse", type: "boolean",
+        question: "Avez-vous une migraine connue avec une aura visuelle scintillante ?" },
+      { id: "dn_epilepsie", label: "Signes post-critiques", type: "boolean",
+        question: "Y a-t-il eu morsure de la langue, perte d'urine, ou confusion après l'épisode ?" },
+      { id: "dn_fdr", label: "Risque vasculaire / ACFA", type: "boolean",
+        question: "Avez-vous des facteurs de risque vasculaire ou une arythmie cardiaque (ACFA) ?" }
+    ],
+    red_flags: [
+      { id: "dn_rf_ait", niveau: 3,
+        when: { all: [{ q: "dn_type", eq: "Perte de force, de la parole ou de la vue (signes « en moins »)" }, { q: "dn_install", eq: "D'un coup, maximum d'emblée" }] },
+        message_medecin: "Déficit focal brutal régressif = AIT : URGENCE (risque d'AVC à court terme). Glycémie capillaire d'abord, puis bilan neurovasculaire immédiat (15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "dn_rf_hypo", niveau: 2,
+        when: { all: [{ q: "dn_diabete", eq: true }, { q: "dn_sueurs", eq: true }] },
+        message_medecin: "Hypoglycémie possible (mime tout déficit) : à éliminer EN PREMIER (glycémie capillaire, resucrage).",
+        message_patient: "Vérifiez votre glycémie et resucrez-vous ; un avis médical est nécessaire." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dn_ait", diagnostic: "Accident ischémique transitoire (AIT)",
+        arguments: [{ label: "début brutal d'emblée maximal", w: 3, when: { q: "dn_install", eq: "D'un coup, maximum d'emblée" } },
+                    { label: "déficit « en moins »", w: 2, when: { q: "dn_type", eq: "Perte de force, de la parole ou de la vue (signes « en moins »)" } },
+                    { label: "régression < 1 h", w: 1, when: { q: "dn_duree", eq: true } },
+                    { label: "facteurs de risque / ACFA", w: 1, when: { q: "dn_fdr", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire", "Imagerie cérébrale + vaisseaux en urgence", "ECG (ACFA), avis neurovasculaire (score ABCD2)"] },
+      { id: "dn_aura", diagnostic: "Aura migraineuse",
+        arguments: [{ label: "marche progressive", w: 3, when: { q: "dn_install", eq: "Progressivement en quelques minutes, en s'étendant" } },
+                    { label: "symptômes « en plus »", w: 2, when: { q: "dn_type", eq: "Picotements qui montent, taches lumineuses (signes « en plus »)" } },
+                    { label: "migraine connue", w: 2, when: { q: "dn_cephalee", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique si typique", "Imagerie si atypie / premier épisode"] },
+      { id: "dn_epilepsie", diagnostic: "Crise épileptique focale",
+        arguments: [{ label: "symptômes « positifs »", w: 2, when: { q: "dn_type", eq: "Picotements qui montent, taches lumineuses (signes « en plus »)" } },
+                    { label: "phase post-critique", w: 3, when: { q: "dn_epilepsie", eq: true } }],
+        examens_a_discuter: ["Avis neurologique", "EEG, imagerie cérébrale"] },
+      { id: "dn_hypoglycemie", diagnostic: "Hypoglycémie",
+        arguments: [{ label: "diabète traité", w: 2, when: { q: "dn_diabete", eq: true } },
+                    { label: "signes neurovégétatifs résolutifs au resucrage", w: 3, when: { q: "dn_sueurs", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire", "Resucrage", "Revue du traitement"] }
+    ],
+    examens_clinique: [
+      "Glycémie capillaire SYSTÉMATIQUE (en premier)",
+      "Examen neurologique complet (score ABCD2)",
+      "Auscultation cardiaque et des carotides",
+      "Pression artérielle, ECG (rechercher une ACFA)",
+      "Recherche de morsure de langue / signes post-critiques"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 27 — FIÈVRE AU RETOUR DES TROPIQUES (URGENCE)
+  // -------------------------------------------------------------------------
+  fievre_tropiques: {
+    id: "fievre_tropiques",
+    symptome: "Fièvre au retour d'un pays tropical",
+    specialite: ["Infectiologie"],
+    urgence: true,
+    questions: [
+      { id: "ft_delai", label: "Délai retour-fièvre", type: "single_choice",
+        question: "Combien de temps après le retour la fièvre est-elle apparue ?",
+        options: ["Moins de 3 mois", "Plus de 3 mois"] },
+      { id: "ft_prophylaxie", label: "Prophylaxie antipaludique", type: "boolean",
+        question: "Aviez-vous pris un traitement préventif du paludisme, bien suivi ?" },
+      { id: "ft_eruption", label: "Éruption + myalgies", type: "boolean",
+        question: "Avez-vous une éruption sur la peau et des douleurs musculaires ?" },
+      { id: "ft_digestif", label: "Signes digestifs", type: "boolean",
+        question: "Avez-vous des troubles digestifs (diarrhée) ou des douleurs au ventre ?" },
+      { id: "ft_ictere", label: "Ictère / urines foncées", type: "boolean",
+        question: "Avez-vous les yeux ou la peau jaunes, ou des urines très foncées ?" },
+      { id: "ft_gravite", label: "Signes de gravité", type: "boolean",
+        question: "Avez-vous : confusion, taches violacées (purpura), urines rares, ou difficulté à respirer ?" }
+    ],
+    red_flags: [
+      { id: "ft_rf_palu", niveau: 3,
+        when: { always: true },
+        message_medecin: "RÈGLE ABSOLUE : toute fièvre au retour des tropiques = ÉLIMINER UN PALUDISME en urgence (frottis-goutte épaisse / test antigénique). Le P. falciparum peut tuer en quelques jours.",
+        message_patient: "Une fièvre au retour d'un pays tropical doit être évaluée par un médecin sans tarder." },
+      { id: "ft_rf_gravite", niveau: 3,
+        when: { q: "ft_gravite", eq: true },
+        message_medecin: "Signes de gravité (neuropaludisme, sepsis, purpura fébrile, défaillance d'organe) : urgence vitale ; isolement si fièvre hémorragique virale suspectée.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ft_palu", diagnostic: "Paludisme (à éliminer EN PREMIER)",
+        arguments: [{ label: "retour récent de zone d'endémie", w: 3, when: { q: "ft_delai", eq: "Moins de 3 mois" } },
+                    { label: "absence de prophylaxie efficace", w: 1, when: { q: "ft_prophylaxie", eq: false } }],
+        examens_a_discuter: ["Frottis sanguin + goutte épaisse EN URGENCE", "Test de diagnostic rapide antigénique"] },
+      { id: "ft_arbovirose", diagnostic: "Arbovirose (dengue, chikungunya, Zika)",
+        arguments: [{ label: "fièvre + myalgies + éruption", w: 3, when: { q: "ft_eruption", eq: true } }],
+        examens_a_discuter: ["NFS (thrombopénie)", "Sérologies / PCR ciblées"] },
+      { id: "ft_typhoide", diagnostic: "Fièvre typhoïde",
+        arguments: [{ label: "fièvre + troubles digestifs", w: 2, when: { q: "ft_digestif", eq: true } }],
+        examens_a_discuter: ["Hémocultures", "Coproculture"] },
+      { id: "ft_hepatite", diagnostic: "Hépatite virale / leptospirose / amibiase / primo-VIH",
+        arguments: [{ label: "ictère / urines foncées", w: 2, when: { q: "ft_ictere", eq: true } }],
+        examens_a_discuter: ["Bilan hépatique", "Sérologies selon expositions"] }
+    ],
+    examens_clinique: [
+      "Température, recherche de purpura, état de conscience",
+      "Palpation splénique (splénomégalie)",
+      "État d'hydratation, diurèse",
+      "SpO2, pression artérielle, fréquence cardiaque (sepsis)",
+      "Recherche d'une porte d'entrée / escarre d'inoculation"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 31 — GROSSE BOURSE (URGENCE)
+  // -------------------------------------------------------------------------
+  grosse_bourse: {
+    id: "grosse_bourse",
+    symptome: "Grosse bourse / douleur testiculaire",
+    specialite: ["Urologie"],
+    urgence: true,
+    questions: [
+      { id: "gb_debut", label: "Mode d'apparition", type: "single_choice",
+        question: "Comment cela a-t-il commencé ?",
+        options: ["Brutalement, d'un seul coup", "Progressivement"] },
+      { id: "gb_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "gb_urinaire", label: "Signes urinaires / IST", type: "boolean",
+        question: "Avez-vous des brûlures urinaires ou un écoulement ?" },
+      { id: "gb_masse", label: "Masse palpable", type: "boolean",
+        question: "Sentez-vous une boule ou une masse dure dans la bourse ?" },
+      { id: "gb_indolore", label: "Masse indolore", type: "boolean",
+        question: "Cette masse est-elle indolore ?",
+        showIf: { q: "gb_masse", eq: true } },
+      { id: "gb_transillum", label: "Aspect liquidien", type: "boolean",
+        question: "La bourse est-elle augmentée de volume, molle et indolore (comme une poche de liquide) ?" },
+      { id: "gb_sepsis", label: "Signes de Fournier", type: "boolean",
+        question: "Avez-vous une douleur/rougeur du périnée avec fièvre importante ou une sensation de crépitements sous la peau ?" }
+    ],
+    red_flags: [
+      { id: "gb_rf_torsion", niveau: 3,
+        when: { q: "gb_debut", eq: "Brutalement, d'un seul coup" },
+        message_medecin: "Douleur scrotale brutale = torsion du cordon jusqu'à preuve du contraire : URGENCE chirurgicale (< 6 h). Ne pas attendre l'imagerie en cas de doute.",
+        message_patient: "Une douleur testiculaire brutale nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "gb_rf_tumeur", niveau: 2,
+        when: { all: [{ q: "gb_masse", eq: true }, { q: "gb_indolore", eq: true }] },
+        message_medecin: "Masse intratesticulaire dure indolore = tumeur jusqu'à preuve du contraire (échographie + marqueurs).",
+        message_patient: "Cette masse nécessite un avis médical rapide pour des examens." },
+      { id: "gb_rf_fournier", niveau: 3,
+        when: { q: "gb_sepsis", eq: true },
+        message_medecin: "Gangrène de Fournier (sepsis + crépitants périnéaux) : urgence chirurgicale.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gb_torsion", diagnostic: "Torsion du cordon spermatique",
+        arguments: [{ label: "douleur brutale", w: 3, when: { q: "gb_debut", eq: "Brutalement, d'un seul coup" } },
+                    { label: "sujet jeune", w: 2, when: { ctx: "age", lte: 30 } }],
+        examens_a_discuter: ["Exploration chirurgicale urgente (< 6 h)", "Réflexe crémastérien aboli, testicule ascensionné"] },
+      { id: "gb_orchiepididymite", diagnostic: "Orchi-épididymite",
+        arguments: [{ label: "fièvre", w: 2, when: { q: "gb_fievre", eq: true } },
+                    { label: "signes urinaires / IST", w: 2, when: { q: "gb_urinaire", eq: true } },
+                    { label: "début progressif", w: 1, when: { q: "gb_debut", eq: "Progressivement" } }],
+        examens_a_discuter: ["ECBU / prélèvement IST", "Échographie-doppler", "Antibiothérapie"] },
+      { id: "gb_tumeur", diagnostic: "Tumeur du testicule",
+        arguments: [{ label: "masse dure", w: 2, when: { q: "gb_masse", eq: true } },
+                    { label: "indolore", w: 2, when: { q: "gb_indolore", eq: true } }],
+        examens_a_discuter: ["Échographie scrotale", "Marqueurs (AFP, β-hCG, LDH)"] },
+      { id: "gb_hydrocele", diagnostic: "Hydrocèle",
+        arguments: [{ label: "masse transilluminable", w: 3, when: { q: "gb_transillum", eq: true } }],
+        examens_a_discuter: ["Échographie scrotale"] }
+    ],
+    examens_clinique: [
+      "Palpation comparative des deux bourses",
+      "Recherche du réflexe crémastérien",
+      "Signe de Prehn (soulagement à la surélévation)",
+      "Transillumination",
+      "Recherche de sepsis / atteinte périnéale (Fournier)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 32 — GROSSE JAMBE ROUGE AIGUË (URGENCE)
+  // -------------------------------------------------------------------------
+  grosse_jambe_rouge: {
+    id: "grosse_jambe_rouge",
+    symptome: "Grosse jambe rouge aiguë",
+    specialite: ["Infectiologie", "Vasculaire"],
+    urgence: true,
+    questions: [
+      { id: "gj_cote", label: "Côté", type: "single_choice",
+        question: "Une seule jambe ou les deux ?",
+        options: ["Une seule", "Les deux"] },
+      { id: "gj_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "gj_porte", label: "Porte d'entrée", type: "boolean",
+        question: "Y a-t-il une plaie, une fissure entre les orteils, ou un ulcère ?" },
+      { id: "gj_dlrdispro", label: "Douleur disproportionnée", type: "boolean",
+        question: "La douleur est-elle beaucoup plus intense que ce que montre l'aspect de la peau ?" },
+      { id: "gj_necrose", label: "Bulles / nécrose / crépitation", type: "boolean",
+        question: "Y a-t-il des cloques (bulles), des zones noires ou violacées, ou des crépitements sous la peau ?" },
+      { id: "gj_sepsis", label: "Signes généraux de sepsis", type: "boolean",
+        question: "Avez-vous des frissons, un malaise, une confusion, ou le cœur qui bat très vite ?" },
+      { id: "gj_mollet", label: "Tableau de TVP", type: "boolean",
+        question: "Avez-vous surtout un gonflement et une douleur du mollet, sans grand placard rouge ?" },
+      { id: "gj_prurit", label: "Dermite de stase", type: "boolean",
+        question: "Est-ce surtout des démangeaisons, sur les deux jambes, sans fièvre ?" },
+      { id: "gj_terrain", label: "Terrain à risque", type: "boolean",
+        question: "Êtes-vous diabétique, immunodéprimé, ou avez-vous une mauvaise circulation des jambes ?" }
+    ],
+    red_flags: [
+      { id: "gj_rf_fasciite", niveau: 3,
+        when: { any: [{ q: "gj_dlrdispro", eq: true }, { q: "gj_necrose", eq: true }, { q: "gj_sepsis", eq: true }] },
+        message_medecin: "Signes de fasciite nécrosante (douleur disproportionnée, bulles/nécrose/crépitation, sepsis) : URGENCE chirurgicale, ne pas temporiser.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "gj_rf_tvp", niveau: 2,
+        when: { all: [{ q: "gj_mollet", eq: true }, { not: { q: "gj_fievre", eq: true } }] },
+        message_medecin: "Tableau évocateur de TVP (œdème/douleur du mollet sans placard fébrile) : écho-doppler veineux (risque d'embolie pulmonaire).",
+        message_patient: "Ce tableau nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gj_erysipele", diagnostic: "Érysipèle / dermohypodermite bactérienne",
+        arguments: [{ label: "unilatéral", w: 1, when: { q: "gj_cote", eq: "Une seule" } },
+                    { label: "fièvre", w: 2, when: { q: "gj_fievre", eq: true } },
+                    { label: "porte d'entrée", w: 2, when: { q: "gj_porte", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique", "Antibiothérapie", "Traitement de la porte d'entrée"] },
+      { id: "gj_fasciite", diagnostic: "Fasciite nécrosante",
+        arguments: [{ label: "douleur disproportionnée", w: 3, when: { q: "gj_dlrdispro", eq: true } },
+                    { label: "nécrose / bulles / crépitation", w: 3, when: { q: "gj_necrose", eq: true } },
+                    { label: "sepsis", w: 2, when: { q: "gj_sepsis", eq: true } }],
+        examens_a_discuter: ["Avis chirurgical URGENT", "Ne pas retarder l'exploration"] },
+      { id: "gj_tvp", diagnostic: "Thrombose veineuse profonde (TVP)",
+        arguments: [{ label: "œdème/douleur du mollet isolés", w: 3, when: { q: "gj_mollet", eq: true } }],
+        examens_a_discuter: ["Score clinique", "D-dimères / écho-doppler veineux"] },
+      { id: "gj_stase", diagnostic: "Eczéma / dermite de stase",
+        arguments: [{ label: "bilatéral", w: 2, when: { q: "gj_cote", eq: "Les deux" } },
+                    { label: "prurit sans fièvre", w: 2, when: { q: "gj_prurit", eq: true } }],
+        examens_a_discuter: ["Traitement local", "Prise en charge de l'insuffisance veineuse"] }
+    ],
+    examens_clinique: [
+      "Température, signes de sepsis (FC, TA, conscience)",
+      "Délimiter le placard au stylo (suivi de l'évolution)",
+      "Rechercher bulles, nécrose, crépitation, hypoesthésie",
+      "Palpation du mollet (signes de TVP)",
+      "Recherche de la porte d'entrée"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 33 — HÉMATÉMÈSE / MÉLÉNA (URGENCE)
+  // -------------------------------------------------------------------------
+  hematemese_melena: {
+    id: "hematemese_melena",
+    symptome: "Vomissement de sang ou selles noires (hémorragie digestive)",
+    specialite: ["Hépato-gastro-entérologie"],
+    urgence: true,
+    questions: [
+      { id: "he_type", label: "Type de saignement", type: "single_choice",
+        question: "Que constatez-vous ?",
+        options: ["Du sang (rouge ou « marc de café ») en vomissant", "Des selles noires, collantes et très malodorantes", "Les deux"] },
+      { id: "he_abondance", label: "Abondance / récidive", type: "boolean",
+        question: "Est-ce abondant ou répété ?" },
+      { id: "he_choc", label: "Signes de choc", type: "boolean",
+        question: "Avez-vous des vertiges/malaise en vous levant, une grande soif, le cœur qui bat vite ?" },
+      { id: "he_ains", label: "AINS / anticoagulants", type: "boolean",
+        question: "Prenez-vous de l'aspirine, des anti-inflammatoires ou des anticoagulants ?" },
+      { id: "he_ulcere", label: "Antécédent ulcéreux", type: "boolean",
+        question: "Avez-vous des douleurs au creux de l'estomac ou un antécédent d'ulcère ?" },
+      { id: "he_alcool", label: "Hépatopathie / alcool", type: "boolean",
+        question: "Avez-vous une maladie du foie ou une consommation d'alcool importante ?" },
+      { id: "he_vomiss", label: "Vomissements préalables", type: "boolean",
+        question: "Le sang est-il apparu APRÈS plusieurs vomissements alimentaires ?" },
+      { id: "he_aeg", label: "AEG / dysphagie", type: "boolean",
+        question: "Avez-vous maigri ou des difficultés à avaler ?" }
+    ],
+    red_flags: [
+      { id: "he_rf_choc", niveau: 3,
+        when: { any: [{ q: "he_choc", eq: true }, { q: "he_abondance", eq: true }] },
+        message_medecin: "Hémorragie digestive abondante / signes de choc : URGENCE — priorité hémodynamique avant l'étiologie (15, voie veineuse, groupe + hémostase).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "he_rf_varices", niveau: 3,
+        when: { all: [{ q: "he_alcool", eq: true }, { q: "he_type", in: ["Du sang (rouge ou « marc de café ») en vomissant", "Les deux"] }] },
+        message_medecin: "Hépatopathie + hématémèse : rupture de varices œsophagiennes possible → urgence (terlipressine, endoscopie).",
+        message_patient: "Ce contexte nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "he_rf_anticoag", niveau: 2,
+        when: { q: "he_ains", eq: true },
+        message_medecin: "Hémorragie sous AINS / anticoagulant : évaluer la gravité et corriger l'hémostase.",
+        message_patient: "Ce saignement nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "he_ulcere", diagnostic: "Ulcère gastro-duodénal",
+        arguments: [{ label: "prise d'AINS/aspirine", w: 2, when: { q: "he_ains", eq: true } },
+                    { label: "épigastralgies / antécédent ulcéreux", w: 3, when: { q: "he_ulcere", eq: true } }],
+        examens_a_discuter: ["Endoscopie œso-gastro-duodénale", "Recherche H. pylori", "IPP IV"] },
+      { id: "he_varices", diagnostic: "Rupture de varices œsophagiennes",
+        arguments: [{ label: "hépatopathie / HTP", w: 3, when: { q: "he_alcool", eq: true } },
+                    { label: "hématémèse abondante", w: 1, when: { q: "he_abondance", eq: true } }],
+        examens_a_discuter: ["Terlipressine", "Endoscopie urgente (ligature)"] },
+      { id: "he_mallory", diagnostic: "Syndrome de Mallory-Weiss",
+        arguments: [{ label: "hématémèse après efforts de vomissement", w: 3, when: { q: "he_vomiss", eq: true } }],
+        examens_a_discuter: ["Endoscopie (souvent résolutif spontanément)"] },
+      { id: "he_cancer", diagnostic: "Cancer gastro-œsophagien",
+        arguments: [{ label: "AEG / dysphagie", w: 3, when: { q: "he_aeg", eq: true } }],
+        examens_a_discuter: ["Endoscopie + biopsies"] }
+    ],
+    examens_clinique: [
+      "Pouls, pression artérielle couché/debout (recherche de choc)",
+      "Recherche de pâleur, marbrures",
+      "Toucher rectal (méléna)",
+      "Stigmates d'hépatopathie chronique",
+      "Voie veineuse + bilan (NFS, groupe, hémostase)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 35 — HÉMOPTYSIE (URGENCE)
+  // -------------------------------------------------------------------------
+  hemoptysie: {
+    id: "hemoptysie",
+    symptome: "Crachats de sang (hémoptysie)",
+    specialite: ["Pneumologie"],
+    urgence: true,
+    questions: [
+      { id: "hm_confirm", label: "Sang à la toux", type: "boolean",
+        question: "Le sang vient-il en toussant (et non vomi ou venant du nez) ?" },
+      { id: "hm_aspect", label: "Sang rouge spumeux", type: "boolean",
+        question: "Est-ce du sang rouge, aéré, mousseux ?" },
+      { id: "hm_abondance", label: "Abondance", type: "single_choice",
+        question: "Quelle quantité de sang ?",
+        options: ["Quelques crachats striés de sang", "Un verre ou plus, ou saignements répétés"] },
+      { id: "hm_detresse", label: "Détresse respiratoire", type: "boolean",
+        question: "Êtes-vous très essoufflé, les lèvres bleues ?" },
+      { id: "hm_tabac", label: "Tabac + AEG", type: "boolean",
+        question: "Fumez-vous, et avez-vous maigri récemment ?" },
+      { id: "hm_fievre", label: "Fièvre / sueurs nocturnes", type: "boolean",
+        question: "Avez-vous de la fièvre, des crachats, ou des sueurs nocturnes ?" },
+      { id: "hm_thrombo", label: "Contexte d'EP", type: "boolean",
+        question: "Avez-vous une douleur dans la poitrine avec essoufflement, ou un contexte de phlébite ?" },
+      { id: "hm_anticoag", label: "Anticoagulants", type: "boolean",
+        question: "Prenez-vous des anticoagulants ?" }
+    ],
+    red_flags: [
+      { id: "hm_rf_abondance", niveau: 3,
+        when: { any: [{ q: "hm_abondance", eq: "Un verre ou plus, ou saignements répétés" }, { q: "hm_detresse", eq: true }] },
+        message_medecin: "Hémoptysie de grande abondance / détresse respiratoire : menace d'ASPHYXIE → urgence (position assise, O2, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "hm_rf_cancer", niveau: 2,
+        when: { q: "hm_tabac", eq: true },
+        message_medecin: "Hémoptysie chez un fumeur (± AEG) : cancer bronchique à éliminer → fibroscopie + TDM thoracique.",
+        message_patient: "Ce symptôme nécessite un avis médical rapide et des examens." },
+      { id: "hm_rf_tb", niveau: 2,
+        when: { q: "hm_fievre", eq: true },
+        message_medecin: "Hémoptysie fébrile + sueurs nocturnes : éliminer une tuberculose active (contagiosité).",
+        message_patient: "Ce symptôme nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "hm_cancer", diagnostic: "Cancer bronchique",
+        arguments: [{ label: "tabac + AEG", w: 3, when: { q: "hm_tabac", eq: true } }],
+        examens_a_discuter: ["TDM thoracique", "Fibroscopie bronchique"] },
+      { id: "hm_tb", diagnostic: "Tuberculose",
+        arguments: [{ label: "fièvre + sueurs nocturnes", w: 3, when: { q: "hm_fievre", eq: true } }],
+        examens_a_discuter: ["Radiographie / TDM", "Recherche de BK (crachats)", "Isolement respiratoire"] },
+      { id: "hm_ep", diagnostic: "Embolie pulmonaire (avec infarctus)",
+        arguments: [{ label: "douleur pleurale + dyspnée + contexte", w: 3, when: { q: "hm_thrombo", eq: true } }],
+        examens_a_discuter: ["Angio-TDM thoracique", "D-dimères"] },
+      { id: "hm_ddb", diagnostic: "Dilatation des bronches",
+        arguments: [{ label: "hémoptysies répétées", w: 2, when: { q: "hm_abondance", eq: "Un verre ou plus, ou saignements répétés" } }],
+        examens_a_discuter: ["TDM thoracique"] }
+    ],
+    examens_clinique: [
+      "SpO2, fréquence respiratoire",
+      "Auscultation pulmonaire",
+      "Quantifier l'abondance (mL/24 h)",
+      "Pression artérielle, fréquence cardiaque",
+      "Recherche de signes de TVP"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 42 — MALAISE ET PERTE DE CONNAISSANCE (URGENCE)
+  // -------------------------------------------------------------------------
+  malaise_pc: {
+    id: "malaise_pc",
+    symptome: "Malaise / perte de connaissance",
+    specialite: ["Cardiologie", "Neurologie"],
+    urgence: true,
+    questions: [
+      { id: "mp_pc", label: "Vraie perte de connaissance", type: "boolean",
+        question: "Y a-t-il eu une vraie perte de connaissance (et pas seulement une sensation de malaise) ?" },
+      { id: "mp_prodrome", label: "Prodromes végétatifs", type: "boolean",
+        question: "Juste avant : sueurs, voile devant les yeux, nausées, chaleur ?" },
+      { id: "mp_effort", label: "Survenue à l'effort / décubitus", type: "boolean",
+        question: "Est-ce survenu pendant un effort, ou en étant allongé ?" },
+      { id: "mp_palpitations", label: "Signes cardiaques", type: "boolean",
+        question: "Aviez-vous des palpitations, une douleur dans la poitrine ou un essoufflement ?" },
+      { id: "mp_recup", label: "Récupération", type: "single_choice",
+        question: "Comment s'est passé le réveil ?",
+        options: ["Immédiat, tout de suite normal", "Confus / désorienté pendant un moment"] },
+      { id: "mp_langue", label: "Signes de crise", type: "boolean",
+        question: "Y a-t-il eu une morsure sur le côté de la langue, une perte d'urine, des mouvements saccadés ?" },
+      { id: "mp_orthostatique", label: "Au lever", type: "boolean",
+        question: "Est-ce survenu en vous levant rapidement ?" },
+      { id: "mp_atcd", label: "Cardiopathie / mort subite familiale", type: "boolean",
+        question: "Avez-vous une maladie du cœur connue, ou des morts subites dans la famille ?" },
+      { id: "mp_medic", label: "Médicaments récents", type: "boolean",
+        question: "Avez-vous changé de médicaments récemment (tension, cœur, diabète) ?" }
+    ],
+    red_flags: [
+      { id: "mp_rf_cardiaque", niveau: 3,
+        when: { any: [{ q: "mp_effort", eq: true }, { q: "mp_palpitations", eq: true }, { all: [{ q: "mp_atcd", eq: true }, { not: { q: "mp_prodrome", eq: true } }] }] },
+        message_medecin: "Syncope d'effort / sans prodrome / sur cardiopathie : cause rythmique ou obstructive (risque de mort subite) → ECG systématique, avis cardiologique urgent.",
+        message_patient: "Ce malaise nécessite une évaluation médicale rapide avec un électrocardiogramme." }
+    ],
+    diagnostics_differentiels: [
+      { id: "mp_vagale", diagnostic: "Syncope vagale (bénigne)",
+        arguments: [{ label: "prodromes neurovégétatifs", w: 3, when: { q: "mp_prodrome", eq: true } },
+                    { label: "récupération immédiate", w: 2, when: { q: "mp_recup", eq: "Immédiat, tout de suite normal" } }],
+        examens_a_discuter: ["Diagnostic clinique", "Mesures hygiéno-diététiques, hydratation"] },
+      { id: "mp_cardiaque", diagnostic: "Syncope cardiaque",
+        arguments: [{ label: "à l'effort / décubitus", w: 3, when: { q: "mp_effort", eq: true } },
+                    { label: "palpitations / douleur thoracique", w: 2, when: { q: "mp_palpitations", eq: true } },
+                    { label: "cardiopathie / mort subite familiale", w: 2, when: { q: "mp_atcd", eq: true } }],
+        examens_a_discuter: ["ECG (QT long, BAV, pré-excitation, Brugada)", "Avis cardiologique, Holter, échocardiographie"] },
+      { id: "mp_orthostatique", diagnostic: "Hypotension orthostatique",
+        arguments: [{ label: "survenue au lever", w: 3, when: { q: "mp_orthostatique", eq: true } },
+                    { label: "médicament récent", w: 1, when: { q: "mp_medic", eq: true } }],
+        examens_a_discuter: ["TA couché/debout", "Revue de l'ordonnance"] },
+      { id: "mp_epilepsie", diagnostic: "Crise d'épilepsie",
+        arguments: [{ label: "morsure latérale de langue / mouvements", w: 3, when: { q: "mp_langue", eq: true } },
+                    { label: "confusion post-critique", w: 2, when: { q: "mp_recup", eq: "Confus / désorienté pendant un moment" } }],
+        examens_a_discuter: ["Avis neurologique", "EEG"] }
+    ],
+    examens_clinique: [
+      "ECG 12 dérivations SYSTÉMATIQUE",
+      "Pression artérielle couché / debout",
+      "Auscultation cardiaque (souffle de rétrécissement aortique)",
+      "Glycémie capillaire",
+      "Examen neurologique"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 64 — ÉPANCHEMENT PLEURAL (CAT)
+  // -------------------------------------------------------------------------
+  epanchement_pleural: {
+    id: "epanchement_pleural",
+    symptome: "Épanchement pleural (eau / liquide autour du poumon)",
+    specialite: ["Pneumologie"],
+    urgence: false,
+    questions: [
+      { id: "ep_dyspnee", label: "Dyspnée", type: "boolean",
+        question: "Êtes-vous essoufflé ?" },
+      { id: "ep_tolerance", label: "Mauvaise tolérance", type: "boolean",
+        question: "Êtes-vous très essoufflé au moindre effort ou au repos ?" },
+      { id: "ep_douleur", label: "Douleur basithoracique", type: "boolean",
+        question: "Avez-vous une douleur sur le côté du thorax en respirant ?" },
+      { id: "ep_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "ep_cardiaque", label: "Cause systémique (transsudat)", type: "boolean",
+        question: "Avez-vous une insuffisance cardiaque, une cirrhose, ou une maladie des reins connue ?" },
+      { id: "ep_neo", label: "Contexte néoplasique", type: "boolean",
+        question: "Avez-vous un cancer connu, ou avez-vous maigri / une altération de l'état général ?" },
+      { id: "ep_amiante", label: "Tabac / amiante", type: "boolean",
+        question: "Fumez-vous ou avez-vous été exposé à l'amiante ?" }
+    ],
+    red_flags: [
+      { id: "ep_rf_purulent", niveau: 3,
+        when: { all: [{ q: "ep_fievre", eq: true }, { q: "ep_dyspnee", eq: true }] },
+        message_medecin: "Épanchement fébrile : pleurésie purulente possible → ponction ; drainage en urgence si liquide purulent.",
+        message_patient: "Cette association nécessite une évaluation médicale rapide." },
+      { id: "ep_rf_compressif", niveau: 3,
+        when: { q: "ep_tolerance", eq: true },
+        message_medecin: "Épanchement compressif mal toléré : évacuation / avis pneumologique urgent.",
+        message_patient: "Cet essoufflement important nécessite une évaluation médicale rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ep_transsudat", diagnostic: "Transsudat (cause systémique)",
+        arguments: [{ label: "insuffisance cardiaque / cirrhose / néphrotique", w: 3, when: { q: "ep_cardiaque", eq: true } }],
+        examens_a_discuter: ["Critères de Light (si ponction)", "Traiter la cause systémique"] },
+      { id: "ep_exsudat_inf", diagnostic: "Pleurésie infectieuse / purulente",
+        arguments: [{ label: "fièvre", w: 3, when: { q: "ep_fievre", eq: true } }],
+        examens_a_discuter: ["Ponction pleurale (cytologie, biochimie, bactériologie)", "Drainage si liquide purulent"] },
+      { id: "ep_neo", diagnostic: "Pleurésie néoplasique",
+        arguments: [{ label: "contexte néoplasique / AEG", w: 3, when: { q: "ep_neo", eq: true } },
+                    { label: "tabac / amiante (mésothéliome)", w: 1, when: { q: "ep_amiante", eq: true } }],
+        examens_a_discuter: ["Ponction (cytologie, exsudat souvent hémorragique)", "Imagerie, avis spécialisé"] },
+      { id: "ep_ep", diagnostic: "Embolie pulmonaire",
+        arguments: [{ label: "douleur basithoracique", w: 2, when: { q: "ep_douleur", eq: true } }],
+        examens_a_discuter: ["Angio-TDM si contexte évocateur"] }
+    ],
+    examens_clinique: [
+      "Auscultation (matité, abolition du murmure vésiculaire)",
+      "SpO2, fréquence respiratoire (tolérance)",
+      "Radiographie thoracique",
+      "Critères de Light sur le liquide de ponction",
+      "Recherche d'une cause systémique vs locale"
+    ]
   }
 };

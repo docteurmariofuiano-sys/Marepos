@@ -28,6 +28,7 @@
 
   function evalPred(pred, ans, ctx) {
     if (!pred || typeof pred !== "object") return false;
+    if ("always" in pred) return !!pred.always;
     if (pred.all) return pred.all.every(function (p) { return evalPred(p, ans, ctx); });
     if (pred.any) return pred.any.some(function (p) { return evalPred(p, ans, ctx); });
     if (pred.not) return !evalPred(pred.not, ans, ctx);

@@ -53,8 +53,9 @@
       var hay = (f.symptome + " " + f.specialite.join(" ")).toLowerCase();
       if (q && hay.indexOf(q) === -1) return;
       var b = document.createElement("button");
-      b.className = "symptom-card";
-      b.innerHTML = "<span class='sc-title'>" + esc(f.symptome) + "</span>" +
+      b.className = "symptom-card" + (f.urgence ? " is-urg" : "");
+      var urgTag = f.urgence ? "<span class='sc-urg'>URGENCE</span>" : "";
+      b.innerHTML = "<span class='sc-title'>" + esc(f.symptome) + urgTag + "</span>" +
         "<span class='sc-spec'>" + esc(f.specialite.join(" · ")) + "</span>";
       b.onclick = function () { startQuiz(key); };
       grid.appendChild(b);
