@@ -1376,6 +1376,46 @@ window.BIOKB = [
     ],
     red_flags: ["RAI positive (anticorps anti-érythrocytaire) → sang phénotypé compatible, risque d'hémolyse transfusionnelle", "Femme en âge de procréer RH−1 (D−) ou exposée à KEL1 : prévenir l'allo-immunisation (maladie hémolytique du nouveau-né)", "Anticorps anti-Kidd (Jk) : hémolyse retardée, parfois indétectable (évanescence) — danger transfusionnel", "Phénotype rare → difficulté d'approvisionnement"],
     conduite: ["Respecter le phénotypage RH-KEL1 chez la femme en âge de procréer et le polytransfusé.", "Devant une RAI positive : identifier l'anticorps et transfuser du sang phénotypé compatible.", "Tenir compte des particularités de population (Fy(a−b−) chez le sujet noir).", "Tracer le phénotype ; coordination avec le laboratoire d'immuno-hématologie / l'EFS."]
+  },
+  {
+    id: "diabete_type_1", num: 91, anomalie: "Diabète de type 1",
+    specialite: "Endocrinologie",
+    definition: "Diabète auto-immun : destruction des cellules β des îlots de Langerhans (auto-anticorps anti-GAD, anti-IA2, anti-îlots/ICA, anti-insuline). Terrain génétique (HLA DR3/DR4) + facteurs environnementaux (viraux : Coxsackie B4, rubéole congénitale). Pré-diabète asymptomatique (~5-10 ans) ; symptômes quand il reste < 10-20 % de cellules β fonctionnelles.",
+    premiere_intention: ["Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises ; glycosurie et cétonurie positives", "Profil évocateur : sujet jeune (< 20 ans), pas d'ATCD familial, début brutal, autres maladies auto-immunes possibles", "2e intention (si doute étiologique) : auto-anticorps anti-GAD, anti-IA2, anti-îlots (ICA), anti-insuline", "Bilan initial : HbA1c, bilan rénal (créatinine, clairance, microalbuminurie), bilan lipidique"],
+    causes: [
+      { cause: "Arguments pour un diabète de type 1", signe: "sujet jeune < 20 ans, début brutal, cétose, pas d'ATCD familial, auto-anticorps positifs", examens: ["Glycémie, cétonurie", "Auto-Ac anti-GAD/IA2/ICA/insuline"] },
+      { cause: "Maladies auto-immunes associées", signe: "thyroïdite auto-immune, maladie cœliaque", examens: ["TSH", "Anticorps anti-transglutaminase (IgA)"] },
+      { cause: "Acidocétose révélatrice", signe: "hyperglycémie + cétose + acidose métabolique à trou anionique augmenté, déshydratation", examens: ["Gaz du sang, ionogramme", "Cétonémie / cétonurie"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique",
+        entetes: ["Intention", "Examens"],
+        lignes: [
+          ["1re intention", "Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises ; glycosurie et cétonurie +"],
+          ["2e intention (doute étiologique)", "Auto-Ac anti-GAD, anti-IA2, anti-îlots (ICA), anti-insuline"]
+        ] },
+      { titre: "Acidocétose diabétique — anomalies",
+        entetes: ["Anomalie", "Mécanisme"],
+        lignes: [
+          ["Acidose métabolique à trou anionique augmenté", "Corps cétoniques (β-hydroxybutyrate, acétoacétate) ; HCO3− ↓, compensation respiratoire (pCO2 ↓, hyperventilation)"],
+          ["Décompensée", "Baisse du pH sanguin"],
+          ["Hyperkaliémie", "Acidose → antiport K+/H+ (sortie de K+ vers le plasma)"],
+          ["Hyperglycémie", "↓ pénétration cellulaire du glucose + ↑ néoglucogenèse / glycogénolyse"],
+          ["Glycosurie, cétonurie", "Polyurie osmotique → déshydratation"],
+          ["Déshydratation globale", "Pertes rénales et pulmonaires"]
+        ] },
+      { titre: "Objectifs et suivi",
+        entetes: ["Domaine", "Cible / rythme"],
+        lignes: [
+          ["HbA1c", "< 7,5 % ; dosage 4 fois/an"],
+          ["Pression artérielle", "< 130/80 mmHg"],
+          ["Lipides", "HDL > 0,4 g/L, LDL < cible, TG < 1,5 g/L"],
+          ["IMC", "< 25 (< 95e percentile chez l'enfant)"],
+          ["Bilan annuel", "Glycémie, lipides, créatinine/clairance, microalbuminurie, TSH, auto-Ac selon clinique"]
+        ] }
+    ],
+    red_flags: ["Acidocétose diabétique : hyperglycémie + cétose + acidose, déshydratation, hyperventilation (Kussmaul), odeur acétonique → URGENCE", "Hyperkaliémie (acidose) ou kaliémie « normale » masquant une déplétion potassique globale", "Déshydratation sévère, troubles de conscience", "Syndrome cardinal de l'enfant/jeune (polyurie, polydipsie, amaigrissement) → ne pas retarder la prise en charge"],
+    conduite: ["Affirmer le diabète (glycémie > 1,26 g/L × 2) ; rechercher la cétose (urgence si acidocétose).", "Confirmer le type 1 si doute : auto-anticorps (anti-GAD…) ; rechercher les maladies auto-immunes associées (TSH, anti-transglutaminase).", "Éducation thérapeutique +++, insulinothérapie adaptée au mode de vie (schéma basal-bolus), auto-surveillance glycémique.", "Prévention CV (lipides, TA, tabac, poids), vaccinations (grippe, pneumocoque), dépistage des complications (ophtalmo, rénal, neuro, cardio, dentaire)."]
   }
 ];
 
