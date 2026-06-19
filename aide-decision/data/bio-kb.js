@@ -1749,5 +1749,32 @@ window.BIOKB = [
     ],
     red_flags: ["BNP / NT-proBNP très élevés avec dyspnée → insuffisance cardiaque aiguë (OAP) probable, prise en charge urgente", "Interpréter selon l'âge et la fonction rénale (NT-proBNP surestimé en insuffisance rénale)", "Un taux bas a une bonne valeur prédictive négative pour éliminer une origine cardiaque à la dyspnée", "Élévation possible dans d'autres causes d'augmentation des pressions (embolie pulmonaire, HTAP…)"],
     conduite: ["Utiliser le BNP / NT-proBNP pour trancher l'origine d'une dyspnée (cardiaque vs pulmonaire).", "Interpréter le NT-proBNP en tenant compte de la fonction rénale (clairance rénale, demi-vie longue).", "Suivre l'efficacité thérapeutique de l'insuffisance cardiaque par la cinétique du marqueur.", "Confronter à l'échographie cardiaque et au contexte clinique."]
+  },
+  {
+    id: "hydratation_intracellulaire", num: 102, anomalie: "Troubles de l'hydratation intracellulaire (osmolalité efficace)",
+    specialite: "Néphrologie",
+    definition: "L'état d'hydratation intracellulaire est déterminé par l'osmolalité efficace (tonicité) du plasma : osmolalité efficace = Na+ × 2 + glucose. L'eau diffuse vers le compartiment le plus concentré jusqu'à l'iso-osmolalité. L'urée (diffusible) n'entre pas dans le calcul (sauf élévation brutale de l'azotémie).",
+    premiere_intention: ["Calculer l'osmolalité efficace (tonicité) : Na+ × 2 + glucose", "Hyperhydratation intracellulaire : hyponatrémie et/ou hypoglycémie (osmolalité efficace ↓ → eau vers l'intracellulaire)", "Déshydratation intracellulaire : hypernatrémie et/ou hyperglycémie (osmolalité efficace ↑ → eau vers l'extracellulaire)", "Ne pas inclure l'urée (diffusible), sauf élévation brutale de l'azotémie"],
+    causes: [
+      { cause: "Hyperhydratation intracellulaire", signe: "hyponatrémie et/ou hypoglycémie → osmolalité efficace basse, eau vers l'intracellulaire", examens: ["Natrémie, glycémie", "Osmolalité"] },
+      { cause: "Déshydratation intracellulaire", signe: "hypernatrémie et/ou hyperglycémie → osmolalité efficace haute, eau vers l'extracellulaire", examens: ["Natrémie, glycémie"] },
+      { cause: "Hyponatrémie hypertonique (piège)", signe: "hyperglycémie sévère : hyponatrémie mais osmolalité efficace élevée (pas d'hyperhydratation intracellulaire)", examens: ["Glycémie", "Osmolalité calculée"] }
+    ],
+    tableaux: [
+      { titre: "Osmolalité efficace et hydratation intracellulaire",
+        entetes: ["Situation", "Osmolalité efficace", "Mouvement de l'eau", "État cellulaire"],
+        lignes: [
+          ["Hyponatrémie / hypoglycémie", "Diminuée", "Vers l'intracellulaire", "Hyperhydratation intracellulaire"],
+          ["Hypernatrémie / hyperglycémie", "Augmentée", "Vers l'extracellulaire", "Déshydratation intracellulaire"]
+        ] },
+      { titre: "Pièges d'interprétation",
+        entetes: ["Règle", "Explication"],
+        lignes: [
+          ["Hypernatrémie = toujours hypertonique", "Le glucose ne peut pas baisser pour compenser l'hyperosmolalité"],
+          ["Hyponatrémie ≠ toujours hyperhydratation IC", "Peut être hypertonique en cas d'hyperglycémie sévère"]
+        ] }
+    ],
+    red_flags: ["Hyponatrémie aiguë sévère / symptomatique (œdème cérébral) → urgence", "Hypernatrémie sévère (déshydratation intracellulaire, troubles neurologiques)", "Correction trop rapide d'une dysnatrémie (risque de myélinolyse centro-pontine si hyponatrémie corrigée trop vite)", "Hyperglycémie majeure avec hyponatrémie (corriger la natrémie selon la glycémie)"],
+    conduite: ["Raisonner sur la tonicité (Na+ × 2 + glucose), pas sur la seule natrémie.", "Hyponatrémie : vérifier la glycémie (hyponatrémie hypertonique possible) avant de conclure à une hyperhydratation intracellulaire.", "Corriger prudemment les dysnatrémies (vitesse de correction), surtout si chroniques.", "Confronter à l'état d'hydratation extracellulaire (volémie) pour la prise en charge."]
   }
 ];
