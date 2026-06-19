@@ -585,5 +585,44 @@ window.BIOKB = [
     ],
     red_flags: ["Syndrome d'hyperviscosité symptomatique (troubles neuro/visuels, hémorragies) → urgence (plasmaphérèse)", "Anémie sévère ou cytopénies profondes", "Neuropathie périphérique, cryoglobulinémie symptomatique"],
     conduite: ["Diagnostic : IgM monoclonale + infiltration médullaire lymphoplasmocytaire (> 20 %).", "Distinguer du myélome (IgG/IgA, plasmocytes, lésions osseuses) : Waldenström = IgM, lymphoplasmocyte, hyperviscosité.", "Formes asymptomatiques : surveillance ; traiter si symptômes (hyperviscosité, cytopénies, AEG).", "Hyperviscosité symptomatique : plasmaphérèse en urgence, puis traitement spécifique (rituximab ± chimiothérapie, inhibiteurs de BTK)."]
+  },
+  {
+    id: "myelome", num: 74, anomalie: "Myélome multiple (maladie de Kahler)",
+    specialite: "Hématologie",
+    definition: "Prolifération plasmocytaire monoclonale médullaire sécrétant une immunoglobuline (le plus souvent IgG) ou des chaînes légères. Manifestations : douleurs osseuses / fractures spontanées, atteinte rénale, hypercalcémie, anémie, AEG, troubles neuro/visuels. Incidence ≈ 4/100 000/an, âge médian 65-70 ans.",
+    premiere_intention: ["Électrophorèse + immunofixation des protéines sériques : pic monoclonal + baisse des Ig polyclonales", "Dosage des chaînes légères libres sériques ; protéinurie de Bence Jones (chaînes légères urinaires)", "Retentissement : calcémie, créatinine (DFG), NFS (anémie ± thrombopénie), frottis en rouleaux", "Myélogramme : plasmocytose > 10 % (morphologie ± atypique), complété par BOM ; immunophénotypage CD138+ / CD38+ / CD56+ / CD19−"],
+    causes: [
+      { cause: "Atteinte osseuse", signe: "douleurs osseuses, fractures spontanées, lésions lytiques, hypercalcémie", examens: ["TDM faible dose / IRM / TEP corps entier", "Calcémie"] },
+      { cause: "Atteinte rénale", signe: "insuffisance rénale (tubulopathie à chaînes légères, hypercalcémie)", examens: ["Créatinine, DFG", "Protéinurie de Bence Jones"] },
+      { cause: "Atteinte hématologique", signe: "anémie ± thrombopénie (infiltration médullaire) ; frottis en rouleaux ± quelques plasmocytes", examens: ["NFS, frottis", "Myélogramme / BOM"] },
+      { cause: "Composant monoclonal", signe: "gammapathie monoclonale (IgG/IgA), baisse des Ig polyclonales", examens: ["EPP, immunofixation", "Chaînes légères libres sériques"] }
+    ],
+    tableaux: [
+      { titre: "Atteintes d'organe évocatrices (CRAB)",
+        entetes: ["Critère", "Manifestation"],
+        lignes: [
+          ["C — Calcémie", "Hypercalcémie"],
+          ["R — Rein", "Insuffisance rénale (créatinine ↑)"],
+          ["A — Anémie", "Anémie (± thrombopénie)"],
+          ["B — os (Bone)", "Lésions lytiques, douleurs, fractures"]
+        ] },
+      { titre: "Type de composant monoclonal",
+        entetes: ["Isotype", "Fréquence"],
+        lignes: [
+          ["IgG", "60-65 %"],
+          ["IgA", "20 %"],
+          ["Chaînes légères seules (κ ou λ)", "15 %"]
+        ] },
+      { titre: "Facteurs pronostiques",
+        entetes: ["Domaine", "Marqueurs"],
+        lignes: [
+          ["Biologie", "β2-microglobuline, albumine (ISS), LDH, CRP"],
+          ["Cytogénétique", "t(4;14), délétion 17p, délétion 13"],
+          ["Tumeur", "Importance du pic d'Ig et de la protéinurie de Bence Jones, morphologie plasmocytaire, indice cinétique"],
+          ["Classification", "Durie et Salmon ; ISS / R-ISS"]
+        ] }
+    ],
+    red_flags: ["Hypercalcémie symptomatique (confusion, déshydratation) → urgence", "Insuffisance rénale aiguë (tubulopathie à chaînes légères, hypercalcémie)", "Compression médullaire (douleur rachidienne + déficit neurologique) → urgence", "Anémie sévère, infections récidivantes (immunodépression)"],
+    conduite: ["Diagnostic : plasmocytose médullaire monoclonale + composant monoclonal + atteinte d'organe (CRAB).", "Distinguer du MGUS (asymptomatique, pic faible, plasmocytose < 10 %) et de Waldenström (IgM).", "Bilan d'extension osseuse (TDM faible dose / IRM / TEP) ; pronostic par ISS/R-ISS et cytogénétique.", "Prise en charge spécialisée ; traiter l'hypercalcémie et la douleur, prévenir les complications osseuses (biphosphonates) et rénales."]
   }
 ];
