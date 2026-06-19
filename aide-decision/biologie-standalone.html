@@ -2959,6 +2959,54 @@ window.BIOKB = [
     ],
     red_flags: ["Rétinite à CMV chez le sujet VIH (CD4 < 50) → risque de cécité, urgence", "CMV chez le transplanté : infection opportuniste grave (pneumopathie, atteinte multi-organe)", "CMV congénital : surdité, retard psychomoteur → dépistage et suivi", "Primo-infection à CMV chez la femme enceinte (risque fœtal)"],
     conduite: ["Immunocompétent : syndrome mononucléosique à MNI-test négatif → évoquer le CMV (sérologie IgM).", "Immunodéprimé : antigénémie pp65 / PCR pour le diagnostic et le suivi ; traitement antiviral (ganciclovir…).", "Grossesse : risque de transmission materno-fœtale ; avis spécialisé en cas de primo-infection.", "Auto-anticorps transitoires possibles : ne pas conclure à tort à une maladie auto-immune."]
+  },
+  {
+    id: "hsv", num: 126, anomalie: "Herpès simplex virus (HSV)",
+    specialite: "Infectiologie",
+    definition: "HSV-1 (séroprévalence ~90 %, latence dans le ganglion trijumeau) et HSV-2 (15-20 %, latence dans les ganglions sacrés). Transmission par contact cutanéo-muqueux. Latence à vie avec récurrences. L'encéphalite herpétique est une urgence.",
+    premiere_intention: ["Diagnostic souvent clinique (vésicules groupées en bouquet) ; PCR HSV si besoin (surtout LCR)", "Encéphalite herpétique : PCR HSV dans le LCR (urgence) ; LCR : lymphocytose < 500/mm³, protéinorachie ↑ (< 1 g/L), glycorachie normale", "Sérologie : différencie HSV-1/HSV-2 mais PAS de marqueur de primo-infection (IgM aussi en récurrence)", "Herpès génital / néonatal : PCR, contexte"],
+    causes: [
+      { cause: "Gingivostomatite aiguë", signe: "primo-infection de l'enfant : fièvre, adénopathie, ulcérations buccales (HSV-1)", examens: ["Clinique, PCR si doute"] },
+      { cause: "Encéphalite herpétique", signe: "encéphalite aiguë nécrosante (enfant/jeune adulte) : fièvre, céphalée, troubles du caractère/mémoire ; LCR lymphocytaire", examens: ["PCR HSV dans le LCR (URGENCE)", "IRM cérébrale"] },
+      { cause: "Herpès génital", signe: "surtout HSV-2 : vésicules puis ulcérations (gland/pénis ; vulve/vagin/col) ± fièvre, ADP, dysurie ; lésions anales", examens: ["PCR, clinique"] },
+      { cause: "Manifestations ophtalmologiques", signe: "conjonctivite, kératite, ulcérations cornéennes", examens: ["Avis ophtalmologique"] },
+      { cause: "Herpès néonatal", signe: "1-5/10 000 grossesses ; risque maximal si primo-infection maternelle", examens: ["PCR, avis spécialisé"] }
+    ],
+    tableaux: [
+      { titre: "HSV-1 vs HSV-2",
+        entetes: ["", "HSV-1", "HSV-2"],
+        lignes: [
+          ["Séroprévalence (adulte)", "~90 %", "15-20 %"],
+          ["Localisation préférentielle", "Orofaciale (gingivostomatite, kératite, encéphalite)", "Génitale"],
+          ["Latence", "Ganglion trijumeau", "Ganglions sacrés"]
+        ] },
+      { titre: "Manifestations cliniques",
+        entetes: ["Forme", "Caractéristiques"],
+        lignes: [
+          ["Gingivostomatite aiguë", "Primo-infection de l'enfant : fièvre, ADP, ulcérations buccales"],
+          ["Ophtalmologique", "Conjonctivite, kératite, ulcérations (risque de cécité)"],
+          ["Encéphalite herpétique", "Aiguë nécrosante : fièvre, céphalée, troubles du caractère/mémoire — URGENCE"],
+          ["Génitale", "Vésicules puis ulcérations (HSV-2 ++) ± fièvre, ADP, dysurie ; lésions anales"],
+          ["Néonatale", "1-5/10 000 ; risque maximal si primo-infection maternelle"]
+        ] },
+      { titre: "LCR de l'encéphalite herpétique",
+        entetes: ["Paramètre", "Valeur"],
+        lignes: [
+          ["Cellules", "Lymphocytose < 500/mm³"],
+          ["Protéinorachie", "Augmentée (souvent < 1 g/L)"],
+          ["Glycorachie", "Normale"],
+          ["PCR HSV", "Positive (examen clé, en urgence)"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Méthode", "Intérêt"],
+        lignes: [
+          ["PCR (ADN viral)", "Examen de référence, surtout dans le LCR (encéphalite)"],
+          ["Sérologie (HSV-1/HSV-2)", "Différencie les types ; PAS de marqueur de primo-infection (IgM aussi en récurrence)"],
+          ["Culture / antigènes viraux", "Laboratoires spécialisés (cellules HeLa)"]
+        ] }
+    ],
+    red_flags: ["Encéphalite herpétique : fièvre + signes neurologiques → PCR LCR + aciclovir IV EN URGENCE (ne pas attendre la confirmation)", "Kératite herpétique : risque de cécité → avis ophtalmologique (CONTRE-INDICATION des corticoïdes locaux)", "Herpès néonatal (primo-infection maternelle en fin de grossesse) → césarienne / aciclovir", "Herpès étendu ou chronique chez l'immunodéprimé"],
+    conduite: ["Diagnostic souvent clinique (vésicules en bouquet) ; PCR pour confirmer (LCR pour l'encéphalite).", "Toute suspicion d'encéphalite herpétique = aciclovir IV en urgence (avant la confirmation).", "Sérologie : utile pour le typage HSV-1/2, pas pour dater l'infection.", "Herpès génital / grossesse : avis spécialisé ; prévention de la transmission néonatale."]
   }
 ];
 
