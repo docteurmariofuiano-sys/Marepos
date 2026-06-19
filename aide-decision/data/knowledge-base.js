@@ -3356,7 +3356,9 @@ window.KB = {
       { id: "ic_aeg", label: "AEG / amaigrissement", type: "boolean", question: "Avez-vous maigri ou une altération de l'état général ?" },
       { id: "ic_alcool", label: "Alcool / hépatite", type: "boolean", question: "Avez-vous une consommation d'alcool importante ou une hépatite connue ?" },
       { id: "ic_medic", label: "Hépatotoxique", type: "boolean", question: "Avez-vous pris un médicament hépatotoxique (paracétamol en excès) récemment ?" },
-      { id: "ic_prurit", label: "Prurit", type: "boolean", question: "Avez-vous des démangeaisons ?" }
+      { id: "ic_prurit", label: "Prurit", type: "boolean", question: "Avez-vous des démangeaisons ?" },
+      { id: "ic_jeune", label: "Profil Gilbert", type: "boolean", question: "L'ictère est-il léger (surtout les yeux), apparu lors d'un jeûne ou d'une infection banale, avec des urines CLAIRES et aucun autre signe ?" },
+      { id: "ic_anemie", label: "Hémolyse", type: "boolean", question: "Avez-vous une pâleur, une fatigue intense ou un essoufflement (anémie) ?" }
     ],
     red_flags: [
       { id: "ic_rf_angiocholite", niveau: 3, when: { q: "ic_douleur", eq: true },
@@ -3372,9 +3374,13 @@ window.KB = {
       { id: "ic_hepatite", diagnostic: "Hépatite (virale, alcoolique, médicamenteuse)", arguments: [{ label: "alcool / hépatite connue", w: 2, when: { q: "ic_alcool", eq: true } }, { label: "médicament hépatotoxique", w: 2, when: { q: "ic_medic", eq: true } }],
         examens_a_discuter: ["Transaminases, TP/facteur V", "Sérologies virales, paracétamolémie"] },
       { id: "ic_cancer", diagnostic: "Cancer (pancréas, voies biliaires)", arguments: [{ label: "AEG / amaigrissement", w: 2, when: { q: "ic_aeg", eq: true } }, { label: "ictère + urines foncées", w: 1, when: { q: "ic_urines", eq: true } }],
-        examens_a_discuter: ["Imagerie (échographie / TDM)", "Avis spécialisé"] }
+        examens_a_discuter: ["Imagerie (échographie / TDM)", "Avis spécialisé"] },
+      { id: "ic_gilbert", diagnostic: "Syndrome de Gilbert (bilirubine non conjuguée, bénin)", arguments: [{ label: "ictère isolé déclenché par le jeûne/une infection, urines claires", w: 3, when: { q: "ic_jeune", eq: true } }],
+        examens_a_discuter: ["Bilirubine non conjuguée modérément ↑ (< 80 µmol/L), fluctuante", "Tests hépatiques normaux, pas d'hémolyse (NFS, réticulocytes, haptoglobine normaux)", "Touche > 5 % de la population — aucun traitement, simple réassurance ; test génétique inutile sauf avant irinotécan"] },
+      { id: "ic_hemolyse", diagnostic: "Ictère hémolytique (bilirubine non conjuguée)", arguments: [{ label: "signes d'anémie", w: 2, when: { q: "ic_anemie", eq: true } }, { label: "urines claires (pas de cholestase)", w: 1, when: { q: "ic_urines", eq: false } }],
+        examens_a_discuter: ["NFS-réticulocytes, haptoglobine, LDH, bilirubine non conjuguée", "Test de Coombs, frottis sanguin"] }
     ],
-    examens_clinique: ["Examen de la peau et des conjonctives", "Palpation hépatique + recherche d'une grosse vésicule", "Recherche d'ascite et de signes d'encéphalopathie", "Bilan hépatique"]
+    examens_clinique: ["Examen de la peau et des conjonctives", "Palpation hépatique + recherche d'une grosse vésicule", "Recherche d'ascite et de signes d'encéphalopathie", "Bilan hépatique : d'abord distinguer bilirubine NON conjuguée (Gilbert, hémolyse) vs CONJUGUÉE (cholestase, hépatite)", "Si cholestase (bili conjuguée + PAL/GGT ↑) : échographie des voies biliaires pour dilatation"]
   },
 
   // -------------------------------------------------------------------------
@@ -3518,24 +3524,39 @@ window.KB = {
       { id: "my_anneau", label: "Dermatophytie", type: "boolean", question: "Est-ce une plaque ronde qui s'étend en anneau, avec une bordure active ?" },
       { id: "my_ongle", label: "Onychomycose", type: "boolean", question: "Un ongle est-il épaissi, jauni, décollé ?" },
       { id: "my_muqueuse", label: "Candidose", type: "boolean", question: "Y a-t-il une atteinte de la bouche (enduit blanc) ou génitale ?" },
+      { id: "my_teigne", label: "Teigne", type: "boolean", question: "S'agit-il d'un enfant avec une ou plusieurs plaques du cuir chevelu, squameuses, avec chute des cheveux ?" },
+      { id: "my_versicolor", label: "Pityriasis versicolor", type: "boolean", question: "Y a-t-il des petites taches du tronc/dos, plus claires ou plus foncées, fines squames, surtout après le soleil ?" },
+      { id: "my_corticoide", label: "Corticoïde local", type: "boolean", question: "Avez-vous appliqué une crème à la cortisone sur la lésion (avec aggravation/extension) ?" },
       { id: "my_diabete", label: "Terrain favorisant", type: "boolean", question: "Êtes-vous diabétique, immunodéprimé, ou sous antibiotiques/corticoïdes ?" }
     ],
     red_flags: [
       { id: "my_rf_immuno", niveau: 2, when: { q: "my_muqueuse", eq: true },
         message_medecin: "Candidose buccale / récidivante : rechercher un facteur favorisant (diabète, immunodépression, VIH, corticoïdes inhalés).",
-        message_patient: "Une mycose de la bouche peut nécessiter de rechercher une cause favorisante." }
+        message_patient: "Une mycose de la bouche peut nécessiter de rechercher une cause favorisante." },
+      { id: "my_rf_teigne", niveau: 2, when: { q: "my_teigne", eq: true },
+        message_medecin: "Teigne du cuir chevelu (enfant +++) : prélèvement mycologique AVANT traitement, traitement antifongique SYSTÉMIQUE obligatoire (un traitement local seul est insuffisant), éviction scolaire jusqu'à preuve de prise en charge, dépistage de l'entourage (familial/collectivité) et de l'animal.",
+        message_patient: "Une mycose du cuir chevelu de l'enfant nécessite une consultation : le traitement passe par voie orale et un contrôle de l'entourage." },
+      { id: "my_rf_pied_diab", niveau: 2, when: { all: [{ q: "my_intertrigo", eq: true }, { q: "my_diabete", eq: true }] },
+        message_medecin: "Intertrigo inter-orteils chez un diabétique/immunodéprimé : porte d'entrée d'érysipèle/dermohypodermite — traiter la mycose et surveiller les signes d'infection bactérienne.",
+        message_patient: "Chez une personne diabétique, une mycose entre les orteils doit être soignée car elle peut favoriser une infection de la peau." }
     ],
     diagnostics_differentiels: [
-      { id: "my_intertrigo", diagnostic: "Intertrigo (dermatophyte / candida)", arguments: [{ label: "atteinte d'un pli", w: 3, when: { q: "my_intertrigo", eq: true } }],
-        examens_a_discuter: ["Prélèvement mycologique si doute", "Antifongique local"] },
+      { id: "my_dd_intertrigo", diagnostic: "Intertrigo (dermatophyte / candida)", arguments: [{ label: "atteinte d'un pli", w: 3, when: { q: "my_intertrigo", eq: true } }],
+        examens_a_discuter: ["Prélèvement mycologique si doute", "Antifongique local", "Assécher les plis (dermatophyte : grands plis/inter-orteils ; candida : fond du pli, pustules satellites)"] },
       { id: "my_dermatophytie", diagnostic: "Dermatophytie (herpès circiné)", arguments: [{ label: "plaque annulaire à bordure active", w: 3, when: { q: "my_anneau", eq: true } }],
-        examens_a_discuter: ["Antifongique local"] },
+        examens_a_discuter: ["Antifongique local", "Prélèvement mycologique si lésions multiples / résistance"] },
+      { id: "my_teigne_dd", diagnostic: "Teigne (Tinea capitis / barbae)", arguments: [{ label: "plaque alopécique squameuse du cuir chevelu (enfant)", w: 3, when: { q: "my_teigne", eq: true } }],
+        examens_a_discuter: ["Prélèvement mycologique AVANT traitement", "Examen en lumière de Wood (fluorescence des teignes microsporiques)", "Antifongique systémique (griséofulvine/terbinafine) + local adjuvant", "Éviction et dépistage de l'entourage / de l'animal"] },
       { id: "my_onychomycose", diagnostic: "Onychomycose", arguments: [{ label: "ongle épaissi / décollé", w: 3, when: { q: "my_ongle", eq: true } }],
         examens_a_discuter: ["Prélèvement mycologique AVANT traitement (long)"] },
+      { id: "my_versicolor_dd", diagnostic: "Pityriasis versicolor (Malassezia)", arguments: [{ label: "macules dyschromiques du tronc, fines squames", w: 3, when: { q: "my_versicolor", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique (signe du copeau)", "Antifongique local (kétoconazole) ; récidives fréquentes ; la dépigmentation persiste après guérison"] },
       { id: "my_candidose", diagnostic: "Candidose", arguments: [{ label: "atteinte muqueuse", w: 3, when: { q: "my_muqueuse", eq: true } }, { label: "terrain favorisant", w: 1, when: { q: "my_diabete", eq: true } }],
-        examens_a_discuter: ["Antifongique", "Recherche d'un facteur favorisant"] }
+        examens_a_discuter: ["Antifongique", "Recherche d'un facteur favorisant"] },
+      { id: "my_incognito", diagnostic: "Dermatophytie modifiée par les corticoïdes (tinea incognito)", arguments: [{ label: "lésion aggravée/atypique après dermocorticoïde", w: 2, when: { q: "my_corticoide", eq: true } }],
+        examens_a_discuter: ["Arrêt du dermocorticoïde", "Prélèvement mycologique (aspect trompeur)", "Antifongique adapté"] }
     ],
-    examens_clinique: ["Examen des plis, des ongles, des muqueuses", "Prélèvement mycologique si doute ou avant traitement systémique", "Recherche d'un terrain favorisant"]
+    examens_clinique: ["Examen des plis, des ongles, des muqueuses et du cuir chevelu", "Prélèvement mycologique si doute, lésion résistante, ou avant tout traitement systémique (ongle, cuir chevelu)", "Examen en lumière de Wood si suspicion de teigne", "Recherche d'un terrain favorisant (diabète, immunodépression, macération, antibiotiques/corticoïdes)"]
   },
 
   // -------------------------------------------------------------------------
