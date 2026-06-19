@@ -3850,11 +3850,16 @@ window.KB = {
       { id: "im_croutes", label: "Croûtes mélicériques / bulles", type: "boolean", question: "Avez-vous des croûtes jaunâtres couleur miel ou des bulles, souvent autour du nez/de la bouche ?" },
       { id: "im_fievre", label: "Fièvre / extension", type: "boolean", question: "Avez-vous de la fièvre ou une extension rapide des lésions ?" },
       { id: "im_etendu", label: "Lésions étendues", type: "boolean", question: "Les lésions sont-elles nombreuses ou étendues ?" },
-      { id: "im_glomerulo", label: "Glomérulonéphrite post-strepto", type: "boolean", question: "Avez-vous, après l'infection, des urines foncées/mousseuses ou des œdèmes ?" }
+      { id: "im_glomerulo", label: "Glomérulonéphrite post-strepto", type: "boolean", question: "Avez-vous, après l'infection, des urines foncées/mousseuses ou des œdèmes ?" },
+      { id: "im_ssss", label: "Décollement cutané (nourrisson)", type: "boolean", question: "S'agit-il d'un nourrisson/jeune enfant avec fièvre, peau rouge douloureuse et décollement en lambeaux (comme une brûlure) ?" },
+      { id: "im_sousjacent", label: "Dermatose sous-jacente", type: "boolean", question: "Les lésions surviennent-elles sur un eczéma, une gale, ou des lésions de grattage préexistantes ?" }
     ],
     red_flags: [
+      { id: "im_rf_ssss", niveau: 3, when: { q: "im_ssss", eq: true },
+        message_medecin: "Décollement cutané étendu fébrile du jeune enfant : épidermolyse staphylococcique aiguë (SSSS / syndrome de Ritter) → hospitalisation, antibiothérapie antistaphylococcique IV, prise en charge type brûlé.",
+        message_patient: "Une peau qui se décolle avec de la fièvre chez un enfant est une urgence — consultez sans attendre." },
       { id: "im_rf_extensif", niveau: 2, when: { any: [{ q: "im_fievre", eq: true }, { q: "im_etendu", eq: true }] },
-        message_medecin: "Impétigo étendu / fébrile : antibiothérapie générale, éviction.",
+        message_medecin: "Impétigo étendu / fébrile : antibiothérapie générale (antistaphylococcique/antistreptococcique), éviction.",
         message_patient: "Une forme étendue nécessite un avis médical." },
       { id: "im_rf_gn", niveau: 2, when: { q: "im_glomerulo", eq: true },
         message_medecin: "Signes de glomérulonéphrite post-streptococcique : avis (protéinurie, créatinine, TA).",
@@ -3862,9 +3867,11 @@ window.KB = {
     ],
     diagnostics_differentiels: [
       { id: "im_impetigo", diagnostic: "Impétigo", arguments: [{ label: "croûtes mélicériques / bulles", w: 3, when: { q: "im_croutes", eq: true } }],
-        examens_a_discuter: ["Antibiothérapie locale (ou générale si étendu)", "Éviction scolaire, hygiène"] }
+        examens_a_discuter: ["Forme peu étendue : antibiothérapie locale (mupirocine) + hygiène ; forme étendue/multiple : antibiothérapie générale", "Éviction scolaire jusqu'à guérison (ou 72 h après le début du traitement) ; mesures d'hygiène, lavage, ongles courts"] },
+      { id: "im_impetiginisation", diagnostic: "Impétiginisation d'une dermatose sous-jacente", arguments: [{ label: "sur eczéma, gale, lésions de grattage", w: 3, when: { q: "im_sousjacent", eq: true } }],
+        examens_a_discuter: ["Traiter l'impétigo ET la dermatose causale (eczéma, gale, pédiculose) sinon récidive", "Rechercher et traiter l'entourage (gale, portage)"] }
     ],
-    examens_clinique: ["Morphologie (croûtes mélicériques, bulles)", "Étendue des lésions", "Recherche d'une porte d'entrée", "Bandelette urinaire si suspicion de GN"]
+    examens_clinique: ["Morphologie (croûtes mélicériques, bulles ; décollement = forme bulleuse/SSSS)", "Étendue des lésions", "Recherche d'une porte d'entrée et d'une dermatose sous-jacente (eczéma, gale)", "Bandelette urinaire si suspicion de GN post-streptococcique"]
   },
 
   // -------------------------------------------------------------------------
@@ -3876,22 +3883,29 @@ window.KB = {
       { id: "ac2_comedons", label: "Acné commune", type: "boolean", question: "Avez-vous des points noirs/blancs (comédons) et des boutons du visage ou du dos ?" },
       { id: "ac2_nodules", label: "Forme sévère", type: "boolean", question: "Avez-vous des nodules profonds, douloureux, laissant des cicatrices ?" },
       { id: "ac2_sopk", label: "Hyperandrogénie", type: "boolean", question: "Avez-vous des règles irrégulières et une pilosité excessive ?" },
-      { id: "ac2_medic", label: "Iatrogène", type: "boolean", question: "Prenez-vous des médicaments (corticoïdes, androgènes, certains) ?" }
+      { id: "ac2_medic", label: "Iatrogène", type: "boolean", question: "Prenez-vous des médicaments (corticoïdes, androgènes, certains) ?" },
+      { id: "ac2_fulminans", label: "Acné fulminans", type: "boolean", question: "L'aggravation est-elle brutale, très inflammatoire/ulcérée, avec fièvre, douleurs articulaires ou malaise général ?" },
+      { id: "ac2_rosacee", label: "Profil rosacée", type: "boolean", question: "Êtes-vous un adulte avec des rougeurs du visage, des bouffées vasomotrices (flush) et des petits vaisseaux, MAIS sans points noirs (comédons) ?" }
     ],
     red_flags: [
+      { id: "ac2_rf_fulminans", niveau: 2, when: { q: "ac2_fulminans", eq: true },
+        message_medecin: "Acné fulminans (début brutal, lésions ulcéro-nécrotiques, fièvre, arthralgies, AEG) : forme rare et grave → avis dermatologique urgent (corticothérapie, prudence avec l'isotrétinoïne).",
+        message_patient: "Une acné brutale avec fièvre et douleurs nécessite un avis médical rapide." },
       { id: "ac2_rf_severe", niveau: 2, when: { q: "ac2_nodules", eq: true },
-        message_medecin: "Acné nodulaire / conglobata sévère : risque cicatriciel → avis dermatologique (isotrétinoïne).",
+        message_medecin: "Acné nodulaire / conglobata sévère : risque cicatriciel → avis dermatologique (isotrétinoïne). Sous isotrétinoïne : contraception efficace obligatoire (tératogène, programme de prévention de la grossesse), surveillance hépatique/lipidique, vigilance sur l'humeur.",
         message_patient: "Une acné sévère mérite un avis dermatologique pour éviter les cicatrices." }
     ],
     diagnostics_differentiels: [
       { id: "ac2_commune", diagnostic: "Acné commune", arguments: [{ label: "comédons + lésions inflammatoires", w: 3, when: { q: "ac2_comedons", eq: true } }],
-        examens_a_discuter: ["Traitements topiques (rétinoïdes, peroxyde de benzoyle)"] },
-      { id: "ac2_severe", diagnostic: "Acné sévère (nodulaire)", arguments: [{ label: "nodules / cicatrices", w: 3, when: { q: "ac2_nodules", eq: true } }],
-        examens_a_discuter: ["Avis dermatologique (isotrétinoïne)"] },
+        examens_a_discuter: ["Traitements topiques (rétinoïdes, peroxyde de benzoyle) ± antibiotique ; éviter l'antibiothérapie prolongée en monothérapie", "Diagnostic clinique, pas de bilan hormonal si acné isolée typique"] },
+      { id: "ac2_severe", diagnostic: "Acné sévère (nodulaire / conglobata)", arguments: [{ label: "nodules / cicatrices", w: 3, when: { q: "ac2_nodules", eq: true } }],
+        examens_a_discuter: ["Avis dermatologique (isotrétinoïne : contraception, bilan hépatique/lipidique, humeur)"] },
+      { id: "ac2_rosacee", diagnostic: "Rosacée (diagnostic différentiel chez l'adulte)", arguments: [{ label: "érythème/flush/télangiectasies sans comédons", w: 3, when: { q: "ac2_rosacee", eq: true } }],
+        examens_a_discuter: ["Pas de comédons (≠ acné) ; éviction des facteurs déclenchants (soleil, alcool, épices)", "Métronidazole/ivermectine topique, doxycycline ; avis si rosacée oculaire"] },
       { id: "ac2_hormonale", diagnostic: "Acné d'origine hormonale (SOPK)", arguments: [{ label: "signes d'hyperandrogénie", w: 3, when: { q: "ac2_sopk", eq: true } }],
         examens_a_discuter: ["Bilan hormonal", "Avis gynéco / endocrino"] }
     ],
-    examens_clinique: ["Type et sévérité des lésions", "Retentissement psychologique", "Recherche de signes d'hyperandrogénie"]
+    examens_clinique: ["Type et sévérité des lésions (comédons, papulo-pustules, nodules, cicatrices)", "Retentissement psychologique (qualité de vie)", "Recherche de signes d'hyperandrogénie ; distinguer une rosacée (adulte, pas de comédons)"]
   },
 
   // -------------------------------------------------------------------------
@@ -5545,20 +5559,30 @@ window.KB = {
       { id: "ab2_collection", label: "Collection", type: "boolean", question: "Y a-t-il une boule rouge, chaude, douloureuse, avec du pus ?" },
       { id: "ab2_fievre", label: "Fièvre / extension", type: "boolean", question: "Avez-vous de la fièvre ou une extension rapide de la rougeur ?" },
       { id: "ab2_face", label: "Localisation à risque", type: "boolean", question: "L'abcès est-il sur le visage (zone médiane / nez), ou y a-t-il des signes de gravité ?" },
-      { id: "ab2_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous diabétique ou immunodéprimé ?" }
+      { id: "ab2_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous diabétique ou immunodéprimé ?" },
+      { id: "ab2_necrose", label: "Signes de nécrose/sepsis", type: "boolean", question: "La douleur est-elle disproportionnée/intense, avec une peau violacée, des taches noires, des bulles, une zone insensible, des crépitations sous la peau, ou un malaise général ?" },
+      { id: "ab2_recidive", label: "Récidive / plis", type: "boolean", question: "Est-ce récidivant, notamment au niveau des aisselles, de l'aine ou des fesses ?" }
     ],
     red_flags: [
-      { id: "ab2_rf_grave", niveau: 2, when: { any: [{ q: "ab2_fievre", eq: true }, { q: "ab2_face", eq: true }] },
-        message_medecin: "Abcès fébrile / extensif / du visage / terrain à risque : antibiothérapie + avis (incision-drainage).",
-        message_patient: "Un abcès avec fièvre ou sur le visage nécessite un avis médical." }
+      { id: "ab2_rf_necro", niveau: 3, when: { q: "ab2_necrose", eq: true },
+        message_medecin: "Douleur disproportionnée, nécrose/bulles, crépitation, zone insensible, sepsis : suspicion de DERMOHYPODERMITE NÉCROSANTE / fasciite nécrosante → URGENCE médico-chirurgicale (réanimation, exploration et débridement, antibiothérapie large), ne pas se contenter d'un drainage.",
+        message_patient: "Ces signes nécessitent un appel au 15 immédiat." },
+      { id: "ab2_rf_face", niveau: 2, when: { q: "ab2_face", eq: true },
+        message_medecin: "Abcès/furoncle de la zone médio-faciale (nez, lèvre supérieure) : risque de thrombophlébite du sinus caverneux — ne pas manipuler/presser, antibiothérapie antistaphylococcique, avis.",
+        message_patient: "Un abcès sur le centre du visage ne doit pas être manipulé et nécessite un avis médical." },
+      { id: "ab2_rf_grave", niveau: 2, when: { any: [{ q: "ab2_fievre", eq: true }, { q: "ab2_terrain", eq: true }] },
+        message_medecin: "Abcès fébrile / extensif / terrain à risque (diabète, immunodépression) : incision-drainage + antibiothérapie, surveillance rapprochée.",
+        message_patient: "Un abcès avec fièvre ou sur terrain fragile nécessite un avis médical." }
     ],
     diagnostics_differentiels: [
-      { id: "ab2_abces", diagnostic: "Abcès cutané", arguments: [{ label: "collection fluctuante", w: 3, when: { q: "ab2_collection", eq: true } }],
-        examens_a_discuter: ["Incision-drainage", "Antibiothérapie si signes généraux / terrain à risque"] },
+      { id: "ab2_abces", diagnostic: "Abcès cutané / furoncle", arguments: [{ label: "collection fluctuante", w: 3, when: { q: "ab2_collection", eq: true } }],
+        examens_a_discuter: ["Incision-drainage = traitement de référence (l'antibiotique seul ne traite pas une collection)", "Antibiothérapie surtout si signes généraux, cellulite extensive, terrain à risque ou localisation à risque", "Furoncle de la face : ne pas manipuler"] },
+      { id: "ab2_hidradenite", diagnostic: "Hidradénite suppurée (maladie de Verneuil)", arguments: [{ label: "abcès récidivants des plis (aisselles, aine, fesses)", w: 3, when: { q: "ab2_recidive", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique (nodules/abcès/fistules récidivants des grands plis)", "Avis dermatologique (prise en charge au long cours, arrêt du tabac, antibiothérapie/anti-TNF, chirurgie)"] },
       { id: "ab2_complique", diagnostic: "Abcès compliqué", arguments: [{ label: "fièvre / extension", w: 2, when: { q: "ab2_fievre", eq: true } }, { label: "terrain à risque", w: 2, when: { q: "ab2_terrain", eq: true } }, { label: "localisation faciale", w: 1, when: { q: "ab2_face", eq: true } }],
         examens_a_discuter: ["Avis, antibiothérapie"] }
     ],
-    examens_clinique: ["Caractériser la collection (fluctuation)", "Signes locaux et généraux", "Recherche d'une porte d'entrée", "Évaluation du terrain"]
+    examens_clinique: ["Caractériser la collection (fluctuation) — un abcès collecté se draine", "Signes locaux et généraux ; rechercher des signes de nécrose (douleur disproportionnée, crépitation, bulles, hypoesthésie)", "Recherche d'une porte d'entrée ; caractère récidivant (Verneuil)", "Évaluation du terrain (diabète, immunodépression)"]
   },
 
   // -------------------------------------------------------------------------
