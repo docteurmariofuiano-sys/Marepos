@@ -2253,5 +2253,59 @@ window.BIOKB = [
     ],
     red_flags: ["Syndrome de lyse tumorale (chimiothérapie) : hyperuricémie majeure → insuffisance rénale (prévention : hydratation, rasburicase)", "Crise de goutte : diagnostic différentiel avec une arthrite septique → ponction articulaire", "Lithiase urique récidivante / colique néphrétique", "Déficit complet en HGPRT (Lesch-Nyhan) : encéphalopathie hyperuricémique"],
     conduite: ["Confirmer l'hyperuricémie ; chercher une surproduction (lyse, alimentation, enzymopathie) ou un défaut d'élimination (rénal, médicaments).", "Crise de goutte : ponction (cristaux d'urate) ; colchicine ; ne pas débuter l'allopurinol en pleine crise.", "Traitement de fond : allopurinol (inhibiteur de la xanthine oxydase) + mesures hygiéno-diététiques.", "Lithiase urique : hydratation, alcalinisation, modération des purines ; prévention des récidives."]
+  },
+  {
+    id: "hypersensibilite_type1", num: 115, anomalie: "Allergologie — hypersensibilité de type I (IgE)",
+    specialite: "Immunologie",
+    definition: "Hypersensibilité immédiate (type I), IgE-médiée. Phase de sensibilisation (1er contact : CPA → Th2 → IL-4/IL-13 → IgE fixées sur mastocytes/basophiles) puis phase de déclenchement (2e contact : pontage des IgE → dégranulation : histamine, tryptase, leucotriènes, PAF). Diagnostic = interrogatoire + tests in vivo + in vitro.",
+    premiere_intention: ["Terrain atopique : antécédents, éosinophilie (> 4 % ou 0,4 G/L), IgE totales (indications limitées), tests multiallergéniques de dépistage (Phadiatop)", "Identifier l'allergène : interrogatoire +++, tests cutanés (prick-test, IDR), IgE spécifiques (tests monospécifiques / multiallergéniques quantitatifs)", "Tests d'activation des basophiles (CD63 / CD203c) si pas de test cutané ni de RAST (médicaments, substances biologiques)", "Histamine / tryptase dans le cadre d'un choc anaphylactique"],
+    causes: [
+      { cause: "Tests du terrain atopique", signe: "éosinophilie, IgE totales, tests de dépistage (Phadiatop, Alatop)", examens: ["NFS", "IgE totales", "Test multiallergénique de dépistage"] },
+      { cause: "Tests d'identification de l'allergène", signe: "tests cutanés (prick, IDR, scratch ; lecture 15-20 min), IgE spécifiques (mono / multiallergéniques quantitatifs)", examens: ["Tests cutanés", "IgE spécifiques (CLA…)"] },
+      { cause: "Tests cellulaires / médiateurs", signe: "activation des basophiles (CD63, CD203c), libération d'histamine/LTC4, tryptase", examens: ["Cytométrie de flux (CD63/CD203c)", "Tryptase, histamine"] }
+    ],
+    tableaux: [
+      { titre: "Mécanisme (hypersensibilité de type I)",
+        entetes: ["Phase", "Mécanisme"],
+        lignes: [
+          ["Sensibilisation (1er contact)", "CPA → Th2 (IL-4, IL-10, IL-13) → IgE par les LB ; IgE fixées sur mastocytes/basophiles (FcεRI haute affinité), macrophages/éosinophiles/LB/plaquettes (FcεRII = CD23, basse affinité)"],
+          ["Déclenchement (2e contact)", "Pontage des IgE → dégranulation (histamine, tryptase, enzymes), médiateurs lipidiques (PG, leucotriènes, PAF), cytokines (IL-4, IL-6, TNF-α)"],
+          ["Phase semi-retardée (~6 h)", "Macrophages, éosinophiles, plaquettes"]
+        ] },
+      { titre: "Médiateurs et effets",
+        entetes: ["Médiateur", "Effet"],
+        lignes: [
+          ["Histamine", "Bronchoconstriction, vasodilatation (récepteurs H1) ; sécrétions gastriques (H2)"],
+          ["Leucotriènes C4/D4, PGD2", "Contraction des muscles lisses bronchiques, mucus, œdème muqueux"],
+          ["PAF", "Activation plaquettaire (microthromboses), contraction des muscles lisses"],
+          ["LTB4", "Chimiotactisme des polynucléaires neutrophiles"],
+          ["Enzymes protéolytiques", "Production de C3 et de kinines → vasodilatation, chimio-attraction"]
+        ] },
+      { titre: "Diagnostic biologique (in vivo / in vitro)",
+        entetes: ["Objectif", "In vivo", "In vitro"],
+        lignes: [
+          ["Terrain atopique", "ATCD (dermatite, rhinite, asthme…)", "Éosinophilie (NFS), IgE totales, tests de dépistage"],
+          ["Identifier l'allergène", "Tests cutanés (prick, IDR), provocation, éviction-réintroduction", "Tests par famille, monospécifiques, multiallergéniques quantitatifs (IgE spécifiques)"],
+          ["Cellules / médiateurs", "—", "Activation des basophiles (CD63/CD203c), histamine/LTC4, tryptase"]
+        ] },
+      { titre: "Tests d'IgE spécifiques",
+        entetes: ["Test", "Intérêt / limite"],
+        lignes: [
+          ["Dépistage (Phadiatop, Alatop)", "Qualitatif ; faible sensibilité avant 4 ans"],
+          ["Monospécifiques", "Précisent la spécificité des IgE (antigènes recombinants : latex, arachide…)"],
+          ["Multiallergéniques quantitatifs (CLA)", "Bons pour pneumallergènes, contestables pour trophallergènes ; allergénicité croisée pollens/aliments"]
+        ] },
+      { titre: "Épidémiologie et allergènes",
+        entetes: ["Aspect", "Données"],
+        lignes: [
+          ["Prévalence", "15-30 % (pays développés) ; allergies alimentaires ~3,5 % (pic à 1-3 ans)"],
+          ["Risque génétique", "0 parent allergique ≈ 15 %, 1 ≈ 30 %, 2 ≈ 60 %"],
+          ["Pneumallergènes saisonniers", "Graminées (été-automne), arbres (bouleau…), herbacées (ambroisie)"],
+          ["Pneumallergènes per-annuels", "Acariens (Dermatophagoides), chat, moisissures (Aspergillus, Cladosporium)"],
+          ["Trophallergènes fréquents", "Enfant : œuf, arachide, lait ; adulte : rosacées, latex, fruits à coque"]
+        ] }
+    ],
+    red_flags: ["Choc anaphylactique → urgence (adrénaline) ; doser tryptase / histamine a posteriori", "Œdème de Quincke avec atteinte laryngée", "Une IgE spécifique positive = SENSIBILISATION, pas forcément allergie clinique (confronter à la clinique)", "Désensibilisation uniquement avec des dérivés monoallergéniques, sous supervision"],
+    conduite: ["Le diagnostic repose sur la SOMME interrogatoire + tests in vivo + in vitro ; aucun test isolé ne suffit.", "Une sensibilisation biologique (IgE+) ne signifie pas une allergie clinique.", "Allergènes : pneumallergènes (inhalés), trophallergènes (ingérés), transcutanés, médicamenteux, professionnels, venins.", "Traitement : éviction, médicaments symptomatiques, désensibilisation monoallergénique (bascule IgE → IgG4, rééquilibrage Th1/Th2)."]
   }
 ];
