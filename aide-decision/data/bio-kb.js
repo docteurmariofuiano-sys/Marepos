@@ -1590,5 +1590,45 @@ window.BIOKB = [
     ],
     red_flags: ["Hépatite fulminante : TP < 50 % / facteur V effondré + encéphalopathie → urgence, contact d'un centre de transplantation", "Encéphalopathie hépatique (astérixis, confusion, coma)", "Hypoglycémie, hémorragie, insuffisance rénale (syndrome hépato-rénal), infection (du liquide d'ascite)", "Intoxication au paracétamol → N-acétylcystéine sans délai"],
     conduite: ["Évaluer la gravité par le TP / facteur V (le facteur V n'est pas vitamine K-dépendant : reflète la synthèse hépatique).", "Arrêter l'exposition au toxique ; N-acétylcystéine (NAC) pour l'intoxication au paracétamol.", "Traiter les complications : coagulation, hypoglycémie, encéphalopathie, insuffisance rénale aiguë, infections.", "Transplantation hépatique dans les formes graves ; avis spécialisé urgent."]
+  },
+  {
+    id: "cirrhose", num: 98, anomalie: "Cirrhose (décompensée)",
+    specialite: "Hépatologie",
+    definition: "Fibrose hépatique diffuse avec nodules de régénération. Compensée (asymptomatique, peu d'hypertension portale) → décompensée (insuffisance hépatocellulaire + hypertension portale) si l'agent étiologique persiste. ~15 000 décès/an ; alcool première cause.",
+    premiere_intention: ["Insuffisance hépatocellulaire : TP, facteur V, albumine, bilirubine, enzymes hépatiques", "Hypertension portale : thrombopénie (hypersplénisme), varices œsophagiennes (endoscopie)", "Marqueurs biologiques de cirrhose (surtout alcoolique) : hypergammaglobulinémie, bloc β-γ à l'EPP, ratio IgA/transferrine > 1,9", "Classer la gravité (Child-Pugh) ; dépister le carcinome hépatocellulaire (AFP, imagerie)"],
+    causes: [
+      { cause: "Cirrhose alcoolique (50-75 %)", signe: "intoxication alcoolique chronique", examens: ["Interrogatoire, GGT / VGM, EPP"] },
+      { cause: "Hépatite virale chronique", signe: "VHC (15-25 %), VHB (5 %)", examens: ["Sérologies, charge virale"] },
+      { cause: "Autres causes", signe: "hémochromatose, cirrhose biliaire primitive, hépatite auto-immune, déficit en α1-antitrypsine", examens: ["Fer / ferritine, anticorps (AMA, auto-Ac), α1-antitrypsine"] }
+    ],
+    tableaux: [
+      { titre: "Score de Child-Pugh",
+        entetes: ["Paramètre", "1 point", "2 points", "3 points"],
+        lignes: [
+          ["Bilirubine (µmol/L)", "< 35", "35-60", "> 60"],
+          ["Albumine (g/L)", "> 35", "28-35", "< 28"],
+          ["TP (%)", "> 50", "40-50", "< 40"],
+          ["Ascite", "Absente", "Modérée", "Permanente"],
+          ["Encéphalopathie", "Absente", "Modérée", "Invalidante"]
+        ] },
+      { titre: "Stades de Child-Pugh",
+        entetes: ["Stade", "Score"],
+        lignes: [
+          ["A", "5-6"],
+          ["B", "7-9"],
+          ["C", "10-15"]
+        ] },
+      { titre: "Marqueurs biologiques",
+        entetes: ["Type", "Marqueurs"],
+        lignes: [
+          ["Insuffisance hépatocellulaire", "TP, facteur V, albumine ↓ ; bilirubine ↑"],
+          ["Hypertension portale", "Thrombopénie (hypersplénisme)"],
+          ["Cirrhose (surtout alcoolique)", "Hypergammaglobulinémie, ↑ IgA + bloc β-γ (EPP), ratio IgA/transferrine > 1,9"],
+          ["Fibrose (éviter la PBH)", "Scores : α2-macroglobuline, haptoglobine, apoA1, γGT, bilirubine, ± ALAT, acide hyaluronique"],
+          ["Carcinome hépatocellulaire", "AFP, imagerie"]
+        ] }
+    ],
+    red_flags: ["Décompensation : ictère, ascite, encéphalopathie, hémorragie digestive (rupture de varices œsophagiennes)", "Hémorragie digestive sur varices → urgence", "Infection du liquide d'ascite, syndrome hépato-rénal", "Carcinome hépatocellulaire (AFP élevée, nodule à l'imagerie)"],
+    conduite: ["Classer la gravité (Child-Pugh A/B/C) ; dépister les varices (endoscopie) et le CHC (échographie + AFP / 6 mois).", "Traitement étiologique : sevrage alcoolique, antiviraux (hépatites B/C), corticoïdes (auto-immune), saignées (hémochromatose).", "Hypertension portale : β-bloquants non sélectifs ; éviter AINS / aspirine et les hépatotoxiques.", "Transplantation hépatique dans les formes avancées."]
   }
 ];
