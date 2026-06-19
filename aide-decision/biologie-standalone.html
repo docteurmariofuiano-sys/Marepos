@@ -2355,6 +2355,46 @@ window.BIOKB = [
     ],
     red_flags: ["Ne pas poser un diagnostic de cancer sur un seul marqueur élevé (faux positifs)", "PSA : doser à distance d'un toucher rectal / d'une prostatite", "AFP élevée chez un cirrhotique / porteur du VHB → dépistage du CHC (mais faux positifs)", "Élévation d'un marqueur en cours de suivi → suspicion de progression / récidive"],
     conduite: ["Utiliser les marqueurs surtout pour le SUIVI et le pronostic, en cinétique.", "Connaître les faux positifs propres à chaque marqueur avant d'interpréter.", "Confronter systématiquement à la clinique, l'imagerie et l'histologie.", "Calcitonine = marqueur du cancer médullaire de la thyroïde ; thyroglobuline = surveillance des cancers différenciés."]
+  },
+  {
+    id: "hyperuricemie", num: 114, anomalie: "Hyperuricémie (goutte, lithiase urique)",
+    specialite: "Métabolisme",
+    definition: "Uricémie élevée (touche 5-15 % de la population). L'acide urique provient de la dégradation des bases puriques (par la xanthine oxydase) ; il est éliminé par le rein (~80 %) et l'intestin (uricolyse en allantoïne, ~20 %). Complications : goutte et lithiase urique.",
+    premiere_intention: ["Confirmer l'hyperuricémie ; distinguer surproduction et défaut d'élimination", "Facteurs : apport alimentaire (purines), médicaments (thiazidiques, furosémide, salicylés), insuffisance rénale, hémopathie / lyse cellulaire", "Crise articulaire : ponction (cristaux d'urate de sodium), VS / NFS, uricémie, uricurie", "Lithiase : pH urinaire (acide), uricémie (↑ dans 25 % seulement), uricurie"],
+    causes: [
+      { cause: "Surproduction (apport / catabolisme)", signe: "excès alimentaire (purines) ; ↑ catabolisme des acides nucléiques (cancers, traitements cytolytiques, psoriasis)", examens: ["Interrogatoire, NFS"] },
+      { cause: "Anomalies enzymatiques", signe: "glycogénose type 1 (Von Gierke), hyperactivité de la PRPP synthétase, déficit en HGPRT (Lesch-Nyhan), hyperactivité de la xanthine oxydase", examens: ["Bilan spécialisé"] },
+      { cause: "Défaut d'élimination rénale", signe: "défaut de sécrétion tubulaire ; inhibition compétitive (corps cétoniques, lactates, thiazidiques, furosémide, salicylés) ; insuffisance rénale", examens: ["Créatinine, revue des médicaments"] }
+    ],
+    tableaux: [
+      { titre: "Étiologies des hyperuricémies",
+        entetes: ["Mécanisme", "Causes"],
+        lignes: [
+          ["Apport exogène", "Excès alimentaire (purines : abats, gibier, certains poissons)"],
+          ["Catabolisme endogène accru", "Cancers, traitements cytolytiques, psoriasis"],
+          ["Surproduction enzymatique", "Glycogénose type 1 (Von Gierke), hyperactivité PRPP synthétase, déficit en HGPRT (Lesch-Nyhan), hyperactivité xanthine oxydase"],
+          ["Défaut d'élimination rénale", "Défaut de sécrétion tubulaire ; inhibition compétitive (corps cétoniques, lactates, thiazidiques, furosémide, salicylés) ; insuffisance rénale"]
+        ] },
+      { titre: "Goutte",
+        entetes: ["Item", "Détail"],
+        lignes: [
+          ["Clinique", "Arthrite inflammatoire (métatarsophalangienne du gros orteil > 75 %), crise nocturne (œdème, chaleur, douleur, rougeur)"],
+          ["Biologie", "VS ↑, hyperleucocytose, uricémie, uraturie"],
+          ["Ponction articulaire", "Liquide inflammatoire : PNN + cristaux d'urate de sodium"],
+          ["Traitement", "Crise : colchicine (régression 5-10 j) ; fond : allopurinol (inhibiteur de la xanthine oxydase) ; rasburicase si lyse tumorale"]
+        ] },
+      { titre: "Lithiase urique",
+        entetes: ["Item", "Détail"],
+        lignes: [
+          ["Clinique", "Variable : colique néphrétique, émission de calculs / sables rougeâtres"],
+          ["pH urinaire", "Souvent acide (favorise la précipitation de l'acide urique)"],
+          ["Uricémie", "Augmentée chez seulement 25 % des patients"],
+          ["Uricurie", "Généralement abaissée"],
+          ["Traitement", "Hydratation, alcalinisation des urines, modération des purines, ± allopurinol"]
+        ] }
+    ],
+    red_flags: ["Syndrome de lyse tumorale (chimiothérapie) : hyperuricémie majeure → insuffisance rénale (prévention : hydratation, rasburicase)", "Crise de goutte : diagnostic différentiel avec une arthrite septique → ponction articulaire", "Lithiase urique récidivante / colique néphrétique", "Déficit complet en HGPRT (Lesch-Nyhan) : encéphalopathie hyperuricémique"],
+    conduite: ["Confirmer l'hyperuricémie ; chercher une surproduction (lyse, alimentation, enzymopathie) ou un défaut d'élimination (rénal, médicaments).", "Crise de goutte : ponction (cristaux d'urate) ; colchicine ; ne pas débuter l'allopurinol en pleine crise.", "Traitement de fond : allopurinol (inhibiteur de la xanthine oxydase) + mesures hygiéno-diététiques.", "Lithiase urique : hydratation, alcalinisation, modération des purines ; prévention des récidives."]
   }
 ];
 

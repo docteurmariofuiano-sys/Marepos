@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **71 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **72 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -70,6 +70,7 @@ maladie rénale chronique (DFG, marqueurs,
 stades), syndrome néphrotique (pur/impur, complications),
 hyperprolactinémie, GGT,
 cytolyse, syndrome cholestatique, insuffisance hépatique, cirrhose (Child-Pugh),
+hyperuricémie (goutte, lithiase urique),
 pancréatite aiguë (Ranson/Imrie), dyslipidémie, CPK, LDH, les marqueurs de
 l'infarctus du myocarde (troponine, myoglobine) et de l'insuffisance cardiaque
 (BNP, NT-proBNP), les marqueurs tumoraux (ACE, CA 19-9, PSA, AFP, CA 125…),
