@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **74 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **75 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -75,7 +75,8 @@ pancréatite aiguë (Ranson/Imrie), dyslipidémie, CPK, LDH, les marqueurs de
 l'infarctus du myocarde (troponine, myoglobine) et de l'insuffisance cardiaque
 (BNP, NT-proBNP), les marqueurs tumoraux (ACE, CA 19-9, PSA, AFP, CA 125…), l'allergologie
 (hypersensibilité de type I : IgE, tests cutanés/in vitro) et l'auto-immunité
-(anticorps antinucléaires : titres, fluorescence, anti-ENA), l'**immuno-hématologie** (groupage ABO-RH1 :
+(anticorps antinucléaires : titres, fluorescence, anti-ENA ; ANCA : c-ANCA/PR3,
+p-ANCA/MPO, vascularites), l'**immuno-hématologie** (groupage ABO-RH1 :
 Beth-Vincent, Simonin, RH1 ; phénotypes érythrocytaires ABO/Rhésus/Kell/MNSs/
 Kidd/Duffy/Lewis), et un **bloc hématologie** : CAT devant une
 anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /

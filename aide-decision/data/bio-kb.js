@@ -2365,5 +2365,44 @@ window.BIOKB = [
     ],
     red_flags: ["ANA présents dans 15 % de la population générale : peu spécifiques, à interpréter avec la clinique", "Anti-ADN natif = marqueur du LES, corrélé à l'évolutivité (suivi des poussées)", "Aspect centromérique = CREST ; nucléolaire = sclérodermie", "Nuclear dots (SP100) → cirrhose biliaire primitive"],
     conduite: ["Dépister par IFI HEp-2 (titre + aspect) ; toute IFI positive impose de préciser la spécificité.", "Anti-ADN natif (FARR/ELISA) et anti-ENA orientent le diagnostic des connectivites.", "Suivre l'anti-ADN natif dans le LES (évolutivité, réponse au traitement).", "Toujours confronter à la clinique : un ANA isolé n'affirme pas une maladie auto-immune."]
+  },
+  {
+    id: "anca", num: 117, anomalie: "Anticorps anti-cytoplasme des polynucléaires (ANCA)",
+    specialite: "Immunologie",
+    definition: "Anticorps anti-cytoplasme des polynucléaires neutrophiles, détectés par IFI sur granulocytes fixés à l'éthanol : aspect cytoplasmique (c-ANCA) ou périnucléaire (p-ANCA). Une fluorescence nucléaire évoque des ANA. Toute IFI positive impose de préciser la cible antigénique (ELISA). Marqueurs des vascularites.",
+    premiere_intention: ["Dépistage par IFI sur granulocytes fixés à l'éthanol : c-ANCA (cytoplasmique) vs p-ANCA (périnucléaire)", "Fluorescence nucléaire → rechercher des ANA (IFI HEp-2)", "Préciser la cible par ELISA : PR3, MPO, BPI, cathepsine G, élastase, lactoferrine…", "Confronter à la clinique (vascularites des petits vaisseaux)"],
+    causes: [
+      { cause: "c-ANCA → PR3 (protéinase 3)", signe: "granulomatose avec polyangéite (maladie de Wegener)", examens: ["ELISA anti-PR3"] },
+      { cause: "c-ANCA → BPI", signe: "mucoviscidose, infection pulmonaire, bronchectasie, vascularites cutanées", examens: ["ELISA anti-BPI"] },
+      { cause: "p-ANCA → MPO (myéloperoxydase)", signe: "polyangéite microscopique (périartérite noueuse microscopique), maladie de Wegener", examens: ["ELISA anti-MPO"] },
+      { cause: "p-ANCA → autres cibles", signe: "cathepsine G (colites inflammatoires), élastase (LES, LES hydralazinique), azurocidine (vascularites), lactoferrine (vascularites secondaires, PR-LES, connectivites mixtes), lysozyme", examens: ["ELISA spécifique"] }
+    ],
+    tableaux: [
+      { titre: "Identification (IFI sur granulocytes)",
+        entetes: ["Aspect", "Type", "Suite"],
+        lignes: [
+          ["Cytoplasmique", "c-ANCA", "ELISA → PR3, BPI"],
+          ["Périnucléaire", "p-ANCA", "ELISA → MPO, cathepsine G, élastase, lactoferrine…"],
+          ["Nucléaire", "Évoque des ANA", "IFI HEp-2"]
+        ] },
+      { titre: "c-ANCA : cibles et pathologies",
+        entetes: ["Cible", "Pathologies"],
+        lignes: [
+          ["PR3 (protéinase 3)", "Granulomatose avec polyangéite (maladie de Wegener)"],
+          ["BPI", "Mucoviscidose, infection pulmonaire, bronchectasie, vascularites cutanées"]
+        ] },
+      { titre: "p-ANCA : cibles et pathologies",
+        entetes: ["Cible", "Pathologies"],
+        lignes: [
+          ["MPO (myéloperoxydase)", "Polyangéite microscopique (PAN microscopique), maladie de Wegener"],
+          ["Cathepsine G", "Colites inflammatoires (MICI)"],
+          ["Élastase", "LES, LES hydralazinique"],
+          ["Azurocidine", "Vascularites"],
+          ["Lactoferrine", "Vascularites secondaires, PR-LES, connectivites mixtes"],
+          ["Lysozyme", "—"]
+        ] }
+    ],
+    red_flags: ["c-ANCA / anti-PR3 → granulomatose avec polyangéite (Wegener) : atteinte ORL, pulmonaire, rénale → urgence diagnostique", "p-ANCA / anti-MPO → polyangéite microscopique (glomérulonéphrite rapidement progressive, hémorragie alvéolaire)", "Vascularite des petits vaisseaux : rechercher une atteinte rénale (protéinurie, hématurie) et pulmonaire", "p-ANCA non spécifiques possibles (MICI, médicaments, infections)"],
+    conduite: ["IFI sur granulocytes (éthanol) → c-ANCA vs p-ANCA ; préciser la cible par ELISA (PR3, MPO…).", "c-ANCA/PR3 et p-ANCA/MPO = marqueurs des vascularites à ANCA (Wegener, polyangéite microscopique).", "Les p-ANCA peuvent être non spécifiques (MICI, connectivites, médicaments) : confronter à la clinique.", "Rechercher une atteinte d'organe (rein, poumon, ORL) ; avis spécialisé."]
   }
 ];
