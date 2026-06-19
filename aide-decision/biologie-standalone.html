@@ -329,8 +329,31 @@ window.BIOKB = [
       { cause: "SIADH (euvolémique)", signe: "natriurèse conservée, urines inadaptées concentrées ; cancers, médicaments, SNC, poumon", examens: ["Osmolalité U, TSH, cortisol"] },
       { cause: "Endocrinien", signe: "hypothyroïdie, insuffisance surrénale", examens: ["TSH, cortisol 8h"] }
     ],
+    tableaux: [
+      { titre: "Éliminer les fausses hyponatrémies",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Iso-osmolaire", "Hyperlipidémie (sérum lactescent), hyperprotidémie"],
+          ["Hyperosmolaire", "Hyperglycémie, hyperazotémie d'apparition brutale, mannitol"]
+        ] },
+      { titre: "Hyponatrémie hypo-osmolaire selon le secteur extracellulaire",
+        entetes: ["Secteur extracellulaire", "Mécanisme", "Étiologies"],
+        lignes: [
+          ["Augmenté (œdèmes)", "Inflation hydrosodée", "IC congestive, cirrhose décompensée, insuffisance hépatique, syndrome néphrotique, IRC terminale"],
+          ["Normal", "Dilution", "SIADH, hypothyroïdie, hypocortisolisme, potomanie / perfusion hypotonique, post-opératoire / stress"],
+          ["Diminué (déshydratation EC)", "Déplétion", "Pertes digestives/cutanées, 3e secteur, pertes rénales (thiazidiques, uropathie), déficit en minéralocorticoïde"]
+        ] },
+      { titre: "Causes de SIADH",
+        entetes: ["Catégorie", "Exemples"],
+        lignes: [
+          ["Cancers", "Bronchique, pancréas, lymphome"],
+          ["Pulmonaire", "Abcès pulmonaire, pneumonie"],
+          ["SNC", "Encéphalite, méningite, LED"],
+          ["Iatrogène", "Vincristine, cyclophosphamide, carbamazépine, antidépresseurs"]
+        ] }
+    ],
     red_flags: ["Hyponatrémie aiguë symptomatique (convulsions, coma)", "Correction trop rapide (myélinolyse centro-pontine)", "Insuffisance surrénale aiguë méconnue"],
-    conduite: ["Corriger lentement (risque de myélinolyse) ; forme aiguë symptomatique = urgence (sérum salé hypertonique en milieu adapté)."]
+    conduite: ["Corriger lentement (risque de myélinolyse) ; forme aiguë symptomatique = urgence (sérum salé hypertonique en milieu adapté).", "Toujours éliminer une fausse hyponatrémie (hyperglycémie, hyperprotidémie/lipidémie) ; calculer l'osmolalité efficace.", "Classer selon le secteur extracellulaire (œdèmes / normal / déshydratation) pour orienter l'étiologie et le traitement."]
   },
   {
     id: "hyperphosphoremie", num: 56, anomalie: "Hyperphosphorémie",
@@ -1918,6 +1941,35 @@ window.BIOKB = [
     ],
     red_flags: ["Hyponatrémie aiguë sévère / symptomatique (œdème cérébral) → urgence", "Hypernatrémie sévère (déshydratation intracellulaire, troubles neurologiques)", "Correction trop rapide d'une dysnatrémie (risque de myélinolyse centro-pontine si hyponatrémie corrigée trop vite)", "Hyperglycémie majeure avec hyponatrémie (corriger la natrémie selon la glycémie)"],
     conduite: ["Raisonner sur la tonicité (Na+ × 2 + glucose), pas sur la seule natrémie.", "Hyponatrémie : vérifier la glycémie (hyponatrémie hypertonique possible) avant de conclure à une hyperhydratation intracellulaire.", "Corriger prudemment les dysnatrémies (vitesse de correction), surtout si chroniques.", "Confronter à l'état d'hydratation extracellulaire (volémie) pour la prise en charge."]
+  },
+  {
+    id: "hypernatremie", num: 103, anomalie: "Hypernatrémie",
+    specialite: "Néphrologie",
+    definition: "Natrémie élevée = hyperosmolalité, TOUJOURS hypertonique → déshydratation intracellulaire (soif, troubles neurologiques). Trois mécanismes : perte d'eau pure, pertes hypotoniques (eau > sodium), surcharge sodée.",
+    premiere_intention: ["Hypernatrémie = toujours hypertonique → déshydratation intracellulaire (soif intense, troubles neurologiques)", "Distinguer : perte d'eau pure, pertes hypotoniques (eau > Na) ou surcharge sodée", "Évaluer le secteur extracellulaire (volémie), la diurèse et l'osmolalité urinaire", "Rechercher un diabète insipide (central vs néphrogénique) : osmolalité urinaire, restriction hydrique, réponse à la desmopressine"],
+    causes: [
+      { cause: "Perte d'eau pure", signe: "pertes insensibles non compensées, hypodipsie primitive, diabète insipide (central ou néphrogénique)", examens: ["Osmolalité urinaire", "Test à la desmopressine"] },
+      { cause: "Pertes hypotoniques (eau > Na)", signe: "rénales (diurétiques de l'anse / osmotiques, levée d'obstacle, reprise de diurèse), digestives (vomissements, diarrhées, lactulose), cutanées (brûlures, sudation)", examens: ["Ionogramme urinaire", "Contexte"] },
+      { cause: "Surcharge sodée hypertonique", signe: "bicarbonate de sodium, alimentation parentérale hypertonique, ingestion d'eau de mer, lavements/émétiques salés", examens: ["Contexte, natriurèse"] }
+    ],
+    tableaux: [
+      { titre: "Mécanismes et étiologies",
+        entetes: ["Mécanisme", "Étiologies"],
+        lignes: [
+          ["Perte d'eau pure", "Pertes insensibles non compensées, hypodipsie primitive, diabète insipide central, diabète insipide néphrogénique"],
+          ["Pertes hypotoniques (eau > Na)", "Rénales (diurétiques de l'anse/osmotiques, levée d'obstacle, reprise de diurèse post-NTA), digestives (vomissements, aspirations, fistules, diarrhées, lactulose), cutanées (brûlures, sudation excessive)"],
+          ["Surcharge sodée hypertonique", "Bicarbonate de sodium hypertonique, alimentation parentérale, ingestion d'eau de mer, émétiques / lavements salés"]
+        ] },
+      { titre: "Diabète insipide",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Central", "Post-traumatique, tumeurs / granulomes, idiopathique, vasculaire / méningite / encéphalite"],
+          ["Néphrogénique héréditaire", "Lié à l'X, récessif"],
+          ["Néphrogénique acquis", "Néphropathie (NIC, drépanocytose), métabolique (hypercalcémie ++, hypokaliémie), iatrogène (lithium +++, déméclocycline, foscarnet, amphotéricine B)"]
+        ] }
+    ],
+    red_flags: ["Hypernatrémie aiguë sévère (déshydratation intracellulaire : troubles neurologiques, coma)", "Correction trop rapide → risque d'œdème cérébral (corriger lentement)", "Trouble de l'accès à l'eau (sujet âgé, nourrisson, coma) aggravant", "Diabète insipide non compensé (polyurie majeure)"],
+    conduite: ["Hypernatrémie = toujours hypertonique : raisonner sur la perte d'eau / le gain de sodium.", "Diabète insipide : restriction hydrique + desmopressine distinguent central (répond) et néphrogénique (ne répond pas).", "Corriger lentement le déficit en eau (risque d'œdème cérébral si correction rapide).", "Traiter la cause (arrêt du lithium, correction de l'hypercalcémie/hypokaliémie ; apport d'eau libre)."]
   }
 ];
 
