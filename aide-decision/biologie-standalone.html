@@ -66,6 +66,14 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
 .causes td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top}
 .c-name{font-weight:700;color:var(--brand-d);white-space:nowrap}
 .exam{display:inline-block;background:#f1ecf8;color:var(--brand-d);border-radius:5px;padding:1px 7px;margin:2px 4px 2px 0;font-size:.8rem}
+.cmp-wrap{margin:0 0 16px;overflow-x:auto}
+.cmp-wrap:last-child{margin-bottom:0}
+.cmp-title{margin:0 0 8px;font-size:.9rem;color:var(--brand-d)}
+.cmp{width:100%;border-collapse:collapse;font-size:.86rem;min-width:480px}
+.cmp thead th{background:#f3eefa;color:var(--brand-d);text-align:left;font-size:.78rem;padding:7px 9px;border:1px solid var(--line);font-weight:700}
+.cmp thead th:first-child{background:#faf7fd}
+.cmp tbody th{text-align:left;font-weight:700;color:var(--ink);background:#faf9fc;padding:7px 9px;border:1px solid var(--line);white-space:nowrap}
+.cmp tbody td{padding:7px 9px;border:1px solid var(--line);vertical-align:top}
 .sec-cat{background:#f0f8f3}
 .sec-cat h3{color:var(--ok)}
 .foot{max-width:1160px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
@@ -134,12 +142,14 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
   <script>
 /* ============================================================================
  * INTERPRÉTATION BIOLOGIQUE — base de connaissances (côté médecin).
- * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
- * Dr Mario Fuiano. Aide à l'interprétation d'un résultat anormal — à confronter
+ * Sources : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
+ * Dr Mario Fuiano ; complément hématologie (fiches 64+) d'après MémoBio (contenu
+ * d'accès libre). Aide à l'interprétation d'un résultat anormal — à confronter
  * à la clinique. Ne remplace pas le médecin/biologiste.
  *
  * Format : { id, num, anomalie, specialite, definition,
  *            premiere_intention:[...], causes:[{cause, signe, examens:[...]}],
+ *            tableaux?:[{titre, entetes:[...], lignes:[[...]]}],
  *            red_flags:[...], conduite:[...] }
  * ========================================================================== */
 window.BIOKB = [
@@ -422,7 +432,7 @@ window.BIOKB = [
   },
   {
     id: "anemie", num: 63, anomalie: "Conduite à tenir devant une anémie",
-    specialite: "Hématologie (CAT)",
+    specialite: "Hématologie",
     definition: "L'algorithme repose sur le VGM + les réticulocytes. Évaluer d'abord la TOLÉRANCE.",
     premiere_intention: ["Évaluer la tolérance (dyspnée, angor, tachycardie → transfusion)", "Orienter par le VGM (micro / macro / normocytaire)", "Réticulocytes si normocytaire (régénérative vs arégénérative)"],
     causes: [
@@ -433,6 +443,84 @@ window.BIOKB = [
     ],
     red_flags: ["Mauvaise tolérance (angor, défaillance) → transfusion", "Saignement actif", "Pancytopénie (leucémie aiguë, aplasie)", "Anémie hémolytique avec schizocytes (MAT)"],
     conduite: ["Microcytaire ferriprive chez homme/femme ménopausée = saignement digestif jusqu'à preuve du contraire (endoscopies)."]
+  },
+  {
+    id: "anemie_microcytaire", num: 64, anomalie: "Anémie microcytaire (démarche diagnostique)",
+    specialite: "Hématologie",
+    definition: "Anémie (Hb < 120 g/L chez l'homme, < 110 g/L chez la femme) avec VGM < 80 fL. Le bilan martial est la clé. Trois grands cadres : ferriprive, inflammatoire, β-thalassémie mineure.",
+    premiere_intention: ["Confirmer la microcytose (VGM < 80 fL) sur l'hémogramme", "Ferritine + CRP en première intention (carence martiale vs inflammation)", "Coefficient de saturation de la transferrine (CST) ; récepteurs solubles de la transferrine (RsTf) si inflammation associée", "Électrophorèse de l'hémoglobine si bilan martial normal (thalassémie)"],
+    causes: [
+      { cause: "Anémie ferriprive", signe: "ferritine basse, CST bas, RsTf augmentés ; saignements chroniques (gynéco chez la femme, digestifs chez l'homme/femme ménopausée), carence d'apport (grossesses répétées, nourrissons)", examens: ["Ferritine", "CST", "Endoscopies digestives", "Bilan gynécologique"] },
+      { cause: "Anémie inflammatoire", signe: "ferritine normale ou augmentée, CST bas, VS et CRP augmentées ; maladies de système (LED, PR), néoplasies, infections chroniques", examens: ["CRP, VS", "Ferritine", "RsTf (non modifiés par l'inflammation)"] },
+      { cause: "β-thalassémie mineure", signe: "microcytose marquée contrastant avec une anémie modérée, pseudo-polyglobulie, bilan martial normal, HbA2 > 3,5 %", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Anémie sidéroblastique / saturnisme", signe: "causes plus rares ; intoxication au plomb", examens: ["Plombémie", "Myélogramme (sidéroblastes en couronne)"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique d'une anémie microcytaire",
+        entetes: ["", "Ferriprive", "Inflammatoire", "β-thalassémie mineure"],
+        lignes: [
+          ["Numération", "Hypochrome microcytaire peu régénérative", "Hypochrome microcytaire arégénérative (après phase normochrome normocytaire), ± PNN ↑", "Microcytose, hypochromie ± anémie, pseudo-polyglobulie"],
+          ["Fer sérique", "Diminué", "Diminué", "N"],
+          ["Transferrine / CTFT", "Augmentées", "Diminuées", "N"],
+          ["Coeff. saturation transferrine (CST)", "Diminué", "Diminué", "N"],
+          ["Ferritine", "Diminuée", "Augmentée", "N"],
+          ["Récepteurs solubles transferrine (RsTf)", "Augmentés", "N", "N"],
+          ["VS", "N", "Augmentée", "N"],
+          ["Protéines de l'inflammation (CRP, Fg)", "N", "Augmentées", "N"],
+          ["Électrophorèse de l'hémoglobine", "N", "N", "HbA2 > 3,5 %"]
+        ] }
+    ],
+    red_flags: ["Anémie ferriprive chez l'homme ou la femme ménopausée → saignement digestif jusqu'à preuve du contraire (endoscopies)", "Mauvaise tolérance (angor, dyspnée, tachycardie)"],
+    conduite: ["Toute anémie ferriprive impose la recherche d'un saignement chronique.", "Sels de fer au cours des repas ; crise réticulocytaire à J7-J10 ; poursuivre jusqu'à normalisation de la ferritine (~6 mois).", "Cinétique ferriprive : ferritine / transferrine > fer sérique / RsTf > hypochromie > microcytose > anémie ; la normalisation sous traitement se fait en sens inverse.", "La ferritine peut être normale si carence martiale + inflammation chronique : les RsTf, non influencés par l'inflammation, permettent le diagnostic."]
+  },
+  {
+    id: "anemie_hemolytique", num: 65, anomalie: "Anémie hémolytique (démarche et classification)",
+    specialite: "Hématologie",
+    definition: "Anémie par destruction accrue des hématies, normochrome normocytaire régénérative (réticulocytes élevés). Classification : corpusculaire (souvent constitutionnelle) vs extracorpusculaire (souvent acquise).",
+    premiere_intention: ["Confirmer l'hémolyse : réticulocytes élevés, haptoglobine effondrée, bilirubine non conjuguée et LDH augmentées", "Frottis sanguin (schizocytes → MAT, sphérocytes, drépanocytes…)", "Test de Coombs direct : différencie hémolyse immunologique vs non immunologique", "Apprécier la tolérance et le caractère aigu ou chronique"],
+    causes: [
+      { cause: "Corpusculaire — membrane", signe: "sphérocytose (Minkowski-Chauffard), elliptocytose", examens: ["Frottis", "Ektacytométrie / résistances osmotiques"] },
+      { cause: "Corpusculaire — hémoglobine", signe: "drépanocytose, thalassémies", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Corpusculaire — enzymatique", signe: "déficit en G6PD, en pyruvate-kinase", examens: ["Dosages enzymatiques érythrocytaires"] },
+      { cause: "Extracorpusculaire — mécanique (MAT)", signe: "SHU, PTT : schizocytes + thrombopénie", examens: ["Frottis (schizocytes)", "Plaquettes", "Avis hématologique urgent"] },
+      { cause: "Extracorpusculaire — infectieux / toxique", signe: "paludisme (retour de zone d'endémie), toxiques", examens: ["Frottis / goutte épaisse", "Contexte d'exposition"] },
+      { cause: "Extracorpusculaire — immunologique", signe: "AHAI : Coombs direct positif", examens: ["Test de Coombs direct"] }
+    ],
+    tableaux: [
+      { titre: "Classification des anémies hémolytiques",
+        entetes: ["Mécanisme", "Corpusculaire (souvent constitutionnelle)", "Extracorpusculaire (souvent acquise)"],
+        lignes: [
+          ["Membrane / mécanique", "Sphérocytose, elliptocytose", "Mécanique : SHU, PTT (MAT)"],
+          ["Hémoglobine / infectieux", "Drépanocytose, thalassémies", "Infectieux : paludisme…"],
+          ["Enzyme / toxique-immuno", "Déficit en G6PD, pyruvate-kinase", "Toxique ; immunologique : AHAI"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë : fièvre, frissons, nausées, malaise, douleurs lombaires/abdominales, état de choc", "Schizocytes + thrombopénie = microangiopathie thrombotique (SHU/PTT) → urgence hématologique", "Paludisme à évoquer au retour de zone d'endémie", "Mauvaise tolérance de l'anémie"],
+    conduite: ["Hémolyse aiguë = signes généraux marqués ; hémolyse chronique = ictère, urines foncées, splénomégalie.", "Coombs direct positif → AHAI ; négatif → orienter vers une cause corpusculaire ou mécanique.", "MAT (schizocytes + thrombopénie) = urgence : avis spécialisé immédiat."]
+  },
+  {
+    id: "ahai", num: 66, anomalie: "Anémie hémolytique auto-immune (AHAI)",
+    specialite: "Hématologie",
+    definition: "Anémie hémolytique liée à des auto-anticorps dirigés contre un antigène de surface de l'hématie ; cause la plus fréquente des anémies hémolytiques extracorpusculaires. Deux types : auto-Ac chauds (50-70 %) et auto-Ac froids.",
+    premiere_intention: ["Confirmer l'hémolyse : anémie normochrome normocytaire régénérative, haptoglobine ↓, bilirubine non conjuguée ↑, LDH ↑", "Test de Coombs direct (test direct à l'antiglobuline) : Ig et/ou complément fixés sur le GR", "Préciser le type : chaud (IgG ± complément, anti-Rh, optimum 37 °C) vs froid (IgM, anti-i, optimum < 22 °C)", "Rechercher systématiquement une cause secondaire"],
+    causes: [
+      { cause: "Auto-Ac chauds — idiopathique", signe: "≈ 50 % des cas, hémolyse souvent chronique", examens: ["Coombs direct (IgG ± complément)"] },
+      { cause: "Auto-Ac chauds — secondaire", signe: "LED (rechercher un lupus, surtout si thrombopénie auto-immune associée = syndrome d'Evans), hémopathie lymphoïde (LNH, LLC, dysglobulinémie), α-méthyldopa", examens: ["Anticorps antinucléaires", "NFS, électrophorèse, imagerie"] },
+      { cause: "Auto-Ac froids — hémoglobinurie a frigore", signe: "auto-anticorps biphasiques (fixation à froid, hémolyse à chaud), rare", examens: ["Test de Donath-Landsteiner"] },
+      { cause: "Auto-Ac froids — secondaire (infections)", signe: "Mycoplasma pneumoniae, EBV (anti-i), CMV, rougeole, oreillons — surtout chez l'enfant", examens: ["Sérologies", "Coombs (complément)"] },
+      { cause: "Maladie des agglutinines froides", signe: "IgM monoclonale (anti-i), crises hémolytiques au froid ; idiopathique ou hémopathie lymphoïde (lymphome lymphoplasmocytaire)", examens: ["Recherche d'agglutinines froides", "Électrophorèse / immunofixation"] }
+    ],
+    tableaux: [
+      { titre: "AHAI à auto-anticorps chauds vs froids",
+        entetes: ["", "Auto-Ac chauds (50-70 %)", "Auto-Ac froids"],
+        lignes: [
+          ["Anticorps", "IgG ± complément (souvent anti-Rh), optimum 37 °C", "IgM (anti-i), optimum < 22 °C"],
+          ["Tableau", "Hémolyse plutôt chronique", "Crises hémolytiques déclenchées par le froid"],
+          ["Étiologies", "Idiopathique (50 %) ; LED, hémopathie lymphoïde, α-méthyldopa…", "HPN a frigore ; infections (Mycoplasma, EBV, CMV…) ; agglutinines froides (hémopathie lymphoïde)"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë (fièvre, frissons, état de choc)", "Syndrome d'Evans (AHAI + thrombopénie auto-immune) → rechercher un lupus", "Mauvaise tolérance → transfusion (avec précautions, sang réchauffé si Ac froids)"],
+    conduite: ["Test de Coombs direct = examen clé ; test d'élution et Coombs indirect précisent la spécificité de l'anticorps.", "Toujours rechercher une cause secondaire (LED, hémopathie lymphoïde, infection, médicament).", "Traitements selon le type : corticothérapie, immunoglobulines IV, immunosuppresseurs, anti-CD20 (rituximab), splénectomie ; pour les formes à Ac froids, protection contre le froid."]
   }
 ];
 
@@ -454,7 +542,11 @@ window.BIOKB = [
 
   BIO.forEach(function (b) {
     b._search = norm([b.anomalie, b.specialite, b.definition,
-      b.causes.map(function (c) { return c.cause + " " + c.signe; }).join(" ")].join(" "));
+      b.causes.map(function (c) { return c.cause + " " + c.signe; }).join(" "),
+      (b.tableaux || []).map(function (t) {
+        return (t.titre || "") + " " + (t.entetes || []).join(" ") + " " +
+          (t.lignes || []).map(function (r) { return r.join(" "); }).join(" ");
+      }).join(" ")].join(" "));
   });
 
   function filtered() {
@@ -486,6 +578,19 @@ window.BIOKB = [
       return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
   }
 
+  function tableau(t) {
+    var head = "<tr>" + (t.entetes || []).map(function (h) {
+      return "<th>" + esc(h) + "</th>"; }).join("") + "</tr>";
+    var body = (t.lignes || []).map(function (r) {
+      return "<tr>" + r.map(function (c, i) {
+        return i === 0 ? "<th>" + esc(c) + "</th>" : "<td>" + esc(c) + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    return "<div class='cmp-wrap'>" +
+      (t.titre ? "<h4 class='cmp-title'>" + esc(t.titre) + "</h4>" : "") +
+      "<table class='cmp'><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>";
+  }
+
   function renderDetail(id) {
     var b = BIO.find(function (x) { return x.id === id; });
     if (!b) return;
@@ -509,6 +614,8 @@ window.BIOKB = [
       "</header>" +
       block("sec-pi", "1 · Première intention / démarche", ul("pi", b.premiere_intention)) +
       block("sec-cz", "2 · Causes à explorer & signes discriminants", causes) +
+      (b.tableaux && b.tableaux.length
+        ? block("sec-tab", "Tableaux comparatifs", b.tableaux.map(tableau).join("")) : "") +
       block("sec-rf", "⚠ Red flags / urgences", ul("rf", b.red_flags)) +
       block("sec-cat", "Conduite à tenir (points clés)", ul("cat", b.conduite));
     renderList();

@@ -1,11 +1,13 @@
 /* ============================================================================
  * INTERPRÉTATION BIOLOGIQUE — base de connaissances (côté médecin).
- * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
- * Dr Mario Fuiano. Aide à l'interprétation d'un résultat anormal — à confronter
+ * Sources : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
+ * Dr Mario Fuiano ; complément hématologie (fiches 64+) d'après MémoBio (contenu
+ * d'accès libre). Aide à l'interprétation d'un résultat anormal — à confronter
  * à la clinique. Ne remplace pas le médecin/biologiste.
  *
  * Format : { id, num, anomalie, specialite, definition,
  *            premiere_intention:[...], causes:[{cause, signe, examens:[...]}],
+ *            tableaux?:[{titre, entetes:[...], lignes:[[...]]}],
  *            red_flags:[...], conduite:[...] }
  * ========================================================================== */
 window.BIOKB = [
@@ -288,7 +290,7 @@ window.BIOKB = [
   },
   {
     id: "anemie", num: 63, anomalie: "Conduite à tenir devant une anémie",
-    specialite: "Hématologie (CAT)",
+    specialite: "Hématologie",
     definition: "L'algorithme repose sur le VGM + les réticulocytes. Évaluer d'abord la TOLÉRANCE.",
     premiere_intention: ["Évaluer la tolérance (dyspnée, angor, tachycardie → transfusion)", "Orienter par le VGM (micro / macro / normocytaire)", "Réticulocytes si normocytaire (régénérative vs arégénérative)"],
     causes: [
@@ -299,5 +301,83 @@ window.BIOKB = [
     ],
     red_flags: ["Mauvaise tolérance (angor, défaillance) → transfusion", "Saignement actif", "Pancytopénie (leucémie aiguë, aplasie)", "Anémie hémolytique avec schizocytes (MAT)"],
     conduite: ["Microcytaire ferriprive chez homme/femme ménopausée = saignement digestif jusqu'à preuve du contraire (endoscopies)."]
+  },
+  {
+    id: "anemie_microcytaire", num: 64, anomalie: "Anémie microcytaire (démarche diagnostique)",
+    specialite: "Hématologie",
+    definition: "Anémie (Hb < 120 g/L chez l'homme, < 110 g/L chez la femme) avec VGM < 80 fL. Le bilan martial est la clé. Trois grands cadres : ferriprive, inflammatoire, β-thalassémie mineure.",
+    premiere_intention: ["Confirmer la microcytose (VGM < 80 fL) sur l'hémogramme", "Ferritine + CRP en première intention (carence martiale vs inflammation)", "Coefficient de saturation de la transferrine (CST) ; récepteurs solubles de la transferrine (RsTf) si inflammation associée", "Électrophorèse de l'hémoglobine si bilan martial normal (thalassémie)"],
+    causes: [
+      { cause: "Anémie ferriprive", signe: "ferritine basse, CST bas, RsTf augmentés ; saignements chroniques (gynéco chez la femme, digestifs chez l'homme/femme ménopausée), carence d'apport (grossesses répétées, nourrissons)", examens: ["Ferritine", "CST", "Endoscopies digestives", "Bilan gynécologique"] },
+      { cause: "Anémie inflammatoire", signe: "ferritine normale ou augmentée, CST bas, VS et CRP augmentées ; maladies de système (LED, PR), néoplasies, infections chroniques", examens: ["CRP, VS", "Ferritine", "RsTf (non modifiés par l'inflammation)"] },
+      { cause: "β-thalassémie mineure", signe: "microcytose marquée contrastant avec une anémie modérée, pseudo-polyglobulie, bilan martial normal, HbA2 > 3,5 %", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Anémie sidéroblastique / saturnisme", signe: "causes plus rares ; intoxication au plomb", examens: ["Plombémie", "Myélogramme (sidéroblastes en couronne)"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique d'une anémie microcytaire",
+        entetes: ["", "Ferriprive", "Inflammatoire", "β-thalassémie mineure"],
+        lignes: [
+          ["Numération", "Hypochrome microcytaire peu régénérative", "Hypochrome microcytaire arégénérative (après phase normochrome normocytaire), ± PNN ↑", "Microcytose, hypochromie ± anémie, pseudo-polyglobulie"],
+          ["Fer sérique", "Diminué", "Diminué", "N"],
+          ["Transferrine / CTFT", "Augmentées", "Diminuées", "N"],
+          ["Coeff. saturation transferrine (CST)", "Diminué", "Diminué", "N"],
+          ["Ferritine", "Diminuée", "Augmentée", "N"],
+          ["Récepteurs solubles transferrine (RsTf)", "Augmentés", "N", "N"],
+          ["VS", "N", "Augmentée", "N"],
+          ["Protéines de l'inflammation (CRP, Fg)", "N", "Augmentées", "N"],
+          ["Électrophorèse de l'hémoglobine", "N", "N", "HbA2 > 3,5 %"]
+        ] }
+    ],
+    red_flags: ["Anémie ferriprive chez l'homme ou la femme ménopausée → saignement digestif jusqu'à preuve du contraire (endoscopies)", "Mauvaise tolérance (angor, dyspnée, tachycardie)"],
+    conduite: ["Toute anémie ferriprive impose la recherche d'un saignement chronique.", "Sels de fer au cours des repas ; crise réticulocytaire à J7-J10 ; poursuivre jusqu'à normalisation de la ferritine (~6 mois).", "Cinétique ferriprive : ferritine / transferrine > fer sérique / RsTf > hypochromie > microcytose > anémie ; la normalisation sous traitement se fait en sens inverse.", "La ferritine peut être normale si carence martiale + inflammation chronique : les RsTf, non influencés par l'inflammation, permettent le diagnostic."]
+  },
+  {
+    id: "anemie_hemolytique", num: 65, anomalie: "Anémie hémolytique (démarche et classification)",
+    specialite: "Hématologie",
+    definition: "Anémie par destruction accrue des hématies, normochrome normocytaire régénérative (réticulocytes élevés). Classification : corpusculaire (souvent constitutionnelle) vs extracorpusculaire (souvent acquise).",
+    premiere_intention: ["Confirmer l'hémolyse : réticulocytes élevés, haptoglobine effondrée, bilirubine non conjuguée et LDH augmentées", "Frottis sanguin (schizocytes → MAT, sphérocytes, drépanocytes…)", "Test de Coombs direct : différencie hémolyse immunologique vs non immunologique", "Apprécier la tolérance et le caractère aigu ou chronique"],
+    causes: [
+      { cause: "Corpusculaire — membrane", signe: "sphérocytose (Minkowski-Chauffard), elliptocytose", examens: ["Frottis", "Ektacytométrie / résistances osmotiques"] },
+      { cause: "Corpusculaire — hémoglobine", signe: "drépanocytose, thalassémies", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Corpusculaire — enzymatique", signe: "déficit en G6PD, en pyruvate-kinase", examens: ["Dosages enzymatiques érythrocytaires"] },
+      { cause: "Extracorpusculaire — mécanique (MAT)", signe: "SHU, PTT : schizocytes + thrombopénie", examens: ["Frottis (schizocytes)", "Plaquettes", "Avis hématologique urgent"] },
+      { cause: "Extracorpusculaire — infectieux / toxique", signe: "paludisme (retour de zone d'endémie), toxiques", examens: ["Frottis / goutte épaisse", "Contexte d'exposition"] },
+      { cause: "Extracorpusculaire — immunologique", signe: "AHAI : Coombs direct positif", examens: ["Test de Coombs direct"] }
+    ],
+    tableaux: [
+      { titre: "Classification des anémies hémolytiques",
+        entetes: ["Mécanisme", "Corpusculaire (souvent constitutionnelle)", "Extracorpusculaire (souvent acquise)"],
+        lignes: [
+          ["Membrane / mécanique", "Sphérocytose, elliptocytose", "Mécanique : SHU, PTT (MAT)"],
+          ["Hémoglobine / infectieux", "Drépanocytose, thalassémies", "Infectieux : paludisme…"],
+          ["Enzyme / toxique-immuno", "Déficit en G6PD, pyruvate-kinase", "Toxique ; immunologique : AHAI"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë : fièvre, frissons, nausées, malaise, douleurs lombaires/abdominales, état de choc", "Schizocytes + thrombopénie = microangiopathie thrombotique (SHU/PTT) → urgence hématologique", "Paludisme à évoquer au retour de zone d'endémie", "Mauvaise tolérance de l'anémie"],
+    conduite: ["Hémolyse aiguë = signes généraux marqués ; hémolyse chronique = ictère, urines foncées, splénomégalie.", "Coombs direct positif → AHAI ; négatif → orienter vers une cause corpusculaire ou mécanique.", "MAT (schizocytes + thrombopénie) = urgence : avis spécialisé immédiat."]
+  },
+  {
+    id: "ahai", num: 66, anomalie: "Anémie hémolytique auto-immune (AHAI)",
+    specialite: "Hématologie",
+    definition: "Anémie hémolytique liée à des auto-anticorps dirigés contre un antigène de surface de l'hématie ; cause la plus fréquente des anémies hémolytiques extracorpusculaires. Deux types : auto-Ac chauds (50-70 %) et auto-Ac froids.",
+    premiere_intention: ["Confirmer l'hémolyse : anémie normochrome normocytaire régénérative, haptoglobine ↓, bilirubine non conjuguée ↑, LDH ↑", "Test de Coombs direct (test direct à l'antiglobuline) : Ig et/ou complément fixés sur le GR", "Préciser le type : chaud (IgG ± complément, anti-Rh, optimum 37 °C) vs froid (IgM, anti-i, optimum < 22 °C)", "Rechercher systématiquement une cause secondaire"],
+    causes: [
+      { cause: "Auto-Ac chauds — idiopathique", signe: "≈ 50 % des cas, hémolyse souvent chronique", examens: ["Coombs direct (IgG ± complément)"] },
+      { cause: "Auto-Ac chauds — secondaire", signe: "LED (rechercher un lupus, surtout si thrombopénie auto-immune associée = syndrome d'Evans), hémopathie lymphoïde (LNH, LLC, dysglobulinémie), α-méthyldopa", examens: ["Anticorps antinucléaires", "NFS, électrophorèse, imagerie"] },
+      { cause: "Auto-Ac froids — hémoglobinurie a frigore", signe: "auto-anticorps biphasiques (fixation à froid, hémolyse à chaud), rare", examens: ["Test de Donath-Landsteiner"] },
+      { cause: "Auto-Ac froids — secondaire (infections)", signe: "Mycoplasma pneumoniae, EBV (anti-i), CMV, rougeole, oreillons — surtout chez l'enfant", examens: ["Sérologies", "Coombs (complément)"] },
+      { cause: "Maladie des agglutinines froides", signe: "IgM monoclonale (anti-i), crises hémolytiques au froid ; idiopathique ou hémopathie lymphoïde (lymphome lymphoplasmocytaire)", examens: ["Recherche d'agglutinines froides", "Électrophorèse / immunofixation"] }
+    ],
+    tableaux: [
+      { titre: "AHAI à auto-anticorps chauds vs froids",
+        entetes: ["", "Auto-Ac chauds (50-70 %)", "Auto-Ac froids"],
+        lignes: [
+          ["Anticorps", "IgG ± complément (souvent anti-Rh), optimum 37 °C", "IgM (anti-i), optimum < 22 °C"],
+          ["Tableau", "Hémolyse plutôt chronique", "Crises hémolytiques déclenchées par le froid"],
+          ["Étiologies", "Idiopathique (50 %) ; LED, hémopathie lymphoïde, α-méthyldopa…", "HPN a frigore ; infections (Mycoplasma, EBV, CMV…) ; agglutinines froides (hémopathie lymphoïde)"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë (fièvre, frissons, état de choc)", "Syndrome d'Evans (AHAI + thrombopénie auto-immune) → rechercher un lupus", "Mauvaise tolérance → transfusion (avec précautions, sang réchauffé si Ac froids)"],
+    conduite: ["Test de Coombs direct = examen clé ; test d'élution et Coombs indirect précisent la spécificité de l'anticorps.", "Toujours rechercher une cause secondaire (LED, hémopathie lymphoïde, infection, médicament).", "Traitements selon le type : corticothérapie, immunoglobulines IV, immunosuppresseurs, anti-CD20 (rituximab), splénectomie ; pour les formes à Ac froids, protection contre le froid."]
   }
 ];

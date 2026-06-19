@@ -46,17 +46,22 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **21 fiches biologiques** du manuel (43-63) sont encodées dans un module
-**distinct, côté médecin** : `biologie.html` (données `data/bio-kb.js`).
-Contrairement au questionnaire patient, l'entrée est un **résultat anormal**
-(ex. hyperkaliémie, TCA allongé, cytolyse, hypercalcémie…) et la sortie est
-structurée : **démarche de 1re intention**, **causes à explorer** avec leur
-**signe discriminant** et les **examens**, **red flags**, **conduite à tenir**.
+Les **24 fiches biologiques** sont encodées dans un module **distinct, côté
+médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
+questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
+TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
+de 1re intention**, **causes à explorer** avec leur **signe discriminant** et les
+**examens**, **tableaux comparatifs** (le cas échéant), **red flags**, **conduite
+à tenir**.
 
 Couvre : anomalies de l'hémostase (TS, TCA, TP, TT, hérédité), électrophorèse,
 hyperéosinophilie, inversion de formule, hyperglycémie, hypercalcémie,
 hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, hyperprolactinémie, GGT,
-cytolyse, dyslipidémie, CPK, LDH, et la CAT devant une anémie.
+cytolyse, dyslipidémie, CPK, LDH, et un **bloc hématologie** : CAT devant une
+anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /
+β-thalassémie), anémie **hémolytique** (classification corpusculaire /
+extracorpusculaire) et **AHAI** (auto-Ac chauds vs froids). Le bloc hématologie
+s'appuie sur du contenu **MémoBio** d'accès libre, reformaté au schéma du module.
 
 Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'app
 clinique. Version autonome : `biologie-standalone.html` (cross-liée aux autres

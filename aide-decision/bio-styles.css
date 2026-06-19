@@ -58,6 +58,14 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
 .causes td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top}
 .c-name{font-weight:700;color:var(--brand-d);white-space:nowrap}
 .exam{display:inline-block;background:#f1ecf8;color:var(--brand-d);border-radius:5px;padding:1px 7px;margin:2px 4px 2px 0;font-size:.8rem}
+.cmp-wrap{margin:0 0 16px;overflow-x:auto}
+.cmp-wrap:last-child{margin-bottom:0}
+.cmp-title{margin:0 0 8px;font-size:.9rem;color:var(--brand-d)}
+.cmp{width:100%;border-collapse:collapse;font-size:.86rem;min-width:480px}
+.cmp thead th{background:#f3eefa;color:var(--brand-d);text-align:left;font-size:.78rem;padding:7px 9px;border:1px solid var(--line);font-weight:700}
+.cmp thead th:first-child{background:#faf7fd}
+.cmp tbody th{text-align:left;font-weight:700;color:var(--ink);background:#faf9fc;padding:7px 9px;border:1px solid var(--line);white-space:nowrap}
+.cmp tbody td{padding:7px 9px;border:1px solid var(--line);vertical-align:top}
 .sec-cat{background:#f0f8f3}
 .sec-cat h3{color:var(--ok)}
 .foot{max-width:1160px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}

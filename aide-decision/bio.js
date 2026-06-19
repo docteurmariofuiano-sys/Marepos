@@ -14,7 +14,11 @@
 
   BIO.forEach(function (b) {
     b._search = norm([b.anomalie, b.specialite, b.definition,
-      b.causes.map(function (c) { return c.cause + " " + c.signe; }).join(" ")].join(" "));
+      b.causes.map(function (c) { return c.cause + " " + c.signe; }).join(" "),
+      (b.tableaux || []).map(function (t) {
+        return (t.titre || "") + " " + (t.entetes || []).join(" ") + " " +
+          (t.lignes || []).map(function (r) { return r.join(" "); }).join(" ");
+      }).join(" ")].join(" "));
   });
 
   function filtered() {
@@ -46,6 +50,19 @@
       return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
   }
 
+  function tableau(t) {
+    var head = "<tr>" + (t.entetes || []).map(function (h) {
+      return "<th>" + esc(h) + "</th>"; }).join("") + "</tr>";
+    var body = (t.lignes || []).map(function (r) {
+      return "<tr>" + r.map(function (c, i) {
+        return i === 0 ? "<th>" + esc(c) + "</th>" : "<td>" + esc(c) + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    return "<div class='cmp-wrap'>" +
+      (t.titre ? "<h4 class='cmp-title'>" + esc(t.titre) + "</h4>" : "") +
+      "<table class='cmp'><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>";
+  }
+
   function renderDetail(id) {
     var b = BIO.find(function (x) { return x.id === id; });
     if (!b) return;
@@ -69,6 +86,8 @@
       "</header>" +
       block("sec-pi", "1 · Première intention / démarche", ul("pi", b.premiere_intention)) +
       block("sec-cz", "2 · Causes à explorer & signes discriminants", causes) +
+      (b.tableaux && b.tableaux.length
+        ? block("sec-tab", "Tableaux comparatifs", b.tableaux.map(tableau).join("")) : "") +
       block("sec-rf", "⚠ Red flags / urgences", ul("rf", b.red_flags)) +
       block("sec-cat", "Conduite à tenir (points clés)", ul("cat", b.conduite));
     renderList();
