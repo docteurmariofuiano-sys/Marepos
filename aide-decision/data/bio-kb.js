@@ -548,5 +548,42 @@ window.BIOKB = [
     ],
     red_flags: ["Cytopénies auto-immunes associées (AHAI, PTAI)", "Complications infectieuses récidivantes (hypogammaglobulinémie)", "Syndrome de Richter : transformation en lymphome agressif (AEG, adénopathie en croissance rapide, LDH ↑)", "Délétion 17p / TP53 muté : forme de mauvais pronostic"],
     conduite: ["Diagnostic = hyperlymphocytose B clonale + score de Matutes 4-5 (3 dans 5 % des cas).", "Classer (stades de Binet A/B/C) ; nombreuses formes indolentes relevant d'une simple surveillance.", "Bilan pronostique : FISH (17p, 11q), statut mutationnel IgVH, β2-microglobuline.", "Traiter les formes symptomatiques / évolutives ; prévention et traitement des infections."]
+  },
+  {
+    id: "waldenstrom", num: 73, anomalie: "Maladie de Waldenström (macroglobulinémie)",
+    specialite: "Hématologie",
+    definition: "Lymphome lymphoplasmocytaire sécrétant une IgM monoclonale. Manifestations liées à l'infiltration (adénopathies, spléno/hépatomégalie, cytopénies, amaigrissement) et à l'IgM (hyperviscosité, cryoglobulinémie, neuropathie, Raynaud). Incidence ≈ 0,5/100 000/an, adulte après 60 ans, sex-ratio H/F ≈ 2-2,5.",
+    premiere_intention: ["Électrophorèse des protéines sériques : pic monoclonal IgM (souvent κ) + baisse des Ig polyclonales ; immunofixation pour typer", "Hémogramme : anémie normochrome normocytaire arégénérative, thrombopénie (~40 %), ± hyperlymphocytose (~40 %) ; frottis en rouleaux", "VS très augmentée, hyperprotidémie", "Myélogramme : infiltration lymphoplasmocytaire polymorphe > 20 %"],
+    causes: [
+      { cause: "Pic monoclonal IgM", signe: "IgM monoclonale (souvent κ), baisse des Ig polyclonales", examens: ["EPP, immunofixation", "Dosage pondéral des Ig"] },
+      { cause: "Syndrome d'hyperviscosité", signe: "troubles neurologiques et visuels, céphalées, hémorragies muqueuses", examens: ["Fond d'œil", "Viscosité sérique"] },
+      { cause: "Cryoglobulinémie (~15 %)", signe: "syndrome de Raynaud, purpura, acrosyndrome", examens: ["Recherche de cryoglobuline (prélèvement à 37 °C)"] },
+      { cause: "Atteinte rénale / chaînes légères (~50 %)", signe: "protéinurie de Bence Jones", examens: ["Protéinurie de Bence Jones", "Électrophorèse des protéines urinaires"] },
+      { cause: "Infiltration médullaire", signe: "infiltration polymorphe > 20 % (lymphocytes, lymphoplasmocytes, plasmocytes)", examens: ["Myélogramme / BOM", "Phosphatase acide tartrate-résistante (cytochimie)"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques caractéristiques",
+        entetes: ["Examen", "Anomalie"],
+        lignes: [
+          ["Électrophorèse", "Pic monoclonal IgM (souvent κ) + ↓ des Ig polyclonales"],
+          ["VS / protides", "VS ↑↑, hyperprotidémie"],
+          ["Hémogramme", "Anémie normochrome normocytaire arégénérative, thrombopénie (40 %), ± hyperlymphocytose (40 %)"],
+          ["Frottis", "Hématies en rouleaux (rouleau-formation)"],
+          ["Cytochimie", "Phosphatase acide tartrate-résistante"],
+          ["Urines", "Protéinurie de Bence Jones (50 %)"],
+          ["Autres", "Cryoglobuline (15 %)"],
+          ["Myélogramme", "Infiltration lymphoplasmocytaire polymorphe > 20 %"]
+        ] },
+      { titre: "Waldenström vs myélome multiple",
+        entetes: ["", "Waldenström", "Myélome multiple"],
+        lignes: [
+          ["Immunoglobuline", "IgM monoclonale", "IgG ou IgA (ou chaînes légères)"],
+          ["Cellule", "Lymphoplasmocyte", "Plasmocyte"],
+          ["Os", "Pas de lésion lytique typique", "Lésions lytiques, hypercalcémie"],
+          ["Particularité", "Hyperviscosité, cryoglobuline", "Insuffisance rénale, douleurs osseuses"]
+        ] }
+    ],
+    red_flags: ["Syndrome d'hyperviscosité symptomatique (troubles neuro/visuels, hémorragies) → urgence (plasmaphérèse)", "Anémie sévère ou cytopénies profondes", "Neuropathie périphérique, cryoglobulinémie symptomatique"],
+    conduite: ["Diagnostic : IgM monoclonale + infiltration médullaire lymphoplasmocytaire (> 20 %).", "Distinguer du myélome (IgG/IgA, plasmocytes, lésions osseuses) : Waldenström = IgM, lymphoplasmocyte, hyperviscosité.", "Formes asymptomatiques : surveillance ; traiter si symptômes (hyperviscosité, cytopénies, AEG).", "Hyperviscosité symptomatique : plasmaphérèse en urgence, puis traitement spécifique (rituximab ± chimiothérapie, inhibiteurs de BTK)."]
   }
 ];
