@@ -2776,6 +2776,52 @@ window.BIOKB = [
     ],
     red_flags: ["Primo-infection : syndrome viral fébrile avec éruption/adénopathies + facteur de risque → ELISA + Ag p24/charge virale (fenêtre sérologique)", "CD4 < 200/mm³ = SIDA : risque d'infections opportunistes → prophylaxie", "Accident d'exposition (AES, rapport à risque) → traitement post-exposition en urgence (< 48 h)", "Co-infections fréquentes : VHB (5-6 %), VHC (~25 %)"],
     conduite: ["Dépistage par ELISA 4e génération ; confirmation Western Blot + 2e prélèvement (arrêté 2010).", "Penser à la fenêtre sérologique (Ag p24 / ARN positifs avant les anticorps).", "Sujet séropositif : bilan immuno-virologique (CD4, charge virale, génotype), général, infectieux ; vacciner (VHB).", "Annonce en entretien individuel + prise en charge spécialisée rapide ; dépistage des partenaires, prévention."]
+  },
+  {
+    id: "vhc", num: 122, anomalie: "Virus de l'hépatite C (VHC)",
+    specialite: "Infectiologie",
+    definition: "Virus à ARN transmis par voie parentérale (sang). Passage à la chronicité fréquent (70-80 %), risque de cirrhose (25 %) et de carcinome hépatocellulaire (5 %). L'hépatite C chronique = persistance de l'ARN VHC > 6 mois. Prévalence en France ~0,8 % (400 000 personnes).",
+    premiere_intention: ["Dépistage : sérologie anti-VHC (2 réactifs) ; si positive, confirmer sur un 2e prélèvement", "Si séropositif : ARN VHC (charge virale) — distingue infection active (ARN+) et guérison (ARN−)", "Les Ac anti-VHC sont souvent absents en phase aiguë → si négatifs devant une hépatite aiguë, rechercher l'ARN VHC", "Génotype + charge virale avant traitement ; transaminases, évaluation de la fibrose"],
+    causes: [
+      { cause: "Hépatite C aiguë", signe: "asymptomatique dans 90 % ; 10 % asthénie ± ictère ; Ac souvent absents (rechercher l'ARN)", examens: ["ARN VHC", "Transaminases"] },
+      { cause: "Hépatite C chronique", signe: "ARN persistant > 6 mois ; asthénie ; manifestations extra-hépatiques (cryoglobulinémie mixte / vascularite, glomérulonéphrite membrano-proliférative)", examens: ["ARN VHC, génotype", "Évaluation de la fibrose"] },
+      { cause: "Complications", signe: "cirrhose (25 %), carcinome hépatocellulaire (5 %) ; pas de fulminante par le VHC seul (sauf co-infection VHB/VHA)", examens: ["Échographie, AFP", "Élastométrie"] }
+    ],
+    tableaux: [
+      { titre: "Algorithme diagnostique",
+        entetes: ["Sérologie / ARN", "Interprétation"],
+        lignes: [
+          ["Sérologie négative", "Pas d'infection (attention à la fenêtre) ; prévention primaire"],
+          ["Sérologie positive (2 réactifs) + 2e prélèvement", "Sujet séropositif → doser l'ARN VHC"],
+          ["ARN positif + transaminases élevées", "Infection active → génotype, charge virale → traitement"],
+          ["ARN positif + transaminases normales", "Surveillance (traitement si génotype 2/3, manifestations extra-hépatiques, demande du patient)"],
+          ["ARN négatif + transaminases normales", "Guérison"]
+        ] },
+      { titre: "Populations à dépister",
+        entetes: ["Niveau de risque", "Populations"],
+        lignes: [
+          ["Élevé", "Toxicomanie IV, transfusion avant 1992, enfant de mère VHC+, hémodialysé, VIH+, AES soignant"],
+          ["Faible", "Partenaires/entourage, incarcération, tatouage/piercing/mésothérapie/acupuncture sans matériel à usage unique, pays de forte prévalence"],
+          ["Signes évocateurs", "Asthénie / ictère inexpliqués, cryoglobulinémie, élévation inexpliquée des transaminases"]
+        ] },
+      { titre: "Transmission et épidémiologie",
+        entetes: ["Aspect", "Données"],
+        lignes: [
+          ["Transmission", "Sanguine parentérale (toxicomanie, transfusion avant 1992, hémodialyse) ; materno-fœtale ; sexuelle très faible"],
+          ["Chronicité", "70-80 %"],
+          ["Complications", "Cirrhose 25 %, carcinome hépatocellulaire 5 %"],
+          ["Prévalence (France)", "~0,8 % (400 000) ; incidence 5000/an (70 % toxicomanes)"]
+        ] },
+      { titre: "Efficacité du traitement",
+        entetes: ["Critère", "Objectif"],
+        lignes: [
+          ["Virologique", "Négativation de l'ARN VHC (réponse virologique soutenue = guérison)"],
+          ["Biochimique", "Normalisation des transaminases"],
+          ["Histologique", "Stabilisation / régression des lésions"]
+        ] }
+    ],
+    red_flags: ["Cirrhose (25 %) et carcinome hépatocellulaire (5 %) : dépistage (échographie + AFP / 6 mois, fibroscopie)", "Manifestations extra-hépatiques : cryoglobulinémie mixte (vascularite), glomérulonéphrite membrano-proliférative", "Co-infection VHB/VHA → risque d'hépatite fulminante (le VHC seul n'en donne pas)", "Co-infection VIH-VHC fréquente (~25 % des patients VIH)"],
+    conduite: ["Dépistage par sérologie (2 réactifs) → ARN VHC pour distinguer infection active et guérison.", "Ac souvent absents en phase aiguë : devant une hépatite aiguë, rechercher l'ARN VHC.", "Évaluer la fibrose (élastométrie / biopsie), le génotype et la charge virale avant traitement.", "Traitement actuel : antiviraux d'action directe (AAD) ; le schéma IFNα pégylé + ribavirine est l'ancienne référence. Objectif = ARN indétectable (guérison)."]
   }
 ];
 
