@@ -867,5 +867,32 @@ window.BIOKB = [
     ],
     red_flags: ["Urgence : neutropénie fébrile (sepsis), syndrome hémorragique / CIVD (surtout LAM 3)", "LAM 3 promyélocytaire = urgence (CIVD) → ATRA sans attendre", "Hyperleucocytose majeure → leucostase (détresse respiratoire, troubles neurologiques)", "Syndrome de lyse tumorale", "Hypertrophie gingivale / leucémides (formes monocytaires)"],
     conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "MPO+ et corps d'Auer orientent vers la LAM (vs LAL, MPO−).", "LAM 3 (t(15;17), PML-RARA) : rechercher et traiter la CIVD, débuter l'ATRA sans délai.", "Bilan : immunophénotype, cytogénétique / biologie moléculaire (pronostic) ; prévenir le syndrome de lyse ; prise en charge spécialisée."]
+  },
+  {
+    id: "smd", num: 82, anomalie: "Syndromes myélodysplasiques (SMD)",
+    specialite: "Hématologie",
+    definition: "Hémopathies clonales de la cellule souche : hématopoïèse inefficace → cytopénie(s) réfractaire(s) + dysplasie médullaire, avec blastose < 20 % (≥ 20 % = LAM). Risque de transformation en LAM. Touche surtout le sujet âgé.",
+    premiere_intention: ["Hémogramme : cytopénie(s) réfractaire(s) (anémie souvent macrocytaire arégénérative ± neutropénie ± thrombopénie)", "Frottis : signes de dysplasie ; compter les blastes ; éliminer carences (B12/folates), alcool, médicaments, causes réactionnelles", "Myélogramme : dysplasie ≥ 1 lignée, % de blastes, sidéroblastes en couronne (coloration de Perls), recherche de corps d'Auer", "Caryotype médullaire (ex. délétion 5q) ; classer (OMS) et stratifier le pronostic (IPSS-R)"],
+    causes: [
+      { cause: "SMD (clonal)", signe: "cytopénie réfractaire + dysplasie, blastes < 20 %, anomalie cytogénétique (5q−…)", examens: ["Myélogramme + coloration de Perls", "Caryotype médullaire"] },
+      { cause: "Cytopénie réactionnelle / carentielle", signe: "carence B12/folates, alcool, médicaments, infection, toxique", examens: ["B12, folates", "Bilan d'élimination"] },
+      { cause: "Excès de blastes ≥ 20 %", signe: "leucémie aiguë myéloïde (au-delà du cadre SMD)", examens: ["Myélogramme", "Immunophénotypage"] }
+    ],
+    tableaux: [
+      { titre: "Classification OMS des SMD",
+        entetes: ["Classification OMS", "Sang", "Moelle"],
+        lignes: [
+          ["Anémie réfractaire (AR)", "Blastes absents ou < 1 % ; anémie", "Blastes < 5 % ; dysérythropoïèse (< 15 % de sidéroblastes en couronne)"],
+          ["AR avec sidéroblastes en couronne (ARSI)", "Blastes absents ; anémie", "Blastes < 5 % ; dysérythropoïèse pure, > 15 % de sidéroblastes en couronne"],
+          ["Cytopénie réfractaire avec dysplasie multilignée (CRDM)", "Blastes absents ou < 1 % ; pas de corps d'Auer ; monocytes < 1 G/L ; bi- ou pancytopénie", "Blastes < 5 % ; dysplasie > 10 % des cellules d'au moins 2 lignées ; < 15 % de sidéroblastes en couronne"],
+          ["CRDM avec sidéroblastes en couronne (CRDM-SC)", "Blastes absents ou < 1 % ; pas de corps d'Auer ; monocytes < 1 G/L ; bi- ou pancytopénie", "Blastes < 5 % ; dysplasie > 10 % des cellules d'au moins 2 lignées ; ≥ 15 % de sidéroblastes en couronne"],
+          ["AR avec excès de blastes type 1 (AREB-1)", "Blastes < 5 % ; pas de corps d'Auer ; monocytes < 1 G/L ; cytopénies", "Blastes 5-10 % ; pas de corps d'Auer ; dysplasie d'une ou plusieurs lignées"],
+          ["AR avec excès de blastes type 2 (AREB-2)", "Blastes 5-19 % ; corps d'Auer possible ; monocytes < 1 G/L ; cytopénies", "Blastes 10-19 % ; corps d'Auer possible ; dysplasie d'une ou plusieurs lignées"],
+          ["SMD inclassable (SMD-U)", "Blastes absents ou < 1 % ; cytopénies", "Blastes < 5 % ; pas de corps d'Auer ; dysplasie sur une seule lignée (granulocytaire ou mégacaryocytaire)"],
+          ["SMD avec délétion 5q− isolée", "Blastes absents ou < 1 % ; anémie ; plaquettes N ou ↑", "Blastes < 5 % ; pas de corps d'Auer ; mégacaryocytes N ou ↑ (noyau non lobé) ; del 5(q21;q32)"]
+        ] }
+    ],
+    red_flags: ["Excès de blastes (AREB-2, blastes 10-19 %) : risque élevé de transformation en LAM", "Présence de corps d'Auer (forme à excès de blastes)", "Cytopénies profondes : neutropénie fébrile, syndrome hémorragique, anémie mal tolérée", "Caryotype défavorable (IPSS-R élevé)"],
+    conduite: ["Diagnostic d'élimination : exclure carences (B12/folates), alcool, médicaments, causes réactionnelles avant de retenir un SMD.", "Myélogramme avec coloration de Perls (sidéroblastes en couronne) et caryotype = indispensables.", "Classer (OMS) et stratifier le risque (IPSS-R) : conditionne la prise en charge.", "Bas risque : soutien (transfusions, EPO, chélation du fer) ; haut risque : agents hypométhylants, allogreffe ; le 5q− isolé répond au lénalidomide."]
   }
 ];

@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **39 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **40 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -73,8 +73,9 @@ Philadelphie / BCR-ABL), **polyglobulie de Vaquez** (JAK2, EPO, seuils
 Hte/Hb), **thrombocytémie essentielle** (critères, thrombocytose
 réactionnelle), **myélofibrose primitive** (dacryocytes, érythromyélémie,
 stades de fibrose), **LAL** (leucémie aiguë lymphoïde : immunophénotype EGIL
-B/T, syndrome de lyse) et **LAM** (leucémie aiguë myéloïde : classification FAB,
-MPO, corps d'Auer). Le bloc hématologie s'appuie sur
+B/T, syndrome de lyse), **LAM** (leucémie aiguë myéloïde : classification FAB,
+MPO, corps d'Auer) et **SMD** (syndromes myélodysplasiques : classification OMS).
+Le bloc hématologie s'appuie sur
 du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
 schéma du module.
 
