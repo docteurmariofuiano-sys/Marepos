@@ -1223,6 +1223,36 @@ window.BIOKB = [
     ],
     red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FIX (inhibiteur, ~2 %)", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
     conduite: ["Profil identique à l'hémophilie A (TCA allongé isolé, Rosner < 12) : c'est le DOSAGE qui distingue (FIX bas vs FVIII bas).", "Chez le nouveau-né, le FIX est physiologiquement bas (15-50 %) : interpréter avec prudence / recontrôler.", "Traitement substitutif par facteur IX ; surveiller l'apparition d'un inhibiteur.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
+  },
+  {
+    id: "sapl", num: 88, anomalie: "Syndrome des antiphospholipides (SAPL)",
+    specialite: "Hémostase",
+    definition: "Thrombophilie auto-immune définie par l'association d'AU MOINS 1 critère clinique (thrombose ou morbidité obstétricale) ET d'AU MOINS 1 critère biologique (anticorps antiphospholipides persistants). Primitif ou associé à un lupus.",
+    premiere_intention: ["Évoquer devant : thrombose (veineuse/artérielle) inexpliquée ou récidivante, morbidité obstétricale, ou TCA allongé isolé ne corrigeant pas", "Anticorps antiphospholipides : lupus anticoagulant, anti-cardiolipides, anti-β2-GP1 (IgG/IgM)", "Confirmer la PERSISTANCE : 2 prélèvements à ≥ 12 semaines d'intervalle", "Rechercher un lupus associé (ACAN, anti-DNA) ; contexte thrombotique"],
+    causes: [
+      { cause: "Critère clinique — thrombose", signe: "≥ 1 thrombose objectivée (imagerie de référence ou histopathologie)", examens: ["Imagerie (écho-Doppler, angio-TDM…)"] },
+      { cause: "Critère clinique — obstétrical", signe: "mort fœtale ≥ 10e semaine, prématurité < 34e semaine (éclampsie/insuffisance placentaire), ≥ 3 fausses couches < 10e semaine", examens: ["Bilan obstétrical"] },
+      { cause: "Critère biologique", signe: "lupus anticoagulant et/ou anti-cardiolipides et/ou anti-β2-GP1, persistants ≥ 12 semaines", examens: ["Lupus anticoagulant (ISTH)", "Anti-cardiolipides, anti-β2-GP1 (ELISA)"] }
+    ],
+    tableaux: [
+      { titre: "Critères cliniques (≥ 1 requis)",
+        entetes: ["Type", "Définition"],
+        lignes: [
+          ["Thrombose", "≥ 1 thrombose objectivée par imagerie de référence ou histopathologie"],
+          ["Obstétrical — mort fœtale", "≥ 1 mort fœtale inexpliquée ≥ 10e semaine de gestation (morphologie normale)"],
+          ["Obstétrical — prématurité", "≥ 1 naissance < 34e semaine pour éclampsie, prééclampsie grave ou insuffisance placentaire (nouveau-né normal)"],
+          ["Obstétrical — fausses couches", "≥ 3 avortements spontanés consécutifs < 10e semaine, sans cause anatomique/hormonale ni chromosomique"]
+        ] },
+      { titre: "Critères biologiques (≥ 2 reprises, ≥ 12 semaines d'intervalle)",
+        entetes: ["Anticorps", "Précisions"],
+        lignes: [
+          ["Lupus anticoagulant", "Mis en évidence selon les recommandations de l'ISTH"],
+          ["Anti-cardiolipides (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"],
+          ["Anti-β2-GP1 (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"]
+        ] }
+    ],
+    red_flags: ["SAPL catastrophique (CAPS) : thromboses multiples avec défaillance multiviscérale → urgence vitale", "Thrombose artérielle (AVC, IDM) ou thrombose veineuse étendue", "Morbidité obstétricale (pertes fœtales répétées, prééclampsie sévère)", "Thrombopénie souvent associée (anticoaguler avec précaution)"],
+    conduite: ["Diagnostic = 1 critère clinique + 1 critère biologique PERSISTANT (≥ 12 semaines).", "Le lupus anticoagulant allonge le TCA (ne corrige pas au mélange) mais le risque est THROMBOTIQUE, pas hémorragique.", "Rechercher un lupus associé ; éviter les œstroprogestatifs ; contrôler les facteurs de risque vasculaire.", "Traitement : anticoagulation au long cours après thrombose ; en obstétrique, aspirine + HBPM ; avis spécialisé."]
   }
 ];
 
