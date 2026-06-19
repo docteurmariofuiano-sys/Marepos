@@ -927,6 +927,46 @@ window.BIOKB = [
     ],
     red_flags: ["Cytopénies sévères (anémie transfusion-dépendante, thrombopénie, neutropénie → infections/saignements)", "Splénomégalie volumineuse compliquée (infarctus splénique, hypertension portale)", "Transformation en leucémie aiguë", "Altération de l'état général marquée (fièvre, sueurs, amaigrissement)"],
     conduite: ["Évoquer devant splénomégalie + érythromyélémie avec dacryocytes ; confirmer par BOM (fibrose) et biologie moléculaire (JAK2+, Ph1−).", "Distinguer myélofibrose primitive vs secondaire (évolution d'une Vaquez/TE) et des autres envahissements médullaires.", "Évaluer le pronostic (scores type IPSS/DIPSS) ; prise en charge spécialisée.", "Traitements : soutien (transfusions), inhibiteurs de JAK (ruxolitinib), allogreffe dans les formes à haut risque."]
+  },
+  {
+    id: "lal", num: 80, anomalie: "Leucémie aiguë lymphoïde (LAL)",
+    specialite: "Hématologie",
+    definition: "Prolifération clonale de précurseurs lymphoïdes (lymphoblastes) envahissant la moelle. URGENCE diagnostique. Deux pics : enfant (2-10 ans, 75 %) et adulte > 50 ans. Incidence 1,5/100 000/an, sex-ratio H/F ≈ 1,3.",
+    premiere_intention: ["Hémogramme : pancytopénie (anémie normochrome normocytaire arégénérative, neutropénie, thrombopénie) ; blastose circulante très variable (0 → 100 G/L)", "Myélogramme (urgent) : moelle riche, blastose médullaire > 90 % (parfois moelle hypocellulaire/fibreuse ~10 %)", "Immunophénotypage : LAL B (85 %, ≥ 2 marqueurs parmi CD19, CD22, cCD79a) ou LAL T (cCD3+)", "Cytogénétique / biologie moléculaire : Ph1 (t(9;22)), t(4;11)(11q23)… ; ponction lombaire (atteinte méningée)"],
+    causes: [
+      { cause: "LAL B (85 %)", signe: "≥ 2 marqueurs parmi CD19, CD22, cCD79a ; stades EGIL B-I à B-IV (B commune CD10+ = 60 %)", examens: ["Immunophénotypage", "Cytogénétique (Ph1, t(4;11))"] },
+      { cause: "LAL T (cCD3+)", signe: "expression du cCD3 ; stades T-I à T-IV ; souvent masse médiastinale, hyperleucocytose", examens: ["Immunophénotypage", "Imagerie thoracique"] },
+      { cause: "Diagnostic différentiel", signe: "LAM (myéloperoxydase+, corps d'Auer), syndrome mononucléosique, aplasie médullaire", examens: ["Cytochimie (MPO)", "Immunophénotypage"] }
+    ],
+    tableaux: [
+      { titre: "LAL B — classification EGIL",
+        entetes: ["Stade", "CD10", "Cµ", "sIg"],
+        lignes: [
+          ["B-I (pro-B)", "−", "−", "−"],
+          ["B-II (B commune, 60 %)", "+", "−", "−"],
+          ["B-III (pré-B)", "±", "+", "−"],
+          ["B-IV (B mature)", "±", "±", "+"]
+        ] },
+      { titre: "LAL T (cCD3+) — classification EGIL",
+        entetes: ["Stade", "CD7", "CD2/CD5/CD8", "CD1a", "sCD3"],
+        lignes: [
+          ["T-I (pro-T)", "+", "−", "−", "−"],
+          ["T-II (pré-T)", "+", "≥ 1 positif", "−", "−"],
+          ["T-III (thymocytes communs)", "±", "≥ 1 (CD4+ et CD8+)", "+", "±"],
+          ["T-IV (T mature)", "±", "≥ 1 (CD4+ ou CD8+)", "−", "+"]
+        ] },
+      { titre: "Syndrome de lyse tumorale (surtout Burkitt)",
+        entetes: ["Paramètre", "Variation"],
+        lignes: [
+          ["Potassium", "↑"],
+          ["Phosphate", "↑"],
+          ["Uricémie", "↑"],
+          ["Calcium", "↓"],
+          ["Créatininémie", "↑ (insuffisance rénale)"]
+        ] }
+    ],
+    red_flags: ["Urgence : pancytopénie fébrile (neutropénie → sepsis), syndrome hémorragique (thrombopénie / CIVD)", "Syndrome de lyse tumorale (surtout Burkitt) : K ↑, phosphate ↑, uricémie ↑, Ca ↓, IRA", "Hyperleucocytose majeure (leucostase) ; atteinte neuroméningée", "Masse médiastinale (LAL T) → compression"],
+    conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "Prévenir/traiter le syndrome de lyse (hyperhydratation, hypo-uricémiants) dans les formes prolifératives (Burkitt).", "Bilan : immunophénotype, cytogénétique (Ph1 → inhibiteur de tyrosine kinase), ponction lombaire (atteinte méningée).", "Prise en charge spécialisée (chimiothérapie, ± TKI si Ph1+, allogreffe selon le risque)."]
   }
 ];
 
