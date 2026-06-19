@@ -428,5 +428,42 @@ window.BIOKB = [
     ],
     red_flags: ["Plaquettes < 20 G/L avec syndrome hémorragique → fond d'œil, avis hématologique urgent", "Hémorragie muqueuse abondante ou signe neurologique (hémorragie intracrânienne, rare mais grave)"],
     conduite: ["Diagnostic d'élimination : thrombopénie isolée régénérative, autres causes exclues.", "Coombs plaquettaire positif dans ≈ 80 % (auto-Ac anti-GpIIbIIIa, anti-GpIb/IX) ; myélogramme (avant corticoïdes chez l'adulte ou si atypie) = moelle riche en mégacaryocytes.", "Plaquettes réticulées > 20-30 % (caractère périphérique).", "Traitement selon profondeur et risque : abstention/surveillance, corticoïdes, immunoglobulines IV ; 2e ligne : agonistes du TPO, rituximab, splénectomie."]
+  },
+  {
+    id: "mat", num: 69, anomalie: "Microangiopathie thrombotique (MAT) — PTT / SHU",
+    specialite: "Hématologie",
+    definition: "Occlusion de la microcirculation par des thrombi plaquettaires → triade : anémie hémolytique mécanique (schizocytes), thrombopénie périphérique de consommation, ischémie d'organe. Deux entités principales : PTT (purpura thrombotique thrombocytopénique, déficit en ADAMTS13) et SHU (syndrome hémolytique et urémique). URGENCE diagnostique et thérapeutique.",
+    premiere_intention: ["Affirmer l'hémolyse mécanique : schizocytes au frottis, haptoglobine effondrée, LDH très élevé, bilirubine non conjuguée ↑, réticulocytes ↑, test de Coombs NÉGATIF", "Thrombopénie de consommation (périphérique), souvent < 50 G/L", "Hémostase NORMALE (TP, TCA, fibrinogène) — distingue la MAT de la CIVD", "Évaluer l'atteinte d'organe : créatinine (rein), examen neurologique, troponine ; activité ADAMTS13 (< 10 % → PTT)"],
+    causes: [
+      { cause: "PTT (Moschcowitz)", signe: "déficit sévère en ADAMTS13 (< 10 %) : auto-immun (anti-ADAMTS13) ou congénital (Upshaw-Schulman) ; atteinte neurologique fluctuante au premier plan", examens: ["Activité ADAMTS13 + anticorps", "Frottis (schizocytes)"] },
+      { cause: "SHU typique (post-diarrhée)", signe: "surtout l'enfant ; E. coli entérohémorragique (Shiga-toxine, O157:H7) ; insuffisance rénale au premier plan, diarrhée souvent sanglante préalable", examens: ["Recherche STEC / Shiga-toxine dans les selles", "Créatinine"] },
+      { cause: "SHU atypique", signe: "dérégulation de la voie alterne du complément ; insuffisance rénale, formes familiales / récidivantes", examens: ["Exploration du complément (CH50, C3, facteurs H/I)"] },
+      { cause: "MAT secondaires", signe: "grossesse (HELLP, pré-éclampsie), cancer, médicaments, greffe, VIH, HTA maligne", examens: ["Contexte", "Bilan étiologique orienté"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique d'une MAT",
+        entetes: ["Paramètre", "Résultat"],
+        lignes: [
+          ["Anémie", "Hémolytique mécanique, régénérative"],
+          ["Frottis", "Schizocytes (> 1 %)"],
+          ["Haptoglobine", "Effondrée"],
+          ["LDH / bilirubine libre", "Augmentés"],
+          ["Test de Coombs", "Négatif (hémolyse non immune)"],
+          ["Plaquettes", "Thrombopénie (consommation)"],
+          ["TP / TCA / fibrinogène", "Normaux (≠ CIVD)"],
+          ["ADAMTS13", "< 10 % → PTT"]
+        ] },
+      { titre: "PTT vs SHU (orientation)",
+        entetes: ["", "PTT", "SHU"],
+        lignes: [
+          ["Mécanisme", "Déficit en ADAMTS13 (< 10 %)", "Shiga-toxine (typique) / complément (atypique)"],
+          ["Terrain", "Adulte", "Enfant surtout (forme typique)"],
+          ["Atteinte dominante", "Neurologique (fluctuante)", "Rénale (insuffisance rénale aiguë)"],
+          ["Élément clé", "ADAMTS13 effondré", "STEC / Shiga-toxine ; complément si atypique"],
+          ["Traitement", "Échanges plasmatiques en urgence", "Support ; éculizumab si atypique"]
+        ] }
+    ],
+    red_flags: ["MAT = urgence vitale : schizocytes + thrombopénie, Coombs négatif, hémostase normale → avis hématologique et échanges plasmatiques en urgence (PTT)", "NE PAS transfuser de plaquettes dans le PTT (aggrave les thromboses) sauf hémorragie vitale", "Atteinte neurologique (confusion, déficit, convulsion) ou cardiaque", "Insuffisance rénale aiguë"],
+    conduite: ["Toute association schizocytes + thrombopénie impose d'évoquer une MAT et de demander un avis spécialisé immédiat.", "Hémostase normale oriente vers MAT plutôt que CIVD ; ADAMTS13 effondré confirme le PTT.", "PTT : échanges plasmatiques en urgence, corticoïdes, rituximab, caplacizumab. SHU typique : traitement de support. SHU atypique : éculizumab."]
   }
 ];
