@@ -1473,5 +1473,46 @@ window.BIOKB = [
     ],
     red_flags: ["IRA à éliminer en urgence : obstacle, néphrotoxiques (produits de contraste iodés, IEC/ARA2, AINS, aminosides), GN rapidement progressive, cause vasculaire", "Hyperkaliémie menaçante (IRC + IEC/ARA2)", "Anémie sévère (↓ EPO) avec retentissement cardiaque (hypertrophie ventriculaire gauche)", "Sous IEC/ARA2 : créatininémie ↑ > 50 % (sténose bilatérale des artères rénales ?) ou kaliémie > 5,6 mmol/L → réévaluer"],
     conduite: ["Devant un DFG < 60 : confirmer, éliminer une IRA, affirmer la chronicité (> 3 mois ; antériorité, anémie/hypocalcémie, petits reins sauf diabète/amylose/polykystose).", "Bilan : EPP, glycémie, bandelette + protéinurie/24 h, cytologie urinaire, échographie rénale ; orienter l'étiologie (glomérulaire / tubulo-interstitielle / vasculaire).", "Néphroprotection : IEC/ARA2 (HTA/protéinurie), PA < 130/80, contrôle CV, éviction des néphrotoxiques ; surveiller créatinine et kaliémie.", "Anémie : fer IV si ferritine < 100 µg/L ou CST < 20 %, puis agents stimulant l'érythropoïèse ; préparer la suppléance aux stades avancés."]
+  },
+  {
+    id: "syndrome_nephrotique", num: 95, anomalie: "Syndrome néphrotique",
+    specialite: "Néphrologie",
+    definition: "Définition biologique : protéinurie > 3 g/24 h + hypoprotidémie < 60 g/L + hypoalbuminémie < 30 g/L. « Pur » si pas d'HTA, ni insuffisance rénale, ni hématurie microscopique, et protéinurie sélective ; « impur » dans le cas contraire.",
+    premiere_intention: ["Affirmer les 3 critères : protéinurie > 3 g/24 h, protidémie < 60 g/L, albuminémie < 30 g/L (le calcium mesuré baisse, pas le calcium corrigé)", "Caractériser la protéinurie (EPP urinaire) : sélective (> 85 % albumine, clairance IgG/transferrine < 0,1) vs non sélective (albumine + Ig)", "Classer pur / impur (HTA, insuffisance rénale, hématurie microscopique, sélectivité)", "Bilan : EPP sérique, bilan lipidique, hémostase, cytologie urinaire, ionogramme urinaire, bilan martial"],
+    causes: [
+      { cause: "Protéinurie sélective", signe: "> 85 % d'albumine, clairance IgG/transferrine < 0,1 ; perte des charges anioniques, pas de lésion en microscopie optique", examens: ["EPP urinaire"] },
+      { cause: "Protéinurie non sélective", signe: "albumine + protéines de haut poids moléculaire (immunoglobulines) ; lésions en microscopie optique", examens: ["EPP urinaire", "PBR selon contexte"] },
+      { cause: "Syndrome néphrotique impur", signe: "HTA, insuffisance rénale, hématurie microscopique ou protéinurie non sélective", examens: ["TA, créatinine, cytologie urinaire"] }
+    ],
+    tableaux: [
+      { titre: "Critères diagnostiques",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Protéinurie", "> 3 g/24 h"],
+          ["Protidémie", "< 60 g/L"],
+          ["Albuminémie", "< 30 g/L (↓ calcium mesuré, calcium corrigé normal)"]
+        ] },
+      { titre: "Syndrome néphrotique pur vs impur",
+        entetes: ["", "Pur", "Impur"],
+        lignes: [
+          ["HTA", "Absente", "Possible"],
+          ["Insuffisance rénale", "Absente", "Possible"],
+          ["Hématurie microscopique", "Absente", "Possible"],
+          ["Protéinurie", "Sélective", "Non sélective possible"]
+        ] },
+      { titre: "Conséquences biologiques et complications",
+        entetes: ["Domaine", "Anomalie / risque"],
+        lignes: [
+          ["EPP sérique", "↑ α2 et β-globulines, ↓ γ-globulines ; ↑ VS (hypoprotidémie)"],
+          ["Lipides", "Hyperlipidémie mixte type IIb (ou IV) : ↑ VLDL et LDL → statine si résistant"],
+          ["Coagulation", "Hypercoagulabilité (↑ facteurs + fuite d'antithrombine) → TVP / EP ; HBPM si albumine < 20-25 g/L puis AVK"],
+          ["Immunité", "↓ IgG / IgA → risque infectieux (pneumocoque, Haemophilus, klebsielle)"],
+          ["Médicaments", "↑ fraction libre des médicaments liés à l'albumine (AVK, AINS)"],
+          ["Fer", "Carence martiale atypique : fer, transferrine et ferritine diminués"],
+          ["Ionogramme urinaire", "Hyperaldostéronisme secondaire : ↓ natriurèse, ↑ kaliurèse"]
+        ] }
+    ],
+    red_flags: ["Complication thrombo-embolique (TVP, embolie pulmonaire, thrombose des veines rénales) par hypercoagulabilité", "Syndrome néphrotique sévère (albumine < 20-25 g/L) : anticoagulation préventive", "Infections (pneumocoque, Haemophilus) par hypogammaglobulinémie", "Syndrome néphrotique impur (HTA, IR, hématurie) → étiologie potentiellement grave, avis néphrologique"],
+    conduite: ["Affirmer les 3 critères biologiques ; distinguer pur (sélectif, sans HTA/IR/hématurie) et impur.", "Prévenir et surveiller les complications : thrombose (HBPM si albumine < 20-25 g/L), infections, dyslipidémie (statine si résistant).", "Adapter les médicaments fortement liés à l'albumine (↑ fraction libre).", "Avis néphrologique ; PBR selon l'âge et le caractère impur ; traitement étiologique."]
   }
 ];
