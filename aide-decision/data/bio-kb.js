@@ -624,5 +624,36 @@ window.BIOKB = [
     ],
     red_flags: ["Hypercalcémie symptomatique (confusion, déshydratation) → urgence", "Insuffisance rénale aiguë (tubulopathie à chaînes légères, hypercalcémie)", "Compression médullaire (douleur rachidienne + déficit neurologique) → urgence", "Anémie sévère, infections récidivantes (immunodépression)"],
     conduite: ["Diagnostic : plasmocytose médullaire monoclonale + composant monoclonal + atteinte d'organe (CRAB).", "Distinguer du MGUS (asymptomatique, pic faible, plasmocytose < 10 %) et de Waldenström (IgM).", "Bilan d'extension osseuse (TDM faible dose / IRM / TEP) ; pronostic par ISS/R-ISS et cytogénétique.", "Prise en charge spécialisée ; traiter l'hypercalcémie et la douleur, prévenir les complications osseuses (biphosphonates) et rénales."]
+  },
+  {
+    id: "tricholeucocytes", num: 75, anomalie: "Leucémie à tricholeucocytes",
+    specialite: "Hématologie",
+    definition: "Syndrome lymphoprolifératif B chronique rare (≈ 2 % des leucémies de l'adulte), à prédominance masculine. Triade : splénomégalie, cytopénies (avec MONOCYTOPÉNIE caractéristique), tricholeucocytes circulants. Mutation BRAF V600E quasi constante.",
+    premiere_intention: ["Hémogramme : pancytopénie — anémie normochrome normocytaire arégénérative, thrombopénie, leuconeutropénie et MONOCYTOPÉNIE (évocatrice)", "Frottis : tricholeucocytes (1-25 %) à contour chevelu", "Immunophénotypage : profil B (CD19/20/22), CD25+, CD103+, CD11c+, CD123+, annexine A1+, Ig de surface fortement exprimée ; CD5−/CD23−/CD10−, score de Matutes 0-1", "Cytochimie : phosphatase acide tartrate-résistante (TRAP) ; BOM (myélofibrose réticulinique, ponction médullaire souvent blanche) ; mutation BRAF V600E"],
+    causes: [
+      { cause: "Leucémie à tricholeucocytes", signe: "monocytopénie, tricholeucocytes chevelus, CD25/CD103/CD11c/CD123/annexine A1+, TRAP+, BRAF V600E", examens: ["Immunophénotypage", "BOM, TRAP", "Recherche BRAF V600E"] },
+      { cause: "Lymphome splénique de la zone marginale", signe: "splénomégalie, lymphocytes villeux ; CD103−, annexine A1−", examens: ["Immunophénotypage", "BOM"] },
+      { cause: "LLC / autre syndrome lymphoprolifératif B", signe: "CD5+, score de Matutes 4-5 (LLC)", examens: ["Immunophénotypage (score de Matutes)"] }
+    ],
+    tableaux: [
+      { titre: "Morphologie du tricholeucocyte (frottis)",
+        entetes: ["Caractère", "Description"],
+        lignes: [
+          ["Taille / proportion", "12-25 µm ; 1-25 % des éléments"],
+          ["Rapport nucléo-cytoplasmique", "0,5-0,7"],
+          ["Noyau", "Arrondi, ovalaire, encoché ou réniforme ; sans nucléole ; chromatine fine"],
+          ["Cytoplasme", "Faiblement basophile, contour irrégulier à prolongements (aspect chevelu)"],
+          ["Granulations", "Généralement absentes"]
+        ] },
+      { titre: "Immunophénotype",
+        entetes: ["Positifs", "Négatifs"],
+        lignes: [
+          ["CD19, CD20, CD22, HLA-DR", "CD5"],
+          ["CD25, CD103, CD11c, CD123", "CD23"],
+          ["Annexine A1 ; Ig de surface fortement exprimée", "CD10"]
+        ] }
+    ],
+    red_flags: ["Neutropénie et monocytopénie → infections (parfois atypiques / mycobactéries) : vigilance en cas de fièvre", "Cytopénies profondes (anémie, thrombopénie) symptomatiques", "Splénomégalie volumineuse"],
+    conduite: ["Évoquer devant splénomégalie + pancytopénie avec MONOCYTOPÉNIE et tricholeucocytes circulants.", "Confirmer : immunophénotype (CD103/CD25/CD11c/annexine A1), TRAP, BOM (myélofibrose, moelle souvent inaspirable), mutation BRAF V600E.", "Distinguer du lymphome splénique de la zone marginale (CD103−, annexine A1−).", "Prise en charge spécialisée : analogues des purines (cladribine, pentostatine) ; abstention si asymptomatique."]
   }
 ];
