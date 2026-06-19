@@ -22,12 +22,14 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (25 fiches)
+## Symptômes couverts (35 fiches)
 
 **Motifs courants** : `acouphène` · `adénopathie superficielle` · `algie faciale` ·
 `algie pelvienne` · `asthénie` · `lombalgie` · `diarrhée aiguë` · `cervicalgie` ·
 `constipation` · `hématurie` · `leucorrhées` · `épistaxis` · `grain de beauté
-(mélanome)` · `douleur du membre inférieur` · `dyspnée chronique`.
+(mélanome)` · `douleur du membre inférieur` · `dyspnée chronique` · `dorsalgie` ·
+`douleur du membre supérieur` · `diplopie` · `dysphonie` · `écoulement urétral` ·
+`goitre` · `diarrhée chronique` · `hépatomégalie` · `dysménorrhée` · `crampes`.
 
 **Fiches URGENCE (10)** : `douleur thoracique` · `dyspnée aiguë` · `déficit
 neurologique transitoire` · `fièvre au retour des tropiques` · `grosse bourse` ·

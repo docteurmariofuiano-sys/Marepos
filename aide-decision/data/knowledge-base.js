@@ -1734,5 +1734,608 @@ window.KB = {
       "Recherche d'un hippocratisme digital",
       "Poids, fréquence cardiaque et respiratoire"
     ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 15 — DORSALGIES
+  // -------------------------------------------------------------------------
+  dorsalgie: {
+    id: "dorsalgie",
+    symptome: "Douleur du milieu du dos (dorsalgie)",
+    specialite: ["Rhumatologie"],
+    questions: [
+      { id: "do_horaire", label: "Rythme", type: "single_choice",
+        question: "Quand la douleur est-elle la plus forte ?",
+        options: ["À l'effort, le soir (mécanique)", "La nuit / au réveil avec raideur (inflammatoire)"] },
+      { id: "do_transfixiante", label: "Douleur transfixiante", type: "boolean",
+        question: "Avez-vous une douleur intense qui traverse vers la poitrine ou le ventre, ou un essoufflement ?" },
+      { id: "do_neuro", label: "Compression médullaire", type: "boolean",
+        question: "Avez-vous une faiblesse des jambes ou des troubles pour uriner ?" },
+      { id: "do_fievre", label: "Fièvre / AEG / cancer", type: "boolean",
+        question: "Avez-vous de la fièvre, ou un cancer connu / un amaigrissement ?" },
+      { id: "do_repas", label: "Douleur viscérale projetée", type: "boolean",
+        question: "La douleur est-elle liée aux repas ou à la position (estomac, pancréas) ?" },
+      { id: "do_permanente", label: "Douleur non mécanique", type: "boolean",
+        question: "Est-elle permanente, non soulagée par le repos ?" },
+      { id: "do_trauma", label: "Contexte fracturaire", type: "boolean",
+        question: "Y a-t-il eu un traumatisme, ou avez-vous de l'ostéoporose ?" }
+    ],
+    red_flags: [
+      { id: "do_rf_vital", niveau: 3,
+        when: { q: "do_transfixiante", eq: true },
+        message_medecin: "Dorsalgie transfixiante : éliminer un IDM, une dissection aortique, une pancréatite (urgence).",
+        message_patient: "Cette douleur nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "do_rf_medullaire", niveau: 3,
+        when: { q: "do_neuro", eq: true },
+        message_medecin: "Signes de compression médullaire dorsale : urgence (IRM).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "do_rf_infect", niveau: 2,
+        when: { all: [{ q: "do_fievre", eq: true }, { q: "do_horaire", eq: "La nuit / au réveil avec raideur (inflammatoire)" }] },
+        message_medecin: "Dorsalgie inflammatoire fébrile / AEG : spondylodiscite ou tumeur à éliminer.",
+        message_patient: "Ces éléments nécessitent un avis médical rapide." },
+      { id: "do_rf_tassement", niveau: 2,
+        when: { q: "do_trauma", eq: true },
+        message_medecin: "Contexte de tassement vertébral (traumatisme, ostéoporose) : imagerie.",
+        message_patient: "Ce contexte nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "do_fonctionnelle", diagnostic: "Dorsalgie statique / fonctionnelle",
+        arguments: [{ label: "rythme mécanique", w: 3, when: { q: "do_horaire", eq: "À l'effort, le soir (mécanique)" } }],
+        examens_a_discuter: ["Correction posturale", "Traitement symptomatique"] },
+      { id: "do_tassement", diagnostic: "Tassement vertébral",
+        arguments: [{ label: "contexte traumatique / ostéoporose", w: 3, when: { q: "do_trauma", eq: true } }],
+        examens_a_discuter: ["Radiographie du rachis dorsal"] },
+      { id: "do_symptomatique", diagnostic: "Dorsalgie symptomatique (spondylodiscite, tumeur)",
+        arguments: [{ label: "fièvre / AEG", w: 3, when: { q: "do_fievre", eq: true } },
+                    { label: "douleur permanente non mécanique", w: 2, when: { q: "do_permanente", eq: true } }],
+        examens_a_discuter: ["VS / CRP", "IRM rachidienne"] },
+      { id: "do_viscerale", diagnostic: "Douleur projetée viscérale (cardiaque, aortique, pancréatique)",
+        arguments: [{ label: "douleur transfixiante", w: 3, when: { q: "do_transfixiante", eq: true } },
+                    { label: "lien avec les repas / position", w: 2, when: { q: "do_repas", eq: true } }],
+        examens_a_discuter: ["ECG, lipase", "Angioscanner aortique selon contexte"] }
+    ],
+    examens_clinique: [
+      "ECG si suspicion de cause cardiaque",
+      "Palpation / percussion du rachis dorsal",
+      "Examen neurologique des membres inférieurs",
+      "Palpation abdominale",
+      "Pression artérielle aux deux bras"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 17 — DOULEURS DU MEMBRE SUPÉRIEUR
+  // -------------------------------------------------------------------------
+  douleur_ms: {
+    id: "douleur_ms",
+    symptome: "Douleur du bras (membre supérieur)",
+    specialite: ["Rhumatologie", "Neurologie", "Vasculaire"],
+    questions: [
+      { id: "ms_cardiaque", label: "Douleur cardiaque projetée", type: "boolean",
+        question: "La douleur touche-t-elle le bras gauche, à l'effort, avec un serrement ou une oppression ?" },
+      { id: "ms_epaule", label: "Pathologie d'épaule", type: "boolean",
+        question: "La douleur est-elle dans l'épaule, gênant les mouvements, parfois la nuit ?" },
+      { id: "ms_radiculaire", label: "Névralgie cervico-brachiale", type: "boolean",
+        question: "La douleur suit-elle un trajet du cou vers la main ?" },
+      { id: "ms_canal", label: "Canal carpien", type: "boolean",
+        question: "Avez-vous des fourmillements des 3 premiers doigts qui vous réveillent la nuit ?" },
+      { id: "ms_oedeme", label: "TVP du membre supérieur", type: "boolean",
+        question: "Avez-vous le bras gonflé, lourd, avec des veines apparentes ?" },
+      { id: "ms_deficit", label: "Déficit moteur", type: "boolean",
+        question: "Avez-vous une faiblesse de la main ou du bras ?" }
+    ],
+    red_flags: [
+      { id: "ms_rf_sca", niveau: 3,
+        when: { q: "ms_cardiaque", eq: true },
+        message_medecin: "Douleur du bras gauche d'effort / constrictive : éliminer un syndrome coronarien (ECG, troponine).",
+        message_patient: "Cette douleur nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ms_rf_tvp", niveau: 2,
+        when: { q: "ms_oedeme", eq: true },
+        message_medecin: "Œdème du membre supérieur : TVP (cathéter, effort) → écho-doppler (risque d'embolie pulmonaire).",
+        message_patient: "Ce gonflement du bras nécessite un avis médical rapide." },
+      { id: "ms_rf_deficit", niveau: 2,
+        when: { q: "ms_deficit", eq: true },
+        message_medecin: "Déficit moteur : avis (atteinte radiculaire / médullaire).",
+        message_patient: "Une faiblesse du bras nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ms_epaule", diagnostic: "Pathologie d'épaule (tendinopathie, capsulite)",
+        arguments: [{ label: "douleur d'épaule mécanique/nocturne", w: 3, when: { q: "ms_epaule", eq: true } }],
+        examens_a_discuter: ["Examen de l'épaule", "Échographie / radiographie"] },
+      { id: "ms_ncb", diagnostic: "Névralgie cervico-brachiale",
+        arguments: [{ label: "douleur radiculaire", w: 3, when: { q: "ms_radiculaire", eq: true } },
+                    { label: "déficit", w: 1, when: { q: "ms_deficit", eq: true } }],
+        examens_a_discuter: ["Examen neurologique du membre supérieur"] },
+      { id: "ms_canal", diagnostic: "Syndrome du canal carpien",
+        arguments: [{ label: "paresthésies nocturnes des 3 premiers doigts", w: 3, when: { q: "ms_canal", eq: true } }],
+        examens_a_discuter: ["Tinel / Phalen", "EMG"] },
+      { id: "ms_cardiaque", diagnostic: "Douleur cardiaque projetée (SCA)",
+        arguments: [{ label: "bras gauche + effort + constriction", w: 3, when: { q: "ms_cardiaque", eq: true } }],
+        examens_a_discuter: ["ECG", "Troponine"] },
+      { id: "ms_tvp", diagnostic: "TVP du membre supérieur",
+        arguments: [{ label: "œdème + circulation collatérale", w: 3, when: { q: "ms_oedeme", eq: true } }],
+        examens_a_discuter: ["Écho-doppler veineux"] }
+    ],
+    examens_clinique: [
+      "Examen de l'épaule (mobilité, manœuvres de la coiffe)",
+      "Examen neurologique du membre supérieur",
+      "Manœuvres de Tinel / Phalen",
+      "Palpation comparative des deux bras (œdème, chaleur)",
+      "ECG en cas de doute cardiaque"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 14 — DIPLOPIE
+  // -------------------------------------------------------------------------
+  diplopie: {
+    id: "diplopie",
+    symptome: "Vision double (diplopie)",
+    specialite: ["Neurologie", "Ophtalmologie"],
+    questions: [
+      { id: "di_binoc", label: "Binoculaire", type: "boolean",
+        question: "La vision double disparaît-elle quand vous fermez un œil ?" },
+      { id: "di_install", label: "Installation", type: "single_choice",
+        question: "Comment est-ce apparu ?",
+        options: ["Brutalement", "Progressivement"] },
+      { id: "di_fluctuant", label: "Fluctuation (myasthénie)", type: "boolean",
+        question: "La gêne varie-t-elle, plus marquée le soir ou à la fatigue ?" },
+      { id: "di_douleur", label: "Douleur péri-orbitaire", type: "boolean",
+        question: "Avez-vous une douleur autour de l'œil ou des maux de tête ?" },
+      { id: "di_ptosis", label: "Ptosis / mydriase (III)", type: "boolean",
+        question: "Avez-vous une paupière tombante et/ou une pupille dilatée d'un côté ?" },
+      { id: "di_neuro", label: "Signes du tronc", type: "boolean",
+        question: "Avez-vous d'autres signes neurologiques (vertige, faiblesse, trouble de la parole) ?" },
+      { id: "di_horton", label: "Horton", type: "boolean",
+        question: "Avez-vous plus de 50 ans avec une douleur de la tempe/mâchoire ou une altération de l'état général ?" },
+      { id: "di_thyroide", label: "Orbitopathie", type: "boolean",
+        question: "Avez-vous les yeux globuleux (qui sortent) ou des signes thyroïdiens ?" }
+    ],
+    red_flags: [
+      { id: "di_rf_anevrisme", niveau: 3,
+        when: { all: [{ q: "di_douleur", eq: true }, { q: "di_ptosis", eq: true }] },
+        message_medecin: "Paralysie du III douloureuse avec mydriase : anévrisme (communicante postérieure) jusqu'à preuve du contraire → imagerie cérébrale urgente.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "di_rf_horton", niveau: 3,
+        when: { q: "di_horton", eq: true },
+        message_medecin: "Diplopie + céphalée / AEG après 50 ans : maladie de Horton (risque de cécité) → VS/CRP en urgence, corticothérapie si forte suspicion.",
+        message_patient: "Ces signes nécessitent une évaluation médicale sans attendre." },
+      { id: "di_rf_avc", niveau: 3,
+        when: { q: "di_neuro", eq: true },
+        message_medecin: "Diplopie + autres signes du tronc cérébral : AVC à éliminer (urgence).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "di_iii", diagnostic: "Paralysie du III (oculomoteur)",
+        arguments: [{ label: "ptosis + mydriase", w: 3, when: { q: "di_ptosis", eq: true } },
+                    { label: "douleur (anévrisme)", w: 1, when: { q: "di_douleur", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale (anévrisme si douloureux/mydriase)", "Glycémie (cause ischémique si mydriase respectée)"] },
+      { id: "di_oculo", diagnostic: "Paralysie oculomotrice (IV / VI)",
+        arguments: [{ label: "diplopie binoculaire", w: 2, when: { q: "di_binoc", eq: true } },
+                    { label: "installation brutale", w: 1, when: { q: "di_install", eq: "Brutalement" } }],
+        examens_a_discuter: ["Recherche d'HTIC", "Imagerie cérébrale"] },
+      { id: "di_myasthenie", diagnostic: "Myasthénie",
+        arguments: [{ label: "diplopie fluctuante à la fatigue", w: 3, when: { q: "di_fluctuant", eq: true } }],
+        examens_a_discuter: ["Test au glaçon", "Anticorps anti-RACh, avis neurologique"] },
+      { id: "di_thyroide", diagnostic: "Orbitopathie dysthyroïdienne",
+        arguments: [{ label: "exophtalmie / signes thyroïdiens", w: 3, when: { q: "di_thyroide", eq: true } }],
+        examens_a_discuter: ["TSH, anticorps", "Imagerie orbitaire"] }
+    ],
+    examens_clinique: [
+      "Test d'occlusion alternée (mono- vs binoculaire)",
+      "Examen des paires crâniennes (III, IV, VI)",
+      "Recherche d'un ptosis / d'une mydriase",
+      "Palpation des artères temporales",
+      "Examen thyroïdien et oculaire (exophtalmie)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 20 — DYSPHONIE
+  // -------------------------------------------------------------------------
+  dysphonie: {
+    id: "dysphonie",
+    symptome: "Voix enrouée (dysphonie)",
+    specialite: ["ORL"],
+    questions: [
+      { id: "dp_duree", label: "Ancienneté", type: "single_choice",
+        question: "Depuis combien de temps ?",
+        options: ["Moins de 3 semaines", "Plus de 3 semaines"] },
+      { id: "dp_tabac", label: "Tabac / alcool", type: "boolean",
+        question: "Fumez-vous et/ou buvez-vous de l'alcool régulièrement ?" },
+      { id: "dp_fievre", label: "Contexte infectieux", type: "boolean",
+        question: "Y a-t-il eu un rhume ou une laryngite récente ?" },
+      { id: "dp_chirurgie", label: "Chirurgie cervico-thoracique / goitre", type: "boolean",
+        question: "Avez-vous eu une chirurgie du cou ou du thorax récente, ou un goitre ?" },
+      { id: "dp_faussesroutes", label: "Voix bitonale / fausses routes", type: "boolean",
+        question: "Avez-vous des fausses routes (vous avalez de travers) ou une voix « bitonale » ?" },
+      { id: "dp_dyspnee", label: "Dyspnée laryngée", type: "boolean",
+        question: "Avez-vous une gêne respiratoire associée ?" },
+      { id: "dp_forcage", label: "Forçage vocal", type: "boolean",
+        question: "Forcez-vous beaucoup sur votre voix (métier de la voix) ?" }
+    ],
+    red_flags: [
+      { id: "dp_rf_dyspnee", niveau: 3,
+        when: { q: "dp_dyspnee", eq: true },
+        message_medecin: "Dyspnée laryngée associée à la dysphonie : urgence (obstruction des voies aériennes).",
+        message_patient: "Une gêne respiratoire nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "dp_rf_cancer", niveau: 2,
+        when: { all: [{ q: "dp_duree", eq: "Plus de 3 semaines" }, { q: "dp_tabac", eq: true }] },
+        message_medecin: "Dysphonie > 3 semaines chez un fumeur/buveur : cancer du larynx → laryngoscopie IMPÉRATIVE.",
+        message_patient: "Une voix enrouée qui dure nécessite un examen ORL." },
+      { id: "dp_rf_recurrentielle", niveau: 2,
+        when: { q: "dp_faussesroutes", eq: true },
+        message_medecin: "Voix bitonale + fausses routes : paralysie récurrentielle (cause médiastinale / thyroïdienne / néoplasique) → exploration.",
+        message_patient: "Ces signes nécessitent un avis ORL." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dp_laryngite", diagnostic: "Laryngite aiguë",
+        arguments: [{ label: "contexte infectieux", w: 3, when: { q: "dp_fievre", eq: true } },
+                    { label: "durée < 3 semaines", w: 1, when: { q: "dp_duree", eq: "Moins de 3 semaines" } }],
+        examens_a_discuter: ["Régression attendue < 1 semaine", "Repos vocal, traitement symptomatique"] },
+      { id: "dp_cancer", diagnostic: "Cancer du larynx",
+        arguments: [{ label: "tabac / alcool", w: 3, when: { q: "dp_tabac", eq: true } },
+                    { label: "durée > 3 semaines", w: 2, when: { q: "dp_duree", eq: "Plus de 3 semaines" } }],
+        examens_a_discuter: ["Laryngoscopie impérative"] },
+      { id: "dp_recurrentielle", diagnostic: "Paralysie récurrentielle",
+        arguments: [{ label: "voix bitonale / fausses routes", w: 3, when: { q: "dp_faussesroutes", eq: true } },
+                    { label: "chirurgie cervico-thoracique / goitre", w: 2, when: { q: "dp_chirurgie", eq: true } }],
+        examens_a_discuter: ["Laryngoscopie", "Imagerie du trajet récurrentiel"] },
+      { id: "dp_forcage", diagnostic: "Forçage vocal / nodules",
+        arguments: [{ label: "malmenage vocal", w: 3, when: { q: "dp_forcage", eq: true } }],
+        examens_a_discuter: ["Laryngoscopie", "Rééducation vocale (orthophonie)"] }
+    ],
+    examens_clinique: [
+      "Laryngoscopie (impérative si > 3 semaines)",
+      "Palpation cervicale (goitre, adénopathies)",
+      "Examen de la déglutition",
+      "Recherche de dyspnée laryngée"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 24 — ÉCOULEMENT URÉTRAL MASCULIN
+  // -------------------------------------------------------------------------
+  ecoulement_uretral: {
+    id: "ecoulement_uretral",
+    symptome: "Écoulement par la verge (urétrite)",
+    specialite: ["Urologie", "IST"],
+    questions: [
+      { id: "eu_aspect", label: "Aspect", type: "single_choice",
+        question: "Quel est l'aspect de l'écoulement ?",
+        options: ["Purulent, jaune-verdâtre, abondant", "Clair ou peu abondant", "Je ne sais pas"] },
+      { id: "eu_brulures", label: "Dysurie", type: "boolean",
+        question: "Avez-vous des brûlures en urinant ?" },
+      { id: "eu_partenaire", label: "Rapport à risque", type: "boolean",
+        question: "Avez-vous eu des rapports non protégés ou un nouveau partenaire récemment ?" },
+      { id: "eu_arthrite", label: "Sd de Fiessinger-Leroy-Reiter", type: "boolean",
+        question: "Avez-vous des douleurs articulaires ou une conjonctivite associées ?" },
+      { id: "eu_testicule", label: "Complication", type: "boolean",
+        question: "Avez-vous une douleur ou un gonflement d'un testicule, ou de la fièvre ?" }
+    ],
+    red_flags: [
+      { id: "eu_rf_complication", niveau: 2,
+        when: { q: "eu_testicule", eq: true },
+        message_medecin: "Orchi-épididymite / prostatite associée : avis rapide, antibiothérapie adaptée.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." },
+      { id: "eu_rf_dissemination", niveau: 2,
+        when: { q: "eu_arthrite", eq: true },
+        message_medecin: "Dissémination gonococcique (arthrite, dermatite) : avis spécialisé.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "eu_gono", diagnostic: "Urétrite gonococcique",
+        arguments: [{ label: "écoulement purulent abondant", w: 3, when: { q: "eu_aspect", eq: "Purulent, jaune-verdâtre, abondant" } }],
+        examens_a_discuter: ["PCR / culture gonocoque", "Traitement minute (ceftriaxone)"] },
+      { id: "eu_chlam", diagnostic: "Urétrite à Chlamydia / mycoplasme",
+        arguments: [{ label: "écoulement clair / modéré", w: 3, when: { q: "eu_aspect", eq: "Clair ou peu abondant" } }],
+        examens_a_discuter: ["PCR Chlamydia / mycoplasme", "Doxycycline"] },
+      { id: "eu_coinf", diagnostic: "Co-infection (traitement probabiliste)",
+        arguments: [{ label: "rapport à risque", w: 2, when: { q: "eu_partenaire", eq: true } }],
+        examens_a_discuter: ["Traiter gonocoque + Chlamydia", "Dépistage des partenaires + IST (VIH, syphilis)"] }
+    ],
+    examens_clinique: [
+      "Examen des organes génitaux externes",
+      "Prélèvement urétral / PCR sur 1er jet d'urine",
+      "Dépistage des autres IST",
+      "Examen articulaire et cutané si signes de dissémination"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 29 — GOITRE
+  // -------------------------------------------------------------------------
+  goitre: {
+    id: "goitre",
+    symptome: "Goitre / nodule de la thyroïde",
+    specialite: ["Endocrinologie"],
+    questions: [
+      { id: "go_nodulaire", label: "Nodulaire vs diffus", type: "boolean",
+        question: "Sentez-vous un nodule dur, plutôt qu'un gonflement diffus du cou ?" },
+      { id: "go_croissance", label: "Croissance rapide", type: "boolean",
+        question: "Augmente-t-il rapidement de taille ?" },
+      { id: "go_compressif", label: "Signes compressifs", type: "boolean",
+        question: "Avez-vous une gêne pour avaler, pour respirer, ou une voix modifiée ?" },
+      { id: "go_hyper", label: "Hyperthyroïdie", type: "boolean",
+        question: "Avez-vous : amaigrissement, cœur rapide, tremblements, intolérance à la chaleur ?" },
+      { id: "go_hypo", label: "Hypothyroïdie", type: "boolean",
+        question: "Avez-vous : frilosité, prise de poids, fatigue, constipation ?" },
+      { id: "go_exophtalmie", label: "Exophtalmie (Basedow)", type: "boolean",
+        question: "Avez-vous les yeux globuleux (qui sortent) ?" },
+      { id: "go_adp", label: "Adénopathie", type: "boolean",
+        question: "Avez-vous un ganglion dur dans le cou ?" },
+      { id: "go_dur_fixe", label: "Nodule dur fixé", type: "boolean",
+        question: "Le nodule est-il dur et fixé (il ne bouge pas) ?" }
+    ],
+    red_flags: [
+      { id: "go_rf_compressif", niveau: 2,
+        when: { q: "go_compressif", eq: true },
+        message_medecin: "Goitre compressif (dyspnée, dysphagie, dysphonie) : avis rapide + imagerie.",
+        message_patient: "Une gêne pour avaler ou respirer nécessite un avis médical rapide." },
+      { id: "go_rf_cancer", niveau: 2,
+        when: { any: [{ all: [{ q: "go_dur_fixe", eq: true }, { q: "go_adp", eq: true }] }, { all: [{ q: "go_nodulaire", eq: true }, { q: "go_croissance", eq: true }] }] },
+        message_medecin: "Signes d'orientation maligne (nodule dur fixé, ADP, croissance rapide, dysphonie) : échographie EU-TIRADS + cytoponction.",
+        message_patient: "Ces caractéristiques nécessitent un avis médical et des examens." },
+      { id: "go_rf_cardiothyreose", niveau: 2,
+        when: { q: "go_hyper", eq: true },
+        message_medecin: "Hyperthyroïdie (risque de cardiothyréose) : bilan thyroïdien (TSH), ECG.",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "go_simple", diagnostic: "Goitre simple / multinodulaire euthyroïdien",
+        arguments: [{ label: "diffus, sans dysthyroïdie", w: 2, when: { all: [{ not: { q: "go_hyper", eq: true } }, { not: { q: "go_hypo", eq: true } }] } }],
+        examens_a_discuter: ["TSH", "Échographie thyroïdienne"] },
+      { id: "go_basedow", diagnostic: "Maladie de Basedow",
+        arguments: [{ label: "exophtalmie", w: 3, when: { q: "go_exophtalmie", eq: true } },
+                    { label: "hyperthyroïdie", w: 2, when: { q: "go_hyper", eq: true } }],
+        examens_a_discuter: ["TSH basse, T4L", "Anticorps anti-récepteur de la TSH"] },
+      { id: "go_hashimoto", diagnostic: "Thyroïdite de Hashimoto",
+        arguments: [{ label: "hypothyroïdie", w: 3, when: { q: "go_hypo", eq: true } }],
+        examens_a_discuter: ["TSH élevée", "Anticorps anti-TPO"] },
+      { id: "go_cancer", diagnostic: "Cancer thyroïdien",
+        arguments: [{ label: "nodule dur fixé", w: 3, when: { q: "go_dur_fixe", eq: true } },
+                    { label: "adénopathie", w: 2, when: { q: "go_adp", eq: true } },
+                    { label: "croissance rapide", w: 1, when: { q: "go_croissance", eq: true } }],
+        examens_a_discuter: ["Échographie EU-TIRADS", "Cytoponction"] }
+    ],
+    examens_clinique: [
+      "Palpation thyroïdienne (consistance, nodules, mobilité)",
+      "Auscultation thyroïdienne (souffle / thrill)",
+      "Recherche d'adénopathies cervicales",
+      "Recherche de signes de dysthyroïdie",
+      "TSH"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 12 — DIARRHÉE CHRONIQUE
+  // -------------------------------------------------------------------------
+  diarrhee_chronique: {
+    id: "diarrhee_chronique",
+    symptome: "Diarrhée qui dure (diarrhée chronique)",
+    specialite: ["Digestif"],
+    questions: [
+      { id: "dch_grasses", label: "Stéatorrhée", type: "boolean",
+        question: "Les selles sont-elles grasses, mastic, et flottent / collent ?" },
+      { id: "dch_sang", label: "Glairo-sanglantes", type: "boolean",
+        question: "Y a-t-il du sang ou des glaires dans les selles ?" },
+      { id: "dch_nocturne", label: "Organique / sécrétoire", type: "boolean",
+        question: "La diarrhée vous réveille-t-elle la nuit, ou persiste-t-elle même en ne mangeant pas ?" },
+      { id: "dch_amaigr", label: "AEG / carences", type: "boolean",
+        question: "Avez-vous maigri, ou êtes-vous pâle / fatigué (carences) ?" },
+      { id: "dch_thyroide", label: "Diarrhée motrice", type: "boolean",
+        question: "Avez-vous un cœur rapide, des tremblements, ou des bouffées de chaleur ?" },
+      { id: "dch_medic", label: "Médicaments / alcool", type: "boolean",
+        question: "Prenez-vous des médicaments, ou buvez-vous de l'alcool de façon importante ?" },
+      { id: "dch_postprandial", label: "Post-prandiale impérieuse", type: "boolean",
+        question: "La diarrhée survient-elle surtout juste après les repas, de façon impérieuse ?" }
+    ],
+    red_flags: [
+      { id: "dch_rf_aeg", niveau: 2,
+        when: { q: "dch_amaigr", eq: true },
+        message_medecin: "Diarrhée chronique + amaigrissement / syndrome carentiel : bilan organique (néoplasie, malabsorption).",
+        message_patient: "Cette association nécessite un avis médical et un bilan." },
+      { id: "dch_rf_sang", niveau: 2,
+        when: { q: "dch_sang", eq: true },
+        message_medecin: "Diarrhée glairo-sanglante chronique : MICI ou cancer à éliminer (coloscopie).",
+        message_patient: "La présence de sang nécessite un avis médical et des examens." },
+      { id: "dch_rf_organique", niveau: 2,
+        when: { q: "dch_nocturne", eq: true },
+        message_medecin: "Diarrhée nocturne persistant au jeûne : cause organique / sécrétoire à explorer.",
+        message_patient: "Ce profil nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dch_malabsorption", diagnostic: "Malabsorption (cœliaque, insuffisance pancréatique)",
+        arguments: [{ label: "stéatorrhée", w: 3, when: { q: "dch_grasses", eq: true } },
+                    { label: "amaigrissement / carences", w: 1, when: { q: "dch_amaigr", eq: true } }],
+        examens_a_discuter: ["Sérologie maladie cœliaque", "Élastase fécale", "Bilan carentiel"] },
+      { id: "dch_mici", diagnostic: "MICI (maladie inflammatoire de l'intestin)",
+        arguments: [{ label: "diarrhée glairo-sanglante", w: 3, when: { q: "dch_sang", eq: true } }],
+        examens_a_discuter: ["Calprotectine fécale", "Coloscopie + biopsies"] },
+      { id: "dch_motrice", diagnostic: "Diarrhée motrice",
+        arguments: [{ label: "post-prandiale impérieuse", w: 3, when: { q: "dch_postprandial", eq: true } },
+                    { label: "signes d'hyperthyroïdie", w: 1, when: { q: "dch_thyroide", eq: true } }],
+        examens_a_discuter: ["TSH", "Traitement symptomatique"] },
+      { id: "dch_secretoire", diagnostic: "Cause sécrétoire / tumorale",
+        arguments: [{ label: "persiste au jeûne / nocturne", w: 3, when: { q: "dch_nocturne", eq: true } }],
+        examens_a_discuter: ["Bilan spécialisé (hormones)", "Coloscopie + biopsies étagées (colite microscopique)"] }
+    ],
+    examens_clinique: [
+      "Poids, IMC, courbe de poids",
+      "Recherche de carences (pâleur, œdèmes)",
+      "Palpation abdominale",
+      "Toucher rectal",
+      "TSH"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 37 — HÉPATOMÉGALIE
+  // -------------------------------------------------------------------------
+  hepatomegalie: {
+    id: "hepatomegalie",
+    symptome: "Gros foie (hépatomégalie)",
+    specialite: ["Digestif", "Hépatologie"],
+    questions: [
+      { id: "hep_alcool", label: "Alcool / hépatite", type: "boolean",
+        question: "Avez-vous une consommation d'alcool importante ou une hépatite connue ?" },
+      { id: "hep_cardiaque", label: "Foie cardiaque", type: "boolean",
+        question: "Avez-vous une insuffisance cardiaque, des jambes gonflées, ou un foie douloureux ?" },
+      { id: "hep_cancer", label: "Contexte tumoral", type: "boolean",
+        question: "Avez-vous un cancer connu, ou un amaigrissement / une altération de l'état général ?" },
+      { id: "hep_ictere", label: "Ictère", type: "boolean",
+        question: "Avez-vous la peau ou les yeux jaunes, ou des démangeaisons ?" },
+      { id: "hep_htp", label: "Hypertension portale", type: "boolean",
+        question: "Avez-vous le ventre gonflé (liquide) ou des vaisseaux visibles sur l'abdomen ?" },
+      { id: "hep_metabolique", label: "Stéatose", type: "boolean",
+        question: "Êtes-vous en surpoids, diabétique, ou avez-vous un excès de cholestérol ?" },
+      { id: "hep_encephalo", label: "Encéphalopathie", type: "boolean",
+        question: "Avez-vous une confusion ou une somnolence inhabituelle ?" }
+    ],
+    red_flags: [
+      { id: "hep_rf_fulminante", niveau: 3,
+        when: { all: [{ q: "hep_ictere", eq: true }, { q: "hep_encephalo", eq: true }] },
+        message_medecin: "Ictère + encéphalopathie : hépatite fulminante possible → urgence (TP / facteur V).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "hep_rf_tumeur", niveau: 2,
+        when: { q: "hep_cancer", eq: true },
+        message_medecin: "Foie tumoral (CHC / métastases) à évoquer : imagerie + avis spécialisé.",
+        message_patient: "Ce contexte nécessite un avis médical et des examens." },
+      { id: "hep_rf_cardiaque", niveau: 2,
+        when: { q: "hep_cardiaque", eq: true },
+        message_medecin: "Foie cardiaque (insuffisance cardiaque droite) : évaluation cardiologique.",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "hep_cirrhose", diagnostic: "Foie de cirrhose",
+        arguments: [{ label: "signes d'hypertension portale", w: 3, when: { q: "hep_htp", eq: true } },
+                    { label: "alcool / hépatite", w: 2, when: { q: "hep_alcool", eq: true } },
+                    { label: "ictère", w: 1, when: { q: "hep_ictere", eq: true } }],
+        examens_a_discuter: ["Bilan hépatique", "Échographie + élastométrie"] },
+      { id: "hep_cardiaque", diagnostic: "Foie cardiaque",
+        arguments: [{ label: "insuffisance cardiaque droite / reflux hépato-jugulaire", w: 3, when: { q: "hep_cardiaque", eq: true } }],
+        examens_a_discuter: ["BNP, échocardiographie"] },
+      { id: "hep_tumoral", diagnostic: "Foie tumoral (métastases / CHC)",
+        arguments: [{ label: "contexte néoplasique / AEG", w: 3, when: { q: "hep_cancer", eq: true } }],
+        examens_a_discuter: ["Imagerie (échographie / TDM)", "Alpha-fœtoprotéine"] },
+      { id: "hep_steatose", diagnostic: "Stéatose hépatique",
+        arguments: [{ label: "contexte métabolique", w: 3, when: { q: "hep_metabolique", eq: true } }],
+        examens_a_discuter: ["Échographie", "Bilan métabolique"] }
+    ],
+    examens_clinique: [
+      "Palpation hépatique (bord, consistance, surface)",
+      "Recherche d'un reflux hépato-jugulaire",
+      "Recherche d'ascite et de signes d'hypertension portale",
+      "Recherche d'un ictère",
+      "Bilan hépatique"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 19 — DYSMÉNORRHÉE
+  // -------------------------------------------------------------------------
+  dysmenorrhee: {
+    id: "dysmenorrhee",
+    symptome: "Règles douloureuses (dysménorrhée)",
+    specialite: ["Gynécologie"],
+    questions: [
+      { id: "dm_type", label: "Primaire vs secondaire", type: "single_choice",
+        question: "Depuis quand avez-vous des règles douloureuses ?",
+        options: ["Depuis les premières règles (adolescence)", "Apparues plus tard (secondairement)"] },
+      { id: "dm_invalidante", label: "Invalidante", type: "boolean",
+        question: "La douleur est-elle invalidante (arrêt d'activité, absentéisme) ?" },
+      { id: "dm_dyspareunie", label: "Dyspareunie profonde", type: "boolean",
+        question: "Avez-vous des douleurs profondes pendant les rapports ?" },
+      { id: "dm_menorragies", label: "Ménorragies", type: "boolean",
+        question: "Avez-vous des règles très abondantes ?" },
+      { id: "dm_infertilite", label: "Infertilité", type: "boolean",
+        question: "Avez-vous des difficultés à concevoir ?" },
+      { id: "dm_ist", label: "Risque IST / DIU", type: "boolean",
+        question: "Avez-vous un risque d'IST ou un stérilet (DIU) ?" }
+    ],
+    red_flags: [
+      { id: "dm_rf_endometriose", niveau: 2,
+        when: { all: [{ q: "dm_type", eq: "Apparues plus tard (secondairement)" }, { any: [{ q: "dm_dyspareunie", eq: true }, { q: "dm_infertilite", eq: true }] }] },
+        message_medecin: "Dysménorrhée secondaire invalidante + dyspareunie / infertilité : endométriose jusqu'à preuve du contraire → avis gynécologique.",
+        message_patient: "Ces éléments justifient un avis gynécologique." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dm_primaire", diagnostic: "Dysménorrhée primaire essentielle",
+        arguments: [{ label: "début à l'adolescence", w: 3, when: { q: "dm_type", eq: "Depuis les premières règles (adolescence)" } }],
+        examens_a_discuter: ["AINS, contraception œstroprogestative", "Réassurance"] },
+      { id: "dm_endometriose", diagnostic: "Endométriose",
+        arguments: [{ label: "dyspareunie profonde", w: 3, when: { q: "dm_dyspareunie", eq: true } },
+                    { label: "douleur invalidante", w: 2, when: { q: "dm_invalidante", eq: true } },
+                    { label: "infertilité", w: 2, when: { q: "dm_infertilite", eq: true } },
+                    { label: "dysménorrhée secondaire", w: 1, when: { q: "dm_type", eq: "Apparues plus tard (secondairement)" } }],
+        examens_a_discuter: ["Échographie / IRM pelvienne", "Avis gynécologique"] },
+      { id: "dm_adenomyose", diagnostic: "Adénomyose / fibrome",
+        arguments: [{ label: "ménorragies associées", w: 3, when: { q: "dm_menorragies", eq: true } }],
+        examens_a_discuter: ["Échographie pelvienne"] },
+      { id: "dm_infectieuse", diagnostic: "Cause infectieuse (salpingite chronique)",
+        arguments: [{ label: "risque d'IST / DIU", w: 2, when: { q: "dm_ist", eq: true } }],
+        examens_a_discuter: ["Prélèvements", "Échographie pelvienne"] }
+    ],
+    examens_clinique: [
+      "Examen gynécologique",
+      "Échographie pelvienne",
+      "Recherche de nodules du cul-de-sac de Douglas (endométriose)",
+      "Recherche d'un utérus augmenté de volume"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 10 — CRAMPES
+  // -------------------------------------------------------------------------
+  crampes: {
+    id: "crampes",
+    symptome: "Crampes musculaires",
+    specialite: ["Neuro-musculaire"],
+    questions: [
+      { id: "cr_nocturne", label: "Crampe essentielle", type: "boolean",
+        question: "Les crampes surviennent-elles surtout la nuit, au mollet ?" },
+      { id: "cr_medic", label: "Iatrogène", type: "boolean",
+        question: "Prenez-vous des diurétiques, des statines, ou d'autres médicaments récents ?" },
+      { id: "cr_deshyd", label: "Déshydratation / dialyse", type: "boolean",
+        question: "Y a-t-il un contexte de déshydratation, de sueurs importantes, ou de dialyse ?" },
+      { id: "cr_fascic", label: "Atteinte neuromusculaire", type: "boolean",
+        question: "Avez-vous des secousses musculaires, une fonte musculaire, ou une faiblesse ?" },
+      { id: "cr_tetanie", label: "Tétanie / spasmophilie", type: "boolean",
+        question: "Avez-vous des fourmillements autour de la bouche et des mains, ou des contractures ?" },
+      { id: "cr_claudication", label: "Claudication artérielle", type: "boolean",
+        question: "Avez-vous mal aux jambes à la marche, soulagé à l'arrêt ?" }
+    ],
+    red_flags: [
+      { id: "cr_rf_sla", niveau: 2,
+        when: { q: "cr_fascic", eq: true },
+        message_medecin: "Crampes + fasciculations + amyotrophie / déficit : signal d'alarme (SLA) → avis neurologique.",
+        message_patient: "Ces signes nécessitent un avis médical." },
+      { id: "cr_rf_rhabdo", niveau: 2,
+        when: { q: "cr_medic", eq: true },
+        message_medecin: "Crampes / myalgies sous statine ou trouble ionique iatrogène : éliminer une rhabdomyolyse (CPK), contrôler le ionogramme.",
+        message_patient: "Ce contexte médicamenteux nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cr_essentielle", diagnostic: "Crampe essentielle / idiopathique",
+        arguments: [{ label: "nocturne, mollet, examen normal", w: 3, when: { q: "cr_nocturne", eq: true } }],
+        examens_a_discuter: ["Réassurance, étirements", "Hydratation"] },
+      { id: "cr_metabolique", diagnostic: "Crampe métabolique / iatrogène",
+        arguments: [{ label: "médicament (diurétique, statine)", w: 2, when: { q: "cr_medic", eq: true } },
+                    { label: "déshydratation / dialyse", w: 2, when: { q: "cr_deshyd", eq: true } }],
+        examens_a_discuter: ["Ionogramme (Ca, Mg, K, Na)", "CPK", "Revue de l'ordonnance"] },
+      { id: "cr_neuromusculaire", diagnostic: "Pathologie neuromusculaire (SLA, myopathie)",
+        arguments: [{ label: "fasciculations / amyotrophie", w: 3, when: { q: "cr_fascic", eq: true } }],
+        examens_a_discuter: ["Avis neurologique, EMG", "CPK"] },
+      { id: "cr_tetanie", diagnostic: "Tétanie / spasmophilie",
+        arguments: [{ label: "paresthésies péribuccales, contractures", w: 3, when: { q: "cr_tetanie", eq: true } }],
+        examens_a_discuter: ["Calcémie, magnésémie", "Signes de Chvostek / Trousseau"] }
+    ],
+    examens_clinique: [
+      "Examen neuro-musculaire (force, amyotrophie, fasciculations, réflexes)",
+      "Signes de Chvostek / Trousseau",
+      "Ionogramme, calcémie, magnésémie",
+      "CPK si myalgies",
+      "Palpation des pouls si claudication"
+    ]
   }
 };
