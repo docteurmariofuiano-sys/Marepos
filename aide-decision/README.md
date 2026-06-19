@@ -65,7 +65,7 @@ extracorpusculaire), **AHAI** (auto-Ac chauds vs froids), **thrombopénie**
 (aigu vs chronique), **MAT** (PTT / SHU : diagnostic biologique, schizocytes,
 ADAMTS13, vérotoxines), **TIH** (thrombopénie induite par l'héparine, type 1
 vs type 2), **syndrome mononucléosique** (orientation EBV / CMV / VIH /
-toxoplasmose), **LLC** (score de Matutes, facteurs pronostiques) **maladie de
+toxoplasmose), **LLC** (score de Matutes, facteurs pronostiques), **maladie de
 Waldenström** (IgM monoclonale, hyperviscosité) et **myélome multiple**
 (CRAB, composant monoclonal, pronostic). Le bloc hématologie s'appuie sur
 du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
