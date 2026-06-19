@@ -4850,20 +4850,23 @@ window.KB = {
       { id: "ta2_gravite", label: "Signes de gravité", type: "boolean", question: "Y a-t-il des signes de gravité : malaises, cœur lent, IMC très bas, troubles ioniques connus, ou refus total de s'alimenter ?" },
       { id: "ta2_restriction", label: "Anorexie", type: "boolean", question: "Y a-t-il une restriction alimentaire avec un poids très bas / un amaigrissement important et une peur de grossir ?" },
       { id: "ta2_crises", label: "Boulimie / hyperphagie", type: "boolean", question: "Y a-t-il des crises de boulimie avec vomissements provoqués/laxatifs, ou des accès d'hyperphagie ?" },
-      { id: "ta2_amenorrhee", label: "Retentissement", type: "boolean", question: "Y a-t-il une aménorrhée, une fatigue, ou des malaises ?" }
+      { id: "ta2_amenorrhee", label: "Retentissement", type: "boolean", question: "Y a-t-il une aménorrhée, une fatigue, ou des malaises ?" },
+      { id: "ta2_organique", label: "Cause organique ?", type: "boolean", question: "L'amaigrissement s'accompagne-t-il de signes évoquant une maladie (fièvre, diarrhée, soif/urines abondantes, accélération du cœur, ganglions) SANS peur de grossir ni image du corps perturbée ?" }
     ],
     red_flags: [
       { id: "ta2_rf_grave", niveau: 3, when: { q: "ta2_gravite", eq: true },
-        message_medecin: "Signes de gravité d'un TCA (IMC très bas, bradycardie, hypokaliémie, malaises, refus alimentaire) : urgence (risque vital) → avis spécialisé / hospitalisation.",
+        message_medecin: "Signes de gravité d'un TCA (IMC très bas/< 14, bradycardie < 40, hypokaliémie, hypotension/hypothermie, malaises, refus alimentaire, vomissements incoercibles) : urgence (risque vital) → avis spécialisé / hospitalisation. À la renutrition : prévenir le SYNDROME DE RENUTRITION INAPPROPRIÉE (hypophosphatémie) — réintroduction progressive, supplémentation phosphore/vitamines, surveillance ionique.",
         message_patient: "Ces signes nécessitent une évaluation médicale rapide." }
     ],
     diagnostics_differentiels: [
       { id: "ta2_anorexie", diagnostic: "Anorexie mentale", arguments: [{ label: "restriction + poids bas + peur de grossir", w: 3, when: { q: "ta2_restriction", eq: true } }, { label: "aménorrhée / retentissement", w: 1, when: { q: "ta2_amenorrhee", eq: true } }],
-        examens_a_discuter: ["Poids/IMC, ionogramme, ECG", "Avis spécialisé"] },
-      { id: "ta2_boulimie", diagnostic: "Boulimie / hyperphagie", arguments: [{ label: "crises + comportements compensatoires", w: 3, when: { q: "ta2_crises", eq: true } }],
-        examens_a_discuter: ["Ionogramme (vomissements)", "Avis, prise en charge"] }
+        examens_a_discuter: ["Repérage : questionnaire SCOFF (≥ 2 « oui » évocateur)", "Poids/IMC, courbe de poids, ionogramme (dont phosphore), ECG (QT, bradycardie), bilan nutritionnel", "Prise en charge pluridisciplinaire (somatique + psychiatrique + nutritionnelle) ; surveillance de la renutrition"] },
+      { id: "ta2_boulimie", diagnostic: "Boulimie / hyperphagie boulimique", arguments: [{ label: "crises + comportements compensatoires", w: 3, when: { q: "ta2_crises", eq: true } }],
+        examens_a_discuter: ["Ionogramme (hypokaliémie des vomissements → risque de troubles du rythme)", "Signes de purge : érosions dentaires, hypertrophie parotidienne, signe de Russell (callosités des doigts)", "TCC, prise en charge nutritionnelle et psychiatrique"] },
+      { id: "ta2_organique", diagnostic: "Amaigrissement d'origine organique (à éliminer)", arguments: [{ label: "signes organiques sans distorsion de l'image du corps", w: 3, when: { q: "ta2_organique", eq: true } }],
+        examens_a_discuter: ["Selon le contexte : hyperthyroïdie (TSH), diabète (glycémie), maladie cœliaque, MICI, cancer, infection (VIH, tuberculose)", "NFS, VS/CRP, bilan selon orientation"] }
     ],
-    examens_clinique: ["Poids / IMC", "Fréquence cardiaque, pression artérielle (bradycardie/hypotension)", "Ionogramme (hypokaliémie)", "ECG (QT)", "Évaluation psychiatrique"]
+    examens_clinique: ["Poids / IMC, courbe de poids, taille (enfant/ado)", "Fréquence cardiaque, pression artérielle, température (bradycardie/hypotension/hypothermie)", "Ionogramme dont phosphore et potassium (vomissements ; renutrition)", "ECG (QT, bradycardie)", "Évaluation psychiatrique et de l'image du corps (vs cause organique)"]
   },
 
   // -------------------------------------------------------------------------
@@ -4875,23 +4878,30 @@ window.KB = {
       { id: "ca_sevrage_alcool", label: "Sevrage alcoolique compliqué", type: "boolean", question: "S'agit-il d'un sevrage d'alcool avec tremblements importants, confusion ou convulsions ?" },
       { id: "ca_psy", label: "Souffrance psychique", type: "boolean", question: "Y a-t-il une souffrance psychique, des idées noires, ou un autre trouble psychiatrique associé ?" },
       { id: "ca_retentissement", label: "Retentissement / dépendance", type: "boolean", question: "Y a-t-il une perte de contrôle, un besoin irrépressible (craving), ou un retentissement (santé, travail, famille) ?" },
-      { id: "ca_demande", label: "Demande d'aide", type: "boolean", question: "Êtes-vous demandeur d'aide pour réduire ou arrêter ?" }
+      { id: "ca_demande", label: "Demande d'aide", type: "boolean", question: "Êtes-vous demandeur d'aide pour réduire ou arrêter ?" },
+      { id: "ca_overdose", label: "Intoxication aiguë", type: "boolean", question: "Y a-t-il actuellement une somnolence profonde, une respiration lente, des pupilles en pointe (opioïdes), ou un coma / des difficultés à réveiller la personne ?" },
+      { id: "ca_injection", label: "Usage injectable / à risque", type: "boolean", question: "Y a-t-il un usage par injection, ou des conduites à risque (partage de matériel, rapports non protégés) ?" }
     ],
     red_flags: [
+      { id: "ca_rf_overdose", niveau: 3, when: { q: "ca_overdose", eq: true },
+        message_medecin: "Intoxication aiguë / overdose (dépression respiratoire, coma, myosis serré = opioïdes) : URGENCE vitale → 15, libération des voies aériennes, naloxone si opioïdes ; coma éthylique = surveillance, position latérale de sécurité.",
+        message_patient: "C'est une urgence vitale : appelez le 15 immédiatement et mettez la personne sur le côté." },
       { id: "ca_rf_sevrage", niveau: 3, when: { q: "ca_sevrage_alcool", eq: true },
-        message_medecin: "Sevrage alcoolique compliqué : urgence (voir fiche sevrage alcoolique).",
+        message_medecin: "Sevrage alcoolique compliqué (delirium tremens, convulsions) : urgence (voir fiche sevrage alcoolique).",
         message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
       { id: "ca_rf_psy", niveau: 2, when: { q: "ca_psy", eq: true },
-        message_medecin: "Souffrance psychique / idées noires associées : évaluer le risque suicidaire, avis.",
+        message_medecin: "Souffrance psychique / idées noires associées : évaluer le risque suicidaire, avis (les addictions augmentent le risque suicidaire).",
         message_patient: "Si vous avez des idées noires, parlez-en à un médecin (ou appelez le 3114)." }
     ],
     diagnostics_differentiels: [
-      { id: "ca_addiction", diagnostic: "Conduite addictive (tabac / cannabis / alcool)", arguments: [{ label: "retentissement / dépendance", w: 2, when: { q: "ca_retentissement", eq: true } }, { label: "demande d'aide", w: 1, when: { q: "ca_demande", eq: true } }],
-        examens_a_discuter: ["Repérage (AUDIT, Fagerström), intervention brève", "Accompagnement, substituts nicotiniques, orientation addictologie"] },
+      { id: "ca_addiction", diagnostic: "Conduite addictive (tabac / cannabis / alcool / autres)", arguments: [{ label: "retentissement / dépendance", w: 2, when: { q: "ca_retentissement", eq: true } }, { label: "demande d'aide", w: 1, when: { q: "ca_demande", eq: true } }],
+        examens_a_discuter: ["Repérage (AUDIT/AUDIT-C alcool, Fagerström tabac, CAST cannabis), évaluer la poly-consommation", "Intervention brève / entretien motivationnel ; accompagnement, substituts nicotiniques, orientation addictologie (CSAPA)"] },
+      { id: "ca_risque_infx", diagnostic: "Complications infectieuses de l'usage à risque", arguments: [{ label: "usage injectable / conduites à risque", w: 2, when: { q: "ca_injection", eq: true } }],
+        examens_a_discuter: ["Dépistage VIH, VHC, VHB ; vaccination VHB ; matériel de réduction des risques", "Rechercher abcès/endocardite au point d'injection"] },
       { id: "ca_sevrage", diagnostic: "Sevrage alcoolique", arguments: [{ label: "signes de sevrage", w: 3, when: { q: "ca_sevrage_alcool", eq: true } }],
-        examens_a_discuter: ["Voir fiche sevrage alcoolique (B1, benzodiazépines)"] }
+        examens_a_discuter: ["Voir fiche sevrage alcoolique (vitamine B1, benzodiazépines)"] }
     ],
-    examens_clinique: ["Repérage du niveau de consommation et de la dépendance", "Évaluation du retentissement et des comorbidités psychiatriques", "Orientation vers une prise en charge addictologique"]
+    examens_clinique: ["Repérage du niveau de consommation et de la dépendance (questionnaires validés)", "Évaluation du retentissement et des comorbidités psychiatriques (dont risque suicidaire)", "Si usage à risque : proposer un dépistage VIH/VHC/VHB", "Orientation vers une prise en charge addictologique (CSAPA, consultation dédiée)"]
   },
 
   // -------------------------------------------------------------------------
