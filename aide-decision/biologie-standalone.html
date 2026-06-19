@@ -967,6 +967,41 @@ window.BIOKB = [
     ],
     red_flags: ["Urgence : pancytopénie fébrile (neutropénie → sepsis), syndrome hémorragique (thrombopénie / CIVD)", "Syndrome de lyse tumorale (surtout Burkitt) : K ↑, phosphate ↑, uricémie ↑, Ca ↓, IRA", "Hyperleucocytose majeure (leucostase) ; atteinte neuroméningée", "Masse médiastinale (LAL T) → compression"],
     conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "Prévenir/traiter le syndrome de lyse (hyperhydratation, hypo-uricémiants) dans les formes prolifératives (Burkitt).", "Bilan : immunophénotype, cytogénétique (Ph1 → inhibiteur de tyrosine kinase), ponction lombaire (atteinte méningée).", "Prise en charge spécialisée (chimiothérapie, ± TKI si Ph1+, allogreffe selon le risque)."]
+  },
+  {
+    id: "lam", num: 81, anomalie: "Leucémie aiguë myéloïde (LAM)",
+    specialite: "Hématologie",
+    definition: "Prolifération clonale de blastes myéloïdes envahissant la moelle (blastose ≥ 20 %). URGENCE diagnostique. Incidence ≈ 3/100 000/an, âge médian ~60 ans.",
+    premiere_intention: ["Hémogramme : pancytopénie (anémie normochrome normocytaire arégénérative, neutropénie, thrombopénie) ; blastose circulante variable (0 → 100 G/L) ± monocytose / basophilie / éosinophilie", "Myélogramme (urgent) : moelle riche, blastose médullaire 20-100 %", "Cytochimie : myéloperoxydase (MPO+), estérases non spécifiques (composante monocytaire) ; immunophénotypage, cytogénétique / biologie moléculaire", "Rechercher une CIVD (surtout LAM 3) ; ponction lombaire si atteinte méningée"],
+    causes: [
+      { cause: "Leucémie aiguë myéloïde", signe: "blastes myéloïdes MPO+, corps d'Auer, blastose médullaire ≥ 20 %", examens: ["Myélogramme, MPO", "Immunophénotypage, cytogénétique"] },
+      { cause: "LAM 3 (promyélocytaire)", signe: "promyélocytes hypergranuleux, fagots de corps d'Auer, CIVD ; t(15;17) → urgence (ATRA)", examens: ["Recherche de CIVD", "t(15;17) / PML-RARA"] },
+      { cause: "Diagnostic différentiel", signe: "LAL (MPO−), syndrome myélodysplasique, réaction leucémoïde", examens: ["Cytochimie, immunophénotype"] }
+    ],
+    tableaux: [
+      { titre: "Classification FAB",
+        entetes: ["Type", "Description (fréquence)"],
+        lignes: [
+          ["LAM 0", "Sans différenciation (2 %)"],
+          ["LAM 1", "Peu différenciée (20 %)"],
+          ["LAM 2", "Avec différenciation (30 %) : corps d'Auer"],
+          ["LAM 3", "Promyélocytaire (10 %) : hypergranuleux, fagots de corps d'Auer → CIVD"],
+          ["LAM 3 variant", "Hyperleucocytaire, hypogranuleux, noyau bilobé"],
+          ["LAM 4", "Myélo-monocytaire (15 %) : monocytose sang > 5 G/L, moelle > 20 %"],
+          ["LAM 5", "Monoblastique (15 %) : monocytose médullaire > 15 %"],
+          ["LAM 6", "Érythroleucémie (5 %) : > 50 % d'érythroblastes"],
+          ["LAM 7", "Mégacaryocytaire (2 %)"]
+        ] },
+      { titre: "Cytochimie / orientation",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["Myéloperoxydase (MPO)", "Lignée granuleuse (LAM) ; négatif dans la LAL"],
+          ["Estérases non spécifiques", "Composante monocytaire (LAM 4 / 5)"],
+          ["Corps d'Auer", "Spécifiques de la lignée myéloïde"]
+        ] }
+    ],
+    red_flags: ["Urgence : neutropénie fébrile (sepsis), syndrome hémorragique / CIVD (surtout LAM 3)", "LAM 3 promyélocytaire = urgence (CIVD) → ATRA sans attendre", "Hyperleucocytose majeure → leucostase (détresse respiratoire, troubles neurologiques)", "Syndrome de lyse tumorale", "Hypertrophie gingivale / leucémides (formes monocytaires)"],
+    conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "MPO+ et corps d'Auer orientent vers la LAM (vs LAL, MPO−).", "LAM 3 (t(15;17), PML-RARA) : rechercher et traiter la CIVD, débuter l'ATRA sans délai.", "Bilan : immunophénotype, cytogénétique / biologie moléculaire (pronostic) ; prévenir le syndrome de lyse ; prise en charge spécialisée."]
   }
 ];
 
