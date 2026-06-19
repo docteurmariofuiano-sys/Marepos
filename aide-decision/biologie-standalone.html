@@ -897,6 +897,36 @@ window.BIOKB = [
     ],
     red_flags: ["Accidents thrombotiques (artériels ++ : AVC, IDM, ischémie) ou hémorragiques", "Thrombocytose extrême → risque hémorragique paradoxal (maladie de Willebrand acquise)", "Transformation : myélofibrose, leucémie aiguë"],
     conduite: ["Affirmer une thrombocytose clonale persistante et éliminer une cause réactionnelle (ferritine, CRP, contexte).", "Pseudo-hyperkaliémie possible (libération plaquettaire) — recontrôler la kaliémie sur plasma.", "Évaluer le risque thrombotique (âge, ATCD, JAK2) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Surveiller la transformation (myélofibrose, LAM)."]
+  },
+  {
+    id: "myelofibrose", num: 79, anomalie: "Splénomégalie myéloïde chronique (myélofibrose primitive)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique (JAK2+, Ph1 négatif) avec fibrose médullaire progressive et hématopoïèse extra-médullaire (splénomégalie). Tableau d'érythromyélémie avec dacryocytes. Incidence 0,5-1,5/100 000/an, âge médian 67 ans, sex-ratio H/F ≈ 1.",
+    premiere_intention: ["Hémogramme : anémie normochrome normocytaire ; érythromyélémie (myélémie + érythroblastes + blastes) ; plaquettes variables (N, ↑ ou ↓)", "Frottis : dacryocytes (hématies en larme), anisopoïkilocytose, érythroblastes (5-20 %), macroplaquettes, noyaux de mégacaryocytes circulants, anneaux de Cabot", "BOM (indispensable) : fibrose médullaire ; moelle souvent inaspirable", "Biologie moléculaire : JAK2 V617F (ou CALR/MPL) ; chromosome Ph1 NÉGATIF"],
+    causes: [
+      { cause: "Myélofibrose primitive", signe: "dacryocytes + érythromyélémie, splénomégalie, JAK2+ / Ph1−, fibrose à la BOM", examens: ["BOM", "JAK2 / CALR / MPL"] },
+      { cause: "Myélofibrose secondaire", signe: "évolution d'une autre SMP (Vaquez, thrombocytémie essentielle), envahissement néoplasique, toxique", examens: ["Antériorité hématologique", "BOM"] },
+      { cause: "Autre splénomégalie / érythromyélémie", signe: "envahissement médullaire (métastases, lymphome), infections graves", examens: ["BOM", "Imagerie, contexte"] }
+    ],
+    tableaux: [
+      { titre: "Frottis sanguin évocateur",
+        entetes: ["Élément", "Anomalie"],
+        lignes: [
+          ["Hématies", "Anisopoïkilocytose, dacryocytes (en larme), anneaux de Cabot"],
+          ["Érythroblastes", "5-20 % (érythromyélémie)"],
+          ["Lignée granuleuse", "Myélémie, polynucléose, quelques blastes"],
+          ["Plaquettes", "Macroplaquettes, noyaux de mégacaryocytes circulants"]
+        ] },
+      { titre: "Stades histologiques (BOM)",
+        entetes: ["Stade", "Histologie"],
+        lignes: [
+          ["I", "Forme hyperplasique, réticuline augmentée"],
+          ["II", "Fibrose collagène mutilante"],
+          ["III", "Ostéomyélosclérose"]
+        ] }
+    ],
+    red_flags: ["Cytopénies sévères (anémie transfusion-dépendante, thrombopénie, neutropénie → infections/saignements)", "Splénomégalie volumineuse compliquée (infarctus splénique, hypertension portale)", "Transformation en leucémie aiguë", "Altération de l'état général marquée (fièvre, sueurs, amaigrissement)"],
+    conduite: ["Évoquer devant splénomégalie + érythromyélémie avec dacryocytes ; confirmer par BOM (fibrose) et biologie moléculaire (JAK2+, Ph1−).", "Distinguer myélofibrose primitive vs secondaire (évolution d'une Vaquez/TE) et des autres envahissements médullaires.", "Évaluer le pronostic (scores type IPSS/DIPSS) ; prise en charge spécialisée.", "Traitements : soutien (transfusions), inhibiteurs de JAK (ruxolitinib), allogreffe dans les formes à haut risque."]
   }
 ];
 
