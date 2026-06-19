@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procédures & prévention — Aide-mémoire (médecin)</title>
+  <meta name="description" content="Aide-mémoire médecin pour les motifs administratifs, préventifs et développementaux (certificats, arrêts, ALD, MDPH, vaccinations, dépistages, suivi de l'enfant, vigilance/signalement, petite chirurgie) : points clés et signaux d'escalade. Non diagnostique." />
+  <link rel="stylesheet" href="procedures-styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">📋</span>
+        <div>
+          <h1>Procédures & prévention</h1>
+          <p class="subtitle">Aide-mémoire administratif, préventif & développemental — usage médecin</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <a class="backlink" href="index.html">← Aide au raisonnement clinique</a>
+        <span class="badge-count" id="countBadge"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal-banner" role="note">
+    <strong>Outil destiné au médecin.</strong> Check-lists et points clés à
+    <strong>adapter aux recommandations en vigueur</strong> (HAS, calendrier vaccinal,
+    Assurance Maladie) et au contexte local. Ne remplace pas le jugement clinique.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher (ex. certificat, arrêt, ALD, MDPH, vaccin, dépistage, maltraitance…)" autocomplete="off" />
+      </div>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="sidebar"><ul class="proc-list" id="procList"></ul>
+      <p class="no-result" id="noResult" hidden>Aucune procédure ne correspond.</p>
+    </aside>
+    <section class="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <h2>Choisissez une procédure</h2>
+          <p>Sélectionnez un motif à gauche : l'outil affiche une <strong>check-list de
+            points clés</strong> et, le cas échéant, les <strong>signaux de vigilance /
+            d'escalade</strong>. Ces fiches couvrent les motifs administratifs, préventifs
+            et développementaux du cabinet (certificats, arrêts, ALD/MDPH, vaccinations,
+            dépistages, suivi de l'enfant, vigilance & signalement, petite chirurgie).</p>
+        </div>
+      </div>
+      <article class="proc-detail" id="detail" hidden></article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Aide-mémoire — <strong>ne remplace pas le médecin</strong>. À confronter aux
+      recommandations en vigueur. Source d'inspiration : Manuel du Généraliste, Dr Mario Fuiano.</p>
+  </footer>
+
+  <script src="data/procedures.js"></script>
+  <script src="procedures.js"></script>
+</body>
+</html>

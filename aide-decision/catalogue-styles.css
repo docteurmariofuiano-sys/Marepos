@@ -1,7 +1,7 @@
 :root{
   --bg:#eef2f6;--surface:#fff;--ink:#1b2733;--soft:#5b6b7b;--line:#e1e8ef;
   --brand:#0e7c86;--brand-d:#0a5a62;
-  --clin:#2563eb;--bio:#6b3fa0;--ref:#94a3b8;--urg:#d92d20;
+  --clin:#2563eb;--bio:#6b3fa0;--proc:#0f7a52;--ref:#94a3b8;--urg:#d92d20;
   --radius:13px;--shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
 }
 *{box-sizing:border-box}
@@ -27,7 +27,7 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
 .legend{max-width:1180px;margin:12px auto 0;padding:0 20px;display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--soft)}
 .lg{display:flex;align-items:center;gap:6px}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
-.dot-clin{background:var(--clin)}.dot-bio{background:var(--bio)}.dot-ref{background:var(--ref)}
+.dot-clin{background:var(--clin)}.dot-bio{background:var(--bio)}.dot-proc{background:var(--proc)}.dot-ref{background:var(--ref)}
 .urgchip{background:var(--urg);color:#fff;border-radius:4px;font-size:.62rem;font-weight:800;padding:1px 5px;letter-spacing:.03em}
 .cats{max-width:1180px;margin:16px auto;padding:0 20px}
 .cat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
@@ -44,10 +44,12 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
 a.motif{cursor:pointer;transition:.12s}
 a.motif:hover{border-color:var(--brand);background:#f1f8f9;transform:translateY(-1px)}
 a.motif.bio:hover{border-color:var(--bio);background:#f6f1fb}
+a.motif.proc:hover{border-color:var(--proc);background:#eef7f2}
 .motif.ref{color:var(--soft);background:#fbfcfd}
 .m-label{flex:1;min-width:0}
 .go{color:var(--brand);font-weight:700;opacity:.6}
 a.motif.bio .go{color:var(--bio)}
+a.motif.proc .go{color:var(--proc)}
 .motif .urgchip{font-size:.6rem}
 .empty{max-width:1180px;margin:30px auto;padding:0 20px;color:var(--soft);text-align:center}
 .foot{max-width:1180px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}

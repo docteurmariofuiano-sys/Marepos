@@ -59,22 +59,40 @@ hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, hyperprolactinémie, GGT
 cytolyse, dyslipidémie, CPK, LDH, et la CAT devant une anémie.
 
 Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'app
-clinique. Version autonome : `biologie-standalone.html` (cross-liée au
-`aide-decision-standalone.html`).
+clinique. Version autonome : `biologie-standalone.html` (cross-liée aux autres
+modules).
+
+### Module « Procédures & prévention » (médecin) — `procedures.html`
+
+Les motifs **administratifs, préventifs et développementaux** ne relèvent pas du
+modèle symptôme→red flags→diagnostics : ils sont traités dans un module
+**dédié, côté médecin** (`procedures.html`, données `data/procedures.js`).
+Format **aide-mémoire** : pour chaque item, une **check-list de points clés** et,
+le cas échéant, des **signaux de vigilance / d'escalade**. **26 fiches** en
+**7 catégories** : certificats & aptitude, arrêt de travail & dossiers sociaux
+(AT/MP, ALD, MDPH), renouvellements & suivi (anticoagulant, personne âgée),
+prévention & dépistage (vaccination, HTA, col/HPV, nutrition), pédiatrie
+(croissance, langage, comportement), vigilance & signalement (maltraitance,
+pharmacovigilance), petite chirurgie / dermatologie courante (ongle incarné,
+verrue, kyste, corps étranger ORL). À adapter aux **recommandations en vigueur**
+(HAS, calendrier vaccinal, Assurance Maladie).
+
+Accès : lien **« 📋 Procédures & prévention »** depuis l'en-tête.
+Version autonome : `procedures-standalone.html`.
 
 ### Catalogue des motifs de consultation — `catalogue.html`
 
 Colonne vertébrale de navigation couvrant **16 spécialités** et **423 motifs**
 (fréquents + urgences), d'après la nomenclature de consultation en médecine
-générale. Chaque motif est **relié, quand c'est pertinent, à une fiche
-décisionnelle** (parcours patient→médecin) ou à une **fiche d'interprétation
-biologique** ; **387 motifs (91 %)** sont déjà reliés et cliquables, les autres
-sont des **entrées de référence** à approfondir à partir des ouvrages du Drive
-(Manuel du Généraliste, Médecine Générale pour le Praticien, fiches dermato
-CESU). Recherche, filtre « urgences », filtre « fiche disponible ».
+générale. Chaque motif est **relié à une fiche décisionnelle** (parcours
+patient→médecin), à une **fiche d'interprétation biologique**, ou à une **fiche
+procédure / prévention** : **les 423 motifs (100 %)** sont désormais reliés et
+cliquables. Trois pastilles de couleur distinguent les destinations (clinique /
+biologie / procédure). Recherche, filtre « urgences », filtre « fiche disponible ».
 
-Accès direct à une fiche : `index.html#s=<clé>` (depuis le catalogue).
-Version autonome : `catalogue-standalone.html` (cross-liée aux deux autres).
+Accès direct à une fiche : `index.html#s=<clé>`, `biologie.html#<id>` ou
+`procedures.html#<id>` (depuis le catalogue).
+Version autonome : `catalogue-standalone.html` (cross-liée aux autres modules).
 
 La base reste extensible : voir `docs/guide-ajout-fiches.md`.
 
@@ -90,13 +108,22 @@ python3 -m http.server 8000   # puis http://localhost:8000/aide-decision/
 ## Fichiers
 
 ```
-index.html                application (patient + médecin)
+index.html                application clinique (patient + médecin)
 styles.css                mise en forme + règles d'impression PDF
 engine.js                 moteur de règles (window.Engine)
 app.js                    contrôleur d'interface
-data/knowledge-base.js    base de connaissances structurée (window.KB)
+biologie.html / bio.js    module interprétation biologique (médecin)
+catalogue.html / *.js     catalogue des motifs (navigation, 16 spécialités)
+procedures.html / *.js    module procédures & prévention (médecin)
+data/knowledge-base.js    base de connaissances clinique (window.KB)
+data/bio-kb.js            fiches d'interprétation biologique (window.BIOKB)
+data/motifs-catalogue.js  catalogue des 423 motifs (window.MOTIFS)
+data/procedures.js        fiches procédures & prévention (window.PROCEDURES)
+build-standalone.py       génère les versions autonomes (single-file)
 docs/                     livrables : cahier des charges, archi, modèle, RGPD/HDS, guide
 ```
+
+Régénérer les fichiers autonomes après modification : `python3 build-standalone.py`.
 
 ## Sécurité du raisonnement
 

@@ -13,26 +13,27 @@
   var TOTAL = 0, MAPPED = 0;
   CATS.forEach(function (c) {
     ["frequents", "urgences"].forEach(function (k) {
-      (c[k] || []).forEach(function (m) { TOTAL++; if (m.f || m.b) MAPPED++; });
+      (c[k] || []).forEach(function (m) { TOTAL++; if (m.f || m.b || m.p) MAPPED++; });
     });
   });
 
   function linkFor(m) {
     if (m.f) return { href: "index.html#s=" + m.f, cls: "clin", title: "Ouvrir la fiche décisionnelle" };
     if (m.b) return { href: "biologie.html#" + m.b, cls: "bio", title: "Ouvrir l'interprétation biologique" };
+    if (m.p) return { href: "procedures.html#" + m.p, cls: "proc", title: "Ouvrir la fiche procédure / prévention" };
     return null;
   }
 
   function motifMatches(m, isUrg) {
     if (state.urgOnly && !isUrg) return false;
-    if (state.ficheOnly && !(m.f || m.b)) return false;
+    if (state.ficheOnly && !(m.f || m.b || m.p)) return false;
     if (state.q && norm(m.l).indexOf(norm(state.q)) === -1) return false;
     return true;
   }
 
   function motifHtml(m, isUrg) {
     var lk = linkFor(m);
-    var dot = "<span class='dot " + (m.f ? "dot-clin" : m.b ? "dot-bio" : "dot-ref") + "'></span>";
+    var dot = "<span class='dot " + (m.f ? "dot-clin" : m.b ? "dot-bio" : m.p ? "dot-proc" : "dot-ref") + "'></span>";
     var urg = isUrg ? "<span class='urgchip'>⚠</span>" : "";
     var label = esc(m.l);
     if (lk) {

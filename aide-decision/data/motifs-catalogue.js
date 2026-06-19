@@ -3,11 +3,12 @@
  * Colonne vertébrale de navigation. Chaque motif peut être relié à :
  *   f = clé d'une fiche décisionnelle (window.KB, parcours patient→médecin)
  *   b = id d'une fiche d'interprétation biologique (window.BIOKB)
+ *   p = id d'une fiche procédure / prévention (window.PROCEDURES)
  * Sinon = entrée « référence » (à approfondir, sources : Manuel du Généraliste,
  * Médecine Générale pour le Praticien, fiches dermato CESU — Drive du Dr Fuiano).
  *
  * Format : { n, titre, icone, frequents:[motif], urgences:[motif] }
- *   motif : { l:libellé, f?:ficheClinique, b?:ficheBio }
+ *   motif : { l:libellé, f?:ficheClinique, b?:ficheBio, p?:ficheProcedure }
  * ========================================================================== */
 window.MOTIFS = [
   {
@@ -18,9 +19,9 @@ window.MOTIFS = [
       { l: "Frissons", f: "fievre_adulte" }, { l: "Douleurs diffuses", f: "fibromyalgie" }, { l: "Courbatures", f: "crampes" },
       { l: "Altération de l'état général", f: "asthenie" }, { l: "Déshydratation", f: "deshydratation" },
       { l: "Chute chez la personne âgée", f: "chute_personne_agee" }, { l: "Confusion aiguë", f: "confusion" }, { l: "Somnolence inhabituelle", f: "confusion" },
-      { l: "Anxiété aiguë / crise de panique", f: "anxiete" }, { l: "Demande de certificat médical" },
-      { l: "Renouvellement d'ordonnance" }, { l: "Bilan biologique perturbé", b: "anemie" },
-      { l: "Effet indésirable médicamenteux" }
+      { l: "Anxiété aiguë / crise de panique", f: "anxiete" }, { l: "Demande de certificat médical", p: "certificat_medical" },
+      { l: "Renouvellement d'ordonnance", p: "renouvellement" }, { l: "Bilan biologique perturbé", b: "anemie" },
+      { l: "Effet indésirable médicamenteux", p: "effet_indesirable" }
     ],
     urgences: []
   },
@@ -37,7 +38,7 @@ window.MOTIFS = [
     ],
     urgences: [
       { l: "Dyspnée laryngée", f: "dysphonie" }, { l: "Stridor", f: "angine" }, { l: "Épistaxis abondante", f: "epistaxis" },
-      { l: "Abcès amygdalien", f: "angine" }, { l: "Corps étranger ORL" }, { l: "Traumatisme facial", f: "traumatisme_cranien" },
+      { l: "Abcès amygdalien", f: "angine" }, { l: "Corps étranger ORL", p: "corps_etranger_orl" }, { l: "Traumatisme facial", f: "traumatisme_cranien" },
       { l: "Vertige aigu invalidant", f: "vertige" }, { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Surdité brutale", f: "acouphene" }
     ]
   },
@@ -66,7 +67,7 @@ window.MOTIFS = [
       { l: "Poussée hypertensive", f: "hta" }, { l: "Œdèmes des jambes", f: "oedemes" }, { l: "Douleur de mollet", f: "douleur_mi" },
       { l: "Varices", f: "varices" }, { l: "Malaise vagal", f: "malaise_pc" }, { l: "Lipothymie", f: "malaise_pc" },
       { l: "Syncope", f: "malaise_pc" }, { l: "Essoufflement à l'effort", f: "dyspnee_chronique" },
-      { l: "Suivi insuffisance cardiaque", f: "dyspnee_chronique" }, { l: "Suivi anticoagulant" }, { l: "Anomalie ECG", f: "palpitations" }
+      { l: "Suivi insuffisance cardiaque", f: "dyspnee_chronique" }, { l: "Suivi anticoagulant", p: "suivi_anticoagulant" }, { l: "Anomalie ECG", f: "palpitations" }
     ],
     urgences: [
       { l: "Syndrome coronarien aigu", f: "douleur_thoracique" }, { l: "Trouble du rythme mal toléré", f: "malaise_pc" },
@@ -132,9 +133,9 @@ window.MOTIFS = [
       { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Urticaire", f: "eruption_urticaire" }, { l: "Eczéma", f: "eczema" }, { l: "Psoriasis", f: "psoriasis" }, { l: "Acné", f: "acne" },
       { l: "Mycose cutanée", f: "mycose_cutanee" }, { l: "Intertrigo", f: "mycose_cutanee" }, { l: "Zona", f: "zona" }, { l: "Herpès", f: "herpes" }, { l: "Impétigo", f: "impetigo" },
       { l: "Érysipèle", f: "grosse_jambe_rouge" }, { l: "Abcès", f: "abces_cutane" }, { l: "Plaie infectée", f: "plaie" }, { l: "Piqûre d'insecte", f: "piqure_insecte" },
-      { l: "Prurit", f: "eruption_urticaire" }, { l: "Chute de cheveux", f: "alopecie" }, { l: "Ongle incarné" }, { l: "Verrue" },
+      { l: "Prurit", f: "eruption_urticaire" }, { l: "Chute de cheveux", f: "alopecie" }, { l: "Ongle incarné", p: "ongle_incarne" }, { l: "Verrue", p: "verrue" },
       { l: "Grain de beauté suspect", f: "grain_beaute" }, { l: "Surveillance nævus", f: "grain_beaute" },
-      { l: "Lésion pigmentée", f: "grain_beaute" }, { l: "Kyste cutané" }, { l: "Brûlure", f: "brulure" }
+      { l: "Lésion pigmentée", f: "grain_beaute" }, { l: "Kyste cutané", p: "kyste_cutane" }, { l: "Brûlure", f: "brulure" }
     ],
     urgences: [
       { l: "Urticaire avec angio-œdème", f: "eruption_urticaire" }, { l: "Anaphylaxie", f: "eruption_urticaire" }, { l: "Érysipèle fébrile", f: "grosse_jambe_rouge" },
@@ -185,15 +186,15 @@ window.MOTIFS = [
       { l: "Gastro-entérite", f: "diarrhee_aigue" }, { l: "Vomissements", f: "nausees_vomissements" }, { l: "Diarrhée", f: "diarrhee_aigue" },
       { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Varicelle", f: "varicelle" }, { l: "Bronchiolite", f: "bronchiolite" }, { l: "Asthme de l'enfant", f: "asthme_enfant" },
       { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson", f: "pleurs_nourrisson" },
-      { l: "Troubles du sommeil", f: "insomnie" }, { l: "Retard de langage" }, { l: "Troubles du comportement" },
-      { l: "Difficultés scolaires" }, { l: "Vaccination" }, { l: "Certificat sport" }, { l: "Suivi de croissance" },
+      { l: "Troubles du sommeil", f: "insomnie" }, { l: "Retard de langage", p: "retard_langage" }, { l: "Troubles du comportement", p: "troubles_comportement_enfant" },
+      { l: "Difficultés scolaires", p: "troubles_comportement_enfant" }, { l: "Vaccination", p: "vaccination" }, { l: "Certificat sport", p: "certificat_sport" }, { l: "Suivi de croissance", p: "suivi_croissance" },
       { l: "Suspicion infection urinaire", f: "cystite" }
     ],
     urgences: [
       { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
       { l: "Déshydratation", f: "deshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
       { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
-      { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée" }
+      { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée", p: "maltraitance" }
     ]
   },
   {
@@ -202,8 +203,8 @@ window.MOTIFS = [
       { l: "Anxiété", f: "anxiete" }, { l: "Crise d'angoisse", f: "anxiete" }, { l: "Dépression", f: "depression" }, { l: "Burn-out", f: "depression" }, { l: "Insomnie", f: "insomnie" },
       { l: "Stress professionnel", f: "depression" }, { l: "Trouble de l'adaptation", f: "depression" }, { l: "Deuil", f: "depression" }, { l: "Irritabilité", f: "depression" },
       { l: "Trouble alimentaire", f: "trouble_alimentaire" }, { l: "Addiction alcool", f: "sevrage_alcool" }, { l: "Addiction cannabis", f: "conduite_addictive" }, { l: "Sevrage tabagique", f: "conduite_addictive" },
-      { l: "Trouble du comportement de l'adolescent" }, { l: "Demande d'arrêt de travail" }, { l: "Idées noires", f: "anxiete" },
-      { l: "Effet indésirable d'un psychotrope" }
+      { l: "Trouble du comportement de l'adolescent", p: "troubles_comportement_enfant" }, { l: "Demande d'arrêt de travail", p: "arret_travail" }, { l: "Idées noires", f: "anxiete" },
+      { l: "Effet indésirable d'un psychotrope", p: "effet_indesirable" }
     ],
     urgences: [
       { l: "Risque suicidaire", f: "anxiete" }, { l: "Tentative de suicide", f: "depression" }, { l: "Agitation aiguë", f: "agitation" }, { l: "Bouffée délirante", f: "agitation" },
@@ -259,14 +260,14 @@ window.MOTIFS = [
   {
     n: 16, titre: "Administratif / prévention", icone: "📋",
     frequents: [
-      { l: "Certificat médical" }, { l: "Certificat sport" }, { l: "Arrêt de travail" }, { l: "Accident de travail" },
-      { l: "Reconnaissance ALD" }, { l: "Dossier MDPH" }, { l: "PAI scolaire" }, { l: "Contre-indication au voyage" },
-      { l: "Certificat d'aptitude / inaptitude" }, { l: "Renouvellement de traitement chronique" }, { l: "Bilan annuel" },
-      { l: "Vaccination" }, { l: "Dépistage cancer colorectal", f: "constipation" }, { l: "Frottis / HPV" },
+      { l: "Certificat médical", p: "certificat_medical" }, { l: "Certificat sport", p: "certificat_sport" }, { l: "Arrêt de travail", p: "arret_travail" }, { l: "Accident de travail", p: "accident_travail" },
+      { l: "Reconnaissance ALD", p: "ald" }, { l: "Dossier MDPH", p: "mdph" }, { l: "PAI scolaire", p: "pai" }, { l: "Contre-indication au voyage", p: "ci_voyage" },
+      { l: "Certificat d'aptitude / inaptitude", p: "aptitude" }, { l: "Renouvellement de traitement chronique", p: "renouvellement" }, { l: "Bilan annuel", p: "bilan_annuel" },
+      { l: "Vaccination", p: "vaccination" }, { l: "Dépistage cancer colorectal", f: "constipation" }, { l: "Frottis / HPV", p: "frottis_hpv" },
       { l: "Dépistage IST", f: "ecoulement_uretral" }, { l: "Dépistage cardiovasculaire", b: "dyslipidemie" },
-      { l: "Dépistage diabète", b: "hyperglycemie" }, { l: "Dépistage HTA" }, { l: "Dépistage apnée du sommeil", f: "apnee_sommeil" },
-      { l: "Suivi de la personne âgée" }, { l: "Évaluation de l'autonomie" }, { l: "Prévention des chutes" },
-      { l: "Conseil nutritionnel" }, { l: "Sevrage tabagique", f: "conduite_addictive" }
+      { l: "Dépistage diabète", b: "hyperglycemie" }, { l: "Dépistage HTA", p: "depistage_hta" }, { l: "Dépistage apnée du sommeil", f: "apnee_sommeil" },
+      { l: "Suivi de la personne âgée", p: "suivi_pa" }, { l: "Évaluation de l'autonomie", p: "suivi_pa" }, { l: "Prévention des chutes", p: "suivi_pa" },
+      { l: "Conseil nutritionnel", p: "conseil_nutritionnel" }, { l: "Sevrage tabagique", f: "conduite_addictive" }
     ],
     urgences: []
   }

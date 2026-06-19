@@ -156,6 +156,7 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
       </nav>
       <a class="bio-link" href="catalogue-standalone.html">📚 Catalogue des motifs</a>
       <a class="bio-link" href="biologie-standalone.html">🧪 Interprétation biologique</a>
+      <a class="bio-link" href="procedures-standalone.html">📋 Procédures & prévention</a>
     </div>
   </header>
 
@@ -6384,7 +6385,7 @@ window.KB = {
     });
     refreshIntroValidity();
     renderSymptomGrid("");
-    // Accès direct à un symptôme depuis le catalogue : index.html#s=<clé>
+    // Accès direct à un symptôme depuis le catalogue : aide-decision-standalone.html#s=<clé>
     var m = /#s=([a-z_]+)/.exec(location.hash);
     if (m && KB[m[1]]) { startQuiz(m[1]); }
   }
