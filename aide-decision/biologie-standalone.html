@@ -287,8 +287,23 @@ window.BIOKB = [
       { cause: "Iatrogène", signe: "vitamine D, thiazidiques, lithium, syndrome des buveurs de lait", examens: ["Revue de l'ordonnance, 25-OH vit. D"] },
       { cause: "Granulomatose", signe: "sarcoïdose (calcitriol ↑)", examens: ["1,25-OH vit. D, imagerie thoracique"] }
     ],
+    tableaux: [
+      { titre: "Étiologies",
+        entetes: ["Catégorie", "Causes"],
+        lignes: [
+          ["Néoplasique (60 %)", "Métastases osseuses (sein, poumon, rein, thyroïde) ; sécrétion de PTH-like / PTHrp (ORL, peau, uro-génital) ; myélome (via l'OAF, Osteoclast Activating Factor)"],
+          ["Non néoplasique (40 %)", "Adénome parathyroïdien (25 %), intoxication à la vitamine D, hyperthyroïdie, syndrome de Burnett (buveurs de lait), sarcoïdose (calcitriol ↑), immobilisation prolongée"]
+        ] },
+      { titre: "Démarche diagnostique (PTH 1-84)",
+        entetes: ["PTH", "Orientation"],
+        lignes: [
+          ["Augmentée / normale haute, calciurie ↑ ou normale", "Hyperparathyroïdie primitive (imagerie)"],
+          ["Augmentée / normale haute, calciurie diminuée", "Hypercalcémie-hypocalciurie familiale bénigne (syndrome de Marx)"],
+          ["Diminuée / normale basse", "Myélome (EPP), cancer (PTHrp), métastases, granulomatose (calcitriol ↑), hyperthyroïdie, intoxication vit. D/A, immobilisation, maladie d'Addison"]
+        ] }
+    ],
     red_flags: ["Hypercalcémie maligne aiguë (> 3,5 mmol/L : troubles du rythme, coma)", "Néoplasie sous-jacente", "Insuffisance rénale, déshydratation"],
-    conduite: ["Hypercalcémie sévère symptomatique = urgence (hydratation, avis spécialisé)."]
+    conduite: ["Hypercalcémie sévère symptomatique = urgence (hydratation, avis spécialisé).", "Vérifier sur le calcium corrigé / ionisé ; exclure les causes alimentaires et iatrogènes (Ca, vitamine D, corticoïdes, thiazidiques).", "La PTH tranche : élevée/inadaptée → hyperparathyroïdie ; freinée → cause non parathyroïdienne (néoplasie surtout)."]
   },
   {
     id: "hyperkaliemie", num: 53, anomalie: "Hyperkaliémie",
@@ -2013,6 +2028,69 @@ window.BIOKB = [
     ],
     red_flags: ["Acidose métabolique sévère (pH < 7,2) → urgence (choc, acidose lactique, acidocétose)", "Acidose respiratoire aiguë (hypercapnie, troubles de conscience)", "Intoxication (méthanol, éthylène glycol, salicylés, metformine) avec acidose à TA augmenté → antidote / épuration", "Trouble mixte ou décompensation profonde"],
     conduite: ["Lire le gaz du sang : pH (sens du trouble), puis pCO2 et HCO3− (origine respiratoire / métabolique et compensation).", "Acidose métabolique : calculer le trou anionique → augmenté (anions indosés) vs normal (hyperchlorémique).", "TA augmenté : doser lactates, cétonurie, créatinine, rechercher un toxique.", "Traiter la cause ; une acidose métabolique à TA augmenté oriente vers une cause grave (lyse, choc, intoxication)."]
+  },
+  {
+    id: "metabolisme_phosphocalcique", num: 105, anomalie: "Métabolisme phospho-calcique (vitamine D, PTH, calcitonine)",
+    specialite: "Endocrinologie",
+    definition: "Trois hormones règlent la calcémie et la phosphatémie. Calcitriol (1,25-OH2-D, forme active de la vitamine D) : hypercalcémiant et hyperphosphatémiant. PTH : hypercalcémiante et HYPOphosphatémiante. Calcitonine : hypocalcémiante et hypophosphatémiante.",
+    premiere_intention: ["Vitamine D : double hydroxylation — 25 (foie, 25-hydroxylase) puis 1α (rein, 1α-hydroxylase stimulée par PTH/hypocalcémie, inhibée par la calcitonine) → calcitriol", "PTH : régulée négativement par la calcémie ; ↑ réabsorption tubulaire du Ca, ↓ réabsorption des phosphates, active la 1α-hydroxylase, ↑ résorption ostéoclastique", "Calcitonine : régulée positivement par la calcémie ; inhibe la résorption ostéoclastique, ↓ réabsorption rénale Ca/P, inhibe la 1α-hydroxylase", "Devant une anomalie : calcémie corrigée / ionisé, phosphatémie, PTH, 25-OH-D, calciurie"],
+    causes: [
+      { cause: "Calcitriol (vitamine D active)", signe: "hypercalcémiant + hyperphosphatémiant ; minéralisation osseuse, ↑ absorption intestinale Ca/P", examens: ["25-OH-D, 1,25-OH2-D"] },
+      { cause: "PTH (parathormone)", signe: "hypercalcémiante + HYPOphosphatémiante ; rein (↑ Ca, ↓ P, 1α-hydroxylase), os (résorption)", examens: ["PTH 1-84", "AMPc néphrogénique, phosphaturie"] },
+      { cause: "Calcitonine", signe: "hypocalcémiante + hypophosphatémiante ; cellules parafolliculaires de la thyroïde", examens: ["Calcitonine (marqueur du cancer médullaire de la thyroïde)"] }
+    ],
+    tableaux: [
+      { titre: "Effets des hormones phospho-calciques",
+        entetes: ["Hormone", "Calcémie", "Phosphatémie", "Actions principales"],
+        lignes: [
+          ["Calcitriol (1,25-OH2-D)", "↑", "↑", "Minéralisation osseuse ; ↑ absorption intestinale Ca/P"],
+          ["PTH", "↑", "↓", "Rein : ↑ réabsorption Ca, ↓ réabsorption P, active la 1α-hydroxylase ; os : résorption"],
+          ["Calcitonine", "↓", "↓", "Inhibe la résorption ostéoclastique ; ↓ réabsorption rénale Ca/P ; inhibe la 1α-hydroxylase"]
+        ] },
+      { titre: "Vitamine D : activation",
+        entetes: ["Étape", "Lieu / enzyme"],
+        lignes: [
+          ["Synthèse cutanée", "7-déhydrocholestérol + UV → vitamine D (+ apport alimentaire)"],
+          ["1re hydroxylation (25)", "Foie : 25-hydroxylase → 25-OH-D"],
+          ["2e hydroxylation (1α)", "Rein : 1α-hydroxylase (stimulée par PTH/hypocalcémie, inhibée par la calcitonine) → calcitriol"]
+        ] }
+    ],
+    red_flags: ["Hyperparathyroïdie (hypercalcémie + PTH inadaptée)", "Carence sévère en vitamine D / insuffisance rénale (défaut de 1α-hydroxylation)", "La PTH favorise la sécrétion de gastrine (risque d'ulcère gastrique)"],
+    conduite: ["Raisonner sur le couple calcémie / phosphatémie + PTH + vitamine D.", "PTH hypercalcémiante/hypophosphatémiante ; calcitriol hyper-/hyper- ; calcitonine hypo-/hypo-.", "AMPc néphrogénique et phosphaturie évaluent la fonctionnalité de la PTH (pseudohypoparathyroïdies).", "Confronter à la clinique et à l'imagerie."]
+  },
+  {
+    id: "hypocalcemie", num: 106, anomalie: "Hypocalcémie",
+    specialite: "Endocrinologie",
+    definition: "À vérifier sur le calcium corrigé / ionisé. La démarche repose sur la créatinine (IRC ?), la PTH (hypo- vs hyperparathyroïdie), la phosphatémie et la vitamine D.",
+    premiere_intention: ["Confirmer sur le calcium corrigé / ionisé ; vérifier l'albumine et la magnésémie", "Créatinine : si augmentée → insuffisance rénale chronique", "PTH 1-84 : diminuée/normale basse = hypoparathyroïdie ; augmentée/normale haute = hyperparathyroïdie (réactionnelle)", "Selon la PTH : phosphatémie, 25-OH-D, 1,25-OH2-D"],
+    causes: [
+      { cause: "Insuffisance rénale chronique", signe: "défaut de 1α-hydroxylation + hyperphosphatémie → hyperparathyroïdie secondaire, ostéodystrophie", examens: ["Créatinine, phosphatémie, PTH"] },
+      { cause: "Hypoparathyroïdie (PTH basse)", signe: "auto-immune, syndrome de Di George, familiale, hypomagnésémie chronique, chirurgie/irradiation du cou, thalassémie", examens: ["PTH, magnésémie", "Anticorps anti-parathyroïde / anti-récepteur du calcium"] },
+      { cause: "Carence en vitamine D (PTH haute, 25-OH-D basse)", signe: "carence d'apport, malabsorption (biliaire, cœliaque), insuffisance hépatique, anticonvulsivants, insensibilité au calcitriol", examens: ["25-OH-D, 1,25-OH2-D"] },
+      { cause: "Pseudohypoparathyroïdie (PTH haute, phosphate haut)", signe: "résistance périphérique à la PTH (action absente malgré une synthèse normale)", examens: ["Test à la PTH exogène (AMPc et phosphaturie)"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique",
+        entetes: ["Étape", "Orientation"],
+        lignes: [
+          ["Créatinine augmentée", "Insuffisance rénale chronique"],
+          ["PTH basse / normale basse", "Hypoparathyroïdie (auto-immune, Di George, chirurgicale, hypomagnésémie, thalassémie…)"],
+          ["PTH haute + phosphatémie augmentée", "Pseudohypoparathyroïdie"],
+          ["PTH haute, 25-OH-D basse", "Carence en vitamine D (ostéomalacie, malabsorption, insuffisance hépatique, anticonvulsivants)"],
+          ["PTH haute, 25-OH-D normale, 1,25-OH2-D bas (défaut de 1α-hydroxylase)", "Rachitisme vitamino-dépendant type 1"],
+          ["PTH haute, 25-OH-D normale, 1,25-OH2-D élevé (résistance au calcitriol)", "Rachitisme vitamino-résistant type 2"]
+        ] },
+      { titre: "Exploration des pseudohypoparathyroïdies (après injection de PTH exogène)",
+        entetes: ["Situation", "PTH", "AMPc néphrog.", "Phosphaturie"],
+        lignes: [
+          ["Hypoparathyroïdie", "↓", "↑", "↑"],
+          ["PTH anormale", "↑", "↑", "↑"],
+          ["Défaut de sécrétion d'AMPc", "↑", "Inchangé", "Inchangé"],
+          ["Défaut de réponse périphérique", "↑", "↑", "Inchangé"]
+        ] }
+    ],
+    red_flags: ["Hypocalcémie aiguë symptomatique : paresthésies, tétanie, signes de Chvostek/Trousseau, laryngospasme, convulsions, QT long → urgence", "Hypocalcémie post-chirurgicale (thyroïdectomie) → surveillance", "Hypomagnésémie associée (à corriger pour corriger la calcémie)", "Insuffisance rénale chronique (cause fréquente)"],
+    conduite: ["Confirmer sur le calcium corrigé / ionisé ; vérifier l'albumine et la magnésémie.", "Algorithme : créatinine (IRC ?) → PTH (hypo/hyperparathyroïdie) → phosphatémie et vitamine D.", "Hypocalcémie aiguë symptomatique = urgence (calcium IV en milieu surveillé).", "Traiter la cause : vitamine D ± calcium, correction d'une hypomagnésémie, prise en charge de l'IRC."]
   }
 ];
 
