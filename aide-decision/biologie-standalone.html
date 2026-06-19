@@ -1193,6 +1193,36 @@ window.BIOKB = [
     ],
     red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FVIII (inhibiteur, 15-30 %) → inefficacité du traitement substitutif", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
     conduite: ["Diagnostic : TCA allongé isolé qui corrige (Rosner < 12) + déficit isolé en FVIII ; TS normal écarte une maladie de Willebrand.", "Le FVIII augmente avec l'inflammation (peut masquer une forme mineure) ; sensibilité du TCA faible et variable selon les réactifs.", "Traitement substitutif par facteur VIII ; recherche systématique d'anticorps anti-FVIII lors des transfusions.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
+  },
+  {
+    id: "hemophilie_b", num: 87, anomalie: "Hémophilie B (déficit en facteur IX)",
+    specialite: "Hémostase",
+    definition: "Déficit constitutionnel en facteur IX, transmission récessive liée à l'X (1/25 000 garçons ; ~20 % des hémophilies). Cliniquement indiscernable de l'hémophilie A (hématomes, hémarthroses) ; le diagnostic repose sur le dosage du facteur IX.",
+    premiere_intention: ["Interrogatoire : antécédents familiaux (liés à l'X), symptomatologie hémorragique (hémarthroses, hématomes)", "Allongement ISOLÉ du TCA (et du TCK) ; indice de Rosner < 12 (corrige)", "Dosage du facteur IX (déficit isolé) — différencie de l'hémophilie A", "Biologie moléculaire ; FIX physiologiquement bas à la naissance (15-50 %) : interpréter avec prudence chez le nouveau-né"],
+    causes: [
+      { cause: "Hémophilie B (déficit FIX)", signe: "TCA allongé isolé, Rosner < 12, facteur IX bas isolé", examens: ["Dosage du facteur IX", "TCA, indice de Rosner"] },
+      { cause: "Diagnostic différentiel", signe: "hémophilie A (déficit VIII), maladie de Willebrand (TS allongé, vWF bas), anticoagulant circulant (Rosner > 15)", examens: ["Facteur VIII, vWF", "Test de correction"] }
+    ],
+    tableaux: [
+      { titre: "Classification (taux de facteur IX)",
+        entetes: ["Forme", "Facteur IX"],
+        lignes: [
+          ["Sévère", "< 1 %"],
+          ["Modérée", "1-5 %"],
+          ["Mineure", "5-50 %"]
+        ] },
+      { titre: "Hémophilie A vs B",
+        entetes: ["", "Hémophilie A", "Hémophilie B"],
+        lignes: [
+          ["Déficit", "Facteur VIII", "Facteur IX"],
+          ["Fréquence", "~80 % (1/5000)", "~20 % (1/25 000)"],
+          ["Transmission", "Récessive liée à l'X", "Récessive liée à l'X"],
+          ["Inhibiteur (anticorps)", "15-30 %", "~2 %"],
+          ["Bilan", "TCA isolé, Rosner < 12, FVIII bas", "TCA isolé, Rosner < 12, FIX bas"]
+        ] }
+    ],
+    red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FIX (inhibiteur, ~2 %)", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
+    conduite: ["Profil identique à l'hémophilie A (TCA allongé isolé, Rosner < 12) : c'est le DOSAGE qui distingue (FIX bas vs FVIII bas).", "Chez le nouveau-né, le FIX est physiologiquement bas (15-50 %) : interpréter avec prudence / recontrôler.", "Traitement substitutif par facteur IX ; surveiller l'apparition d'un inhibiteur.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
   }
 ];
 
