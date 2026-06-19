@@ -1828,5 +1828,48 @@ window.BIOKB = [
     ],
     red_flags: ["Hypernatrémie aiguë sévère (déshydratation intracellulaire : troubles neurologiques, coma)", "Correction trop rapide → risque d'œdème cérébral (corriger lentement)", "Trouble de l'accès à l'eau (sujet âgé, nourrisson, coma) aggravant", "Diabète insipide non compensé (polyurie majeure)"],
     conduite: ["Hypernatrémie = toujours hypertonique : raisonner sur la perte d'eau / le gain de sodium.", "Diabète insipide : restriction hydrique + desmopressine distinguent central (répond) et néphrogénique (ne répond pas).", "Corriger lentement le déficit en eau (risque d'œdème cérébral si correction rapide).", "Traiter la cause (arrêt du lithium, correction de l'hypercalcémie/hypokaliémie ; apport d'eau libre)."]
+  },
+  {
+    id: "troubles_acidobasiques", num: 104, anomalie: "Troubles acido-basiques",
+    specialite: "Métabolisme",
+    definition: "L'équilibre acido-basique s'analyse sur le pH, la pCO2 (composante respiratoire / acide) et les HCO3− (composante métabolique / réserve alcaline). Quatre troubles élémentaires (acidose/alcalose × métabolique/respiratoire), ± compensation. L'acidose métabolique se classe selon le TROU ANIONIQUE.",
+    premiere_intention: ["Gaz du sang : pH, pCO2, HCO3− ; déterminer le trouble primaire et la compensation", "pH < 7,38 = acidose décompensée ; pH > 7,42 = alcalose décompensée", "Acidose métabolique : trou anionique = (Na+ + K+) − (Cl− + HCO3−) ≈ 12-16 mmol/L", "Orienter l'étiologie selon le type de trouble et le trou anionique"],
+    causes: [
+      { cause: "Acidose métabolique à TA augmenté (normochlorémique)", signe: "anions indosés ↑ : insuffisance rénale, acidose lactique (metformine, choc), acidocétose (diabète), acide exogène (salicylés, méthanol, éthylène glycol)", examens: ["Trou anionique", "Lactates, cétonurie, créatinine"] },
+      { cause: "Acidose métabolique à TA normal (hyperchlorémique)", signe: "diarrhée aiguë, acidoses tubulaires (I distale, II proximale, IV)", examens: ["Chlore", "Ionogramme urinaire"] },
+      { cause: "Trouble respiratoire", signe: "acidose respiratoire (hypoventilation, BPCO, atteinte musculaire) ou alcalose respiratoire (hyperventilation : panique, altitude, infection, anémie)", examens: ["pCO2", "Contexte"] },
+      { cause: "Alcalose métabolique", signe: "pertes digestives (vomissements), pertes urinaires (hyperaldostéronisme, furosémide), apports alcalins", examens: ["HCO3−", "Ionogramme urinaire"] }
+    ],
+    tableaux: [
+      { titre: "Interprétation isolée",
+        entetes: ["Analyte", "Diminution", "Augmentation"],
+        lignes: [
+          ["HCO3− (réserve alcaline, métabolique)", "Acidose métabolique ou compensation d'une alcalose respiratoire", "Alcalose métabolique ou compensation d'une acidose respiratoire"],
+          ["pCO2 (acide, respiratoire)", "Alcalose respiratoire ou compensation d'une acidose métabolique", "Acidose respiratoire ou compensation d'une alcalose métabolique"],
+          ["pH", "Acidose décompensée", "Alcalose décompensée"]
+        ] },
+      { titre: "Interprétation combinée (HCO3− × pCO2)",
+        entetes: ["", "pCO2 augmentée", "pCO2 diminuée"],
+        lignes: [
+          ["HCO3− augmenté", "Alcalose métabolique + compensation, ou acidose respiratoire + compensation (selon le pH)", "Alcalose mixte"],
+          ["HCO3− diminué", "Acidose mixte", "Acidose métabolique + compensation, ou alcalose respiratoire + compensation (selon le pH)"]
+        ] },
+      { titre: "Étiologies par type de trouble",
+        entetes: ["Trouble", "Étiologies"],
+        lignes: [
+          ["Acidose métabolique", "Selon le trou anionique (voir ci-dessous)"],
+          ["Acidose respiratoire", "Hypoventilation centrale, atteinte des muscles respiratoires (myasthénie, polio, tétanos), asthme / BPCO / emphysème"],
+          ["Alcalose métabolique", "Pertes digestives (vomissements), pertes urinaires (hyperaldostéronisme, furosémide), apports alcalins / reventilation"],
+          ["Alcalose respiratoire", "Crise de panique, altitude, infections, anémie"]
+        ] },
+      { titre: "Acidose métabolique : trou anionique TA = (Na+ + K+) − (Cl− + HCO3−) ≈ 12-16",
+        entetes: ["Trou anionique", "Étiologies"],
+        lignes: [
+          ["Augmenté (chlore normal)", "Insuffisance rénale ; acidose lactique (metformine, hypoxie/choc) ; acidocétose (diabète type 1) ; acide exogène (salicylés, méthanol, éthylène glycol)"],
+          ["Normal (chlore augmenté)", "Diarrhée aiguë ; acidoses tubulaires (distale I, proximale II, type IV)"]
+        ] }
+    ],
+    red_flags: ["Acidose métabolique sévère (pH < 7,2) → urgence (choc, acidose lactique, acidocétose)", "Acidose respiratoire aiguë (hypercapnie, troubles de conscience)", "Intoxication (méthanol, éthylène glycol, salicylés, metformine) avec acidose à TA augmenté → antidote / épuration", "Trouble mixte ou décompensation profonde"],
+    conduite: ["Lire le gaz du sang : pH (sens du trouble), puis pCO2 et HCO3− (origine respiratoire / métabolique et compensation).", "Acidose métabolique : calculer le trou anionique → augmenté (anions indosés) vs normal (hyperchlorémique).", "TA augmenté : doser lactates, cétonurie, créatinine, rechercher un toxique.", "Traiter la cause ; une acidose métabolique à TA augmenté oriente vers une cause grave (lyse, choc, intoxication)."]
   }
 ];
