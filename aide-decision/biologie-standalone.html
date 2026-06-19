@@ -1815,6 +1815,44 @@ window.BIOKB = [
     ],
     red_flags: ["Signes de gravité : état de choc, oligurie, polypnée, confusion → réanimation", "Pancréatite nécrotico-hémorragique (mortalité ~20 %) : Ranson/Imrie ≥ 3, CRP > 150 à 48 h, index TDM > 4", "Défaillance d'organe (hémodynamique, respiratoire, rénale, neurologique, hématologique)", "Origine lithiasique avec angiocholite → recherche et levée de l'obstacle (CPRE)"],
     conduite: ["Affirmer le diagnostic : douleur + lipase > 3N ; TDM en cas de doute.", "Hospitalisation systématique ; rechercher une défaillance viscérale plusieurs fois/jour les 48 premières heures.", "Évaluer la gravité (Ranson/Imrie ≥ 3, CRP > 150, index TDM > 4, terrain) → surveillance renforcée clinico-radio-biologique.", "Antalgiques (morphiniques), réhydratation, jeûne puis réalimentation après 48 h sans douleur ; cholécystectomie si lithiase ; réanimation / drainage de nécrose / antibiothérapie si complications."]
+  },
+  {
+    id: "marqueurs_idm", num: 100, anomalie: "Marqueurs biologiques de l'infarctus du myocarde",
+    specialite: "Cardiologie",
+    definition: "Marqueurs de nécrose myocardique. La troponine (isoforme I cardiaque) est le marqueur de référence : spécifique du myocarde, base de la cinétique, confirmation a posteriori et valeur pronostique. Le diagnostic d'IDM aigu repose d'abord sur la clinique + l'ECG (revascularisation précoce).",
+    premiere_intention: ["Diagnostic de l'IDM aigu : clinique + ECG d'abord (revascularisation précoce) — ne pas attendre la troponine", "Troponine I (spécifique) : cinétique (pic ~12 h), confirmation a posteriori, pronostic", "SCA sans sus-décalage ST : troponine = diagnostic + stratification du risque ; si négative < 12 h, RÉPÉTER 6-12 h plus tard", "Myoglobine : marqueur le plus précoce (2-3 h), bonne VPN, efficacité de reperfusion et récidive"],
+    causes: [
+      { cause: "Troponine I", signe: "spécifique du myocarde ; ↑ 4-6 h, pic 12 h, normalisation 9-14 j ; la troponine T peut être faussement ↑ (IRC, poly/dermatomyosite)", examens: ["Troponine I (cinétique)"] },
+      { cause: "Myoglobine", signe: "la plus précoce (2-3 h), non spécifique (toute lyse musculaire), bonne VPN, reperfusion / récidive", examens: ["Myoglobine"] },
+      { cause: "CK-MB", signe: "isoforme cardiaque de la CK ; quasi abandonnée (peu d'apport vs troponine)", examens: ["CK-MB"] },
+      { cause: "Élévation non ischémique de la troponine", signe: "EP, insuffisance cardiaque, choc septique, AVC, cirrhose, acidocétose, chirurgie cardiaque", examens: ["Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs de nécrose myocardique",
+        entetes: ["Marqueur", "Caractéristiques"],
+        lignes: [
+          ["Troponine I", "Spécifique du myocarde ; ↑ 4-6 h, pic ~12 h, normalisation 9-14 j ; marqueur de référence (cinétique, pronostic)"],
+          ["Myoglobine", "La plus précoce (2-3 h) ; non spécifique ; bonne VPN ; reperfusion et récidive précoce"],
+          ["CK-MB", "Isoforme cardiaque de la CK ; quasi abandonnée (peu d'apport vs troponine)"],
+          ["ASAT, LDH, CK totales", "Peu spécifiques, cinétique retardée ; non utilisés pour le diagnostic d'IDM"]
+        ] },
+      { titre: "Place de la troponine dans le SCA",
+        entetes: ["Situation", "Conduite"],
+        lignes: [
+          ["SCA sans sus-décalage ST", "Troponine = diagnostic + stratification du risque"],
+          ["Troponine négative < 12 h", "N'exclut pas : 2e dosage 6-12 h plus tard"],
+          ["Angor instable + troponine élevée", "Prise en charge agressive (HBPM ou anti-GpIIbIIIa)"]
+        ] },
+      { titre: "Élévations non ischémiques de la troponine",
+        entetes: ["Type", "Exemples"],
+        lignes: [
+          ["Cardio-respiratoire", "Embolie pulmonaire, insuffisance cardiaque"],
+          ["Systémique", "Choc septique, AVC, acidocétose diabétique"],
+          ["Autres", "Cirrhose, chirurgie cardiaque"]
+        ] }
+    ],
+    red_flags: ["Douleur thoracique évocatrice → ECG immédiat ; sus-décalage ST = IDM → revascularisation en urgence (ne pas attendre la troponine)", "Troponine négative précoce (< 12 h) n'exclut pas un SCA → répéter", "Angor instable avec troponine élevée → prise en charge agressive (HBPM / anti-GpIIbIIIa)", "Élévation de troponine sans contexte ischémique (EP, sepsis, insuffisance cardiaque…) à interpréter"],
+    conduite: ["IDM aigu = diagnostic clinique + ECG ; la troponine confirme a posteriori et stratifie le risque.", "Interférences de la troponine : fibrine / débris (centrifugation, voire ultracentrifugation), facteur rhumatoïde, anticorps hétérophiles.", "La troponine T peut être faussement élevée (IRC, poly/dermatomyosite) → préférer la troponine I.", "La taille de l'infarctus s'évalue par imagerie, pas par les marqueurs biologiques."]
   }
 ];
 

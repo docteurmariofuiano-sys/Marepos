@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **57 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **58 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -64,7 +64,8 @@ hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, maladie rénale chroniqu
 (DFG, marqueurs, stades), syndrome néphrotique (pur/impur, complications),
 hyperprolactinémie, GGT,
 cytolyse, syndrome cholestatique, insuffisance hépatique, cirrhose (Child-Pugh),
-pancréatite aiguë (Ranson/Imrie), dyslipidémie, CPK, LDH, l'**immuno-hématologie** (groupage ABO-RH1 :
+pancréatite aiguë (Ranson/Imrie), dyslipidémie, CPK, LDH, les marqueurs de
+l'infarctus du myocarde (troponine, myoglobine), l'**immuno-hématologie** (groupage ABO-RH1 :
 Beth-Vincent, Simonin, RH1 ; phénotypes érythrocytaires ABO/Rhésus/Kell/MNSs/
 Kidd/Duffy/Lewis), et un **bloc hématologie** : CAT devant une
 anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /
