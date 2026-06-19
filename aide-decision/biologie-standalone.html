@@ -2127,6 +2127,91 @@ window.BIOKB = [
     ],
     red_flags: ["Interprétation des marqueurs osseux faussée près d'une fracture / intervention osseuse", "PAL totales peu spécifiques (origine hépatique et intestinale aussi)", "Calcémie à toujours interpréter selon l'albumine (et le pH pour le calcium ionisé)"],
     conduite: ["Toujours corriger la calcémie selon l'albumine (ou doser le calcium ionisé, corrigé à pH 7,4).", "Le TRP évalue la réabsorption tubulaire des phosphates (fonctionnalité de la PTH).", "Ostéoporose : marqueur de résorption + densitométrie ; suivi du traitement par la cinétique du marqueur.", "Ne pas doser les marqueurs osseux juste après une fracture."]
+  },
+  {
+    id: "hyperthyroidie", num: 108, anomalie: "Hyperthyroïdie",
+    specialite: "Endocrinologie",
+    definition: "Excès d'hormones thyroïdiennes (thyrotoxicose). Diagnostic biologique : TSH freinée, confirmée par la T4L (± T3L) augmentées. Étiologies : maladie de Basedow (la plus fréquente), nodules toxiques, thyroïdites, surcharge iodée, causes centrales (rares).",
+    premiere_intention: ["TSH en 1re intention : diminuée → doser la T4L (puis la T3L si T4L normale/limite)", "TSH basse + T4L ↑ = hyperthyroïdie franche ; T4L normale + T3L ↑ = hyperthyroïdie à T3 ; T3L normale + paucisymptomatique = infraclinique", "TSH normale/augmentée + T4L ↑ → cause centrale (adénome thyréotrope, résistance aux hormones thyroïdiennes)", "Étiologie : anticorps anti-récepteur de la TSH (TRAK), anti-TPO, échographie / scintigraphie"],
+    causes: [
+      { cause: "Maladie de Basedow", signe: "anticorps anti-récepteur de la TSH STIMULANTS (TRAK) ; goitre diffus pulsatile, orbitopathie, myxœdème prétibial ; femme jeune (F/H = 6, ~1 %)", examens: ["TRAK (positifs 60-80 %)", "Échographie, scintigraphie"] },
+      { cause: "Nodule(s) toxique(s)", signe: "adénome toxique ou goitre multinodulaire toxique : sécrétion autonome (TSH freinée)", examens: ["Scintigraphie (nodule chaud)"] },
+      { cause: "Thyrotoxicose par destruction (thyroïdites)", signe: "De Quervain (virale, douloureuse, syndrome inflammatoire), post-partum (anti-TPO élevés), iatrogène (interféron α, amiodarone), phase initiale d'Hashimoto", examens: ["CRP/VS, anti-TPO", "Scintigraphie blanche"] },
+      { cause: "Surcharge iodée", signe: "amiodarone, produits de contraste, apport alimentaire (sur thyroïde déjà pathologique)", examens: ["Iodurie, contexte"] },
+      { cause: "Causes centrales (rares)", signe: "adénome hypophysaire thyréotrope, résistance hypophysaire aux hormones thyroïdiennes", examens: ["TSH inadaptée, IRM hypophysaire"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique (TSH)",
+        entetes: ["TSH", "T4L / T3L", "Orientation"],
+        lignes: [
+          ["Diminuée", "T4L augmentée", "Hyperthyroïdie franche"],
+          ["Diminuée", "T4L normale/limite, T3L augmentée", "Hyperthyroïdie à T3"],
+          ["Diminuée", "T4L et T3L normales, paucisymptomatique", "Hyperthyroïdie infraclinique (recontrôler)"],
+          ["Normale ou augmentée", "T4L augmentée", "Cause centrale (adénome thyréotrope, résistance aux hormones thyroïdiennes)"]
+        ] },
+      { titre: "Signes biologiques de thyrotoxicose",
+        entetes: ["Paramètre", "Variation"],
+        lignes: [
+          ["TSH", "↓"],
+          ["T4L, T3L", "↑"],
+          ["Leucocytes / PNN", "↓ (neutropénie)"],
+          ["Enzymes hépatiques", "↑"],
+          ["Cholestérol, triglycérides", "↓"],
+          ["Calcémie", "↑"],
+          ["Glycémie", "Légèrement ↑"]
+        ] },
+      { titre: "Anticorps dans la maladie de Basedow",
+        entetes: ["Anticorps", "Intérêt"],
+        lignes: [
+          ["Anti-récepteur de la TSH (TRAK)", "Positifs 60-80 %, stimulants ; au diagnostic et en fin de traitement (persistance = risque de récidive)"],
+          ["Anti-TPO, anti-Tg", "Possibles à taux faible"]
+        ] }
+    ],
+    red_flags: ["Cardiothyréose : fibrillation auriculaire, insuffisance cardiaque, troubles du rythme", "Crise aiguë thyrotoxique", "Orbitopathie maligne (exophtalmie, surtout chez le fumeur)", "Antithyroïdiens de synthèse : AGRANULOCYTOSE immuno-allergique → NFS en urgence si fièvre/angine"],
+    conduite: ["Affirmer par TSH freinée + T4L (± T3L) ; étiologie par TRAK, échographie / scintigraphie.", "Basedow : antithyroïdiens de synthèse (carbimazole) → euthyroïdie en 4-6 semaines, entretien ~18 mois ; ± chirurgie / iode 131.", "Surveillance NFS sous antithyroïdiens (tous les 10 j les 2 premiers mois) — risque d'agranulocytose ; consulter en urgence si fièvre/angine.", "Grossesse : rémission possible aux 2e/3e trimestres, rebond post-partum ; risque d'hyperthyroïdie néonatale."]
+  },
+  {
+    id: "hypothyroidie", num: 109, anomalie: "Hypothyroïdie",
+    specialite: "Endocrinologie",
+    definition: "Déficit en hormones thyroïdiennes. Diagnostic biologique : TSH augmentée (forme périphérique), T4L basse (franche) ou normale (fruste / infraclinique). Cause la plus fréquente : thyroïdite d'Hashimoto (auto-immune).",
+    premiere_intention: ["TSH en 1re intention : augmentée → doser la T4L", "T4L basse = hypothyroïdie franche ; T4L normale/limite = hypothyroïdie infraclinique (fruste)", "Ne pas doser la T3L (souvent normale, dernier paramètre à se modifier)", "Anticorps anti-TPO (Hashimoto) ; si négatifs : anti-Tg, anti-récepteur de la TSH (bloquants)"],
+    causes: [
+      { cause: "Thyroïdite d'Hashimoto", signe: "destruction auto-immune ; goitre ferme pseudo-nodulaire ; anti-TPO fortement positifs ; autres maladies auto-immunes associées (DT1, vitiligo, Biermer, Addison)", examens: ["Anti-TPO (± anti-Tg, anti-R-TSH bloquants)"] },
+      { cause: "Thyroïdite du post-partum", signe: "6 % des grossesses ; hypothyroïdie au 3e-6e mois (± phase d'hyperthyroïdie transitoire) ; récidivante, parfois définitive", examens: ["Anti-TPO, TSH"] },
+      { cause: "Hypothyroïdie iatrogène", signe: "amiodarone, lithium, interféron α, IL-2, antithyroïdiens ; thyroïdectomie, iode 131, radiothérapie cervicale", examens: ["Contexte médicamenteux"] },
+      { cause: "Autres causes", signe: "thyroïdite atrophique, De Quervain, carence en iode, hypothyroïdie congénitale de l'enfant (ectopie, trouble de synthèse)", examens: ["Échographie, iodurie", "Dépistage néonatal"] },
+      { cause: "Hypothyroïdie centrale (secondaire)", signe: "T4L basse + TSH normale (parfois ↑ si hypothalamique) ; pas de goitre ni d'infiltration cutanéo-muqueuse ; tumeurs, nécrose, chirurgie, hémochromatose", examens: ["T4L, TSH inadaptée, IRM hypophysaire"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique (TSH)",
+        entetes: ["TSH", "T4L", "Orientation"],
+        lignes: [
+          ["Augmentée", "Basse", "Hypothyroïdie franche (périphérique)"],
+          ["Augmentée", "Normale/limite", "Hypothyroïdie infraclinique (anti-TPO)"],
+          ["Normale", "Basse", "Hypothyroïdie centrale ou interférence (test au TRH)"],
+          ["Normale", "Normale", "Pas d'hypothyroïdie (test au TRH si forte conviction)"]
+        ] },
+      { titre: "Syndromes cliniques",
+        entetes: ["Syndrome", "Signes"],
+        lignes: [
+          ["Hypométabolisme", "Asthénie physique/psychique, somnolence, frilosité, prise de poids, dépression, confusion"],
+          ["Neuro-musculaire", "Crampes, myalgies, constipation, bradycardie, troubles du rythme"],
+          ["Cutanéo-muqueux", "Peau pâle et sèche, dépilation (queue du sourcil), voix rauque, macroglossie"],
+          ["Endocrinien", "Galactorrhée (hyperprolactinémie), troubles des règles, baisse de libido, infertilité"],
+          ["Rhumatologique", "Tendinites, arthralgies, acroparesthésies"]
+        ] },
+      { titre: "Marqueurs biologiques associés",
+        entetes: ["Domaine", "Anomalie"],
+        lignes: [
+          ["Hématologie", "Anémie souvent macrocytaire ; maladie de Willebrand acquise"],
+          ["Ionogramme", "Hyponatrémie de dilution"],
+          ["Muscle", "↑ CK"],
+          ["Lipides", "Hypercholestérolémie"],
+          ["Thyroïde", "TSH ↑, T4L basse ou normale (fruste)"]
+        ] }
+    ],
+    red_flags: ["Coma myxœdémateux (hypothermie, bradycardie, troubles de conscience) → urgence", "Hypothyroïdie + grossesse (risque pour le développement cérébral fœtal) → TSH dans la moitié inférieure de la normale", "Hypothyroïdie centrale (T4L basse, TSH non élevée) à ne pas méconnaître", "Retentissement cardiaque (bradycardie, épanchement péricardique)"],
+    conduite: ["TSH ↑ + T4L → franche (T4L basse) ou fruste (T4L normale) ; ne pas doser la T3L.", "Anti-TPO pour confirmer l'origine auto-immune (Hashimoto) ; rechercher les maladies auto-immunes associées.", "Hypothyroïdie centrale : T4L basse avec TSH inadaptée → IRM hypophysaire.", "Substitution par lévothyroxine, surveillance de la TSH ; adaptation pendant la grossesse."]
   }
 ];
 
