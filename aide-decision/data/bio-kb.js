@@ -488,5 +488,32 @@ window.BIOKB = [
     ],
     red_flags: ["TIH de type 2 = urgence : thrombopénie + thromboses sous héparine → arrêt immédiat de toute héparine", "Ne pas attendre la confirmation biologique si forte suspicion clinique", "Rechercher une thrombose (veineuse ou artérielle) et une CIVD associée"],
     conduite: ["Dès la suspicion clinique ou biologique : ARRÊT de l'héparinothérapie + contrôle quotidien des plaquettes.", "Anticoagulation de relais par danaparoïde (risque de réactivité croisée mais activité anti-Xa étalonnée contrôlable) ou lépirudine/argatroban (pas de réactivité croisée mais activité non dosable en routine).", "La remontée rapide des plaquettes après arrêt de l'héparine conforte le diagnostic.", "Rechercher une CIVD (PDF/D-dimères, facteur V, complexes solubles).", "Ne jamais ré-introduire d'héparine ; tracer l'allergie."]
+  },
+  {
+    id: "syndrome_mononucleosique", num: 71, anomalie: "Syndrome mononucléosique",
+    specialite: "Hématologie",
+    definition: "Présence dans le sang périphérique de grandes cellules lymphoïdes hyperbasophiles. Formule : lymphocytose > 50 % et lymphocytes activés (hyperbasophiles) > 10 %. Le plus souvent d'origine virale (EBV ++).",
+    premiere_intention: ["Hémogramme + frottis : lymphocytose > 50 %, lymphocytes activés > 10 %", "MNI test (anticorps hétérophiles) en première intention", "Sérologie EBV (cause la plus fréquente)", "Selon le tableau : sérologie CMV, toxoplasmose, VIH (± Ag p24), sérologies hépatites"],
+    causes: [
+      { cause: "Mononucléose infectieuse (EBV)", signe: "cause la plus fréquente ; angine, adénopathies, asthénie, splénomégalie ; rash si prise d'ampicilline/amoxicilline", examens: ["MNI test", "Sérologie EBV (VCA IgM/IgG, EBNA)"] },
+      { cause: "Primo-infection à CMV", signe: "souvent fièvre isolée prolongée ; MNI test négatif", examens: ["Sérologie CMV (IgM)", "PCR CMV"] },
+      { cause: "Primo-infection VIH", signe: "syndrome pseudo-grippal, angine, éruption, adénopathies ; à évoquer systématiquement", examens: ["Sérologie VIH + Ag p24 (test combiné)", "Charge virale si doute"] },
+      { cause: "Toxoplasmose", signe: "adénopathies (cervicales), fébricule, asthénie ; sujet immunocompétent", examens: ["Sérologie toxoplasmose (IgM/IgG)"] },
+      { cause: "Hépatites virales", signe: "présentation avec ictère / cytolyse", examens: ["Sérologies hépatites (A, B, C)"] },
+      { cause: "Cause médicamenteuse", signe: "éruption cutanée (ampicilline), allergie médicamenteuse / DRESS", examens: ["Imputabilité médicamenteuse"] }
+    ],
+    tableaux: [
+      { titre: "Orientation selon la présentation",
+        entetes: ["Présentation", "Évoquer", "Examens"],
+        lignes: [
+          ["Angine", "MNI (EBV), primo-infection VIH", "MNI test, sérologie EBV, sérologie VIH ± Ag p24"],
+          ["Adénopathies", "MNI, toxoplasmose, VIH", "MNI test, sérologies EBV / toxoplasmose / VIH ± Ag p24"],
+          ["Éruption cutanée", "MNI (sous ampicilline), allergie médicamenteuse", "MNI test, sérologie EBV"],
+          ["Fièvre isolée", "CMV", "Sérologie CMV"],
+          ["Ictère", "Hépatite", "Sérologies hépatites"]
+        ] }
+    ],
+    red_flags: ["Toujours évoquer une primo-infection VIH (sérologie combinée + Ag p24) — enjeu individuel et de santé publique", "Rupture de rate (rare) dans la MNI : douleur de l'hypochondre gauche → éviter les sports de contact si splénomégalie", "Complications : thrombopénie / AHAI auto-immune, hépatite sévère, angine très hypertrophique avec gêne respiratoire"],
+    conduite: ["EBV = cause la plus fréquente : MNI test + sérologie EBV en première intention.", "MNI test négatif → élargir : CMV, toxoplasmose, VIH (± Ag p24), hépatites.", "Éviter l'amoxicilline/ampicilline (rash) ; repos, abstention des sports de contact en cas de splénomégalie."]
   }
 ];
