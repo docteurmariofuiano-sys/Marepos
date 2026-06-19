@@ -1086,7 +1086,7 @@ window.BIOKB = [
     id: "sapl", num: 88, anomalie: "Syndrome des antiphospholipides (SAPL)",
     specialite: "Hémostase",
     definition: "Thrombophilie auto-immune définie par l'association d'AU MOINS 1 critère clinique (thrombose ou morbidité obstétricale) ET d'AU MOINS 1 critère biologique (anticorps antiphospholipides persistants). Primitif ou associé à un lupus.",
-    premiere_intention: ["Évoquer devant : thrombose (veineuse/artérielle) inexpliquée ou récidivante, morbidité obstétricale, ou TCA allongé isolé ne corrigeant pas", "Anticorps antiphospholipides : lupus anticoagulant, anti-cardiolipides, anti-β2-GP1 (IgG/IgM)", "Confirmer la PERSISTANCE : 2 prélèvements à ≥ 12 semaines d'intervalle", "Rechercher un lupus associé (ACAN, anti-DNA) ; contexte thrombotique"],
+    premiere_intention: ["Circonstances : maladie auto-immune (lupus), thrombose veineuse/artérielle inexpliquée, pertes fœtales à répétition, thrombopénie inexpliquée, allongement isolé du TCA découvert fortuitement", "Dépistage du lupus anticoagulant : TCA (sensibilité selon l'activateur : silice ++, kaolin −), TTd (temps de Quick dilué, thromboplastine au 1/500), dRVVT (active directement le facteur X, insensible à l'héparine via polybrène)", "Principe : allongement NON corrigé par l'ajout de plasma témoin + dépendance aux phospholipides (raccourcissement par addition de PL)", "Anticorps anti-PL par ELISA : anti-cardiolipides, anti-β2-GP1 (isotypes IgG/IgM) ; autres selon contexte (anti-PE, anti-prothrombine, anti-annexine V)", "Confirmer la PERSISTANCE : 2 prélèvements à ≥ 12 semaines d'intervalle ; rechercher un lupus (ACAN, anti-ADN natif)"],
     causes: [
       { cause: "Critère clinique — thrombose", signe: "≥ 1 thrombose objectivée (imagerie de référence ou histopathologie)", examens: ["Imagerie (écho-Doppler, angio-TDM…)"] },
       { cause: "Critère clinique — obstétrical", signe: "mort fœtale ≥ 10e semaine, prématurité < 34e semaine (éclampsie/insuffisance placentaire), ≥ 3 fausses couches < 10e semaine", examens: ["Bilan obstétrical"] },
@@ -1107,9 +1107,16 @@ window.BIOKB = [
           ["Lupus anticoagulant", "Mis en évidence selon les recommandations de l'ISTH"],
           ["Anti-cardiolipides (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"],
           ["Anti-β2-GP1 (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"]
+        ] },
+      { titre: "Tests du lupus anticoagulant — interprétation (M = malade, T = témoin)",
+        entetes: ["Test", "Calcul", "Négatif", "Positif"],
+        lignes: [
+          ["TCA", "Indice de Rosner : (M − T) × 100 / M", "< 12", "> 15"],
+          ["TTd (temps de thromboplastine dilué)", "(M + T) / T", "< 1,15", "> 1,20"],
+          ["dRVVT", "Ratio normalisé : (M/T screen) / (M/T confirm)", "< 1,20", "> 1,20"]
         ] }
     ],
-    red_flags: ["SAPL catastrophique (CAPS) : thromboses multiples avec défaillance multiviscérale → urgence vitale", "Thrombose artérielle (AVC, IDM) ou thrombose veineuse étendue", "Morbidité obstétricale (pertes fœtales répétées, prééclampsie sévère)", "Thrombopénie souvent associée (anticoaguler avec précaution)"],
+    red_flags: ["SAPL catastrophique (CAPS) : thromboses multiples avec défaillance multiviscérale → urgence vitale", "Thrombose artérielle (AVC, IDM) ou thrombose veineuse étendue", "Morbidité obstétricale (pertes fœtales répétées, prééclampsie sévère)", "Thrombopénie souvent associée (auto-immune ou de consommation ; réaliser un TS, anticoaguler avec précaution)"],
     conduite: ["Diagnostic = 1 critère clinique + 1 critère biologique PERSISTANT (≥ 12 semaines).", "Le lupus anticoagulant allonge le TCA (ne corrige pas au mélange) mais le risque est THROMBOTIQUE, pas hémorragique.", "Rechercher un lupus associé ; éviter les œstroprogestatifs ; contrôler les facteurs de risque vasculaire.", "Traitement : anticoagulation au long cours après thrombose ; en obstétrique, aspirine + HBPM ; avis spécialisé."]
   }
 ];
