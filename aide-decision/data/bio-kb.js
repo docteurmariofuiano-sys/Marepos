@@ -1162,5 +1162,77 @@ window.BIOKB = [
     ],
     red_flags: ["Discordance Beth-Vincent / Simonin → ne pas valider le groupe, avis immuno-hématologique", "Témoin RH1 positif (autoagglutination) → RH1 ininterprétable, reprendre", "Sécurité transfusionnelle : vérifier le respect des 2 prélèvements / 2 déterminations avant toute transfusion", "Urgence vitale sans groupe disponible : culots O (RH−) selon protocole"],
     conduite: ["Valider le groupe ABO uniquement si Beth-Vincent et Simonin CONCORDENT.", "Simonin peu fiable chez le nouveau-né (< 6 mois, anticorps naturels absents) et le sujet âgé/immunodéprimé.", "Compléter par la RAI avant transfusion ; respecter les règles des 2 prélèvements et le contrôle ultime au lit du malade.", "Toute discordance ou témoin positif → contrôle au laboratoire d'immuno-hématologie."]
+  },
+  {
+    id: "phenotypes_erythrocytaires", num: 90, anomalie: "Phénotypes érythrocytaires (systèmes de groupes sanguins)",
+    specialite: "Immuno-hématologie",
+    definition: "Principaux systèmes antigéniques érythrocytaires (ABO, Rhésus, Kell, MNSs, Kidd, Duffy, Lewis) et fréquences phénotypiques. Importants pour la transfusion (phénotypage, RAI) et la prévention de l'allo-immunisation. Fréquences indicatives (population générale).",
+    premiere_intention: ["ABO + RH1 (D) : groupage de base", "Phénotypage RH-KEL1 (Rhésus C/c/E/e + Kell) recommandé, notamment chez la femme en âge de procréer et le polytransfusé", "Phénotype étendu (Kidd, Duffy, MNSs…) si allo-immunisation ou transfusions itératives", "RAI (recherche d'agglutinines irrégulières) avant transfusion"],
+    causes: [
+      { cause: "Allo-immunisation anti-érythrocytaire", signe: "anticorps irréguliers (anti-RH, anti-KEL, anti-Kidd, anti-Duffy…) après transfusion ou grossesse", examens: ["RAI, identification", "Phénotype étendu"] },
+      { cause: "Antigènes à risque", signe: "RH et KEL très immunogènes ; anti-Kidd (Jk) responsables d'hémolyse retardée", examens: ["Phénotypage", "Test de Coombs / élution"] },
+      { cause: "Particularités de population", signe: "Fy(a−b−) fréquent chez le sujet noir (résistance à Plasmodium vivax)", examens: ["Phénotype Duffy"] }
+    ],
+    tableaux: [
+      { titre: "ABO",
+        entetes: ["Groupe", "Antigène", "Anticorps", "Fréquence"],
+        lignes: [
+          ["O", "Ni A ni B", "Anti-A + Anti-B", "45 %"],
+          ["A", "A", "Anti-B", "42 %"],
+          ["B", "B", "Anti-A", "10 %"],
+          ["AB", "A + B", "Aucun", "3 %"]
+        ] },
+      { titre: "Rhésus",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["D+ C+ E− c− e+", "35 %"],
+          ["D+ C+ E− c+ e+", "20 %"],
+          ["D+ C+ E+ c+ e+", "13 %"],
+          ["D+ C− E+ c+ e+", "12 %"],
+          ["D+ C− E− c+ e+", "2 %"],
+          ["D− C− E− c+ e+", "15 %"]
+        ] },
+      { titre: "Kell",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Kel:−1,2 (K−k+)", "91 %"],
+          ["Kel:1,2 (K+k+)", "8,8 %"],
+          ["Kel:1,−2 (K+k−)", "0,2 %"]
+        ] },
+      { titre: "MNSs",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["M+N+", "50 %"],
+          ["M+N−", "28 %"],
+          ["M−N+", "22 %"],
+          ["S−s+", "45 %"],
+          ["S+s+", "44 %"],
+          ["S+s−", "11 %"]
+        ] },
+      { titre: "Kidd",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Jk:1,2 (Jk(a+b+))", "50 %"],
+          ["Jk:−1,2 (Jk(a−b+))", "24 %"],
+          ["Jk:1,−2 (Jk(a+b−))", "26 %"]
+        ] },
+      { titre: "Duffy",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Fy:1,2 (Fy(a+b+))", "47 %"],
+          ["Fy:−1,2 (Fy(a−b+))", "33 %"],
+          ["Fy:1,−2 (Fy(a+b−))", "20 %"],
+          ["Fy:−1,−2 (Fy(a−b−))", "fréquent chez le sujet noir"]
+        ] },
+      { titre: "Lewis",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Le(a−b+)", "72 %"],
+          ["Le(a+b−)", "22 %"],
+          ["Le(a−b−)", "6 %"]
+        ] }
+    ],
+    red_flags: ["RAI positive (anticorps anti-érythrocytaire) → sang phénotypé compatible, risque d'hémolyse transfusionnelle", "Femme en âge de procréer RH−1 (D−) ou exposée à KEL1 : prévenir l'allo-immunisation (maladie hémolytique du nouveau-né)", "Anticorps anti-Kidd (Jk) : hémolyse retardée, parfois indétectable (évanescence) — danger transfusionnel", "Phénotype rare → difficulté d'approvisionnement"],
+    conduite: ["Respecter le phénotypage RH-KEL1 chez la femme en âge de procréer et le polytransfusé.", "Devant une RAI positive : identifier l'anticorps et transfuser du sang phénotypé compatible.", "Tenir compte des particularités de population (Fy(a−b−) chez le sujet noir).", "Tracer le phénotype ; coordination avec le laboratoire d'immuno-hématologie / l'EFS."]
   }
 ];

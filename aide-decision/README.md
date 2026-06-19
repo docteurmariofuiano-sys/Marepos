@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **47 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **48 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -59,9 +59,9 @@ Willebrand, hémophilies A et B, syndrome des antiphospholipides, démarche
 devant un bilan de coagulation anormal), électrophorèse,
 hyperéosinophilie, inversion de formule, hyperglycémie, hypercalcémie,
 hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, hyperprolactinémie, GGT,
-cytolyse, dyslipidémie, CPK, LDH, le **groupage sanguin ABO-RH1**
-(immuno-hématologie : Beth-Vincent, Simonin, RH1), et un **bloc hématologie** :
-CAT devant une
+cytolyse, dyslipidémie, CPK, LDH, l'**immuno-hématologie** (groupage ABO-RH1 :
+Beth-Vincent, Simonin, RH1 ; phénotypes érythrocytaires ABO/Rhésus/Kell/MNSs/
+Kidd/Duffy/Lewis), et un **bloc hématologie** : CAT devant une
 anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /
 β-thalassémie), anémie **hémolytique** (classification corpusculaire /
 extracorpusculaire), **AHAI** (auto-Ac chauds vs froids), **thrombopénie**
