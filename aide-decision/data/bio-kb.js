@@ -2447,5 +2447,41 @@ window.BIOKB = [
     ],
     red_flags: ["Anti-CCP positif = mauvais pronostic (PR érosive) → prise en charge précoce et agressive", "FR peu spécifique : ne pas porter le diagnostic de PR sur le seul FR", "FR positif chez le sujet âgé sain (15 % après 70 ans)", "FR élevé + cryoglobulinémie → évoquer une infection par le VHC ou un Waldenström"],
     conduite: ["Devant une polyarthrite : associer FR IgM (ELISA / néphélémétrie) et anti-CCP.", "Anti-CCP = marqueur spécifique et précoce de la PR (anti-CCP2 plus sensible).", "Un FR positif isolé n'affirme pas une PR (faux positifs nombreux) : confronter à la clinique et à l'imagerie.", "AKA / anti-filaggrine abandonnés au profit des anti-CCP."]
+  },
+  {
+    id: "autoanticorps_organes", num: 119, anomalie: "Anticorps spécifiques d'organes",
+    specialite: "Immunologie",
+    definition: "Auto-anticorps spécifiques d'organe : marqueurs des maladies auto-immunes spécifiques d'organe. Pour chaque cible, un anticorps de 1re intention (± 2e intention) oriente le diagnostic. À confronter à la clinique.",
+    premiere_intention: ["Choisir l'auto-anticorps selon l'organe suspecté (1re intention), puis 2e intention si besoin", "Confronter à la clinique : un auto-anticorps positif n'affirme pas toujours la maladie", "Rechercher les polyendocrinopathies auto-immunes (associations : thyroïde, surrénale, estomac, pancréas…)", "Techniques : ELISA, IFI selon l'anticorps"],
+    causes: [
+      { cause: "Auto-immunité endocrinienne", signe: "pancréas (GAD/IA2/ICA), thyroïde (TSH-R, TPO), parathyroïde (CaSR), surrénale (21-OH), gonades", examens: ["Auto-anticorps spécifiques"] },
+      { cause: "Auto-immunité digestive", signe: "estomac (facteur intrinsèque, cellules pariétales), intestin (ASCA/Crohn, transglutaminase/cœliaque), foie (actine, LKM1, mitochondries)", examens: ["ELISA / IFI"] },
+      { cause: "Autres organes", signe: "rein/poumon (anti-MBG/Goodpasture), jonction neuromusculaire (anti-RACh/myasthénie), hématies (Coombs), plaquettes (anti-GP)", examens: ["Auto-anticorps spécifiques"] }
+    ],
+    tableaux: [
+      { titre: "Auto-anticorps spécifiques d'organe",
+        entetes: ["Organe", "Auto-anticorps (1re intention)", "2e intention", "Pathologie"],
+        lignes: [
+          ["Pancréas", "Anti-GAD 65, anti-IA2", "ICA (anti-îlots, IFI)", "Diabète type 1, diabète LADA"],
+          ["Thyroïde", "Anti-récepteur de la TSH", "—", "Maladie de Basedow"],
+          ["Thyroïde", "Anti-TPO", "Anti-Tg", "Thyroïdite d'Hashimoto, myxœdème primitif"],
+          ["Parathyroïde", "Anti-parathyroïde (IFI), anti-CaSR", "—", "Hypoparathyroïdie auto-immune"],
+          ["Surrénales", "Anti-surrénale (IFI), anti-21-hydroxylase", "—", "Maladie d'Addison"],
+          ["Gonades", "Anti-ovaire", "Anti-17α-hydroxylase, anti-20-22 desmolase", "Hypogonadisme"],
+          ["Estomac", "Anti-facteur intrinsèque", "Anti-cellules pariétales (IFI)", "Maladie de Biermer"],
+          ["Estomac", "Anti-pompe à protons", "Anti-cellules pariétales (IFI)", "Gastrite atrophique A"],
+          ["Intestin", "Anti-Saccharomyces cerevisiae (ASCA)", "Anti-pancréas exocrine", "Maladie de Crohn"],
+          ["Intestin", "Anti-transglutaminase, anti-endomysium", "—", "Maladie cœliaque"],
+          ["Foie", "Anti-actine", "—", "Hépatite auto-immune type 1"],
+          ["Foie", "Anti-réticulum (LKM1)", "—", "Hépatite auto-immune type 2"],
+          ["Foie", "Anti-mitochondries (PDH)", "—", "Cirrhose biliaire primitive"],
+          ["Rein / poumon", "Anti-membrane basale glomérulaire", "—", "Syndrome de Goodpasture"],
+          ["Jonction neuromusculaire", "Anti-récepteur de l'acétylcholine", "—", "Myasthénie"],
+          ["Hématies", "Test de Coombs", "—", "Anémie hémolytique auto-immune (AHAI)"],
+          ["Plaquettes", "Anti-GP", "—", "Thrombopénie auto-immune (PTAI)"]
+        ] }
+    ],
+    red_flags: ["Syndrome de Goodpasture (anti-MBG) : hémorragie alvéolaire + glomérulonéphrite rapidement progressive → urgence", "Myasthénie (anti-RACh) : crise myasthénique (atteinte respiratoire / déglutition)", "Polyendocrinopathie auto-immune : dépister les autres atteintes (ex. Addison + thyroïde + Biermer)", "Un auto-anticorps isolé ne suffit pas au diagnostic : confronter à la clinique"],
+    conduite: ["Choisir l'auto-anticorps en fonction de l'organe cible (1re puis 2e intention).", "Penser aux associations auto-immunes (polyendocrinopathies, Biermer + thyroïde, etc.).", "Confronter systématiquement à la clinique et aux autres examens.", "Renvois internes : diabète type 1 (anti-GAD), Basedow/Hashimoto (TSH-R/TPO), Addison (21-OH), AHAI (Coombs), PTAI."]
   }
 ];
