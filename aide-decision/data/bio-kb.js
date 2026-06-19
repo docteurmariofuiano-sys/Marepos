@@ -2776,5 +2776,46 @@ window.BIOKB = [
     ],
     red_flags: ["Splénomégalie (50 %) → risque de rupture splénique : éviter les sports de contact", "Angine très hypertrophique avec gêne respiratoire (obstruction)", "Complications hématologiques (AHAI, thrombopénie) ou neurologiques", "Éviter l'amoxicilline/ampicilline (exanthème) ; chez l'immunodéprimé, risque tumoral (lymphome)"],
     conduite: ["Évoquer devant un syndrome mononucléosique : NFS, MNI-test, sérologie EBV (VCA, EA, EBNA).", "Primo-infection = IgM anti-VCA + sans anti-EBNA ; infection ancienne = anti-EBNA +.", "Le MNI-test peut être négatif (surtout chez l'enfant) → s'appuyer sur la sérologie.", "Traitement symptomatique (repos), éviction des sports de contact si splénomégalie ; voir la fiche « syndrome mononucléosique »."]
+  },
+  {
+    id: "cmv", num: 125, anomalie: "Cytomégalovirus (CMV)",
+    specialite: "Infectiologie",
+    definition: "Virus du groupe herpès. Séroprévalence ~50 % en France. Souvent asymptomatique chez l'immunocompétent ; grave chez l'immunodéprimé (transplanté, SIDA) et le fœtus (maladie des inclusions cytomégaliques). Transmission respiratoire, salive, urines, sexuelle, lait, transplantation.",
+    premiere_intention: ["NFS : syndrome mononucléosique (vers J15 de la fièvre), thrombopénie ; transaminases ↑ (surtout ALAT) ; hypergammaglobulinémie polyclonale à IgM", "Sérologie : IgM = infection récente (peuvent réaugmenter en réactivation)", "Immunodéprimé : antigénémie pp65 et/ou PCR (ADN viral plasmatique / leucocytaire / LCR / urine)", "Auto-anticorps transitoires possibles (ANA, facteur rhumatoïde) : ne pas surinterpréter"],
+    causes: [
+      { cause: "Immunocompétent", signe: "souvent asymptomatique ; fièvre prolongée (> 15 j) ± frissons, céphalée, asthénie, arthralgies, pharyngite", examens: ["NFS, sérologie (IgM)"] },
+      { cause: "Immunodéprimé — transplanté", signe: "infection opportuniste la plus fréquente (30-50 %) : pneumopathie interstitielle, fièvre + cytolyse, cytopénies, glomérulopathie, myocardite, encéphalite ; récidives", examens: ["Antigénémie pp65, PCR"] },
+      { cause: "Immunodéprimé — SIDA (CD4 < 50)", signe: "réactivation : rétinite nécrosante (uni puis bilatérale), atteintes digestives ; plus rarement pneumopathie, encéphalite", examens: ["PCR, fond d'œil"] },
+      { cause: "Fœtus / nouveau-né", signe: "maladie congénitale des inclusions cytomégaliques (1-5/10 000) ; formes inapparentes (virurie, encéphalopathie / retard psychomoteur)", examens: ["PCR (urine/salive du nouveau-né)"] }
+    ],
+    tableaux: [
+      { titre: "Signes biologiques d'orientation",
+        entetes: ["Examen", "Anomalie"],
+        lignes: [
+          ["NFS", "Syndrome mononucléosique (vers J15), thrombopénie"],
+          ["Transaminases", "Augmentées (surtout ALAT)"],
+          ["Immunoglobulines", "Hypergammaglobulinémie polyclonale à IgM"],
+          ["Auto-anticorps", "Apparition transitoire d'ANA, facteur rhumatoïde, complexes immuns circulants"]
+        ] },
+      { titre: "Diagnostic virologique",
+        entetes: ["Méthode", "Intérêt"],
+        lignes: [
+          ["Sérologie (IgM/IgG)", "IgM = infection récente (peuvent réaugmenter en réactivation)"],
+          ["Antigénémie pp65", "Surtout chez l'immunodéprimé (transplanté, SIDA)"],
+          ["PCR (ADN viral)", "Plasma, leucocytes, LCR, urine ; quantification"],
+          ["Culture (fibroblastes humains)", "Effet cytopathogène en 10-21 j ; permet l'antivirogramme"],
+          ["Histologie", "Cellules à grosses inclusions intranucléaires"]
+        ] },
+      { titre: "Manifestations selon le terrain",
+        entetes: ["Terrain", "Manifestations"],
+        lignes: [
+          ["Immunocompétent", "Souvent asymptomatique ; fièvre prolongée, asthénie, pharyngite"],
+          ["Transplanté", "Pneumopathie interstitielle, cytolyse, cytopénies, myocardite, encéphalite (30-50 %)"],
+          ["SIDA (CD4 < 50)", "Rétinite nécrosante, atteintes digestives"],
+          ["Fœtus / nouveau-né", "Maladie des inclusions cytomégaliques ; encéphalopathie, retard psychomoteur"]
+        ] }
+    ],
+    red_flags: ["Rétinite à CMV chez le sujet VIH (CD4 < 50) → risque de cécité, urgence", "CMV chez le transplanté : infection opportuniste grave (pneumopathie, atteinte multi-organe)", "CMV congénital : surdité, retard psychomoteur → dépistage et suivi", "Primo-infection à CMV chez la femme enceinte (risque fœtal)"],
+    conduite: ["Immunocompétent : syndrome mononucléosique à MNI-test négatif → évoquer le CMV (sérologie IgM).", "Immunodéprimé : antigénémie pp65 / PCR pour le diagnostic et le suivi ; traitement antiviral (ganciclovir…).", "Grossesse : risque de transmission materno-fœtale ; avis spécialisé en cas de primo-infection.", "Auto-anticorps transitoires possibles : ne pas conclure à tort à une maladie auto-immune."]
   }
 ];
