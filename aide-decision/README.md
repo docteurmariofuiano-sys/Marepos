@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **41 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **42 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -54,7 +54,8 @@ de 1re intention**, **causes à explorer** avec leur **signe discriminant** et l
 **examens**, **tableaux comparatifs** (le cas échéant), **red flags**, **conduite
 à tenir**.
 
-Couvre : anomalies de l'hémostase (TS, TCA, TP, TT, hérédité), électrophorèse,
+Couvre : anomalies de l'hémostase (TS, TCA, TP, TT, hérédité, maladie de
+Willebrand), électrophorèse,
 hyperéosinophilie, inversion de formule, hyperglycémie, hypercalcémie,
 hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, hyperprolactinémie, GGT,
 cytolyse, dyslipidémie, CPK, LDH, et un **bloc hématologie** : CAT devant une

@@ -923,5 +923,49 @@ window.BIOKB = [
     ],
     red_flags: ["Excès de blastes / évolution vers une LAM", "Cytopénies profondes (infections, hémorragies, anémie mal tolérée)", "Forme proliférative avec hyperleucocytose, splénomégalie volumineuse", "Localisations extra-hématologiques (cutanées, séreuses)"],
     conduite: ["Affirmer une monocytose clonale persistante (> 1 G/L, > 3 mois) et éliminer une monocytose réactionnelle et la LMC (Ph1−).", "Myélogramme + caryotype indispensables ; apprécier dysplasie et blastose.", "Stratifier le risque (scores spécifiques LMMC) ; prise en charge spécialisée.", "Traitements : soutien, hydroxyurée (formes prolifératives), agents hypométhylants, allogreffe selon le risque."]
+  },
+  {
+    id: "willebrand", num: 84, anomalie: "Maladie de Willebrand",
+    specialite: "Hémostase",
+    definition: "Maladie hémorragique constitutionnelle la plus fréquente (~1 % de la population, surtout formes frustes). Déficit quantitatif (types 1 et 3) ou qualitatif (type 2) du facteur Willebrand. Transmission autosomique dominante (sauf types 2N et 3, récessifs). Saignements cutanéo-muqueux ; rares hématomes profonds / hémarthroses.",
+    premiere_intention: ["Interrogatoire +++ (score hémorragique, ATCD familiaux, saignements provoqués : chirurgie, dents de sagesse)", "Formes frustes : TS et TCA peu sensibles → doser directement l'antigène du vWF (vWF:Ag)", "Bilan : vWF:Ag, activité cofacteur de la ristocétine (vWF:RCo), facteur VIII, rapport vWF:RCo/vWF:Ag", "Typage : étude des multimères et agrégation à la ristocétine ; un syndrome inflammatoire même mineur peut masquer une forme fruste"],
+    causes: [
+      { cause: "Type 1 (70-80 %)", signe: "déficit quantitatif partiel ; rapport vWF:RCo/vWF:Ag ≈ 1", examens: ["vWF:Ag, vWF:RCo, FVIII"] },
+      { cause: "Type 2 (15-25 %)", signe: "déficit qualitatif ; rapport vWF:RCo/vWF:Ag < 0,7 (sauf 2N)", examens: ["Multimères", "Agrégation à la ristocétine"] },
+      { cause: "Type 3 (< 5 %)", signe: "déficit quantitatif sévère (vWF effondré, FVIII bas) ; transmission récessive", examens: ["vWF:Ag effondré, FVIII"] }
+    ],
+    tableaux: [
+      { titre: "Sous-types de la maladie de Willebrand",
+        entetes: ["Type", "Mécanisme", "Multimères de haut poids moléculaire"],
+        lignes: [
+          ["1 (70-80 %)", "Déficit quantitatif partiel", "Présents"],
+          ["2A", "↓ affinité vWF–GPIb plaquettaire", "Absents"],
+          ["2B", "↑ affinité vWF–GPIb (thrombopénie possible)", "Diminués"],
+          ["2M", "↓ affinité vWF–GPIb plaquettaire", "Présents (tous)"],
+          ["2N", "↓ affinité vWF–facteur VIII", "Présents"],
+          ["3 (< 5 %)", "Déficit quantitatif sévère", "Absents (vWF effondré)"]
+        ] },
+      { titre: "Bilan d'hémostase",
+        entetes: ["Test", "Résultat"],
+        lignes: [
+          ["Temps de saignement (Ivy)", "Allongé (sauf formes frustes et 2N)"],
+          ["Temps d'occlusion (PFA)", "Allongé (sauf 2N)"],
+          ["TCA", "Allongé (parallèle au FVIII et au TS)"],
+          ["Plaquettes", "Diminuées dans le type 2B"],
+          ["Facteur VIII", "Diminué"],
+          ["vWF:Ag", "Diminué (sauf type 2)"],
+          ["vWF:RCo (cofacteur ristocétine)", "Diminué (sauf 2N)"],
+          ["Rapport vWF:RCo / vWF:Ag", "≈ 1 (types 1, 3, 2N) ; < 0,7 (type 2)"],
+          ["Agrégation à faible dose de ristocétine", "Augmentée dans le type 2B"]
+        ] },
+      { titre: "Facteurs modifiant le vWF",
+        entetes: ["Sens", "Facteurs"],
+        lignes: [
+          ["↑ vWF / FVIII", "Stress, exercice, inflammation, grossesse, œstroprogestatifs"],
+          ["↓ vWF", "Groupe sanguin O"]
+        ] }
+    ],
+    red_flags: ["Saignement actif ou chirurgie programmée chez un patient à risque → avis spécialisé et prévention", "Type 3 (déficit sévère) : risque d'hématomes profonds, d'hémarthroses", "Type 2B : thrombopénie (ne pas confondre avec un PTI ; desmopressine à éviter)", "Inflammation / grossesse pouvant masquer une forme fruste (faux négatif)"],
+    conduite: ["Diagnostic guidé par l'interrogatoire (score hémorragique) puis dosages (vWF:Ag, vWF:RCo, FVIII, rapport).", "Typer (multimères, ristocétine) : la prise en charge en dépend — desmopressine (DDAVP) surtout efficace dans le type 1, à éviter dans le type 2B (aggrave la thrombopénie).", "Concentrés de vWF (± FVIII) dans les formes sévères ou avant un geste à risque ; éviter aspirine / AINS.", "Recontrôler à distance d'un épisode inflammatoire pour ne pas méconnaître une forme fruste."]
   }
 ];
