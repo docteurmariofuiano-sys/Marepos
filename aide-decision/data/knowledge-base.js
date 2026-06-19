@@ -4956,5 +4956,302 @@ window.KB = {
         examens_a_discuter: ["TSH, B12/folates, revue des médicaments"] }
     ],
     examens_clinique: ["Évaluation cognitive (MMSE, test de l'horloge)", "Bilan biologique (TSH, B12, calcémie)", "Imagerie cérébrale", "Recherche d'une dépression"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PNEUMONIE / BRONCHITE
+  // -------------------------------------------------------------------------
+  pneumonie: {
+    id: "pneumonie", symptome: "Pneumonie / bronchite (toux fébrile)", specialite: ["Pneumologie", "Infectiologie"], urgence: true,
+    questions: [
+      { id: "pn2_gravite", label: "Signes de gravité", type: "boolean", question: "Avez-vous une difficulté à respirer marquée, une confusion, une tension basse, ou des lèvres bleues ?" },
+      { id: "pn2_foyer", label: "Foyer pulmonaire", type: "boolean", question: "Avez-vous une fièvre avec toux, crachats, et une douleur thoracique ?" },
+      { id: "pn2_dyspnee", label: "Dyspnée", type: "boolean", question: "Êtes-vous essoufflé ?" },
+      { id: "pn2_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous âgé, BPCO, immunodéprimé, ou avez-vous des comorbidités importantes ?" },
+      { id: "pn2_viral", label: "Bronchite virale", type: "boolean", question: "S'agit-il plutôt d'une toux avec courbatures dans un contexte épidémique, sans foyer ?" }
+    ],
+    red_flags: [
+      { id: "pn2_rf_grave", niveau: 3, when: { q: "pn2_gravite", eq: true },
+        message_medecin: "Signes de gravité (détresse respiratoire, confusion, hypotension) : pneumonie grave / sepsis → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "pn2_rf_terrain", niveau: 2, when: { q: "pn2_terrain", eq: true },
+        message_medecin: "Pneumonie sur terrain à risque : évaluer une hospitalisation (score CRB65).",
+        message_patient: "Ce contexte nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pn2_pneumonie", diagnostic: "Pneumonie", arguments: [{ label: "fièvre + foyer + douleur", w: 3, when: { q: "pn2_foyer", eq: true } }, { label: "dyspnée", w: 1, when: { q: "pn2_dyspnee", eq: true } }],
+        examens_a_discuter: ["Auscultation, radiographie thoracique, CRP", "Antibiothérapie"] },
+      { id: "pn2_bronchite", diagnostic: "Bronchite aiguë virale", arguments: [{ label: "contexte viral sans foyer", w: 3, when: { q: "pn2_viral", eq: true } }],
+        examens_a_discuter: ["Traitement symptomatique (pas d'antibiotique)"] },
+      { id: "pn2_grave", diagnostic: "Pneumonie grave", arguments: [{ label: "signes de gravité", w: 3, when: { q: "pn2_gravite", eq: true } }, { label: "terrain à risque", w: 1, when: { q: "pn2_terrain", eq: true } }],
+        examens_a_discuter: ["Hospitalisation (CRB65)"] }
+    ],
+    examens_clinique: ["SpO2, fréquence respiratoire", "Auscultation pulmonaire (foyer)", "Pression artérielle, conscience", "Score CRB65"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SYNDROME GRIPPAL (grippe / COVID)
+  // -------------------------------------------------------------------------
+  syndrome_grippal: {
+    id: "syndrome_grippal", symptome: "Syndrome grippal (grippe / COVID)", specialite: ["Infectiologie"], urgence: true,
+    questions: [
+      { id: "sg_gravite", label: "Signes de gravité", type: "boolean", question: "Avez-vous une gêne respiratoire, une douleur thoracique, ou une confusion ?" },
+      { id: "sg_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous à risque (âgé, femme enceinte, BPCO, immunodéprimé, nourrisson) ?" },
+      { id: "sg_typique", label: "Tableau typique", type: "boolean", question: "Avez-vous fièvre, courbatures, maux de tête et fatigue, dans un contexte épidémique ?" },
+      { id: "sg_prolonge", label: "Surinfection", type: "boolean", question: "Les symptômes durent-ils plus de 7 jours ou s'aggravent-ils ?" }
+    ],
+    red_flags: [
+      { id: "sg_rf_grave", niveau: 3, when: { q: "sg_gravite", eq: true },
+        message_medecin: "Signes de gravité respiratoire / neurologique : grippe ou COVID compliqué → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "sg_rf_terrain", niveau: 2, when: { q: "sg_terrain", eq: true },
+        message_medecin: "Terrain à risque : surveillance, traitement antiviral à discuter, isolement.",
+        message_patient: "Ce contexte nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "sg_grippal", diagnostic: "Syndrome grippal (grippe / COVID)", arguments: [{ label: "tableau typique épidémique", w: 3, when: { q: "sg_typique", eq: true } }],
+        examens_a_discuter: ["Tests selon contexte", "Traitement symptomatique, isolement"] },
+      { id: "sg_complique", diagnostic: "Forme compliquée", arguments: [{ label: "signes de gravité", w: 2, when: { q: "sg_gravite", eq: true } }, { label: "aggravation / prolongation", w: 2, when: { q: "sg_prolonge", eq: true } }],
+        examens_a_discuter: ["Radiographie thoracique, évaluation"] }
+    ],
+    examens_clinique: ["SpO2", "Auscultation pulmonaire", "Température", "Recherche de signes de gravité"]
+  },
+
+  // -------------------------------------------------------------------------
+  // APNÉE DU SOMMEIL
+  // -------------------------------------------------------------------------
+  apnee_sommeil: {
+    id: "apnee_sommeil", symptome: "Apnée du sommeil (ronflements, somnolence)", specialite: ["Pneumologie", "ORL"],
+    questions: [
+      { id: "as2_triade", label: "Triade évocatrice", type: "boolean", question: "Ronflez-vous fort, avec des pauses respiratoires constatées et une somnolence excessive en journée ?" },
+      { id: "as2_somnolence_danger", label: "Somnolence dangereuse", type: "boolean", question: "La somnolence est-elle dangereuse (endormissements au volant, accidents évités de justesse) ?" },
+      { id: "as2_comorbid", label: "Comorbidités", type: "boolean", question: "Avez-vous une HTA résistante, un diabète, ou une maladie cardiaque ?" },
+      { id: "as2_morpho", label: "Morphologie", type: "boolean", question: "Êtes-vous en surpoids, avec un cou large ?" }
+    ],
+    red_flags: [
+      { id: "as2_rf_danger", niveau: 2, when: { q: "as2_somnolence_danger", eq: true },
+        message_medecin: "Somnolence dangereuse (conduite) : conseils de prévention, dépistage rapide, éviter la conduite.",
+        message_patient: "Une somnolence dangereuse au volant nécessite un avis médical rapide ; évitez de conduire." }
+    ],
+    diagnostics_differentiels: [
+      { id: "as2_saos", diagnostic: "Syndrome d'apnées obstructives du sommeil", arguments: [{ label: "ronflements + pauses + somnolence", w: 3, when: { q: "as2_triade", eq: true } }, { label: "morphologie", w: 1, when: { q: "as2_morpho", eq: true } }, { label: "comorbidités CV", w: 1, when: { q: "as2_comorbid", eq: true } }],
+        examens_a_discuter: ["Échelle d'Epworth", "Polygraphie ventilatoire / polysomnographie"] }
+    ],
+    examens_clinique: ["IMC, tour de cou", "Score d'Epworth", "Examen ORL des voies aériennes supérieures", "Pression artérielle"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DYSPEPSIE / DOULEUR ÉPIGASTRIQUE
+  // -------------------------------------------------------------------------
+  dyspepsie: {
+    id: "dyspepsie", symptome: "Douleur du creux de l'estomac / digestion difficile (dyspepsie)", specialite: ["Digestif"],
+    questions: [
+      { id: "dd_alarme", label: "Signes d'alarme", type: "boolean", question: "Avez-vous une dysphagie, un amaigrissement, une anémie, des vomissements de sang/selles noires, ou une masse ?" },
+      { id: "dd_cardiaque", label: "Cause cardiaque", type: "boolean", question: "La gêne survient-elle à l'effort, ou avez-vous des facteurs de risque cardiaque ?" },
+      { id: "dd_epigastrique", label: "Dyspepsie typique", type: "boolean", question: "Avez-vous une gêne du creux de l'estomac, des ballonnements, surtout après les repas ?" },
+      { id: "dd_age50", label: "Âge > 50 récent", type: "boolean", question: "Avez-vous plus de 50 ans avec des symptômes récents ?" },
+      { id: "dd_ains", label: "AINS", type: "boolean", question: "Prenez-vous de l'aspirine ou des anti-inflammatoires ?" }
+    ],
+    red_flags: [
+      { id: "dd_rf_alarme", niveau: 2, when: { any: [{ q: "dd_alarme", eq: true }, { q: "dd_age50", eq: true }] },
+        message_medecin: "Signes d'alarme / dyspepsie récente après 50 ans : endoscopie haute (éliminer ulcère/cancer).",
+        message_patient: "Ces éléments nécessitent un avis médical et une endoscopie." },
+      { id: "dd_rf_cardiaque", niveau: 2, when: { q: "dd_cardiaque", eq: true },
+        message_medecin: "Douleur d'effort : éliminer une cause cardiaque (ECG) avant d'étiqueter une dyspepsie.",
+        message_patient: "Une douleur à l'effort doit être évaluée par un médecin." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dd_fonctionnelle", diagnostic: "Dyspepsie fonctionnelle / RGO", arguments: [{ label: "gêne épigastrique post-prandiale", w: 3, when: { q: "dd_epigastrique", eq: true } }],
+        examens_a_discuter: ["Règles hygiéno-diététiques, IPP", "Recherche d'H. pylori"] },
+      { id: "dd_ulcere", diagnostic: "Ulcère / cause organique", arguments: [{ label: "AINS", w: 2, when: { q: "dd_ains", eq: true } }, { label: "signes d'alarme", w: 2, when: { q: "dd_alarme", eq: true } }, { label: "> 50 ans récent", w: 1, when: { q: "dd_age50", eq: true } }],
+        examens_a_discuter: ["Endoscopie, recherche d'H. pylori"] },
+      { id: "dd_cardiaque", diagnostic: "Cause cardiaque à éliminer", arguments: [{ label: "douleur d'effort / FdR CV", w: 3, when: { q: "dd_cardiaque", eq: true } }],
+        examens_a_discuter: ["ECG"] }
+    ],
+    examens_clinique: ["Palpation abdominale", "Recherche de signes d'alarme", "ECG si doute cardiaque"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PROSTATITE
+  // -------------------------------------------------------------------------
+  prostatite: {
+    id: "prostatite", symptome: "Prostatite (infection de la prostate)", specialite: ["Urologie"], urgence: true,
+    questions: [
+      { id: "pr_sepsis", label: "Signes de gravité", type: "boolean", question: "Avez-vous des signes de gravité (malaise, confusion, tension basse, frissons intenses) ?" },
+      { id: "pr_retention", label: "Rétention", type: "boolean", question: "N'arrivez-vous plus à uriner (rétention) ?" },
+      { id: "pr_aigue", label: "Prostatite aiguë", type: "boolean", question: "Avez-vous de la fièvre avec des brûlures urinaires, des difficultés à uriner, et des douleurs du périnée ?" },
+      { id: "pr_chronique", label: "Forme chronique", type: "boolean", question: "Est-ce une gêne pelvienne/urinaire chronique, récidivante, sans fièvre ?" }
+    ],
+    red_flags: [
+      { id: "pr_rf_sepsis", niveau: 3, when: { any: [{ q: "pr_sepsis", eq: true }, { q: "pr_retention", eq: true }] },
+        message_medecin: "Prostatite aiguë avec sepsis / rétention : urgence (ECBU, antibiothérapie, drainage si rétention).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pr_aigue", diagnostic: "Prostatite aiguë", arguments: [{ label: "fièvre + signes urinaires + douleur périnéale", w: 3, when: { q: "pr_aigue", eq: true } }],
+        examens_a_discuter: ["ECBU", "Antibiothérapie prolongée (pas de massage prostatique)"] },
+      { id: "pr_chronique", diagnostic: "Prostatite chronique / douleur pelvienne chronique", arguments: [{ label: "gêne chronique récidivante", w: 3, when: { q: "pr_chronique", eq: true } }],
+        examens_a_discuter: ["ECBU, avis urologique"] }
+    ],
+    examens_clinique: ["Température, recherche de sepsis", "Toucher rectal (prostate douloureuse — avec prudence)", "ECBU", "Recherche d'un globe vésical"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ŒDÈMES DES MEMBRES INFÉRIEURS
+  // -------------------------------------------------------------------------
+  oedemes: {
+    id: "oedemes", symptome: "Œdèmes / jambes gonflées", specialite: ["Cardiologie", "Néphrologie", "Vasculaire"], urgence: true,
+    questions: [
+      { id: "oe_quincke", label: "Angio-œdème", type: "boolean", question: "Y a-t-il un gonflement brutal du visage/des lèvres/de la gorge avec gêne respiratoire ?" },
+      { id: "oe_unilateral", label: "TVP", type: "boolean", question: "L'œdème touche-t-il une seule jambe, chaude et douloureuse ?" },
+      { id: "oe_dyspnee", label: "Insuffisance cardiaque", type: "boolean", question: "Avez-vous un essoufflement, ou une gêne pour respirer allongé ?" },
+      { id: "oe_renal", label: "Cause rénale", type: "boolean", question: "Avez-vous des urines mousseuses, une hypertension, ou une maladie rénale ?" },
+      { id: "oe_anasarque", label: "Anasarque", type: "boolean", question: "Y a-t-il une prise de poids rapide et un gonflement généralisé (visage, abdomen) ?" },
+      { id: "oe_veineux", label: "Insuffisance veineuse", type: "boolean", question: "Est-ce les deux jambes, en fin de journée, avec des varices ?" }
+    ],
+    red_flags: [
+      { id: "oe_rf_quincke", niveau: 3, when: { q: "oe_quincke", eq: true },
+        message_medecin: "Œdème de Quincke / anaphylaxie : urgence (voir fiche urticaire).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "oe_rf_tvp", niveau: 2, when: { q: "oe_unilateral", eq: true },
+        message_medecin: "Œdème unilatéral chaud/douloureux : TVP → écho-doppler (voir douleur de jambe).",
+        message_patient: "Un gonflement d'une seule jambe nécessite un avis médical rapide." },
+      { id: "oe_rf_oap", niveau: 2, when: { q: "oe_dyspnee", eq: true },
+        message_medecin: "Œdèmes + dyspnée/orthopnée : insuffisance cardiaque → évaluation (BNP, ETT).",
+        message_patient: "Des œdèmes avec essoufflement nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "oe_cardiaque", diagnostic: "Insuffisance cardiaque", arguments: [{ label: "dyspnée / orthopnée", w: 3, when: { q: "oe_dyspnee", eq: true } }, { label: "anasarque", w: 1, when: { q: "oe_anasarque", eq: true } }],
+        examens_a_discuter: ["BNP, ECG, échocardiographie"] },
+      { id: "oe_renal", diagnostic: "Cause rénale (syndrome néphrotique)", arguments: [{ label: "protéinurie / HTA / maladie rénale", w: 3, when: { q: "oe_renal", eq: true } }, { label: "anasarque", w: 1, when: { q: "oe_anasarque", eq: true } }],
+        examens_a_discuter: ["Protéinurie, créatinine"] },
+      { id: "oe_veineux", diagnostic: "Insuffisance veineuse", arguments: [{ label: "bilatéral, vespéral, varices", w: 3, when: { q: "oe_veineux", eq: true } }],
+        examens_a_discuter: ["Contention veineuse, mesures"] },
+      { id: "oe_tvp", diagnostic: "Thrombose veineuse profonde", arguments: [{ label: "œdème unilatéral", w: 3, when: { q: "oe_unilateral", eq: true } }],
+        examens_a_discuter: ["Écho-doppler veineux"] }
+    ],
+    examens_clinique: ["Caractère uni/bilatéral, signe du godet", "Recherche de signes de TVP", "Auscultation cardio-pulmonaire", "Bandelette urinaire, pression artérielle"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TRAUMATISME CRÂNIEN
+  // -------------------------------------------------------------------------
+  traumatisme_cranien: {
+    id: "traumatisme_cranien", symptome: "Traumatisme crânien", specialite: ["Urgences", "Neurologie"], urgence: true,
+    questions: [
+      { id: "tc2_grave", label: "Signes de gravité", type: "boolean", question: "Y a-t-il eu une perte de connaissance, des vomissements répétés, une confusion/somnolence, une convulsion, ou un déficit neurologique ?" },
+      { id: "tc2_ecoulement", label: "Signes de fracture", type: "boolean", question: "Y a-t-il un écoulement de sang ou de liquide clair par le nez/l'oreille, ou des ecchymoses autour des yeux ?" },
+      { id: "tc2_anticoag", label: "Anticoagulants / âge", type: "boolean", question: "La personne prend-elle des anticoagulants/antiagrégants, ou est-elle âgée ?" },
+      { id: "tc2_mecanisme", label: "Mécanisme violent", type: "boolean", question: "Le choc a-t-il été violent (chute de hauteur, accident, projection) ?" },
+      { id: "tc2_amnesie", label: "Amnésie / céphalées", type: "boolean", question: "Y a-t-il une amnésie de l'accident, ou des maux de tête persistants ?" }
+    ],
+    red_flags: [
+      { id: "tc2_rf_grave", niveau: 3, when: { any: [{ q: "tc2_grave", eq: true }, { q: "tc2_ecoulement", eq: true }] },
+        message_medecin: "Signes de gravité (PC, vomissements, confusion, déficit, écoulement, fracture) : TDM cérébrale en urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "tc2_rf_anticoag", niveau: 2, when: { q: "tc2_anticoag", eq: true },
+        message_medecin: "Traumatisme crânien sous anticoagulant / sujet âgé : TDM cérébrale (risque d'hématome, parfois différé), surveillance.",
+        message_patient: "Un choc à la tête sous anticoagulant nécessite un avis médical et une surveillance." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tc2_grave", diagnostic: "TC grave (lésion intracrânienne)", arguments: [{ label: "signes de gravité", w: 3, when: { q: "tc2_grave", eq: true } }, { label: "mécanisme violent", w: 1, when: { q: "tc2_mecanisme", eq: true } }],
+        examens_a_discuter: ["TDM cérébrale"] },
+      { id: "tc2_risque", diagnostic: "TC à risque (anticoagulant / âgé)", arguments: [{ label: "anticoagulant / âge", w: 3, when: { q: "tc2_anticoag", eq: true } }],
+        examens_a_discuter: ["TDM cérébrale, surveillance"] },
+      { id: "tc2_leger", diagnostic: "TC léger", arguments: [{ label: "amnésie / céphalées sans signe de gravité", w: 2, when: { all: [{ q: "tc2_amnesie", eq: true }, { q: "tc2_grave", eq: false }] } }],
+        examens_a_discuter: ["Surveillance, consignes de reconsultation"] }
+    ],
+    examens_clinique: ["Score de Glasgow", "Examen neurologique et des pupilles", "Recherche de signes de fracture / écoulement", "Statut anticoagulant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ABCÈS CUTANÉ
+  // -------------------------------------------------------------------------
+  abces_cutane: {
+    id: "abces_cutane", symptome: "Abcès cutané", specialite: ["Dermatologie", "Chirurgie"],
+    questions: [
+      { id: "ab2_collection", label: "Collection", type: "boolean", question: "Y a-t-il une boule rouge, chaude, douloureuse, avec du pus ?" },
+      { id: "ab2_fievre", label: "Fièvre / extension", type: "boolean", question: "Avez-vous de la fièvre ou une extension rapide de la rougeur ?" },
+      { id: "ab2_face", label: "Localisation à risque", type: "boolean", question: "L'abcès est-il sur le visage (zone médiane / nez), ou y a-t-il des signes de gravité ?" },
+      { id: "ab2_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous diabétique ou immunodéprimé ?" }
+    ],
+    red_flags: [
+      { id: "ab2_rf_grave", niveau: 2, when: { any: [{ q: "ab2_fievre", eq: true }, { q: "ab2_face", eq: true }] },
+        message_medecin: "Abcès fébrile / extensif / du visage / terrain à risque : antibiothérapie + avis (incision-drainage).",
+        message_patient: "Un abcès avec fièvre ou sur le visage nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ab2_abces", diagnostic: "Abcès cutané", arguments: [{ label: "collection fluctuante", w: 3, when: { q: "ab2_collection", eq: true } }],
+        examens_a_discuter: ["Incision-drainage", "Antibiothérapie si signes généraux / terrain à risque"] },
+      { id: "ab2_complique", diagnostic: "Abcès compliqué", arguments: [{ label: "fièvre / extension", w: 2, when: { q: "ab2_fievre", eq: true } }, { label: "terrain à risque", w: 2, when: { q: "ab2_terrain", eq: true } }, { label: "localisation faciale", w: 1, when: { q: "ab2_face", eq: true } }],
+        examens_a_discuter: ["Avis, antibiothérapie"] }
+    ],
+    examens_clinique: ["Caractériser la collection (fluctuation)", "Signes locaux et généraux", "Recherche d'une porte d'entrée", "Évaluation du terrain"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ÉPILEPSIE / CRISE CONVULSIVE
+  // -------------------------------------------------------------------------
+  epilepsie: {
+    id: "epilepsie", symptome: "Crise convulsive / épilepsie", specialite: ["Neurologie"], urgence: true,
+    questions: [
+      { id: "ep3_status", label: "État de mal", type: "boolean", question: "La crise dure-t-elle plus de 5 minutes, ou les crises s'enchaînent-elles sans reprise de conscience ?" },
+      { id: "ep3_fievre", label: "Crise symptomatique aiguë", type: "boolean", question: "Y a-t-il de la fièvre, des maux de tête, ou des signes neurologiques persistants ?" },
+      { id: "ep3_premiere", label: "Première crise", type: "boolean", question: "Est-ce une PREMIÈRE crise (jamais eu auparavant) ?" },
+      { id: "ep3_connu", label: "Épilepsie connue", type: "boolean", question: "Est-ce une personne épileptique connue, avec une crise habituelle qui s'est résolue ?" },
+      { id: "ep3_facteur", label: "Facteur déclenchant", type: "boolean", question: "Y a-t-il un facteur déclenchant (oubli de traitement, manque de sommeil, alcool) ?" }
+    ],
+    red_flags: [
+      { id: "ep3_rf_status", niveau: 3, when: { q: "ep3_status", eq: true },
+        message_medecin: "État de mal épileptique (> 5 min ou crises répétées) : urgence vitale (15, benzodiazépines).",
+        message_patient: "Une crise qui dure ou se répète nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ep3_rf_premiere", niveau: 2, when: { any: [{ q: "ep3_premiere", eq: true }, { q: "ep3_fievre", eq: true }] },
+        message_medecin: "Première crise / crise fébrile : bilan (imagerie, recherche de cause, PL si fièvre) → avis neurologique.",
+        message_patient: "Une première crise nécessite un avis médical et des examens." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ep3_connu", diagnostic: "Crise sur épilepsie connue", arguments: [{ label: "épileptique connu, crise résolutive", w: 3, when: { q: "ep3_connu", eq: true } }, { label: "facteur déclenchant", w: 1, when: { q: "ep3_facteur", eq: true } }],
+        examens_a_discuter: ["Vérifier l'observance / le facteur déclenchant", "Adapter le traitement"] },
+      { id: "ep3_premiere", diagnostic: "Première crise", arguments: [{ label: "premier épisode", w: 3, when: { q: "ep3_premiere", eq: true } }],
+        examens_a_discuter: ["Bilan étiologique, imagerie cérébrale, EEG"] },
+      { id: "ep3_status", diagnostic: "État de mal épileptique", arguments: [{ label: "crise prolongée / répétée", w: 3, when: { q: "ep3_status", eq: true } }],
+        examens_a_discuter: ["Urgence (benzodiazépines)"] },
+      { id: "ep3_symptomatique", diagnostic: "Crise symptomatique aiguë", arguments: [{ label: "fièvre / signes neuro", w: 2, when: { q: "ep3_fievre", eq: true } }],
+        examens_a_discuter: ["Rechercher la cause (méningite, métabolique, toxique)"] }
+    ],
+    examens_clinique: ["Examen neurologique post-critique", "Glycémie capillaire, température", "Recherche d'une morsure de langue / d'un facteur déclenchant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // VARICES / INSUFFISANCE VEINEUSE
+  // -------------------------------------------------------------------------
+  varices: {
+    id: "varices", symptome: "Varices / jambes lourdes (insuffisance veineuse)", specialite: ["Vasculaire"],
+    questions: [
+      { id: "va2_phlebite", label: "Paraphlébite / TVP", type: "boolean", question: "Une veine est-elle rouge, chaude, dure et douloureuse, ou une jambe est-elle gonflée et douloureuse ?" },
+      { id: "va2_ulcere", label: "Troubles trophiques", type: "boolean", question: "Y a-t-il une plaie qui ne cicatrise pas (ulcère), ou un durcissement / changement de couleur de la peau de la cheville ?" },
+      { id: "va2_hemorragie", label: "Hémorragie", type: "boolean", question: "Une varice a-t-elle saigné abondamment ?" },
+      { id: "va2_gene", label: "Symptômes veineux", type: "boolean", question: "Avez-vous des jambes lourdes, des varices visibles, gonflées en fin de journée ?" }
+    ],
+    red_flags: [
+      { id: "va2_rf_phlebite", niveau: 2, when: { q: "va2_phlebite", eq: true },
+        message_medecin: "Cordon induré inflammatoire / jambe gonflée et douloureuse : paraphlébite ou TVP → écho-doppler.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." },
+      { id: "va2_rf_ulcere", niveau: 2, when: { q: "va2_ulcere", eq: true },
+        message_medecin: "Ulcère / troubles trophiques : prise en charge spécialisée (contention, soins de plaie).",
+        message_patient: "Une plaie de jambe qui ne cicatrise pas nécessite un avis médical." },
+      { id: "va2_rf_hemorragie", niveau: 2, when: { q: "va2_hemorragie", eq: true },
+        message_medecin: "Hémorragie sur varice : compression + surélévation ; avis.",
+        message_patient: "Comprimez et surélevez la jambe ; consultez." }
+    ],
+    diagnostics_differentiels: [
+      { id: "va2_iv", diagnostic: "Insuffisance veineuse / varices", arguments: [{ label: "jambes lourdes, varices, œdème vespéral", w: 3, when: { q: "va2_gene", eq: true } }],
+        examens_a_discuter: ["Contention veineuse, mesures", "Avis vasculaire si gênant"] },
+      { id: "va2_phlebite", diagnostic: "Complication (paraphlébite / TVP)", arguments: [{ label: "cordon induré / jambe gonflée", w: 3, when: { q: "va2_phlebite", eq: true } }],
+        examens_a_discuter: ["Écho-doppler veineux"] },
+      { id: "va2_ulcere", diagnostic: "Ulcère veineux / troubles trophiques", arguments: [{ label: "ulcère / dermite ocre", w: 3, when: { q: "va2_ulcere", eq: true } }],
+        examens_a_discuter: ["IPS avant contention, soins de plaie"] }
+    ],
+    examens_clinique: ["Examen des membres inférieurs (varices, œdème, troubles trophiques)", "Recherche de signes de TVP", "Palpation des pouls (IPS avant contention)"]
   }
 };
