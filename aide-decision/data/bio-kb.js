@@ -515,5 +515,38 @@ window.BIOKB = [
     ],
     red_flags: ["Toujours évoquer une primo-infection VIH (sérologie combinée + Ag p24) — enjeu individuel et de santé publique", "Rupture de rate (rare) dans la MNI : douleur de l'hypochondre gauche → éviter les sports de contact si splénomégalie", "Complications : thrombopénie / AHAI auto-immune, hépatite sévère, angine très hypertrophique avec gêne respiratoire"],
     conduite: ["EBV = cause la plus fréquente : MNI test + sérologie EBV en première intention.", "MNI test négatif → élargir : CMV, toxoplasmose, VIH (± Ag p24), hépatites.", "Éviter l'amoxicilline/ampicilline (rash) ; repos, abstention des sports de contact en cas de splénomégalie."]
+  },
+  {
+    id: "llc", num: 72, anomalie: "Leucémie lymphoïde chronique (LLC)",
+    specialite: "Hématologie",
+    definition: "Hémopathie lymphoïde B mature : accumulation de petits lymphocytes B monoclonaux. Souvent asymptomatique, découverte sur une hyperlymphocytose ; sinon adénopathies, complications infectieuses. Incidence 3-10/100 000/an, âge médian 64 ans, sex-ratio H/F ≈ 2.",
+    premiere_intention: ["Hémogramme : lymphocytose > 4 G/L persistante, ± anémie, ± thrombopénie", "Frottis : petits lymphocytes matures monomorphes, ombres de Gumprecht", "Immunophénotypage lymphocytaire (score de Matutes) = examen clé du diagnostic", "Évaluer le retentissement : adénopathies, splénomégalie, infections, cytopénies"],
+    causes: [
+      { cause: "Leucémie lymphoïde chronique", signe: "petits lymphocytes matures, ombres de Gumprecht, score de Matutes 4-5", examens: ["Immunophénotypage (score de Matutes)"] },
+      { cause: "Autre syndrome lymphoprolifératif B", signe: "lymphome en phase leucémique (manteau, folliculaire, splénique…) ; score de Matutes < 4", examens: ["Immunophénotypage, cytogénétique", "Biopsie ganglionnaire si besoin"] },
+      { cause: "Lymphocytose réactionnelle", signe: "infection (virale, coqueluche), transitoire, polyclonale", examens: ["Contexte clinique, contrôle de l'hémogramme"] }
+    ],
+    tableaux: [
+      { titre: "Score de Matutes (immunophénotypage) — LLC si 4-5 (3 dans 5 % des cas)",
+        entetes: ["Antigène", "1 point si", "0 point si"],
+        lignes: [
+          ["CD5", "Positif", "Négatif"],
+          ["CD23", "Positif", "Négatif"],
+          ["CD22 ou CD79b", "Faible expression", "Expression normale"],
+          ["FMC7", "Négatif", "Positif"],
+          ["Ig de surface", "Faible expression", "Normale ou forte"]
+        ] },
+      { titre: "Facteurs de mauvais pronostic",
+        entetes: ["Domaine", "Marqueurs"],
+        lignes: [
+          ["Immunophénotype", "CD38+, ZAP70+"],
+          ["Cytogénétique", "Délétion 17p (TP53), délétion 11q23"],
+          ["Moléculaire", "Chaînes lourdes d'Ig (IgVH) non mutées"],
+          ["Évolutivité", "Temps de doublement lymphocytaire < 1 an, cytologie atypique, score de Matutes faible"],
+          ["Biologie", "LDH et β2-microglobuline élevées"]
+        ] }
+    ],
+    red_flags: ["Cytopénies auto-immunes associées (AHAI, PTAI)", "Complications infectieuses récidivantes (hypogammaglobulinémie)", "Syndrome de Richter : transformation en lymphome agressif (AEG, adénopathie en croissance rapide, LDH ↑)", "Délétion 17p / TP53 muté : forme de mauvais pronostic"],
+    conduite: ["Diagnostic = hyperlymphocytose B clonale + score de Matutes 4-5 (3 dans 5 % des cas).", "Classer (stades de Binet A/B/C) ; nombreuses formes indolentes relevant d'une simple surveillance.", "Bilan pronostique : FISH (17p, 11q), statut mutationnel IgVH, β2-microglobuline.", "Traiter les formes symptomatiques / évolutives ; prévention et traitement des infections."]
   }
 ];
