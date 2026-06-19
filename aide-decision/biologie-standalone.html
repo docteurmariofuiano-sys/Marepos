@@ -2309,6 +2309,52 @@ window.BIOKB = [
     ],
     red_flags: ["Insuffisance surrénale AIGUË : déshydratation, choc, hyperkaliémie, hypoglycémie → URGENCE vitale (hydrocortisone IV)", "Facteur de stress (infection, chirurgie) chez un insuffisant surrénalien → augmenter les doses", "Hyperkaliémie menaçante", "Mélanodermie + asthénie + hypotension = évoquer une maladie d'Addison"],
     conduite: ["Orientation : hyponatrémie + hyperkaliémie + hypoglycémie ; certitude : cortisol bas + ACTH (élevée si primaire).", "Test au Synacthène ; anti-21-hydroxylase ; imagerie surrénalienne.", "Traitement : hydrocortisone (doses ↑ en cas de stress) ; fludrocortisone dans la maladie d'Addison ; régime normosodé.", "Explorer les autres axes endocriniens (polyendocrinopathie auto-immune)."]
+  },
+  {
+    id: "marqueurs_tumoraux", num: 113, anomalie: "Marqueurs tumoraux",
+    specialite: "Oncologie",
+    definition: "Les marqueurs tumoraux servent surtout au SUIVI et au pronostic, rarement au diagnostic (faible spécificité, faux positifs fréquents). À interpréter en cinétique et avec la clinique, l'imagerie et l'histologie.",
+    premiere_intention: ["Indication principale : suivi thérapeutique et détection de récidive (cinétique +++), pas le dépistage de masse", "Connaître les faux positifs (pathologies bénignes, tabac, grossesse, insuffisance rénale…)", "Interpréter la VARIATION plus que la valeur isolée", "Confronter à la clinique, à l'imagerie et à l'histologie"],
+    causes: [
+      { cause: "Usage approprié", signe: "suivi / pronostic / récidive (cinétique) ; rarement diagnostique", examens: ["Dosages répétés"] },
+      { cause: "Limites", signe: "faux positifs (pathologies bénignes, tabac, grossesse, insuffisance rénale), manque de spécificité", examens: ["Interprétation prudente"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs tumoraux par pathologie",
+        entetes: ["Cancer", "Marqueur(s)", "Faux positifs", "Utilité"],
+        lignes: [
+          ["Côlon-rectum", "ACE", "Tabac, pathologies digestives/pulmonaires bénignes, insuffisance rénale", "50 % (75 % si métastases)"],
+          ["Côlon-rectum", "CA 19-9", "Pancréatite, cholécystite, cirrhose", "48 %"],
+          ["Estomac / pancréas", "CA 19-9", "Pancréatite, cholécystite, cirrhose", "65 % estomac, 80 % pancréas"],
+          ["Estomac / pancréas", "ACE", "—", "10-60 %"],
+          ["Sein", "CA 15-3", "Hépatopathies bénignes, cirrhose, hépatite", "85 % polymétastatique, 10-30 % non métastatique"],
+          ["Sein", "ACE", "—", "12 % non métastatique, 35-40 % métastatique"],
+          ["Prostate", "PSA", "Prostatite, toucher rectal", "10 % stade A, 25 % B, 50 % C"],
+          ["Prostate", "PAP", "—", "10-15 % stade C"],
+          ["Ovaire (épithélial)", "CA 125", "Cirrhose, hépatopathie, pancréatite, endométriose, fin de grossesse, inflammation des séreuses", "80-85 %"],
+          ["Ovaire (mucineux)", "ACE", "—", "40 %"],
+          ["Testicule / tumeurs germinales", "AFP, β-hCG", "AFP : hépatopathies bénignes ; β-hCG : grossesse", "91 %"],
+          ["Tumeurs placentaires", "β-hCG", "Grossesse", "100 %"],
+          ["Poumon — adénocarcinome", "ACE", "—", "30 %"],
+          ["Poumon — petites cellules", "NSE", "Pathologies pulmonaires bénignes", "70 % (anaplasique à petites cellules)"],
+          ["Poumon — épidermoïde", "Cyfra 21-1, SCC", "—", "Diagnostic histologique / surveillance"],
+          ["Foie (CHC)", "AFP", "Cirrhose (50 %), hépatite B (50 %)", "40-90 %"],
+          ["Cancer médullaire de la thyroïde", "Calcitonine (TCT), ACE", "Hyperparathyroïdie, insuffisance rénale", "100 %"],
+          ["Cancer thyroïdien différencié", "Thyroglobuline", "Thyroïdite, Basedow, nodules froids bénins", "Surveillance ++"],
+          ["Myélome multiple", "Ig monoclonale, β2-microglobuline", "MGUS", "90 % (10 % non sécrétants) ; β2-m pronostique"],
+          ["ORL", "SCC", "—", "Surveillance ++"],
+          ["Vessie (infiltrante)", "TPA", "—", "Pronostic / suivi ++"]
+        ] },
+      { titre: "Principes d'interprétation",
+        entetes: ["Principe", "Détail"],
+        lignes: [
+          ["Indication", "Suivi, pronostic, récidive (cinétique) ; pas un test de dépistage de masse"],
+          ["Spécificité", "Faible : nombreux faux positifs bénins"],
+          ["Interprétation", "La variation prime sur la valeur isolée ; respecter les délais (ex. PSA après toucher rectal)"]
+        ] }
+    ],
+    red_flags: ["Ne pas poser un diagnostic de cancer sur un seul marqueur élevé (faux positifs)", "PSA : doser à distance d'un toucher rectal / d'une prostatite", "AFP élevée chez un cirrhotique / porteur du VHB → dépistage du CHC (mais faux positifs)", "Élévation d'un marqueur en cours de suivi → suspicion de progression / récidive"],
+    conduite: ["Utiliser les marqueurs surtout pour le SUIVI et le pronostic, en cinétique.", "Connaître les faux positifs propres à chaque marqueur avant d'interpréter.", "Confronter systématiquement à la clinique, l'imagerie et l'histologie.", "Calcitonine = marqueur du cancer médullaire de la thyroïde ; thyroglobuline = surveillance des cancers différenciés."]
   }
 ];
 
