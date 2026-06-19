@@ -3104,25 +3104,29 @@ window.KB = {
       { id: "ht_signes", label: "Souffrance d'organe", type: "boolean", question: "Avez-vous : douleur thoracique, essoufflement, maux de tête intenses, troubles visuels, ou signes neurologiques ?" },
       { id: "ht_chiffres", label: "Chiffres très élevés", type: "boolean", question: "La tension est-elle très élevée (≥ 180/110) ?" },
       { id: "ht_contexte", label: "Découverte fortuite", type: "boolean", question: "Est-ce une découverte fortuite, sans aucun symptôme ?" },
-      { id: "ht_renal", label: "Comorbidités", type: "boolean", question: "Avez-vous une maladie rénale, un diabète, ou des œdèmes ?" }
+      { id: "ht_renal", label: "Comorbidités", type: "boolean", question: "Avez-vous une maladie rénale, un diabète, ou des œdèmes ?" },
+      { id: "ht_secondaire_indice", label: "Indices d'HTA secondaire", type: "boolean", question: "Avez-vous : un taux de potassium bas, des poussées avec sueurs/palpitations/maux de tête, un ronflement avec apnées, ou une HTA résistant à 3 médicaments ?" }
     ],
     red_flags: [
       { id: "ht_rf_urgence", niveau: 3, when: { all: [{ q: "ht_chiffres", eq: true }, { q: "ht_signes", eq: true }] },
-        message_medecin: "Élévation tensionnelle avec souffrance d'organe (neuro/thoracique/visuelle) = URGENCE hypertensive → prise en charge immédiate.",
+        message_medecin: "Élévation tensionnelle avec souffrance d'organe (neuro/thoracique/visuelle/rénale) = URGENCE hypertensive → prise en charge immédiate, baisse contrôlée en milieu hospitalier.",
         message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
       { id: "ht_rf_grossesse", niveau: 3, when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "ht_chiffres", eq: true }] },
         message_medecin: "HTA + grossesse possible : éliminer une pré-éclampsie → avis obstétrical urgent.",
-        message_patient: "Cette association nécessite une évaluation médicale sans attendre." }
+        message_patient: "Cette association nécessite une évaluation médicale sans attendre." },
+      { id: "ht_rf_poussee_isolee", niveau: 1, when: { all: [{ q: "ht_chiffres", eq: true }, { q: "ht_signes", eq: false }] },
+        message_medecin: "Élévation tensionnelle sévère SANS souffrance d'organe = poussée hypertensive simple, PAS une urgence : repos, ne pas faire baisser brutalement la TA (risque ischémique), rechercher un facteur (douleur, anxiété, arrêt de traitement), réévaluer et organiser le suivi.",
+        message_patient: "Une tension élevée sans autre signe n'est pas une urgence : restez au calme et consultez votre médecin pour adapter le suivi." }
     ],
     diagnostics_differentiels: [
       { id: "ht_essentielle", diagnostic: "HTA essentielle (à confirmer)", arguments: [{ label: "découverte fortuite asymptomatique", w: 3, when: { q: "ht_contexte", eq: true } }],
-        examens_a_discuter: ["Confirmation (MAPA / automesure)", "Bilan OMS, retentissement (ECG, créatinine, bandelette)"] },
-      { id: "ht_urgence", diagnostic: "Urgence / poussée hypertensive", arguments: [{ label: "souffrance d'organe", w: 3, when: { q: "ht_signes", eq: true } }, { label: "chiffres très élevés", w: 2, when: { q: "ht_chiffres", eq: true } }],
-        examens_a_discuter: ["Recherche de souffrance d'organe (fond d'œil, ECG, créatinine, troponine)"] },
-      { id: "ht_secondaire", diagnostic: "HTA secondaire", arguments: [{ label: "sujet jeune", w: 2, when: { ctx: "age", lte: 35 } }, { label: "atteinte rénale / comorbidités", w: 2, when: { q: "ht_renal", eq: true } }],
-        examens_a_discuter: ["Bilan d'HTA secondaire (rénine/aldostérone, échographie rénale)"] }
+        examens_a_discuter: ["Confirmer le diagnostic en dehors du cabinet (MAPA ou automesure) — écarter l'effet blouse blanche ; grades : 1 (140-159/90-99), 2 (160-179/100-109), 3 (≥ 180/110)", "Bilan initial : iono-créatinine-DFG, glycémie, bilan lipidique, bandelette urinaire (protéinurie), ECG ; évaluation du risque cardiovasculaire global", "Mesures hygiéno-diététiques (sel, poids, activité, alcool) ; traitement médicamenteux selon le risque"] },
+      { id: "ht_urgence", diagnostic: "Urgence / poussée hypertensive", arguments: [{ label: "souffrance d'organe", w: 3, when: { q: "ht_signes", eq: true } }, { label: "chiffres très élevés", w: 1, when: { q: "ht_chiffres", eq: true } }],
+        examens_a_discuter: ["Distinguer urgence hypertensive (AVEC souffrance d'organe) vs poussée simple (sans)", "Recherche de souffrance d'organe (fond d'œil, ECG, créatinine, troponine, BNP)"] },
+      { id: "ht_secondaire", diagnostic: "HTA secondaire", arguments: [{ label: "indices évocateurs (hypokaliémie, paroxysmes, SAOS, résistance)", w: 3, when: { q: "ht_secondaire_indice", eq: true } }, { label: "sujet jeune", w: 2, when: { ctx: "age", lte: 35 } }, { label: "atteinte rénale / comorbidités", w: 1, when: { q: "ht_renal", eq: true } }],
+        examens_a_discuter: ["Hyperaldostéronisme (rapport aldostérone/rénine si hypokaliémie) ; sténose de l'artère rénale (souffle, écho-doppler) ; phéochromocytome (métanéphrines si paroxysmes) ; SAOS ; causes rénales/médicamenteuses (AINS, corticoïdes, réglisse, vasoconstricteurs)", "Avis spécialisé"] }
     ],
-    examens_clinique: ["Confirmer la TA au repos, aux deux bras", "Recherche d'une souffrance d'organe (fond d'œil, ECG, bandelette)", "Examen neurologique", "Auscultation cardiaque et des trajets vasculaires"]
+    examens_clinique: ["Confirmer la TA au repos, aux deux bras, avec un brassard adapté (puis MAPA/automesure)", "Recherche d'une souffrance d'organe (fond d'œil, ECG, bandelette urinaire)", "Examen neurologique", "Auscultation cardiaque et des trajets vasculaires (souffle abdominal/fémoral) ; palpation des pouls"]
   },
 
   // -------------------------------------------------------------------------
@@ -5170,20 +5174,24 @@ window.KB = {
       { id: "pr_sepsis", label: "Signes de gravité", type: "boolean", question: "Avez-vous des signes de gravité (malaise, confusion, tension basse, frissons intenses) ?" },
       { id: "pr_retention", label: "Rétention", type: "boolean", question: "N'arrivez-vous plus à uriner (rétention) ?" },
       { id: "pr_aigue", label: "Prostatite aiguë", type: "boolean", question: "Avez-vous de la fièvre avec des brûlures urinaires, des difficultés à uriner, et des douleurs du périnée ?" },
-      { id: "pr_chronique", label: "Forme chronique", type: "boolean", question: "Est-ce une gêne pelvienne/urinaire chronique, récidivante, sans fièvre ?" }
+      { id: "pr_chronique", label: "Forme chronique", type: "boolean", question: "Est-ce une gêne pelvienne/urinaire chronique, récidivante, sans fièvre ?" },
+      { id: "pr_bourse", label: "Atteinte scrotale", type: "boolean", question: "Avez-vous une douleur/un gonflement d'une bourse, ou un écoulement par le méat (urétrite) ?" },
+      { id: "pr_geste", label: "Geste urologique", type: "boolean", question: "Avez-vous eu récemment un sondage, une biopsie de prostate, ou des rapports à risque d'IST ?" }
     ],
     red_flags: [
       { id: "pr_rf_sepsis", niveau: 3, when: { any: [{ q: "pr_sepsis", eq: true }, { q: "pr_retention", eq: true }] },
-        message_medecin: "Prostatite aiguë avec sepsis / rétention : urgence (ECBU, antibiothérapie, drainage si rétention).",
+        message_medecin: "Prostatite aiguë avec sepsis / rétention aiguë d'urine : urgence (ECBU + hémocultures, antibiothérapie urgente, drainage par cathéter sus-pubien si rétention — éviter le sondage urétral). Pas de toucher rectal appuyé ni de massage prostatique (risque de bactériémie).",
         message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
     ],
     diagnostics_differentiels: [
-      { id: "pr_aigue", diagnostic: "Prostatite aiguë", arguments: [{ label: "fièvre + signes urinaires + douleur périnéale", w: 3, when: { q: "pr_aigue", eq: true } }],
-        examens_a_discuter: ["ECBU", "Antibiothérapie prolongée (pas de massage prostatique)"] },
+      { id: "pr_aigue", diagnostic: "Prostatite aiguë (infection urinaire masculine fébrile)", arguments: [{ label: "fièvre + signes urinaires + douleur périnéale", w: 3, when: { q: "pr_aigue", eq: true } }, { label: "après geste urologique", w: 1, when: { q: "pr_geste", eq: true } }],
+        examens_a_discuter: ["ECBU (± hémocultures si fièvre) AVANT antibiotique", "Antibiothérapie active sur la prostate, prolongée (≈ 2-3 semaines ; fluoroquinolone ou C3G) — pas de massage prostatique", "Ne pas doser le PSA en phase aiguë (faussement élevé)"] },
       { id: "pr_chronique", diagnostic: "Prostatite chronique / douleur pelvienne chronique", arguments: [{ label: "gêne chronique récidivante", w: 3, when: { q: "pr_chronique", eq: true } }],
-        examens_a_discuter: ["ECBU, avis urologique"] }
+        examens_a_discuter: ["ECBU ; avis urologique ; après 2 épisodes ou récidive, explorer une anomalie sous-jacente (résidu post-mictionnel, HBP, sténose, lithiase)", "Distinguer la prostatite chronique bactérienne du syndrome douloureux pelvien chronique (ECBU souvent négatif)"] },
+      { id: "pr_scrotale", diagnostic: "Orchi-épididymite / urétrite associée", arguments: [{ label: "douleur scrotale ou écoulement urétral", w: 3, when: { q: "pr_bourse", eq: true } }],
+        examens_a_discuter: ["Échographie scrotale si doute (éliminer une torsion chez le sujet jeune)", "Si IST probable (sujet jeune, écoulement) : PCR gonocoque/Chlamydia, traitement adapté au(x) partenaire(s)"] }
     ],
-    examens_clinique: ["Température, recherche de sepsis", "Toucher rectal (prostate douloureuse — avec prudence)", "ECBU", "Recherche d'un globe vésical"]
+    examens_clinique: ["Température, recherche de sepsis (FC, TA, marbrures)", "Toucher rectal (prostate douloureuse, augmentée — sans massage)", "Palpation des bourses (épididymite associée), recherche d'un écoulement urétral", "ECBU ± hémocultures ; recherche d'un globe vésical (rétention)"]
   },
 
   // -------------------------------------------------------------------------
