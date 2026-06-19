@@ -22,23 +22,40 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (35 fiches)
+## Symptômes couverts (43 fiches cliniques)
 
-**Motifs courants** : `acouphène` · `adénopathie superficielle` · `algie faciale` ·
-`algie pelvienne` · `asthénie` · `lombalgie` · `diarrhée aiguë` · `cervicalgie` ·
-`constipation` · `hématurie` · `leucorrhées` · `épistaxis` · `grain de beauté
-(mélanome)` · `douleur du membre inférieur` · `dyspnée chronique` · `dorsalgie` ·
-`douleur du membre supérieur` · `diplopie` · `dysphonie` · `écoulement urétral` ·
-`goitre` · `diarrhée chronique` · `hépatomégalie` · `dysménorrhée` · `crampes`.
+**TOUS les symptômes cliniques du manuel sont encodés** (43 fiches). Les 21 fiches
+restantes du livre sont des fiches d'**interprétation biologique** (anomalies de
+l'hémostase, ionogramme, transaminases, etc.) — elles ne se prêtent pas à un
+questionnaire patient et relèveraient d'un module médecin distinct (voir plus bas).
 
 **Fiches URGENCE (10)** : `douleur thoracique` · `dyspnée aiguë` · `déficit
 neurologique transitoire` · `fièvre au retour des tropiques` · `grosse bourse` ·
 `grosse jambe rouge aiguë` · `hématémèse / méléna` · `hémoptysie` · `malaise /
 perte de connaissance` · `épanchement pleural`.
 
-La base est conçue pour **monter en charge jusqu'aux 64 fiches**
-(voir `docs/guide-ajout-fiches.md`). Les symptômes marqués `urgence: true`
-affichent un badge **URGENCE** dans l'interface.
+**Motifs courants & spécialisés (33)** : acouphène, adénopathie, algie faciale,
+algie pelvienne, asthénie, lombalgie, dorsalgie, cervicalgie, douleurs des membres
+(sup./inf.), crampes, diarrhée aiguë/chronique, constipation, hématurie,
+leucorrhées, dysménorrhée, écoulement urétral, hémospermie, épistaxis, dysphonie,
+diplopie, goitre, galactorrhée, bouffées de chaleur, hyperhidrose, difficultés
+sexuelles, érythermalgie, hépatomégalie, hoquet chronique, grain de beauté
+(mélanome), dyspnée chronique, alopécie.
+
+Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
+
+### Fiches biologiques restantes (module à venir)
+
+Les fiches 43-62 du manuel (allongement du TCA/TP/TS/TT, anomalies de
+l'électrophorèse, hyper-éosinophilie, hyper/hypokaliémie, hyponatrémie,
+hypercalcémie, hyperglycémie, élévation des transaminases/GGT/CPK/LDH,
+dyslipidémie, hyperprolactinémie…) sont des **arbres d'interprétation d'un
+résultat de laboratoire**. Elles seraient mieux servies par un module
+**« interprétation biologique » côté médecin** (entrée = valeur du bilan, sortie =
+causes à explorer) plutôt que par un questionnaire patient. Le texte intégral de
+ces fiches reste consultable dans l'app de consultation (`/` racine, 64 fiches).
+
+La base reste extensible : voir `docs/guide-ajout-fiches.md`.
 
 ## Lancer
 

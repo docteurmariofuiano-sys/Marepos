@@ -2337,5 +2337,437 @@ window.KB = {
       "CPK si myalgies",
       "Palpation des pouls si claudication"
     ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 05 — ALOPÉCIE
+  // -------------------------------------------------------------------------
+  alopecie: {
+    id: "alopecie",
+    symptome: "Chute de cheveux (alopécie)",
+    specialite: ["Dermatologie"],
+    questions: [
+      { id: "al_type", label: "Type de chute", type: "single_choice",
+        question: "Comment se présente la perte de cheveux ?",
+        options: ["En plaques bien limitées", "Diffuse (sur tout le cuir chevelu)", "Golfes / dessus du crâne, progressive"] },
+      { id: "al_cicatricielle", label: "Cicatricielle", type: "boolean",
+        question: "Sur les zones dégarnies, la peau est-elle lisse et brillante (les pores des cheveux ont disparu) ?" },
+      { id: "al_facteur", label: "Effluvium télogène", type: "boolean",
+        question: "Y a-t-il eu, 2 à 3 mois avant, un accouchement, une forte fièvre, une chirurgie, un régime ou un stress important ?" },
+      { id: "al_medic", label: "Iatrogène", type: "boolean",
+        question: "Avez-vous commencé un médicament (anticoagulant, rétinoïde, chimiothérapie, lithium) ?" },
+      { id: "al_squames", label: "Teigne / inflammation", type: "boolean",
+        question: "Y a-t-il des démangeaisons, des squames, ou des cheveux cassés courts (surtout chez l'enfant) ?" },
+      { id: "al_lupus", label: "Signes de lupus", type: "boolean",
+        question: "Avez-vous une éruption du visage, des douleurs articulaires, une sensibilité au soleil ?" },
+      { id: "al_carence", label: "Carence / dysthyroïdie", type: "boolean",
+        question: "Avez-vous une carence en fer ou un problème de thyroïde connu ?" }
+    ],
+    red_flags: [
+      { id: "al_rf_cicatricielle", niveau: 2,
+        when: { q: "al_cicatricielle", eq: true },
+        message_medecin: "Alopécie cicatricielle (lichen plan, lupus, pseudo-pelade) : biopsie indispensable pour ne pas perdre le capital pilaire.",
+        message_patient: "Ce type de chute mérite un avis dermatologique." },
+      { id: "al_rf_lupus", niveau: 2,
+        when: { q: "al_lupus", eq: true },
+        message_medecin: "Signes de lupus systémique associés : bilan auto-immun, avis spécialisé.",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "al_pelade", diagnostic: "Pelade",
+        arguments: [{ label: "plaques alopéciques nettes", w: 3, when: { q: "al_type", eq: "En plaques bien limitées" } }],
+        examens_a_discuter: ["Recherche de cheveux en point d'exclamation", "Test de traction"] },
+      { id: "al_effluvium", diagnostic: "Effluvium télogène",
+        arguments: [{ label: "chute diffuse", w: 2, when: { q: "al_type", eq: "Diffuse (sur tout le cuir chevelu)" } },
+                    { label: "facteur déclenchant 2-3 mois avant", w: 3, when: { q: "al_facteur", eq: true } }],
+        examens_a_discuter: ["Réversible", "Ferritine, TSH"] },
+      { id: "al_androgenetique", diagnostic: "Alopécie androgénétique",
+        arguments: [{ label: "golfes / vertex, progressive", w: 3, when: { q: "al_type", eq: "Golfes / dessus du crâne, progressive" } }],
+        examens_a_discuter: ["Diagnostic clinique"] },
+      { id: "al_teigne", diagnostic: "Teigne",
+        arguments: [{ label: "plaque squameuse + cheveux cassés", w: 3, when: { q: "al_squames", eq: true } }],
+        examens_a_discuter: ["Prélèvement mycologique"] },
+      { id: "al_cicatricielle", diagnostic: "Alopécie cicatricielle",
+        arguments: [{ label: "disparition des orifices pilaires", w: 3, when: { q: "al_cicatricielle", eq: true } }],
+        examens_a_discuter: ["Biopsie du cuir chevelu"] }
+    ],
+    examens_clinique: [
+      "Examen du cuir chevelu (présence/absence des orifices pilaires)",
+      "Test de traction",
+      "Recherche de cheveux en point d'exclamation (pelade)",
+      "Ferritine, TSH"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 07 — BOUFFÉES DE CHALEUR
+  // -------------------------------------------------------------------------
+  bouffees_chaleur: {
+    id: "bouffees_chaleur",
+    symptome: "Bouffées de chaleur",
+    specialite: ["Endocrinologie", "Gynécologie"],
+    questions: [
+      { id: "bc_meno", label: "Contexte ménopausique", type: "boolean",
+        question: "Êtes-vous une femme d'environ 50 ans avec des règles espacées ou arrêtées ?" },
+      { id: "bc_climaterique", label: "Signes climatériques", type: "boolean",
+        question: "Avez-vous d'autres signes : sécheresse vaginale, troubles de l'humeur ou du sommeil ?" },
+      { id: "bc_diarrhee", label: "Syndrome carcinoïde", type: "boolean",
+        question: "Avez-vous un flush accompagné de diarrhée et/ou de sifflements respiratoires ?" },
+      { id: "bc_phaeo", label: "Phéochromocytome", type: "boolean",
+        question: "Avez-vous des accès de maux de tête + palpitations + sueurs avec des poussées de tension ?" },
+      { id: "bc_medic", label: "Iatrogène", type: "boolean",
+        question: "Prenez-vous un traitement hormonal (tamoxifène, anti-aromatase, analogues LHRH) ou des vasodilatateurs ?" }
+    ],
+    red_flags: [
+      { id: "bc_rf_carcinoide", niveau: 2,
+        when: { q: "bc_diarrhee", eq: true },
+        message_medecin: "Flush + diarrhée (± valvulopathie) : syndrome carcinoïde → 5-HIAA urinaire.",
+        message_patient: "Cette association nécessite un avis médical et un bilan." },
+      { id: "bc_rf_phaeo", niveau: 2,
+        when: { q: "bc_phaeo", eq: true },
+        message_medecin: "Triade céphalées-palpitations-sueurs + HTA paroxystique : phéochromocytome → métanéphrines.",
+        message_patient: "Ces signes nécessitent un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "bc_menopause", diagnostic: "Ménopause / périménopause",
+        arguments: [{ label: "femme ~50 ans + aménorrhée", w: 3, when: { q: "bc_meno", eq: true } },
+                    { label: "signes climatériques", w: 2, when: { q: "bc_climaterique", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique"] },
+      { id: "bc_carcinoide", diagnostic: "Syndrome carcinoïde",
+        arguments: [{ label: "flush + diarrhée + bronchospasme", w: 3, when: { q: "bc_diarrhee", eq: true } }],
+        examens_a_discuter: ["5-HIAA urinaire", "Imagerie"] },
+      { id: "bc_phaeo", diagnostic: "Phéochromocytome",
+        arguments: [{ label: "triade + HTA paroxystique", w: 3, when: { q: "bc_phaeo", eq: true } }],
+        examens_a_discuter: ["Métanéphrines", "Imagerie surrénale"] },
+      { id: "bc_iatrogene", diagnostic: "Cause iatrogène",
+        arguments: [{ label: "traitement hormonal / vasodilatateur", w: 2, when: { q: "bc_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance"] }
+    ],
+    examens_clinique: [
+      "Pression artérielle (recherche de poussées)",
+      "Recherche de signes climatériques",
+      "Auscultation cardiaque (valvulopathie)",
+      "Bilan orienté selon les signes atypiques"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 13 — DIFFICULTÉS SEXUELLES
+  // -------------------------------------------------------------------------
+  difficultes_sexuelles: {
+    id: "difficultes_sexuelles",
+    symptome: "Difficultés sexuelles",
+    specialite: ["Andrologie", "Sexologie"],
+    questions: [
+      { id: "ds_debut", label: "Profil", type: "single_choice",
+        question: "Comment le trouble est-il apparu ?",
+        options: ["Brutalement / seulement dans certaines situations", "Progressivement / dans toutes les situations"] },
+      { id: "ds_nocturne", label: "Érections spontanées", type: "boolean",
+        question: "Les érections nocturnes ou matinales spontanées sont-elles conservées ?" },
+      { id: "ds_fdr", label: "Facteurs de risque CV", type: "boolean",
+        question: "Avez-vous des facteurs de risque cardiovasculaire (tabac, diabète, hypertension, cholestérol) ?" },
+      { id: "ds_medic", label: "Iatrogène", type: "boolean",
+        question: "Prenez-vous des traitements (tension, antidépresseurs, neuroleptiques) ?" },
+      { id: "ds_libido", label: "Hypogonadisme / prolactine", type: "boolean",
+        question: "Avez-vous une baisse du désir, et/ou un écoulement de lait / une augmentation de la poitrine ?" },
+      { id: "ds_psy", label: "Contexte psychologique", type: "boolean",
+        question: "Y a-t-il un contexte d'anxiété, de dépression, ou de difficultés dans le couple ?" }
+    ],
+    red_flags: [
+      { id: "ds_rf_coronarien", niveau: 2,
+        when: { all: [{ q: "ds_debut", eq: "Progressivement / dans toutes les situations" }, { q: "ds_fdr", eq: true }] },
+        message_medecin: "Dysfonction érectile organique progressive + facteurs de risque CV : la DE est un marqueur précoce d'athérome → bilan cardiovasculaire.",
+        message_patient: "Un bilan médical est recommandé, notamment cardiovasculaire." },
+      { id: "ds_rf_prolactine", niveau: 2,
+        when: { q: "ds_libido", eq: true },
+        message_medecin: "Baisse de libido + galactorrhée / gynécomastie : hyperprolactinémie (adénome) ou hypogonadisme à éliminer (prolactine, testostérone).",
+        message_patient: "Ces signes nécessitent un avis médical et un bilan hormonal." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ds_organique", diagnostic: "Dysfonction érectile organique (vasculaire)",
+        arguments: [{ label: "installation progressive", w: 2, when: { q: "ds_debut", eq: "Progressivement / dans toutes les situations" } },
+                    { label: "érections spontanées abolies", w: 2, when: { q: "ds_nocturne", eq: false } },
+                    { label: "facteurs de risque CV", w: 2, when: { q: "ds_fdr", eq: true } }],
+        examens_a_discuter: ["Bilan cardiovasculaire", "Glycémie, lipides, testostérone"] },
+      { id: "ds_psychogene", diagnostic: "Dysfonction érectile psychogène",
+        arguments: [{ label: "début brutal / situationnel", w: 3, when: { q: "ds_debut", eq: "Brutalement / seulement dans certaines situations" } },
+                    { label: "érections spontanées conservées", w: 2, when: { q: "ds_nocturne", eq: true } },
+                    { label: "contexte psychologique", w: 1, when: { q: "ds_psy", eq: true } }],
+        examens_a_discuter: ["Prise en charge psycho-sexologique"] },
+      { id: "ds_endocrinienne", diagnostic: "Cause endocrinienne",
+        arguments: [{ label: "baisse de libido / galactorrhée", w: 3, when: { q: "ds_libido", eq: true } }],
+        examens_a_discuter: ["Testostérone, prolactine, TSH"] },
+      { id: "ds_iatrogene", diagnostic: "Cause iatrogène",
+        arguments: [{ label: "médicament (antiHTA, psychotrope)", w: 2, when: { q: "ds_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance"] }
+    ],
+    examens_clinique: [
+      "Interrogatoire ciblé (érections spontanées conservées ou non)",
+      "Bilan cardiovasculaire (TA, glycémie, lipides)",
+      "Testostérone matinale",
+      "Prolactine, TSH selon le contexte"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 26 — ÉRYTHERMALGIE
+  // -------------------------------------------------------------------------
+  erythermalgie: {
+    id: "erythermalgie",
+    symptome: "Crises de brûlure rouge des extrémités (érythermalgie)",
+    specialite: ["Vasculaire", "Hématologie"],
+    questions: [
+      { id: "er_crises", label: "Tableau typique", type: "boolean",
+        question: "Avez-vous des crises de rougeur + chaleur + brûlure des extrémités (surtout les pieds) ?" },
+      { id: "er_chaleur", label: "Déclenchement", type: "boolean",
+        question: "Sont-elles déclenchées par la chaleur ou l'effort, et calmées par le froid ?" },
+      { id: "er_aspirine", label: "Test à l'aspirine", type: "boolean",
+        question: "La douleur est-elle spectaculairement soulagée par l'aspirine ?" },
+      { id: "er_smp", label: "Syndrome myéloprolifératif", type: "boolean",
+        question: "Avez-vous un syndrome myéloprolifératif connu, des démangeaisons, une grosse rate, ou des thromboses ?" },
+      { id: "er_medic", label: "Iatrogène", type: "boolean",
+        question: "Prenez-vous des inhibiteurs calciques ou de la bromocriptine ?" }
+    ],
+    red_flags: [
+      { id: "er_rf_smp", niveau: 2,
+        when: { any: [{ q: "er_aspirine", eq: true }, { q: "er_smp", eq: true }] },
+        message_medecin: "Sensibilité spectaculaire à l'aspirine / contexte myéloprolifératif : thrombocytémie essentielle ou maladie de Vaquez (risque thrombotique) → NFS-plaquettes.",
+        message_patient: "Ces éléments nécessitent un avis médical et une prise de sang." }
+    ],
+    diagnostics_differentiels: [
+      { id: "er_smp", diagnostic: "Érythromélalgie des syndromes myéloprolifératifs",
+        arguments: [{ label: "sensibilité à l'aspirine", w: 3, when: { q: "er_aspirine", eq: true } },
+                    { label: "contexte myéloprolifératif", w: 2, when: { q: "er_smp", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes", "Recherche JAK2"] },
+      { id: "er_primitive", diagnostic: "Forme primitive / héréditaire",
+        arguments: [{ label: "sujet jeune", w: 2, when: { ctx: "age", lte: 30 } },
+                    { label: "tableau typique", w: 1, when: { q: "er_crises", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé (mutation SCN9A)"] },
+      { id: "er_secondaire", diagnostic: "Formes secondaires",
+        arguments: [{ label: "médicament", w: 2, when: { q: "er_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance", "Recherche de neuropathie / connectivite"] }
+    ],
+    examens_clinique: [
+      "NFS-plaquettes systématique",
+      "Examen des extrémités pendant la crise",
+      "Recherche d'une splénomégalie"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 28 — GALACTORRHÉE
+  // -------------------------------------------------------------------------
+  galactorrhee: {
+    id: "galactorrhee",
+    symptome: "Écoulement de lait par le mamelon (galactorrhée)",
+    specialite: ["Endocrinologie"],
+    questions: [
+      { id: "ga_bilateral", label: "Galactorrhée vraie", type: "boolean",
+        question: "L'écoulement est-il laiteux et présent des deux seins ?" },
+      { id: "ga_sanglant", label: "Écoulement suspect", type: "boolean",
+        question: "L'écoulement est-il d'un seul sein, par un seul orifice, ou teinté de sang ?" },
+      { id: "ga_amenorrhee", label: "Hyperprolactinémie", type: "boolean",
+        question: "Avez-vous des règles espacées/absentes, une infertilité, ou une baisse de libido ?" },
+      { id: "ga_visuel", label: "Syndrome tumoral", type: "boolean",
+        question: "Avez-vous des maux de tête ou des troubles de la vue (sur les côtés du champ visuel) ?" },
+      { id: "ga_medic", label: "Iatrogène", type: "boolean",
+        question: "Prenez-vous des neuroleptiques, des antiémétiques (métoclopramide, dompéridone), des antidépresseurs, ou des opiacés ?" },
+      { id: "ga_thyroide", label: "Hypothyroïdie", type: "boolean",
+        question: "Avez-vous des signes d'hypothyroïdie (frilosité, fatigue, prise de poids) ?" }
+    ],
+    red_flags: [
+      { id: "ga_rf_sein", niveau: 2,
+        when: { q: "ga_sanglant", eq: true },
+        message_medecin: "Écoulement unilatéral, uniporal ou sanglant = PAS une galactorrhée : bilan mammaire (cancer du sein).",
+        message_patient: "Ce type d'écoulement nécessite un bilan du sein." },
+      { id: "ga_rf_adenome", niveau: 2,
+        when: { q: "ga_visuel", eq: true },
+        message_medecin: "Galactorrhée + syndrome tumoral (céphalées, troubles du champ visuel) : macroadénome hypophysaire → IRM.",
+        message_patient: "Ces signes nécessitent un avis médical et une imagerie." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ga_medic", diagnostic: "Hyperprolactinémie médicamenteuse",
+        arguments: [{ label: "médicament hyperprolactinémiant", w: 3, when: { q: "ga_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance", "Prolactine"] },
+      { id: "ga_adenome", diagnostic: "Adénome à prolactine",
+        arguments: [{ label: "aménorrhée / infertilité / baisse de libido", w: 2, when: { q: "ga_amenorrhee", eq: true } },
+                    { label: "syndrome tumoral", w: 2, when: { q: "ga_visuel", eq: true } },
+                    { label: "galactorrhée bilatérale", w: 1, when: { q: "ga_bilateral", eq: true } }],
+        examens_a_discuter: ["Prolactine", "IRM hypophysaire"] },
+      { id: "ga_thyroide", diagnostic: "Hypothyroïdie",
+        arguments: [{ label: "signes d'hypothyroïdie", w: 3, when: { q: "ga_thyroide", eq: true } }],
+        examens_a_discuter: ["TSH"] },
+      { id: "ga_mammaire", diagnostic: "Pathologie mammaire (écoulement sanglant)",
+        arguments: [{ label: "écoulement unilatéral / sanglant", w: 3, when: { q: "ga_sanglant", eq: true } }],
+        examens_a_discuter: ["Mammographie / échographie", "Avis sénologique"] }
+    ],
+    examens_clinique: [
+      "Caractériser l'écoulement (bilatéral/laiteux vs unilatéral/sanglant)",
+      "Prolactine",
+      "TSH, β-hCG",
+      "Champ visuel si suspicion d'adénome"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 36 — HÉMOSPERMIE
+  // -------------------------------------------------------------------------
+  hemospermie: {
+    id: "hemospermie",
+    symptome: "Sang dans le sperme (hémospermie)",
+    specialite: ["Urologie"],
+    questions: [
+      { id: "hs_recidive", label: "Récidivante", type: "boolean",
+        question: "Est-ce récidivant (plusieurs épisodes) ?" },
+      { id: "hs_hematurie", label: "Hématurie associée", type: "boolean",
+        question: "Y a-t-il aussi du sang dans les urines ?" },
+      { id: "hs_geste", label: "Post-geste", type: "boolean",
+        question: "Avez-vous eu récemment une biopsie de prostate ou une vasectomie ?" },
+      { id: "hs_infection", label: "Infection / IST", type: "boolean",
+        question: "Avez-vous des brûlures urinaires, de la fièvre, ou un contexte d'IST ?" },
+      { id: "hs_prostate", label: "Cause prostatique", type: "boolean",
+        question: "Avez-vous des troubles urinaires (jet faible, envies nocturnes) ou un PSA élevé connu ?" }
+    ],
+    red_flags: [
+      { id: "hs_rf_prostate", niveau: 2,
+        when: { all: [{ ctx: "age", gte: 40 }, { any: [{ q: "hs_recidive", eq: true }, { q: "hs_prostate", eq: true }] }] },
+        message_medecin: "Hémospermie après 40 ans ou persistante : bilan prostatique (toucher rectal, PSA) pour ne pas méconnaître un cancer.",
+        message_patient: "À votre âge, ce signe mérite un bilan urologique." },
+      { id: "hs_rf_urinaire", niveau: 2,
+        when: { q: "hs_hematurie", eq: true },
+        message_medecin: "Hémospermie + hématurie : origine urologique → bilan (ECBU, imagerie).",
+        message_patient: "L'association avec du sang dans les urines nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "hs_benigne", diagnostic: "Hémospermie idiopathique / bénigne",
+        arguments: [{ label: "sujet jeune, épisode isolé", w: 3, when: { all: [{ ctx: "age", lte: 40 }, { q: "hs_recidive", eq: false }] } }],
+        examens_a_discuter: ["Réassurance", "Surveillance"] },
+      { id: "hs_infection", diagnostic: "Infection (prostatite, vésiculite, IST)",
+        arguments: [{ label: "contexte infectieux", w: 3, when: { q: "hs_infection", eq: true } }],
+        examens_a_discuter: ["ECBU", "Dépistage IST"] },
+      { id: "hs_prostate", diagnostic: "Cause prostatique (> 40 ans)",
+        arguments: [{ label: "troubles urinaires / PSA", w: 2, when: { q: "hs_prostate", eq: true } },
+                    { label: "âge > 40 ans", w: 1, when: { ctx: "age", gte: 40 } }],
+        examens_a_discuter: ["Toucher rectal, PSA", "Échographie"] },
+      { id: "hs_postgeste", diagnostic: "Post-geste (biopsie prostatique)",
+        arguments: [{ label: "geste récent", w: 3, when: { q: "hs_geste", eq: true } }],
+        examens_a_discuter: ["Réassurance (banal après biopsie)"] }
+    ],
+    examens_clinique: [
+      "Toucher rectal (prostate)",
+      "PSA si âge > 40 ans",
+      "ECBU",
+      "Recherche d'une hématurie associée"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 38 — HOQUET CHRONIQUE
+  // -------------------------------------------------------------------------
+  hoquet_chronique: {
+    id: "hoquet_chronique",
+    symptome: "Hoquet qui dure (hoquet chronique)",
+    specialite: ["Digestif", "Neurologie"],
+    questions: [
+      { id: "ho_duree", label: "> 48 heures", type: "boolean",
+        question: "Le hoquet dure-t-il depuis plus de 48 heures ?" },
+      { id: "ho_nuit", label: "Persiste la nuit (organique)", type: "boolean",
+        question: "Persiste-t-il pendant le sommeil (la nuit) ?" },
+      { id: "ho_digestif", label: "Cause digestive", type: "boolean",
+        question: "Avez-vous des remontées acides, un ulcère, ou des troubles digestifs ?" },
+      { id: "ho_neuro", label: "Cause centrale", type: "boolean",
+        question: "Avez-vous des signes neurologiques (trouble de l'équilibre, de la vision, de la parole, faiblesse) ?" },
+      { id: "ho_thoracique", label: "Cause thoracique", type: "boolean",
+        question: "Avez-vous une douleur thoracique, une toux, ou un cancer thoracique connu ?" },
+      { id: "ho_metabolique", label: "Cause métabolique / iatrogène", type: "boolean",
+        question: "Avez-vous une insuffisance rénale, ou prenez-vous des corticoïdes ?" },
+      { id: "ho_retentissement", label: "Retentissement", type: "boolean",
+        question: "Cela perturbe-t-il votre sommeil et votre alimentation, avec un amaigrissement ?" }
+    ],
+    red_flags: [
+      { id: "ho_rf_central", niveau: 2,
+        when: { q: "ho_neuro", eq: true },
+        message_medecin: "Hoquet + signes neurologiques : cause centrale (AVC, tumeur du tronc, SEP) → IRM.",
+        message_patient: "Ces signes nécessitent un avis médical." },
+      { id: "ho_rf_organique", niveau: 2,
+        when: { all: [{ q: "ho_nuit", eq: true }, { q: "ho_duree", eq: true }] },
+        message_medecin: "Hoquet chronique persistant la nuit (organique) : explorer tout le trajet phréno-vagal (du tronc cérébral à l'abdomen).",
+        message_patient: "Un hoquet qui dure et persiste la nuit nécessite un bilan médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ho_digestif", diagnostic: "Hoquet digestif",
+        arguments: [{ label: "RGO / distension gastrique", w: 3, when: { q: "ho_digestif", eq: true } }],
+        examens_a_discuter: ["Traiter le RGO", "Endoscopie si besoin"] },
+      { id: "ho_central", diagnostic: "Hoquet central",
+        arguments: [{ label: "signes neurologiques", w: 3, when: { q: "ho_neuro", eq: true } }],
+        examens_a_discuter: ["IRM cérébrale"] },
+      { id: "ho_metabolique", diagnostic: "Hoquet métabolique / iatrogène",
+        arguments: [{ label: "urémie / corticoïdes", w: 3, when: { q: "ho_metabolique", eq: true } }],
+        examens_a_discuter: ["Ionogramme, urée/créatinine", "Revue des médicaments"] },
+      { id: "ho_tumoral", diagnostic: "Hoquet tumoral médiastinal / sous-phrénique",
+        arguments: [{ label: "contexte thoracique", w: 2, when: { q: "ho_thoracique", eq: true } },
+                    { label: "retentissement / amaigrissement", w: 1, when: { q: "ho_retentissement", eq: true } }],
+        examens_a_discuter: ["Imagerie thoraco-abdominale"] }
+    ],
+    examens_clinique: [
+      "Examen neurologique",
+      "Examen abdominal",
+      "Bilan métabolique (ionogramme, calcémie, urée)",
+      "Imagerie selon l'orientation"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 39 — HYPERHIDROSE
+  // -------------------------------------------------------------------------
+  hyperhidrose: {
+    id: "hyperhidrose",
+    symptome: "Transpiration excessive (hyperhidrose)",
+    specialite: ["Endocrinologie", "Neurologie"],
+    questions: [
+      { id: "hy_localisee", label: "Localisée et symétrique", type: "boolean",
+        question: "La transpiration excessive est-elle localisée et symétrique (mains, pieds, aisselles) ?" },
+      { id: "hy_emotion", label: "Diurne, émotionnelle", type: "boolean",
+        question: "Est-elle déclenchée par l'émotion, présente le jour, et absente la nuit ?" },
+      { id: "hy_nocturne", label: "Sueurs nocturnes B", type: "boolean",
+        question: "Avez-vous des sueurs nocturnes abondantes avec fièvre et/ou amaigrissement ?" },
+      { id: "hy_hyperthyroidie", label: "Hyperthyroïdie", type: "boolean",
+        question: "Avez-vous un cœur rapide, une intolérance à la chaleur, un amaigrissement ?" },
+      { id: "hy_phaeo", label: "Phéochromocytome", type: "boolean",
+        question: "Avez-vous des accès de maux de tête + palpitations + sueurs avec des poussées de tension ?" },
+      { id: "hy_meno", label: "Ménopause", type: "boolean",
+        question: "Êtes-vous en période de ménopause (bouffées de chaleur) ?" }
+    ],
+    red_flags: [
+      { id: "hy_rf_b", niveau: 2,
+        when: { q: "hy_nocturne", eq: true },
+        message_medecin: "Sueurs nocturnes profuses + AEG : lymphome, tuberculose ou néoplasie à éliminer → bilan.",
+        message_patient: "Des sueurs nocturnes avec amaigrissement nécessitent un bilan médical." },
+      { id: "hy_rf_phaeo", niveau: 2,
+        when: { q: "hy_phaeo", eq: true },
+        message_medecin: "Triade céphalées-palpitations-sueurs + HTA paroxystique : phéochromocytome → métanéphrines.",
+        message_patient: "Ces signes nécessitent un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "hy_primaire", diagnostic: "Hyperhidrose primaire (essentielle)",
+        arguments: [{ label: "localisée et symétrique", w: 3, when: { q: "hy_localisee", eq: true } },
+                    { label: "diurne, émotionnelle, jamais nocturne", w: 2, when: { q: "hy_emotion", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique", "Traitements topiques / spécialisés"] },
+      { id: "hy_b", diagnostic: "Sueurs nocturnes « B » (lymphome, tuberculose, néoplasie)",
+        arguments: [{ label: "sueurs nocturnes + signes généraux", w: 3, when: { q: "hy_nocturne", eq: true } }],
+        examens_a_discuter: ["NFS, VS/CRP", "Radiographie thoracique, recherche de TB / lymphome"] },
+      { id: "hy_hyperthyroidie", diagnostic: "Hyperthyroïdie",
+        arguments: [{ label: "thermophobie + tachycardie + amaigrissement", w: 3, when: { q: "hy_hyperthyroidie", eq: true } }],
+        examens_a_discuter: ["TSH"] },
+      { id: "hy_phaeo", diagnostic: "Phéochromocytome",
+        arguments: [{ label: "triade + HTA paroxystique", w: 3, when: { q: "hy_phaeo", eq: true } }],
+        examens_a_discuter: ["Métanéphrines"] }
+    ],
+    examens_clinique: [
+      "Caractériser (localisée/diurne vs généralisée/nocturne)",
+      "Pression artérielle",
+      "Palpation thyroïdienne",
+      "Recherche d'adénopathies / d'altération de l'état général"
+    ]
   }
 };
