@@ -243,8 +243,17 @@ window.BIOKB = [
       { cause: "Hépatite virale", signe: "B/C chronique, A/E aiguë", examens: ["Sérologies virales"] },
       { cause: "Cytolyse extra-hépatique", signe: "musculaire (CPK), hémolyse, hyperthyroïdie", examens: ["CPK, haptoglobine, TSH"] }
     ],
+    tableaux: [
+      { titre: "Marqueurs de cytolyse",
+        entetes: ["Enzyme", "Spécificité"],
+        lignes: [
+          ["ALAT", "La plus spécifique du foie (cytosol des hépatocytes)"],
+          ["ASAT", "Foie et muscle (cœur) ; généralement < ALAT, SAUF origine alcoolique (déficit en pyridoxal, cofacteur de l'ALAT) → ASAT > ALAT"],
+          ["LDH", "Non spécifique : marqueur de souffrance cellulaire"]
+        ] }
+    ],
     red_flags: ["Hépatite fulminante (TP ↓, facteur V ↓, encéphalopathie)", "Intoxication au paracétamol", "Hépatite ischémique (foie de choc)"],
-    conduite: ["Cytolyse majeure + TP bas/encéphalopathie = urgence (centre d'hépatologie)."]
+    conduite: ["Cytolyse majeure + TP bas/encéphalopathie = urgence (centre d'hépatologie).", "Étiologies : hépatites virales, alcooliques, médicamenteuses (paracétamol) ou toxiques (amanite phalloïde), mononucléose, cirrhose, certaines cholestases.", "Après 50 ans, environ 50 % des hépatites cytolytiques sont d'origine médicamenteuse → revue systématique de l'ordonnance."]
   },
   {
     id: "dyslipidemie", num: 60, anomalie: "Élévation du cholestérol (dyslipidémie)",
