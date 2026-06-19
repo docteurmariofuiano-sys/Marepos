@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interprétation biologique — Aide au raisonnement (médecin)</title>
+  <meta name="description" content="Module d'aide à l'interprétation d'un résultat de laboratoire anormal (médecin) : causes à explorer, signe discriminant, examens, red flags et conduite à tenir. D'après le Manuel du Généraliste — Dr Mario Fuiano." />
+  <style>
+:root{
+  --bg:#eef2f6;--surface:#fff;--ink:#1b2733;--soft:#5b6b7b;--line:#e1e8ef;
+  --brand:#6b3fa0;--brand-d:#512f7a; /* violet : domaine biologie */
+  --u3:#d92d20;--u3-bg:#fdf0ef;--ok:#0d8a4f;
+  --radius:13px;--shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1160px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.brand-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.backlink{color:#fff;font-size:.82rem;text-decoration:none;opacity:.92}
+.backlink:hover{text-decoration:underline}
+.badge-count{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.legal-banner{background:#f5f0fb;border-bottom:1px solid #e3d6f3;color:#4a2f70;font-size:.82rem;padding:10px 20px;text-align:center}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.toolbar-inner{max-width:1160px;margin:0 auto;padding:12px 20px;display:flex;gap:12px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1 1 320px;min-width:220px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.55}
+#search{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;background:#fbfcfe}
+#search:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(107,63,160,.15)}
+.select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe;font-size:.9rem;cursor:pointer}
+.layout{max-width:1160px;margin:18px auto;padding:0 20px;display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
+.sidebar{position:sticky;top:66px;max-height:calc(100vh-86px);overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.anom-list{list-style:none;margin:0;padding:6px}
+.anom-item{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent}
+.anom-item:hover{background:#f5f1fb}
+.anom-item.active{background:#efe7f8;border-color:#dcc9f0}
+.anom-num{flex:0 0 auto;font-size:.7rem;font-weight:700;color:var(--brand-d);background:#efe7f8;border-radius:6px;padding:2px 7px;min-width:26px;text-align:center;margin-top:1px}
+.anom-item.active .anom-num{background:var(--brand);color:#fff}
+.anom-title{font-size:.9rem;font-weight:600;display:block}
+.anom-spec{font-size:.74rem;color:var(--soft)}
+.no-result{padding:20px;text-align:center;color:var(--soft);font-size:.9rem}
+.content{min-height:60vh}
+.placeholder{display:flex;align-items:center;justify-content:center;min-height:50vh}
+.placeholder-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;max-width:520px;text-align:center}
+.anom-detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.detail-head{padding:20px 24px;border-bottom:1px solid var(--line);background:#faf7fd}
+.detail-eyebrow{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.detail-num{font-size:.74rem;font-weight:700;color:#fff;background:var(--brand);border-radius:6px;padding:3px 9px}
+.detail-spec{font-size:.82rem;color:var(--soft);font-weight:600}
+.detail-head h2{margin:2px 0 8px;font-size:1.35rem}
+.definition{margin:0;color:var(--ink);font-size:.95rem;background:#fff;border-left:3px solid var(--brand);padding:8px 12px;border-radius:6px}
+.blk{padding:16px 24px;border-bottom:1px solid var(--line)}
+.blk h3{margin:0 0 10px;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-d)}
+.pi,.cat,.rf{margin:0;padding-left:18px;font-size:.93rem}
+.pi li,.cat li,.rf li{margin:4px 0}
+.sec-rf h3{color:var(--u3)}
+.rf{list-style:none;padding-left:4px}
+.rf li{position:relative;padding:5px 0 5px 24px;border-bottom:1px dashed rgba(217,45,32,.18)}
+.rf li:last-child{border-bottom:none}
+.rf li::before{content:"⚠";position:absolute;left:2px;top:5px;font-size:.85rem}
+.causes{width:100%;border-collapse:collapse;font-size:.9rem}
+.causes th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:var(--soft);border-bottom:2px solid var(--line);padding:6px 8px}
+.causes td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top}
+.c-name{font-weight:700;color:var(--brand-d);white-space:nowrap}
+.exam{display:inline-block;background:#f1ecf8;color:var(--brand-d);border-radius:5px;padding:1px 7px;margin:2px 4px 2px 0;font-size:.8rem}
+.sec-cat{background:#f0f8f3}
+.sec-cat h3{color:var(--ok)}
+.foot{max-width:1160px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.sidebar{position:static;max-height:48vh}.causes,.causes thead,.causes tbody,.causes tr,.causes td{display:block}.causes thead{display:none}.causes td{border:none;padding:2px 0}.c-name{margin-top:8px}}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🧪</span>
+        <div>
+          <h1>Interprétation biologique</h1>
+          <p class="subtitle">Aide au raisonnement devant un résultat anormal — usage médecin</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <a class="backlink" href="aide-decision-standalone.html">← Aide au raisonnement clinique</a>
+        <span class="badge-count" id="countBadge"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal-banner" role="note">
+    <strong>Outil destiné au médecin.</strong> Aide à l'interprétation, à <strong>confronter
+    à la clinique</strong> et aux recommandations en vigueur. Ne remplace pas l'avis du
+    biologiste ni le jugement clinique.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher une anomalie (ex. kaliémie, TCA, cytolyse, calcémie…)" autocomplete="off" />
+      </div>
+      <select id="specFilter" class="select" aria-label="Filtrer par domaine">
+        <option value="">Tous les domaines</option>
+      </select>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="sidebar"><ul class="anom-list" id="anomList"></ul>
+      <p class="no-result" id="noResult" hidden>Aucune anomalie ne correspond.</p>
+    </aside>
+    <section class="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <h2>Choisissez une anomalie biologique</h2>
+          <p>Sélectionnez un résultat anormal à gauche : l'outil affiche les <strong>causes à
+            explorer</strong>, le <strong>signe discriminant</strong>, les <strong>examens</strong> de
+            seconde intention, les <strong>red flags</strong> et la <strong>conduite à tenir</strong>.</p>
+        </div>
+      </div>
+      <article class="anom-detail" id="detail" hidden></article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Source : Manuel du Généraliste — fiches biologiques (43-63), Dr Mario Fuiano.
+      Aide au raisonnement, validation médicale obligatoire.</p>
+  </footer>
+
+  <script>
+/* ============================================================================
+ * INTERPRÉTATION BIOLOGIQUE — base de connaissances (côté médecin).
+ * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
+ * Dr Mario Fuiano. Aide à l'interprétation d'un résultat anormal — à confronter
+ * à la clinique. Ne remplace pas le médecin/biologiste.
+ *
+ * Format : { id, num, anomalie, specialite, definition,
+ *            premiere_intention:[...], causes:[{cause, signe, examens:[...]}],
+ *            red_flags:[...], conduite:[...] }
+ * ========================================================================== */
+window.BIOKB = [
+  {
+    id: "ts_hemostase_primaire", num: 43, anomalie: "Allongement du temps de saignement / hémostase primaire",
+    specialite: "Hémostase",
+    definition: "Saignement de type hémostase primaire = cutanéo-muqueux (purpura pétéchial, épistaxis, gingivorragies, ménorragies), à distinguer des hématomes/hémarthroses (coagulation).",
+    premiere_intention: ["NFS-plaquettes EN PREMIER (éliminer une thrombopénie)", "Rechercher antiagrégants (aspirine, AINS, clopidogrel)", "Puis évoquer une maladie de Willebrand (la plus fréquente des maladies hémorragiques constitutionnelles)"],
+    causes: [
+      { cause: "Thrombopénie", signe: "plaquettes basses (1re cause à éliminer)", examens: ["NFS-plaquettes"] },
+      { cause: "Maladie de Willebrand", signe: "saignements muqueux + ATCD familial, TCA parfois allongé", examens: ["Dosage facteur Willebrand / facteur VIII"] },
+      { cause: "Thrombopathie médicamenteuse", signe: "aspirine / AINS / antiagrégants", examens: ["Revue de l'ordonnance"] },
+      { cause: "Thrombopathies acquises", signe: "urémie, dysglobulinémie, syndrome myéloprolifératif", examens: ["Créatinine, électrophorèse, NFS"] }
+    ],
+    red_flags: ["Thrombopénie profonde (risque hémorragique)", "Saignement actif sous antiagrégants"],
+    conduite: ["Éliminer thrombopénie et antiagrégants avant d'évoquer une thrombopathie constitutionnelle."]
+  },
+  {
+    id: "tca", num: 44, anomalie: "Allongement du TCA (temps de céphaline activée)",
+    specialite: "Hémostase",
+    definition: "Le test de correction (mélange plasma malade + témoin) est l'orientation clé.",
+    premiere_intention: ["Éliminer une héparinothérapie (cause n°1 d'allongement isolé)", "Test de correction : CORRIGE = déficit en facteur ; NE CORRIGE PAS = anticoagulant circulant"],
+    causes: [
+      { cause: "Héparine", signe: "cause la plus fréquente d'allongement isolé", examens: ["Vérifier traitement / héparinémie"] },
+      { cause: "Hémophilie A (VIII) / B (IX)", signe: "garçon, hémarthroses/hématomes, TCA allongé + TP normal", examens: ["Dosage facteurs VIII et IX"] },
+      { cause: "Maladie de Willebrand", signe: "TCA ± allongé (baisse du VIII)", examens: ["Facteur Willebrand, VIII"] },
+      { cause: "Anticoagulant circulant (anti-VIII, lupique/SAPL)", signe: "TCA non corrigé par le témoin → thrombose, pas hémorragie", examens: ["Test de correction, anticoagulant lupique, anti-cardiolipine"] }
+    ],
+    red_flags: ["Hémophilie sévère (saignement)", "SAPL (risque thrombotique malgré TCA allongé)"],
+    conduite: ["Toujours éliminer l'héparine d'abord, puis faire le test de correction."]
+  },
+  {
+    id: "tp_bas", num: 45, anomalie: "Allongement du TP / temps de Quick (TP bas)",
+    specialite: "Hémostase",
+    definition: "Le FACTEUR V est le discriminant majeur entre insuffisance hépatocellulaire et carence en vitamine K.",
+    premiere_intention: ["Vérifier un traitement par AVK (INR)", "Doser le facteur V : V BAS = insuffisance hépatocellulaire ; V NORMAL = carence en vitamine K"],
+    causes: [
+      { cause: "AVK", signe: "allongement attendu/recherché", examens: ["INR"] },
+      { cause: "Insuffisance hépatocellulaire", signe: "TP bas + facteur V BAS", examens: ["Facteur V, bilan hépatique"] },
+      { cause: "Carence en vitamine K", signe: "TP bas + facteur V NORMAL (cholestase, malabsorption, ATB) ; corrigé par vit. K", examens: ["Facteur V, test de correction par vitamine K"] },
+      { cause: "CIVD", signe: "TP bas + plaquettes ↓ + fibrinogène ↓ + D-dimères ↑↑", examens: ["Plaquettes, fibrinogène, D-dimères"] }
+    ],
+    red_flags: ["Insuffisance hépatique aiguë (TP < 50 %, facteur V effondré)", "CIVD", "Surdosage AVK avec hémorragie"],
+    conduite: ["Toute baisse aiguë du TP impose le dosage du facteur V."]
+  },
+  {
+    id: "tt", num: 46, anomalie: "Allongement du temps de thrombine (TT)",
+    specialite: "Hémostase",
+    definition: "Le TT explore la dernière étape (fibrinogène → fibrine).",
+    premiere_intention: ["Éliminer l'héparine (neutralisée par la protamine)", "Doser le fibrinogène pour trancher"],
+    causes: [
+      { cause: "Héparine / contamination", signe: "allonge le TT, neutralisé par la protamine", examens: ["Vérifier héparine, temps de reptilase"] },
+      { cause: "Hypo/dysfibrinogénémie", signe: "constitutionnelle ou acquise (IHC, CIVD)", examens: ["Dosage du fibrinogène"] },
+      { cause: "Présence d'inhibiteurs", signe: "dysglobuline, PDF élevés", examens: ["Électrophorèse, PDF/D-dimères"] }
+    ],
+    red_flags: ["CIVD avec consommation du fibrinogène", "Hépatopathie sévère"],
+    conduite: ["Allongement isolé = héparine le plus souvent, ou anomalie du fibrinogène."]
+  },
+  {
+    id: "hemostase_hereditaire", num: 47, anomalie: "Anomalie héréditaire de l'hémostase",
+    specialite: "Hémostase",
+    definition: "L'arbre généalogique et le TYPE de saignement orientent le diagnostic.",
+    premiere_intention: ["Préciser le type de saignement : cutanéo-muqueux (Willebrand) vs hématomes/hémarthroses (hémophilie)", "Enquête familiale : transmission liée à l'X (hémophilie) vs autosomique (Willebrand)"],
+    causes: [
+      { cause: "Maladie de Willebrand", signe: "la plus fréquente, autosomique, saignements muqueux", examens: ["Facteur Willebrand, VIII"] },
+      { cause: "Hémophilie A / B", signe: "liée à l'X, garçons, hémarthroses", examens: ["Facteurs VIII / IX"] },
+      { cause: "Thrombophilies constitutionnelles", signe: "facteur V Leiden, mutation II, déficits AT/PC/PS → versant thrombotique", examens: ["Bilan de thrombophilie (ATCD thrombotiques précoces, fausses couches)"] }
+    ],
+    red_flags: ["Hémophilie sévère (hémarthroses invalidantes)", "Thrombophilie majeure (récidive thrombo-embolique)"],
+    conduite: ["Adresser à un centre spécialisé (CRC-MHC) pour confirmation et prise en charge."]
+  },
+  {
+    id: "electrophorese", num: 48, anomalie: "Anomalies de l'électrophorèse des protéines sériques",
+    specialite: "Hématologie",
+    definition: "Un pic ÉTROIT dans les gamma = composant monoclonal (immunofixation) ; une élévation polyclonale « en dôme » = réactionnelle.",
+    premiere_intention: ["Devant un pic étroit : immunofixation pour typer le composant monoclonal", "Rechercher des signes de myélome (CRAB)"],
+    causes: [
+      { cause: "Pic monoclonal étroit (gamma)", signe: "myélome, MGUS, Waldenström (IgM)", examens: ["Immunofixation, protéinurie de Bence-Jones, NFS, calcémie, créatinine"] },
+      { cause: "Hypergammaglobulinémie polyclonale", signe: "inflammation chronique, hépatopathie, infections, auto-immunité", examens: ["CRP, bilan hépatique, sérologies"] },
+      { cause: "Bloc bêta-gamma", signe: "très évocateur de cirrhose", examens: ["Bilan hépatique"] },
+      { cause: "Hypogammaglobulinémie", signe: "déficit immunitaire, fuite (néphrotique), myélome à chaînes légères", examens: ["Dosage pondéral des Ig, protéinurie"] }
+    ],
+    red_flags: ["Myélome (CRAB : hyperCalcémie, Rénale, Anémie, Bone/os)", "Waldenström symptomatique", "Amylose AL"],
+    conduite: ["Pic monoclonal → immunofixation + recherche des critères de malignité (CRAB)."]
+  },
+  {
+    id: "hypereosinophilie", num: 49, anomalie: "Hyperéosinophilie",
+    specialite: "Hématologie",
+    definition: "Démarche « médicament, parasite, atopie » couvre l'immense majorité des cas.",
+    premiere_intention: ["Rechercher un médicament récent (1re cause en France) — penser DRESS", "Rechercher une parasitose (voyage, helminthiase)", "Évaluer un terrain atopique"],
+    causes: [
+      { cause: "Hyperéosinophilie médicamenteuse", signe: "la plus fréquente ; DRESS si fièvre + éruption + atteinte viscérale", examens: ["Revue de l'ordonnance, bilan hépatique/rénal si DRESS"] },
+      { cause: "Parasitoses helminthiques", signe: "selon voyage et cycle (phase d'invasion)", examens: ["Examen parasitologique des selles, sérologies"] },
+      { cause: "Atopie", signe: "asthme, rhinite, eczéma, urticaire", examens: ["Contexte clinique"] },
+      { cause: "Causes systémiques / malignes", signe: "vascularite à ANCA (Churg-Strauss), lymphome, SHE, néoplasie", examens: ["ANCA, imagerie, avis spécialisé"] }
+    ],
+    red_flags: ["DRESS (atteinte viscérale)", "Syndrome hyperéosinophilique (atteinte cardiaque)", "Vascularite (Churg-Strauss)", "Anguillulose maligne avant immunosuppression"],
+    conduite: ["Éosinophilie + fièvre + DRESS = urgence d'arrêt du médicament. Traiter une anguillulose avant toute corticothérapie."]
+  },
+  {
+    id: "inversion_formule", num: 50, anomalie: "Inversion de la formule sanguine (lymphocytes > neutrophiles)",
+    specialite: "Hématologie",
+    definition: "Inversion physiologique chez le jeune enfant. Chez l'adulte, une hyperlymphocytose persistante (> 1 mois) impose un immunophénotypage.",
+    premiere_intention: ["Replacer dans le contexte (âge, syndrome viral)", "Si hyperlymphocytose persistante de l'adulte : immunophénotypage (LLC)"],
+    causes: [
+      { cause: "Lymphocytose réactionnelle virale", signe: "jeune, syndrome viral, MNI (syndrome mononucléosique)", examens: ["MNI-test, sérologies EBV/CMV/toxo, VIH"] },
+      { cause: "Syndrome lymphoprolifératif", signe: "sujet âgé, hyperlymphocytose persistante", examens: ["Immunophénotypage lymphocytaire (LLC)"] },
+      { cause: "Coqueluche", signe: "hyperlymphocytose + toux quinteuse", examens: ["PCR coqueluche"] }
+    ],
+    red_flags: ["Leucémie aiguë (cytopénies + blastes)", "LLC à fort compte / syndrome de Richter", "Primo-infection VIH (à ne pas manquer)"],
+    conduite: ["Penser systématiquement à la primo-infection VIH devant un syndrome mononucléosique."]
+  },
+  {
+    id: "hyperglycemie", num: 51, anomalie: "Hyperglycémie de l'adulte",
+    specialite: "Endocrinologie",
+    definition: "Diagnostic biologique (seuils OMS). Le syndrome cardinal rapide chez un sujet jeune/maigre = type 1 (risque de cétose).",
+    premiere_intention: ["Affirmer le diabète : glycémie à jeun ≥ 1,26 g/L (×2) / HbA1c / glycémie ≥ 2 g/L + symptômes", "Rechercher des signes de cétose / déshydratation (urgence)", "Distinguer type 1 (jeune, maigre, cétose) vs type 2"],
+    causes: [
+      { cause: "Diabète de type 2", signe: "surpoids, insulinorésistance, > 40 ans, souvent asymptomatique", examens: ["HbA1c, bilan métabolique"] },
+      { cause: "Diabète de type 1", signe: "jeune, maigre, syndrome cardinal rapide, cétose", examens: ["Cétonémie, auto-anticorps (GAD, IA2)"] },
+      { cause: "Acidocétose / coma hyperosmolaire", signe: "urgences métaboliques (cétose vs déshydratation majeure)", examens: ["Gaz du sang, cétonémie, ionogramme, osmolalité"] },
+      { cause: "Diabète secondaire", signe: "corticoïdes, pancréatopathie, hémochromatose, endocrinopathie", examens: ["Selon contexte"] }
+    ],
+    red_flags: ["Acidocétose diabétique", "Coma hyperosmolaire", "Hyperglycémie + infection/sepsis"],
+    conduite: ["Haleine acétonique + dyspnée de Kussmaul = acidocétose → urgence."]
+  },
+  {
+    id: "hypercalcemie", num: 52, anomalie: "Hypercalcémie",
+    specialite: "Endocrinologie",
+    definition: "La PTH tranche : élevée/inadaptée = hyperparathyroïdie primaire ; FREINÉE = cause non parathyroïdienne (néoplasie surtout). Ces 2 causes = 90 %.",
+    premiere_intention: ["Doser la PTH (discriminant majeur)", "Interpréter sur la calcémie corrigée / calcium ionisé", "Rechercher une néoplasie si PTH freinée"],
+    causes: [
+      { cause: "Hyperparathyroïdie primaire", signe: "PTH normale-haute/élevée (inadaptée), calcémie modérée, fortuite", examens: ["PTH, calciurie, échographie/scintigraphie parathyroïdienne"] },
+      { cause: "Hypercalcémie maligne", signe: "PTH BASSE + néoplasie (métastases, myélome, PTHrp)", examens: ["Imagerie, électrophorèse, PTHrp"] },
+      { cause: "Iatrogène", signe: "vitamine D, thiazidiques, lithium, syndrome des buveurs de lait", examens: ["Revue de l'ordonnance, 25-OH vit. D"] },
+      { cause: "Granulomatose", signe: "sarcoïdose (calcitriol ↑)", examens: ["1,25-OH vit. D, imagerie thoracique"] }
+    ],
+    red_flags: ["Hypercalcémie maligne aiguë (> 3,5 mmol/L : troubles du rythme, coma)", "Néoplasie sous-jacente", "Insuffisance rénale, déshydratation"],
+    conduite: ["Hypercalcémie sévère symptomatique = urgence (hydratation, avis spécialisé)."]
+  },
+  {
+    id: "hyperkaliemie", num: 53, anomalie: "Hyperkaliémie",
+    specialite: "Néphrologie",
+    definition: "Toujours éliminer une FAUSSE hyperkaliémie (hémolyse de prélèvement). Le danger est CARDIAQUE et non corrélé aux symptômes : l'ECG guide l'urgence.",
+    premiere_intention: ["Éliminer une fausse hyperkaliémie (garrot, hémolyse, thrombocytose/hyperleucocytose)", "ECG immédiat (ondes T amples/pointues, élargissement QRS, bradycardie)", "Rechercher cause iatrogène (bloqueurs du SRAA) ± insuffisance rénale"],
+    causes: [
+      { cause: "Hyperkaliémie iatrogène", signe: "IEC/ARA2 + épargneur potassique + AINS ± IR", examens: ["Revue de l'ordonnance"] },
+      { cause: "Insuffisance rénale", signe: "défaut d'excrétion", examens: ["Créatinine, DFG"] },
+      { cause: "Transfert / lyse cellulaire", signe: "acidose, rhabdomyolyse, lyse tumorale, hémolyse", examens: ["Gaz du sang, CPK, LDH, uricémie"] },
+      { cause: "Hypoaldostéronisme", signe: "Addison, hyporéninisme du diabétique", examens: ["Cortisol, rénine/aldostérone"] }
+    ],
+    red_flags: ["Hyperkaliémie menaçante (ECG modifié) = URGENCE (gluconate de Ca, etc.)", "QRS élargis / bradycardie (risque d'arrêt)", "Insuffisance rénale aiguë"],
+    conduite: ["ECG modifié → urgence : gluconate de calcium, insuline-glucose, etc."]
+  },
+  {
+    id: "hypokaliemie", num: 54, anomalie: "Hypokaliémie",
+    specialite: "Néphrologie",
+    definition: "HTA + hypokaliémie = orientation forte vers un hyperaldostéronisme. Risque majeur : troubles du rythme (surtout sous digitaliques).",
+    premiere_intention: ["Préciser le mécanisme : pertes digestives vs rénales vs transfert", "ECG (ondes U, troubles du rythme)", "Si HTA associée : explorer un hyperaldostéronisme"],
+    causes: [
+      { cause: "Pertes digestives", signe: "diarrhée/vomissements/laxatifs", examens: ["Chlorurie, contexte"] },
+      { cause: "Pertes rénales iatrogènes", signe: "diurétiques hypokaliémiants (cause n°1)", examens: ["Kaliurèse, revue ordonnance"] },
+      { cause: "Hyperaldostéronisme", signe: "HTA + hypokaliémie + kaliurèse inadaptée", examens: ["Rénine/aldostérone (Conn)"] },
+      { cause: "Transfert", signe: "alcalose, β2-mimétiques, insuline", examens: ["Gaz du sang"] }
+    ],
+    red_flags: ["Troubles du rythme (potentialisés par digitaliques)", "Hypokaliémie profonde < 2,5 (paralysie, rhabdomyolyse)", "Torsades de pointes (si QT long associé)"],
+    conduite: ["Corriger le potassium ET le magnésium ; vigilance accrue sous digoxine."]
+  },
+  {
+    id: "hyponatremie", num: 55, anomalie: "Hyponatrémie",
+    specialite: "Néphrologie",
+    definition: "Démarche : éliminer les fausses → évaluer la VOLÉMIE + osmolalités. Le danger neurologique dépend de la RAPIDITÉ ; la correction doit être LENTE.",
+    premiere_intention: ["Éliminer une fausse hyponatrémie (hyperglycémie, hyperprotidémie/lipidémie)", "Évaluer la volémie (hypo / hyper / euvolémie)", "Osmolalités sang/urines, natriurèse"],
+    causes: [
+      { cause: "Hyponatrémie hypovolémique", signe: "pertes + déshydratation extracellulaire", examens: ["Natriurèse, clinique"] },
+      { cause: "Hyponatrémie hypervolémique", signe: "IC, cirrhose, syndrome néphrotique (œdèmes)", examens: ["BNP, bilan hépatique, protéinurie"] },
+      { cause: "SIADH (euvolémique)", signe: "natriurèse conservée, urines inadaptées concentrées ; cancers, médicaments, SNC, poumon", examens: ["Osmolalité U, TSH, cortisol"] },
+      { cause: "Endocrinien", signe: "hypothyroïdie, insuffisance surrénale", examens: ["TSH, cortisol 8h"] }
+    ],
+    red_flags: ["Hyponatrémie aiguë symptomatique (convulsions, coma)", "Correction trop rapide (myélinolyse centro-pontine)", "Insuffisance surrénale aiguë méconnue"],
+    conduite: ["Corriger lentement (risque de myélinolyse) ; forme aiguë symptomatique = urgence (sérum salé hypertonique en milieu adapté)."]
+  },
+  {
+    id: "hyperphosphoremie", num: 56, anomalie: "Hyperphosphorémie",
+    specialite: "Néphrologie",
+    definition: "L'insuffisance rénale est de loin la cause la plus fréquente. Aiguë + hypoCa + hyperK + hyperuricémie = syndrome de lyse tumorale.",
+    premiere_intention: ["Évaluer la fonction rénale (cause n°1)", "Interpréter le couple Ca/P et la PTH", "Rechercher une lyse cellulaire si aiguë"],
+    causes: [
+      { cause: "Insuffisance rénale", signe: "défaut d'excrétion, contexte d'IRC", examens: ["Créatinine, Ca/P, PTH"] },
+      { cause: "Lyse cellulaire", signe: "lyse tumorale (+ hyperuricémie + hyperK + hypoCa), rhabdomyolyse", examens: ["Uricémie, K, Ca, LDH, CPK"] },
+      { cause: "Hypoparathyroïdie", signe: "P haut + Ca bas + PTH basse", examens: ["PTH, calcémie"] },
+      { cause: "Apports / vitamine D excessive", signe: "iatrogène (laxatifs/lavements phosphatés)", examens: ["Interrogatoire, 25-OH vit. D"] }
+    ],
+    red_flags: ["Syndrome de lyse tumorale", "Hypocalcémie symptomatique associée", "Calcifications métastatiques (produit Ca×P élevé)"],
+    conduite: ["Suspecter un syndrome de lyse tumorale en contexte oncologique (urgence)."]
+  },
+  {
+    id: "hyperprolactinemie", num: 57, anomalie: "Hyperprolactinémie",
+    specialite: "Endocrinologie",
+    definition: "Avant l'IRM, éliminer les 3 « faux coupables » : grossesse, médicaments, hypothyroïdie. PRL très élevée (> 150-200 ng/mL) → macroprolactinome.",
+    premiere_intention: ["Éliminer grossesse, stress du prélèvement", "Rechercher un médicament hyperprolactinémiant", "Doser la TSH", "Si syndrome tumoral (céphalées, hémianopsie) → IRM hypophysaire sans délai"],
+    causes: [
+      { cause: "Hyperprolactinémie médicamenteuse", signe: "psychotropes, antiémétiques dopaminergiques (très fréquent)", examens: ["Revue de l'ordonnance"] },
+      { cause: "Adénome à prolactine", signe: "micro/macroadénome ; PRL souvent très élevée si macro", examens: ["IRM hypophysaire"] },
+      { cause: "Hypothyroïdie", signe: "TRH ↑ stimule la PRL", examens: ["TSH"] },
+      { cause: "Déconnexion hypothalamo-hypophysaire", signe: "macroadénome non sécrétant comprimant la tige (PRL modérée)", examens: ["IRM hypophysaire"] }
+    ],
+    red_flags: ["Macroadénome compressif (champ visuel, apoplexie hypophysaire)", "Ne pas confondre avec hypothyroïdie (réversible)"],
+    conduite: ["Macroadénome + troubles visuels = avis neurochirurgical/endocrinologique urgent."]
+  },
+  {
+    id: "ggt", num: 58, anomalie: "Augmentation isolée des gamma-GT",
+    specialite: "Hépatologie",
+    definition: "Une élévation ISOLÉE des GGT (PAL et transaminases normales) est le plus souvent banale. C'est l'association GGT + PAL qui définit la cholestase.",
+    premiere_intention: ["Vérifier que l'élévation est isolée (PAL, transaminases normales)", "Rechercher alcool, surpoids/stéatose, inducteurs enzymatiques", "Si GGT + PAL → imagerie des voies biliaires"],
+    causes: [
+      { cause: "Alcool / stéatose métabolique", signe: "les 2 causes dominantes d'élévation isolée", examens: ["Échographie hépatique, bilan métabolique"] },
+      { cause: "Induction enzymatique médicamenteuse", signe: "GGT ↑ isolée, sans cholestase vraie", examens: ["Revue de l'ordonnance"] },
+      { cause: "Cholestase débutante", signe: "GGT + PAL élevées ensemble", examens: ["Échographie / imagerie biliaire"] },
+      { cause: "Foie cardiaque", signe: "contexte d'insuffisance cardiaque", examens: ["BNP, échocardiographie"] }
+    ],
+    red_flags: ["Cholestase (GGT + PAL) → obstacle biliaire / cancer", "Hépatopathie alcoolique avancée"],
+    conduite: ["GGT isolées ne justifient pas d'emblée un bilan lourd ; réévaluer après réduction des facteurs."]
+  },
+  {
+    id: "cytolyse", num: 59, anomalie: "Élévation des transaminases (cytolyse hépatique)",
+    specialite: "Hépatologie",
+    definition: "Le rapport ASAT/ALAT, l'ampleur (> 10N = hépatite aiguë) et la prise de médicaments guident. Toute cytolyse aiguë impose la mesure du TP (facteur V).",
+    premiere_intention: ["Quantifier (modérée < 5N vs majeure > 10N) et la cinétique", "Rechercher alcool (ASAT>ALAT), stéatose, médicaments (paracétamol)", "Sérologies virales (B, C, A, E)", "TP / facteur V si aiguë (gravité)"],
+    causes: [
+      { cause: "Stéatopathie métabolique / alcoolique", signe: "cytolyse modérée chronique, la plus fréquente", examens: ["Échographie, bilan métabolique"] },
+      { cause: "Hépatite médicamenteuse / toxique", signe: "paracétamol (massive), antituberculeux, statines, azolés", examens: ["Paracétamolémie, revue ordonnance"] },
+      { cause: "Hépatite virale", signe: "B/C chronique, A/E aiguë", examens: ["Sérologies virales"] },
+      { cause: "Cytolyse extra-hépatique", signe: "musculaire (CPK), hémolyse, hyperthyroïdie", examens: ["CPK, haptoglobine, TSH"] }
+    ],
+    red_flags: ["Hépatite fulminante (TP ↓, facteur V ↓, encéphalopathie)", "Intoxication au paracétamol", "Hépatite ischémique (foie de choc)"],
+    conduite: ["Cytolyse majeure + TP bas/encéphalopathie = urgence (centre d'hépatologie)."]
+  },
+  {
+    id: "dyslipidemie", num: 60, anomalie: "Élévation du cholestérol (dyslipidémie)",
+    specialite: "Métabolisme",
+    definition: "Avant de traiter : éliminer une cause secondaire et raisonner sur le risque CV global. Dépôts lipidiques + ATCD CV précoces = forme familiale.",
+    premiere_intention: ["Caractériser : LDL pure, hypertriglycéridémie, ou mixte", "Éliminer une cause secondaire (TSH, glycémie, créatinine)", "Évaluer le risque CV global (cible de LDL)"],
+    causes: [
+      { cause: "Dyslipidémie commune / polygénique", signe: "la plus fréquente, multifactorielle", examens: ["Bilan lipidique, FdR CV"] },
+      { cause: "Hypercholestérolémie familiale", signe: "LDL très élevé + xanthomes + ATCD CV précoces", examens: ["Dépistage familial, score clinique"] },
+      { cause: "Dyslipidémie secondaire", signe: "hypothyroïdie, diabète, néphrotique, alcool, iatrogène", examens: ["TSH, glycémie, créatinine, protéinurie"] },
+      { cause: "Hypertriglycéridémie majeure", signe: "risque de pancréatite aiguë", examens: ["Triglycérides, lipase si douleur"] }
+    ],
+    red_flags: ["Hypertriglycéridémie majeure (pancréatite aiguë)", "Hypercholestérolémie familiale (risque CV précoce)"],
+    conduite: ["Xanthomes tendineux / arc cornéen avant 45 ans → suspecter une forme familiale, dépistage familial."]
+  },
+  {
+    id: "cpk", num: 61, anomalie: "Élévation des CPK (créatine-kinase)",
+    specialite: "Muscle",
+    definition: "Vérifier d'abord l'origine MUSCULAIRE (vs effort/IM/comitialité). CPK massives + myoglobinurie = rhabdomyolyse (surveiller kaliémie et fonction rénale).",
+    premiere_intention: ["Confirmer l'origine musculaire (myalgies, faiblesse, urines foncées)", "Rechercher une cause iatrogène (STATINE ± fibrate, neuroleptiques)", "Surveiller kaliémie et fonction rénale si rhabdomyolyse"],
+    causes: [
+      { cause: "Rhabdomyolyse", signe: "CPK très élevées + myalgies + myoglobinurie → risque IRA et hyperkaliémie", examens: ["Kaliémie, créatinine, BU (myoglobinurie)"] },
+      { cause: "Myopathie iatrogène", signe: "statines (myalgies + CPK ↑), syndrome malin des neuroleptiques (urgence)", examens: ["Revue ordonnance, température/conscience"] },
+      { cause: "Myosite inflammatoire", signe: "déficit proximal + CPK ↑ (dermato/polymyosite)", examens: ["EMG, auto-anticorps, avis spécialisé"] },
+      { cause: "Hypothyroïdie", signe: "CPK ↑ + signes d'hypothyroïdie", examens: ["TSH"] }
+    ],
+    red_flags: ["Rhabdomyolyse (IRA, hyperkaliémie)", "Syndrome malin des neuroleptiques", "Myocardite / SCA (préférer la troponine)"],
+    conduite: ["Sous statine : myalgies + CPK élevées → arrêt (risque majoré par les fibrates)."]
+  },
+  {
+    id: "ldh", num: 62, anomalie: "Lacticodéshydrogénase (LDH) élevée",
+    specialite: "Non spécifique",
+    definition: "Marqueur de lyse cellulaire NON spécifique : n'a de valeur qu'interprété dans un contexte. Éliminer une hémolyse (de prélèvement ou vraie).",
+    premiere_intention: ["Éliminer une hémolyse de prélèvement", "Rechercher une hémolyse vraie : LDH ↑ + haptoglobine ↓ + bilirubine libre ↑", "Replacer dans le contexte (néoplasie, nécrose tissulaire)"],
+    causes: [
+      { cause: "Hémolyse", signe: "vraie (anémie hémolytique) ou artefactuelle", examens: ["Haptoglobine, bilirubine libre, frottis (schizocytes)"] },
+      { cause: "Néoplasie / hémopathie", signe: "lymphome (valeur pronostique), tumeurs à fort turn-over", examens: ["Imagerie, avis hématologique"] },
+      { cause: "Nécrose tissulaire", signe: "infarctus, rhabdomyolyse, ischémie", examens: ["Troponine, CPK selon contexte"] },
+      { cause: "Autres", signe: "hépatopathie, macro-LDH, atteinte musculaire", examens: ["Bilan orienté"] }
+    ],
+    red_flags: ["Anémie hémolytique aiguë (MAT : LDH ↑ + schizocytes + thrombopénie → urgence)", "Syndrome de lyse tumorale", "Lymphome agressif"],
+    conduite: ["LDH ↑ + schizocytes + thrombopénie = microangiopathie thrombotique → urgence."]
+  },
+  {
+    id: "anemie", num: 63, anomalie: "Conduite à tenir devant une anémie",
+    specialite: "Hématologie (CAT)",
+    definition: "L'algorithme repose sur le VGM + les réticulocytes. Évaluer d'abord la TOLÉRANCE.",
+    premiere_intention: ["Évaluer la tolérance (dyspnée, angor, tachycardie → transfusion)", "Orienter par le VGM (micro / macro / normocytaire)", "Réticulocytes si normocytaire (régénérative vs arégénérative)"],
+    causes: [
+      { cause: "Anémie microcytaire ferriprive", signe: "ferritine basse → CHERCHER le saignement (digestif si homme/femme ménopausée)", examens: ["Ferritine, endoscopies digestives"] },
+      { cause: "Anémie macrocytaire carentielle", signe: "B12/folates, alcool, hypothyroïdie, myélodysplasie", examens: ["B12, folates, TSH, myélogramme si besoin"] },
+      { cause: "Anémie normocytaire régénérative", signe: "hémolyse (LDH ↑, haptoglobine ↓) ou saignement aigu", examens: ["Réticulocytes, haptoglobine, LDH, bilirubine"] },
+      { cause: "Anémie normocytaire arégénérative", signe: "inflammation, IRC (EPO ↓), insuffisance médullaire", examens: ["CRP, créatinine, myélogramme si pancytopénie"] }
+    ],
+    red_flags: ["Mauvaise tolérance (angor, défaillance) → transfusion", "Saignement actif", "Pancytopénie (leucémie aiguë, aplasie)", "Anémie hémolytique avec schizocytes (MAT)"],
+    conduite: ["Microcytaire ferriprive chez homme/femme ménopausée = saignement digestif jusqu'à preuve du contraire (endoscopies)."]
+  }
+];
+
+</script>
+  <script>
+/* Interprétation biologique — renderer médecin (lecture seule). */
+(function () {
+  "use strict";
+  var BIO = (window.BIOKB || []).slice();
+  var el = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  };
+  var norm = function (s) {
+    return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  };
+  var state = { q: "", spec: "", current: null };
+
+  BIO.forEach(function (b) {
+    b._search = norm([b.anomalie, b.specialite, b.definition,
+      b.causes.map(function (c) { return c.cause + " " + c.signe; }).join(" ")].join(" "));
+  });
+
+  function filtered() {
+    var nq = norm(state.q.trim());
+    return BIO.filter(function (b) {
+      if (state.spec && b.specialite !== state.spec) return false;
+      if (nq && b._search.indexOf(nq) === -1) {
+        return nq.split(/\s+/).every(function (t) { return b._search.indexOf(t) !== -1; });
+      }
+      return true;
+    });
+  }
+
+  function renderList() {
+    var items = filtered();
+    el("noResult").hidden = items.length !== 0;
+    el("anomList").innerHTML = items.map(function (b) {
+      var active = state.current === b.id ? " active" : "";
+      return "<li class='anom-item" + active + "' data-id='" + b.id + "'>" +
+        "<span class='anom-num'>" + b.num + "</span>" +
+        "<span class='anom-texts'><span class='anom-title'>" + esc(b.anomalie) + "</span>" +
+        "<span class='anom-spec'>" + esc(b.specialite) + "</span></span></li>";
+    }).join("");
+    el("countBadge").textContent = items.length + " / " + BIO.length;
+  }
+
+  function ul(cls, arr) {
+    return "<ul class='" + cls + "'>" + arr.map(function (x) {
+      return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+  }
+
+  function renderDetail(id) {
+    var b = BIO.find(function (x) { return x.id === id; });
+    if (!b) return;
+    state.current = id;
+    el("placeholder").hidden = true;
+    var d = el("detail"); d.hidden = false;
+    var causes = "<table class='causes'><thead><tr><th>Cause</th><th>Signe discriminant</th>" +
+      "<th>Examens</th></tr></thead><tbody>" +
+      b.causes.map(function (c) {
+        return "<tr><td class='c-name'>" + esc(c.cause) + "</td>" +
+          "<td>" + esc(c.signe) + "</td>" +
+          "<td>" + c.examens.map(function (e) { return "<span class='exam'>" + esc(e) + "</span>"; }).join("") + "</td></tr>";
+      }).join("") + "</tbody></table>";
+
+    d.innerHTML =
+      "<header class='detail-head'>" +
+        "<div class='detail-eyebrow'><span class='detail-num'>Fiche " + b.num + "</span>" +
+        "<span class='detail-spec'>" + esc(b.specialite) + "</span></div>" +
+        "<h2>" + esc(b.anomalie) + "</h2>" +
+        "<p class='definition'>" + esc(b.definition) + "</p>" +
+      "</header>" +
+      block("sec-pi", "1 · Première intention / démarche", ul("pi", b.premiere_intention)) +
+      block("sec-cz", "2 · Causes à explorer & signes discriminants", causes) +
+      block("sec-rf", "⚠ Red flags / urgences", ul("rf", b.red_flags)) +
+      block("sec-cat", "Conduite à tenir (points clés)", ul("cat", b.conduite));
+    renderList();
+    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    d.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function block(cls, title, html) {
+    return "<section class='blk " + cls + "'><h3>" + esc(title) + "</h3>" + html + "</section>";
+  }
+
+  function buildSpecOptions() {
+    var specs = {};
+    BIO.forEach(function (b) { specs[b.specialite] = (specs[b.specialite] || 0) + 1; });
+    var sel = el("specFilter");
+    Object.keys(specs).sort(function (a, b) { return a.localeCompare(b, "fr"); }).forEach(function (s) {
+      var o = document.createElement("option");
+      o.value = s; o.textContent = s + " (" + specs[s] + ")";
+      sel.appendChild(o);
+    });
+  }
+
+  function init() {
+    if (!BIO.length) { el("anomList").innerHTML = "<li style='padding:14px;color:#888'>Données indisponibles.</li>"; return; }
+    buildSpecOptions();
+    el("search").addEventListener("input", function (e) { state.q = e.target.value; renderList(); });
+    el("specFilter").addEventListener("change", function (e) { state.spec = e.target.value; renderList(); });
+    el("anomList").addEventListener("click", function (e) {
+      var li = e.target.closest(".anom-item");
+      if (li) renderDetail(li.getAttribute("data-id"));
+    });
+    renderList();
+    var m = /#([a-z_]+)/.exec(location.hash);
+    if (m && BIO.find(function (b) { return b.id === m[1]; })) renderDetail(m[1]);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

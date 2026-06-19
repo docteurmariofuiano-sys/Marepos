@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interprétation biologique — Aide au raisonnement (médecin)</title>
+  <meta name="description" content="Module d'aide à l'interprétation d'un résultat de laboratoire anormal (médecin) : causes à explorer, signe discriminant, examens, red flags et conduite à tenir. D'après le Manuel du Généraliste — Dr Mario Fuiano." />
+  <link rel="stylesheet" href="bio-styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🧪</span>
+        <div>
+          <h1>Interprétation biologique</h1>
+          <p class="subtitle">Aide au raisonnement devant un résultat anormal — usage médecin</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <a class="backlink" href="index.html">← Aide au raisonnement clinique</a>
+        <span class="badge-count" id="countBadge"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal-banner" role="note">
+    <strong>Outil destiné au médecin.</strong> Aide à l'interprétation, à <strong>confronter
+    à la clinique</strong> et aux recommandations en vigueur. Ne remplace pas l'avis du
+    biologiste ni le jugement clinique.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher une anomalie (ex. kaliémie, TCA, cytolyse, calcémie…)" autocomplete="off" />
+      </div>
+      <select id="specFilter" class="select" aria-label="Filtrer par domaine">
+        <option value="">Tous les domaines</option>
+      </select>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="sidebar"><ul class="anom-list" id="anomList"></ul>
+      <p class="no-result" id="noResult" hidden>Aucune anomalie ne correspond.</p>
+    </aside>
+    <section class="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <h2>Choisissez une anomalie biologique</h2>
+          <p>Sélectionnez un résultat anormal à gauche : l'outil affiche les <strong>causes à
+            explorer</strong>, le <strong>signe discriminant</strong>, les <strong>examens</strong> de
+            seconde intention, les <strong>red flags</strong> et la <strong>conduite à tenir</strong>.</p>
+        </div>
+      </div>
+      <article class="anom-detail" id="detail" hidden></article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Source : Manuel du Généraliste — fiches biologiques (43-63), Dr Mario Fuiano.
+      Aide au raisonnement, validation médicale obligatoire.</p>
+  </footer>
+
+  <script src="data/bio-kb.js"></script>
+  <script src="bio.js"></script>
+</body>
+</html>
