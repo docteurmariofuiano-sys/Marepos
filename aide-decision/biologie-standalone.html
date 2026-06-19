@@ -797,6 +797,37 @@ window.BIOKB = [
     ],
     red_flags: ["Neutropénie et monocytopénie → infections (parfois atypiques / mycobactéries) : vigilance en cas de fièvre", "Cytopénies profondes (anémie, thrombopénie) symptomatiques", "Splénomégalie volumineuse"],
     conduite: ["Évoquer devant splénomégalie + pancytopénie avec MONOCYTOPÉNIE et tricholeucocytes circulants.", "Confirmer : immunophénotype (CD103/CD25/CD11c/annexine A1), TRAP, BOM (myélofibrose, moelle souvent inaspirable), mutation BRAF V600E.", "Distinguer du lymphome splénique de la zone marginale (CD103−, annexine A1−).", "Prise en charge spécialisée : analogues des purines (cladribine, pentostatine) ; abstention si asymptomatique."]
+  },
+  {
+    id: "lmc", num: 76, anomalie: "Leucémie myéloïde chronique (LMC)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique lié à la fusion BCR-ABL (chromosome Philadelphie, t(9;22)). Splénomégalie + hyperleucocytose avec myélémie. Évolution possible en 3 phases (chronique → accélérée → transformation aiguë). Incidence 1-2/100 000/an, âge médian 30-50 ans, sex-ratio H/F ≈ 1,1-1,2.",
+    premiere_intention: ["Hémogramme : hyperleucocytose franche, MYÉLÉMIE marquée (toutes les formes granuleuses), basophilie ± éosinophilie, ± thrombocytose", "Myélogramme : moelle très riche, prédominance granuleuse SANS blocage de maturation, mégacaryocytes nombreux et petits", "Caryotype : chromosome Philadelphie t(9;22) ; biologie moléculaire BCR-ABL (RT-PCR)", "Biochimie : hyperuricémie, LDH ↑, vitamine B12 ↑"],
+    causes: [
+      { cause: "Leucémie myéloïde chronique", signe: "myélémie + basophilie, splénomégalie, BCR-ABL / Ph1 positif", examens: ["Caryotype (Ph1)", "BCR-ABL (RT-PCR)"] },
+      { cause: "Réaction leucémoïde", signe: "infection/inflammation, pas de basophilie, BCR-ABL négatif", examens: ["CRP, contexte", "BCR-ABL négatif"] },
+      { cause: "Autres SMP (Ph1 négatifs)", signe: "polyglobulie de Vaquez, thrombocytémie essentielle, myélofibrose primitive", examens: ["JAK2 V617F, CALR, MPL", "BOM"] }
+    ],
+    tableaux: [
+      { titre: "Hémogramme évocateur",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Leucocytes", "Hyperleucocytose franche"],
+          ["Myélémie", "+++ (myélocytes, métamyélocytes, PNN…)"],
+          ["Basophiles / éosinophiles", "Basophilie ± éosinophilie"],
+          ["Plaquettes", "± thrombocytose"],
+          ["Biochimie", "Hyperuricémie, LDH ↑, vitamine B12 ↑"]
+        ] },
+      { titre: "Phases évolutives",
+        entetes: ["Phase", "Caractéristiques"],
+        lignes: [
+          ["Chronique", "Forme habituelle au diagnostic, bonne réponse au traitement"],
+          ["Accélérée", "Blastes 10-19 %, basophilie ≥ 20 %, cytopénies/thrombocytose réfractaires"],
+          ["Transformation aiguë (blastique)", "Blastes ≥ 20 % : leucémie aiguë (myéloïde ou lymphoïde)"]
+        ] }
+    ],
+    red_flags: ["Hyperleucocytose majeure avec leucostase (troubles neuro/visuels, priapisme, détresse respiratoire) → urgence", "Phase accélérée / transformation blastique (blastes en augmentation, basophilie, cytopénies)", "Syndrome de lyse (hyperuricémie) en début de traitement"],
+    conduite: ["Diagnostic = SMP avec myélémie + chromosome Philadelphie / BCR-ABL.", "Confirmer par caryotype (Ph1) et RT-PCR BCR-ABL (référence pour le suivi de la réponse moléculaire).", "Traitement par inhibiteurs de tyrosine kinase (imatinib et suivants) — pronostic transformé.", "Surveiller la réponse moléculaire ; rechercher un passage en phase accélérée/blastique."]
   }
 ];
 

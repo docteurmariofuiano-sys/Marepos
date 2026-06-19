@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **33 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **34 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -67,8 +67,9 @@ ADAMTS13, vérotoxines), **TIH** (thrombopénie induite par l'héparine, type 1
 vs type 2), **syndrome mononucléosique** (orientation EBV / CMV / VIH /
 toxoplasmose), **LLC** (score de Matutes, facteurs pronostiques), **maladie de
 Waldenström** (IgM monoclonale, hyperviscosité), **myélome multiple**
-(CRAB, composant monoclonal, pronostic) et **leucémie à tricholeucocytes**
-(monocytopénie, immunophénotype, BRAF). Le bloc hématologie s'appuie sur
+(CRAB, composant monoclonal, pronostic), **leucémie à tricholeucocytes**
+(monocytopénie, immunophénotype, BRAF) et **LMC** (myélémie, chromosome
+Philadelphie / BCR-ABL). Le bloc hématologie s'appuie sur
 du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
 schéma du module.
 
