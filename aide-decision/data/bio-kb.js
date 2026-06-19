@@ -1013,5 +1013,43 @@ window.BIOKB = [
     ],
     red_flags: ["Syndrome hémorragique actif avec anomalie du bilan → urgence", "CIVD (TCA ↑ + TP ↓ + thrombopénie + D-dimères ↑) : contexte grave (sepsis, obstétrique, cancer)", "Surdosage en AVK (INR élevé) avec saignement", "Anticoagulant circulant lupique : risque paradoxal THROMBOTIQUE (SAPL), pas hémorragique"],
     conduite: ["Toujours éliminer une cause préanalytique avant d'interpréter.", "TCA allongé isolé : le test de correction (Rosner) distingue déficit (corrige) et anticoagulant circulant (ne corrige pas).", "Un allongement isolé du TCA sans saignement, ne corrigeant pas, évoque un anticoagulant lupique (risque thrombotique).", "Confronter systématiquement au traitement anticoagulant et au contexte (foie, sepsis)."]
+  },
+  {
+    id: "hemophilie_a", num: 86, anomalie: "Hémophilie A (déficit en facteur VIII)",
+    specialite: "Hémostase",
+    definition: "Déficit constitutionnel en facteur VIII, transmission récessive liée à l'X (1/5000 garçons ; 1/3 de néo-mutations, sans antécédent familial). Saignements de type hématome / hémarthrose. Sévérité selon le taux de facteur VIII.",
+    premiere_intention: ["Interrogatoire +++ : antécédents familiaux (liés à l'X), symptomatologie hémorragique (hémarthroses, hématomes)", "TS normal (différencie de la maladie de Willebrand) ; allongement ISOLÉ du TCA (et du TCK)", "Test de correction : indice de Rosner < 12 (corrige) ; dosage du facteur VIII (déficit isolé)", "Rechercher un anticorps anti-VIII (dilutions linéaires après incubation 2 h à 37 °C) ; biologie moléculaire"],
+    causes: [
+      { cause: "Hémophilie A (déficit FVIII)", signe: "TCA allongé isolé, Rosner < 12, facteur VIII bas isolé, TS normal", examens: ["Dosage du facteur VIII", "TCA, indice de Rosner"] },
+      { cause: "Diagnostic différentiel", signe: "maladie de Willebrand (TS souvent allongé, vWF bas), hémophilie B (déficit IX), anticoagulant circulant (Rosner > 15)", examens: ["vWF:Ag / vWF:RCo, facteur IX", "Test de correction"] },
+      { cause: "Femme conductrice", signe: "FVIII/vWF:Ag < 0,8 (80 %), FVIII < 50 % (30 %)", examens: ["Facteur VIII, vWF:Ag", "Biologie moléculaire (certitude)"] }
+    ],
+    tableaux: [
+      { titre: "Classification (taux de facteur VIII)",
+        entetes: ["Forme", "Facteur VIII"],
+        lignes: [
+          ["Sévère", "< 1 %"],
+          ["Modérée", "1-5 %"],
+          ["Mineure", "5-50 %"]
+        ] },
+      { titre: "Diagnostic prénatal (formes sévères)",
+        entetes: ["Étape", "Terme / prélèvement"],
+        lignes: [
+          ["Diagnostic du sexe", "10 SA (trophoblaste)"],
+          ["Analyse moléculaire", "14 SA (cellules amniotiques)"],
+          ["Dosage du facteur VIII", "18 SA (sang de cordon)"]
+        ] },
+      { titre: "Bilan d'hémostase",
+        entetes: ["Test", "Résultat"],
+        lignes: [
+          ["Temps de saignement (TS)", "Normal (≠ maladie de Willebrand)"],
+          ["TCA (et TCK)", "Allongement isolé"],
+          ["Indice de Rosner", "< 12 (corrige → déficit)"],
+          ["Facteur VIII", "Déficit isolé (augmente en cas d'inflammation)"],
+          ["Anticorps anti-VIII", "Absents (dilutions linéaires après 2 h à 37 °C)"]
+        ] }
+    ],
+    red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FVIII (inhibiteur, 15-30 %) → inefficacité du traitement substitutif", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
+    conduite: ["Diagnostic : TCA allongé isolé qui corrige (Rosner < 12) + déficit isolé en FVIII ; TS normal écarte une maladie de Willebrand.", "Le FVIII augmente avec l'inflammation (peut masquer une forme mineure) ; sensibilité du TCA faible et variable selon les réactifs.", "Traitement substitutif par facteur VIII ; recherche systématique d'anticorps anti-FVIII lors des transfusions.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
   }
 ];
