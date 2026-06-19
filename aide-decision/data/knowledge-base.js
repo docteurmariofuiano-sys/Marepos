@@ -3806,22 +3806,38 @@ window.KB = {
     questions: [
       { id: "ot_douleur", label: "Otalgie", type: "boolean", question: "L'oreille est-elle douloureuse (ou l'enfant se touche l'oreille, pleure, a de la fièvre) ?" },
       { id: "ot_ecoulement", label: "Otorrhée", type: "boolean", question: "Y a-t-il un écoulement de l'oreille ?" },
+      { id: "ot_baignade", label: "Otite externe", type: "boolean", question: "La douleur est-elle déclenchée en tirant le pavillon/appuyant sur le tragus, après baignade ou manipulation du conduit ?" },
+      { id: "ot_hypoacousie", label: "Hypoacousie sans douleur", type: "boolean", question: "Y a-t-il une baisse d'audition ou une sensation d'oreille bouchée SANS douleur ni fièvre (enfant inattentif) ?" },
+      { id: "ot_otoscopie_normale", label: "Otalgie à otoscopie normale", type: "boolean", question: "L'oreille semble-t-elle normale à l'examen alors qu'elle fait mal (douleur projetée) ?" },
+      { id: "ot_vesicules", label: "Zona auriculaire", type: "boolean", question: "Y a-t-il des vésicules dans/autour de l'oreille, surtout si la moitié du visage est paralysée ?" },
       { id: "ot_complication", label: "Mastoïdite", type: "boolean", question: "Y a-t-il un gonflement rouge et douloureux derrière l'oreille, ou un enfant très abattu ?" }
     ],
     red_flags: [
       { id: "ot_rf_mastoidite", niveau: 2, when: { q: "ot_complication", eq: true },
-        message_medecin: "Tuméfaction rétro-auriculaire / signes généraux : mastoïdite → avis ORL urgent.",
-        message_patient: "Ces signes nécessitent un avis médical rapide." }
+        message_medecin: "Tuméfaction rétro-auriculaire (décollement du pavillon) / signes généraux : mastoïdite → avis ORL urgent.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." },
+      { id: "ot_rf_ramsayhunt", niveau: 2, when: { q: "ot_vesicules", eq: true },
+        message_medecin: "Vésicules de la zone de Ramsay-Hunt ± paralysie faciale périphérique : zona auriculaire (VII bis) → antiviral précoce + corticothérapie, avis ORL ; risque de séquelles auditives/faciales.",
+        message_patient: "Des vésicules dans l'oreille avec une paralysie du visage nécessitent une prise en charge rapide." },
+      { id: "ot_rf_projetee", niveau: 1, when: { q: "ot_otoscopie_normale", eq: true },
+        message_medecin: "Otalgie à otoscopie normale = douleur projetée : examiner dents/ATM, pharynx (angine), rachis cervical ; chez un fumeur/buveur > 50 ans, une otalgie persistante doit faire éliminer un cancer ORL (examen pharyngolaryngé).",
+        message_patient: "Une douleur d'oreille avec un examen normal peut venir d'ailleurs (dents, gorge) et mérite un examen complet." }
     ],
     diagnostics_differentiels: [
       { id: "ot_oma", diagnostic: "Otite moyenne aiguë", arguments: [{ label: "otalgie fébrile", w: 3, when: { q: "ot_douleur", eq: true } }],
-        examens_a_discuter: ["Otoscopie (tympan bombé/rouge)", "Antibiothérapie selon âge et critères"] },
-      { id: "ot_externe", diagnostic: "Otite externe", arguments: [{ label: "écoulement + douleur à la traction", w: 2, when: { q: "ot_ecoulement", eq: true } }],
-        examens_a_discuter: ["Otoscopie", "Traitement local"] },
+        examens_a_discuter: ["Otoscopie : tympan congestif ET bombé (ou perforé/otorrhée) = OMA purulente", "Antibiothérapie d'emblée si < 2 ans, otorrhée, ou symptômes intenses ; sinon antalgiques + réévaluation à 48-72 h"] },
+      { id: "ot_externe", diagnostic: "Otite externe", arguments: [{ label: "douleur à la traction du pavillon / tragus", w: 3, when: { q: "ot_baignade", eq: true } }, { label: "écoulement", w: 1, when: { q: "ot_ecoulement", eq: true } }],
+        examens_a_discuter: ["Otoscopie (conduit inflammatoire, tympan normal)", "Traitement local antibio-corticoïde, éviction de l'eau ; antifongique si otomycose"] },
+      { id: "ot_osm", diagnostic: "Otite séreuse (OSM)", arguments: [{ label: "hypoacousie / oreille bouchée sans douleur", w: 3, when: { q: "ot_hypoacousie", eq: true } }],
+        examens_a_discuter: ["Otoscopie (tympan rétracté, épanchement rétrotympanique, niveau)", "Audiométrie/tympanométrie ; avis ORL si persistance > 3 mois ou retentissement (langage) ; chez l'adulte unilatérale : examiner le cavum"] },
+      { id: "ot_projetee", diagnostic: "Otalgie projetée (otoscopie normale)", arguments: [{ label: "douleur sans anomalie otoscopique", w: 3, when: { q: "ot_otoscopie_normale", eq: true } }],
+        examens_a_discuter: ["Examen dentaire/ATM, pharynx, rachis cervical", "Chez le fumeur > 50 ans : nasofibroscopie (éliminer un cancer ORL)"] },
+      { id: "ot_zona", diagnostic: "Zona auriculaire (Ramsay-Hunt)", arguments: [{ label: "vésicules ± paralysie faciale", w: 3, when: { q: "ot_vesicules", eq: true } }],
+        examens_a_discuter: ["Antiviral précoce + corticoïde, avis ORL"] },
       { id: "ot_mastoidite", diagnostic: "Mastoïdite", arguments: [{ label: "tuméfaction rétro-auriculaire", w: 3, when: { q: "ot_complication", eq: true } }],
         examens_a_discuter: ["Avis ORL, imagerie"] }
     ],
-    examens_clinique: ["Otoscopie des deux tympans", "Température", "Recherche d'une complication (mastoïdite)"]
+    examens_clinique: ["Otoscopie des deux tympans (congestion, bombement, rétraction, épanchement, perforation)", "Manœuvre de traction du pavillon / pression du tragus (otite externe)", "Température", "Si otoscopie normale : examen dentaire, pharyngé et cervical (otalgie projetée)", "Recherche d'une complication (mastoïdite, paralysie faciale)"]
   },
 
   // -------------------------------------------------------------------------
@@ -4570,20 +4586,28 @@ window.KB = {
       { id: "cj_douleur", label: "Signes de gravité", type: "boolean", question: "Avez-vous une douleur importante, une baisse de vision, ou une forte sensibilité à la lumière ?" },
       { id: "cj_lentilles", label: "Port de lentilles", type: "boolean", question: "Portez-vous des lentilles de contact ?" },
       { id: "cj_secretions", label: "Conjonctivite infectieuse", type: "boolean", question: "Avez-vous des sécrétions (yeux collés le matin), des deux yeux, sans baisse de vision ?" },
-      { id: "cj_allergie", label: "Conjonctivite allergique", type: "boolean", question: "Y a-t-il des démangeaisons, un contexte allergique, des deux yeux ?" }
+      { id: "cj_allergie", label: "Conjonctivite allergique", type: "boolean", question: "Y a-t-il des démangeaisons, un contexte allergique, des deux yeux ?" },
+      { id: "cj_purulent", label: "Sécrétions purulentes", type: "boolean", question: "Les sécrétions sont-elles franchement purulentes (jaunes/vertes, abondantes) ?" },
+      { id: "cj_viral", label: "Contexte viral", type: "boolean", question: "Y a-t-il un rhume/contage récent, des sécrétions plutôt claires, un œil très rouge, parfois un ganglion devant l'oreille (très contagieux) ?" },
+      { id: "cj_nourrisson", label: "Nouveau-né", type: "boolean", question: "S'agit-il d'un nouveau-né (moins de 28 jours) ?" }
     ],
     red_flags: [
       { id: "cj_rf_grave", niveau: 3, when: { any: [{ q: "cj_douleur", eq: true }, { q: "cj_lentilles", eq: true }] },
-        message_medecin: "Œil rouge douloureux / baisse de vision / port de lentilles : ce n'est pas une simple conjonctivite (kératite, uvéite, glaucome) → avis ophtalmologique urgent.",
-        message_patient: "Ces signes nécessitent une évaluation ophtalmologique urgente." }
+        message_medecin: "Œil rouge douloureux / baisse de vision / photophobie / port de lentilles : ce n'est pas une simple conjonctivite (kératite, abcès de cornée sous lentilles, uvéite, glaucome aigu) → avis ophtalmologique urgent.",
+        message_patient: "Ces signes nécessitent une évaluation ophtalmologique urgente." },
+      { id: "cj_rf_neonat", niveau: 3, when: { q: "cj_nourrisson", eq: true },
+        message_medecin: "Conjonctivite du nouveau-né (ophtalmie néonatale) : urgence — gonocoque (purulence majeure précoce, risque de perforation) ou Chlamydia → prélèvements et traitement spécifique en urgence, avis ophtalmologique/pédiatrique.",
+        message_patient: "Un œil rouge/qui coule chez un nouveau-né nécessite une consultation en urgence." }
     ],
     diagnostics_differentiels: [
-      { id: "cj_infectieuse", diagnostic: "Conjonctivite infectieuse", arguments: [{ label: "sécrétions, yeux collés", w: 3, when: { q: "cj_secretions", eq: true } }],
-        examens_a_discuter: ["Hygiène, lavage", "Traitement local"] },
+      { id: "cj_bacterienne", diagnostic: "Conjonctivite bactérienne", arguments: [{ label: "sécrétions purulentes, yeux collés", w: 3, when: { q: "cj_purulent", eq: true } }, { label: "sécrétions, yeux collés", w: 1, when: { q: "cj_secretions", eq: true } }],
+        examens_a_discuter: ["Hygiène, lavage au sérum physiologique", "Le plus souvent spontanément résolutive ; collyre antibiotique si purulente/traînante ou terrain à risque"] },
+      { id: "cj_virale", diagnostic: "Conjonctivite virale (adénovirus)", arguments: [{ label: "contexte viral, sécrétions claires, ADP prétragienne", w: 3, when: { q: "cj_viral", eq: true } }, { label: "sécrétions, yeux collés", w: 1, when: { q: "cj_secretions", eq: true } }],
+        examens_a_discuter: ["TRÈS contagieuse : lavage des mains, ne pas partager serviettes, éviction", "Traitement symptomatique (sérum physiologique) ; pas d'antibiotique ; consulter si baisse de vision (kératite)"] },
       { id: "cj_allergique", diagnostic: "Conjonctivite allergique", arguments: [{ label: "démangeaisons, contexte allergique", w: 3, when: { q: "cj_allergie", eq: true } }],
-        examens_a_discuter: ["Éviction, antihistaminiques / collyre"] }
+        examens_a_discuter: ["Éviction, antihistaminiques / collyre antiallergique"] }
     ],
-    examens_clinique: ["Acuité visuelle", "Examen à la fluorescéine si doute", "Examen des pupilles"]
+    examens_clinique: ["Acuité visuelle (toute baisse = signe d'alerte)", "Examen à la fluorescéine si doute (ulcère/kératite)", "Examen des pupilles, recherche d'un cercle périkératique (sclérite/uvéite/glaucome)", "Palpation d'une adénopathie prétragienne (oriente vers l'origine virale)"]
   },
 
   // -------------------------------------------------------------------------
@@ -5082,18 +5106,28 @@ window.KB = {
       { id: "as2_triade", label: "Triade évocatrice", type: "boolean", question: "Ronflez-vous fort, avec des pauses respiratoires constatées et une somnolence excessive en journée ?" },
       { id: "as2_somnolence_danger", label: "Somnolence dangereuse", type: "boolean", question: "La somnolence est-elle dangereuse (endormissements au volant, accidents évités de justesse) ?" },
       { id: "as2_comorbid", label: "Comorbidités", type: "boolean", question: "Avez-vous une HTA résistante, un diabète, ou une maladie cardiaque ?" },
-      { id: "as2_morpho", label: "Morphologie", type: "boolean", question: "Êtes-vous en surpoids, avec un cou large ?" }
+      { id: "as2_morpho", label: "Morphologie", type: "boolean", question: "Êtes-vous en surpoids, avec un cou large ?" },
+      { id: "as2_nocturnes", label: "Signes nocturnes/matinaux", type: "boolean", question: "Avez-vous un sommeil non réparateur, des réveils en sursaut/étouffement, des levers pour uriner la nuit, ou des maux de tête au réveil ?" },
+      { id: "as2_conducteur", label: "Conducteur professionnel", type: "boolean", question: "Conduisez-vous pour votre travail (poids lourd, transport, VTC) ou utilisez-vous des machines dangereuses ?" },
+      { id: "as2_autre_cause", label: "Autre cause de somnolence", type: "boolean", question: "Votre somnolence peut-elle s'expliquer autrement (manque de sommeil, travail de nuit, dépression, médicaments sédatifs, alcool) ?" }
     ],
     red_flags: [
       { id: "as2_rf_danger", niveau: 2, when: { q: "as2_somnolence_danger", eq: true },
         message_medecin: "Somnolence dangereuse (conduite) : conseils de prévention, dépistage rapide, éviter la conduite.",
-        message_patient: "Une somnolence dangereuse au volant nécessite un avis médical rapide ; évitez de conduire." }
+        message_patient: "Une somnolence dangereuse au volant nécessite un avis médical rapide ; évitez de conduire." },
+      { id: "as2_rf_conducteur", niveau: 2, when: { all: [{ q: "as2_conducteur", eq: true }, { any: [{ q: "as2_triade", eq: true }, { q: "as2_somnolence_danger", eq: true }] }] },
+        message_medecin: "SAOS suspecté chez un conducteur professionnel : enjeu d'aptitude (arrêté permis de conduire) — orienter vers un diagnostic et un traitement avant reprise de la conduite professionnelle.",
+        message_patient: "Pour les conducteurs professionnels, une somnolence avec ronflements doit être évaluée avant de reprendre le volant." }
     ],
     diagnostics_differentiels: [
-      { id: "as2_saos", diagnostic: "Syndrome d'apnées obstructives du sommeil", arguments: [{ label: "ronflements + pauses + somnolence", w: 3, when: { q: "as2_triade", eq: true } }, { label: "morphologie", w: 1, when: { q: "as2_morpho", eq: true } }, { label: "comorbidités CV", w: 1, when: { q: "as2_comorbid", eq: true } }],
-        examens_a_discuter: ["Échelle d'Epworth", "Polygraphie ventilatoire / polysomnographie"] }
+      { id: "as2_saos", diagnostic: "Syndrome d'apnées obstructives du sommeil", arguments: [{ label: "ronflements + pauses + somnolence", w: 3, when: { q: "as2_triade", eq: true } }, { label: "signes nocturnes/matinaux", w: 1, when: { q: "as2_nocturnes", eq: true } }, { label: "morphologie", w: 1, when: { q: "as2_morpho", eq: true } }, { label: "comorbidités CV", w: 1, when: { q: "as2_comorbid", eq: true } }],
+        examens_a_discuter: ["Échelle d'Epworth, questionnaire STOP-BANG", "Polygraphie ventilatoire nocturne / polysomnographie (IAH)", "PPC (CPAP) en 1re intention si SAOS sévère ; orthèse d'avancée mandibulaire / mesures (perte de poids, alcool, position) selon les cas"] },
+      { id: "as2_central", diagnostic: "Apnées centrales (non obstructives)", arguments: [{ label: "comorbidité cardiaque (insuffisance cardiaque)", w: 1, when: { q: "as2_comorbid", eq: true } }],
+        examens_a_discuter: ["Évoquer si insuffisance cardiaque, AVC, opioïdes (respiration de Cheyne-Stokes)", "Polysomnographie (différencie central vs obstructif)"] },
+      { id: "as2_autre_somnolence", diagnostic: "Autre cause de somnolence diurne", arguments: [{ label: "explication alternative (dette de sommeil, dépression, médicaments)", w: 2, when: { q: "as2_autre_cause", eq: true } }],
+        examens_a_discuter: ["Agenda du sommeil ; revue des médicaments sédatifs ; dépistage d'une dépression", "Évoquer une narcolepsie si somnolence sévère sans SAOS (avis spécialisé)"] }
     ],
-    examens_clinique: ["IMC, tour de cou", "Score d'Epworth", "Examen ORL des voies aériennes supérieures", "Pression artérielle"]
+    examens_clinique: ["IMC, tour de cou", "Score d'Epworth, STOP-BANG", "Examen ORL des voies aériennes supérieures (obstacle nasal, rétrognathie, hypertrophie amygdalienne)", "Pression artérielle (rechercher une HTA résistante)"]
   },
 
   // -------------------------------------------------------------------------
