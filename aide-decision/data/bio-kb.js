@@ -2680,5 +2680,61 @@ window.BIOKB = [
     ],
     red_flags: ["Cirrhose (25 %) et carcinome hépatocellulaire (5 %) : dépistage (échographie + AFP / 6 mois, fibroscopie)", "Manifestations extra-hépatiques : cryoglobulinémie mixte (vascularite), glomérulonéphrite membrano-proliférative", "Co-infection VHB/VHA → risque d'hépatite fulminante (le VHC seul n'en donne pas)", "Co-infection VIH-VHC fréquente (~25 % des patients VIH)"],
     conduite: ["Dépistage par sérologie (2 réactifs) → ARN VHC pour distinguer infection active et guérison.", "Ac souvent absents en phase aiguë : devant une hépatite aiguë, rechercher l'ARN VHC.", "Évaluer la fibrose (élastométrie / biopsie), le génotype et la charge virale avant traitement.", "Traitement actuel : antiviraux d'action directe (AAD) ; le schéma IFNα pégylé + ribavirine est l'ancienne référence. Objectif = ARN indétectable (guérison)."]
+  },
+  {
+    id: "vhb", num: 123, anomalie: "Virus de l'hépatite B (VHB) — marqueurs sérologiques",
+    specialite: "Infectiologie",
+    definition: "Virus à ADN transmis par voie sanguine, sexuelle et materno-fœtale. Hépatite aiguë souvent asymptomatique (90 %) ; chronicité (Ag HBs > 6 mois) dans ~10 % (90 % chez le nouveau-né). Risque de cirrhose et de carcinome hépatocellulaire ; rare hépatite fulminante. Bilan de base : Ag HBs, Ac anti-HBs, Ac anti-HBc.",
+    premiere_intention: ["3 marqueurs de base : Ag HBs (présence du virus), Ac anti-HBs (guérison/vaccination), Ac anti-HBc (contact)", "2e intention : Ag HBe / Ac anti-HBe, IgM anti-HBc", "3e intention : ADN VHB (charge virale, réplication)", "Transaminases (ALAT > ASAT) ; TP (> 60 % sauf forme fulminante)"],
+    causes: [
+      { cause: "Marqueurs de contact / guérison", signe: "Ac anti-HBc (contact), Ac anti-HBs (guérison chez l'immunocompétent, persistent ~10 ans) ; Ac anti-HBs isolés = vaccination", examens: ["Ag HBs, Ac anti-HBs, Ac anti-HBc"] },
+      { cause: "Marqueurs de réplication", signe: "Ag HBe (réplication active ; négatif si mutant pré-C), ADN VHB (quantification), Ag pré-S1 (très sensible)", examens: ["Ag HBe, ADN VHB"] },
+      { cause: "Primo-infection vs réactivation", signe: "IgM anti-HBc élevés = primo-infection ; faibles = réactivation / infection ancienne", examens: ["IgM anti-HBc"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs virologiques (signification)",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["Ag HBs", "Présence du VHB dans l'organisme"],
+          ["Ac anti-HBs", "Guérison (immunocompétent) ou vaccination ; persistent ~10 ans"],
+          ["Ac anti-HBc (IgM + IgG)", "Contact avec le VHB"],
+          ["IgM anti-HBc", "Primo-infection (titre élevé) ou réactivation (titre faible)"],
+          ["Ag HBe", "Réplication active (négatif si mutant pré-C)"],
+          ["Ac anti-HBe", "Arrêt de la réplication (sauf mutant pré-C)"],
+          ["Ag pré-S1", "Marqueur très sensible de réplication (même si mutation pré-C/C)"],
+          ["ADN VHB", "Quantification de la réplication virale"]
+        ] },
+      { titre: "Interprétation des profils sérologiques",
+        entetes: ["Profil", "Interprétation"],
+        lignes: [
+          ["Ag HBs isolé (rare)", "Phase précoce d'une hépatite aiguë"],
+          ["Ac anti-HBs isolés", "Sujet vacciné"],
+          ["Ac anti-HBs + Ac anti-HBc", "Sujet guéri"],
+          ["Ac anti-HBc isolés + IgM anti-HBc positif", "Primo-infection"],
+          ["Ac anti-HBc isolés + IgM négatif/faible", "Infection ancienne"],
+          ["Ag HBs + Ac anti-HBc + Ag HBe + IgM anti-HBc", "Primo-infection ou réactivation d'une hépatite chronique"],
+          ["Ag HBs + Ac anti-HBc + Ac anti-HBe + ADN VHB positif", "Phase active d'un mutant pré-C"],
+          ["Ag HBs + Ac anti-HBc + Ac anti-HBe + ADN VHB négatif", "Porteur asymptomatique ou séroconversion « e »"]
+        ] },
+      { titre: "Marqueurs selon la situation clinique",
+        entetes: ["Situation", "Marqueurs"],
+        lignes: [
+          ["Réponse vaccinale (1-2 mois après la dernière dose)", "Titrage des Ac anti-HBs"],
+          ["Dépistage (immunocompétent)", "Ac anti-HBc"],
+          ["Dépistage (immunodéprimé)", "Ag HBs, Ac anti-HBs, Ac anti-HBc"],
+          ["Dépistage (femme enceinte)", "Ag HBs"],
+          ["Hépatite aiguë", "Ag HBs, IgM anti-HBc"],
+          ["Suivi d'une hépatite chronique", "Ag HBs, Ag HBe, Ac anti-HBe"]
+        ] },
+      { titre: "Évolution de l'infection",
+        entetes: ["Forme", "Caractéristiques"],
+        lignes: [
+          ["Hépatite aiguë", "Asymptomatique (90 %) ou fièvre/asthénie/anorexie/ictère ; TP > 60 %"],
+          ["Hépatite chronique (Ag HBs > 6 mois)", "~10 % (90 % chez le nouveau-né, 50 % immunodéprimé) ; porteur asymptomatique / persistante / active ; cirrhose, CHC"],
+          ["Hépatite fulminante", "~0,01 % ; TP < 30 %, encéphalopathie, hypoglycémie, hémorragie, CIVD ; ~80 % de décès → transplantation"]
+        ] }
+    ],
+    red_flags: ["Hépatite fulminante : TP < 30 %, encéphalopathie, hypoglycémie, syndrome hémorragique → urgence (transplantation)", "Chronicité (Ag HBs > 6 mois) : risque de cirrhose et de carcinome hépatocellulaire → surveillance (ADN, échographie, AFP)", "Mutant pré-C : Ag HBe négatif malgré une réplication (ADN VHB positif) → ne pas se fier au seul Ag HBe", "Réactivation sous immunosuppression / chimiothérapie chez un porteur"],
+    conduite: ["Bilan de base : Ag HBs (présence), Ac anti-HBs (guérison/vaccin), Ac anti-HBc (contact) ; ajuster selon la situation.", "Hépatite aiguë : Ag HBs + IgM anti-HBc ; chronique : Ag HBs, Ag HBe, Ac anti-HBe, ADN VHB.", "Attention au mutant pré-C (Ag HBe négatif + ADN VHB positif).", "Prévention : vaccination (obligatoire pour les soignants), dépistage des groupes à risque et de la femme enceinte."]
   }
 ];
