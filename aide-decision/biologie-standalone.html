@@ -224,16 +224,53 @@ window.BIOKB = [
   {
     id: "electrophorese", num: 48, anomalie: "Anomalies de l'électrophorèse des protéines sériques",
     specialite: "Hématologie",
-    definition: "Un pic ÉTROIT dans les gamma = composant monoclonal (immunofixation) ; une élévation polyclonale « en dôme » = réactionnelle.",
-    premiere_intention: ["Devant un pic étroit : immunofixation pour typer le composant monoclonal", "Rechercher des signes de myélome (CRAB)"],
+    definition: "Les techniques haute résolution séparent 7 fractions (préalbumine, albumine, α1, α2, β1, β2, γ). Un pic ÉTROIT dans les gamma = composant monoclonal (immunofixation) ; une élévation polyclonale « en dôme » = réactionnelle.",
+    premiere_intention: ["Lire chaque fraction et reconnaître les profils caractéristiques (inflammation, cirrhose, néphrotique…)", "Devant un pic étroit : immunofixation pour typer le composant monoclonal", "Rechercher des signes de myélome (CRAB)", "Pièges : fibrinogène (migre en β si anticoagulant / tube mal coagulé), pic d'hémoglobine (β ou α2 lié à l'haptoglobine) en cas d'hémolyse"],
     causes: [
       { cause: "Pic monoclonal étroit (gamma)", signe: "myélome, MGUS, Waldenström (IgM)", examens: ["Immunofixation, protéinurie de Bence-Jones, NFS, calcémie, créatinine"] },
       { cause: "Hypergammaglobulinémie polyclonale", signe: "inflammation chronique, hépatopathie, infections, auto-immunité", examens: ["CRP, bilan hépatique, sérologies"] },
       { cause: "Bloc bêta-gamma", signe: "très évocateur de cirrhose", examens: ["Bilan hépatique"] },
       { cause: "Hypogammaglobulinémie", signe: "déficit immunitaire, fuite (néphrotique), myélome à chaînes légères", examens: ["Dosage pondéral des Ig, protéinurie"] }
     ],
-    red_flags: ["Myélome (CRAB : hyperCalcémie, Rénale, Anémie, Bone/os)", "Waldenström symptomatique", "Amylose AL"],
-    conduite: ["Pic monoclonal → immunofixation + recherche des critères de malignité (CRAB)."]
+    tableaux: [
+      { titre: "Les 7 fractions (haute résolution)",
+        entetes: ["Fraction", "Principales protéines"],
+        lignes: [
+          ["Préalbumine", "Préalbumine (transthyrétine)"],
+          ["Albumine", "Albumine"],
+          ["α1-globulines", "α1-antitrypsine, orosomucoïde (α1-glycoprotéine acide)"],
+          ["α2-globulines", "Haptoglobine, α2-macroglobuline, céruléoplasmine"],
+          ["β1-globulines", "Transferrine"],
+          ["β2-globulines", "Complément (C3)"],
+          ["γ-globulines", "Immunoglobulines (IgG, IgA, IgM)"]
+        ] },
+      { titre: "Variations par fraction",
+        entetes: ["Fraction", "Diminution", "Augmentation"],
+        lignes: [
+          ["Protéines totales", "Malnutrition, malabsorption, insuffisance hépatique, fuite (hémorragie, rénale, digestive, cutanée)", "Déshydratation, hypergammaglobulinémie (poly- ou monoclonale)"],
+          ["Albumine", "Insuffisance hépatique, inflammation, fuite, dénutrition, syndrome néphrotique", "Déshydratation, exercice, garrot prolongé, jeûne (3 jours)"],
+          ["α1-globulines", "Insuffisance hépatique, déficit en α1-antitrypsine", "Inflammation (orosomucoïde, α1-antitrypsine)"],
+          ["α2-globulines", "Insuffisance hépatique, hémolyse intravasculaire (haptoglobine)", "Inflammation (haptoglobine, céruléoplasmine), syndrome néphrotique (α2-macroglobuline)"],
+          ["β1 (transferrine)", "Insuffisance hépatique, surcharge en fer, inflammation", "Carence martiale, grossesse (3e trimestre, jusqu'à 2,5N), œstroprogestatifs"],
+          ["β2 (C3)", "Disparition du C3 si sérum prélevé > 24 h avant l'analyse", "Cholestase, inflammation, œstrogènes"],
+          ["γ-globulines", "Déficit primitif, myélome, chimio/immunosuppresseurs, syndrome néphrotique", "Polyclonale (infection, inflammation, hépatopathie, auto-immunité) ; mono-/oligoclonale (myélome)"]
+        ] },
+      { titre: "Profils électrophorétiques caractéristiques",
+        entetes: ["Profil", "Prot. tot.", "Albumine", "α1", "α2", "β", "γ"],
+        lignes: [
+          ["Inflammation aiguë", "—", "↓ ou N", "↑", "↑↑", "—", "↑ ou N"],
+          ["Inflammation chronique", "—", "—", "↑", "↑", "—", "↑"],
+          ["Hépatite grave", "↓ ou N", "↓", "↓", "↓", "↓", "↓"],
+          ["Cirrhose décompensée", "—", "↓↓", "—", "—", "Bloc β-γ", "↑↑"],
+          ["Syndrome néphrotique", "↓↓", "↓↓", "↓", "↑↑", "↓", "↓ ou N"],
+          ["Hypergammaglobulinémie", "N ou ↑", "↓ ou N", "—", "—", "—", "↑↑"],
+          ["Hypo/agammaglobulinémie", "N ou ↓", "—", "—", "—", "—", "↓↓↓"],
+          ["Déficit en α1-antitrypsine", "—", "—", "↓↓", "—", "—", "—"],
+          ["Gammapathie monoclonale", "N ou ↑", "↓ ou N", "—", "—", "—", "Pic étroit"]
+        ] }
+    ],
+    red_flags: ["Myélome (CRAB : hyperCalcémie, Rénale, Anémie, Bone/os)", "Waldenström symptomatique", "Amylose AL", "Bloc β-γ = cirrhose ; hypogammaglobulinémie profonde = déficit immunitaire / myélome à chaînes légères"],
+    conduite: ["Pic monoclonal → immunofixation + recherche des critères de malignité (CRAB).", "Lire le profil global (inflammation, cirrhose avec bloc β-γ, syndrome néphrotique) avant de conclure.", "Attention aux pièges préanalytiques : fibrinogène (β), hémoglobine (hémolyse), disparition du C3 (prélèvement ancien)."]
   },
   {
     id: "hypereosinophilie", num: 49, anomalie: "Hyperéosinophilie",
