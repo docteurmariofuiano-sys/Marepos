@@ -65,10 +65,10 @@ extracorpusculaire), **AHAI** (auto-Ac chauds vs froids), **thrombopénie**
 (aigu vs chronique), **MAT** (PTT / SHU : diagnostic biologique, schizocytes,
 ADAMTS13, vérotoxines), **TIH** (thrombopénie induite par l'héparine, type 1
 vs type 2), **syndrome mononucléosique** (orientation EBV / CMV / VIH /
-toxoplasmose) **LLC** (score de Matutes, facteurs pronostiques) et **maladie de
-Waldenström** (IgM monoclonale, hyperviscosité). Le bloc
-hématologie s'appuie sur du contenu **MémoBio** d'accès libre et des références
-classiques, reformaté au schéma du module.
+toxoplasmose), **LLC** (score de Matutes, facteurs pronostiques) et **maladie de
+Waldenström** (IgM monoclonale, hyperviscosité). Le bloc hématologie s'appuie sur
+du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
+schéma du module.
 
 Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'app
 clinique. Version autonome : `biologie-standalone.html` (cross-liée aux autres
