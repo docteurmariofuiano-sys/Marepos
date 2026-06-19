@@ -1547,6 +1547,74 @@ window.BIOKB = [
     ],
     red_flags: ["Macrosomie fœtale, hydramnios → surveillance obstétricale rapprochée", "Glycémie à jeun d'emblée élevée : évoquer un diabète préexistant (type 2) méconnu", "Mauvais équilibre glycémique : complications materno-fœtales (pré-éclampsie, dystocie, hypoglycémie néonatale)", "O'Sullivan ne POSE PAS le diagnostic (sauf > 2 g/L) : ne pas étiqueter sur ce seul test"],
     conduite: ["Privilégier la stratégie en 1 temps (HGPO 75 g, seuils CNGOF) ; 1 valeur anormale suffit.", "Le test d'O'Sullivan dépiste mais ne diagnostique pas (confirmer par HGPO), sauf glycémie à 1 h > 2 g/L.", "Respecter les conditions du test (≥ 150 g glucides/j les 3 jours avant, jeûne 8-14 h, pas de tabac).", "En cas de diagnostic : autosurveillance, mesures diététiques ± insuline ; surveillance obstétricale et dépistage du diabète en post-partum."]
+  },
+  {
+    id: "insuffisance_renale_chronique", num: 94, anomalie: "Maladie rénale chronique / insuffisance rénale chronique",
+    specialite: "Néphrologie",
+    definition: "Maladie rénale chronique (MRC) = DFG < 60 mL/min/1,73 m² pendant ≥ 3 mois, OU atteinte rénale (histologie, imagerie, marqueurs : protéinurie, hématurie, leucocyturie, microalbuminurie chez le diabétique) > 3 mois quel que soit le DFG. Caractère chronique = irréversible et présent depuis > 3 mois.",
+    premiere_intention: ["Dépistage des sujets à risque : HTA, diabète, âge > 60 ans, histoire familiale, infections urinaires à répétition, toxiques", "Estimer le DFG (Cockcroft-Gault ou MDRD) + marqueurs : protéinurie, hématurie, leucocyturie, microalbuminurie", "Confirmer (interférences : cimétidine, triméthoprime) et éliminer une IRA (fonctionnelle, obstructive, médicamenteuse, GN rapidement progressive, vasculaire)", "Affirmer la chronicité (> 3 mois) : antériorité, anémie normochrome normocytaire arégénérative, hypocalcémie, petits reins"],
+    causes: [
+      { cause: "Néphropathie glomérulaire", signe: "protéinurie abondante, hématurie (cylindres hématiques), HTA", examens: ["Protéinurie/24 h", "PBR"] },
+      { cause: "Néphropathie tubulo-interstitielle", signe: "leucocyturie (cylindres leucocytaires), protéinurie de faible taux", examens: ["Cytologie urinaire", "Imagerie"] },
+      { cause: "Atteinte vasculaire / réno-vasculaire", signe: "HTA, athérome, sténose des artères rénales", examens: ["Écho-Doppler des artères rénales"] },
+      { cause: "Causes fréquentes", signe: "diabète, HTA, polykystose, uropathie", examens: ["Glycémie, échographie rénale"] }
+    ],
+    tableaux: [
+      { titre: "Classification (stades)",
+        entetes: ["Stade", "DFG (mL/min/1,73 m²)", "Définition"],
+        lignes: [
+          ["1", "≥ 90 + marqueurs", "MRC sans insuffisance rénale"],
+          ["2", "60-89 + marqueurs", "MRC (atteinte légère)"],
+          ["3", "30-59", "Insuffisance rénale modérée"],
+          ["4", "15-29", "Insuffisance rénale sévère"],
+          ["5", "< 15", "Insuffisance rénale terminale"]
+        ] },
+      { titre: "Marqueurs d'atteinte rénale (seuils)",
+        entetes: ["Marqueur", "Seuil"],
+        lignes: [
+          ["Protéinurie", "> 300 mg/24 h ou protéinurie/créatininurie > 200 mg/g"],
+          ["Hématurie", "> 10/mm³ (10 000/mL)"],
+          ["Leucocyturie", "> 10/mm³ (10 000/mL)"],
+          ["Microalbuminurie", "20-200 µg/min ; 30-300 mg/24 h ; albuminurie/créatininurie > 2 mg/mmol"],
+          ["Morphologie", "Asymétrie, contours bosselés, petits reins ou gros reins polykystiques, néphrocalcinose, calcul, hydronéphrose"]
+        ] },
+      { titre: "Estimation du DFG",
+        entetes: ["Méthode", "Particularités"],
+        lignes: [
+          ["Cockcroft-Gault", "(140 − âge) × poids × K / créatininémie (µmol/L) ; K = 1,24 (H) / 1,04 (F) ; limite si DFG < 30"],
+          ["MDRD", "Indépendante du poids ; préférable chez le sujet âgé ; ajuster ×0,742 (femme), ×1,21 (sujet africain)"],
+          ["Clairance mesurée (urines 24 h)", "Si > 75 ans, masse musculaire anormale, dénutrition/obésité, doute, suivi de néphrotoxiques"]
+        ] },
+      { titre: "Prise en charge par stade",
+        entetes: ["Stade", "DFG", "Actions"],
+        lignes: [
+          ["1", "≥ 90 + marqueurs", "Diagnostic étiologique ; traiter les comorbidités (diabète, HTA, dyslipidémie, tabac) ; évaluer la progression ; réduire le risque CV"],
+          ["2", "60-89 + marqueurs", "+ néphroprotection : IEC/ARA2 si HTA ou protéinurie, PA < 130/80, hygiène, éviction des néphrotoxiques"],
+          ["3", "30-59", "+ traiter les complications (anémie, phospho-calcique, acidose, nutrition) ; préserver le capital veineux ; vacciner VHB"],
+          ["4", "15-29", "+ préparer la suppléance"],
+          ["5", "< 15", "+ démarrer la suppléance si nécessaire"]
+        ] },
+      { titre: "Anomalies biologiques de l'IRC",
+        entetes: ["Domaine", "Anomalies"],
+        lignes: [
+          ["Azote / créatinine", "Hyperazotémie, hyperuricémie, hypercréatininémie"],
+          ["Phospho-calcique", "Hyperphosphatémie, hypocalcémie (ostéodystrophie rénale)"],
+          ["Hématologie", "Anémie normochrome normocytaire arégénérative (microcytaire si carence martiale)"],
+          ["Acido-basique", "Acidose métabolique à trou anionique augmenté"],
+          ["Protéines", "Hypoprotidémie (↓ β/γ-globulines, ↑ α2-globulines), hypoalbuminémie"],
+          ["Ionogramme", "Hyperkaliémie, hyponatrémie, hypermagnésémie"]
+        ] },
+      { titre: "Ostéodystrophie rénale (physiopathologie)",
+        entetes: ["Mécanisme", "Conséquence"],
+        lignes: [
+          ["Phosphates non filtrés", "Hyperphosphatémie → précipitation phosphocalcique → hypocalcémie"],
+          ["Défaut d'hydroxylation rénale (25-OH-D → calcitriol)", "↓ absorption intestinale du calcium → hypocalcémie"],
+          ["Hypocalcémie", "Hyperparathyroïdie secondaire (PTH ↑)"],
+          ["PTH élevée", "Ostéoclastes → ostéodystrophie ; ↑ réabsorption Ca, ↓ réabsorption des phosphates"]
+        ] }
+    ],
+    red_flags: ["IRA à éliminer en urgence : obstacle, néphrotoxiques (produits de contraste iodés, IEC/ARA2, AINS, aminosides), GN rapidement progressive, cause vasculaire", "Hyperkaliémie menaçante (IRC + IEC/ARA2)", "Anémie sévère (↓ EPO) avec retentissement cardiaque (hypertrophie ventriculaire gauche)", "Sous IEC/ARA2 : créatininémie ↑ > 50 % (sténose bilatérale des artères rénales ?) ou kaliémie > 5,6 mmol/L → réévaluer"],
+    conduite: ["Devant un DFG < 60 : confirmer, éliminer une IRA, affirmer la chronicité (> 3 mois ; antériorité, anémie/hypocalcémie, petits reins sauf diabète/amylose/polykystose).", "Bilan : EPP, glycémie, bandelette + protéinurie/24 h, cytologie urinaire, échographie rénale ; orienter l'étiologie (glomérulaire / tubulo-interstitielle / vasculaire).", "Néphroprotection : IEC/ARA2 (HTA/protéinurie), PA < 130/80, contrôle CV, éviction des néphrotoxiques ; surveiller créatinine et kaliémie.", "Anémie : fer IV si ferritine < 100 µg/L ou CST < 20 %, puis agents stimulant l'érythropoïèse ; préparer la suppléance aux stades avancés."]
   }
 ];
 

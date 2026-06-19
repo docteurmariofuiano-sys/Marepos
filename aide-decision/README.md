@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **51 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **52 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -60,7 +60,8 @@ devant un bilan de coagulation anormal), électrophorèse,
 hyperéosinophilie, inversion de formule, hyperglycémie, diabète de type 1
 (auto-immunité, acidocétose), diabète de type 2 (insulino-résistance, syndrome
 métabolique), diabète gestationnel (HGPO, O'Sullivan), hypercalcémie,
-hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, hyperprolactinémie, GGT,
+hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, maladie rénale chronique
+(DFG, marqueurs, stades), hyperprolactinémie, GGT,
 cytolyse, dyslipidémie, CPK, LDH, l'**immuno-hématologie** (groupage ABO-RH1 :
 Beth-Vincent, Simonin, RH1 ; phénotypes érythrocytaires ABO/Rhésus/Kell/MNSs/
 Kidd/Duffy/Lewis), et un **bloc hématologie** : CAT devant une
