@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lecture intelligente d'un bilan biologique — Aide au médecin</title>
+<meta name="description" content="Coller un bilan biologique brut de laboratoire et obtenir une interprétation médicale structurée : anomalies, syndromes, hiérarchisation, orientation diagnostique, red flags, examens complémentaires et synthèse. Aide au raisonnement, ne remplace pas le jugement clinique." />
+<style>
+:root{
+  --bg:#eef2f6;--surface:#fff;--ink:#1b2733;--soft:#5b6b7b;--line:#e1e8ef;
+  --brand:#6b3fa0;--brand-d:#512f7a;
+  --green:#0d8a4f;--green-bg:#eaf7f0;
+  --orange:#b86b00;--orange-bg:#fff6e8;
+  --red:#d92d20;--red-bg:#fdf0ef;
+  --blue:#1462c6;--blue-bg:#eef4fd;
+  --radius:13px;--shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ---- Header ---- */
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1160px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.brand-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.backlink{color:#fff;font-size:.82rem;text-decoration:none;opacity:.92}
+.backlink:hover{text-decoration:underline}
+.legal-banner{background:#f5f0fb;border-bottom:1px solid #e3d6f3;color:#4a2f70;font-size:.82rem;padding:10px 20px;text-align:center}
+
+.wrap{max-width:1160px;margin:18px auto;padding:0 20px}
+
+/* ---- Input panel ---- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.panel h2{margin:0 0 12px;font-size:1.02rem}
+.ctx-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.ctx-field{display:flex;flex-direction:column;gap:4px}
+.ctx-field label{font-size:.74rem;color:var(--soft);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+.ctx-field input,.ctx-field select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.92rem;background:#fbfcfe;min-width:90px}
+#rawInput{width:100%;min-height:230px;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:.92rem;
+  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;background:#fbfcfe;resize:vertical;line-height:1.45}
+#rawInput:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(107,63,160,.15)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{padding:10px 16px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:.9rem;font-weight:600;cursor:pointer;color:var(--ink);transition:.12s}
+.btn:hover{background:#f4f6f9}
+.btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-d)}
+.btn-ghost{background:transparent}
+
+/* ---- Results ---- */
+#results{margin-top:22px;display:none}
+.section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+.section>h2{margin:0 0 14px;font-size:1.05rem;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.section>h2 .ico{font-size:1.15rem}
+
+/* urgency banner */
+.urg{display:flex;align-items:center;gap:14px;border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;border:1px solid}
+.urg .dot{width:46px;height:46px;border-radius:50%;flex:0 0 46px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.urg-green{background:var(--green-bg);border-color:#bfe6cf;color:#0a5c36}
+.urg-orange{background:var(--orange-bg);border-color:#f3d9a8;color:#8a5200}
+.urg-red{background:var(--red-bg);border-color:#f3c0bb;color:#a01b12}
+.urg .dot.dg{background:var(--green)}.urg .dot.do{background:var(--orange)}.urg .dot.dr{background:var(--red)}
+.urg .dot{color:#fff}
+.urg h3{margin:0 0 3px;font-size:1.05rem}
+.urg p{margin:0;font-size:.9rem}
+
+/* summary stats */
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.stat{flex:1 1 130px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:center;background:#fbfcfe}
+.stat .n{font-size:1.7rem;font-weight:700;line-height:1}
+.stat .l{font-size:.74rem;color:var(--soft);margin-top:5px;text-transform:uppercase;letter-spacing:.02em}
+.stat.major .n{color:var(--red)}.stat.minor .n{color:var(--orange)}.stat.flag .n{color:var(--red)}.stat.tot .n{color:var(--brand)}
+
+/* synthesis */
+.synth{font-size:.96rem;line-height:1.6}
+.synth ul{margin:8px 0 0;padding-left:22px}
+.synth li{margin:3px 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;margin:2px 4px 2px 0}
+.tag-axis{background:var(--blue-bg);color:var(--blue)}
+.reassure{background:var(--green-bg);border-left:4px solid var(--green);padding:10px 14px;border-radius:8px;margin-top:10px}
+.reassure ul{margin:6px 0 0;padding-left:20px}
+
+/* red flags */
+.redflag{background:var(--red-bg);border:1px solid #f3c0bb;border-left:5px solid var(--red);border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.redflag h4{margin:0 0 4px;color:var(--red);font-size:.96rem;display:flex;gap:7px;align-items:center}
+.redflag p{margin:3px 0;font-size:.9rem}
+.redflag .cat{font-weight:600}
+
+/* abnormalities table */
+.tbl-scroll{overflow-x:auto}
+table.anom{width:100%;border-collapse:collapse;font-size:.88rem}
+table.anom th,table.anom td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.anom th{font-size:.74rem;text-transform:uppercase;letter-spacing:.02em;color:var(--soft);background:#fbfcfe;position:sticky;top:0}
+table.anom td.val{font-weight:700;white-space:nowrap}
+.lvl{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.lvl-mineur{background:#eef4fd;color:var(--blue)}
+.lvl-significatif{background:var(--orange-bg);color:var(--orange)}
+.lvl-important{background:#fde9d6;color:#a85200}
+.lvl-urgent{background:var(--red-bg);color:var(--red)}
+.lvl-normal{background:#eef2f6;color:var(--soft)}
+.arrow-up{color:var(--red)}.arrow-down{color:var(--blue)}
+
+/* domains */
+.domain{border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.domain-h{background:#fbfcfe;padding:11px 14px;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.domain-h .badge{font-size:.72rem;font-weight:600;padding:2px 9px;border-radius:999px;background:#eef2f6;color:var(--soft)}
+.domain-h .badge.abn{background:var(--orange-bg);color:var(--orange)}
+.domain-b{padding:12px 14px;font-size:.9rem;border-top:1px solid var(--line)}
+.domain-b .kv{margin:2px 0}
+.domain-b .kv b{display:inline-block;min-width:175px}
+.domain-b .interp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--ink)}
+.domain-b .interp .lab{font-weight:600;color:var(--brand)}
+
+/* diagnostic orientation */
+.dx{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.dx h4{margin:0 0 8px;font-size:.98rem;color:var(--brand-d)}
+.dx .hyp{margin:6px 0;padding:8px 10px;border-radius:8px;background:#fbfcfe;border:1px solid var(--line)}
+.dx .hyp .proba{font-size:.7rem;font-weight:700;padding:1px 7px;border-radius:999px;margin-right:6px}
+.proba-probable{background:#fde9d6;color:#a85200}
+.proba-possible{background:#eef4fd;color:var(--blue)}
+.proba-nepasmanquer{background:var(--red-bg);color:var(--red)}
+.dx ul{margin:5px 0;padding-left:20px}
+.dx .lbl{font-weight:600;font-size:.82rem;color:var(--soft);text-transform:uppercase;letter-spacing:.02em}
+
+/* tests / cat lists */
+.colcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.colcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.colcard h4{margin:0 0 8px;font-size:.88rem}
+.colcard.fast h4{color:var(--red)}.colcard.ctx h4{color:var(--orange)}.colcard.disc h4{color:var(--blue)}
+.colcard ul{margin:0;padding-left:18px;font-size:.87rem}
+.colcard li{margin:3px 0}
+
+/* record summary */
+#recordBox{background:#fbfcfe;border:1px dashed var(--line);border-radius:9px;padding:14px;font-size:.92rem;line-height:1.55;white-space:pre-wrap}
+
+/* missing data */
+.missing{font-size:.88rem}
+.missing .chip{display:inline-block;background:#fff6e8;color:#8a5200;border:1px solid #f3d9a8;padding:3px 10px;border-radius:999px;margin:3px 4px 3px 0;font-size:.8rem}
+
+.disclaimer{font-size:.82rem;color:var(--soft);background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.disclaimer ul{margin:6px 0 0;padding-left:20px}
+
+.foot{max-width:1160px;margin:24px auto;padding:0 20px 40px;font-size:.78rem;color:var(--soft);text-align:center}
+.unparsed{font-size:.82rem;color:var(--soft);margin-top:10px}
+.unparsed code{background:#f4f6f9;padding:1px 5px;border-radius:4px}
+
+@media (max-width:640px){
+  .domain-b .kv b{min-width:auto;display:block}
+}
+@media print{
+  .topbar,.legal-banner,#inputPanel,.btn-row,.no-print{display:none!important}
+  body{background:#fff}
+  .section{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">🧬</span>
+      <div>
+        <h1>Lecture intelligente d'un bilan biologique</h1>
+        <p class="subtitle">Coller un bilan brut → interprétation médicale structurée — usage médecin</p>
+      </div>
+    </div>
+    <div class="brand-meta">
+      <a class="backlink" href="biologie-reference.html">📚 Référentiel des anomalies biologiques</a>
+    </div>
+  </div>
+</header>
+
+<div class="legal-banner" role="note">
+  <strong>Outil d'aide au raisonnement destiné au médecin.</strong> Interprétation à
+  <strong>confronter à la clinique</strong>. Ne remplace ni le jugement médical ni l'avis du biologiste.
+</div>
+
+<div class="wrap">
+  <!-- ============ INPUT ============ -->
+  <div class="panel" id="inputPanel">
+    <h2>1 · Coller le bilan biologique brut</h2>
+    <div class="ctx-row">
+      <div class="ctx-field">
+        <label for="ageInput">Âge</label>
+        <input id="ageInput" type="number" min="0" max="120" placeholder="ans" />
+      </div>
+      <div class="ctx-field">
+        <label for="sexInput">Sexe</label>
+        <select id="sexInput">
+          <option value="">—</option>
+          <option value="H">Homme</option>
+          <option value="F">Femme</option>
+        </select>
+      </div>
+      <div class="ctx-field" style="flex:1 1 220px">
+        <label for="ctxInput">Contexte clinique bref (optionnel)</label>
+        <input id="ctxInput" type="text" placeholder="ex. diabète, HTA, AINS, fièvre, IEC…" />
+      </div>
+    </div>
+    <textarea id="rawInput" placeholder="Collez ici le texte du laboratoire (hémogramme, ionogramme, créatinine/DFG, bilan hépatique, lipides, HbA1c, CRP, ferritine, électrophorèse, urines…).
+
+Les formats français sont reconnus : décimales à la virgule, valeurs entre astérisques *46*, normes entre parenthèses (3,84-5,12), (&lt;5,0), (&gt;90)."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="analyzeBtn">🔬 Analyser le bilan</button>
+      <button class="btn" id="exampleBtn">📋 Exemple de bilan</button>
+      <button class="btn btn-ghost" id="clearBtn">✕ Effacer</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <div id="results"></div>
+</div>
+
+<footer class="foot">
+  <p>Moteur d'aide à l'interprétation biologique — Dr Mario Fuiano. Base de connaissances modulaire,
+  raisonnement prudent orienté médecin. Validation médicale obligatoire.</p>
+</footer>
+
+<script>
+/* ==========================================================================
+ * LECTURE INTELLIGENTE D'UN BILAN BIOLOGIQUE
+ * Application autonome (HTML/CSS/JS) — usage médecin.
+ *
+ * Architecture interne (modules séparés, extensibles) :
+ *   1. KB.biomarkers   — base de connaissances des paramètres (normes, seuils, interprétation)
+ *   2. KB.patterns     — détecteurs de syndromes biologiques (raisonnement)
+ *   3. KB.redFlags     — détecteurs d'urgences / signaux d'alarme
+ *   4. parser          — parseBiologyText / extractLabValues / normalizeBiomarkerName
+ *   5. analyzer        — detectAbnormalities / detectClinicalPatterns / gradeSeverity / synthèses
+ *   6. renderer        — affichage structuré + exports
+ *
+ * Avertissement : aide au raisonnement, ne remplace pas le jugement clinique.
+ * ========================================================================== */
+"use strict";
+
+/* ===========================================================================
+ * UTILITAIRES
+ * ======================================================================== */
+var U = {
+  // supprime accents + minuscule
+  norm: function (s) {
+    return (s || "").toString().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/(?<!\d)\.(?!\d)/g, " ")
+      .replace(/\s+/g, " ").trim();
+  },
+  // "1,59" -> 1.59 ; "*46*" -> 46 ; "< 5" -> 5
+  toNum: function (s) {
+    if (s == null) return null;
+    var m = ("" + s).replace(/\s/g, "").replace(/,/g, ".").match(/-?\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  },
+  esc: function (s) {
+    return (s == null ? "" : "" + s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  },
+  round: function (n, d) { var p = Math.pow(10, d || 0); return Math.round(n * p) / p; },
+  fr: function (n) { return ("" + n).replace(".", ","); }
+};
+
+/* ===========================================================================
+ * 1) BASE DE CONNAISSANCES — BIOMARQUEURS  (data/biomarkers.js)
+ * ---------------------------------------------------------------------------
+ * Chaque entrée :
+ *   key      : identifiant interne
+ *   nom      : libellé affiché
+ *   domaine  : domaine clinique (clé de KB.domains)
+ *   unit     : unité de référence
+ *   names    : synonymes reconnus par le parser (normalisés à la volée)
+ *   ref      : {low, high} normes par défaut (adulte) ; sexRef:{H,F} si dépendant du sexe
+ *   bandsLow / bandsHigh : seuils de gravité [{th, level}] (le plus sévère franchi l'emporte)
+ *   interpret(v, ctx) : texte d'interprétation court orienté médecin
+ *   refKey   : id de fiche du référentiel (biologie-reference.html#...) si disponible
+ * ======================================================================== */
+var KB = {};
+
+KB.domains = {
+  hemato:   { label: "Hématologie", ico: "🩸" },
+  iono:     { label: "Ionogramme / hydro-électrolytique", ico: "🧂" },
+  renal:    { label: "Fonction rénale", ico: "🫘" },
+  glyc:     { label: "Glycémie / diabète", ico: "🍬" },
+  lipid:    { label: "Lipides / risque cardio-vasculaire", ico: "❤️" },
+  foie:     { label: "Bilan hépatique", ico: "🫧" },
+  inflamm:  { label: "Inflammation / infection", ico: "🔥" },
+  phosphoca:{ label: "Métabolisme phosphocalcique", ico: "🦴" },
+  prot:     { label: "Protéines / électrophorèse", ico: "🧫" },
+  urines:   { label: "Urines / albuminurie", ico: "💧" },
+  hemostase:{ label: "Hémostase", ico: "🩹" },
+  thyro:    { label: "Thyroïde", ico: "🦋" },
+  muscle:   { label: "Muscle / cardiaque", ico: "💪" },
+  autre:    { label: "Autres", ico: "🔬" }
+};
+
+KB.biomarkers = {
+  /* ---------- HÉMATOLOGIE ---------- */
+  hb: {
+    nom: "Hémoglobine", domaine: "hemato", unit: "g/dL",
+    names: ["hemoglobine", "hemoglobin", "hb", "hgb"],
+    sexRef: { H: { low: 13, high: 17 }, F: { low: 12, high: 16 } }, ref: { low: 12, high: 17 },
+    bandsLow: [{ th: 7, level: "urgent" }, { th: 8, level: "important" }, { th: 10, level: "significatif" }],
+    bandsHigh: [{ th: 20, level: "important" }, { th: 18.5, level: "significatif" }],
+    refKey: "anemie",
+    interpret: function (v, ctx) {
+      if (v < ctx.refLow) {
+        var t = "Anémie";
+        if (v < 7) t += " profonde — tolérance clinique à évaluer en urgence";
+        else if (v < 10) t += " modérée";
+        else t += " légère";
+        return t + ". Préciser le mécanisme avec VGM et réticulocytes.";
+      }
+      if (v > ctx.refHigh) return "Hémoglobine élevée — vérifier hématocrite ; polyglobulie vraie vs hémoconcentration.";
+      return "Pas d'anémie.";
+    }
+  },
+  hct: {
+    nom: "Hématocrite", domaine: "hemato", unit: "%",
+    names: ["hematocrite", "hematocrit", "hct", "ht"],
+    sexRef: { H: { low: 40, high: 54 }, F: { low: 37, high: 47 } }, ref: { low: 37, high: 54 },
+    interpret: function (v, ctx) {
+      if (v > ctx.refHigh) return "Hématocrite élevé — déshydratation/hémoconcentration ou polyglobulie.";
+      if (v < ctx.refLow) return "Hématocrite bas, concordant avec une anémie.";
+      return "Normal.";
+    }
+  },
+  vgm: {
+    nom: "VGM (volume globulaire moyen)", domaine: "hemato", unit: "fL",
+    names: ["vgm", "volume globulaire moyen", "mcv"], ref: { low: 80, high: 100 },
+    interpret: function (v, ctx) {
+      if (v < 80) return "Microcytose — carence martiale, syndrome inflammatoire, thalassémie.";
+      if (v > 100) return "Macrocytose — carence B12/folates, alcool, hypothyroïdie, hépatopathie, médicaments, myélodysplasie.";
+      return "Normocytose.";
+    }
+  },
+  tcmh: {
+    nom: "TCMH", domaine: "hemato", unit: "pg",
+    names: ["tcmh", "teneur corpusculaire moyenne", "mch"], ref: { low: 27, high: 32 },
+    interpret: function (v) { return v < 27 ? "Hypochromie (oriente vers carence martiale/thalassémie)." : "—"; }
+  },
+  ccmh: {
+    nom: "CCMH", domaine: "hemato", unit: "g/dL",
+    names: ["ccmh", "concentration corpusculaire moyenne", "mchc"], ref: { low: 32, high: 36 },
+    interpret: function () { return "—"; }
+  },
+  reticulocytes: {
+    nom: "Réticulocytes", domaine: "hemato", unit: "G/L",
+    names: ["reticulocytes", "retic"], ref: { low: 25, high: 100 },
+    interpret: function (v) {
+      if (v > 100) return "Réticulocytose — anémie régénérative (hémolyse, hémorragie, régénération).";
+      if (v < 25) return "Réticulocytes bas — anémie arégénérative (origine centrale, carence).";
+      return "—";
+    }
+  },
+  leuco: {
+    nom: "Leucocytes", domaine: "hemato", unit: "G/L",
+    names: ["leucocytes", "globules blancs", "gb", "leucos", "wbc"], ref: { low: 4, high: 10 },
+    bandsHigh: [{ th: 50, level: "important" }, { th: 25, level: "significatif" }],
+    bandsLow: [{ th: 2, level: "important" }],
+    interpret: function (v, ctx) {
+      if (v > ctx.refHigh) return "Hyperleucocytose — préciser sur la formule (PNN = infection/inflammation ; lymphocytes ; cellules anormales).";
+      if (v < ctx.refLow) return "Leucopénie — analyser PNN et lymphocytes.";
+      return "Normal.";
+    }
+  },
+  pnn: {
+    nom: "Polynucléaires neutrophiles (absolus)", domaine: "hemato", unit: "G/L",
+    names: ["pn.neutro#", "pn neutro#", "neutrophiles#", "neutrophiles absolus", "polynucleaires neutrophiles", "pnn", "neutrophiles", "pn neutrophiles"],
+    ref: { low: 1.5, high: 7 },
+    bandsLow: [{ th: 0.5, level: "urgent" }, { th: 1, level: "important" }, { th: 1.5, level: "significatif" }],
+    bandsHigh: [{ th: 20, level: "significatif" }],
+    refKey: "anemie",
+    interpret: function (v, ctx) {
+      if (v < 0.5) return "Neutropénie SÉVÈRE (< 0,5 G/L) — risque infectieux majeur ; fièvre = urgence (neutropénie fébrile).";
+      if (v < 1.5) return "Neutropénie — gravité selon la profondeur ; rechercher cause médicamenteuse, virale, centrale.";
+      if (v > ctx.refHigh) return "Polynucléose neutrophile — infection bactérienne, inflammation, corticoïdes, tabac, stress.";
+      return "Normal.";
+    }
+  },
+  lympho: {
+    nom: "Lymphocytes (absolus)", domaine: "hemato", unit: "G/L",
+    names: ["lympho#", "lymphocytes#", "lymphocytes absolus", "lymphocytes"], ref: { low: 1, high: 4 },
+    bandsHigh: [{ th: 5, level: "significatif" }],
+    interpret: function (v, ctx) {
+      if (v > 5) return "Hyperlymphocytose — si > 5 G/L persistante chez l'adulte > 60 ans : évoquer une LLC (immunophénotypage).";
+      if (v < 1) return "Lymphopénie — virale, corticoïdes, dénutrition, VIH, hémopathie.";
+      return "Normal.";
+    }
+  },
+  mono: {
+    nom: "Monocytes (absolus)", domaine: "hemato", unit: "G/L",
+    names: ["mono#", "monocytes#", "monocytes absolus", "monocytes"], ref: { low: 0.2, high: 1 },
+    interpret: function (v) {
+      if (v > 1) return "Monocytose — réactionnelle si discrète ; si > 1 G/L persistante (> 3 mois) : évoquer LMMC.";
+      return "—";
+    }
+  },
+  eosino: {
+    nom: "Éosinophiles (absolus)", domaine: "hemato", unit: "G/L",
+    names: ["eosino#", "eosinophiles#", "polynucleaires eosinophiles", "eosinophiles", "pne"], ref: { low: 0, high: 0.5 },
+    bandsHigh: [{ th: 1.5, level: "significatif" }],
+    refKey: "hypereosinophilie",
+    interpret: function (v) {
+      if (v > 1.5) return "Hyperéosinophilie marquée — allergie, parasitose, médicament (penser DRESS), vascularite, hémopathie.";
+      if (v > 0.5) return "Éosinophilie — allergie, parasitose, médicament, atopie.";
+      return "—";
+    }
+  },
+  plaq: {
+    nom: "Plaquettes", domaine: "hemato", unit: "G/L",
+    names: ["plaquettes", "platelets", "plt", "thrombocytes", "numeration plaquettaire"], ref: { low: 150, high: 400 },
+    bandsLow: [{ th: 20, level: "urgent" }, { th: 30, level: "urgent" }, { th: 50, level: "important" }, { th: 100, level: "significatif" }, { th: 150, level: "mineur" }],
+    bandsHigh: [{ th: 1000, level: "important" }, { th: 600, level: "significatif" }],
+    refKey: "thrombopenie",
+    interpret: function (v, ctx) {
+      if (v < 30) return "Thrombopénie SÉVÈRE (< 30 G/L) — risque hémorragique ; éliminer une fausse thrombopénie (EDTA) puis cause centrale/périphérique.";
+      if (v < 100) return "Thrombopénie — vérifier sur frottis (agrégats), rechercher médicament, virose, hépatopathie, hypersplénisme, MAT, PTI.";
+      if (v < 150) return "Thrombopénie limite — recontrôler ; éliminer artefact EDTA.";
+      if (v > ctx.refHigh) return "Thrombocytose — réactionnelle (inflammation, carence martiale, splénectomie, hémorragie) le plus souvent ; si persistante, évoquer un syndrome myéloprolifératif.";
+      return "Normal.";
+    }
+  },
+  vs: {
+    nom: "VS (vitesse de sédimentation)", domaine: "inflamm", unit: "mm/h",
+    names: ["vs", "vitesse de sedimentation", "sedimentation"], ref: { low: 0, high: 20 },
+    interpret: function (v) { return v > 20 ? "VS élevée — syndrome inflammatoire (peu spécifique) ; coupler à la CRP, penser dysglobulinémie si discordance." : "—"; }
+  },
+
+  /* ---------- IONOGRAMME / NÉPHRO ---------- */
+  na: {
+    nom: "Sodium (natrémie)", domaine: "iono", unit: "mmol/L",
+    names: ["sodium", "natremie", "na+", "na"], ref: { low: 135, high: 145 },
+    bandsLow: [{ th: 120, level: "urgent" }, { th: 125, level: "urgent" }, { th: 130, level: "important" }, { th: 135, level: "significatif" }],
+    bandsHigh: [{ th: 155, level: "urgent" }, { th: 150, level: "important" }, { th: 145, level: "significatif" }],
+    refKey: "hyponatremie",
+    interpret: function (v) {
+      if (v < 125) return "Hyponatrémie SÉVÈRE — risque neurologique ; évaluer symptômes, volémie et osmolalité, correction prudente.";
+      if (v < 135) return "Hyponatrémie — préciser osmolalité et volémie (SIADH, déplétion, surcharge, médicaments).";
+      if (v > 145) return "Hypernatrémie — déficit en eau / défaut d'accès à l'eau ; évaluer l'hydratation.";
+      return "Normal.";
+    }
+  },
+  k: {
+    nom: "Potassium (kaliémie)", domaine: "iono", unit: "mmol/L",
+    names: ["potassium", "kaliemie", "k+", "k"], ref: { low: 3.5, high: 5.0 },
+    bandsLow: [{ th: 2.5, level: "urgent" }, { th: 3.0, level: "important" }, { th: 3.5, level: "significatif" }],
+    bandsHigh: [{ th: 6.0, level: "urgent" }, { th: 5.5, level: "important" }, { th: 5.0, level: "significatif" }],
+    refKey: "hyperkaliemie",
+    interpret: function (v) {
+      if (v >= 6.0) return "Hyperkaliémie SÉVÈRE — ECG immédiat ; éliminer hémolyse du prélèvement, prise en charge urgente.";
+      if (v > 5.0) return "Hyperkaliémie — rechercher IEC/ARA2/spironolactone/AINS, insuffisance rénale, hémolyse de prélèvement ; recontrôler ± ECG.";
+      if (v < 3.0) return "Hypokaliémie marquée — risque rythmique ; ECG, recharge potassique, corriger la cause.";
+      if (v < 3.5) return "Hypokaliémie — diurétiques, pertes digestives, hyperaldostéronisme ; corriger magnésium associé.";
+      return "Normal.";
+    }
+  },
+  cl: {
+    nom: "Chlore (chlorémie)", domaine: "iono", unit: "mmol/L",
+    names: ["chlore", "chloremie", "cl-", "cl"], ref: { low: 98, high: 107 },
+    interpret: function () { return "À interpréter avec le trou anionique et les bicarbonates."; }
+  },
+  hco3: {
+    nom: "Bicarbonates (réserve alcaline)", domaine: "iono", unit: "mmol/L",
+    names: ["bicarbonates", "co2 total", "co2t", "hco3-", "hco3", "reserve alcaline", "rabase"], ref: { low: 22, high: 29 },
+    bandsLow: [{ th: 15, level: "important" }, { th: 22, level: "significatif" }],
+    interpret: function (v) {
+      if (v < 22) return "Bicarbonates bas — acidose métabolique (calculer le trou anionique : acidocétose, lactique, IRC, pertes digestives).";
+      if (v > 29) return "Bicarbonates élevés — alcalose métabolique (vomissements, diurétiques).";
+      return "Normal.";
+    }
+  },
+  mg: {
+    nom: "Magnésium", domaine: "iono", unit: "mmol/L",
+    names: ["magnesium", "mg++", "magnesemie"], ref: { low: 0.7, high: 1.0 },
+    interpret: function (v) { return v < 0.7 ? "Hypomagnésémie — à corriger (entretient hypokaliémie et hypocalcémie réfractaires)." : "—"; }
+  },
+  creat: {
+    nom: "Créatinine", domaine: "renal", unit: "µmol/L",
+    names: ["creatinine", "creatininemie", "creat"],
+    sexRef: { H: { low: 62, high: 106 }, F: { low: 44, high: 80 } }, ref: { low: 44, high: 106 },
+    bandsHigh: [{ th: 300, level: "important" }, { th: 150, level: "significatif" }],
+    refKey: "insuffisance_renale_chronique",
+    interpret: function (v, ctx) {
+      if (v > ctx.refHigh) return "Créatinine élevée — interpréter via le DFG estimé ; comparer aux valeurs antérieures (aiguë vs chronique).";
+      return "Normale (mais le DFG reste le meilleur reflet de la fonction rénale).";
+    }
+  },
+  dfg: {
+    nom: "DFG estimé (CKD-EPI)", domaine: "renal", unit: "mL/min/1,73m²",
+    names: ["dfg ckd-epi", "dfg ckd epi", "debit de filtration glomerulaire", "dfg", "egfr", "ckd-epi", "ckd epi", "clairance"],
+    ref: { low: 90, high: null }, // "anormal" si < 90 (direction basse)
+    bandsLow: [{ th: 15, level: "urgent" }, { th: 30, level: "important" }, { th: 45, level: "important" }, { th: 60, level: "significatif" }, { th: 90, level: "mineur" }],
+    oneSided: "low",
+    refKey: "insuffisance_renale_chronique",
+    interpret: function (v) {
+      var g = v >= 90 ? "G1" : v >= 60 ? "G2" : v >= 45 ? "G3a" : v >= 30 ? "G3b" : v >= 15 ? "G4" : "G5";
+      if (v >= 90) return "DFG ≥ 90 — normal (stade G1 si atteinte rénale par ailleurs).";
+      if (v >= 60) return "DFG 60-89 (" + g + ") — légèrement diminué ; significatif seulement si atteinte rénale associée (albuminurie, anomalie échographique).";
+      if (v >= 45) return "DFG 45-59 (G3a) — baisse modérée ; confirmer la chronicité (> 3 mois) avant de parler de MRC.";
+      if (v >= 30) return "DFG 30-44 (G3b) — baisse modérée à sévère ; surveillance rapprochée, adaptation des médicaments.";
+      if (v >= 15) return "DFG 15-29 (G4) — insuffisance rénale sévère ; avis néphrologique, préparer la suppléance.";
+      return "DFG < 15 (G5) — insuffisance rénale terminale ; avis néphrologique urgent.";
+    }
+  },
+  uree: {
+    nom: "Urée", domaine: "renal", unit: "mmol/L",
+    names: ["uree", "uree sanguine", "bun"], ref: { low: 2.5, high: 7.5 },
+    interpret: function (v) { return v > 7.5 ? "Urée élevée — insuffisance rénale, déshydratation, régime hyperprotidique, hémorragie digestive (rapport urée/créat)." : "—"; }
+  },
+  acideurique: {
+    nom: "Acide urique (uricémie)", domaine: "iono", unit: "µmol/L",
+    names: ["acide urique", "uricemie", "uree urique"],
+    sexRef: { H: { low: 200, high: 420 }, F: { low: 140, high: 340 } }, ref: { low: 140, high: 420 },
+    interpret: function (v, ctx) { return v > ctx.refHigh ? "Hyperuricémie — goutte (si symptomatique), syndrome métabolique, diurétiques, IRC ; traiter surtout si goutte." : "—"; }
+  },
+
+  /* ---------- PHOSPHOCALCIQUE ---------- */
+  ca: {
+    nom: "Calcium (calcémie)", domaine: "phosphoca", unit: "mmol/L",
+    names: ["calcium", "calcemie", "ca++", "ca2+", "ca total"], ref: { low: 2.20, high: 2.60 },
+    bandsLow: [{ th: 1.9, level: "urgent" }, { th: 2.0, level: "important" }, { th: 2.20, level: "significatif" }],
+    bandsHigh: [{ th: 3.0, level: "urgent" }, { th: 2.75, level: "important" }, { th: 2.60, level: "significatif" }],
+    refKey: "hypercalcemie",
+    interpret: function (v) {
+      if (v > 3.0) return "Hypercalcémie SÉVÈRE (> 3,0) — à contrôler rapidement ; ECG, hydratation, rechercher cause (PTH, myélome, néoplasie).";
+      if (v > 2.60) return "Hypercalcémie — interpréter avec albumine (calcium corrigé) et PTH ; causes : hyperparathyroïdie, néoplasie, myélome.";
+      if (v < 2.20) return "Hypocalcémie — vérifier albumine, magnésium, vitamine D, PTH, créatinine.";
+      return "Normal.";
+    }
+  },
+  phosphore: {
+    nom: "Phosphore (phosphorémie)", domaine: "phosphoca", unit: "mmol/L",
+    names: ["phosphore", "phosphoremie", "phosphates", "po4"], ref: { low: 0.8, high: 1.45 },
+    refKey: "hyperphosphoremie",
+    interpret: function (v) {
+      if (v > 1.45) return "Hyperphosphorémie — fréquente dans l'IRC ; rechercher aussi lyse cellulaire, hypoparathyroïdie.";
+      if (v < 0.8) return "Hypophosphorémie — dénutrition/renutrition, hyperparathyroïdie, alcool.";
+      return "Normal.";
+    }
+  },
+
+  /* ---------- GLYCÉMIE / DIABÈTE ---------- */
+  glycemie: {
+    nom: "Glycémie à jeun", domaine: "glyc", unit: "mmol/L",
+    names: ["glycemie a jeun", "glycemie", "glucose", "gly"], ref: { low: 3.9, high: 5.5 },
+    bandsHigh: [{ th: 16.7, level: "urgent" }, { th: 11, level: "important" }, { th: 7, level: "significatif" }, { th: 5.5, level: "mineur" }],
+    bandsLow: [{ th: 3.0, level: "important" }, { th: 3.9, level: "significatif" }],
+    refKey: "hyperglycemie",
+    // accepte aussi g/L (×~18 -> mmol/L) via normalisation d'unité dans le parser
+    interpret: function (v) {
+      if (v >= 16.7) return "Hyperglycémie majeure (≥ 3 g/L) — rechercher cétose/acidocétose ; bandelette urinaire, gaz, cétonémie.";
+      if (v >= 7) return "Glycémie à jeun ≥ 7 mmol/L (1,26 g/L) — compatible avec un diabète (à confirmer sur 2e dosage ou HbA1c).";
+      if (v >= 5.6) return "Glycémie à jeun 5,6-6,9 mmol/L — hyperglycémie modérée à jeun (prédiabète selon contexte).";
+      if (v < 3.9) return "Hypoglycémie — corréler aux symptômes et au contexte (jeûne, traitement hypoglycémiant).";
+      return "Normale.";
+    }
+  },
+  hba1c: {
+    nom: "HbA1c", domaine: "glyc", unit: "%",
+    names: ["hba1c", "hemoglobine glyquee", "hb glyquee", "a1c"], ref: { low: 4, high: 5.7 },
+    bandsHigh: [{ th: 10, level: "important" }, { th: 8, level: "significatif" }, { th: 6.5, level: "significatif" }, { th: 5.7, level: "mineur" }],
+    oneSided: "high",
+    refKey: "diabete_type_2",
+    interpret: function (v, ctx) {
+      var lim = "";
+      if (ctx && ctx.hba1cUnreliable) lim = " ⚠ Interprétation limitée ici (" + ctx.hba1cUnreliable + ") : préférer glycémie veineuse / fructosamine.";
+      if (v >= 6.5) return "HbA1c ≥ 6,5 % — en faveur d'un diabète (à confirmer selon contexte ; objectif personnalisé si diabète connu)." + lim;
+      if (v >= 5.7) return "HbA1c 5,7-6,4 % — zone de prédiabète / haut risque métabolique." + lim;
+      return "HbA1c < 5,7 % — normale." + lim;
+    }
+  },
+
+  /* ---------- LIPIDES ---------- */
+  choltotal: {
+    nom: "Cholestérol total", domaine: "lipid", unit: "g/L",
+    names: ["cholesterol total", "cholesterol totale", "cht", "cholesterol"], ref: { low: 0, high: 2.0 },
+    oneSided: "high",
+    refKey: "dyslipidemie",
+    interpret: function () { return "À interpréter via LDL, non-HDL et le risque cardio-vasculaire global, pas isolément."; }
+  },
+  ldl: {
+    nom: "LDL-cholestérol", domaine: "lipid", unit: "g/L",
+    names: ["ldl cholesterol", "ldl-cholesterol", "ldlc", "ldl"], ref: { low: 0, high: 1.6 },
+    oneSided: "high",
+    bandsHigh: [{ th: 1.9, level: "significatif" }, { th: 1.6, level: "mineur" }],
+    refKey: "dyslipidemie",
+    interpret: function (v) {
+      return "LDL à " + U.fr(v) + " g/L — la cible dépend du RISQUE CV (≈ < 1,16 risque modéré ; < 1,0 haut risque ; < 0,70 g/L très haut risque). Ne pas conclure « normal » sur la seule norme labo.";
+    }
+  },
+  hdl: {
+    nom: "HDL-cholestérol", domaine: "lipid", unit: "g/L",
+    names: ["hdl cholesterol", "hdl-cholesterol", "hdlc", "hdl"], ref: { low: 0.40, high: 3 },
+    oneSided: "low",
+    refKey: "dyslipidemie",
+    interpret: function (v) {
+      if (v < 0.40) return "HDL bas (< 0,40 g/L) — facteur de risque CV ; fréquent dans le syndrome métabolique.";
+      return "HDL ≥ 0,40 g/L.";
+    }
+  },
+  tg: {
+    nom: "Triglycérides", domaine: "lipid", unit: "g/L",
+    names: ["triglycerides", "tg", "trigly"], ref: { low: 0, high: 1.5 },
+    oneSided: "high",
+    bandsHigh: [{ th: 10, level: "urgent" }, { th: 5, level: "important" }, { th: 2, level: "significatif" }, { th: 1.5, level: "mineur" }],
+    refKey: "dyslipidemie",
+    interpret: function (v) {
+      if (v >= 10) return "Hypertriglycéridémie majeure (≥ 10 g/L) — RISQUE DE PANCRÉATITE ; mesures urgentes (jeûne, fibrate, avis).";
+      if (v >= 5) return "Hypertriglycéridémie importante — risque de pancréatite si majoration ; rechercher diabète, alcool, médicaments.";
+      if (v > 1.5) return "Hypertriglycéridémie — souvent associée au syndrome métabolique ; vérifier le jeûne.";
+      return "Normaux.";
+    }
+  },
+
+  /* ---------- FOIE ---------- */
+  asat: {
+    nom: "ASAT (SGOT)", domaine: "foie", unit: "U/L",
+    names: ["asat", "sgot", "got", "aspartate aminotransferase", "tgo"], ref: { low: 0, high: 40 },
+    oneSided: "high",
+    bandsHigh: [{ th: 400, level: "urgent" }, { th: 200, level: "important" }, { th: 80, level: "significatif" }, { th: 40, level: "mineur" }],
+    refKey: "cytolyse",
+    interpret: function (v, ctx) {
+      var n = v / ctx.refHigh;
+      if (n > 10) return "Cytolyse MAJEURE (> 10 N) — hépatite aiguë (virale, toxique, ischémique) ; TP/facteur V, avis.";
+      if (n > 2) return "Cytolyse — préciser ASAT/ALAT, GGT, contexte (alcool, métabolique, médicaments, viral).";
+      return "Légère élévation.";
+    }
+  },
+  alat: {
+    nom: "ALAT (SGPT)", domaine: "foie", unit: "U/L",
+    names: ["alat", "sgpt", "gpt", "alanine aminotransferase", "tgp"], ref: { low: 0, high: 45 },
+    oneSided: "high",
+    bandsHigh: [{ th: 450, level: "urgent" }, { th: 225, level: "important" }, { th: 90, level: "significatif" }, { th: 45, level: "mineur" }],
+    refKey: "cytolyse",
+    interpret: function (v, ctx) {
+      var n = v / ctx.refHigh;
+      if (n > 10) return "Cytolyse MAJEURE (> 10 N) — hépatite aiguë ; bilan étiologique urgent + TP/facteur V.";
+      if (n > 2) return "Cytolyse à prédominance ALAT — orientation métabolique/virale/médicamenteuse.";
+      return "Légère élévation.";
+    }
+  },
+  ggt: {
+    nom: "Gamma-GT (GGT)", domaine: "foie", unit: "U/L",
+    names: ["gamma gt", "gamma-gt", "ggt", "gammagt", "yggt"],
+    sexRef: { H: { low: 0, high: 55 }, F: { low: 0, high: 38 } }, ref: { low: 0, high: 55 },
+    oneSided: "high",
+    refKey: "ggt",
+    interpret: function (v, ctx) {
+      return "GGT élevées — alcool, stéatopathie métabolique, médicaments inducteurs, cholestase (associer PAL) ; isolées = peu spécifiques.";
+    }
+  },
+  pal: {
+    nom: "Phosphatases alcalines (PAL)", domaine: "foie", unit: "U/L",
+    names: ["phosphatases alcalines", "pal", "pa", "alp"], ref: { low: 40, high: 130 },
+    oneSided: "high",
+    refKey: "cholestase",
+    interpret: function (v) { return v > 130 ? "PAL élevées — cholestase si GGT élevées en parallèle ; origine osseuse possible si GGT normales." : "—"; }
+  },
+  bili: {
+    nom: "Bilirubine totale", domaine: "foie", unit: "µmol/L",
+    names: ["bilirubine totale", "bilirubine", "bili totale", "bilirubinemie"], ref: { low: 0, high: 21 },
+    oneSided: "high",
+    bandsHigh: [{ th: 50, level: "significatif" }, { th: 21, level: "mineur" }],
+    refKey: "cholestase",
+    interpret: function (v) {
+      if (v > 50) return "Hyperbilirubinémie marquée (ictère) — préciser la part conjuguée ; cholestase vs hémolyse vs Gilbert.";
+      if (v > 21) return "Hyperbilirubinémie modérée — si non conjuguée isolée et bilan normal : Gilbert probable.";
+      return "Normale.";
+    }
+  },
+  albumine: {
+    nom: "Albumine", domaine: "prot", unit: "g/L",
+    names: ["albumine", "albuminemie", "alb"], ref: { low: 35, high: 50 },
+    oneSided: "low",
+    refKey: "syndrome_nephrotique",
+    interpret: function (v) {
+      if (v < 35) return "Hypoalbuminémie — dénutrition, inflammation, fuite (rénale/digestive), insuffisance hépatique ; sert au calcul du calcium corrigé.";
+      return "Normale.";
+    }
+  },
+  protides: {
+    nom: "Protéines totales", domaine: "prot", unit: "g/L",
+    names: ["proteines totales", "protides", "proteinemie", "protidemie"], ref: { low: 65, high: 80 },
+    refKey: "electrophorese",
+    interpret: function (v) {
+      if (v > 80) return "Hyperprotidémie — évoquer une dysglobulinémie (faire électrophorèse) ou une hémoconcentration.";
+      if (v < 65) return "Hypoprotidémie — dénutrition, fuite, insuffisance hépatique.";
+      return "Normales.";
+    }
+  },
+  gamma: {
+    nom: "Gammaglobulines", domaine: "prot", unit: "g/L",
+    names: ["gammaglobulines", "gamma globulines", "gammaglobuline"], ref: { low: 6, high: 13 },
+    refKey: "electrophorese",
+    interpret: function (v) {
+      if (v > 13) return "Hypergammaglobulinémie — polyclonale (infection/inflammation chronique, hépatopathie, auto-immunité) ou pic monoclonal : analyser le tracé.";
+      if (v < 6) return "Hypogammaglobulinémie — déficit immunitaire, myélome, fuite ; doser les immunoglobulines pondérales.";
+      return "Normales.";
+    }
+  },
+
+  /* ---------- INFLAMMATION / FER ---------- */
+  crp: {
+    nom: "CRP (protéine C-réactive)", domaine: "inflamm", unit: "mg/L",
+    names: ["crp", "proteine c reactive", "c reactive protein", "c-reactive"], ref: { low: 0, high: 5 },
+    oneSided: "high",
+    bandsHigh: [{ th: 200, level: "important" }, { th: 100, level: "important" }, { th: 50, level: "significatif" }, { th: 5, level: "mineur" }],
+    interpret: function (v) {
+      if (v > 100) return "CRP très élevée (> 100 mg/L) — forte présomption d'infection bactérienne/inflammation marquée ; corréler à la clinique.";
+      if (v > 5) return "CRP élevée — syndrome inflammatoire ; intensité et cinétique à interpréter avec la clinique.";
+      return "Pas de syndrome inflammatoire biologique (CRP).";
+    }
+  },
+  pct: {
+    nom: "Procalcitonine", domaine: "inflamm", unit: "ng/mL",
+    names: ["procalcitonine", "pct"], ref: { low: 0, high: 0.5 },
+    oneSided: "high",
+    interpret: function (v) { return v > 0.5 ? "Procalcitonine élevée — argument pour une infection bactérienne / sepsis selon contexte." : "—"; }
+  },
+  ferritine: {
+    nom: "Ferritine", domaine: "inflamm", unit: "µg/L",
+    names: ["ferritine", "ferritin", "ferritinemie"],
+    sexRef: { H: { low: 30, high: 300 }, F: { low: 15, high: 200 } }, ref: { low: 15, high: 300 },
+    refKey: "anemie_microcytaire",
+    interpret: function (v, ctx) {
+      if (v < ctx.refLow) return "Ferritine basse — carence martiale (spécifique) ; rechercher saignement occulte, malabsorption.";
+      if (v > ctx.refHigh) return "Ferritine élevée — protéine de l'inflammation : interpréter avec la CRP ; aussi surcharge, cytolyse, syndrome métabolique. Ne masque pas une carence (CST/CRP).";
+      return "Normale (n'exclut pas une carence si inflammation : coupler CST).";
+    }
+  },
+  cst: {
+    nom: "Coefficient de saturation de la transferrine", domaine: "inflamm", unit: "%",
+    names: ["coefficient de saturation", "cst", "saturation transferrine", "coeff saturation"], ref: { low: 20, high: 40 },
+    interpret: function (v) {
+      if (v < 20) return "CST bas — en faveur d'une carence martiale (utile quand la ferritine est faussée par l'inflammation).";
+      if (v > 45) return "CST élevé — évoquer une surcharge en fer (hémochromatose) ; demander ferritine.";
+      return "—";
+    }
+  },
+  fer: {
+    nom: "Fer sérique", domaine: "inflamm", unit: "µmol/L",
+    names: ["fer serique", "fer", "sideremie"], ref: { low: 11, high: 30 },
+    interpret: function () { return "Peu fiable isolé (variations nycthémérales) : interpréter avec ferritine + CST."; }
+  },
+
+  /* ---------- CARENCES VITAMINIQUES ---------- */
+  b12: {
+    nom: "Vitamine B12 (cobalamine)", domaine: "hemato", unit: "pg/mL",
+    names: ["vitamine b12", "b12", "cobalamine", "vit b12"], ref: { low: 200, high: 900 },
+    oneSided: "low",
+    interpret: function (v, ctx) {
+      if (v < ctx.refLow) return "Carence en B12 — macrocytose, signes neurologiques ; rechercher Biermer, malabsorption, régime ; doser homocystéine/MMA si zone grise.";
+      if (v < 300) return "B12 en zone grise basse — si symptômes/macrocytose : compléter par homocystéine/MMA ou holo-transcobalamine.";
+      return "Normale.";
+    }
+  },
+  folates: {
+    nom: "Folates (vitamine B9)", domaine: "hemato", unit: "ng/mL",
+    names: ["folates", "vitamine b9", "b9", "acide folique", "folate serique"], ref: { low: 4, high: 20 },
+    oneSided: "low",
+    bandsLow: [{ th: 2, level: "significatif" }, { th: 4, level: "mineur" }],
+    interpret: function (v, ctx) {
+      if (v < ctx.refLow) return "Déficit en folates — carence d'apport/alcool/malabsorption/grossesse ; macrocytose possible ; supplémentation après avoir vérifié la B12.";
+      return "Normaux.";
+    }
+  },
+  vitd: {
+    nom: "Vitamine D (25-OH)", domaine: "phosphoca", unit: "ng/mL",
+    names: ["vitamine d", "25 oh vitamine d", "25-oh", "25ohd", "vit d", "calcidiol"], ref: { low: 30, high: 100 },
+    oneSided: "low",
+    interpret: function (v) {
+      if (v < 10) return "Carence profonde en vitamine D — supplémenter ; rechercher conséquences phosphocalciques.";
+      if (v < 20) return "Carence en vitamine D.";
+      if (v < 30) return "Insuffisance en vitamine D.";
+      return "Suffisante.";
+    }
+  },
+
+  /* ---------- URINES ---------- */
+  rac: {
+    nom: "Rapport albumine/créatinine urinaire (RAC)", domaine: "urines", unit: "mg/g",
+    names: ["rapport albumine creatinine", "rapport albumine/creatinine", "rac", "racu", "albumine/creatinine", "ratio albumine creatinine"],
+    ref: { low: 0, high: 30 }, oneSided: "high",
+    bandsHigh: [{ th: 300, level: "significatif" }, { th: 30, level: "significatif" }],
+    refKey: "insuffisance_renale_chronique",
+    interpret: function (v) {
+      if (v >= 300) return "Albuminurie A3 (RAC ≥ 300 mg/g) — protéinurie significative ; risque rénal et CV élevé, avis néphrologique.";
+      if (v >= 30) return "Albuminurie A2 (RAC 30-300 mg/g) — microalbuminurie ; marqueur de néphropathie débutante et de risque CV. À confirmer (2-3 prélèvements).";
+      return "Albuminurie A1 (< 30 mg/g) — normale ; rassurant sur le plan rénal.";
+    }
+  },
+  proteinurie: {
+    nom: "Protéinurie", domaine: "urines", unit: "g/24h",
+    names: ["proteinurie", "proteinurie des 24h", "proteines urinaires"], ref: { low: 0, high: 0.15 },
+    oneSided: "high",
+    bandsHigh: [{ th: 3, level: "important" }, { th: 0.5, level: "significatif" }, { th: 0.15, level: "mineur" }],
+    refKey: "syndrome_nephrotique",
+    interpret: function (v) {
+      if (v >= 3) return "Protéinurie de rang néphrotique (≥ 3 g/24h) — avec hypoalbuminémie = syndrome néphrotique ; avis néphrologique.";
+      if (v >= 0.15) return "Protéinurie pathologique — caractériser (albumine vs globulines), rechercher cause rénale.";
+      return "Normale.";
+    }
+  },
+
+  /* ---------- THYROÏDE ---------- */
+  tsh: {
+    nom: "TSH", domaine: "thyro", unit: "mUI/L",
+    names: ["tsh", "thyreostimuline", "thyreo-stimuline"], ref: { low: 0.4, high: 4.0 },
+    bandsHigh: [{ th: 10, level: "significatif" }, { th: 4, level: "mineur" }],
+    bandsLow: [{ th: 0.1, level: "significatif" }, { th: 0.4, level: "mineur" }],
+    interpret: function (v) {
+      if (v > 4.0) return "TSH élevée — hypothyroïdie (fruste si T4 normale) ; contrôler T4L ± anticorps.";
+      if (v < 0.4) return "TSH basse — hyperthyroïdie possible ; contrôler T4L/T3L.";
+      return "Normale.";
+    }
+  },
+
+  /* ---------- HÉMOSTASE ---------- */
+  tp: {
+    nom: "TP (taux de prothrombine)", domaine: "hemostase", unit: "%",
+    names: ["taux de prothrombine", "tp", "temps de quick", "quick"], ref: { low: 70, high: 100 },
+    oneSided: "low",
+    bandsLow: [{ th: 40, level: "urgent" }, { th: 50, level: "important" }, { th: 70, level: "significatif" }],
+    refKey: "tp_bas",
+    interpret: function (v) {
+      if (v < 50) return "TP bas (< 50 %) — doser le FACTEUR V : V bas = insuffisance hépatocellulaire ; V normal = carence en vitamine K. Éliminer AVK.";
+      if (v < 70) return "TP abaissé — vérifier AVK, fonction hépatique, vitamine K.";
+      return "Normal.";
+    }
+  },
+  inr: {
+    nom: "INR", domaine: "hemostase", unit: "",
+    names: ["inr"], ref: { low: 0.8, high: 1.2 }, oneSided: "high",
+    bandsHigh: [{ th: 5, level: "urgent" }, { th: 1.2, level: "significatif" }],
+    interpret: function (v, ctx) {
+      if (/avk|anticoag|coumadin|previscan|warfar/.test(ctx.ctxText || "")) return "INR sous AVK — interpréter selon la cible thérapeutique (souvent 2-3).";
+      if (v > 1.2) return "INR allongé (hors AVK) — explorer la coagulation (TP/facteur V), insuffisance hépatique, vitamine K.";
+      return "Normal.";
+    }
+  },
+  ddimeres: {
+    nom: "D-dimères", domaine: "hemostase", unit: "µg/L",
+    names: ["d-dimeres", "d dimeres", "ddimeres", "dimeres"], ref: { low: 0, high: 500 }, oneSided: "high",
+    interpret: function (v) { return v > 500 ? "D-dimères élevés — bonne VPN si négatifs ; élevés = peu spécifiques (thrombose, inflammation, âge, grossesse). Seuil ajusté à l'âge possible." : "—"; }
+  },
+  fibrinogene: {
+    nom: "Fibrinogène", domaine: "hemostase", unit: "g/L",
+    names: ["fibrinogene", "fibrinogenemie"], ref: { low: 2, high: 4 },
+    interpret: function (v) {
+      if (v < 2) return "Fibrinogène bas — CIVD, insuffisance hépatique sévère, fibrinolyse ; danger hémorragique.";
+      if (v > 4) return "Fibrinogène élevé — protéine inflammatoire.";
+      return "Normal.";
+    }
+  },
+
+  /* ---------- MUSCLE / CARDIAQUE / DIVERS ---------- */
+  cpk: {
+    nom: "CPK (créatine-kinase)", domaine: "muscle", unit: "U/L",
+    names: ["cpk", "creatine kinase", "ck", "creatine-kinase"], ref: { low: 0, high: 200 }, oneSided: "high",
+    bandsHigh: [{ th: 5000, level: "urgent" }, { th: 1000, level: "important" }, { th: 200, level: "significatif" }],
+    refKey: "cpk",
+    interpret: function (v) {
+      if (v > 5000) return "CPK très élevées — rhabdomyolyse : surveiller la fonction rénale et la kaliémie, hydrater.";
+      if (v > 200) return "CPK élevées — effort, traumatisme, médicament (statine), myopathie, hypothyroïdie ; recontrôler à distance de l'effort.";
+      return "Normales.";
+    }
+  },
+  ldh: {
+    nom: "LDH", domaine: "autre", unit: "U/L",
+    names: ["ldh", "lacticodeshydrogenase", "lactate deshydrogenase", "lacticodéshydrogénase"], ref: { low: 0, high: 250 }, oneSided: "high",
+    refKey: "ldh",
+    interpret: function (v) { return v > 250 ? "LDH élevée (peu spécifique) — hémolyse, lyse cellulaire, hépatopathie, hémopathie ; signal d'alarme si anémie + thrombopénie (MAT)." : "—"; }
+  },
+  trop: {
+    nom: "Troponine", domaine: "muscle", unit: "ng/L",
+    names: ["troponine", "troponine hs", "trop hs", "tnt", "tni"], ref: { low: 0, high: 14 }, oneSided: "high",
+    refKey: "marqueurs_idm",
+    interpret: function (v) { return v > 14 ? "Troponine élevée — souffrance myocardique : interpréter en cinétique et avec la clinique/ECG (SCA, mais aussi EP, myocardite, IRC)." : "—"; }
+  },
+  bnp: {
+    nom: "BNP / NT-proBNP", domaine: "muscle", unit: "pg/mL",
+    names: ["nt-probnp", "nt probnp", "probnp", "bnp"], ref: { low: 0, high: 125 }, oneSided: "high",
+    refKey: "marqueurs_insuffisance_cardiaque",
+    interpret: function (v) { return v > 125 ? "Peptides natriurétiques élevés — argument pour une insuffisance cardiaque ; seuils variables selon âge/IRC/contexte aigu." : "—"; }
+  },
+  lipase: {
+    nom: "Lipase", domaine: "autre", unit: "U/L",
+    names: ["lipase", "lipasemie"], ref: { low: 0, high: 60 }, oneSided: "high",
+    bandsHigh: [{ th: 180, level: "important" }, { th: 60, level: "significatif" }],
+    refKey: "pancreatite_aigue",
+    interpret: function (v, ctx) { return v > 3 * ctx.refHigh ? "Lipase > 3 N — compatible avec une pancréatite aiguë dans le contexte douloureux." : (v > ctx.refHigh ? "Lipase élevée — à interpréter avec la clinique." : "—"); }
+  }
+};
+
+/* index de recherche : synonyme normalisé -> [keys], trié par longueur décroissante */
+KB._index = (function () {
+  var arr = [];
+  Object.keys(KB.biomarkers).forEach(function (key) {
+    var bm = KB.biomarkers[key];
+    (bm.names || []).forEach(function (n) {
+      var nn = U.norm(n);
+      arr.push({ key: key, syn: nn, len: nn.length });
+    });
+  });
+  arr.sort(function (a, b) { return b.len - a.len; });
+  return arr;
+})();
+
+/* ===========================================================================
+ * 2) PARSER  (parser.js)
+ * ======================================================================== */
+var Parser = {
+  // normalizeBiomarkerName : renvoie la clé biomarqueur pour un libellé donné
+  normalizeBiomarkerName: function (name) {
+    var n = U.norm(name);
+    for (var i = 0; i < KB._index.length; i++) {
+      var e = KB._index[i];
+      var re = new RegExp("(^|[^a-z0-9+])" + e.syn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "([^a-z0-9]|$)");
+      if (re.test(n)) return e.key;
+    }
+    return null;
+  },
+
+  // extrait une plage de référence d'une chaîne : (3,84-5,12) (<5,0) (>90) [12-16]
+  extractRef: function (line) {
+    var m = line.match(/[\(\[]\s*([<>]?\s*[\d.,]+(?:\s*[-–à]\s*[\d.,]+)?)\s*[\)\]]/);
+    if (!m) {
+      // forme "N < 5" ou "Norme: 12 - 16"
+      m = line.match(/(?:norme|valeurs?\s+normales?|ref\.?|n)\s*[:=]?\s*([<>]?\s*[\d.,]+(?:\s*[-–à]\s*[\d.,]+)?)/i);
+      if (!m) return null;
+    }
+    var s = m[1];
+    var range = s.match(/([\d.,]+)\s*[-–à]\s*([\d.,]+)/);
+    if (range) return { low: U.toNum(range[1]), high: U.toNum(range[2]) };
+    var lt = s.match(/<\s*([\d.,]+)/); if (lt) return { low: null, high: U.toNum(lt[1]) };
+    var gt = s.match(/>\s*([\d.,]+)/); if (gt) return { low: U.toNum(gt[1]), high: null };
+    return null;
+  },
+
+  // détecte l'unité présente dans la ligne
+  UNITS: ["g/dl", "g/l", "mg/l", "mg/dl", "µg/l", "ug/l", "ng/ml", "pg/ml", "pmol/l", "mmol/l",
+          "µmol/l", "umol/l", "u/l", "ui/l", "mui/l", "g/24h", "mg/g", "mg/mmol", "mg/24h",
+          "ng/l", "pg/l", "ml/min/1,73m²", "ml/min", "%", "fl", "pg", "t/l", "g/l", "meq/l"],
+  _unitsSorted: null,
+  extractUnit: function (line) {
+    var l = U.norm(line);
+    if (!this._unitsSorted) this._unitsSorted = this.UNITS.slice().sort(function (a, b) { return b.length - a.length; });
+    // longest-first + frontière à gauche (espace ou chiffre) pour éviter que
+    // « g/l » soit reconnu à l'intérieur de « mg/l » / « µg/l ».
+    for (var i = 0; i < this._unitsSorted.length; i++) {
+      var u = this._unitsSorted[i];
+      var re = new RegExp("(^|[\\s\\d])" + u.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      if (re.test(l)) return u;
+    }
+    return null;
+  },
+
+  // extractLabValues : analyse ligne par ligne -> [{key, nom, raw, value, unit, labRef, labFlagged, rawLine}]
+  extractLabValues: function (rawText) {
+    var lines = (rawText || "").split(/\r?\n/);
+    var out = [], seen = {}, unparsed = [];
+    lines.forEach(function (line) {
+      var clean = line.trim();
+      if (!clean || clean.length < 2) return;
+
+      var key = Parser._matchKeyInLine(clean);
+      if (!key) {
+        if (/\d/.test(clean) && clean.length < 60) unparsed.push(clean);
+        return;
+      }
+      if (seen[key]) return; // garder la 1re occurrence (souvent l'unité usuelle)
+
+      var labFlagged = /\*\s*[\d.,]+\s*\*/.test(clean) || /[\d.,]+\s*\*/.test(clean) ||
+                       /\b(eleve|bas|haut|anormal|abnormal|H|L)\b/.test(clean) === false ? /\*/.test(clean) : true;
+      labFlagged = /\*/.test(clean);
+
+      var labRef = Parser.extractRef(clean);
+      // retirer la plage de référence pour ne pas confondre ses chiffres avec la valeur
+      var work = clean.replace(/[\(\[][^\)\]]*[\)\]]/g, " ");
+
+      var value = Parser._extractValueAfterName(work, key);
+      if (value == null) value = U.toNum(work);
+      if (value == null) return;
+
+      var unit = Parser.extractUnit(clean);
+      var bm = KB.biomarkers[key];
+
+      // conversions d'unités fréquentes -> unité de référence du biomarqueur
+      var conv = Parser._convert(key, value, unit);
+      // pour l'affichage : unité convertie sinon unité canonique du biomarqueur
+      // (évite la confusion G/L (giga) vs g/L (grammes), perdue à la normalisation)
+      value = conv.value; unit = conv.unit || bm.unit;
+
+      seen[key] = true;
+      out.push({
+        key: key, nom: bm.nom, value: value, unit: unit,
+        labRef: labRef, labFlagged: labFlagged, rawLine: clean, domaine: bm.domaine
+      });
+    });
+    return { values: out, unparsed: unparsed };
+  },
+
+  _matchKeyInLine: function (line) {
+    var n = U.norm(line);
+    for (var i = 0; i < KB._index.length; i++) {
+      var e = KB._index[i];
+      var re = new RegExp("(^|[^a-z0-9+])" + e.syn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "([^a-z0-9]|$)");
+      if (re.test(n)) return e.key;
+    }
+    return null;
+  },
+
+  // prend le 1er nombre situé APRÈS le libellé reconnu
+  _extractValueAfterName: function (work, key) {
+    var n = U.norm(work);
+    var bm = KB.biomarkers[key];
+    // trouver la position de fin du synonyme le plus long présent
+    var best = -1;
+    (bm.names || []).forEach(function (nm) {
+      var s = U.norm(nm);
+      var idx = n.indexOf(s);
+      if (idx !== -1) { var end = idx + s.length; if (end > best) best = end; }
+    });
+    var tail = best >= 0 ? n.slice(best) : n;
+    // ignorer des fragments numériques de libellé (b12, a1c, 1,73, 25, co2)
+    tail = tail.replace(/1[.,]73\s*m?2?/g, " ").replace(/\bm²|\bm2\b/g, " ");
+    var m = tail.match(/-?\d+(?:[.,]\d+)?/);
+    return m ? U.toNum(m[0]) : null;
+  },
+
+  // conversions d'unités vers l'unité de référence interne
+  _convert: function (key, value, unit) {
+    var u = (unit || "").toLowerCase();
+    // glycémie g/L -> mmol/L
+    if (key === "glycemie" && /g\/l/.test(u) && value < 4) return { value: U.round(value * 5.55, 2), unit: "mmol/L" };
+    // cholestérol/LDL/HDL : mmol/L -> g/L (LDL en mmol vaut typiquement 1-6)
+    if ((key === "ldl" || key === "hdl" || key === "choltotal") && /mmol/.test(u)) return { value: U.round(value * 0.387, 2), unit: "g/L" };
+    // triglycérides mmol/L -> g/L
+    if (key === "tg" && /mmol/.test(u)) return { value: U.round(value * 0.875, 2), unit: "g/L" };
+    // créatinine mg/dL -> µmol/L (×88,4) ou mg/L -> µmol/L (×8,84)
+    if (key === "creat" && /mg\/dl/.test(u)) return { value: U.round(value * 88.4, 0), unit: "µmol/L" };
+    if (key === "creat" && /mg\/l/.test(u)) return { value: U.round(value * 8.84, 0), unit: "µmol/L" };
+    // calcium mg/L -> mmol/L
+    if (key === "ca" && /mg\/l/.test(u) && value > 50) return { value: U.round(value / 40.08, 2), unit: "mmol/L" };
+    // B12 pmol/L -> pg/mL
+    if (key === "b12" && /pmol/.test(u)) return { value: U.round(value * 1.355, 0), unit: "pg/mL" };
+    // RAC mg/mmol -> mg/g
+    if (key === "rac" && /mg\/mmol/.test(u)) return { value: U.round(value * 8.84, 0), unit: "mg/g" };
+    // vitamine D nmol/L -> ng/mL
+    if (key === "vitd" && /nmol/.test(u)) return { value: U.round(value / 2.5, 0), unit: "ng/mL" };
+    return { value: value, unit: null }; // pas de conversion -> l'appelant utilisera l'unité canonique
+  },
+
+  // parseBiologyText : point d'entrée principal
+  parseBiologyText: function (rawText) {
+    return Parser.extractLabValues(rawText);
+  }
+};
+
+/* ===========================================================================
+ * 3) ANALYZER — seuils, gravité, anomalies, patterns, synthèses  (analyzer.js)
+ * ======================================================================== */
+var Analyzer = {
+  // construit le contexte d'analyse (sexe, âge, normes effectives) pour un biomarqueur
+  refFor: function (bm, ctx) {
+    var r = bm.ref || { low: null, high: null };
+    if (bm.sexRef && ctx.sex && bm.sexRef[ctx.sex]) r = bm.sexRef[ctx.sex];
+    return { refLow: r.low, refHigh: r.high };
+  },
+
+  // compareToReference : 'low' | 'high' | 'normal'
+  compareToReference: function (value, refLow, refHigh, oneSided) {
+    if (refHigh != null && value > refHigh) return "high";
+    if (refLow != null && value < refLow && oneSided !== "high") return "low";
+    return "normal";
+  },
+
+  // gradeSeverity : attribue un niveau à une anomalie
+  gradeSeverity: function (bm, value, direction, refLow, refHigh) {
+    var bands = direction === "low" ? bm.bandsLow : bm.bandsHigh;
+    var order = { mineur: 1, significatif: 2, important: 3, urgent: 4 };
+    var level = null;
+    if (bands) {
+      bands.forEach(function (b) {
+        var hit = direction === "low" ? value < b.th : value > b.th;
+        if (hit) { if (!level || order[b.level] > order[level]) level = b.level; }
+      });
+    }
+    if (level) return level;
+    // fallback générique par écart relatif
+    var ref = direction === "low" ? refLow : refHigh;
+    if (ref == null || ref === 0) return "significatif";
+    var r = direction === "low" ? value / ref : value / ref;
+    if (direction === "low") {
+      if (r > 0.9) return "mineur";
+      if (r > 0.75) return "significatif";
+      if (r > 0.5) return "important";
+      return "urgent";
+    } else {
+      if (r < 1.25) return "mineur";
+      if (r < 1.6) return "significatif";
+      if (r < 2.5) return "important";
+      return "important";
+    }
+  },
+
+  // detectAbnormalities : enrichit chaque valeur avec direction/level/interprétation
+  detectAbnormalities: function (values, ctx) {
+    var byKey = {};
+    values.forEach(function (v) { byKey[v.key] = v; });
+
+    // pré-calcul de fiabilité HbA1c
+    ctx.hba1cUnreliable = Analyzer._hba1cReliability(byKey, ctx);
+
+    var results = values.map(function (v) {
+      var bm = KB.biomarkers[v.key];
+      var ef = Analyzer.refFor(bm, ctx);
+      // si le labo fournit une norme, on l'utilise en priorité pour le statut anormal
+      var refLow = (v.labRef && v.labRef.low != null) ? v.labRef.low : ef.refLow;
+      var refHigh = (v.labRef && v.labRef.high != null) ? v.labRef.high : ef.refHigh;
+
+      var dir = Analyzer.compareToReference(v.value, refLow, refHigh, bm.oneSided);
+      var icx = Object.assign({}, ctx, { refLow: refLow, refHigh: refHigh });
+      var level = dir === "normal" ? "normal" : Analyzer.gradeSeverity(bm, v.value, dir, refLow, refHigh);
+      var interp = bm.interpret ? bm.interpret(v.value, icx) : "";
+
+      // LDL : "anormal cliniquement" même si dans la norme labo (logique de risque CV)
+      if (v.key === "ldl" && dir === "normal" && v.value >= 1.16) { level = "mineur"; }
+
+      return {
+        key: v.key, nom: bm.nom, domaine: v.domaine, value: v.value, unit: v.unit || bm.unit,
+        refLow: refLow, refHigh: refHigh, labRef: v.labRef, labFlagged: v.labFlagged,
+        direction: dir, level: level, interp: interp, refKey: bm.refKey, rawLine: v.rawLine
+      };
+    });
+    return results;
+  },
+
+  _hba1cReliability: function (byKey, ctx) {
+    var reasons = [];
+    if (byKey.hb && byKey.hb.value < 11) reasons.push("anémie");
+    if (byKey.dfg && byKey.dfg.value < 30) reasons.push("IRC avancée");
+    if (byKey.reticulocytes && byKey.reticulocytes.value > 120) reasons.push("régénération/hémolyse");
+    var t = U.norm(ctx.ctxText || "");
+    if (/hemolys|drepanocyt|thalass|hemoglobinopath|transfus|grossesse|enceinte/.test(t)) reasons.push("contexte (hémoglobinopathie/transfusion/grossesse)");
+    return reasons.length ? reasons.join(", ") : null;
+  },
+
+  /* ----- detectClinicalPatterns : reconnaissance de syndromes ----- */
+  detectClinicalPatterns: function (abn, ctx) {
+    var v = {}; abn.forEach(function (a) { v[a.key] = a; });
+    var has = function (k) { return v[k] != null; };
+    var val = function (k) { return has(k) ? v[k].value : null; };
+    var patterns = [];
+
+    /* --- Rénal / MRC --- */
+    if (has("dfg") || (has("creat") && v.creat.direction === "high")) {
+      var dfg = val("dfg");
+      var stage = dfg == null ? null : (dfg >= 90 ? "G1" : dfg >= 60 ? "G2" : dfg >= 45 ? "G3a" : dfg >= 30 ? "G3b" : dfg >= 15 ? "G4" : "G5");
+      var alb = has("rac") ? (val("rac") >= 300 ? "A3" : val("rac") >= 30 ? "A2" : "A1") : (has("proteinurie") && val("proteinurie") >= 0.15 ? "protéinurie" : null);
+      if (dfg != null && dfg < 60 || (has("creat") && v.creat.direction === "high")) {
+        patterns.push({
+          domaine: "renal", titre: "Atteinte de la fonction rénale" + (stage ? " — " + stage : "") + (alb ? " " + alb : ""),
+          severite: dfg != null && dfg < 30 ? "important" : "significatif",
+          hypotheses: [
+            { proba: "probable", txt: "Baisse du DFG" + (dfg != null ? " à " + U.fr(U.round(dfg, 0)) + " mL/min/1,73m²" : ""),
+              pour: ["DFG/créatinine altérés"].concat(alb && alb !== "A1" ? ["albuminurie " + alb] : []),
+              contre: alb === "A1" ? ["albuminurie normale (A1) : rassurant"] : [],
+              examens: ["Recontrôle créatinine/DFG (chronicité > 3 mois ?)", "RAC urinaire", "ECBU ± sédiment", "Échographie rénale si MRC non connue ou aggravation"] }
+          ],
+          aVerifier: ["Chronicité (> 3 mois) avant de parler de MRC", "Comparer aux DFG antérieurs (aigu vs chronique)",
+                      "Revue des médicaments néphrotoxiques/à adapter : AINS, IEC/ARA2, diurétiques, spironolactone, metformine, iSGLT2, IPP au long cours"],
+          conduite: ["Surveiller la kaliémie", "Optimiser le risque cardio-rénal (TA, glycémie, lipides)",
+                     "Avis néphrologique si déclin rapide, DFG très bas, albuminurie importante, hématurie, HTA résistante ou cause non évidente"]
+        });
+      }
+    }
+
+    /* --- Diabète / glycémie --- */
+    if (has("hba1c") || has("glycemie")) {
+      var a1c = val("hba1c"), gly = val("glycemie");
+      var label = null, sev = "mineur";
+      if ((a1c != null && a1c >= 6.5) || (gly != null && gly >= 7)) { label = "Profil de diabète (à confirmer selon contexte)"; sev = "significatif"; }
+      else if ((a1c != null && a1c >= 5.7) || (gly != null && gly >= 5.6)) { label = "Prédiabète / haut risque métabolique"; sev = "mineur"; }
+      if (label) {
+        patterns.push({
+          domaine: "glyc", titre: label, severite: sev,
+          hypotheses: [{ proba: a1c != null && a1c >= 6.5 ? "probable" : "possible", txt: label,
+            pour: [].concat(a1c != null ? ["HbA1c " + U.fr(a1c) + " %"] : [], gly != null ? ["glycémie " + U.fr(gly) + " mmol/L"] : []),
+            contre: [], examens: ["Confirmer (2e glycémie à jeun ou HbA1c)", "Bilan du retentissement et des FdR CV"] }],
+          aVerifier: [ctx.hba1cUnreliable ? "Fiabilité HbA1c limitée (" + ctx.hba1cUnreliable + ")" : "Conditions du prélèvement (à jeun ?)"],
+          conduite: ["Hygiène de vie", "Évaluer/optimiser le risque cardio-métabolique global", a1c != null && a1c >= 6.5 ? "Si diabète connu : interpréter selon l'objectif personnalisé" : "Recontrôle programmé"]
+        });
+      }
+    }
+
+    /* --- Dyslipidémie / syndrome métabolique --- */
+    var ldlHigh = has("ldl") && (v.ldl.direction === "high" || val("ldl") >= 1.16);
+    var hdlLow = has("hdl") && val("hdl") < 0.40;
+    var tgHigh = has("tg") && val("tg") > 1.5;
+    if (ldlHigh || hdlLow || tgHigh) {
+      var nonhdl = (has("choltotal") && has("hdl")) ? U.round(val("choltotal") - val("hdl"), 2) : null;
+      var mixte = (ldlHigh || (has("choltotal") && val("choltotal") > 2)) && tgHigh;
+      patterns.push({
+        domaine: "lipid",
+        titre: mixte ? "Dyslipidémie mixte" : (tgHigh && !ldlHigh ? "Hypertriglycéridémie" : "Dyslipidémie (profil athérogène)"),
+        severite: (has("tg") && val("tg") >= 5) ? "important" : "significatif",
+        hypotheses: [{ proba: "probable", txt: "Profil lipidique défavorable",
+          pour: [].concat(ldlHigh ? ["LDL " + U.fr(val("ldl")) + " g/L"] : [], hdlLow ? ["HDL bas " + U.fr(val("hdl")) + " g/L"] : [],
+                          tgHigh ? ["TG " + U.fr(val("tg")) + " g/L"] : [], nonhdl != null ? ["non-HDL " + U.fr(nonhdl) + " g/L"] : []),
+          contre: [], examens: ["Calcul du risque CV global (SCORE2)", "Rechercher causes secondaires : TSH, glycémie/HbA1c, alcool, syndrome néphrotique, IRC, cholestase, médicaments"] }],
+        aVerifier: ["Prélèvement à jeun (surtout pour TG)", "Objectif de LDL selon le niveau de risque CV (ne pas se fier à la seule norme labo)"],
+        conduite: [].concat(
+          ["Mesures hygiéno-diététiques"],
+          ldlHigh ? ["Statine / intensification selon le risque CV et la cible de LDL"] : [],
+          (has("tg") && val("tg") >= 10) ? ["TG ≥ 10 g/L : RISQUE DE PANCRÉATITE — mesures urgentes (jeûne, fibrate, avis)"] : [],
+          ["Recontrôle 6-12 semaines après modification thérapeutique"])
+      });
+      if (has("hba1c") && val("hba1c") >= 5.7 && tgHigh && hdlLow) {
+        patterns.push({ domaine: "lipid", titre: "Syndrome métabolique probable", severite: "significatif",
+          hypotheses: [{ proba: "probable", txt: "Association HbA1c élevée + TG élevés + HDL bas",
+            pour: ["HbA1c " + U.fr(val("hba1c")) + " %", "TG " + U.fr(val("tg")) + " g/L", "HDL " + U.fr(val("hdl")) + " g/L"],
+            contre: [], examens: ["Tour de taille, TA, IMC pour confirmer les critères"] }],
+          aVerifier: ["Critères cliniques (tour de taille, TA)"], conduite: ["Prise en charge globale du risque cardio-métabolique"] });
+      }
+    }
+
+    /* --- Anémie + caractérisation --- */
+    if (has("hb") && v.hb.direction === "low") {
+      var vgm = val("vgm");
+      var type = vgm == null ? "normocytaire (VGM à préciser)" : (vgm < 80 ? "microcytaire" : vgm > 100 ? "macrocytaire" : "normocytaire");
+      var hyp = [];
+      if (vgm != null && vgm < 80) hyp.push({ proba: "probable", txt: "Anémie microcytaire",
+        pour: ["VGM " + U.fr(vgm) + " fL"].concat(has("ferritine") && v.ferritine.direction === "low" ? ["ferritine basse"] : []),
+        contre: [], examens: ["Ferritine + CST + CRP", "Recherche de saignement (digestif, gynéco)"] });
+      else if (vgm != null && vgm > 100) hyp.push({ proba: "probable", txt: "Anémie macrocytaire",
+        pour: ["VGM " + U.fr(vgm) + " fL"], contre: [], examens: ["B12, folates, TSH, réticulocytes", "Bilan hépatique, interrogatoire alcool/médicaments ; myélogramme si inexpliquée"] });
+      else hyp.push({ proba: "possible", txt: "Anémie normocytaire", pour: [], contre: [],
+        examens: ["Réticulocytes (régénérative vs arégénérative)", "CRP, créatinine, TSH ; hémolyse (LDH, haptoglobine, bilirubine)"] });
+      patterns.push({
+        domaine: "hemato", titre: "Anémie " + type + (val("hb") < 7 ? " profonde" : ""),
+        severite: val("hb") < 7 ? "urgent" : (val("hb") < 10 ? "significatif" : "mineur"),
+        hypotheses: hyp,
+        aVerifier: ["Tolérance clinique", "Cinétique (aiguë vs chronique), antériorités", "Saignement actif ?"],
+        conduite: val("hb") < 7 ? ["Anémie profonde : évaluer en urgence la tolérance, discuter transfusion selon clinique"] : ["Compléter le bilan étiologique selon le VGM"]
+      });
+    }
+
+    /* --- Carence martiale / vitaminique isolée --- */
+    if ((has("ferritine") && v.ferritine.direction === "low") || (has("folates") && v.folates.direction === "low") || (has("b12") && v.b12.direction === "low") || (has("vitd") && val("vitd") < 20)) {
+      var car = [];
+      if (has("ferritine") && v.ferritine.direction === "low") car.push("ferritine basse (carence martiale)");
+      if (has("folates") && v.folates.direction === "low") car.push("folates bas");
+      if (has("b12") && v.b12.direction === "low") car.push("B12 basse");
+      if (has("vitd") && val("vitd") < 20) car.push("vitamine D basse");
+      patterns.push({
+        domaine: "hemato", titre: "Carence(s) : " + car.join(", "), severite: "mineur",
+        hypotheses: [{ proba: "possible", txt: "Déficit isolé en micronutriment(s)",
+          pour: car, contre: [], examens: ["CST/transferrine + CRP (si fer)", "Homocystéine/MMA si B12 en zone grise", "Recherche de la cause (apports, malabsorption, pertes)"] }],
+        aVerifier: ["Croiser avec VGM, Hb et la clinique (asthénie, chute de cheveux, SJSR, signes neuro)", "Vérifier la B12 avant de supplémenter en folates"],
+        conduite: ["Supplémentation ciblée après bilan", "Traiter la cause"]
+      });
+    }
+
+    /* --- Foie : cytolyse / cholestase --- */
+    var cytolyse = (has("alat") && v.alat.direction === "high") || (has("asat") && v.asat.direction === "high");
+    var cholestase = (has("pal") && v.pal.direction === "high") && (has("ggt") && v.ggt.direction === "high");
+    if (cytolyse || cholestase || (has("ggt") && v.ggt.direction === "high")) {
+      var asat = val("asat"), alat = val("alat");
+      var alcool = (asat != null && alat != null && asat > alat) && has("ggt") && v.ggt.direction === "high";
+      var maxN = Math.max(has("asat") ? asat / (v.asat.refHigh || 40) : 0, has("alat") ? alat / (v.alat.refHigh || 45) : 0);
+      var titre = cholestase ? "Cholestase" : (cytolyse ? (maxN > 10 ? "Cytolyse hépatique majeure (> 10 N)" : "Cytolyse hépatique") : "Élévation isolée des GGT");
+      // FIB-4 si âge + plaquettes
+      var fib4 = null;
+      if (ctx.age && asat != null && alat != null && has("plaq") && val("plaq") > 0 && alat > 0) {
+        fib4 = U.round((ctx.age * asat) / (val("plaq") * Math.sqrt(alat)), 2);
+      }
+      patterns.push({
+        domaine: "foie", titre: titre, severite: maxN > 10 ? "important" : (cytolyse || cholestase ? "significatif" : "mineur"),
+        hypotheses: [].concat(
+          cytolyse ? [{ proba: "probable", txt: "Cytolyse hépatique",
+            pour: [].concat(asat != null ? ["ASAT " + U.round(asat, 0) + " U/L"] : [], alat != null ? ["ALAT " + U.round(alat, 0) + " U/L"] : [], fib4 != null ? ["FIB-4 = " + U.fr(fib4) + (fib4 >= 2.67 ? " (élevé)" : fib4 < 1.3 ? " (bas)" : "")] : []),
+            contre: [], examens: ["Échographie hépatobiliaire", "Sérologies virales (B, C ± A, E)", "Bilan métabolique (glycémie, lipides, IMC)", "Interrogatoire alcool/médicaments", maxN > 10 ? "TP / facteur V en urgence" : "Recontrôle"] }] : [],
+          alcool ? [{ proba: "possible", txt: "Profil évocateur d'origine alcoolique (ASAT > ALAT + GGT élevées)", pour: ["ASAT > ALAT", "GGT élevées"], contre: [], examens: ["Interrogatoire, VGM, CDT si besoin"] }] : [],
+          cholestase ? [{ proba: "probable", txt: "Cholestase (PAL + GGT élevées)", pour: ["PAL et GGT élevées"], contre: [], examens: ["Échographie des voies biliaires (dilatées ou non)", "Bilirubine conjuguée"] }] : [],
+          (has("ldl") || has("hba1c")) ? [{ proba: "possible", txt: "Stéatopathie métabolique possible", pour: ["contexte cardio-métabolique"], contre: [], examens: ["Échographie, score de stéatose, FIB-4"] }] : []),
+        aVerifier: ["ASAT/ALAT, GGT, PAL, bilirubine ensemble", "Comparer aux bilans antérieurs", fib4 != null && fib4 >= 2.67 ? "FIB-4 élevé : évaluer la fibrose (avis hépato/élastométrie)" : "Médicaments hépatotoxiques"],
+        conduite: maxN > 10 ? ["Cytolyse majeure : TP/facteur V, recherche étiologique urgente, avis si insuffisance hépatique"] : ["Bilan étiologique orienté ; recontrôle à distance"]
+      });
+    }
+
+    /* --- Inflammation --- */
+    if (has("crp") && v.crp.direction === "high") {
+      patterns.push({
+        domaine: "inflamm", titre: "Syndrome inflammatoire" + (val("crp") > 100 ? " marqué (CRP > 100)" : ""),
+        severite: val("crp") > 100 ? "important" : "significatif",
+        hypotheses: [{ proba: "probable", txt: "Inflammation/infection",
+          pour: ["CRP " + U.round(val("crp"), 0) + " mg/L"].concat(has("pnn") && v.pnn.direction === "high" ? ["PNN élevés"] : []),
+          contre: [], examens: ["Orienter selon la clinique (foyer infectieux ?)", "PCT si doute bactérien/sepsis", "Recontrôle (cinétique)"] }],
+        aVerifier: ["Foyer clinique", "Si CRP très élevée sans foyer : élargir (imagerie, hémocultures, contexte)"],
+        conduite: val("crp") > 100 ? ["CRP > 100 : contexte infectieux/inflammatoire significatif — évaluation clinique rapprochée"] : ["Corréler à la clinique et recontrôler"]
+      });
+    }
+
+    /* --- Électrophorèse / pic monoclonal --- */
+    if (has("gamma") && val("gamma") > (v.gamma.refHigh || 13)) {
+      patterns.push({ domaine: "prot", titre: "Hypergammaglobulinémie", severite: "significatif",
+        hypotheses: [{ proba: "possible", txt: "Polyclonale vs pic monoclonal",
+          pour: ["Gammaglobulines élevées"], contre: [], examens: ["Lecture du tracé d'électrophorèse (aspect du pic)", "Immunofixation + chaînes légères libres si pic", "NFS, calcémie, créatinine, protéinurie (recherche CRAB)"] }],
+        aVerifier: ["Aspect polyclonal (base large) vs monoclonal (pic étroit)", "Ne pas surinterpréter une petite variation isolée si commentaire « sans anomalie notable »"],
+        conduite: ["Si pic monoclonal : bilan myélome/Waldenström selon contexte"] });
+    }
+
+    return patterns;
+  },
+
+  /* ----- generateDifferentialDiagnosis : aplatit les hypothèses des patterns ----- */
+  generateDifferentialDiagnosis: function (patterns) {
+    var dx = [];
+    patterns.forEach(function (p) {
+      (p.hypotheses || []).forEach(function (h) { dx.push({ contexte: p.titre, domaine: p.domaine, hyp: h }); });
+    });
+    return dx;
+  },
+
+  /* ----- generateRecommendedTests : regroupe les examens par priorité ----- */
+  generateRecommendedTests: function (patterns, redFlags) {
+    var fast = [], ctx = [], disc = [], add = function (arr, x) { if (x && arr.indexOf(x) === -1) arr.push(x); };
+    redFlags.forEach(function (r) { (r.actions || []).forEach(function (a) { add(fast, a); }); });
+    patterns.forEach(function (p) {
+      (p.hypotheses || []).forEach(function (h) {
+        (h.examens || []).forEach(function (e) {
+          if (/urgen|ecg|tp|facteur v|hospital|immediat/i.test(e)) add(fast, e);
+          else if (/recontrol|recontrôl|distance|persist|6-12|element|à confirmer|confirmer/i.test(e)) add(disc, e);
+          else add(ctx, e);
+        });
+      });
+    });
+    return { fast: fast, ctx: ctx, disc: disc };
+  },
+
+  /* ----- generateClinicalSummary : synthèse + axes + points rassurants ----- */
+  generateClinicalSummary: function (abn, patterns, ctx) {
+    var v = {}; abn.forEach(function (a) { v[a.key] = a; });
+    var axes = patterns.map(function (p) { return p.titre; });
+
+    // points rassurants (présents et normaux)
+    var rass = [];
+    if (v.hb && v.hb.direction !== "low") rass.push("Pas d'anémie");
+    if (v.plaq && v.plaq.direction === "normal") rass.push("Pas de thrombopénie");
+    if ((v.pnn && v.pnn.direction === "normal") || (v.leuco && v.leuco.direction === "normal")) rass.push("Pas de leucopénie/neutropénie");
+    if (v.crp && v.crp.direction !== "high") rass.push("Pas de syndrome inflammatoire (CRP)");
+    if ((v.alat && v.alat.direction === "normal") && (v.asat && v.asat.direction === "normal")) rass.push("Bilan hépatique (transaminases) normal");
+    if (v.rac && v.rac.value < 30) rass.push("Albuminurie normale (A1)");
+    if (v.k && v.k.direction === "normal" && v.na && v.na.direction === "normal") rass.push("Ionogramme (Na/K) normal");
+    if (v.gamma && v.gamma.direction === "normal") rass.push("Pas d'hypergammaglobulinémie / pic évident");
+
+    // texte de synthèse
+    var phrases = [];
+    if (axes.length === 0) phrases.push("Bilan globalement sans anomalie majeure sur les paramètres analysés.");
+    else {
+      var lead = "Le bilan est dominé par " + Analyzer._joinFr(patterns.slice(0, 4).map(function (p) { return Analyzer._lc(p.titre); })) + ".";
+      phrases.push(lead);
+    }
+    if (rass.length) phrases.push("Éléments rassurants : " + Analyzer._lc(rass.join(", ")) + ".");
+    phrases.push("Interprétation à confronter à la clinique, à l'âge, au sexe, aux antécédents, aux traitements et aux valeurs antérieures.");
+
+    return { axes: axes, reassurances: rass, text: phrases.join(" ") };
+  },
+
+  // minuscule en préservant les codes de stade (G3b, A1, A2…)
+  _lc: function (s) {
+    return ("" + s).toLowerCase()
+      .replace(/\bg(\d[ab]?)\b/g, function (m, d) { return "G" + d; })
+      .replace(/\ba(\d)\b/g, "A$1");
+  },
+  _joinFr: function (arr) {
+    if (!arr.length) return "";
+    if (arr.length === 1) return arr[0];
+    return arr.slice(0, -1).join(", ") + " et " + arr[arr.length - 1];
+  },
+
+  /* ----- generateMedicalRecordSummary : version courte pour dossier ----- */
+  generateMedicalRecordSummary: function (abn, patterns, ctx) {
+    var v = {}; abn.forEach(function (a) { v[a.key] = a; });
+    var bits = [];
+    if (v.dfg) bits.push("DFG à " + U.fr(U.round(v.dfg.value, 0)) + " mL/min/1,73m²" + (v.rac ? (v.rac.value < 30 ? " sans albuminurie (A1)" : " avec albuminurie " + (v.rac.value >= 300 ? "A3" : "A2")) : ""));
+    if (v.hba1c) bits.push("HbA1c à " + U.fr(v.hba1c.value) + " %");
+    var lip = [];
+    if (v.ldl) lip.push("LDL " + U.fr(v.ldl.value));
+    if (v.hdl) lip.push("HDL " + U.fr(v.hdl.value));
+    if (v.tg) lip.push("TG " + U.fr(v.tg.value));
+    if (lip.length) bits.push("profil lipidique (" + lip.join(", ") + " g/L)");
+    var rass = [];
+    if (v.hb && v.hb.direction !== "low") rass.push("pas d'anémie");
+    if (v.crp && v.crp.direction !== "high") rass.push("pas de syndrome inflammatoire");
+    if (v.alat && v.alat.direction === "normal" && v.asat && v.asat.direction === "normal") rass.push("bilan hépatique normal");
+
+    var head = "Bilan biologique" + (ctx.age ? " (" + ctx.age + " ans" + (ctx.sex ? ", " + (ctx.sex === "H" ? "homme" : "femme") : "") + ")" : "") + " montrant ";
+    var main = patterns.length ? patterns.map(function (p) { return Analyzer._lc(p.titre); }).slice(0, 4).join(", ") : "pas d'anomalie majeure";
+    var det = bits.length ? " (" + bits.join(" ; ") + ")" : "";
+    var r = rass.length ? " " + rass.join(", ") + "." : "";
+    // à prévoir
+    var todo = [];
+    if (v.dfg && v.dfg.value < 60) todo.push("contrôle fonction rénale/ionogramme + surveillance albuminurie");
+    if (patterns.some(function (p) { return p.domaine === "lipid"; })) todo.push("optimisation cardio-métabolique, recherche de causes secondaires de dyslipidémie");
+    if (v.crp && v.crp.direction === "high") todo.push("réévaluation du syndrome inflammatoire");
+    var todoTxt = todo.length ? " À prévoir : " + todo.join(" ; ") + "." : "";
+
+    return head + main + det + "." + (r ? r : "") + todoTxt + " À confronter à la clinique et aux antériorités.";
+  }
+};
+
+/* ===========================================================================
+ * 4) RED FLAGS  (data/redFlags.js + détecteur)
+ * ======================================================================== */
+KB.detectRedFlags = function (abn, ctx) {
+  var v = {}; abn.forEach(function (a) { v[a.key] = a; });
+  var has = function (k) { return v[k] != null; };
+  var val = function (k) { return has(k) ? v[k].value : null; };
+  var f = [];
+  var push = function (cat, msg, actions) { f.push({ cat: cat, msg: msg, actions: actions || [] }); };
+
+  if (has("k") && val("k") >= 6.0) push("Hyperkaliémie sévère", "Kaliémie " + U.fr(val("k")) + " mmol/L (≥ 6,0).", ["ECG immédiat", "Éliminer une hémolyse de prélèvement (recontrôle)", "Prise en charge urgente de l'hyperkaliémie"]);
+  if (has("na") && val("na") < 125) push("Hyponatrémie sévère", "Natrémie " + U.fr(val("na")) + " mmol/L (< 125).", ["Évaluer symptômes neuro, volémie, osmolalité", "Correction prudente (risque myélinolyse)"]);
+  if (has("hb") && val("hb") < 7) push("Anémie profonde", "Hb " + U.fr(val("hb")) + " g/dL (< 7).", ["Évaluer la tolérance clinique", "Discuter transfusion selon clinique", "Rechercher un saignement actif"]);
+  if (has("plaq") && val("plaq") < 30) push("Thrombopénie sévère", "Plaquettes " + U.round(val("plaq"), 0) + " G/L (< 30).", ["Éliminer une fausse thrombopénie (frottis)", "Risque hémorragique : avis spécialisé"]);
+  if (has("pnn") && val("pnn") < 0.5) push("Neutropénie sévère", "PNN " + U.fr(val("pnn")) + " G/L (< 0,5).", ["Si fièvre = urgence (neutropénie fébrile)", "Avis hématologique"]);
+  if (has("dfg") && val("dfg") < 15) push("Insuffisance rénale terminale", "DFG " + U.round(val("dfg"), 0) + " mL/min (< 15).", ["Avis néphrologique urgent", "Vérifier kaliémie et surcharge"]);
+  else if (has("dfg") && val("dfg") < 30) push("Insuffisance rénale sévère", "DFG " + U.round(val("dfg"), 0) + " mL/min (G4).", ["Confirmer chronicité / éliminer IRA", "Surveiller kaliémie, adapter médicaments", "Avis néphrologique"]);
+  var maxN = Math.max(has("asat") ? val("asat") / (v.asat.refHigh || 40) : 0, has("alat") ? val("alat") / (v.alat.refHigh || 45) : 0);
+  if (maxN > 10) push("Cytolyse hépatique majeure", "Transaminases > 10 N.", ["TP / facteur V en urgence", "Rechercher hépatite aiguë (toxique, virale, ischémique)", "Avis si insuffisance hépatique"]);
+  if (has("bili") && val("bili") > 50 && (has("pal") && v.pal.direction === "high")) push("Cholestase ictérique", "Bilirubine élevée + cholestase.", ["Échographie des voies biliaires", "Rechercher obstacle / angiocholite (fièvre)"]);
+  if (has("ca") && val("ca") > 3.0) push("Hypercalcémie sévère", "Calcémie " + U.fr(val("ca")) + " mmol/L (> 3,0).", ["À contrôler rapidement", "ECG, hydratation", "Rechercher PTH, myélome, néoplasie"]);
+  if (has("crp") && val("crp") > 100) push("CRP très élevée", "CRP " + U.round(val("crp"), 0) + " mg/L.", ["Rechercher un foyer infectieux", "Évaluation clinique rapprochée ± hémocultures/imagerie"]);
+  if (has("tg") && val("tg") >= 10) push("Hypertriglycéridémie majeure", "TG " + U.fr(val("tg")) + " g/L (≥ 10).", ["Risque de pancréatite aiguë", "Jeûne, fibrate, avis spécialisé"]);
+  if ((has("glycemie") && val("glycemie") >= 16.7)) push("Hyperglycémie majeure", "Glycémie " + U.fr(val("glycemie")) + " mmol/L.", ["Rechercher cétose/acidocétose (BU, cétonémie, gaz)", "Hydratation, insuline selon protocole"]);
+
+  // syndromes combinés
+  if (has("hb") && val("hb") < (v.hb.refLow || 12) && has("plaq") && val("plaq") < 150 && has("ldh") && v.ldh.direction === "high")
+    push("Suspicion de microangiopathie thrombotique (MAT)", "Anémie + thrombopénie + LDH élevée.", ["Frottis : recherche de schizocytes", "Haptoglobine, bilirubine, créatinine", "URGENCE : avis spécialisé immédiat (PTT/SHU)"]);
+  if (has("hb") && val("hb") < (v.hb.refLow || 12) && ((has("dfg") && val("dfg") < 60) || (has("creat") && v.creat.direction === "high")) && has("ca") && val("ca") > 2.60)
+    push("Suspicion de myélome", "Anémie + insuffisance rénale + hypercalcémie.", ["Électrophorèse + immunofixation, chaînes légères libres", "Protéinurie de Bence-Jones", "Recherche CRAB, avis hématologique"]);
+
+  return f;
+};
+
+/* ===========================================================================
+ * 5) ORCHESTRATION
+ * ======================================================================== */
+function analyzeBilan(rawText, ctx) {
+  var parsed = Parser.parseBiologyText(rawText);
+  var abn = Analyzer.detectAbnormalities(parsed.values, ctx);
+  var patterns = Analyzer.detectClinicalPatterns(abn, ctx);
+  var redFlags = KB.detectRedFlags(abn, ctx);
+  var summary = Analyzer.generateClinicalSummary(abn, patterns, ctx);
+  var dx = Analyzer.generateDifferentialDiagnosis(patterns);
+  var tests = Analyzer.generateRecommendedTests(patterns, redFlags);
+  var record = Analyzer.generateMedicalRecordSummary(abn, patterns, ctx);
+  var missing = computeMissingData(abn, ctx);
+  return { parsed: parsed, abn: abn, patterns: patterns, redFlags: redFlags,
+           summary: summary, dx: dx, tests: tests, record: record, missing: missing };
+}
+
+function computeMissingData(abn, ctx) {
+  var m = [];
+  if (!ctx.age) m.push("Âge");
+  if (!ctx.sex) m.push("Sexe");
+  if (!ctx.ctxText) {
+    m.push("Antécédents (diabète, HTA, MRC, MCV, cancer, maladie inflammatoire)");
+    m.push("Traitements (AINS, IEC/ARA2, diurétiques, metformine, anticoagulants, statines, corticoïdes, IPP…)");
+    m.push("Symptômes (fièvre, amaigrissement, asthénie, dyspnée, œdèmes, saignement, troubles neuro)");
+  }
+  m.push("Valeurs biologiques antérieures (cinétique aiguë vs chronique)");
+  return m;
+}
+
+/* ===========================================================================
+ * 6) RENDERER  (renderer.js)
+ * ======================================================================== */
+var LVL_LABEL = { normal: "Normal", mineur: "Mineur à surveiller", significatif: "Significatif à explorer", important: "Important à prendre en charge", urgent: "Urgent / red flag" };
+var LVL_ORDER = { urgent: 4, important: 3, significatif: 2, mineur: 1, normal: 0 };
+
+function R(res, ctx) {
+  var H = [];
+
+  /* --- niveau d'urgence global --- */
+  var hasRed = res.redFlags.length > 0;
+  var hasImportant = res.abn.some(function (a) { return a.level === "important" || a.level === "urgent"; });
+  var urg = hasRed || res.abn.some(function (a) { return a.level === "urgent"; }) ? "red" : (hasImportant ? "orange" : "green");
+  var urgTxt = { red: ["Niveau rouge", "Red flag(s) ou anomalie urgente — action rapide à évaluer."],
+                 orange: ["Niveau orange", "Anomalie(s) significative(s) à prendre en charge / explorer."],
+                 green: ["Niveau vert", "Pas d'anomalie urgente identifiée sur les données fournies."] }[urg];
+  var dico = { red: "dr", orange: "do", green: "dg" }, emo = { red: "⛔", orange: "⚠️", green: "✅" };
+  H.push("<div class='urg urg-" + urg + "'><div class='dot " + dico[urg] + "'>" + emo[urg] + "</div><div><h3>" + urgTxt[0] + "</h3><p>" + urgTxt[1] + "</p></div></div>");
+
+  /* --- red flags en haut --- */
+  if (hasRed) {
+    var rf = "<div class='section'><h2><span class='ico'>🚩</span> Red flags</h2>";
+    res.redFlags.forEach(function (r) {
+      rf += "<div class='redflag'><h4>🚩 " + U.esc(r.cat) + "</h4><p class='cat'>" + U.esc(r.msg) + "</p>" +
+        (r.actions.length ? "<p>Conduite immédiate : " + r.actions.map(U.esc).join(" · ") + "</p>" : "") + "</div>";
+    });
+    rf += "</div>";
+    H.push(rf);
+  }
+
+  /* --- résumé immédiat --- */
+  var nMajor = res.abn.filter(function (a) { return a.level === "important" || a.level === "urgent"; }).length;
+  var nMinor = res.abn.filter(function (a) { return a.level === "mineur" || a.level === "significatif"; }).length;
+  var nAbn = res.abn.filter(function (a) { return a.direction !== "normal"; }).length;
+  H.push("<div class='section'><h2><span class='ico'>📊</span> Résumé immédiat</h2><div class='stats'>" +
+    "<div class='stat tot'><div class='n'>" + nAbn + "</div><div class='l'>Anomalies détectées</div></div>" +
+    "<div class='stat major'><div class='n'>" + nMajor + "</div><div class='l'>Anomalies majeures</div></div>" +
+    "<div class='stat minor'><div class='n'>" + nMinor + "</div><div class='l'>Anomalies mineures</div></div>" +
+    "<div class='stat flag'><div class='n'>" + res.redFlags.length + "</div><div class='l'>Red flags</div></div>" +
+    "</div><p style='margin:10px 0 0;font-size:.85rem;color:var(--soft)'>" + res.parsed.values.length + " paramètre(s) extrait(s) du texte.</p></div>");
+
+  /* --- synthèse clinique --- */
+  var syn = "<div class='section'><h2><span class='ico'>🧠</span> Synthèse clinique globale</h2><div class='synth'>";
+  syn += "<p>" + U.esc(res.summary.text) + "</p>";
+  if (res.summary.axes.length) syn += "<p style='margin-top:8px'><strong>Axes principaux :</strong><br>" + res.summary.axes.map(function (a) { return "<span class='tag tag-axis'>" + U.esc(a) + "</span>"; }).join("") + "</p>";
+  if (res.summary.reassurances.length) syn += "<div class='reassure'><strong>Points rassurants</strong><ul>" + res.summary.reassurances.map(function (r) { return "<li>" + U.esc(r) + "</li>"; }).join("") + "</ul></div>";
+  syn += "</div></div>";
+  H.push(syn);
+
+  /* --- tableau des anomalies --- */
+  var abns = res.abn.filter(function (a) { return a.direction !== "normal"; })
+    .sort(function (a, b) { return LVL_ORDER[b.level] - LVL_ORDER[a.level]; });
+  if (abns.length) {
+    var t = "<div class='section'><h2><span class='ico'>📋</span> Tableau des anomalies</h2><div class='tbl-scroll'><table class='anom'><thead><tr>" +
+      "<th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Normes</th><th>Niveau</th><th>Interprétation</th><th>Domaine</th></tr></thead><tbody>";
+    abns.forEach(function (a) {
+      var arrow = a.direction === "high" ? "<span class='arrow-up'>▲</span>" : (a.direction === "low" ? "<span class='arrow-down'>▼</span>" : "");
+      var ref;
+      if (a.refLow != null && a.refHigh != null) ref = U.fr(a.refLow) + " – " + U.fr(a.refHigh);
+      else if (a.refHigh != null) ref = "≤ " + U.fr(a.refHigh);
+      else if (a.refLow != null) ref = "≥ " + U.fr(a.refLow);
+      else ref = "—";
+      t += "<tr><td>" + U.esc(a.nom) + "</td>" +
+        "<td class='val'>" + arrow + " " + U.fr(a.value) + "</td>" +
+        "<td>" + U.esc(a.unit || "") + "</td>" +
+        "<td style='white-space:nowrap'>" + U.esc(ref || "—") + "</td>" +
+        "<td><span class='lvl lvl-" + a.level + "'>" + U.esc(LVL_LABEL[a.level]) + "</span></td>" +
+        "<td>" + U.esc(a.interp || "") + "</td>" +
+        "<td style='white-space:nowrap'>" + U.esc((KB.domains[a.domaine] || {}).label || a.domaine) + "</td></tr>";
+    });
+    t += "</tbody></table></div></div>";
+    H.push(t);
+  }
+
+  /* --- analyse par domaine --- */
+  var byDom = {};
+  res.abn.forEach(function (a) { (byDom[a.domaine] = byDom[a.domaine] || []).push(a); });
+  var domHtml = "<div class='section'><h2><span class='ico'>🗂️</span> Analyse par domaine</h2>";
+  Object.keys(KB.domains).forEach(function (dk) {
+    var items = byDom[dk]; if (!items || !items.length) return;
+    var nAb = items.filter(function (i) { return i.direction !== "normal"; }).length;
+    var d = KB.domains[dk];
+    domHtml += "<div class='domain'><div class='domain-h'><span>" + d.ico + " " + U.esc(d.label) + "</span>" +
+      "<span class='badge " + (nAb ? "abn" : "") + "'>" + (nAb ? nAb + " anomalie(s)" : "RAS") + "</span></div><div class='domain-b'>";
+    items.forEach(function (i) {
+      domHtml += "<div class='kv'><b>" + U.esc(i.nom) + " :</b> " + U.fr(i.value) + " " + U.esc(i.unit || "") +
+        (i.direction !== "normal" ? " <span class='lvl lvl-" + i.level + "'>" + U.esc(LVL_LABEL[i.level]) + "</span>" : "") + "</div>";
+    });
+    var withInterp = items.filter(function (i) { return i.interp && i.interp !== "—"; });
+    if (withInterp.length) {
+      domHtml += "<div class='interp'>";
+      withInterp.forEach(function (i) { domHtml += "<div><span class='lab'>" + U.esc(i.nom) + " —</span> " + U.esc(i.interp) + "</div>"; });
+      domHtml += "</div>";
+    }
+    domHtml += "</div></div>";
+  });
+  domHtml += "</div>";
+  H.push(domHtml);
+
+  /* --- orientation diagnostique --- */
+  if (res.patterns.length) {
+    var od = "<div class='section'><h2><span class='ico'>🎯</span> Orientation diagnostique</h2>";
+    res.patterns.forEach(function (p) {
+      od += "<div class='dx'><h4>" + U.esc(p.titre) + "</h4>";
+      (p.hypotheses || []).forEach(function (h) {
+        var pc = { probable: "proba-probable", possible: "proba-possible" }[h.proba] || "proba-nepasmanquer";
+        var pl = { probable: "Probable", possible: "Possible" }[h.proba] || "À ne pas manquer";
+        od += "<div class='hyp'><div><span class='proba " + pc + "'>" + pl + "</span><strong>" + U.esc(h.txt) + "</strong></div>";
+        if (h.pour && h.pour.length) od += "<div><span class='lbl'>Arguments pour</span><ul>" + h.pour.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") + "</ul></div>";
+        if (h.contre && h.contre.length) od += "<div><span class='lbl'>Arguments contre</span><ul>" + h.contre.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") + "</ul></div>";
+        if (h.examens && h.examens.length) od += "<div><span class='lbl'>Examens à demander</span><ul>" + h.examens.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") + "</ul></div>";
+        od += "</div>";
+      });
+      if (p.aVerifier && p.aVerifier.length) od += "<div><span class='lbl'>Ce qu'il faut vérifier</span><ul>" + p.aVerifier.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") + "</ul></div>";
+      if (p.conduite && p.conduite.length) od += "<div><span class='lbl'>Conduite pratique</span><ul>" + p.conduite.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") + "</ul></div>";
+      var rk = (KB.biomarkers[p.domaine] || {});
+      od += "</div>";
+    });
+    od += "</div>";
+    H.push(od);
+  }
+
+  /* --- examens complémentaires --- */
+  var tt = res.tests;
+  if (tt.fast.length || tt.ctx.length || tt.disc.length) {
+    var ex = "<div class='section'><h2><span class='ico'>🧾</span> Examens complémentaires utiles</h2><div class='colcards'>";
+    ex += "<div class='colcard fast'><h4>⏱️ À faire rapidement</h4><ul>" + (tt.fast.length ? tt.fast.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") : "<li>—</li>") + "</ul></div>";
+    ex += "<div class='colcard ctx'><h4>🔎 Selon le contexte</h4><ul>" + (tt.ctx.length ? tt.ctx.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") : "<li>—</li>") + "</ul></div>";
+    ex += "<div class='colcard disc'><h4>🔁 À discuter si anomalie persistante</h4><ul>" + (tt.disc.length ? tt.disc.map(function (x) { return "<li>" + U.esc(x) + "</li>"; }).join("") : "<li>—</li>") + "</ul></div>";
+    ex += "</div></div>";
+    H.push(ex);
+  }
+
+  /* --- version dossier --- */
+  H.push("<div class='section'><h2><span class='ico'>📝</span> Version courte pour dossier médical</h2><div id='recordBox'>" + U.esc(res.record) + "</div>" +
+    "<div class='btn-row no-print'><button class='btn' data-copy='record'>📄 Copier version dossier</button>" +
+    "<button class='btn' data-copy='synthese'>🧠 Copier la synthèse</button>" +
+    "<button class='btn' data-copy='cat'>🩺 Copier la conduite à tenir</button>" +
+    "<button class='btn' onclick='window.print()'>🖨️ Imprimer / PDF</button></div></div>");
+
+  /* --- données manquantes --- */
+  if (res.missing.length) {
+    H.push("<div class='section'><h2><span class='ico'>❓</span> Données manquantes à préciser</h2><div class='missing'>" +
+      "<p style='font-size:.88rem;color:var(--soft)'>L'analyse a été produite avec prudence ; ces éléments affineraient l'interprétation :</p>" +
+      res.missing.map(function (m) { return "<span class='chip'>" + U.esc(m) + "</span>"; }).join("") + "</div></div>");
+  }
+
+  /* --- non reconnu --- */
+  if (res.parsed.unparsed.length) {
+    H.push("<div class='section'><h2><span class='ico'>🧩</span> Lignes non interprétées</h2><div class='unparsed'>" +
+      "<p>Ces lignes contenaient des chiffres mais n'ont pas été reconnues (paramètre non répertorié ou format inhabituel) — à vérifier manuellement :</p>" +
+      res.parsed.unparsed.slice(0, 25).map(function (l) { return "<div><code>" + U.esc(l) + "</code></div>"; }).join("") + "</div></div>");
+  }
+
+  /* --- disclaimer --- */
+  H.push("<div class='section'><div class='disclaimer'><strong>⚕️ Sécurité médicale</strong>" +
+    "<ul><li>Aide au raisonnement : <strong>ne remplace pas le jugement clinique</strong> ni l'avis du biologiste.</li>" +
+    "<li>Confronter à l'âge, au sexe, aux antécédents, aux traitements et au contexte aigu/chronique.</li>" +
+    "<li>Vérifier les valeurs antérieures ; une anomalie isolée doit souvent être recontrôlée.</li>" +
+    "<li>Ne pas poser de diagnostic définitif sur la seule biologie.</li>" +
+    "<li>En cas de discordance clinico-biologique : penser aux causes préanalytiques (hémolyse, garrot, prélèvement ancien) et demander un avis biologiste.</li></ul></div></div>");
+
+  return H.join("");
+}
+
+/* ===========================================================================
+ * 7) UI / ÉVÉNEMENTS
+ * ======================================================================== */
+var EXAMPLE = [
+  "LABORATOIRE — BILAN SANGUIN",
+  "",
+  "HEMOGRAMME",
+  "Hémoglobine        13,4 g/dL      (13,0 - 17,0)",
+  "Hématocrite        40,1 %         (40 - 54)",
+  "VGM                88 fL          (80 - 100)",
+  "Leucocytes         6,8 G/L        (4,0 - 10,0)",
+  "PN. Neutro#        4,1 G/L        (1,5 - 7,0)",
+  "Lympho#            2,0 G/L        (1,0 - 4,0)",
+  "Mono#              0,5 G/L        (0,2 - 1,0)",
+  "Plaquettes         245 G/L        (150 - 400)",
+  "",
+  "BIOCHIMIE",
+  "Créatinine         118 µmol/L     (62 - 106)",
+  "DFG (CKD-EPI)      44 mL/min/1,73m²   (>90)",
+  "Sodium             139 mmol/L     (135 - 145)",
+  "Potassium          4,7 mmol/L     (3,5 - 5,0)",
+  "Glycémie à jeun    5,9 mmol/L     (3,9 - 5,5)",
+  "HbA1c              6,3 %          (<5,7)",
+  "",
+  "BILAN LIPIDIQUE",
+  "Cholestérol total  2,35 g/L",
+  "LDL cholestérol    1,59 g/L",
+  "HDL cholestérol    0,38 g/L",
+  "Triglycérides      1,84 g/L",
+  "",
+  "BILAN HEPATIQUE",
+  "ASAT               28 U/L         (<40)",
+  "ALAT               31 U/L         (<45)",
+  "GGT                42 U/L         (<55)",
+  "",
+  "AUTRES",
+  "CRP                3 mg/L         (<5)",
+  "Ferritine          95 µg/L        (30 - 300)",
+  "Folates            *2,8* ng/mL    (>4,0)",
+  "Vitamine B12       310 pg/mL      (200 - 900)",
+  "",
+  "URINES",
+  "Rapport albumine/créatinine   12 mg/g   (<30)"
+].join("\n");
+
+function getCtx() {
+  return {
+    age: U.toNum(document.getElementById("ageInput").value),
+    sex: document.getElementById("sexInput").value || null,
+    ctxText: document.getElementById("ctxInput").value || ""
+  };
+}
+
+var LAST = null;
+
+function runAnalysis() {
+  var raw = document.getElementById("rawInput").value;
+  if (!raw.trim()) { alert("Collez d'abord un bilan biologique."); return; }
+  var ctx = getCtx();
+  var res = analyzeBilan(raw, ctx);
+  LAST = { res: res, ctx: ctx };
+  var box = document.getElementById("results");
+  box.innerHTML = R(res, ctx);
+  box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* exports texte */
+function buildText(kind) {
+  if (!LAST) return "";
+  var res = LAST.res, out = [];
+  if (kind === "record") return res.record;
+  if (kind === "synthese") {
+    out.push("SYNTHÈSE CLINIQUE DU BILAN");
+    out.push(res.summary.text);
+    if (res.summary.axes.length) out.push("\nAxes principaux :\n- " + res.summary.axes.join("\n- "));
+    if (res.summary.reassurances.length) out.push("\nPoints rassurants :\n- " + res.summary.reassurances.join("\n- "));
+    if (res.redFlags.length) out.push("\nRED FLAGS :\n- " + res.redFlags.map(function (r) { return r.cat + " : " + r.msg; }).join("\n- "));
+    else out.push("\nPas de red flag biologique immédiat identifié dans les données fournies.");
+    return out.join("\n");
+  }
+  if (kind === "cat") {
+    out.push("CONDUITE À TENIR");
+    res.redFlags.forEach(function (r) { out.push("[URGENT] " + r.cat + " → " + r.actions.join(" ; ")); });
+    res.patterns.forEach(function (p) {
+      out.push("\n• " + p.titre);
+      if (p.aVerifier && p.aVerifier.length) out.push("  À vérifier : " + p.aVerifier.join(" ; "));
+      if (p.conduite && p.conduite.length) out.push("  Conduite : " + p.conduite.join(" ; "));
+    });
+    out.push("\nExamens à faire rapidement : " + (res.tests.fast.join(" ; ") || "—"));
+    out.push("Selon contexte : " + (res.tests.ctx.join(" ; ") || "—"));
+    out.push("\n(Aide au raisonnement — à confronter à la clinique.)");
+    return out.join("\n");
+  }
+  return "";
+}
+
+function copyText(kind) {
+  var txt = buildText(kind);
+  if (!txt) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(function () { toast("Copié ✓"); }, function () { fallbackCopy(txt); });
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt) {
+  var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); toast("Copié ✓"); } catch (e) { alert("Copie impossible — sélectionnez le texte manuellement."); }
+  document.body.removeChild(ta);
+}
+function toast(msg) {
+  var t = document.createElement("div"); t.textContent = msg;
+  t.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1b2733;color:#fff;padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)";
+  document.body.appendChild(t); setTimeout(function () { t.remove(); }, 1600);
+}
+
+/* listeners */
+document.getElementById("analyzeBtn").addEventListener("click", runAnalysis);
+document.getElementById("exampleBtn").addEventListener("click", function () {
+  document.getElementById("rawInput").value = EXAMPLE;
+  document.getElementById("ageInput").value = 62;
+  document.getElementById("sexInput").value = "H";
+  document.getElementById("ctxInput").value = "HTA, metformine";
+  runAnalysis();
+});
+document.getElementById("clearBtn").addEventListener("click", function () {
+  document.getElementById("rawInput").value = "";
+  document.getElementById("ctxInput").value = "";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("results").innerHTML = "";
+  LAST = null;
+});
+document.getElementById("results").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-copy]");
+  if (b) copyText(b.getAttribute("data-copy"));
+});
+document.addEventListener("keydown", function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") runAnalysis();
+});
+</script>
+</body>
+</html>
