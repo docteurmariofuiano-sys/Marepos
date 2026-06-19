@@ -3355,5 +3355,322 @@ window.KB = {
         examens_a_discuter: ["Imagerie (échographie / TDM)", "Avis spécialisé"] }
     ],
     examens_clinique: ["Examen de la peau et des conjonctives", "Palpation hépatique + recherche d'une grosse vésicule", "Recherche d'ascite et de signes d'encéphalopathie", "Bilan hépatique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ECZÉMA / DERMATITE
+  // -------------------------------------------------------------------------
+  eczema: {
+    id: "eczema", symptome: "Eczéma / dermatite", specialite: ["Dermatologie"],
+    questions: [
+      { id: "ec_prurit", label: "Prurit", type: "boolean", question: "Avez-vous des démangeaisons importantes ?" },
+      { id: "ec_atopie", label: "Terrain atopique", type: "boolean", question: "Avez-vous un terrain atopique (asthme, rhinite, eczéma ancien) ?" },
+      { id: "ec_contact", label: "Eczéma de contact", type: "boolean", question: "Les lésions sont-elles localisées à une zone de contact (bijou, cosmétique, produit professionnel) ?" },
+      { id: "ec_suintant", label: "Surinfection", type: "boolean", question: "Les lésions sont-elles très rouges, suintantes, croûteuses, avec de la fièvre ?" },
+      { id: "ec_herpes", label: "Eczéma herpétisé", type: "boolean", question: "Y a-t-il une aggravation brutale avec des vésicules creusées (ombiliquées), de la fièvre et une altération de l'état général ?" },
+      { id: "ec_etendu", label: "Érythrodermie", type: "boolean", question: "L'éruption est-elle généralisée à presque tout le corps ?" }
+    ],
+    red_flags: [
+      { id: "ec_rf_herpes", niveau: 3, when: { q: "ec_herpes", eq: true },
+        message_medecin: "Suspicion d'eczéma herpétisé (syndrome de Kaposi-Juliusberg) : urgence (aciclovir IV).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ec_rf_erythro", niveau: 2, when: { q: "ec_etendu", eq: true },
+        message_medecin: "Érythrodermie : avis dermatologique, recherche de complications (déshydratation, infection).",
+        message_patient: "Une éruption généralisée nécessite un avis médical rapide." },
+      { id: "ec_rf_surinfection", niveau: 2, when: { q: "ec_suintant", eq: true },
+        message_medecin: "Eczéma impétiginisé (surinfection) : antibiothérapie adaptée.",
+        message_patient: "Une surinfection nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ec_atopique", diagnostic: "Dermatite atopique", arguments: [{ label: "terrain atopique", w: 3, when: { q: "ec_atopie", eq: true } }, { label: "prurit", w: 1, when: { q: "ec_prurit", eq: true } }],
+        examens_a_discuter: ["Émollients, dermocorticoïdes", "Éviction des irritants"] },
+      { id: "ec_contact", diagnostic: "Eczéma de contact", arguments: [{ label: "zone de contact d'un allergène", w: 3, when: { q: "ec_contact", eq: true } }],
+        examens_a_discuter: ["Éviction, dermocorticoïdes", "Tests épicutanés si récidive"] },
+      { id: "ec_surinfecte", diagnostic: "Eczéma surinfecté", arguments: [{ label: "suintant, croûteux, fébrile", w: 3, when: { q: "ec_suintant", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie"] }
+    ],
+    examens_clinique: ["Topographie et morphologie des lésions", "Recherche de signes de surinfection", "Recherche d'un terrain atopique", "Recherche de vésicules ombiliquées (Kaposi-Juliusberg)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PSORIASIS
+  // -------------------------------------------------------------------------
+  psoriasis: {
+    id: "psoriasis", symptome: "Psoriasis", specialite: ["Dermatologie"],
+    questions: [
+      { id: "ps_plaques", label: "Plaques typiques", type: "boolean", question: "Avez-vous des plaques rouges bien limitées avec des squames épaisses (coudes, genoux, cuir chevelu) ?" },
+      { id: "ps_ongles", label: "Atteinte unguéale", type: "boolean", question: "Avez-vous des ongles abîmés (piquetés, décollés) ?" },
+      { id: "ps_articulaire", label: "Rhumatisme psoriasique", type: "boolean", question: "Avez-vous des douleurs articulaires inflammatoires (raideur le matin) ?" },
+      { id: "ps_pustules", label: "Forme pustuleuse", type: "boolean", question: "Avez-vous une poussée de pustules avec fièvre et altération de l'état général ?" },
+      { id: "ps_etendu", label: "Érythrodermie", type: "boolean", question: "L'éruption est-elle généralisée à presque tout le corps ?" }
+    ],
+    red_flags: [
+      { id: "ps_rf_grave", niveau: 2, when: { any: [{ q: "ps_pustules", eq: true }, { q: "ps_etendu", eq: true }] },
+        message_medecin: "Psoriasis pustuleux généralisé ou érythrodermique : forme grave → avis dermatologique urgent.",
+        message_patient: "Cette forme nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ps_plaques", diagnostic: "Psoriasis en plaques", arguments: [{ label: "plaques squameuses typiques", w: 3, when: { q: "ps_plaques", eq: true } }, { label: "atteinte unguéale", w: 1, when: { q: "ps_ongles", eq: true } }],
+        examens_a_discuter: ["Dermocorticoïdes, analogues de la vitamine D", "Avis dermatologique si étendu"] },
+      { id: "ps_rhumatisme", diagnostic: "Rhumatisme psoriasique", arguments: [{ label: "arthralgies inflammatoires", w: 3, when: { q: "ps_articulaire", eq: true } }],
+        examens_a_discuter: ["Avis rhumatologique"] },
+      { id: "ps_grave", diagnostic: "Forme grave (pustuleuse / érythrodermique)", arguments: [{ label: "pustules + fièvre", w: 3, when: { q: "ps_pustules", eq: true } }, { label: "érythrodermie", w: 2, when: { q: "ps_etendu", eq: true } }],
+        examens_a_discuter: ["Avis dermatologique urgent"] }
+    ],
+    examens_clinique: ["Topographie (coudes, genoux, cuir chevelu, ongles)", "Signe de la tache de bougie", "Examen articulaire", "Évaluation du retentissement et de la surface atteinte"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ZONA
+  // -------------------------------------------------------------------------
+  zona: {
+    id: "zona", symptome: "Zona", specialite: ["Dermatologie", "Infectiologie"],
+    questions: [
+      { id: "zo_topo", label: "Topographie métamérique", type: "boolean", question: "L'éruption (vésicules en bouquet) est-elle limitée à une bande, d'un seul côté du corps ?" },
+      { id: "zo_oeil", label: "Zona ophtalmique", type: "boolean", question: "L'éruption touche-t-elle le front, le nez ou l'œil ?" },
+      { id: "zo_oreille", label: "Ramsay-Hunt", type: "boolean", question: "Y a-t-il une atteinte de l'oreille avec une paralysie du visage ?" },
+      { id: "zo_immuno", label: "Immunodépression", type: "boolean", question: "Êtes-vous immunodéprimé, ou l'éruption est-elle très étendue ?" },
+      { id: "zo_douleur", label: "Douleur", type: "boolean", question: "Avez-vous des douleurs importantes dans la zone ?" }
+    ],
+    red_flags: [
+      { id: "zo_rf_ophtalmique", niveau: 2, when: { q: "zo_oeil", eq: true },
+        message_medecin: "Zona ophtalmique (V1) : risque oculaire → avis ophtalmologique + antiviral en urgence (idéalement < 72 h).",
+        message_patient: "Un zona près de l'œil nécessite un avis médical rapide." },
+      { id: "zo_rf_ramsayhunt", niveau: 2, when: { q: "zo_oreille", eq: true },
+        message_medecin: "Zona auriculaire (Ramsay-Hunt) : antiviral précoce, avis ORL.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." },
+      { id: "zo_rf_immuno", niveau: 2, when: { q: "zo_immuno", eq: true },
+        message_medecin: "Zona chez l'immunodéprimé / extensif : risque de dissémination → avis, antiviral (parfois IV).",
+        message_patient: "Ce contexte nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "zo_zona", diagnostic: "Zona", arguments: [{ label: "éruption métamérique unilatérale", w: 3, when: { q: "zo_topo", eq: true } }, { label: "douleur", w: 1, when: { q: "zo_douleur", eq: true } }],
+        examens_a_discuter: ["Antiviral précoce (< 72 h) si indication", "Antalgiques ; prévention des algies post-zostériennes"] },
+      { id: "zo_ophtalmique", diagnostic: "Zona ophtalmique", arguments: [{ label: "atteinte du territoire V1", w: 3, when: { q: "zo_oeil", eq: true } }],
+        examens_a_discuter: ["Avis ophtalmologique", "Antiviral en urgence"] },
+      { id: "zo_complique", diagnostic: "Zona compliqué (immunodéprimé)", arguments: [{ label: "immunodépression / extensif", w: 3, when: { q: "zo_immuno", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé", "Antiviral (IV si grave)"] }
+    ],
+    examens_clinique: ["Topographie métamérique", "Recherche d'une atteinte V1 (signe de Hutchinson sur le nez)", "Examen oculaire / ORL selon la zone", "Recherche d'une immunodépression"]
+  },
+
+  // -------------------------------------------------------------------------
+  // HERPÈS
+  // -------------------------------------------------------------------------
+  herpes: {
+    id: "herpes", symptome: "Herpès", specialite: ["Dermatologie", "Infectiologie"],
+    questions: [
+      { id: "he2_recidive", label: "Récidivant au même endroit", type: "boolean", question: "Est-ce récidivant, toujours au même endroit (bouton de fièvre / herpès génital) ?" },
+      { id: "he2_genital", label: "Localisation génitale", type: "boolean", question: "Les lésions sont-elles génitales ?" },
+      { id: "he2_oeil", label: "Atteinte oculaire", type: "boolean", question: "Y a-t-il une atteinte de l'œil (rougeur, douleur, baisse de vision) ?" },
+      { id: "he2_immuno", label: "Immunodépression / extension", type: "boolean", question: "Êtes-vous immunodéprimé, ou les lésions sont-elles très étendues ?" },
+      { id: "he2_eczema", label: "Eczéma herpétisé", type: "boolean", question: "Avez-vous un eczéma avec une aggravation brutale et de la fièvre ?" }
+    ],
+    red_flags: [
+      { id: "he2_rf_oeil", niveau: 2, when: { q: "he2_oeil", eq: true },
+        message_medecin: "Herpès oculaire (kératite herpétique) : avis ophtalmologique urgent (NE PAS appliquer de corticoïdes).",
+        message_patient: "Une atteinte de l'œil nécessite un avis ophtalmologique rapide." },
+      { id: "he2_rf_grossesse", niveau: 2, when: { all: [{ q: "he2_genital", eq: true }, { ctx: "grossessePossible", eq: true }] },
+        message_medecin: "Herpès génital + grossesse possible : risque néonatal → avis obstétrical.",
+        message_patient: "Ce contexte nécessite un avis médical." },
+      { id: "he2_rf_grave", niveau: 2, when: { any: [{ q: "he2_immuno", eq: true }, { q: "he2_eczema", eq: true }] },
+        message_medecin: "Herpès de l'immunodéprimé / eczéma herpétisé : forme grave → antiviral, avis.",
+        message_patient: "Ce contexte nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "he2_recidivant", diagnostic: "Herpès labial / génital récidivant", arguments: [{ label: "récidives au même endroit", w: 3, when: { q: "he2_recidive", eq: true } }, { label: "localisation génitale", w: 1, when: { q: "he2_genital", eq: true } }],
+        examens_a_discuter: ["Antiviral si gênant / fréquent", "Mesures de prévention de la transmission"] },
+      { id: "he2_oculaire", diagnostic: "Herpès oculaire", arguments: [{ label: "atteinte de l'œil", w: 3, when: { q: "he2_oeil", eq: true } }],
+        examens_a_discuter: ["Avis ophtalmologique urgent"] },
+      { id: "he2_grave", diagnostic: "Forme grave (immunodéprimé / eczéma herpétisé)", arguments: [{ label: "immunodépression / extension", w: 3, when: { q: "he2_immuno", eq: true } }, { label: "eczéma herpétisé", w: 2, when: { q: "he2_eczema", eq: true } }],
+        examens_a_discuter: ["Aciclovir, avis spécialisé"] }
+    ],
+    examens_clinique: ["Morphologie vésiculeuse en bouquet", "Localisation (labiale, génitale, oculaire)", "Examen oculaire si atteinte faciale", "Recherche d'un terrain à risque"]
+  },
+
+  // -------------------------------------------------------------------------
+  // MYCOSE CUTANÉE
+  // -------------------------------------------------------------------------
+  mycose_cutanee: {
+    id: "mycose_cutanee", symptome: "Mycose cutanée / intertrigo", specialite: ["Dermatologie"],
+    questions: [
+      { id: "my_intertrigo", label: "Intertrigo", type: "boolean", question: "Est-ce dans un pli (aine, sous les seins, entre les orteils), rouge avec des démangeaisons ?" },
+      { id: "my_anneau", label: "Dermatophytie", type: "boolean", question: "Est-ce une plaque ronde qui s'étend en anneau, avec une bordure active ?" },
+      { id: "my_ongle", label: "Onychomycose", type: "boolean", question: "Un ongle est-il épaissi, jauni, décollé ?" },
+      { id: "my_muqueuse", label: "Candidose", type: "boolean", question: "Y a-t-il une atteinte de la bouche (enduit blanc) ou génitale ?" },
+      { id: "my_diabete", label: "Terrain favorisant", type: "boolean", question: "Êtes-vous diabétique, immunodéprimé, ou sous antibiotiques/corticoïdes ?" }
+    ],
+    red_flags: [
+      { id: "my_rf_immuno", niveau: 2, when: { q: "my_muqueuse", eq: true },
+        message_medecin: "Candidose buccale / récidivante : rechercher un facteur favorisant (diabète, immunodépression, VIH, corticoïdes inhalés).",
+        message_patient: "Une mycose de la bouche peut nécessiter de rechercher une cause favorisante." }
+    ],
+    diagnostics_differentiels: [
+      { id: "my_intertrigo", diagnostic: "Intertrigo (dermatophyte / candida)", arguments: [{ label: "atteinte d'un pli", w: 3, when: { q: "my_intertrigo", eq: true } }],
+        examens_a_discuter: ["Prélèvement mycologique si doute", "Antifongique local"] },
+      { id: "my_dermatophytie", diagnostic: "Dermatophytie (herpès circiné)", arguments: [{ label: "plaque annulaire à bordure active", w: 3, when: { q: "my_anneau", eq: true } }],
+        examens_a_discuter: ["Antifongique local"] },
+      { id: "my_onychomycose", diagnostic: "Onychomycose", arguments: [{ label: "ongle épaissi / décollé", w: 3, when: { q: "my_ongle", eq: true } }],
+        examens_a_discuter: ["Prélèvement mycologique AVANT traitement (long)"] },
+      { id: "my_candidose", diagnostic: "Candidose", arguments: [{ label: "atteinte muqueuse", w: 3, when: { q: "my_muqueuse", eq: true } }, { label: "terrain favorisant", w: 1, when: { q: "my_diabete", eq: true } }],
+        examens_a_discuter: ["Antifongique", "Recherche d'un facteur favorisant"] }
+    ],
+    examens_clinique: ["Examen des plis, des ongles, des muqueuses", "Prélèvement mycologique si doute ou avant traitement systémique", "Recherche d'un terrain favorisant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // IMPÉTIGO
+  // -------------------------------------------------------------------------
+  impetigo: {
+    id: "impetigo", symptome: "Impétigo", specialite: ["Dermatologie", "Pédiatrie"],
+    questions: [
+      { id: "im_croutes", label: "Croûtes mélicériques / bulles", type: "boolean", question: "Avez-vous des croûtes jaunâtres couleur miel ou des bulles, souvent autour du nez/de la bouche ?" },
+      { id: "im_fievre", label: "Fièvre / extension", type: "boolean", question: "Avez-vous de la fièvre ou une extension rapide des lésions ?" },
+      { id: "im_etendu", label: "Lésions étendues", type: "boolean", question: "Les lésions sont-elles nombreuses ou étendues ?" },
+      { id: "im_glomerulo", label: "Glomérulonéphrite post-strepto", type: "boolean", question: "Avez-vous, après l'infection, des urines foncées/mousseuses ou des œdèmes ?" }
+    ],
+    red_flags: [
+      { id: "im_rf_extensif", niveau: 2, when: { any: [{ q: "im_fievre", eq: true }, { q: "im_etendu", eq: true }] },
+        message_medecin: "Impétigo étendu / fébrile : antibiothérapie générale, éviction.",
+        message_patient: "Une forme étendue nécessite un avis médical." },
+      { id: "im_rf_gn", niveau: 2, when: { q: "im_glomerulo", eq: true },
+        message_medecin: "Signes de glomérulonéphrite post-streptococcique : avis (protéinurie, créatinine, TA).",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "im_impetigo", diagnostic: "Impétigo", arguments: [{ label: "croûtes mélicériques / bulles", w: 3, when: { q: "im_croutes", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie locale (ou générale si étendu)", "Éviction scolaire, hygiène"] }
+    ],
+    examens_clinique: ["Morphologie (croûtes mélicériques, bulles)", "Étendue des lésions", "Recherche d'une porte d'entrée", "Bandelette urinaire si suspicion de GN"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ACNÉ
+  // -------------------------------------------------------------------------
+  acne: {
+    id: "acne", symptome: "Acné", specialite: ["Dermatologie"],
+    questions: [
+      { id: "ac2_comedons", label: "Acné commune", type: "boolean", question: "Avez-vous des points noirs/blancs (comédons) et des boutons du visage ou du dos ?" },
+      { id: "ac2_nodules", label: "Forme sévère", type: "boolean", question: "Avez-vous des nodules profonds, douloureux, laissant des cicatrices ?" },
+      { id: "ac2_sopk", label: "Hyperandrogénie", type: "boolean", question: "Avez-vous des règles irrégulières et une pilosité excessive ?" },
+      { id: "ac2_medic", label: "Iatrogène", type: "boolean", question: "Prenez-vous des médicaments (corticoïdes, androgènes, certains) ?" }
+    ],
+    red_flags: [
+      { id: "ac2_rf_severe", niveau: 2, when: { q: "ac2_nodules", eq: true },
+        message_medecin: "Acné nodulaire / conglobata sévère : risque cicatriciel → avis dermatologique (isotrétinoïne).",
+        message_patient: "Une acné sévère mérite un avis dermatologique pour éviter les cicatrices." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ac2_commune", diagnostic: "Acné commune", arguments: [{ label: "comédons + lésions inflammatoires", w: 3, when: { q: "ac2_comedons", eq: true } }],
+        examens_a_discuter: ["Traitements topiques (rétinoïdes, peroxyde de benzoyle)"] },
+      { id: "ac2_severe", diagnostic: "Acné sévère (nodulaire)", arguments: [{ label: "nodules / cicatrices", w: 3, when: { q: "ac2_nodules", eq: true } }],
+        examens_a_discuter: ["Avis dermatologique (isotrétinoïne)"] },
+      { id: "ac2_hormonale", diagnostic: "Acné d'origine hormonale (SOPK)", arguments: [{ label: "signes d'hyperandrogénie", w: 3, when: { q: "ac2_sopk", eq: true } }],
+        examens_a_discuter: ["Bilan hormonal", "Avis gynéco / endocrino"] }
+    ],
+    examens_clinique: ["Type et sévérité des lésions", "Retentissement psychologique", "Recherche de signes d'hyperandrogénie"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PIQÛRE D'INSECTE
+  // -------------------------------------------------------------------------
+  piqure_insecte: {
+    id: "piqure_insecte", symptome: "Piqûre d'insecte / morsure d'arthropode", specialite: ["Dermatologie", "Urgences"], urgence: true,
+    questions: [
+      { id: "pi_anaphylaxie", label: "Anaphylaxie", type: "boolean", question: "Avez-vous un gonflement du visage/de la gorge, une gêne respiratoire, ou un malaise ?" },
+      { id: "pi_tique", label: "Tique / érythème migrant", type: "boolean", question: "S'agit-il d'une piqûre de tique, ou avez-vous une plaque rouge qui s'étend en anneau (jours/semaines après) ?" },
+      { id: "pi_cellulite", label: "Surinfection", type: "boolean", question: "La zone est-elle très rouge, chaude, étendue, avec de la fièvre ?" },
+      { id: "pi_venimeux", label: "Animal venimeux / multiples", type: "boolean", question: "Y a-t-il de nombreuses piqûres ou un animal venimeux (frelon, scorpion, serpent) ?" }
+    ],
+    red_flags: [
+      { id: "pi_rf_anaphylaxie", niveau: 3, when: { q: "pi_anaphylaxie", eq: true },
+        message_medecin: "Réaction anaphylactique : urgence vitale (adrénaline IM, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "pi_rf_venimeux", niveau: 3, when: { q: "pi_venimeux", eq: true },
+        message_medecin: "Envenimation / piqûres multiples : surveillance, avis (centre antipoison).",
+        message_patient: "Ce contexte nécessite une évaluation médicale urgente." },
+      { id: "pi_rf_lyme", niveau: 2, when: { q: "pi_tique", eq: true },
+        message_medecin: "Piqûre de tique / érythème migrant : maladie de Lyme → antibiothérapie ; retrait précoce de la tique.",
+        message_patient: "Une piqûre de tique avec rougeur qui s'étend nécessite un avis médical." },
+      { id: "pi_rf_cellulite", niveau: 2, when: { q: "pi_cellulite", eq: true },
+        message_medecin: "Surinfection (dermohypodermite) : antibiothérapie.",
+        message_patient: "Une zone très rouge et chaude avec fièvre nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pi_locale", diagnostic: "Réaction locale banale", arguments: [{ label: "sans signe général ni surinfection", w: 2, when: { all: [{ q: "pi_anaphylaxie", eq: false }, { q: "pi_cellulite", eq: false }] } }],
+        examens_a_discuter: ["Antihistaminique, dermocorticoïde", "Glace, surveillance"] },
+      { id: "pi_anaphylaxie", diagnostic: "Anaphylaxie", arguments: [{ label: "signes généraux / respiratoires", w: 3, when: { q: "pi_anaphylaxie", eq: true } }],
+        examens_a_discuter: ["Adrénaline IM"] },
+      { id: "pi_lyme", diagnostic: "Maladie de Lyme (érythème migrant)", arguments: [{ label: "tique / érythème migrant", w: 3, when: { q: "pi_tique", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie (amoxicilline/doxycycline)"] },
+      { id: "pi_surinfection", diagnostic: "Surinfection (dermohypodermite)", arguments: [{ label: "rouge, chaud, fébrile", w: 3, when: { q: "pi_cellulite", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie"] }
+    ],
+    examens_clinique: ["Examen de la lésion et signes généraux", "Recherche d'un érythème migrant", "Retrait d'une tique le cas échéant", "Statut vaccinal antitétanique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // BRÛLURE
+  // -------------------------------------------------------------------------
+  brulure: {
+    id: "brulure", symptome: "Brûlure", specialite: ["Dermatologie", "Urgences"], urgence: true,
+    questions: [
+      { id: "br_etendue", label: "Étendue", type: "boolean", question: "La brûlure est-elle étendue (plus grande que la paume de la main) ou touche-t-elle plusieurs zones ?" },
+      { id: "br_profonde", label: "Profondeur", type: "boolean", question: "La peau est-elle blanche, cartonnée ou noire, ou la zone est-elle indolore (brûlure profonde) ?" },
+      { id: "br_zone", label: "Zone fonctionnelle", type: "boolean", question: "Touche-t-elle le visage, les mains, les pieds, les organes génitaux, ou une articulation ?" },
+      { id: "br_inhalation", label: "Inhalation / voies aériennes", type: "boolean", question: "Y a-t-il eu inhalation de fumée, brûlure de la face, ou une voix rauque ?" },
+      { id: "br_electrique", label: "Électrique / chimique", type: "boolean", question: "Est-ce une brûlure électrique ou chimique ?" }
+    ],
+    red_flags: [
+      { id: "br_rf_grave", niveau: 3, when: { any: [{ q: "br_etendue", eq: true }, { q: "br_profonde", eq: true }, { q: "br_inhalation", eq: true }, { q: "br_electrique", eq: true }] },
+        message_medecin: "Brûlure étendue / profonde / des voies aériennes / électrique ou chimique : urgence (centre des brûlés, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "br_rf_zone", niveau: 2, when: { q: "br_zone", eq: true },
+        message_medecin: "Brûlure de zone fonctionnelle (visage, mains, périnée, articulations) : avis spécialisé.",
+        message_patient: "Une brûlure de ces zones nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "br_superficielle", diagnostic: "Brûlure superficielle peu étendue", arguments: [{ label: "ni étendue ni profonde", w: 2, when: { all: [{ q: "br_etendue", eq: false }, { q: "br_profonde", eq: false }] } }],
+        examens_a_discuter: ["Refroidir, pansement, antalgiques", "Mise à jour antitétanique"] },
+      { id: "br_grave", diagnostic: "Brûlure grave", arguments: [{ label: "étendue", w: 2, when: { q: "br_etendue", eq: true } }, { label: "profonde", w: 2, when: { q: "br_profonde", eq: true } }, { label: "inhalation", w: 2, when: { q: "br_inhalation", eq: true } }, { label: "électrique / chimique", w: 1, when: { q: "br_electrique", eq: true } }],
+        examens_a_discuter: ["Réanimation (remplissage)", "Orientation vers un centre des brûlés"] }
+    ],
+    examens_clinique: ["Estimer la surface brûlée (% de surface corporelle)", "Évaluer la profondeur", "Repérer les zones fonctionnelles", "Rechercher des signes d'inhalation", "Statut antitétanique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PLAIE
+  // -------------------------------------------------------------------------
+  plaie: {
+    id: "plaie", symptome: "Plaie", specialite: ["Urgences", "Chirurgie"],
+    questions: [
+      { id: "pl_morsure", label: "Morsure", type: "boolean", question: "S'agit-il d'une morsure (animale ou humaine) ?" },
+      { id: "pl_profonde", label: "Plaie profonde / complexe", type: "boolean", question: "La plaie est-elle profonde, souillée, avec un corps étranger, ou une perte de mobilité/sensibilité (tendon/nerf) ?" },
+      { id: "pl_infectee", label: "Plaie infectée", type: "boolean", question: "La plaie est-elle rouge, chaude, gonflée, avec du pus ou de la fièvre ?" },
+      { id: "pl_tetanos", label: "Tétanos non à jour", type: "boolean", question: "Votre vaccination contre le tétanos date-t-elle de plus de 10-20 ans, ou ne le savez-vous pas ?" }
+    ],
+    red_flags: [
+      { id: "pl_rf_profonde", niveau: 2, when: { q: "pl_profonde", eq: true },
+        message_medecin: "Plaie profonde / atteinte tendineuse-nerveuse / corps étranger : exploration, avis chirurgical.",
+        message_patient: "Cette plaie nécessite un avis médical rapide." },
+      { id: "pl_rf_morsure", niveau: 2, when: { q: "pl_morsure", eq: true },
+        message_medecin: "Morsure : risque infectieux (pas de suture d'emblée selon les cas), antibioprophylaxie au besoin, vérifier tétanos et rage.",
+        message_patient: "Une morsure nécessite un avis médical." },
+      { id: "pl_rf_infectee", niveau: 2, when: { q: "pl_infectee", eq: true },
+        message_medecin: "Plaie infectée : parage, antibiothérapie, recherche de complications.",
+        message_patient: "Une plaie infectée nécessite un avis médical." },
+      { id: "pl_rf_tetanos", niveau: 2, when: { q: "pl_tetanos", eq: true },
+        message_medecin: "Couverture antitétanique incertaine : mise à jour (VAT ± immunoglobulines selon le risque).",
+        message_patient: "Votre vaccination contre le tétanos devra être vérifiée." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pl_simple", diagnostic: "Plaie simple", arguments: [{ label: "superficielle, propre, non mordue", w: 2, when: { all: [{ q: "pl_profonde", eq: false }, { q: "pl_infectee", eq: false }, { q: "pl_morsure", eq: false }] } }],
+        examens_a_discuter: ["Nettoyage, parage, suture si récente et propre", "Mise à jour antitétanique"] },
+      { id: "pl_morsure", diagnostic: "Morsure", arguments: [{ label: "morsure", w: 3, when: { q: "pl_morsure", eq: true } }],
+        examens_a_discuter: ["Lavage abondant, avis", "Antibioprophylaxie, tétanos / rage"] },
+      { id: "pl_compliquee", diagnostic: "Plaie compliquée (profonde / infectée)", arguments: [{ label: "profonde / corps étranger", w: 3, when: { q: "pl_profonde", eq: true } }, { label: "infectée", w: 2, when: { q: "pl_infectee", eq: true } }],
+        examens_a_discuter: ["Exploration chirurgicale"] }
+    ],
+    examens_clinique: ["Explorer la plaie (profondeur, tendons, nerfs, vaisseaux, corps étranger)", "Statut antitétanique", "Recherche de signes d'infection", "Évaluation fonctionnelle en aval"]
   }
 };
