@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aide au raisonnement clinique — Préparation de consultation</title>
+  <meta name="description" content="Outil d'aide au raisonnement clinique (médecine générale) : le patient saisit ses symptômes, l'application détecte les red flags et génère une synthèse structurée pour le médecin. Ne pose pas de diagnostic." />
+  <style>
+:root {
+  --bg:#eef2f6; --surface:#fff; --ink:#1b2733; --soft:#5b6b7b; --line:#e1e8ef;
+  --brand:#0e7c86; --brand-d:#0a5a62;
+  --u1:#0d8a4f; --u1-bg:#e9f8ef;
+  --u2:#c97a00; --u2-bg:#fff6e6;
+  --u3:#d92d20; --u3-bg:#fdf0ef;
+  --radius:14px; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* top bar */
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}
+.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}
+.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.mode-switch{display:flex;background:rgba(255,255,255,.15);border-radius:10px;padding:3px}
+.mode-switch button{border:0;background:transparent;color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.mode-switch button.active{background:#fff;color:var(--brand-d)}
+
+/* legal banner */
+.legal-banner{background:#fff7ed;border-bottom:1px solid #fde4c8;color:#7c4a03;
+  font-size:.82rem;padding:10px 20px;max-width:none;text-align:center}
+.legal-banner strong{color:#9a3412}
+
+.wrap{max-width:1000px;margin:20px auto;padding:0 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 26px;margin-bottom:18px}
+h2{margin:0 0 12px;font-size:1.3rem}
+.lead{color:var(--soft)}
+.muted{color:var(--soft);font-size:.9rem}
+
+/* form fields */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:block;margin:14px 0}
+.field>span,legend{font-weight:600;font-size:.9rem;display:block;margin-bottom:5px}
+.field input[type=number],.field input[type=text],.field select{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;background:#fbfdff}
+.field.check,.field.consent{display:flex;gap:9px;align-items:flex-start}
+.field.check input,.field.consent input{margin-top:3px}
+.consent span{font-size:.9rem;color:var(--soft)}
+fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:flex;gap:6px;align-items:center;background:#f4f8fb;border:1px solid var(--line);
+  padding:6px 11px;border-radius:999px;font-size:.85rem;cursor:pointer}
+
+/* buttons */
+.btn{border:0;border-radius:10px;padding:11px 18px;font-size:.95rem;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:disabled{background:#9fc4c8;cursor:not-allowed}
+.btn.ghost{background:#eef3f6;color:var(--brand-d)}
+.search{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;margin-bottom:14px}
+
+/* symptom grid */
+.symptom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.symptom-card{text-align:left;background:#fbfdff;border:1px solid var(--line);border-radius:12px;padding:15px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:.12s}
+.symptom-card:hover{border-color:var(--brand);background:#f1f8f9;transform:translateY(-1px)}
+.sc-title{font-weight:700}
+.sc-spec{font-size:.78rem;color:var(--soft)}
+
+/* quiz */
+.quiz-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.quiz-head h2{margin:0}
+.q{padding:14px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q-text{font-weight:600;margin:0 0 10px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{background:#f4f8fb;border:1px solid var(--line);border-radius:9px;padding:9px 15px;cursor:pointer;font-size:.9rem}
+.choice:hover{border-color:var(--brand)}
+.choice.sel{background:var(--brand);color:#fff;border-color:var(--brand)}
+.scale-out{margin-left:10px;font-weight:700;color:var(--brand-d)}
+.quiz-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap}
+.progress{color:var(--soft);font-size:.85rem}
+
+/* patient result */
+.alert{padding:14px 16px;border-radius:10px;font-size:.95rem}
+.alert.u1{background:var(--u1-bg);border:1px solid #bde8cd}
+.alert.u2{background:var(--u2-bg);border:1px solid #f6dcab}
+.alert.u3{background:var(--u3-bg);border:1px solid #f5c2bd}
+.cta-row{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+
+/* synthese medecin */
+.synthese{padding:0;overflow:hidden}
+.syn-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;color:#fff}
+.syn-head.u1{background:var(--u1)}.syn-head.u2{background:var(--u2)}.syn-head.u3{background:var(--u3)}
+.syn-head h2{margin:0;font-size:1.2rem;color:#fff}
+.syn-sub{margin:3px 0 0;font-size:.82rem;opacity:.92}
+.urg-badge{text-align:center;background:rgba(255,255,255,.2);border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.urg-badge small{display:block;font-size:.66rem;font-weight:600;opacity:.95}
+.syn-block{padding:16px 24px;border-bottom:1px solid var(--line)}
+.syn-block h3{margin:0 0 8px;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-d)}
+.recap{columns:2;column-gap:24px;margin:0;padding-left:18px;font-size:.92rem}
+.rf{margin:0;padding-left:18px}
+.rf li{margin:6px 0}
+.u-tag{display:inline-block;color:#fff;border-radius:5px;padding:1px 7px;font-size:.72rem;font-weight:700;margin-right:4px}
+.u-tag.u1{background:var(--u1)}.u-tag.u2{background:var(--u2)}.u-tag.u3{background:var(--u3)}
+.ok{background:var(--u1-bg);border:1px solid #bde8cd;padding:10px 12px;border-radius:8px;margin:0}
+.hyp{margin:0;padding-left:20px}
+.hyp li{margin:6px 0}
+.args{color:var(--soft);font-size:.85rem}
+.score{font-size:.74rem;color:#fff;background:var(--brand);border-radius:5px;padding:1px 6px;margin-left:4px}
+.verif,.exam{margin:0;padding-left:18px;font-size:.92rem}
+.verif li,.exam li{margin:3px 0}
+.orient{font-weight:600;padding:10px 12px;border-radius:8px;margin:0}
+.orient.u1{background:var(--u1-bg)}.orient.u2{background:var(--u2-bg)}.orient.u3{background:var(--u3-bg)}
+.doctor-notes{padding:16px 24px}
+.doctor-notes label span{font-weight:600;font-size:.9rem;display:block;margin-bottom:6px}
+.doctor-notes textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:.92rem}
+.syn-actions{padding:16px 24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.disclaimer{font-size:.78rem;color:var(--soft);flex:1;min-width:200px}
+
+.foot{max-width:1000px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
+
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.recap{columns:1}}
+
+/* print : ne montrer que la synthèse médecin */
+@media print{
+  .topbar,.legal-banner,.mode-switch,.foot,#view-patient,.syn-actions,.doctor-notes textarea{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none;border:none}
+  .syn-head{color:#000!important;background:#fff!important;border-bottom:2px solid #000}
+  .syn-head h2{color:#000}
+  .urg-badge{background:#eee;color:#000}
+}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🧭</span>
+        <div>
+          <h1>Aide au raisonnement clinique</h1>
+          <p class="subtitle">Préparation de consultation — médecine générale</p>
+        </div>
+      </div>
+      <nav class="mode-switch" id="modeSwitch">
+        <button data-mode="patient" class="active">Espace patient</button>
+        <button data-mode="medecin">Espace médecin</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Bandeau médico-légal permanent -->
+  <div class="legal-banner" role="alert">
+    <strong>⚠ Cette application ne pose pas de diagnostic.</strong>
+    Elle aide à structurer les symptômes et à préparer la consultation.
+    En cas de douleur thoracique, gêne respiratoire importante, malaise, déficit
+    neurologique, confusion, fièvre avec taches violacées (purpura), douleur intense
+    brutale, ou grossesse avec douleur/saignement&nbsp;:
+    <strong>appelez le 15 (SAMU) ou le 112.</strong>
+  </div>
+
+  <main class="wrap">
+    <!-- ================= ESPACE PATIENT ================= -->
+    <section id="view-patient">
+
+      <!-- Étape 0 : consentement + contexte -->
+      <div class="card step" id="step-intro">
+        <h2>Avant de commencer</h2>
+        <p class="lead">Quelques questions simples vont vous être posées sur ce qui vous amène.
+          Vos réponses aideront le médecin à préparer la consultation. <strong>Elles ne
+          remplacent pas son avis.</strong></p>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Âge</span>
+            <input type="number" id="ctx-age" min="0" max="120" placeholder="ex. 45" />
+          </label>
+          <label class="field">
+            <span>Sexe</span>
+            <select id="ctx-sexe">
+              <option value="">—</option>
+              <option>Femme</option>
+              <option>Homme</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field check" id="ctx-grossesse-wrap" hidden>
+          <input type="checkbox" id="ctx-grossesse" />
+          <span>Une grossesse est possible (rapports sans contraception fiable)</span>
+        </label>
+
+        <fieldset class="field">
+          <legend>Avez-vous l'un de ces antécédents ? (facultatif)</legend>
+          <div class="chips" id="ctx-atcd">
+            <label><input type="checkbox" value="cancer connu" /> Cancer connu</label>
+            <label><input type="checkbox" value="immunodépression" /> Immunodépression</label>
+            <label><input type="checkbox" value="sous anticoagulant" /> Anticoagulant</label>
+            <label><input type="checkbox" value="terrain cardiovasculaire" /> Maladie cardiovasculaire</label>
+            <label><input type="checkbox" value="diabète" /> Diabète</label>
+          </div>
+        </fieldset>
+
+        <label class="field consent">
+          <input type="checkbox" id="ctx-consent" />
+          <span>J'ai compris que cet outil ne pose pas de diagnostic et j'accepte de répondre
+            pour préparer ma consultation.</span>
+        </label>
+
+        <button class="btn primary" id="toSymptom" disabled>Continuer</button>
+      </div>
+
+      <!-- Étape 1 : choix du symptôme -->
+      <div class="card step" id="step-symptom" hidden>
+        <h2>Quel est votre symptôme principal ?</h2>
+        <input type="search" id="symptomSearch" class="search" placeholder="Rechercher (ex. fatigue, ganglion, douleur du visage…)" />
+        <div class="symptom-grid" id="symptomGrid"></div>
+      </div>
+
+      <!-- Étape 2 : questionnaire -->
+      <div class="card step" id="step-quiz" hidden>
+        <div class="quiz-head">
+          <button class="btn ghost" id="backToSymptom">← Changer de symptôme</button>
+          <h2 id="quizTitle"></h2>
+        </div>
+        <form id="quizForm" class="quiz"></form>
+        <div class="quiz-actions">
+          <span class="progress" id="quizProgress"></span>
+          <button class="btn primary" id="submitQuiz">Voir le résultat</button>
+        </div>
+      </div>
+
+      <!-- Étape 3 : retour patient (prudent, non anxiogène) -->
+      <div class="card step" id="step-patient-result" hidden>
+        <h2>Merci, c'est noté ✅</h2>
+        <div id="patientMessage"></div>
+        <div class="cta-row">
+          <button class="btn primary" id="goMedecin">Afficher la synthèse pour le médecin</button>
+          <button class="btn ghost" id="restart">Recommencer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ESPACE MÉDECIN ================= -->
+    <section id="view-medecin" hidden>
+      <div class="card" id="medecinEmpty">
+        <h2>Espace médecin</h2>
+        <p class="lead">Aucune consultation en cours. Demandez au patient de remplir le
+          questionnaire dans l'espace patient, ou chargez un exemple.</p>
+        <button class="btn ghost" id="loadDemo">Charger un exemple (acouphène)</button>
+      </div>
+
+      <div id="medecinSynthese" hidden></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Outil d'aide au raisonnement — <strong>ne remplace pas le médecin</strong>.
+      Red flags codés en règles explicites · raisonnement différentiel · validation médicale obligatoire.
+      Source clinique : Manuel du Généraliste, Dr Mario Fuiano. Prototype — mode local, aucune donnée transmise.</p>
+  </footer>
+
+  <script>
+/* ============================================================================
+ * BASE DE CONNAISSANCES CLINIQUE — Aide au raisonnement (NE POSE PAS DE DIAGNOSTIC)
+ * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » /
+ *          « Fiches d'interrogatoire par symptôme » — Dr Mario Fuiano.
+ *
+ * Format documenté dans docs/modele-de-donnees.md.
+ * Prédicats (champ `when` / `showIf` / `w.when`) évalués par engine.js :
+ *   { q:"id", eq:val | in:[...] | gte:n | lte:n | truthy:true }
+ *   { ctx:"age|sexe|grossessePossible|ageProcreer|antecedent", eq|in|gte|lte|has }
+ *   { all:[...] }  (ET)   { any:[...] }  (OU)   { not: pred }
+ * Niveaux d'urgence : 1 = non urgent · 2 = avis rapide · 3 = urgence.
+ * ========================================================================== */
+window.KB = {
+  meta: {
+    version: "0.1.0",
+    source: "Manuel du Généraliste — Dr Mario Fuiano",
+    avertissement:
+      "Outil d'aide au raisonnement clinique. Ne pose pas de diagnostic. " +
+      "Toute conclusion doit être validée par un médecin."
+  },
+
+  // -------------------------------------------------------------------------
+  // 01 — ACOUPHÈNE
+  // -------------------------------------------------------------------------
+  acouphene: {
+    id: "acouphene",
+    symptome: "Acouphène (bruit dans l'oreille)",
+    specialite: ["ORL", "Neurologie"],
+    questions: [
+      { id: "ac_cote", label: "Latéralité", type: "single_choice",
+        question: "Le bruit est-il dans une seule oreille ou dans les deux ?",
+        options: ["Une seule oreille", "Les deux oreilles", "Je ne sais pas"] },
+      { id: "ac_pulsatile", label: "Caractère pulsatile", type: "boolean",
+        question: "Le bruit bat-il au rythme de votre cœur (comme un pouls) ?" },
+      { id: "ac_hypoacousie", label: "Baisse d'audition", type: "boolean",
+        question: "Entendez-vous moins bien de l'oreille concernée ?" },
+      { id: "ac_brusque", label: "Surdité brutale", type: "boolean",
+        question: "Cette baisse d'audition est-elle apparue brutalement, en quelques heures ou jours ?",
+        showIf: { q: "ac_hypoacousie", eq: true } },
+      { id: "ac_vertige", label: "Vertiges rotatoires", type: "boolean",
+        question: "Avez-vous des vertiges qui tournent ?" },
+      { id: "ac_otalgie", label: "Otalgie / écoulement", type: "boolean",
+        question: "Avez-vous mal à l'oreille ou un écoulement ?" },
+      { id: "ac_trauma", label: "Traumatisme sonore", type: "boolean",
+        question: "Avez-vous été exposé récemment à un bruit très fort (concert, explosion, tir) ?" },
+      { id: "ac_ototox", label: "Médicaments ototoxiques", type: "boolean",
+        question: "Prenez-vous certains médicaments : aspirine à forte dose, anti-inflammatoires, certains antibiotiques, ou une chimiothérapie ?" },
+      { id: "ac_neuro", label: "Signes neurologiques", type: "boolean",
+        question: "Avez-vous des signes neurologiques : trouble de l'équilibre marqué, vision double, faiblesse d'un côté, troubles de la parole ?" }
+    ],
+    red_flags: [
+      { id: "ac_rf_pulsatile", niveau: 2,
+        when: { all: [{ q: "ac_pulsatile", eq: true }, { q: "ac_cote", eq: "Une seule oreille" }] },
+        message_medecin: "Acouphène pulsatile unilatéral : cause vasculaire ou tumorale à éliminer (auscultation cervicale, imagerie vasculaire, avis ORL).",
+        message_patient: "La nature du bruit décrit nécessite un avis médical rapide pour vérification." },
+      { id: "ac_rf_surdite_brusque", niveau: 3,
+        when: { all: [{ q: "ac_hypoacousie", eq: true }, { q: "ac_brusque", eq: true }] },
+        message_medecin: "Surdité brusque associée : urgence ORL (corticothérapie d'autant plus efficace qu'elle est précoce).",
+        message_patient: "Une baisse d'audition brutale nécessite une évaluation médicale sans attendre." },
+      { id: "ac_rf_neuro", niveau: 3,
+        when: { q: "ac_neuro", eq: true },
+        message_medecin: "Signes neurologiques centraux associés : avis neurologique urgent (éliminer une cause centrale).",
+        message_patient: "Les signes neurologiques décrits nécessitent une évaluation médicale sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ac_vasc", diagnostic: "Cause vasculaire (acouphène pulsatile)",
+        arguments: [{ label: "synchrone du pouls", w: 3, when: { q: "ac_pulsatile", eq: true } },
+                    { label: "unilatéral", w: 1, when: { q: "ac_cote", eq: "Une seule oreille" } }],
+        examens_a_discuter: ["Auscultation cervicale (souffle)", "Imagerie vasculaire selon contexte", "Avis ORL"] },
+      { id: "ac_neurinome", diagnostic: "Neurinome de l'acoustique (à éliminer)",
+        arguments: [{ label: "unilatéral + hypoacousie de perception", w: 3, when: { all: [{ q: "ac_cote", eq: "Une seule oreille" }, { q: "ac_hypoacousie", eq: true }] } },
+                    { label: "non pulsatile", w: 1, when: { q: "ac_pulsatile", eq: false } }],
+        examens_a_discuter: ["Audiométrie tonale et vocale", "IRM des conduits auditifs internes"] },
+      { id: "ac_meniere", diagnostic: "Maladie de Ménière",
+        arguments: [{ label: "vertige rotatoire", w: 2, when: { q: "ac_vertige", eq: true } },
+                    { label: "surdité fluctuante associée", w: 1, when: { q: "ac_hypoacousie", eq: true } }],
+        examens_a_discuter: ["Audiométrie", "Avis ORL"] },
+      { id: "ac_trauma_presby", diagnostic: "Traumatisme sonore / presbyacousie",
+        arguments: [{ label: "exposition au bruit", w: 3, when: { q: "ac_trauma", eq: true } },
+                    { label: "bilatéral", w: 1, when: { q: "ac_cote", eq: "Les deux oreilles" } }],
+        examens_a_discuter: ["Audiométrie (scotome sur 4 kHz)"] },
+      { id: "ac_ototox", diagnostic: "Cause ototoxique (iatrogène)",
+        arguments: [{ label: "prise de médicaments ototoxiques", w: 2, when: { q: "ac_ototox", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance", "Audiométrie de référence"] }
+    ],
+    examens_clinique: [
+      "Otoscopie (rechercher bouchon de cérumen, otite)",
+      "Acoumétrie (Weber / Rinne)",
+      "Auscultation des trajets carotidiens",
+      "Tension artérielle",
+      "Examen neurologique simple (équilibre, paires crâniennes)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 02 — ADÉNOPATHIE SUPERFICIELLE
+  // -------------------------------------------------------------------------
+  adenopathie: {
+    id: "adenopathie",
+    symptome: "Ganglion gonflé (adénopathie superficielle)",
+    specialite: ["Hématologie", "Infectiologie", "ORL"],
+    questions: [
+      { id: "ad_loc", label: "Localisation", type: "single_choice",
+        question: "Où se situe le ganglion gonflé ?",
+        options: ["Cou", "Au-dessus de la clavicule", "Aisselle", "Aine", "Plusieurs endroits"] },
+      { id: "ad_taille", label: "Taille", type: "single_choice",
+        question: "Quelle est sa taille approximative ?",
+        options: ["Moins de 1 cm", "1 à 2 cm", "Plus de 2 cm"] },
+      { id: "ad_duree", label: "Évolution", type: "single_choice",
+        question: "Depuis combien de temps est-il présent ?",
+        options: ["Moins d'une semaine", "1 à 4 semaines", "Plus d'un mois"] },
+      { id: "ad_douleur", label: "Douleur", type: "boolean",
+        question: "Le ganglion est-il douloureux ?" },
+      { id: "ad_fixe", label: "Dur et fixé", type: "boolean",
+        question: "Est-il dur et fixé (il ne roule pas sous les doigts) ?" },
+      { id: "ad_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "ad_sueurs", label: "Sueurs nocturnes", type: "boolean",
+        question: "Avez-vous des sueurs la nuit, au point de tremper les draps ?" },
+      { id: "ad_amaigr", label: "Amaigrissement", type: "boolean",
+        question: "Avez-vous maigri sans le vouloir récemment ?" },
+      { id: "ad_prurit", label: "Prurit", type: "boolean",
+        question: "Avez-vous des démangeaisons de tout le corps ?" },
+      { id: "ad_porte", label: "Porte d'entrée", type: "boolean",
+        question: "Y a-t-il une plaie, un bouton ou une infection près du ganglion ?" },
+      { id: "ad_chat", label: "Griffure de chat", type: "boolean",
+        question: "Avez-vous été griffé ou mordu par un chat récemment ?" },
+      { id: "ad_tabac", label: "Tabac / alcool", type: "boolean",
+        question: "Fumez-vous ou consommez-vous de l'alcool régulièrement ?" }
+    ],
+    red_flags: [
+      { id: "ad_rf_susclav", niveau: 2,
+        when: { q: "ad_loc", eq: "Au-dessus de la clavicule" },
+        message_medecin: "Adénopathie sus-claviculaire : localisation TOUJOURS suspecte (Troisier à gauche → néo digestif/pelvien ; à droite → médiastin/poumon). Évaluation rapide.",
+        message_patient: "La localisation décrite nécessite un avis médical rapide." },
+      { id: "ad_rf_dure_b", niveau: 2,
+        when: { all: [{ q: "ad_fixe", eq: true }, { any: [{ q: "ad_sueurs", eq: true }, { q: "ad_amaigr", eq: true }] }] },
+        message_medecin: "Adénopathie dure/fixée avec signes généraux (sueurs/amaigrissement) : suspicion de lymphome ou de métastase → biopsie ganglionnaire à discuter (pas la ponction seule).",
+        message_patient: "L'association décrite nécessite un avis médical rapide pour des examens complémentaires." },
+      { id: "ad_rf_persistante", niveau: 2,
+        when: { all: [{ q: "ad_duree", eq: "Plus d'un mois" }, { q: "ad_taille", eq: "Plus de 2 cm" }] },
+        message_medecin: "ADP > 2 cm persistant > 3-4 semaines sans cause : biopsie ganglionnaire à discuter.",
+        message_patient: "Un ganglion volumineux et durable mérite un avis médical pour exploration." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ad_reactionnelle", diagnostic: "Adénite réactionnelle (infectieuse)",
+        arguments: [{ label: "chaude/douloureuse", w: 2, when: { q: "ad_douleur", eq: true } },
+                    { label: "porte d'entrée dans le territoire", w: 2, when: { q: "ad_porte", eq: true } },
+                    { label: "contage félin (maladie des griffes du chat)", w: 1, when: { q: "ad_chat", eq: true } },
+                    { label: "évolution courte", w: 1, when: { q: "ad_duree", eq: "Moins d'une semaine" } }],
+        examens_a_discuter: ["Traitement de la porte d'entrée", "Réévaluation à 2-4 semaines", "Sérologie bartonellose si contage chat"] },
+      { id: "ad_neo_susclav", diagnostic: "Néoplasie viscérale/médiastinale (ADP sus-claviculaire)",
+        arguments: [{ label: "siège sus-claviculaire", w: 3, when: { q: "ad_loc", eq: "Au-dessus de la clavicule" } }],
+        examens_a_discuter: ["Imagerie thoraco-abdomino-pelvienne", "Endoscopies selon contexte", "Avis spécialisé"] },
+      { id: "ad_lymphome", diagnostic: "Lymphome / hémopathie",
+        arguments: [{ label: "polyadénopathie", w: 2, when: { q: "ad_loc", eq: "Plusieurs endroits" } },
+                    { label: "signes B (sueurs)", w: 1, when: { q: "ad_sueurs", eq: true } },
+                    { label: "signes B (amaigrissement)", w: 1, when: { q: "ad_amaigr", eq: true } },
+                    { label: "prurit", w: 1, when: { q: "ad_prurit", eq: true } },
+                    { label: "ganglion fixé", w: 1, when: { q: "ad_fixe", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes, LDH", "Sérologies VIH/EBV/CMV/toxoplasmose", "Biopsie ganglionnaire (exérèse)"] },
+      { id: "ad_metastase", diagnostic: "Métastase ganglionnaire",
+        arguments: [{ label: "ganglion dur et fixé", w: 3, when: { q: "ad_fixe", eq: true } },
+                    { label: "tabac/alcool (si cervical)", w: 1, when: { all: [{ q: "ad_tabac", eq: true }, { q: "ad_loc", eq: "Cou" }] } }],
+        examens_a_discuter: ["Examen ORL complet (si cervical)", "Recherche du primitif", "Biopsie"] },
+      { id: "ad_infectieux", diagnostic: "Causes infectieuses générales (MNI, toxo, VIH, BK)",
+        arguments: [{ label: "fièvre", w: 2, when: { q: "ad_fievre", eq: true } }],
+        examens_a_discuter: ["MNI-test / sérologies", "Sérologie VIH", "IDR / test IGRA si suspicion tuberculose"] }
+    ],
+    examens_clinique: [
+      "Palpation de TOUTES les aires ganglionnaires",
+      "Caractérisation : taille, consistance, mobilité, sensibilité",
+      "Examen ORL si adénopathie cervicale",
+      "Palpation hépatique et splénique",
+      "Recherche de la porte d'entrée dans le territoire de drainage"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 03 — ALGIE FACIALE
+  // -------------------------------------------------------------------------
+  algie_faciale: {
+    id: "algie_faciale",
+    symptome: "Douleur de la face (algie faciale)",
+    specialite: ["Neurologie", "ORL", "Ophtalmologie"],
+    questions: [
+      { id: "af_duree_acces", label: "Durée des accès", type: "single_choice",
+        question: "Combien de temps dure chaque crise de douleur ?",
+        options: ["Quelques secondes", "15 minutes à 3 heures", "Plusieurs heures"] },
+      { id: "af_type", label: "Type de douleur", type: "single_choice",
+        question: "Comment décririez-vous la douleur ?",
+        options: ["Décharge électrique brève", "Douleur atroce autour de l'œil", "Douleur qui pulse (qui bat)", "Douleur en étau / pression"] },
+      { id: "af_gachette", label: "Zone gâchette", type: "boolean",
+        question: "La douleur est-elle déclenchée en touchant le visage, en mâchant ou en parlant ?" },
+      { id: "af_dysauto", label: "Signes dysautonomiques", type: "boolean",
+        question: "Pendant la crise, avez-vous d'un seul côté : œil rouge ou larmoyant, nez bouché ou qui coule, paupière tombante ?" },
+      { id: "af_migraine", label: "Photo/phonophobie, nausées", type: "boolean",
+        question: "La douleur s'accompagne-t-elle d'une gêne à la lumière ou au bruit, de nausées ?" },
+      { id: "af_temporal", label: "Signes de Horton", type: "boolean",
+        question: "Avez-vous mal au niveau de la tempe, avec une artère dure ou douloureuse, ou une douleur de la mâchoire en mangeant ?" },
+      { id: "af_visuel", label: "Troubles visuels", type: "boolean",
+        question: "Avez-vous des troubles de la vue (baisse de vision, vision double, voile) ?" },
+      { id: "af_deficit", label: "Déficit neurologique", type: "boolean",
+        question: "Avez-vous une faiblesse, un engourdissement du visage, ou d'autres signes neurologiques ?" },
+      { id: "af_fievre", label: "Fièvre / AEG", type: "boolean",
+        question: "Avez-vous de la fièvre ou une altération récente de l'état général ?" }
+    ],
+    red_flags: [
+      { id: "af_rf_horton", niveau: 3,
+        when: { all: [{ ctx: "age", gte: 50 }, { any: [{ q: "af_temporal", eq: true }, { q: "af_visuel", eq: true }] }] },
+        message_medecin: "Suspicion de maladie de Horton (> 50 ans, signes temporaux/visuels) : risque de cécité → VS/CRP en urgence ; corticothérapie sans délai si forte suspicion (avant la BAT).",
+        message_patient: "Certains éléments nécessitent une évaluation médicale sans attendre." },
+      { id: "af_rf_deficit", niveau: 2,
+        when: { q: "af_deficit", eq: true },
+        message_medecin: "Algie faciale + déficit neurologique : forme symptomatique → imagerie (IRM).",
+        message_patient: "Les signes neurologiques décrits nécessitent un avis médical rapide." },
+      { id: "af_rf_fievre", niveau: 2,
+        when: { q: "af_fievre", eq: true },
+        message_medecin: "Algie faciale fébrile / AEG : éliminer une cause secondaire (sinusienne, infectieuse, inflammatoire).",
+        message_patient: "La présence de fièvre nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "af_nevralgie", diagnostic: "Névralgie du trijumeau essentielle",
+        arguments: [{ label: "décharges électriques", w: 3, when: { q: "af_type", eq: "Décharge électrique brève" } },
+                    { label: "zone gâchette", w: 2, when: { q: "af_gachette", eq: true } },
+                    { label: "accès de quelques secondes", w: 2, when: { q: "af_duree_acces", eq: "Quelques secondes" } }],
+        examens_a_discuter: ["Examen neurologique (V) — normal si essentielle", "IRM si déficit ou présentation atypique"] },
+      { id: "af_avf", diagnostic: "Algie vasculaire de la face",
+        arguments: [{ label: "douleur périorbitaire atroce", w: 3, when: { q: "af_type", eq: "Douleur atroce autour de l'œil" } },
+                    { label: "signes dysautonomiques homolatéraux", w: 3, when: { q: "af_dysauto", eq: true } },
+                    { label: "accès de 15-180 min", w: 2, when: { q: "af_duree_acces", eq: "15 minutes à 3 heures" } }],
+        examens_a_discuter: ["Avis neurologique", "Traitement de crise (oxygène, triptan)"] },
+      { id: "af_migraine", diagnostic: "Migraine",
+        arguments: [{ label: "photo/phonophobie, nausées", w: 3, when: { q: "af_migraine", eq: true } },
+                    { label: "douleur pulsatile", w: 2, when: { q: "af_type", eq: "Douleur qui pulse (qui bat)" } },
+                    { label: "accès de plusieurs heures", w: 1, when: { q: "af_duree_acces", eq: "Plusieurs heures" } }],
+        examens_a_discuter: ["Agenda des crises", "Pas d'imagerie si examen normal et critères typiques"] },
+      { id: "af_horton", diagnostic: "Maladie de Horton (artérite à cellules géantes)",
+        arguments: [{ label: "âge > 50 ans", w: 2, when: { ctx: "age", gte: 50 } },
+                    { label: "céphalée temporale / artère indurée", w: 3, when: { q: "af_temporal", eq: true } },
+                    { label: "signes visuels", w: 2, when: { q: "af_visuel", eq: true } }],
+        examens_a_discuter: ["VS / CRP en urgence", "Écho-doppler des temporales / biopsie", "Avis spécialisé"] }
+    ],
+    examens_clinique: [
+      "Examen des paires crâniennes (territoire du V)",
+      "Palpation des artères temporales (induration, pouls)",
+      "Examen ophtalmologique / acuité visuelle",
+      "Recherche de signes dysautonomiques pendant la crise",
+      "Tension artérielle, palpation des sinus et de l'ATM"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 04 — ALGIES PELVIENNES
+  // -------------------------------------------------------------------------
+  algie_pelvienne: {
+    id: "algie_pelvienne",
+    symptome: "Douleur du bas-ventre (algie pelvienne)",
+    specialite: ["Gynécologie", "Digestif", "Urologie"],
+    questions: [
+      { id: "ap_cote", label: "Localisation", type: "single_choice",
+        question: "La douleur est-elle d'un côté ou au milieu ?",
+        options: ["Un côté", "Au milieu", "Les deux côtés"] },
+      { id: "ap_debut", label: "Mode d'apparition", type: "single_choice",
+        question: "Comment la douleur a-t-elle commencé ?",
+        options: ["Brutalement", "Progressivement"] },
+      { id: "ap_metrorragie", label: "Saignements anormaux", type: "boolean",
+        question: "Avez-vous des saignements en dehors des règles ?",
+        showIf: { ctx: "sexe", eq: "Femme" } },
+      { id: "ap_leucorrhee", label: "Pertes anormales", type: "boolean",
+        question: "Avez-vous des pertes vaginales anormales (couleur, odeur) ?",
+        showIf: { ctx: "sexe", eq: "Femme" } },
+      { id: "ap_cyclique", label: "Douleur cataméniale", type: "boolean",
+        question: "La douleur survient-elle surtout au moment des règles ?",
+        showIf: { ctx: "sexe", eq: "Femme" } },
+      { id: "ap_dyspareunie", label: "Dyspareunie profonde", type: "boolean",
+        question: "Avez-vous des douleurs profondes pendant les rapports ?",
+        showIf: { ctx: "sexe", eq: "Femme" } },
+      { id: "ap_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "ap_vomit", label: "Vomissements", type: "boolean",
+        question: "Avez-vous des vomissements ?" },
+      { id: "ap_urinaire", label: "Signes urinaires", type: "boolean",
+        question: "Avez-vous des brûlures en urinant ou des envies fréquentes ?" },
+      { id: "ap_irradiation", label: "Irradiation type colique", type: "boolean",
+        question: "La douleur descend-elle vers les organes génitaux ou le dos, par vagues, avec une agitation (impossible de rester en place) ?" },
+      { id: "ap_defense", label: "Défense abdominale", type: "boolean",
+        question: "Votre ventre est-il dur et très douloureux quand on appuie ?" }
+    ],
+    red_flags: [
+      { id: "ap_rf_geu", niveau: 3,
+        when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "ap_metrorragie", eq: true }] },
+        message_medecin: "Douleur pelvienne + métrorragies + grossesse possible : GROSSESSE EXTRA-UTÉRINE à éliminer en URGENCE → β-hCG + échographie sans délai.",
+        message_patient: "Cette association nécessite une évaluation médicale urgente." },
+      { id: "ap_rf_torsion", niveau: 3,
+        when: { all: [{ q: "ap_debut", eq: "Brutalement" }, { q: "ap_cote", eq: "Un côté" }, { q: "ap_vomit", eq: true }] },
+        message_medecin: "Douleur brutale unilatérale + vomissements : torsion d'annexe possible → avis gynéco-chirurgical urgent (échographie-doppler).",
+        message_patient: "La douleur décrite nécessite une évaluation médicale urgente." },
+      { id: "ap_rf_perito", niveau: 3,
+        when: { all: [{ q: "ap_fievre", eq: true }, { q: "ap_defense", eq: true }] },
+        message_medecin: "Douleur + fièvre + défense : urgence chirurgicale/infectieuse (pelvipéritonite, appendicite) → avis chirurgical.",
+        message_patient: "Cette association nécessite une évaluation médicale urgente." },
+      { id: "ap_rf_salpingite", niveau: 2,
+        when: { all: [{ q: "ap_fievre", eq: true }, { q: "ap_leucorrhee", eq: true }] },
+        message_medecin: "Douleur + fièvre + leucorrhées : salpingite (PID) probable → avis gynéco rapide, prélèvements, antibiothérapie.",
+        message_patient: "Cette association nécessite un avis médical rapide." },
+      { id: "ap_rf_bhcg", niveau: 2,
+        when: { all: [{ ctx: "grossessePossible", eq: true }] },
+        message_medecin: "Femme en âge de procréer avec algie pelvienne : β-hCG D'EMBLÉE (règle de sécurité — éliminer une GEU).",
+        message_patient: "Un test de grossesse sera nécessaire dans le cadre du bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ap_geu", diagnostic: "Grossesse extra-utérine (GEU)",
+        arguments: [{ label: "grossesse possible", w: 3, when: { ctx: "grossessePossible", eq: true } },
+                    { label: "métrorragies", w: 2, when: { q: "ap_metrorragie", eq: true } },
+                    { label: "douleur unilatérale", w: 1, when: { q: "ap_cote", eq: "Un côté" } }],
+        examens_a_discuter: ["β-hCG quantitatif", "Échographie pelvienne", "Avis gynécologique urgent"] },
+      { id: "ap_salpingite", diagnostic: "Salpingite (infection génitale haute)",
+        arguments: [{ label: "fièvre", w: 2, when: { q: "ap_fievre", eq: true } },
+                    { label: "leucorrhées", w: 2, when: { q: "ap_leucorrhee", eq: true } },
+                    { label: "douleur bilatérale", w: 1, when: { q: "ap_cote", eq: "Les deux côtés" } }],
+        examens_a_discuter: ["Prélèvements vaginaux + IST", "β-hCG", "Échographie pelvienne", "Avis gynécologique"] },
+      { id: "ap_torsion", diagnostic: "Torsion d'annexe / kyste compliqué",
+        arguments: [{ label: "début brutal", w: 2, when: { q: "ap_debut", eq: "Brutalement" } },
+                    { label: "unilatérale", w: 2, when: { q: "ap_cote", eq: "Un côté" } },
+                    { label: "vomissements", w: 2, when: { q: "ap_vomit", eq: true } }],
+        examens_a_discuter: ["Échographie pelvienne avec doppler", "Avis gynéco-chirurgical urgent"] },
+      { id: "ap_endometriose", diagnostic: "Endométriose",
+        arguments: [{ label: "douleur cataméniale", w: 3, when: { q: "ap_cyclique", eq: true } },
+                    { label: "dyspareunie profonde", w: 2, when: { q: "ap_dyspareunie", eq: true } }],
+        examens_a_discuter: ["Échographie / IRM pelvienne", "Avis gynécologique"] },
+      { id: "ap_colique", diagnostic: "Colique néphrétique",
+        arguments: [{ label: "irradiation OGE + agitation", w: 3, when: { q: "ap_irradiation", eq: true } },
+                    { label: "unilatérale", w: 1, when: { q: "ap_cote", eq: "Un côté" } }],
+        examens_a_discuter: ["Bandelette urinaire (hématurie)", "Échographie / uro-scanner", "Antalgiques (AINS)"] },
+      { id: "ap_urinaire", diagnostic: "Infection urinaire (cystite / pyélonéphrite)",
+        arguments: [{ label: "signes urinaires", w: 2, when: { q: "ap_urinaire", eq: true } },
+                    { label: "fièvre (si haute)", w: 1, when: { q: "ap_fievre", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire / ECBU"] }
+    ],
+    examens_clinique: [
+      "Température, fréquence cardiaque, pression artérielle",
+      "Palpation abdominale (défense, contracture)",
+      "Examen gynécologique : douleur à la mobilisation utérine, masse latéro-utérine",
+      "Bandelette urinaire",
+      "β-hCG chez toute femme en âge de procréer"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 06 — ASTHÉNIE
+  // -------------------------------------------------------------------------
+  asthenie: {
+    id: "asthenie",
+    symptome: "Fatigue (asthénie)",
+    specialite: ["Médecine interne", "Endocrinologie", "Psychiatrie"],
+    questions: [
+      { id: "as_horaire", label: "Profil horaire", type: "single_choice",
+        question: "Quand êtes-vous le plus fatigué ?",
+        options: ["Le matin au réveil, ça s'améliore dans la journée", "Ça s'aggrave au fil de la journée", "Fatigué toute la journée"] },
+      { id: "as_duree", label: "Durée", type: "single_choice",
+        question: "Depuis combien de temps êtes-vous fatigué ?",
+        options: ["Moins d'un mois", "Plus d'un mois"] },
+      { id: "as_amaigr", label: "Amaigrissement", type: "boolean",
+        question: "Avez-vous maigri sans le vouloir ?" },
+      { id: "as_anorexie", label: "Perte d'appétit", type: "boolean",
+        question: "Avez-vous perdu l'appétit ?" },
+      { id: "as_fievre", label: "Fièvre / sueurs", type: "boolean",
+        question: "Avez-vous de la fièvre ou des sueurs qui durent ?" },
+      { id: "as_paleur", label: "Pâleur / dyspnée", type: "boolean",
+        question: "Êtes-vous pâle et essoufflé à l'effort ?" },
+      { id: "as_soif", label: "Syndrome polyuro-polydipsique", type: "boolean",
+        question: "Avez-vous très soif et urinez-vous beaucoup ?" },
+      { id: "as_froid", label: "Signes d'hypothyroïdie", type: "boolean",
+        question: "Êtes-vous frileux, constipé, avec une peau sèche ou une prise de poids ?" },
+      { id: "as_melano", label: "Signes surrénaliens", type: "boolean",
+        question: "Avez-vous remarqué un bronzage anormal de la peau et des malaises en vous levant ?" },
+      { id: "as_humeur", label: "Contexte thymique", type: "boolean",
+        question: "Avez-vous perdu le plaisir et l'envie, avec tristesse ou anxiété et troubles du sommeil ?" },
+      { id: "as_medic", label: "Iatrogénie", type: "boolean",
+        question: "Avez-vous commencé un nouveau médicament récemment (cœur/tension, sommeil, allergies) ?" }
+    ],
+    red_flags: [
+      { id: "as_rf_aeg", niveau: 2,
+        when: { all: [{ q: "as_amaigr", eq: true }, { q: "as_anorexie", eq: true }] },
+        message_medecin: "Altération de l'état général (asthénie + anorexie + amaigrissement) : bilan organique / néoplasique à ne pas retarder.",
+        message_patient: "Cette association nécessite un avis médical pour réaliser un bilan." },
+      { id: "as_rf_fievre", niveau: 2,
+        when: { q: "as_fievre", eq: true },
+        message_medecin: "Asthénie + fièvre/sueurs prolongées : éliminer infection chronique, tuberculose, hémopathie.",
+        message_patient: "La présence de fièvre prolongée nécessite un avis médical." },
+      { id: "as_rf_surrenale", niveau: 2,
+        when: { q: "as_melano", eq: true },
+        message_medecin: "Mélanodermie + hypotension/malaises orthostatiques : évoquer une insuffisance surrénale → ionogramme (hypoNa/hyperK), cortisol 8h.",
+        message_patient: "Les signes décrits nécessitent un avis médical pour vérification." }
+    ],
+    diagnostics_differentiels: [
+      { id: "as_organique", diagnostic: "Asthénie organique",
+        arguments: [{ label: "s'aggrave au fil de la journée", w: 3, when: { q: "as_horaire", eq: "Ça s'aggrave au fil de la journée" } },
+                    { label: "amaigrissement", w: 1, when: { q: "as_amaigr", eq: true } },
+                    { label: "évolue depuis > 1 mois", w: 1, when: { q: "as_duree", eq: "Plus d'un mois" } }],
+        examens_a_discuter: ["NFS, VS/CRP", "TSH", "Glycémie à jeun", "Ionogramme, calcémie", "Ferritine"] },
+      { id: "as_anemie", diagnostic: "Anémie",
+        arguments: [{ label: "pâleur + dyspnée d'effort", w: 3, when: { q: "as_paleur", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes", "Ferritine, bilan martial"] },
+      { id: "as_hypothyroidie", diagnostic: "Hypothyroïdie",
+        arguments: [{ label: "frilosité, constipation, peau sèche", w: 3, when: { q: "as_froid", eq: true } }],
+        examens_a_discuter: ["TSH (± T4L)"] },
+      { id: "as_diabete", diagnostic: "Diabète",
+        arguments: [{ label: "syndrome polyuro-polydipsique", w: 3, when: { q: "as_soif", eq: true } }],
+        examens_a_discuter: ["Glycémie à jeun", "HbA1c"] },
+      { id: "as_surrenale", diagnostic: "Insuffisance surrénale",
+        arguments: [{ label: "mélanodermie + orthostatisme", w: 3, when: { q: "as_melano", eq: true } }],
+        examens_a_discuter: ["Ionogramme (hypoNa/hyperK)", "Cortisol 8h ± test au Synacthène"] },
+      { id: "as_psy", diagnostic: "Asthénie psychogène / dépression",
+        arguments: [{ label: "maximale le matin, s'améliore", w: 3, when: { q: "as_horaire", eq: "Le matin au réveil, ça s'améliore dans la journée" } },
+                    { label: "contexte anxiodépressif", w: 3, when: { q: "as_humeur", eq: true } }],
+        examens_a_discuter: ["Évaluation thymique (anhédonie, sommeil)", "Bilan organique de débrouillage si doute"] },
+      { id: "as_iatrogene", diagnostic: "Asthénie iatrogène / réactionnelle",
+        arguments: [{ label: "médicament récent", w: 2, when: { q: "as_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance (β-bloquants, hypnotiques, antihistaminiques)"] }
+    ],
+    examens_clinique: [
+      "Poids, IMC, courbe de poids",
+      "Température, pression artérielle couché/debout",
+      "Recherche de pâleur (conjonctives)",
+      "Palpation thyroïdienne et des aires ganglionnaires",
+      "Examen général orienté par les réponses"
+    ]
+  }
+};
+
+</script>
+  <script>
+/* ============================================================================
+ * MOTEUR DE RAISONNEMENT — règles explicites (pas d'IA pour les red flags).
+ * Expose window.Engine : evalPred, run(symptomKey, answers, context).
+ *
+ * Principe :
+ *   1. Red flags = règles explicites codées -> priorité absolue, fixent l'urgence.
+ *   2. Diagnostics différentiels = score = somme des poids des arguments validés.
+ *   3. Synthèse médecin = agrégation structurée (jamais de diagnostic affirmé).
+ * ========================================================================== */
+(function () {
+  "use strict";
+
+  var URGENCE = {
+    1: { libelle: "Non urgent a priori", classe: "u1",
+         orientation: "Consultation programmée. Réévaluer selon l'évolution." },
+    2: { libelle: "Avis médical rapide", classe: "u2",
+         orientation: "Avis médical non différable (jours), examen clinique ciblé indispensable." },
+    3: { libelle: "Urgence — avis immédiat", classe: "u3",
+         orientation: "Évaluation médicale immédiate / orientation vers les urgences." }
+  };
+
+  // ---- Évaluation d'un prédicat ------------------------------------------
+  function resolve(pred, ans, ctx) {
+    if ("q" in pred) return ans ? ans[pred.q] : undefined;
+    if ("ctx" in pred) return ctx ? ctx[pred.ctx] : undefined;
+    return undefined;
+  }
+
+  function evalPred(pred, ans, ctx) {
+    if (!pred || typeof pred !== "object") return false;
+    if (pred.all) return pred.all.every(function (p) { return evalPred(p, ans, ctx); });
+    if (pred.any) return pred.any.some(function (p) { return evalPred(p, ans, ctx); });
+    if (pred.not) return !evalPred(pred.not, ans, ctx);
+
+    var val = resolve(pred, ans, ctx);
+    if ("eq" in pred) return val === pred.eq;
+    if ("in" in pred) return pred.in.indexOf(val) !== -1;
+    if ("has" in pred) return Array.isArray(val) && val.indexOf(pred.has) !== -1;
+    if ("gte" in pred) return typeof val === "number" && val >= pred.gte;
+    if ("lte" in pred) return typeof val === "number" && val <= pred.lte;
+    if ("truthy" in pred) return !!val === pred.truthy;
+    return false;
+  }
+
+  // ---- Questions visibles selon le contexte/réponses ----------------------
+  function visibleQuestions(fiche, ans, ctx) {
+    return fiche.questions.filter(function (qq) {
+      return !qq.showIf || evalPred(qq.showIf, ans, ctx);
+    });
+  }
+
+  // ---- Exécution principale ----------------------------------------------
+  function run(fiche, ans, ctx) {
+    // 1) Red flags
+    var firedFlags = (fiche.red_flags || []).filter(function (rf) {
+      return evalPred(rf.when, ans, ctx);
+    });
+    var niveau = firedFlags.reduce(function (m, rf) { return Math.max(m, rf.niveau); }, 1);
+
+    // 2) Diagnostics différentiels scorés
+    var hypotheses = (fiche.diagnostics_differentiels || []).map(function (dx) {
+      var matched = [], score = 0, maxScore = 0;
+      (dx.arguments || []).forEach(function (a) {
+        var w = a.w || 1; maxScore += w;
+        if (evalPred(a.when, ans, ctx)) { matched.push(a.label); score += w; }
+      });
+      return {
+        id: dx.id, diagnostic: dx.diagnostic, score: score, maxScore: maxScore,
+        arguments_pour: matched, examens_a_discuter: dx.examens_a_discuter || []
+      };
+    }).filter(function (h) { return h.score > 0; })
+      .sort(function (a, b) { return b.score - a.score; });
+
+    // 3) Examens à discuter (union des hypothèses retenues, sans doublon)
+    var examens = [];
+    hypotheses.slice(0, 4).forEach(function (h) {
+      h.examens_a_discuter.forEach(function (e) {
+        if (examens.indexOf(e) === -1) examens.push(e);
+      });
+    });
+
+    return {
+      symptome: fiche.symptome,
+      specialite: fiche.specialite,
+      niveau: niveau,
+      urgence: URGENCE[niveau],
+      redFlags: firedFlags,
+      hypotheses: hypotheses,
+      points_a_verifier: fiche.examens_clinique || [],
+      examens_a_discuter: examens
+    };
+  }
+
+  // ---- Synthèse texte côté médecin ---------------------------------------
+  function humanizeContext(ctx) {
+    var bits = [];
+    if (ctx.age != null && ctx.age !== "") bits.push(ctx.age + " ans");
+    if (ctx.sexe) bits.push(ctx.sexe.toLowerCase());
+    if (ctx.grossessePossible) bits.push("grossesse possible");
+    (ctx.antecedents || []).forEach(function (a) { bits.push(a); });
+    return bits.join(", ");
+  }
+
+  function recap(fiche, ans, ctx) {
+    var lines = [];
+    visibleQuestions(fiche, ans, ctx).forEach(function (qq) {
+      var v = ans[qq.id];
+      if (v === undefined || v === null || v === "") return;
+      if (qq.type === "boolean") {
+        if (v === "unknown") return;
+        lines.push(qq.label + " : " + (v === true ? "oui" : "non"));
+      } else {
+        lines.push(qq.label + " : " + v);
+      }
+    });
+    return lines;
+  }
+
+  window.Engine = {
+    URGENCE: URGENCE,
+    evalPred: evalPred,
+    visibleQuestions: visibleQuestions,
+    run: run,
+    recap: recap,
+    humanizeContext: humanizeContext
+  };
+})();
+
+</script>
+  <script>
+/* ============================================================================
+ * CONTRÔLEUR UI — parcours patient -> moteur -> synthèse médecin.
+ * Aucune donnée n'est transmise (mode local / prototype).
+ * ========================================================================== */
+(function () {
+  "use strict";
+
+  var KB = window.KB, Engine = window.Engine;
+  var el = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  };
+
+  // État de la consultation en cours
+  var session = { ctx: {}, symptomKey: null, answers: {}, result: null };
+
+  // Liste des symptômes (clé interne -> fiche)
+  var SYMPTOMS = Object.keys(KB).filter(function (k) { return k !== "meta"; });
+
+  // ---------------------------------------------------------------- contexte
+  function readContext() {
+    var atcd = [];
+    el("ctx-atcd").querySelectorAll("input:checked").forEach(function (c) { atcd.push(c.value); });
+    var age = parseInt(el("ctx-age").value, 10);
+    var sexe = el("ctx-sexe").value;
+    var grossesse = el("ctx-grossesse").checked && sexe === "Femme";
+    var ageProcreer = sexe === "Femme" && !isNaN(age) && age >= 12 && age <= 51;
+    session.ctx = {
+      age: isNaN(age) ? null : age,
+      sexe: sexe || null,
+      grossessePossible: grossesse || (ageProcreer && sexe === "Femme" && el("ctx-grossesse").checked),
+      ageProcreer: ageProcreer,
+      antecedents: atcd
+    };
+    // Si femme en âge de procréer, la grossesse est "possible" par prudence sauf info contraire
+    if (ageProcreer && el("ctx-grossesse").checked) session.ctx.grossessePossible = true;
+  }
+
+  function refreshIntroValidity() {
+    var sexe = el("ctx-sexe").value;
+    el("ctx-grossesse-wrap").hidden = sexe !== "Femme";
+    el("toSymptom").disabled = !el("ctx-consent").checked;
+  }
+
+  // ----------------------------------------------------------- grille symptômes
+  function renderSymptomGrid(filter) {
+    var q = (filter || "").toLowerCase();
+    var grid = el("symptomGrid");
+    grid.innerHTML = "";
+    SYMPTOMS.forEach(function (key) {
+      var f = KB[key];
+      var hay = (f.symptome + " " + f.specialite.join(" ")).toLowerCase();
+      if (q && hay.indexOf(q) === -1) return;
+      var b = document.createElement("button");
+      b.className = "symptom-card";
+      b.innerHTML = "<span class='sc-title'>" + esc(f.symptome) + "</span>" +
+        "<span class='sc-spec'>" + esc(f.specialite.join(" · ")) + "</span>";
+      b.onclick = function () { startQuiz(key); };
+      grid.appendChild(b);
+    });
+    if (!grid.children.length) {
+      grid.innerHTML = "<p class='muted'>Aucun symptôme ne correspond. D'autres fiches seront ajoutées " +
+        "(le manuel en compte 64).</p>";
+    }
+  }
+
+  // -------------------------------------------------------------- questionnaire
+  function startQuiz(key) {
+    session.symptomKey = key;
+    session.answers = {};
+    el("quizTitle").textContent = KB[key].symptome;
+    renderQuiz();
+    show("step-quiz");
+  }
+
+  function renderQuiz() {
+    var f = KB[session.symptomKey];
+    var form = el("quizForm");
+    form.innerHTML = "";
+    var visible = Engine.visibleQuestions(f, session.answers, session.ctx);
+    visible.forEach(function (qq) {
+      form.appendChild(renderQuestion(qq));
+    });
+    updateProgress(visible);
+  }
+
+  function renderQuestion(qq) {
+    var wrap = document.createElement("div");
+    wrap.className = "q";
+    var label = document.createElement("p");
+    label.className = "q-text";
+    label.textContent = qq.question;
+    wrap.appendChild(label);
+
+    var val = session.answers[qq.id];
+
+    if (qq.type === "boolean") {
+      wrap.appendChild(choiceButtons([
+        { v: true, t: "Oui" }, { v: false, t: "Non" }, { v: "unknown", t: "Je ne sais pas" }
+      ], val, function (v) { setAnswer(qq.id, v); }));
+    } else if (qq.type === "single_choice") {
+      wrap.appendChild(choiceButtons(
+        qq.options.map(function (o) { return { v: o, t: o }; }), val,
+        function (v) { setAnswer(qq.id, v); }));
+    } else if (qq.type === "scale") {
+      var rng = document.createElement("input");
+      rng.type = "range"; rng.min = 0; rng.max = 10; rng.value = val != null ? val : 5;
+      var out = document.createElement("span"); out.className = "scale-out"; out.textContent = rng.value + "/10";
+      rng.oninput = function () { out.textContent = rng.value + "/10"; setAnswer(qq.id, parseInt(rng.value, 10), true); };
+      wrap.appendChild(rng); wrap.appendChild(out);
+    } else { // text
+      var ta = document.createElement("input");
+      ta.type = "text"; ta.value = val || "";
+      ta.oninput = function () { setAnswer(qq.id, ta.value, true); };
+      wrap.appendChild(ta);
+    }
+    return wrap;
+  }
+
+  function choiceButtons(opts, current, onPick) {
+    var box = document.createElement("div");
+    box.className = "choices";
+    opts.forEach(function (o) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice" + (current === o.v ? " sel" : "");
+      b.textContent = o.t;
+      b.onclick = function () { onPick(o.v); };
+      box.appendChild(b);
+    });
+    return box;
+  }
+
+  // noRerender : true pour les champs continus (texte/échelle) afin de ne pas perdre le focus
+  function setAnswer(id, v, noRerender) {
+    session.answers[id] = v;
+    if (!noRerender) renderQuiz(); // re-render pour gérer les questions conditionnelles + sélection
+  }
+
+  function updateProgress(visible) {
+    var answered = visible.filter(function (qq) {
+      return session.answers[qq.id] !== undefined;
+    }).length;
+    el("quizProgress").textContent = answered + " / " + visible.length + " questions";
+  }
+
+  // ------------------------------------------------------------------ résultats
+  function compute() {
+    var f = KB[session.symptomKey];
+    session.result = Engine.run(f, session.answers, session.ctx);
+    return session.result;
+  }
+
+  function showPatientResult() {
+    var r = compute();
+    var msg = el("patientMessage");
+    var prudent;
+    if (r.niveau >= 3) {
+      prudent = "<p class='alert u3'>Certains éléments de vos réponses nécessitent une " +
+        "<strong>évaluation médicale sans attendre</strong>. Contactez votre médecin, une " +
+        "structure de soins, ou le 15 si vous vous sentez mal.</p>";
+    } else if (r.niveau === 2) {
+      prudent = "<p class='alert u2'>Certains éléments nécessitent un <strong>avis médical " +
+        "rapide</strong> afin d'éliminer une cause à ne pas négliger. Prenez rendez-vous prochainement.</p>";
+    } else {
+      prudent = "<p class='alert u1'>Vos réponses ne montrent pas de signe d'alerte immédiat. " +
+        "Une consultation permettra de faire le point.</p>";
+    }
+    msg.innerHTML = prudent +
+      "<p class='muted'>Cette information reste indicative et <strong>ne constitue pas un " +
+      "diagnostic</strong>. Seul le médecin pourra conclure après vous avoir examiné.</p>";
+    show("step-patient-result");
+  }
+
+  // ------------------------------------------------------------- synthèse médecin
+  function renderSynthese() {
+    if (!session.result) { el("medecinEmpty").hidden = false; el("medecinSynthese").hidden = true; return; }
+    var f = KB[session.symptomKey], r = session.result, ctx = session.ctx;
+    el("medecinEmpty").hidden = true;
+    var box = el("medecinSynthese");
+    box.hidden = false;
+
+    var recapLines = Engine.recap(f, session.answers, session.ctx);
+    var ctxLine = Engine.humanizeContext(ctx);
+
+    var rf = r.redFlags.length
+      ? "<ul class='rf'>" + r.redFlags.map(function (x) {
+          return "<li><span class='u-tag " + Engine.URGENCE[x.niveau].classe + "'>N" + x.niveau +
+            "</span> " + esc(x.message_medecin) + "</li>"; }).join("") + "</ul>"
+      : "<p class='ok'>Pas de red flag vital immédiat détecté sur les éléments déclarés. " +
+        "La vigilance clinique reste de mise.</p>";
+
+    var hyp = r.hypotheses.length
+      ? "<ol class='hyp'>" + r.hypotheses.slice(0, 4).map(function (h) {
+          var args = h.arguments_pour.length
+            ? " <span class='args'>(" + h.arguments_pour.map(esc).join(" · ") + ")</span>" : "";
+          return "<li><strong>" + esc(h.diagnostic) + "</strong>" + args +
+            " <span class='score'>score " + h.score + "/" + h.maxScore + "</span></li>"; }).join("") + "</ol>"
+      : "<p class='muted'>Pas d'orientation différentielle marquée : compléter l'interrogatoire et l'examen.</p>";
+
+    box.innerHTML =
+      "<div class='card synthese'>" +
+        "<div class='syn-head " + r.urgence.classe + "'>" +
+          "<div><h2>Synthèse clinique — " + esc(f.symptome) + "</h2>" +
+            "<p class='syn-sub'>" + esc(f.specialite.join(" · ")) +
+            (ctxLine ? " — " + esc(ctxLine) : "") + "</p></div>" +
+          "<div class='urg-badge'>Niveau " + r.niveau + "<small>" + esc(r.urgence.libelle) + "</small></div>" +
+        "</div>" +
+
+        block("Motif principal", "<p>" + esc(f.symptome) +
+          (ctxLine ? " — " + esc(ctxLine) : "") + "</p>") +
+
+        block("Éléments importants (déclaratif patient)",
+          recapLines.length ? "<ul class='recap'>" + recapLines.map(function (l) {
+            return "<li>" + esc(l) + "</li>"; }).join("") + "</ul>"
+            : "<p class='muted'>Questionnaire incomplet.</p>") +
+
+        block("⚠ Red flags / signes d'alerte", rf) +
+
+        block("Hypothèses à envisager (classées)", hyp) +
+
+        block("À vérifier à l'examen clinique",
+          "<ul class='verif'>" + r.points_a_verifier.map(function (p) {
+            return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>") +
+
+        block("Examens complémentaires à discuter",
+          r.examens_a_discuter.length
+            ? "<ul class='exam'>" + r.examens_a_discuter.map(function (e) {
+                return "<li>" + esc(e) + "</li>"; }).join("") + "</ul>"
+            : "<p class='muted'>Selon l'examen clinique.</p>") +
+
+        block("Orientation proposée",
+          "<p class='orient " + r.urgence.classe + "'>" + esc(r.urgence.orientation) + "</p>") +
+
+        "<div class='doctor-notes'>" +
+          "<label><span>Conclusion / notes du médecin (modifiable)</span>" +
+          "<textarea id='docNotes' rows='3' placeholder='Hypothèse retenue, décision, orientation…'></textarea></label>" +
+        "</div>" +
+
+        "<div class='syn-actions'>" +
+          "<button class='btn primary' onclick='window.print()'>🖨 Exporter / Imprimer (PDF)</button>" +
+          "<span class='disclaimer'>Aide au raisonnement — conclusion à valider par le médecin. " +
+          "Ne dispense pas de l'examen clinique ni des recommandations en vigueur.</span>" +
+        "</div>" +
+      "</div>";
+  }
+
+  function block(title, html) {
+    return "<section class='syn-block'><h3>" + esc(title) + "</h3>" + html + "</section>";
+  }
+
+  // ----------------------------------------------------------------- navigation
+  function show(stepId) {
+    ["step-intro", "step-symptom", "step-quiz", "step-patient-result"].forEach(function (s) {
+      el(s).hidden = s !== stepId;
+    });
+  }
+
+  function setMode(mode) {
+    el("view-patient").hidden = mode !== "patient";
+    el("view-medecin").hidden = mode !== "medecin";
+    el("modeSwitch").querySelectorAll("button").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.mode === mode);
+    });
+    if (mode === "medecin") renderSynthese();
+  }
+
+  // --------------------------------------------------------------------- démo
+  function loadDemo() {
+    session.ctx = { age: 38, sexe: "Homme", grossessePossible: false, ageProcreer: false, antecedents: [] };
+    session.symptomKey = "acouphene";
+    session.answers = {
+      ac_cote: "Une seule oreille", ac_pulsatile: false, ac_hypoacousie: true,
+      ac_brusque: false, ac_vertige: false, ac_otalgie: false,
+      ac_trauma: true, ac_ototox: false, ac_neuro: false
+    };
+    compute();
+    setMode("medecin");
+  }
+
+  // ------------------------------------------------------------------- listeners
+  function init() {
+    ["ctx-sexe", "ctx-consent"].forEach(function (id) {
+      el(id).addEventListener("change", refreshIntroValidity);
+    });
+    el("toSymptom").addEventListener("click", function () {
+      readContext(); renderSymptomGrid(""); show("step-symptom");
+    });
+    el("symptomSearch").addEventListener("input", function (e) { renderSymptomGrid(e.target.value); });
+    el("backToSymptom").addEventListener("click", function () { show("step-symptom"); });
+    el("submitQuiz").addEventListener("click", function (e) { e.preventDefault(); showPatientResult(); });
+    el("goMedecin").addEventListener("click", function () { setMode("medecin"); });
+    el("restart").addEventListener("click", function () {
+      session = { ctx: {}, symptomKey: null, answers: {}, result: null };
+      el("ctx-consent").checked = false; refreshIntroValidity(); show("step-intro");
+    });
+    el("loadDemo").addEventListener("click", loadDemo);
+    el("modeSwitch").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-mode]");
+      if (b) setMode(b.dataset.mode);
+    });
+    refreshIntroValidity();
+    renderSymptomGrid("");
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

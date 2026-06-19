@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aide au raisonnement clinique — Préparation de consultation</title>
+  <meta name="description" content="Outil d'aide au raisonnement clinique (médecine générale) : le patient saisit ses symptômes, l'application détecte les red flags et génère une synthèse structurée pour le médecin. Ne pose pas de diagnostic." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🧭</span>
+        <div>
+          <h1>Aide au raisonnement clinique</h1>
+          <p class="subtitle">Préparation de consultation — médecine générale</p>
+        </div>
+      </div>
+      <nav class="mode-switch" id="modeSwitch">
+        <button data-mode="patient" class="active">Espace patient</button>
+        <button data-mode="medecin">Espace médecin</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Bandeau médico-légal permanent -->
+  <div class="legal-banner" role="alert">
+    <strong>⚠ Cette application ne pose pas de diagnostic.</strong>
+    Elle aide à structurer les symptômes et à préparer la consultation.
+    En cas de douleur thoracique, gêne respiratoire importante, malaise, déficit
+    neurologique, confusion, fièvre avec taches violacées (purpura), douleur intense
+    brutale, ou grossesse avec douleur/saignement&nbsp;:
+    <strong>appelez le 15 (SAMU) ou le 112.</strong>
+  </div>
+
+  <main class="wrap">
+    <!-- ================= ESPACE PATIENT ================= -->
+    <section id="view-patient">
+
+      <!-- Étape 0 : consentement + contexte -->
+      <div class="card step" id="step-intro">
+        <h2>Avant de commencer</h2>
+        <p class="lead">Quelques questions simples vont vous être posées sur ce qui vous amène.
+          Vos réponses aideront le médecin à préparer la consultation. <strong>Elles ne
+          remplacent pas son avis.</strong></p>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Âge</span>
+            <input type="number" id="ctx-age" min="0" max="120" placeholder="ex. 45" />
+          </label>
+          <label class="field">
+            <span>Sexe</span>
+            <select id="ctx-sexe">
+              <option value="">—</option>
+              <option>Femme</option>
+              <option>Homme</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field check" id="ctx-grossesse-wrap" hidden>
+          <input type="checkbox" id="ctx-grossesse" />
+          <span>Une grossesse est possible (rapports sans contraception fiable)</span>
+        </label>
+
+        <fieldset class="field">
+          <legend>Avez-vous l'un de ces antécédents ? (facultatif)</legend>
+          <div class="chips" id="ctx-atcd">
+            <label><input type="checkbox" value="cancer connu" /> Cancer connu</label>
+            <label><input type="checkbox" value="immunodépression" /> Immunodépression</label>
+            <label><input type="checkbox" value="sous anticoagulant" /> Anticoagulant</label>
+            <label><input type="checkbox" value="terrain cardiovasculaire" /> Maladie cardiovasculaire</label>
+            <label><input type="checkbox" value="diabète" /> Diabète</label>
+          </div>
+        </fieldset>
+
+        <label class="field consent">
+          <input type="checkbox" id="ctx-consent" />
+          <span>J'ai compris que cet outil ne pose pas de diagnostic et j'accepte de répondre
+            pour préparer ma consultation.</span>
+        </label>
+
+        <button class="btn primary" id="toSymptom" disabled>Continuer</button>
+      </div>
+
+      <!-- Étape 1 : choix du symptôme -->
+      <div class="card step" id="step-symptom" hidden>
+        <h2>Quel est votre symptôme principal ?</h2>
+        <input type="search" id="symptomSearch" class="search" placeholder="Rechercher (ex. fatigue, ganglion, douleur du visage…)" />
+        <div class="symptom-grid" id="symptomGrid"></div>
+      </div>
+
+      <!-- Étape 2 : questionnaire -->
+      <div class="card step" id="step-quiz" hidden>
+        <div class="quiz-head">
+          <button class="btn ghost" id="backToSymptom">← Changer de symptôme</button>
+          <h2 id="quizTitle"></h2>
+        </div>
+        <form id="quizForm" class="quiz"></form>
+        <div class="quiz-actions">
+          <span class="progress" id="quizProgress"></span>
+          <button class="btn primary" id="submitQuiz">Voir le résultat</button>
+        </div>
+      </div>
+
+      <!-- Étape 3 : retour patient (prudent, non anxiogène) -->
+      <div class="card step" id="step-patient-result" hidden>
+        <h2>Merci, c'est noté ✅</h2>
+        <div id="patientMessage"></div>
+        <div class="cta-row">
+          <button class="btn primary" id="goMedecin">Afficher la synthèse pour le médecin</button>
+          <button class="btn ghost" id="restart">Recommencer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ESPACE MÉDECIN ================= -->
+    <section id="view-medecin" hidden>
+      <div class="card" id="medecinEmpty">
+        <h2>Espace médecin</h2>
+        <p class="lead">Aucune consultation en cours. Demandez au patient de remplir le
+          questionnaire dans l'espace patient, ou chargez un exemple.</p>
+        <button class="btn ghost" id="loadDemo">Charger un exemple (acouphène)</button>
+      </div>
+
+      <div id="medecinSynthese" hidden></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Outil d'aide au raisonnement — <strong>ne remplace pas le médecin</strong>.
+      Red flags codés en règles explicites · raisonnement différentiel · validation médicale obligatoire.
+      Source clinique : Manuel du Généraliste, Dr Mario Fuiano. Prototype — mode local, aucune donnée transmise.</p>
+  </footer>
+
+  <script src="data/knowledge-base.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
