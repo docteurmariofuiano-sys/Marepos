@@ -1260,6 +1260,50 @@ window.BIOKB = [
     ],
     red_flags: ["SAPL catastrophique (CAPS) : thromboses multiples avec défaillance multiviscérale → urgence vitale", "Thrombose artérielle (AVC, IDM) ou thrombose veineuse étendue", "Morbidité obstétricale (pertes fœtales répétées, prééclampsie sévère)", "Thrombopénie souvent associée (auto-immune ou de consommation ; réaliser un TS, anticoaguler avec précaution)"],
     conduite: ["Diagnostic = 1 critère clinique + 1 critère biologique PERSISTANT (≥ 12 semaines).", "Le lupus anticoagulant allonge le TCA (ne corrige pas au mélange) mais le risque est THROMBOTIQUE, pas hémorragique.", "Rechercher un lupus associé ; éviter les œstroprogestatifs ; contrôler les facteurs de risque vasculaire.", "Traitement : anticoagulation au long cours après thrombose ; en obstétrique, aspirine + HBPM ; avis spécialisé."]
+  },
+  {
+    id: "groupage_abo", num: 89, anomalie: "Groupage sanguin ABO-RH1",
+    specialite: "Immuno-hématologie",
+    definition: "Le groupage ABO repose sur la concordance de deux épreuves : Beth-Vincent (sérums-tests = recherche des antigènes sur les hématies du patient) et Simonin (hématies-tests = recherche des anticorps naturels dans le sérum). La détermination de l'antigène RH1 (D) utilise un anti-RH1 avec un témoin. Règles de sécurité transfusionnelle strictes.",
+    premiere_intention: ["Beth-Vincent (épreuve globulaire) : hématies du patient + sérums anti-A, anti-B, anti-AB", "Simonin (épreuve sérique) : sérum du patient + hématies-tests A et B (anticorps naturels)", "Concordance OBLIGATOIRE Beth-Vincent / Simonin pour valider le groupe ABO", "Détermination RH1 (D) : anti-RH1 + témoin ; un témoin positif rend le résultat ININTERPRÉTABLE"],
+    causes: [
+      { cause: "Discordance Beth-Vincent / Simonin", signe: "sous-groupes, agglutinines irrégulières, autoanticorps ; Simonin peu fiable chez le nouveau-né (< 6 mois) et le sujet âgé", examens: ["Contrôle, avis immuno-hématologique", "RAI"] },
+      { cause: "Témoin RH1 positif", signe: "autoagglutination → détermination RH1 ininterprétable", examens: ["Reprise", "Test à l'antiglobuline"] },
+      { cause: "Contexte transfusionnel", signe: "validité du groupe selon les règles (2 prélèvements / 2 déterminations)", examens: ["RAI associée", "Contrôle ultime au lit"] }
+    ],
+    tableaux: [
+      { titre: "Épreuve de Beth-Vincent (sérums-tests sur hématies)",
+        entetes: ["Groupe", "Anti-A", "Anti-B", "Anti-AB"],
+        lignes: [
+          ["A", "+", "−", "+"],
+          ["B", "−", "+", "+"],
+          ["AB", "+", "+", "+"],
+          ["O", "−", "−", "−"]
+        ] },
+      { titre: "Épreuve de Simonin (hématies-tests sur sérum)",
+        entetes: ["Groupe", "Hématies A", "Hématies B"],
+        lignes: [
+          ["A", "−", "+"],
+          ["B", "+", "−"],
+          ["AB", "−", "−"],
+          ["O", "+", "+"]
+        ] },
+      { titre: "Détermination de l'antigène RH1 (D)",
+        entetes: ["Résultat", "Anti-RH1", "Témoin"],
+        lignes: [
+          ["RH1 positif (D+)", "+", "−"],
+          ["RH-1 négatif (D−)", "−", "−"],
+          ["Ininterprétable", "—", "+ (autoagglutination)"]
+        ] },
+      { titre: "Règles de sécurité (réalisation)",
+        entetes: ["Niveau", "Exigence"],
+        lignes: [
+          ["1 groupage sanguin", "2 prélèvements (1 détermination par prélèvement)"],
+          ["1 détermination", "1 réalisation automatisée, OU 2 réalisations manuelles par 2 techniciens différents + double saisie par 2 personnes différentes"]
+        ] }
+    ],
+    red_flags: ["Discordance Beth-Vincent / Simonin → ne pas valider le groupe, avis immuno-hématologique", "Témoin RH1 positif (autoagglutination) → RH1 ininterprétable, reprendre", "Sécurité transfusionnelle : vérifier le respect des 2 prélèvements / 2 déterminations avant toute transfusion", "Urgence vitale sans groupe disponible : culots O (RH−) selon protocole"],
+    conduite: ["Valider le groupe ABO uniquement si Beth-Vincent et Simonin CONCORDENT.", "Simonin peu fiable chez le nouveau-né (< 6 mois, anticorps naturels absents) et le sujet âgé/immunodéprimé.", "Compléter par la RAI avant transfusion ; respecter les règles des 2 prélèvements et le contrôle ultime au lit du malade.", "Toute discordance ou témoin positif → contrôle au laboratoire d'immuno-hématologie."]
   }
 ];
 
