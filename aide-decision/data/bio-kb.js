@@ -1772,7 +1772,7 @@ window.BIOKB = [
       { cause: "Troponine I", signe: "spécifique du myocarde ; ↑ 4-6 h, pic 12 h, normalisation 9-14 j ; la troponine T peut être faussement ↑ (IRC, poly/dermatomyosite)", examens: ["Troponine I (cinétique)"] },
       { cause: "Myoglobine", signe: "la plus précoce (2-3 h), non spécifique (toute lyse musculaire), bonne VPN, reperfusion / récidive", examens: ["Myoglobine"] },
       { cause: "CK-MB", signe: "isoforme cardiaque de la CK ; quasi abandonnée (peu d'apport vs troponine)", examens: ["CK-MB"] },
-      { cause: "Élévation non ischémique de la troponine", signe: "EP, insuffisance cardiaque, choc septique, AVC, cirrhose, acidocétose, chirurgie cardiaque", examens: ["Contexte clinique"] }
+      { cause: "Élévation non ischémique de la troponine", signe: "EP, insuffisance cardiaque, dissection aortique, myocardite/endocardite, choc septique, AVC, cirrhose, acidocétose, IRC, chirurgie cardiaque", examens: ["Contexte clinique"] }
     ],
     tableaux: [
       { titre: "Marqueurs de nécrose myocardique",
@@ -1793,9 +1793,9 @@ window.BIOKB = [
       { titre: "Élévations non ischémiques de la troponine",
         entetes: ["Type", "Exemples"],
         lignes: [
-          ["Cardio-respiratoire", "Embolie pulmonaire, insuffisance cardiaque"],
-          ["Systémique", "Choc septique, AVC, acidocétose diabétique"],
-          ["Autres", "Cirrhose, chirurgie cardiaque"]
+          ["Cardio-vasculaire", "Embolie pulmonaire, insuffisance cardiaque, dissection aortique, myocardite / endocardite, arythmie (FA rapide)"],
+          ["Systémique", "Choc septique, AVC, acidocétose diabétique, insuffisance rénale chronique"],
+          ["Autres", "Cirrhose, chirurgie cardiaque, effort intense"]
         ] }
     ],
     red_flags: ["Douleur thoracique évocatrice → ECG immédiat ; sus-décalage ST = IDM → revascularisation en urgence (ne pas attendre la troponine)", "Troponine négative précoce (< 12 h) n'exclut pas un SCA → répéter", "Angor instable avec troponine élevée → prise en charge agressive (HBPM / anti-GpIIbIIIa)", "Élévation de troponine sans contexte ischémique (EP, sepsis, insuffisance cardiaque…) à interpréter"],
@@ -1809,7 +1809,8 @@ window.BIOKB = [
     causes: [
       { cause: "BNP (forme active)", signe: "↑ étirement ventriculaire, ↑ pression intracardiaque, HTA ; demi-vie plus courte", examens: ["BNP"] },
       { cause: "NT-proBNP (forme inactive)", signe: "mêmes indications que le BNP ; clairance dépendante de la fonction rénale, demi-vie plus longue", examens: ["NT-proBNP"] },
-      { cause: "Élévation à interpréter", signe: "âge, insuffisance rénale (surtout NT-proBNP), autres causes d'augmentation des pressions de remplissage", examens: ["Fonction rénale, contexte"] }
+      { cause: "Élévation à interpréter", signe: "âge, insuffisance rénale (surtout NT-proBNP), autres causes d'augmentation des pressions de remplissage", examens: ["Fonction rénale, contexte"] },
+      { cause: "Élévation non liée à l'insuffisance cardiaque", signe: "fibrillation auriculaire, insuffisance rénale chronique, insuffisance hépatique, embolie pulmonaire / HTAP, âge avancé, sepsis", examens: ["ECG", "Fonction rénale, bilan hépatique", "Contexte"] }
     ],
     tableaux: [
       { titre: "BNP vs NT-proBNP",
@@ -1834,6 +1835,15 @@ window.BIOKB = [
           ["Natriurèse", "Augmentée"],
           ["Vaisseaux", "Vasodilatation"],
           ["Système rénine-angiotensine-aldostérone", "Inhibition"]
+        ] },
+      { titre: "Élévations non liées à l'insuffisance cardiaque (faux positifs)",
+        entetes: ["Cause", "Remarque"],
+        lignes: [
+          ["Fibrillation auriculaire", "Élévation fréquente, indépendante d'une dysfonction ventriculaire"],
+          ["Insuffisance rénale chronique", "Clairance diminuée (surtout NT-proBNP)"],
+          ["Insuffisance hépatique", "Élévation possible"],
+          ["Embolie pulmonaire / HTAP", "Surcharge ventriculaire droite"],
+          ["Âge avancé, sepsis", "Valeurs de base plus élevées"]
         ] }
     ],
     red_flags: ["BNP / NT-proBNP très élevés avec dyspnée → insuffisance cardiaque aiguë (OAP) probable, prise en charge urgente", "Interpréter selon l'âge et la fonction rénale (NT-proBNP surestimé en insuffisance rénale)", "Un taux bas a une bonne valeur prédictive négative pour éliminer une origine cardiaque à la dyspnée", "Élévation possible dans d'autres causes d'augmentation des pressions (embolie pulmonaire, HTAP…)"],
@@ -2262,7 +2272,17 @@ window.BIOKB = [
           ["Cancer thyroïdien différencié", "Thyroglobuline", "Thyroïdite, Basedow, nodules froids bénins", "Surveillance ++"],
           ["Myélome multiple", "Ig monoclonale, β2-microglobuline", "MGUS", "90 % (10 % non sécrétants) ; β2-m pronostique"],
           ["ORL", "SCC", "—", "Surveillance ++"],
-          ["Vessie (infiltrante)", "TPA", "—", "Pronostic / suivi ++"]
+          ["Vessie (infiltrante)", "TPA", "—", "Pronostic / suivi ++"],
+          ["Tumeurs neuroendocrines (toutes)", "Chromogranine A", "IPP (inhibiteurs de la pompe à protons), insuffisance rénale, gastrite atrophique", "Marqueur général des TNE"],
+          ["Tumeur carcinoïde", "5-HIAA urinaire (24 h)", "Aliments riches en sérotonine (banane, avocat, noix, ananas), certains médicaments", "Sérotonine → 5-HIAA"],
+          ["Phéochromocytome / paragangliome", "Métanéphrines libres (plasma/urines)", "Stress, médicaments (IMAO, tricycliques), café", "Catécholamines / métanéphrines"]
+        ] },
+      { titre: "Marqueurs des tumeurs neuroendocrines (Blood Tests Made Easy, P. Hamilton)",
+        entetes: ["Marqueur", "Indication", "Pièges"],
+        lignes: [
+          ["Chromogranine A", "Marqueur commun à toutes les tumeurs neuroendocrines (TNE) ; suivi", "Faux positifs : IPP, insuffisance rénale, gastrite atrophique"],
+          ["5-HIAA urinaire (24 h)", "Tumeur carcinoïde (métabolite de la sérotonine)", "Régime sans aliments riches en sérotonine avant le recueil"],
+          ["Métanéphrines libres (plasmatiques / urinaires)", "Phéochromocytome et paragangliome", "Conditions de prélèvement strictes (repos, médicaments)"]
         ] },
       { titre: "Principes d'interprétation",
         entetes: ["Principe", "Détail"],
