@@ -1514,5 +1514,40 @@ window.BIOKB = [
     ],
     red_flags: ["Complication thrombo-embolique (TVP, embolie pulmonaire, thrombose des veines rénales) par hypercoagulabilité", "Syndrome néphrotique sévère (albumine < 20-25 g/L) : anticoagulation préventive", "Infections (pneumocoque, Haemophilus) par hypogammaglobulinémie", "Syndrome néphrotique impur (HTA, IR, hématurie) → étiologie potentiellement grave, avis néphrologique"],
     conduite: ["Affirmer les 3 critères biologiques ; distinguer pur (sélectif, sans HTA/IR/hématurie) et impur.", "Prévenir et surveiller les complications : thrombose (HBPM si albumine < 20-25 g/L), infections, dyslipidémie (statine si résistant).", "Adapter les médicaments fortement liés à l'albumine (↑ fraction libre).", "Avis néphrologique ; PBR selon l'âge et le caractère impur ; traitement étiologique."]
+  },
+  {
+    id: "cholestase", num: 96, anomalie: "Syndrome cholestatique",
+    specialite: "Hépatologie",
+    definition: "Diminution ou arrêt de l'excrétion biliaire. Marqueurs : ↑ PAL, GGT, 5'-nucléotidase, bilirubine conjuguée. Cliniquement : ictère à urines foncées, prurit, stéatorrhée et décoloration des selles (malabsorption des graisses et des vitamines liposolubles A, D, E, K).",
+    premiere_intention: ["Confirmer la cholestase : ↑ PAL, GGT, 5'-nucléotidase, bilirubine conjuguée, cholestérol, acides biliaires totaux", "Retentissement : TP ↓ (carence en vitamine K → facteurs II, VII, IX, X, protéines C et S) ; rechercher une cytolyse associée (ALAT, ASAT, LDH)", "Échographie abdominale en 1re intention : voies biliaires dilatées (obstacle = extra-hépatique) ou non (intra-hépatique)", "Rechercher médicaments, alcool, virus des hépatites"],
+    causes: [
+      { cause: "Cholestase intra-hépatique", signe: "voies biliaires non dilatées ; hépatite (médicamenteuse, virale, alcoolique), cirrhose, hépatocarcinome, septicémie, cholangite sclérosante, grossesse", examens: ["Sérologies, revue des médicaments", "Échographie, cholangio-IRM"] },
+      { cause: "Cholestase extra-hépatique", signe: "voies biliaires dilatées (obstacle) ; lithiase du cholédoque, cancer du pancréas ou du cholédoque, sténose", examens: ["Échographie", "Cholangio-IRM, écho-endoscopie"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques",
+        entetes: ["Sens", "Paramètres"],
+        lignes: [
+          ["Augmentés", "PAL, GGT, 5'-nucléotidase, bilirubine conjuguée, cholestérol, acides biliaires totaux (dosés surtout chez la femme enceinte)"],
+          ["Diminués", "TP, facteurs vitamine K-dépendants (II, VII, IX, X), protéine C, protéine S"],
+          ["Si cytolyse associée", "↑ ALAT, ASAT, LDH"]
+        ] },
+      { titre: "Étiologies",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Intra-hépatique (VB non dilatées)", "Hépatite médicamenteuse / virale / alcoolique, cirrhose, hépatocarcinome, septicémie, cholangite sclérosante, grossesse"],
+          ["Extra-hépatique (VB dilatées)", "Lithiase du cholédoque, cancer du pancréas ou du cholédoque, sténose"]
+        ] },
+      { titre: "Conséquences cliniques",
+        entetes: ["Mécanisme", "Manifestation"],
+        lignes: [
+          ["Accumulation de bilirubine conjuguée", "Ictère, urines foncées"],
+          ["Accumulation d'acides biliaires", "Prurit"],
+          ["Malabsorption des graisses", "Stéatorrhée, décoloration des selles"],
+          ["Carence en vitamine K", "↓ facteurs II/VII/IX/X, protéines C/S → TP abaissé"]
+        ] }
+    ],
+    red_flags: ["Angiocholite : fièvre + ictère + douleur de l'hypochondre droit (triade de Charcot) → urgence", "Obstacle des voies biliaires (lithiase, cancer) → avis chirurgical / endoscopique", "Trouble de la coagulation (carence en vitamine K) avant un geste invasif", "Ictère fébrile, sepsis sur obstacle"],
+    conduite: ["Échographie abdominale d'emblée : VB dilatées (extra-hépatique, obstacle) vs non dilatées (intra-hépatique).", "Rechercher une cause médicamenteuse, alcoolique ou virale ; compléter par cholangio-IRM / écho-endoscopie si besoin.", "Traitement étiologique (souvent chirurgical / endoscopique pour les obstacles).", "Symptomatique : prurit → cholestyramine (résine chélatrice des acides biliaires) ; carence en vitamine K → vitamine K parentérale."]
   }
 ];
