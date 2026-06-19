@@ -1416,6 +1416,55 @@ window.BIOKB = [
     ],
     red_flags: ["Acidocétose diabétique : hyperglycémie + cétose + acidose, déshydratation, hyperventilation (Kussmaul), odeur acétonique → URGENCE", "Hyperkaliémie (acidose) ou kaliémie « normale » masquant une déplétion potassique globale", "Déshydratation sévère, troubles de conscience", "Syndrome cardinal de l'enfant/jeune (polyurie, polydipsie, amaigrissement) → ne pas retarder la prise en charge"],
     conduite: ["Affirmer le diabète (glycémie > 1,26 g/L × 2) ; rechercher la cétose (urgence si acidocétose).", "Confirmer le type 1 si doute : auto-anticorps (anti-GAD…) ; rechercher les maladies auto-immunes associées (TSH, anti-transglutaminase).", "Éducation thérapeutique +++, insulinothérapie adaptée au mode de vie (schéma basal-bolus), auto-surveillance glycémique.", "Prévention CV (lipides, TA, tabac, poids), vaccinations (grippe, pneumocoque), dépistage des complications (ophtalmo, rénal, neuro, cardio, dentaire)."]
+  },
+  {
+    id: "diabete_type_2", num: 92, anomalie: "Diabète de type 2",
+    specialite: "Endocrinologie",
+    definition: "Diabète lié à une insulino-résistance des tissus périphériques (muscle ++, foie, tissu adipeux) avec hyperinsulinisme compensateur (10-20 ans), puis épuisement de l'insulino-sécrétion → hyperglycémie. Associé au surpoids / obésité abdominale et au syndrome métabolique (risque cardio-vasculaire).",
+    premiere_intention: ["Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises", "Profil étiologique : âge > 40 ans, IMC > 27, surpoids à répartition abdominale, ATCD familiaux, cétonurie nulle/faible, HTA associée", "Bilan : HbA1c, bilan rénal (créatinine, clairance, microalbuminurie), bilan lipidique", "Dépister le syndrome métabolique (tour de taille, TG, HDL, TA, glycémie)"],
+    causes: [
+      { cause: "Insulino-résistance", signe: "surcharge pondérale (graisse viscérale, AG libres en compétition avec le glucose, adipokines : leptine/résistine/adiponectine), sédentarité, terrain génétique", examens: ["Tour de taille, IMC", "Insulinémie à jeun > 15 mUI/L (si glycémie < 1,1 g/L)"] },
+      { cause: "Syndrome métabolique (IDF 2005)", signe: "obésité centrale + ≥ 2 critères (TG, HDL, TA, glycémie)", examens: ["Tour de taille", "Bilan lipidique, glycémie, TA"] },
+      { cause: "Arguments vs diabète de type 1", signe: "âge > 40 ans, IMC élevé, absence de cétose, ATCD familiaux de DT2", examens: ["Cétonurie (nulle/faible)", "Contexte"] }
+    ],
+    tableaux: [
+      { titre: "Syndrome métabolique (IDF 2005)",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Obésité centrale (OBLIGATOIRE)", "Tour de taille > 94 cm (homme), > 80 cm (femme)"],
+          ["+ au moins 2 parmi :", "—"],
+          ["Triglycérides", "> 1,5 g/L"],
+          ["HDL cholestérol", "< 0,4 g/L (homme), < 0,5 g/L (femme)"],
+          ["Pression artérielle", "≥ 130/85 mmHg"],
+          ["Glycémie à jeun", "> 1 g/L (ou diabète de type 2)"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Cible", "Critères"],
+        lignes: [
+          ["Diabète de type 2", "Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises"],
+          ["Insulino-résistance", "Insulinémie à jeun > 15 mUI/L (interprétable si glycémie < 1,1 g/L)"],
+          ["Troubles associés", "TG > 1,7 g/L (1,5 femme), HDL < 0,35 g/L (0,45 femme), ↑ CRP / fibrinogène / ferritine / γGT / ALAT"]
+        ] },
+      { titre: "Profil clinique",
+        entetes: ["Élément", "Description"],
+        lignes: [
+          ["Terrain", "Surpoids (IMC > 25), graisse abdominale (TT > 94 H / > 80 F)"],
+          ["Mode de vie", "Sédentarité"],
+          ["Âge / hérédité", "> 40 ans, ATCD familiaux de DT2"],
+          ["Comorbidité", "HTA associée"]
+        ] },
+      { titre: "Objectifs et hygiène de vie",
+        entetes: ["Domaine", "Cible"],
+        lignes: [
+          ["HbA1c", "Cible individualisée (âge, ancienneté, risque d'hypoglycémie) ; dosage 4 fois/an"],
+          ["Poids / tour de taille", "IMC < 25 ; TT < 94 cm (H) / < 80 cm (F)"],
+          ["Lipides", "HDL > 0,4 g/L, LDL < cible, TG < 1,5 g/L"],
+          ["Pression artérielle", "< 130/80 mmHg"],
+          ["Hygiène", "Activité physique, sevrage tabagique, limiter l'alcool"]
+        ] }
+    ],
+    red_flags: ["Complications cardio-vasculaires (le syndrome métabolique est prothrombotique, pro-inflammatoire, dyslipidémique, hypertensif)", "Hyperglycémie majeure / coma hyperosmolaire (sujet âgé, déshydratation)", "Découverte tardive avec complications déjà présentes (rétinopathie, néphropathie, neuropathie, pied diabétique)", "Dyslipidémie de type IV/IIb et stéatose hépatique associées"],
+    conduite: ["Affirmer le DT2 (glycémie > 1,26 g/L × 2) ; profil : âge > 40 ans, surpoids abdominal, pas de cétose.", "Dépister et prendre en charge le syndrome métabolique global (TA, lipides, poids, tabac).", "Mesures hygiéno-diététiques en première ligne, puis antidiabétiques oraux et/ou insuline ; statine/fibrate, traitement de l'HTA.", "Vaccinations (grippe, pneumocoque) ; dépistage annuel des complications (ophtalmo, rénal, neuro, cardio, pied, dentaire)."]
   }
 ];
 
