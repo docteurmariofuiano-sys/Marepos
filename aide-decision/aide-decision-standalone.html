@@ -5918,23 +5918,29 @@ window.KB = {
       { id: "ar2_fievre", label: "Arthrite septique", type: "boolean", question: "Y a-t-il une articulation chaude et très douloureuse avec de la fièvre ?" },
       { id: "ar2_inflammatoire", label: "Rhumatisme inflammatoire", type: "boolean", question: "Y a-t-il une raideur matinale prolongée (> 30 min), un gonflement, ou plusieurs articulations atteintes ?" },
       { id: "ar2_mecanique", label: "Douleur mécanique", type: "boolean", question: "La douleur est-elle déclenchée par l'effort/la marche et calmée par le repos, sur une articulation (genou, hanche, main) ?" },
-      { id: "ar2_blocage", label: "Blocage / instabilité", type: "boolean", question: "Y a-t-il un blocage articulaire, une instabilité, ou un épanchement important ?" }
+      { id: "ar2_blocage", label: "Blocage / instabilité", type: "boolean", question: "Y a-t-il un blocage articulaire, une instabilité, ou un épanchement important ?" },
+      { id: "ar2_cristaux", label: "Crise microcristalline", type: "boolean", question: "Avez-vous eu une crise aiguë très douloureuse, rouge et chaude (gros orteil, genou), apparue en quelques heures et régressive ?" },
+      { id: "ar2_periarticulaire", label: "Douleur péri-articulaire", type: "boolean", question: "La douleur est-elle localisée à un point précis (tendon, à côté de l'articulation) et réveillée par un mouvement particulier, sans gonflement de l'articulation ?" }
     ],
     red_flags: [
       { id: "ar2_rf_septique", niveau: 3, when: { q: "ar2_fievre", eq: true },
-        message_medecin: "Articulation chaude + fièvre : arthrite septique à éliminer (voir fiche arthrite) → ponction.",
+        message_medecin: "Articulation chaude + fièvre : arthrite septique à éliminer en URGENCE (voir fiche arthrite) → ponction articulaire avant toute antibiothérapie. Une monoarthrite aiguë fébrile est septique jusqu'à preuve du contraire.",
         message_patient: "Une articulation chaude et douloureuse avec fièvre nécessite une évaluation médicale immédiate." },
       { id: "ar2_rf_inflammatoire", niveau: 2, when: { q: "ar2_inflammatoire", eq: true },
-        message_medecin: "Caractères inflammatoires : évoquer un rhumatisme inflammatoire (voir fiche arthrite) plutôt qu'une arthrose.",
+        message_medecin: "Caractères inflammatoires (raideur matinale > 30 min, gonflement, polyarticulaire) : évoquer un rhumatisme inflammatoire (voir fiche arthrite) plutôt qu'une arthrose → VS/CRP, avis rhumatologique.",
         message_patient: "Ces caractéristiques nécessitent un avis médical." }
     ],
     diagnostics_differentiels: [
       { id: "ar2_arthrose", diagnostic: "Arthrose", arguments: [{ label: "douleur mécanique", w: 3, when: { q: "ar2_mecanique", eq: true } }, { label: "blocage / épanchement", w: 1, when: { q: "ar2_blocage", eq: true } }],
-        examens_a_discuter: ["Radiographie", "Antalgiques, activité physique adaptée"] },
+        examens_a_discuter: ["Diagnostic clinique pour une gonarthrose/coxarthrose typique ; radiographie (pincement, ostéophytes, en charge) utile mais non systématique", "Traitement : activité physique adaptée et perte de poids (genou/hanche) en 1re ligne, antalgiques, AINS topiques ; pas de corrélation stricte douleur–radiographie"] },
+      { id: "ar2_microcristalline", diagnostic: "Arthropathie microcristalline (goutte, chondrocalcinose)", arguments: [{ label: "crise aiguë rouge/chaude régressive", w: 3, when: { q: "ar2_cristaux", eq: true } }],
+        examens_a_discuter: ["Ponction articulaire (cristaux d'urate ou de pyrophosphate) — élimine aussi une arthrite septique", "Uricémie (à distance de la crise), radiographie (liseré de chondrocalcinose)", "Colchicine/AINS en crise ; hypo-uricémiant à distance dans la goutte"] },
+      { id: "ar2_periarticulaire", diagnostic: "Atteinte péri-articulaire (tendinopathie, bursite)", arguments: [{ label: "douleur localisée, mouvement contrarié, sans épanchement", w: 3, when: { q: "ar2_periarticulaire", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique (palpation, manœuvres tendineuses) ; échographie si doute", "Repos relatif, AINS topiques, rééducation"] },
       { id: "ar2_inflammatoire", diagnostic: "Cause inflammatoire / septique (voir arthrite)", arguments: [{ label: "caractères inflammatoires", w: 2, when: { q: "ar2_inflammatoire", eq: true } }, { label: "fièvre", w: 2, when: { q: "ar2_fievre", eq: true } }],
         examens_a_discuter: ["Voir fiche arthrite (VS/CRP, ponction)"] }
     ],
-    examens_clinique: ["Examen articulaire (mobilité, épanchement, chaleur)", "Radiographie", "Recherche de signes inflammatoires"]
+    examens_clinique: ["Examen articulaire (mobilité, épanchement, chaleur, déformation, douleur à la palpation)", "Distinguer douleur articulaire vraie vs péri-articulaire (tendon/bourse)", "Radiographie en charge si besoin (genou/hanche)", "Recherche de signes inflammatoires/généraux"]
   },
 
   // -------------------------------------------------------------------------
@@ -5944,21 +5950,27 @@ window.KB = {
     id: "fibromyalgie", symptome: "Douleurs diffuses chroniques / fibromyalgie", specialite: ["Rhumatologie"],
     questions: [
       { id: "fi_organique", label: "Signes d'alarme", type: "boolean", question: "Y a-t-il des signes d'alarme : fièvre, amaigrissement, gonflement articulaire, faiblesse musculaire vraie, anomalies biologiques ?" },
-      { id: "fi_diffus", label: "Tableau typique", type: "boolean", question: "Avez-vous des douleurs diffuses chroniques (plus de 3 mois), avec fatigue et troubles du sommeil ?" },
-      { id: "fi_thyroide", label: "Hypothyroïdie / statine", type: "boolean", question: "Avez-vous des signes d'hypothyroïdie, ou prenez-vous une statine ?" }
+      { id: "fi_diffus", label: "Tableau typique", type: "boolean", question: "Avez-vous des douleurs diffuses chroniques (plus de 3 mois), avec fatigue, sommeil non réparateur et troubles de la concentration (« brouillard ») ?" },
+      { id: "fi_thyroide", label: "Hypothyroïdie / statine", type: "boolean", question: "Avez-vous des signes d'hypothyroïdie, ou prenez-vous une statine ?" },
+      { id: "fi_ppr", label: "Pseudopolyarthrite", type: "boolean", question: "Avez-vous plus de 50 ans, avec des douleurs et une raideur des épaules et des hanches (ceintures), prédominant le matin, d'apparition récente ?" }
     ],
     red_flags: [
       { id: "fi_rf_organique", niveau: 2, when: { q: "fi_organique", eq: true },
-        message_medecin: "Signes d'alarme : éliminer une cause organique (inflammatoire, endocrinienne, musculaire) avant de retenir une fibromyalgie.",
-        message_patient: "Ces signes nécessitent un bilan médical." }
+        message_medecin: "Signes d'alarme : éliminer une cause organique (inflammatoire, endocrinienne, musculaire, néoplasique) avant de retenir une fibromyalgie.",
+        message_patient: "Ces signes nécessitent un bilan médical." },
+      { id: "fi_rf_ppr", niveau: 2, when: { q: "fi_ppr", eq: true },
+        message_medecin: "Sujet > 50 ans, douleurs/raideur des ceintures d'apparition récente : évoquer une pseudopolyarthrite rhizomélique (VS/CRP élevées) — NE PAS étiqueter fibromyalgie. Rechercher des signes de maladie de Horton associée (céphalées, signes visuels, claudication de la mâchoire) = urgence (corticothérapie, risque de cécité).",
+        message_patient: "Après 50 ans, des douleurs récentes des épaules/hanches nécessitent un bilan rapide." }
     ],
     diagnostics_differentiels: [
-      { id: "fi_fibromyalgie", diagnostic: "Fibromyalgie", arguments: [{ label: "douleurs diffuses + fatigue + sommeil", w: 3, when: { q: "fi_diffus", eq: true } }],
-        examens_a_discuter: ["Diagnostic clinique (après élimination de l'organique)", "Prise en charge globale (activité physique, TCC)"] },
+      { id: "fi_fibromyalgie", diagnostic: "Fibromyalgie", arguments: [{ label: "douleurs diffuses > 3 mois + fatigue + sommeil + cognition", w: 3, when: { q: "fi_diffus", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique positif (douleurs diffuses + symptômes associés), après élimination raisonnable de l'organique — éviter la surenchère d'examens", "Prise en charge globale : éducation, activité physique adaptée régulière (pierre angulaire), TCC, traitement du sommeil ; antalgiques de palier 1"] },
+      { id: "fi_ppr", diagnostic: "Pseudopolyarthrite rhizomélique / Horton", arguments: [{ label: "douleurs des ceintures > 50 ans", w: 3, when: { q: "fi_ppr", eq: true } }],
+        examens_a_discuter: ["VS/CRP (syndrome inflammatoire franc)", "Corticothérapie ; avis spécialisé ; biopsie d'artère temporale si suspicion de Horton"] },
       { id: "fi_organique", diagnostic: "Cause organique à éliminer", arguments: [{ label: "signes d'alarme", w: 3, when: { q: "fi_organique", eq: true } }, { label: "hypothyroïdie / statine", w: 1, when: { q: "fi_thyroide", eq: true } }],
-        examens_a_discuter: ["VS/CRP, TSH, CPK selon le contexte"] }
+        examens_a_discuter: ["VS/CRP, TSH, CPK, calcémie, glycémie selon le contexte", "Myalgies sous statine : doser les CPK, réévaluer le traitement"] }
     ],
-    examens_clinique: ["Examen général et articulaire", "Recherche de signes d'alarme", "Bilan de débrouillage (VS/CRP, TSH, CPK)"]
+    examens_clinique: ["Examen général et articulaire (absence de synovite vraie dans la fibromyalgie)", "Recherche de signes d'alarme et de douleurs des ceintures (> 50 ans)", "Bilan de débrouillage limité (VS/CRP, TSH, CPK) — un bilan normal soutient le diagnostic positif"]
   },
 
   // -------------------------------------------------------------------------
@@ -5970,20 +5982,26 @@ window.KB = {
       { id: "os_fracture", label: "Fracture de fragilité", type: "boolean", question: "Avez-vous eu une fracture pour un traumatisme mineur (chute de sa hauteur), notamment poignet, hanche, ou un tassement vertébral ?" },
       { id: "os_dos", label: "Tassement vertébral", type: "boolean", question: "Avez-vous une douleur dorsale aiguë ou une perte de taille ?" },
       { id: "os_facteurs", label: "Facteurs de risque", type: "boolean", question: "Avez-vous des facteurs de risque (ménopause, corticothérapie prolongée, antécédents familiaux, faible poids, tabac/alcool) ?" },
-      { id: "os_secondaire", label: "Cause secondaire", type: "boolean", question: "Y a-t-il une cause secondaire possible (hyperthyroïdie, hyperparathyroïdie, malabsorption) ?" }
+      { id: "os_secondaire", label: "Cause secondaire", type: "boolean", question: "Y a-t-il une cause secondaire possible (hyperthyroïdie, hyperparathyroïdie, malabsorption) ?" },
+      { id: "os_drapeau", label: "Drapeau rouge tumoral", type: "boolean", question: "Le tassement/la douleur s'accompagne-t-il d'altération de l'état général, de douleur permanente y compris la nuit/au repos, d'un cancer connu, ou de signes neurologiques (faiblesse/troubles sphinctériens) ?" }
     ],
     red_flags: [
+      { id: "os_rf_neuro", niveau: 3, when: { q: "os_drapeau", eq: true },
+        message_medecin: "Tassement vertébral avec drapeaux rouges (AEG, douleur nocturne/permanente, cancer connu, signes neurologiques) : évoquer une fracture MALIGNE (métastase, myélome) ou une compression médullaire → imagerie (IRM) en urgence, ne pas étiqueter « ostéoporose » d'emblée.",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide et une imagerie." },
       { id: "os_rf_fracture", niveau: 2, when: { any: [{ q: "os_fracture", eq: true }, { q: "os_dos", eq: true }] },
-        message_medecin: "Fracture de fragilité / tassement vertébral : confirmer (imagerie), bilan d'ostéoporose, traitement, prévention des chutes.",
+        message_medecin: "Fracture de fragilité / tassement vertébral : confirmer (imagerie), bilan d'ostéoporose, traitement (une fracture de fragilité justifie souvent un traitement même sans DXA effondrée), prévention des chutes.",
         message_patient: "Une fracture pour un choc mineur nécessite un avis médical et un bilan." }
     ],
     diagnostics_differentiels: [
       { id: "os_osteoporose", diagnostic: "Ostéoporose", arguments: [{ label: "facteurs de risque", w: 2, when: { q: "os_facteurs", eq: true } }, { label: "fracture de fragilité", w: 2, when: { q: "os_fracture", eq: true } }],
-        examens_a_discuter: ["Ostéodensitométrie", "Bilan phosphocalcique, traitement, vitamine D/calcium"] },
+        examens_a_discuter: ["Ostéodensitométrie (T-score ≤ -2,5) ; score FRAX pour le risque fracturaire", "Bilan phosphocalcique, 25-OH-vitamine D ; supplémentation calcium/vitamine D, traitement anti-ostéoporotique (bisphosphonates…), activité physique"] },
+      { id: "os_maligne", diagnostic: "Fracture pathologique maligne (métastase, myélome)", arguments: [{ label: "drapeaux rouges (AEG, douleur nocturne, cancer, neuro)", w: 3, when: { q: "os_drapeau", eq: true } }],
+        examens_a_discuter: ["IRM rachidienne ; recherche d'un primitif ; EPP/immunofixation, calcémie (myélome)", "Avis spécialisé urgent si signes neurologiques"] },
       { id: "os_secondaire", diagnostic: "Ostéoporose secondaire", arguments: [{ label: "cause secondaire possible", w: 3, when: { q: "os_secondaire", eq: true } }],
-        examens_a_discuter: ["Bilan étiologique (TSH, PTH, calcium, vitamine D)"] }
+        examens_a_discuter: ["Bilan étiologique (TSH, PTH, calcium, vitamine D, cortisol, testostérone, etc.)", "Penser à l'ostéoporose cortisonique (corticothérapie ≥ 3 mois)"] }
     ],
-    examens_clinique: ["Taille / poids (perte de taille)", "Recherche d'un tassement", "Facteurs de risque", "Ostéodensitométrie, bilan phosphocalcique"]
+    examens_clinique: ["Taille / poids (perte de taille ≥ 3-4 cm)", "Recherche d'un tassement et de drapeaux rouges (douleur nocturne, AEG, neuro)", "Facteurs de risque (ménopause, corticoïdes, antécédent familial, IMC bas, tabac/alcool)", "Ostéodensitométrie, bilan phosphocalcique, évaluation du risque de chute"]
   },
 
   // -------------------------------------------------------------------------
