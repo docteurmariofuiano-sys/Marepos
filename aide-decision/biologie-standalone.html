@@ -2712,6 +2712,70 @@ window.BIOKB = [
     ],
     red_flags: ["VS ~100 mm/h : rechercher infection, cancer, myélome, maladie systémique (Horton)", "CRP / PCT très élevées : sepsis bactérien (PCT = gravité)", "Syndrome inflammatoire chronique → anémie inflammatoire (microcytaire), thrombocytose > 500 G/L", "Dissociation VS/CRP (VS ↑ mais CRP normale : gammapathie, anémie ; ou inverse)"],
     conduite: ["CRP = marqueur précoce et fiable ; PCT discrimine l'infection bactérienne (pas virale).", "VS très influencée par de nombreux facteurs (anémie, Ig, fibrinogène, technique) → préférer la CRP.", "Profil électrophorétique inflammatoire : ↓ albumine, ↑ α1/α2.", "Syndrome inflammatoire prolongé : anémie inflammatoire, thrombocytose."]
+  },
+  {
+    id: "vih", num: 121, anomalie: "Infection à VIH (dépistage et diagnostic)",
+    specialite: "Infectiologie",
+    definition: "Rétrovirus (Lentivirus) à grande variabilité génétique. VIH-1 (cosmopolite : groupes M/O/N) et VIH-2 (Afrique de l'Ouest, moins contagieux). Dépistage par test combiné ELISA de 4e génération (Ac anti-VIH-1/2 + Ag p24), confirmé par Western Blot, validé sur un 2e prélèvement (arrêté du 28 mai 2010).",
+    premiere_intention: ["Dépistage : ELISA combiné 4e génération (Ac anti-VIH-1/2 + Ag p24 ; seuil p24 ≥ 2 UI/mL)", "Si positif / douteux : confirmation par Western Blot ou immunoblot (différencie VIH-1 et VIH-2)", "Si confirmation négative / douteuse : antigénémie p24 (test de neutralisation) ou ARN viral (charge virale)", "Tout résultat positif validé sur un 2e prélèvement ; attention à la fenêtre sérologique"],
+    causes: [
+      { cause: "Primo-infection (2-8 semaines)", signe: "fièvre, adénopathies, myalgies, éruption ; leucopénie puis syndrome mononucléosique, ↑ transaminases ; Ag p24 et ARN positifs avant les anticorps (fenêtre)", examens: ["ELISA 4e génération, Ag p24, charge virale"] },
+      { cause: "Western Blot positif", signe: "≥ 2 ENV + 1 GAG ou POL (ou 1 ENV + 1 GAG : gp160 + p24)", examens: ["Western Blot / immunoblot"] },
+      { cause: "Profil douteux", signe: "p24 isolée (souvent faux positif, séroconversion en cours, ou VIH-2)", examens: ["Contrôle, charge virale"] }
+    ],
+    tableaux: [
+      { titre: "Algorithme de dépistage / diagnostic (arrêté 2010)",
+        entetes: ["Étape", "Conduite"],
+        lignes: [
+          ["Dépistage", "ELISA combiné 4e génération (Ac anti-VIH-1/2 + Ag p24)"],
+          ["Si positif / douteux", "Western Blot / immunoblot (différencie VIH-1 / VIH-2)"],
+          ["WB négatif / douteux", "Ag p24 (test de neutralisation) ou ARN viral plasmatique"],
+          ["Validation", "2e prélèvement obligatoire ; annonce en entretien individuel"]
+        ] },
+      { titre: "Cinétique des marqueurs (fenêtre sérologique)",
+        entetes: ["Marqueur", "Apparition (jours)"],
+        lignes: [
+          ["ARN viral", "~11-12 j"],
+          ["Ag p24", "~14-15 j"],
+          ["Anticorps", "~20-29 j (Western Blot interprétable vers J28-29)"]
+        ] },
+      { titre: "Risque de transmission (pour 10 000 expositions)",
+        entetes: ["Mode", "Risque"],
+        lignes: [
+          ["Rapport anal (réceptif / insertif)", "~50 / ~6,5"],
+          ["Rapport vaginal (réceptif / insertif)", "~10 / ~5"],
+          ["Rapport bucco-génital", "~0,5-1"],
+          ["Partage de seringues", "~67"],
+          ["Blessure percutanée (aiguille)", "~30"],
+          ["Transfusion", "~9 (exceptionnel aujourd'hui)"],
+          ["Périnatal (sans / avec traitement)", "10-40 % / 1-2 %"]
+        ] },
+      { titre: "Stades cliniques (OMS)",
+        entetes: ["Stade", "Caractéristiques"],
+        lignes: [
+          ["A", "Primo-infection (2-8 sem) + phase asymptomatique (~10 ans) ; lymphadénopathie généralisée persistante"],
+          ["B", "Candidose oropharyngée / vaginale récidivante, zona, leucoplasie chevelue, dysplasie cervicale, PTI, neuropathie, syndrome constitutionnel"],
+          ["C", "Infections opportunistes (pneumocystose, toxoplasmose cérébrale, candidose œsophagienne, CMV, tuberculose, cryptococcose), Kaposi, lymphomes, cancer invasif du col"],
+          ["SIDA", "CD4 < 200/mm³ et/ou pathologie du stade C"]
+        ] },
+      { titre: "Interprétation du Western Blot",
+        entetes: ["Résultat", "Critères"],
+        lignes: [
+          ["Positif", "≥ 2 ENV + 1 GAG ou POL (ou 1 ENV + 1 GAG : gp160 + p24)"],
+          ["Ininterprétable", "1 ENV ± POL ; GAG + POL ; p24 isolée (faux positif, séroconversion, ou VIH-2)"],
+          ["Négatif", "Aucune bande, bandes non répertoriées, ou p17 isolée"]
+        ] },
+      { titre: "Bilan initial du sujet séropositif",
+        entetes: ["Bilan", "Examens"],
+        lignes: [
+          ["Immuno-virologique", "CD4 / CD8, charge virale, test génotypique de résistance"],
+          ["Général", "NFS, transaminases, γGT, PAL, créatinine, glycémie, bilan lipidique, 25-OH-D, protéinurie ; facteurs de risque CV"],
+          ["Infectieux", "Sérologies syphilis, VHA/VHB/VHC, toxoplasmose, CMV, IDR tuberculine, radiographie du thorax"],
+          ["Mesures", "VHB négatif → vaccination ; VHC négatif → dépistage régulier si risque ; dépistage des partenaires"]
+        ] }
+    ],
+    red_flags: ["Primo-infection : syndrome viral fébrile avec éruption/adénopathies + facteur de risque → ELISA + Ag p24/charge virale (fenêtre sérologique)", "CD4 < 200/mm³ = SIDA : risque d'infections opportunistes → prophylaxie", "Accident d'exposition (AES, rapport à risque) → traitement post-exposition en urgence (< 48 h)", "Co-infections fréquentes : VHB (5-6 %), VHC (~25 %)"],
+    conduite: ["Dépistage par ELISA 4e génération ; confirmation Western Blot + 2e prélèvement (arrêté 2010).", "Penser à la fenêtre sérologique (Ag p24 / ARN positifs avant les anticorps).", "Sujet séropositif : bilan immuno-virologique (CD4, charge virale, génotype), général, infectieux ; vacciner (VHB).", "Annonce en entretien individuel + prise en charge spécialisée rapide ; dépistage des partenaires, prévention."]
   }
 ];
 
