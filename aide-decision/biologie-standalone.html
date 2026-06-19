@@ -1036,6 +1036,35 @@ window.BIOKB = [
     ],
     red_flags: ["Excès de blastes (AREB-2, blastes 10-19 %) : risque élevé de transformation en LAM", "Présence de corps d'Auer (forme à excès de blastes)", "Cytopénies profondes : neutropénie fébrile, syndrome hémorragique, anémie mal tolérée", "Caryotype défavorable (IPSS-R élevé)"],
     conduite: ["Diagnostic d'élimination : exclure carences (B12/folates), alcool, médicaments, causes réactionnelles avant de retenir un SMD.", "Myélogramme avec coloration de Perls (sidéroblastes en couronne) et caryotype = indispensables.", "Classer (OMS) et stratifier le risque (IPSS-R) : conditionne la prise en charge.", "Bas risque : soutien (transfusions, EPO, chélation du fer) ; haut risque : agents hypométhylants, allogreffe ; le 5q− isolé répond au lénalidomide."]
+  },
+  {
+    id: "lmmc", num: 83, anomalie: "Leucémie myélomonocytaire chronique (LMMC)",
+    specialite: "Hématologie",
+    definition: "Hémopathie clonale à la frontière SMD / SMP, définie par une monocytose sanguine persistante (> 1 G/L > 3 mois) avec dysplasie, sans chromosome Philadelphie et blastose < 20 %. Touche surtout le sujet âgé, prédominance masculine.",
+    premiere_intention: ["Hémogramme : MONOCYTOSE > 1 G/L persistante (> 3 mois) ; forme dysplasique (pancytopénie) ou proliférative (hyperleucocytose)", "Frottis : anomalies morphologiques des monocytes (formes proliférantes), blastose sanguine souvent présente (parfois faible)", "Myélogramme : moelle hypercellulaire avec dysmyélopoïèse (dysgranulopoïèse, dysérythropoïèse, dysmégacaryocytopoïèse) ; blastose < 20 %", "Caryotype + biologie moléculaire ; éliminer Ph1 / BCR-ABL et les autres causes de monocytose"],
+    causes: [
+      { cause: "LMMC (clonale)", signe: "monocytose > 1 G/L > 3 mois + dysplasie / anomalie clonale ; Ph1 négatif ; blastes < 20 %", examens: ["Myélogramme, caryotype", "Biologie moléculaire"] },
+      { cause: "Monocytose réactionnelle", signe: "infections (tuberculose, endocardite…), inflammation, cancers, sortie d'aplasie", examens: ["Bilan infectieux / inflammatoire", "Contexte clinique"] },
+      { cause: "Autre hémopathie", signe: "LMC (Ph1+), LAM monocytaire (blastes ≥ 20 %), autre SMD/SMP", examens: ["BCR-ABL", "Myélogramme (blastes)"] }
+    ],
+    tableaux: [
+      { titre: "Critères OMS (LMMC)",
+        entetes: ["Critère", "Seuil / condition"],
+        lignes: [
+          ["Monocytose sanguine", "> 1 G/L pendant > 3 mois"],
+          ["Chromosome Ph1 / BCR-ABL", "Absent"],
+          ["Blastose médullaire", "< 20 % (myéloblastes + monoblastes + promonocytes)"],
+          ["Dysplasie", "≥ 1 lignée ; si absente : anomalie cytogénétique clonale, monocytose réellement > 3 mois, autres causes exclues"]
+        ] },
+      { titre: "Formes hématologiques",
+        entetes: ["Forme", "Hémogramme"],
+        lignes: [
+          ["Dysplasique / pancytopénique (~50 %)", "Neutropénie, anémie macrocytaire, thrombopénie, monocytose"],
+          ["Proliférative", "Hyperleucocytose, monocytose, anémie, thrombopénie"]
+        ] }
+    ],
+    red_flags: ["Excès de blastes / évolution vers une LAM", "Cytopénies profondes (infections, hémorragies, anémie mal tolérée)", "Forme proliférative avec hyperleucocytose, splénomégalie volumineuse", "Localisations extra-hématologiques (cutanées, séreuses)"],
+    conduite: ["Affirmer une monocytose clonale persistante (> 1 G/L, > 3 mois) et éliminer une monocytose réactionnelle et la LMC (Ph1−).", "Myélogramme + caryotype indispensables ; apprécier dysplasie et blastose.", "Stratifier le risque (scores spécifiques LMMC) ; prise en charge spécialisée.", "Traitements : soutien, hydroxyurée (formes prolifératives), agents hypométhylants, allogreffe selon le risque."]
   }
 ];
 
