@@ -5536,5 +5536,139 @@ window.KB = {
         examens_a_discuter: ["Orientation vers la maternité"] }
     ],
     examens_clinique: ["Pression artérielle, bandelette urinaire", "Hauteur utérine, bruits du cœur fœtal selon le terme", "Orientation vers le suivi recommandé"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ARTHROSE
+  // -------------------------------------------------------------------------
+  arthrose: {
+    id: "arthrose", symptome: "Arthrose / douleur articulaire mécanique", specialite: ["Rhumatologie"], urgence: true,
+    questions: [
+      { id: "ar2_fievre", label: "Arthrite septique", type: "boolean", question: "Y a-t-il une articulation chaude et très douloureuse avec de la fièvre ?" },
+      { id: "ar2_inflammatoire", label: "Rhumatisme inflammatoire", type: "boolean", question: "Y a-t-il une raideur matinale prolongée (> 30 min), un gonflement, ou plusieurs articulations atteintes ?" },
+      { id: "ar2_mecanique", label: "Douleur mécanique", type: "boolean", question: "La douleur est-elle déclenchée par l'effort/la marche et calmée par le repos, sur une articulation (genou, hanche, main) ?" },
+      { id: "ar2_blocage", label: "Blocage / instabilité", type: "boolean", question: "Y a-t-il un blocage articulaire, une instabilité, ou un épanchement important ?" }
+    ],
+    red_flags: [
+      { id: "ar2_rf_septique", niveau: 3, when: { q: "ar2_fievre", eq: true },
+        message_medecin: "Articulation chaude + fièvre : arthrite septique à éliminer (voir fiche arthrite) → ponction.",
+        message_patient: "Une articulation chaude et douloureuse avec fièvre nécessite une évaluation médicale immédiate." },
+      { id: "ar2_rf_inflammatoire", niveau: 2, when: { q: "ar2_inflammatoire", eq: true },
+        message_medecin: "Caractères inflammatoires : évoquer un rhumatisme inflammatoire (voir fiche arthrite) plutôt qu'une arthrose.",
+        message_patient: "Ces caractéristiques nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ar2_arthrose", diagnostic: "Arthrose", arguments: [{ label: "douleur mécanique", w: 3, when: { q: "ar2_mecanique", eq: true } }, { label: "blocage / épanchement", w: 1, when: { q: "ar2_blocage", eq: true } }],
+        examens_a_discuter: ["Radiographie", "Antalgiques, activité physique adaptée"] },
+      { id: "ar2_inflammatoire", diagnostic: "Cause inflammatoire / septique (voir arthrite)", arguments: [{ label: "caractères inflammatoires", w: 2, when: { q: "ar2_inflammatoire", eq: true } }, { label: "fièvre", w: 2, when: { q: "ar2_fievre", eq: true } }],
+        examens_a_discuter: ["Voir fiche arthrite (VS/CRP, ponction)"] }
+    ],
+    examens_clinique: ["Examen articulaire (mobilité, épanchement, chaleur)", "Radiographie", "Recherche de signes inflammatoires"]
+  },
+
+  // -------------------------------------------------------------------------
+  // FIBROMYALGIE / DOULEURS DIFFUSES
+  // -------------------------------------------------------------------------
+  fibromyalgie: {
+    id: "fibromyalgie", symptome: "Douleurs diffuses chroniques / fibromyalgie", specialite: ["Rhumatologie"],
+    questions: [
+      { id: "fi_organique", label: "Signes d'alarme", type: "boolean", question: "Y a-t-il des signes d'alarme : fièvre, amaigrissement, gonflement articulaire, faiblesse musculaire vraie, anomalies biologiques ?" },
+      { id: "fi_diffus", label: "Tableau typique", type: "boolean", question: "Avez-vous des douleurs diffuses chroniques (plus de 3 mois), avec fatigue et troubles du sommeil ?" },
+      { id: "fi_thyroide", label: "Hypothyroïdie / statine", type: "boolean", question: "Avez-vous des signes d'hypothyroïdie, ou prenez-vous une statine ?" }
+    ],
+    red_flags: [
+      { id: "fi_rf_organique", niveau: 2, when: { q: "fi_organique", eq: true },
+        message_medecin: "Signes d'alarme : éliminer une cause organique (inflammatoire, endocrinienne, musculaire) avant de retenir une fibromyalgie.",
+        message_patient: "Ces signes nécessitent un bilan médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "fi_fibromyalgie", diagnostic: "Fibromyalgie", arguments: [{ label: "douleurs diffuses + fatigue + sommeil", w: 3, when: { q: "fi_diffus", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique (après élimination de l'organique)", "Prise en charge globale (activité physique, TCC)"] },
+      { id: "fi_organique", diagnostic: "Cause organique à éliminer", arguments: [{ label: "signes d'alarme", w: 3, when: { q: "fi_organique", eq: true } }, { label: "hypothyroïdie / statine", w: 1, when: { q: "fi_thyroide", eq: true } }],
+        examens_a_discuter: ["VS/CRP, TSH, CPK selon le contexte"] }
+    ],
+    examens_clinique: ["Examen général et articulaire", "Recherche de signes d'alarme", "Bilan de débrouillage (VS/CRP, TSH, CPK)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // OSTÉOPOROSE
+  // -------------------------------------------------------------------------
+  osteoporose: {
+    id: "osteoporose", symptome: "Ostéoporose / fracture de fragilité", specialite: ["Rhumatologie", "Endocrinologie"],
+    questions: [
+      { id: "os_fracture", label: "Fracture de fragilité", type: "boolean", question: "Avez-vous eu une fracture pour un traumatisme mineur (chute de sa hauteur), notamment poignet, hanche, ou un tassement vertébral ?" },
+      { id: "os_dos", label: "Tassement vertébral", type: "boolean", question: "Avez-vous une douleur dorsale aiguë ou une perte de taille ?" },
+      { id: "os_facteurs", label: "Facteurs de risque", type: "boolean", question: "Avez-vous des facteurs de risque (ménopause, corticothérapie prolongée, antécédents familiaux, faible poids, tabac/alcool) ?" },
+      { id: "os_secondaire", label: "Cause secondaire", type: "boolean", question: "Y a-t-il une cause secondaire possible (hyperthyroïdie, hyperparathyroïdie, malabsorption) ?" }
+    ],
+    red_flags: [
+      { id: "os_rf_fracture", niveau: 2, when: { any: [{ q: "os_fracture", eq: true }, { q: "os_dos", eq: true }] },
+        message_medecin: "Fracture de fragilité / tassement vertébral : confirmer (imagerie), bilan d'ostéoporose, traitement, prévention des chutes.",
+        message_patient: "Une fracture pour un choc mineur nécessite un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "os_osteoporose", diagnostic: "Ostéoporose", arguments: [{ label: "facteurs de risque", w: 2, when: { q: "os_facteurs", eq: true } }, { label: "fracture de fragilité", w: 2, when: { q: "os_fracture", eq: true } }],
+        examens_a_discuter: ["Ostéodensitométrie", "Bilan phosphocalcique, traitement, vitamine D/calcium"] },
+      { id: "os_secondaire", diagnostic: "Ostéoporose secondaire", arguments: [{ label: "cause secondaire possible", w: 3, when: { q: "os_secondaire", eq: true } }],
+        examens_a_discuter: ["Bilan étiologique (TSH, PTH, calcium, vitamine D)"] }
+    ],
+    examens_clinique: ["Taille / poids (perte de taille)", "Recherche d'un tassement", "Facteurs de risque", "Ostéodensitométrie, bilan phosphocalcique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DÉSHYDRATATION
+  // -------------------------------------------------------------------------
+  deshydratation: {
+    id: "deshydratation", symptome: "Déshydratation", specialite: ["Médecine générale", "Gériatrie"], urgence: true,
+    questions: [
+      { id: "de2_choc", label: "Signes de gravité", type: "boolean", question: "Y a-t-il des signes de gravité : malaise/tension basse en se levant, confusion, marbrures, cœur rapide ?" },
+      { id: "de2_terrain", label: "Terrain à risque", type: "boolean", question: "S'agit-il d'un nourrisson ou d'une personne âgée ?" },
+      { id: "de2_pertes", label: "Pertes importantes", type: "boolean", question: "Y a-t-il des pertes importantes (diarrhée, vomissements, fièvre, forte chaleur, diabète déséquilibré) ?" },
+      { id: "de2_clinique", label: "Signes cliniques", type: "boolean", question: "Y a-t-il une soif intense, une bouche sèche, des urines rares/foncées, un pli cutané ?" }
+    ],
+    red_flags: [
+      { id: "de2_rf_grave", niveau: 3, when: { any: [{ q: "de2_choc", eq: true }, { all: [{ q: "de2_terrain", eq: true }, { q: "de2_pertes", eq: true }] }] },
+        message_medecin: "Déshydratation sévère / signes de choc (ou nourrisson / sujet âgé avec pertes) : urgence (réhydratation, parfois IV).",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "de2_deshy", diagnostic: "Déshydratation", arguments: [{ label: "signes cliniques de déshydratation", w: 3, when: { q: "de2_clinique", eq: true } }, { label: "pertes importantes", w: 1, when: { q: "de2_pertes", eq: true } }],
+        examens_a_discuter: ["Réhydratation (orale ou IV)", "Traiter la cause ; ionogramme/créatinine si sévère"] },
+      { id: "de2_grave", diagnostic: "Déshydratation grave", arguments: [{ label: "signes de choc", w: 3, when: { q: "de2_choc", eq: true } }, { label: "terrain à risque", w: 1, when: { q: "de2_terrain", eq: true } }],
+        examens_a_discuter: ["Hospitalisation, réhydratation IV"] }
+    ],
+    examens_clinique: ["Pression artérielle couché/debout, fréquence cardiaque", "Pli cutané, état des muqueuses", "Diurèse, poids", "Ionogramme / créatinine si sévère"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CARENCES NUTRITIONNELLES
+  // -------------------------------------------------------------------------
+  carences: {
+    id: "carences", symptome: "Carence (fer, B12, vitamine D)", specialite: ["Nutrition", "Hématologie"],
+    questions: [
+      { id: "ca2_martiale", label: "Carence martiale", type: "boolean", question: "Êtes-vous pâle/fatigué, avec une carence en fer connue ou des saignements (règles abondantes, digestif) ?" },
+      { id: "ca2_b12", label: "Carence B12", type: "boolean", question: "Avez-vous des fourmillements, des troubles de l'équilibre/de la mémoire, ou un régime végétalien ?" },
+      { id: "ca2_vitd", label: "Carence vitamine D", type: "boolean", question: "Avez-vous peu d'exposition au soleil, des douleurs osseuses/musculaires diffuses ?" },
+      { id: "ca2_digestif", label: "Malabsorption", type: "boolean", question: "Avez-vous une maladie digestive (cœliaque, MICI, chirurgie), un alcoolisme, ou une dénutrition ?" }
+    ],
+    red_flags: [
+      { id: "ca2_rf_digestive", niveau: 2, when: { q: "ca2_digestif", eq: true },
+        message_medecin: "Carences / contexte de malabsorption : bilan global, rechercher la cause (cœliaque, MICI, dénutrition).",
+        message_patient: "Ce contexte nécessite un bilan médical." },
+      { id: "ca2_rf_b12", niveau: 2, when: { q: "ca2_b12", eq: true },
+        message_medecin: "Carence en B12 avec signes neurologiques : corriger sans retard (risque de séquelles), rechercher la cause (Biermer, régime, malabsorption).",
+        message_patient: "Ces signes nécessitent un avis médical et un dosage." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ca2_martiale", diagnostic: "Carence martiale", arguments: [{ label: "pâleur / fer bas / saignements", w: 3, when: { q: "ca2_martiale", eq: true } }],
+        examens_a_discuter: ["Ferritine, bilan martial", "CHERCHER le saignement (voir anémie)"] },
+      { id: "ca2_b12", diagnostic: "Carence en B12 / folates", arguments: [{ label: "signes neuro / régime", w: 3, when: { q: "ca2_b12", eq: true } }],
+        examens_a_discuter: ["B12, folates, recherche de la cause"] },
+      { id: "ca2_vitd", diagnostic: "Carence en vitamine D", arguments: [{ label: "peu de soleil / douleurs diffuses", w: 3, when: { q: "ca2_vitd", eq: true } }],
+        examens_a_discuter: ["25-OH vitamine D, supplémentation"] },
+      { id: "ca2_malabsorption", diagnostic: "Malabsorption / dénutrition", arguments: [{ label: "contexte digestif / dénutrition", w: 3, when: { q: "ca2_digestif", eq: true } }],
+        examens_a_discuter: ["Bilan nutritionnel, sérologie cœliaque"] }
+    ],
+    examens_clinique: ["Poids / IMC, pâleur", "Examen neurologique (B12)", "Bilan ciblé (ferritine, B12/folates, vitamine D, calcémie)"]
   }
 };

@@ -15,9 +15,9 @@ window.MOTIFS = [
     frequents: [
       { l: "Fièvre", f: "fievre_adulte" }, { l: "Fatigue / asthénie", f: "asthenie" }, { l: "Malaise", f: "malaise_pc" },
       { l: "Vertiges", f: "vertige" }, { l: "Perte de poids", f: "asthenie" }, { l: "Sueurs nocturnes", f: "hyperhidrose" },
-      { l: "Frissons" }, { l: "Douleurs diffuses" }, { l: "Courbatures", f: "crampes" },
-      { l: "Altération de l'état général", f: "asthenie" }, { l: "Déshydratation" },
-      { l: "Chute chez la personne âgée", f: "chute_personne_agee" }, { l: "Confusion aiguë", f: "confusion" }, { l: "Somnolence inhabituelle" },
+      { l: "Frissons", f: "fievre_adulte" }, { l: "Douleurs diffuses", f: "fibromyalgie" }, { l: "Courbatures", f: "crampes" },
+      { l: "Altération de l'état général", f: "asthenie" }, { l: "Déshydratation", f: "deshydratation" },
+      { l: "Chute chez la personne âgée", f: "chute_personne_agee" }, { l: "Confusion aiguë", f: "confusion" }, { l: "Somnolence inhabituelle", f: "confusion" },
       { l: "Anxiété aiguë / crise de panique", f: "anxiete" }, { l: "Demande de certificat médical" },
       { l: "Renouvellement d'ordonnance" }, { l: "Bilan biologique perturbé", b: "anemie" },
       { l: "Effet indésirable médicamenteux" }
@@ -33,12 +33,12 @@ window.MOTIFS = [
       { l: "Vertiges positionnels", f: "vertige" }, { l: "Sinusite", f: "sinusite" }, { l: "Douleur faciale", f: "algie_faciale" },
       { l: "Épistaxis", f: "epistaxis" }, { l: "Aphonie / dysphonie", f: "dysphonie" },
       { l: "Ganglion cervical", f: "adenopathie" }, { l: "Plaie buccale / aphte", f: "aphte" },
-      { l: "Douleur dentaire", f: "douleur_dentaire" }, { l: "Infection dentaire", f: "douleur_dentaire" }, { l: "Fièvre avec symptômes ORL" }
+      { l: "Douleur dentaire", f: "douleur_dentaire" }, { l: "Infection dentaire", f: "douleur_dentaire" }, { l: "Fièvre avec symptômes ORL", f: "syndrome_grippal" }
     ],
     urgences: [
-      { l: "Dyspnée laryngée", f: "dysphonie" }, { l: "Stridor" }, { l: "Épistaxis abondante", f: "epistaxis" },
-      { l: "Abcès amygdalien" }, { l: "Corps étranger ORL" }, { l: "Traumatisme facial" },
-      { l: "Vertige aigu invalidant" }, { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Surdité brutale", f: "acouphene" }
+      { l: "Dyspnée laryngée", f: "dysphonie" }, { l: "Stridor", f: "angine" }, { l: "Épistaxis abondante", f: "epistaxis" },
+      { l: "Abcès amygdalien", f: "angine" }, { l: "Corps étranger ORL" }, { l: "Traumatisme facial", f: "traumatisme_cranien" },
+      { l: "Vertige aigu invalidant", f: "vertige" }, { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Surdité brutale", f: "acouphene" }
     ]
   },
   {
@@ -66,7 +66,7 @@ window.MOTIFS = [
       { l: "Poussée hypertensive", f: "hta" }, { l: "Œdèmes des jambes", f: "oedemes" }, { l: "Douleur de mollet", f: "douleur_mi" },
       { l: "Varices", f: "varices" }, { l: "Malaise vagal", f: "malaise_pc" }, { l: "Lipothymie", f: "malaise_pc" },
       { l: "Syncope", f: "malaise_pc" }, { l: "Essoufflement à l'effort", f: "dyspnee_chronique" },
-      { l: "Suivi insuffisance cardiaque" }, { l: "Suivi anticoagulant" }, { l: "Anomalie ECG" }
+      { l: "Suivi insuffisance cardiaque", f: "dyspnee_chronique" }, { l: "Suivi anticoagulant" }, { l: "Anomalie ECG", f: "palpitations" }
     ],
     urgences: [
       { l: "Syndrome coronarien aigu", f: "douleur_thoracique" }, { l: "Trouble du rythme mal toléré", f: "malaise_pc" },
@@ -88,16 +88,16 @@ window.MOTIFS = [
       { l: "Intolérance alimentaire", f: "dyspepsie" }, { l: "Douleur post-prandiale", f: "dyspepsie" }
     ],
     urgences: [
-      { l: "Abdomen aigu", f: "douleur_abdominale" }, { l: "Appendicite", f: "douleur_abdominale" }, { l: "Cholécystite", f: "douleur_abdominale" }, { l: "Pancréatite" },
+      { l: "Abdomen aigu", f: "douleur_abdominale" }, { l: "Appendicite", f: "douleur_abdominale" }, { l: "Cholécystite", f: "douleur_abdominale" }, { l: "Pancréatite", f: "douleur_abdominale" },
       { l: "Occlusion intestinale", f: "constipation" }, { l: "Hémorragie digestive", f: "hematemese_melena" },
-      { l: "Vomissements incoercibles", f: "nausees_vomissements" }, { l: "Déshydratation sévère", f: "diarrhee_aigue" }, { l: "Péritonite" },
-      { l: "Douleur abdominale du sujet âgé", f: "douleur_abdominale" }, { l: "Suspicion ischémie mésentérique" }
+      { l: "Vomissements incoercibles", f: "nausees_vomissements" }, { l: "Déshydratation sévère", f: "diarrhee_aigue" }, { l: "Péritonite", f: "douleur_abdominale" },
+      { l: "Douleur abdominale du sujet âgé", f: "douleur_abdominale" }, { l: "Suspicion ischémie mésentérique", f: "douleur_abdominale" }
     ]
   },
   {
     n: 6, titre: "Urologie / néphrologie", icone: "🚽",
     frequents: [
-      { l: "Brûlures urinaires", f: "cystite" }, { l: "Pollakiurie" }, { l: "Cystite", f: "cystite" }, { l: "Douleur lombaire", f: "lombalgie" },
+      { l: "Brûlures urinaires", f: "cystite" }, { l: "Pollakiurie", f: "cystite" }, { l: "Cystite", f: "cystite" }, { l: "Douleur lombaire", f: "lombalgie" },
       { l: "Colique néphrétique", f: "hematurie" }, { l: "Hématurie", f: "hematurie" }, { l: "Incontinence urinaire", f: "incontinence_urinaire" },
       { l: "Rétention urinaire", f: "retention_urinaire" }, { l: "Trouble de l'érection", f: "difficultes_sexuelles" }, { l: "Douleur testiculaire", f: "grosse_bourse" },
       { l: "Infection urinaire récidivante", f: "cystite" }, { l: "Prostatite", f: "prostatite" }, { l: "Bilan rénal perturbé", b: "hyperkaliemie" },
@@ -106,13 +106,13 @@ window.MOTIFS = [
     urgences: [
       { l: "Pyélonéphrite fébrile", f: "cystite" }, { l: "Colique néphrétique hyperalgique", f: "hematurie" }, { l: "Anurie", f: "retention_urinaire" },
       { l: "Rétention aiguë d'urine", f: "retention_urinaire" }, { l: "Hématurie avec caillots", f: "hematurie" },
-      { l: "Torsion testiculaire", f: "grosse_bourse" }, { l: "Insuffisance rénale aiguë", b: "hyperkaliemie" }, { l: "Sepsis urinaire" }
+      { l: "Torsion testiculaire", f: "grosse_bourse" }, { l: "Insuffisance rénale aiguë", b: "hyperkaliemie" }, { l: "Sepsis urinaire", f: "cystite" }
     ]
   },
   {
     n: 7, titre: "Gynécologie / obstétrique", icone: "🤰",
     frequents: [
-      { l: "Douleurs pelviennes", f: "algie_pelvienne" }, { l: "Saignements gynécologiques", f: "metrorragies" }, { l: "Retard de règles" },
+      { l: "Douleurs pelviennes", f: "algie_pelvienne" }, { l: "Saignements gynécologiques", f: "metrorragies" }, { l: "Retard de règles", f: "trouble_cycle" },
       { l: "Contraception", f: "contraception" }, { l: "Suivi grossesse", f: "suivi_grossesse" }, { l: "Nausées de grossesse", f: "nausees_grossesse" }, { l: "Mycose vaginale", f: "leucorrhees" },
       { l: "Leucorrhées", f: "leucorrhees" }, { l: "Douleur mammaire", f: "galactorrhee" }, { l: "Masse mammaire", f: "masse_mammaire" },
       { l: "Infection urinaire chez la femme enceinte", f: "cystite" }, { l: "Ménopause", f: "bouffees_chaleur" }, { l: "Bouffées de chaleur", f: "bouffees_chaleur" },
@@ -147,35 +147,35 @@ window.MOTIFS = [
     n: 9, titre: "Neurologie", icone: "🧠",
     frequents: [
       { l: "Céphalée", f: "cephalee" }, { l: "Migraine", f: "cephalee" }, { l: "Vertiges", f: "vertige" },
-      { l: "Troubles de l'équilibre" }, { l: "Paresthésies", f: "paresthesies" }, { l: "Douleur neuropathique", f: "paresthesies" }, { l: "Tremblements", f: "tremblements" },
+      { l: "Troubles de l'équilibre", f: "vertige" }, { l: "Paresthésies", f: "paresthesies" }, { l: "Douleur neuropathique", f: "paresthesies" }, { l: "Tremblements", f: "tremblements" },
       { l: "Troubles de la mémoire", f: "troubles_memoire" }, { l: "Troubles du sommeil", f: "insomnie" }, { l: "Sciatique", f: "lombalgie" },
       { l: "Cervicalgie avec irradiation", f: "cervicalgie" }, { l: "Névralgie faciale", f: "algie_faciale" },
-      { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Syndrome des jambes sans repos" }, { l: "Malaise", f: "malaise_pc" },
-      { l: "Épilepsie connue", f: "epilepsie" }, { l: "Suivi post-AVC" }
+      { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Syndrome des jambes sans repos", f: "paresthesies" }, { l: "Malaise", f: "malaise_pc" },
+      { l: "Épilepsie connue", f: "epilepsie" }, { l: "Suivi post-AVC", f: "deficit_neuro" }
     ],
     urgences: [
       { l: "AVC / AIT", f: "deficit_neuro" }, { l: "Céphalée brutale « coup de tonnerre »", f: "cephalee" },
       { l: "Crise convulsive", f: "epilepsie" }, { l: "Déficit neurologique brutal", f: "deficit_neuro" },
       { l: "Confusion aiguë", f: "confusion" }, { l: "Méningite suspectée", f: "cervicalgie" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
-      { l: "Compression médullaire", f: "lombalgie" }, { l: "Guillain-Barré suspecté" }, { l: "Vertige aigu avec signes neurologiques", f: "deficit_neuro" }
+      { l: "Compression médullaire", f: "lombalgie" }, { l: "Guillain-Barré suspecté", f: "paresthesies" }, { l: "Vertige aigu avec signes neurologiques", f: "deficit_neuro" }
     ]
   },
   {
     n: 10, titre: "Rhumatologie / traumatologie", icone: "🦴",
     frequents: [
       { l: "Lombalgie", f: "lombalgie" }, { l: "Cervicalgie", f: "cervicalgie" }, { l: "Dorsalgie", f: "dorsalgie" },
-      { l: "Sciatique", f: "lombalgie" }, { l: "Douleur d'épaule", f: "douleur_ms" }, { l: "Tendinite" },
+      { l: "Sciatique", f: "lombalgie" }, { l: "Douleur d'épaule", f: "douleur_ms" }, { l: "Tendinite", f: "douleur_ms" },
       { l: "Douleur de genou", f: "douleur_mi" }, { l: "Entorse", f: "traumatisme_membre" }, { l: "Douleur de hanche", f: "douleur_mi" },
-      { l: "Arthrose" }, { l: "Gonalgie", f: "douleur_mi" }, { l: "Douleur du poignet", f: "douleur_ms" },
+      { l: "Arthrose", f: "arthrose" }, { l: "Gonalgie", f: "douleur_mi" }, { l: "Douleur du poignet", f: "douleur_ms" },
       { l: "Syndrome du canal carpien", f: "douleur_ms" }, { l: "Crise de goutte", f: "arthrite" }, { l: "Douleurs articulaires inflammatoires", f: "arthrite" },
-      { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente", f: "chute_personne_agee" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion", f: "traumatisme_membre" },
+      { l: "Fibromyalgie", f: "fibromyalgie" }, { l: "Chute sans gravité apparente", f: "chute_personne_agee" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion", f: "traumatisme_membre" },
       { l: "Fracture suspectée", f: "traumatisme_membre" }
     ],
     urgences: [
       { l: "Fracture", f: "traumatisme_membre" }, { l: "Luxation", f: "traumatisme_membre" }, { l: "Plaie profonde", f: "plaie" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
-      { l: "Traumatisme thoracique ou abdominal" }, { l: "Chute chez la personne âgée", f: "chute_personne_agee" },
+      { l: "Traumatisme thoracique ou abdominal", f: "douleur_abdominale" }, { l: "Chute chez la personne âgée", f: "chute_personne_agee" },
       { l: "Douleur rachidienne avec déficit", f: "lombalgie" }, { l: "Syndrome de la queue de cheval", f: "lombalgie" },
-      { l: "Arthrite septique", f: "arthrite" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique" }
+      { l: "Arthrite septique", f: "arthrite" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique", f: "traumatisme_membre" }
     ]
   },
   {
@@ -190,8 +190,8 @@ window.MOTIFS = [
       { l: "Suspicion infection urinaire", f: "cystite" }
     ],
     urgences: [
-      { l: "Fièvre du nourrisson < 3 mois" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
-      { l: "Déshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
+      { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
+      { l: "Déshydratation", f: "deshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
       { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
       { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée" }
     ]
@@ -218,8 +218,8 @@ window.MOTIFS = [
       { l: "Découverte de diabète", b: "hyperglycemie" }, { l: "Obésité", f: "obesite" }, { l: "Perte de poids", f: "asthenie" },
       { l: "Prise de poids", f: "obesite" }, { l: "Dyslipidémie", b: "dyslipidemie" }, { l: "Trouble thyroïdien", f: "goitre" },
       { l: "Nodule thyroïdien", f: "goitre" }, { l: "Fatigue inexpliquée", f: "asthenie" }, { l: "SOPK", f: "sopk" },
-      { l: "Hirsutisme", f: "sopk" }, { l: "Aménorrhée", f: "trouble_cycle" }, { l: "Ostéoporose" }, { l: "Carence en vitamine D" },
-      { l: "Carence en B12", b: "anemie" }, { l: "Anémie", b: "anemie" }, { l: "Hyperferritinémie", b: "cytolyse" }
+      { l: "Hirsutisme", f: "sopk" }, { l: "Aménorrhée", f: "trouble_cycle" }, { l: "Ostéoporose", f: "osteoporose" }, { l: "Carence en vitamine D", f: "carences" },
+      { l: "Carence en B12", f: "carences" }, { l: "Anémie", b: "anemie" }, { l: "Hyperferritinémie", b: "cytolyse" }
     ],
     urgences: [
       { l: "Acidocétose diabétique", b: "hyperglycemie" }, { l: "Hyperglycémie sévère avec déshydratation", b: "hyperglycemie" },
@@ -232,28 +232,28 @@ window.MOTIFS = [
     frequents: [
       { l: "Anémie", b: "anemie" }, { l: "Leucopénie", b: "inversion_formule" }, { l: "Thrombopénie", b: "ts_hemostase_primaire" },
       { l: "Hyperleucocytose", b: "inversion_formule" }, { l: "Syndrome inflammatoire", b: "electrophorese" },
-      { l: "Fièvre prolongée", f: "fievre_tropiques" }, { l: "Adénopathies", f: "adenopathie" }, { l: "Splénomégalie" },
+      { l: "Fièvre prolongée", f: "fievre_tropiques" }, { l: "Adénopathies", f: "adenopathie" }, { l: "Splénomégalie", f: "adenopathie" },
       { l: "Hématomes faciles", b: "ts_hemostase_primaire" }, { l: "Fatigue avec pâleur", b: "anemie" },
       { l: "Bilan hépatique perturbé", b: "cytolyse" }, { l: "Ferritine élevée", b: "cytolyse" },
-      { l: "Carence martiale", b: "anemie" }, { l: "Infection récidivante", b: "electrophorese" }
+      { l: "Carence martiale", f: "carences" }, { l: "Infection récidivante", b: "electrophorese" }
     ],
     urgences: [
-      { l: "Neutropénie fébrile" }, { l: "Purpura extensif" }, { l: "Anémie sévère symptomatique", b: "anemie" },
-      { l: "Thrombopénie profonde", b: "ts_hemostase_primaire" }, { l: "Sepsis" }, { l: "Méningococcémie suspectée" },
-      { l: "Syndrome hémorragique", b: "tp_bas" }, { l: "Complication de chimiothérapie" }
+      { l: "Neutropénie fébrile", f: "fievre_adulte" }, { l: "Purpura extensif", f: "eruption_urticaire" }, { l: "Anémie sévère symptomatique", b: "anemie" },
+      { l: "Thrombopénie profonde", b: "ts_hemostase_primaire" }, { l: "Sepsis", f: "fievre_adulte" }, { l: "Méningococcémie suspectée", f: "fievre_adulte" },
+      { l: "Syndrome hémorragique", b: "tp_bas" }, { l: "Complication de chimiothérapie", f: "fievre_adulte" }
     ]
   },
   {
     n: 15, titre: "Ophtalmologie", icone: "👁️",
     frequents: [
-      { l: "Œil rouge", f: "oeil_rouge" }, { l: "Conjonctivite", f: "conjonctivite" }, { l: "Douleur oculaire" }, { l: "Baisse de vision" },
+      { l: "Œil rouge", f: "oeil_rouge" }, { l: "Conjonctivite", f: "conjonctivite" }, { l: "Douleur oculaire", f: "oeil_rouge" }, { l: "Baisse de vision", f: "oeil_rouge" },
       { l: "Corps étranger oculaire", f: "corps_etranger_oeil" }, { l: "Orgelet", f: "orgelet_chalazion" }, { l: "Chalazion", f: "orgelet_chalazion" }, { l: "Sécheresse oculaire", f: "secheresse_oculaire" },
-      { l: "Traumatisme oculaire léger" }, { l: "Vision floue", f: "diplopie" }, { l: "Céphalée avec gêne visuelle", f: "algie_faciale" }
+      { l: "Traumatisme oculaire léger", f: "corps_etranger_oeil" }, { l: "Vision floue", f: "diplopie" }, { l: "Céphalée avec gêne visuelle", f: "algie_faciale" }
     ],
     urgences: [
-      { l: "Baisse brutale de vision", f: "diplopie" }, { l: "Douleur oculaire intense" }, { l: "Glaucome aigu" },
-      { l: "Kératite" }, { l: "Traumatisme oculaire" }, { l: "Corps étranger métallique", f: "corps_etranger_oeil" }, { l: "Brûlure chimique", f: "corps_etranger_oeil" },
-      { l: "Décollement de rétine suspecté" }, { l: "Diplopie aiguë", f: "diplopie" }, { l: "Œil rouge douloureux chez porteur de lentilles", f: "oeil_rouge" }
+      { l: "Baisse brutale de vision", f: "diplopie" }, { l: "Douleur oculaire intense", f: "oeil_rouge" }, { l: "Glaucome aigu", f: "oeil_rouge" },
+      { l: "Kératite", f: "oeil_rouge" }, { l: "Traumatisme oculaire", f: "corps_etranger_oeil" }, { l: "Corps étranger métallique", f: "corps_etranger_oeil" }, { l: "Brûlure chimique", f: "corps_etranger_oeil" },
+      { l: "Décollement de rétine suspecté", f: "oeil_rouge" }, { l: "Diplopie aiguë", f: "diplopie" }, { l: "Œil rouge douloureux chez porteur de lentilles", f: "oeil_rouge" }
     ]
   },
   {
