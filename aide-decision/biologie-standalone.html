@@ -1700,6 +1700,38 @@ window.BIOKB = [
     ],
     red_flags: ["Angiocholite : fièvre + ictère + douleur de l'hypochondre droit (triade de Charcot) → urgence", "Obstacle des voies biliaires (lithiase, cancer) → avis chirurgical / endoscopique", "Trouble de la coagulation (carence en vitamine K) avant un geste invasif", "Ictère fébrile, sepsis sur obstacle"],
     conduite: ["Échographie abdominale d'emblée : VB dilatées (extra-hépatique, obstacle) vs non dilatées (intra-hépatique).", "Rechercher une cause médicamenteuse, alcoolique ou virale ; compléter par cholangio-IRM / écho-endoscopie si besoin.", "Traitement étiologique (souvent chirurgical / endoscopique pour les obstacles).", "Symptomatique : prurit → cholestyramine (résine chélatrice des acides biliaires) ; carence en vitamine K → vitamine K parentérale."]
+  },
+  {
+    id: "insuffisance_hepatique", num: 97, anomalie: "Insuffisance hépatique",
+    specialite: "Hépatologie",
+    definition: "Défaillance des fonctions hépatiques (synthèse, détoxification, excrétion). Conséquences : hypoglycémie, hypoalbuminémie (œdème/ascite), troubles de la coagulation (hémorragies), hyperammoniémie (encéphalopathie), hypogonadisme, cholestase. Forme aiguë (hépatite fulminante) ou chronique (cirrhose décompensée).",
+    premiere_intention: ["Apprécier la gravité : TP / facteur V (synthèse des facteurs de coagulation), ammoniémie, glycémie", "Bilan : albumine, bilirubine, transaminases, ionogramme, créatinine, NFS-plaquettes", "Rechercher l'étiologie : alcool, virus, médicaments / toxiques (paracétamolémie)", "Évaluer l'encéphalopathie hépatique (astérixis, confusion)"],
+    causes: [
+      { cause: "Cirrhose décompensée", signe: "insuffisance hépatique chronique ; ascite, ictère, encéphalopathie, hémorragie", examens: ["Échographie, élastométrie", "TP / facteur V, albumine"] },
+      { cause: "Hépatite aiguë (fulminante)", signe: "virale, médicamenteuse (paracétamol), toxique (amanite phalloïde) ; TP / facteur V effondrés + encéphalopathie", examens: ["Sérologies, paracétamolémie", "TP / facteur V"] }
+    ],
+    tableaux: [
+      { titre: "Conséquences de la défaillance hépatique",
+        entetes: ["Fonction perdue", "Conséquence"],
+        lignes: [
+          ["Néoglucogenèse / glycogénolyse", "Hypoglycémie"],
+          ["Synthèse d'albumine", "Œdème, ascite"],
+          ["Synthèse des facteurs de coagulation", "Hémorragies (TP / facteur V abaissés)"],
+          ["Synthèse du cholestérol (hormones)", "Hypogonadisme"],
+          ["Uréogenèse (détoxification de l'ammoniac)", "Hyperammoniémie → encéphalopathie hépatique"],
+          ["Métabolisation des médicaments", "Adaptation thérapeutique nécessaire"],
+          ["Excrétion biliaire", "Syndrome cholestatique"]
+        ] },
+      { titre: "Signes cliniques (insuffisance hépatique chronique)",
+        entetes: ["Catégorie", "Signes"],
+        lignes: [
+          ["Cutanés / phanères", "Angiomes stellaires, érythrose palmaire, hippocratisme digital, ongles blancs"],
+          ["Hypogonadisme (homme)", "Gynécomastie, impuissance"],
+          ["Hypogonadisme (femme)", "Aménorrhée, atrophie mammaire"]
+        ] }
+    ],
+    red_flags: ["Hépatite fulminante : TP < 50 % / facteur V effondré + encéphalopathie → urgence, contact d'un centre de transplantation", "Encéphalopathie hépatique (astérixis, confusion, coma)", "Hypoglycémie, hémorragie, insuffisance rénale (syndrome hépato-rénal), infection (du liquide d'ascite)", "Intoxication au paracétamol → N-acétylcystéine sans délai"],
+    conduite: ["Évaluer la gravité par le TP / facteur V (le facteur V n'est pas vitamine K-dépendant : reflète la synthèse hépatique).", "Arrêter l'exposition au toxique ; N-acétylcystéine (NAC) pour l'intoxication au paracétamol.", "Traiter les complications : coagulation, hypoglycémie, encéphalopathie, insuffisance rénale aiguë, infections.", "Transplantation hépatique dans les formes graves ; avis spécialisé urgent."]
   }
 ];
 

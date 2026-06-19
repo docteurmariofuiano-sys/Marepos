@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **54 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **55 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -63,7 +63,8 @@ métabolique), diabète gestationnel (HGPO, O'Sullivan), hypercalcémie,
 hyper/hypokaliémie, hyponatrémie, hyperphosphorémie, maladie rénale chronique
 (DFG, marqueurs, stades), syndrome néphrotique (pur/impur, complications),
 hyperprolactinémie, GGT,
-cytolyse, syndrome cholestatique, dyslipidémie, CPK, LDH, l'**immuno-hématologie** (groupage ABO-RH1 :
+cytolyse, syndrome cholestatique, insuffisance hépatique, dyslipidémie, CPK, LDH,
+l'**immuno-hématologie** (groupage ABO-RH1 :
 Beth-Vincent, Simonin, RH1 ; phénotypes érythrocytaires ABO/Rhésus/Kell/MNSs/
 Kidd/Duffy/Lewis), et un **bloc hématologie** : CAT devant une
 anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /
