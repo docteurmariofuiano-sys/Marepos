@@ -2736,5 +2736,45 @@ window.BIOKB = [
     ],
     red_flags: ["Hépatite fulminante : TP < 30 %, encéphalopathie, hypoglycémie, syndrome hémorragique → urgence (transplantation)", "Chronicité (Ag HBs > 6 mois) : risque de cirrhose et de carcinome hépatocellulaire → surveillance (ADN, échographie, AFP)", "Mutant pré-C : Ag HBe négatif malgré une réplication (ADN VHB positif) → ne pas se fier au seul Ag HBe", "Réactivation sous immunosuppression / chimiothérapie chez un porteur"],
     conduite: ["Bilan de base : Ag HBs (présence), Ac anti-HBs (guérison/vaccin), Ac anti-HBc (contact) ; ajuster selon la situation.", "Hépatite aiguë : Ag HBs + IgM anti-HBc ; chronique : Ag HBs, Ag HBe, Ac anti-HBe, ADN VHB.", "Attention au mutant pré-C (Ag HBe négatif + ADN VHB positif).", "Prévention : vaccination (obligatoire pour les soignants), dépistage des groupes à risque et de la femme enceinte."]
+  },
+  {
+    id: "ebv", num: 124, anomalie: "Virus d'Epstein-Barr (EBV)",
+    specialite: "Infectiologie",
+    definition: "Virus du groupe herpès, transmission salivaire (« maladie du baiser »). 80-90 % des adultes sont séropositifs. Primo-infection souvent asymptomatique ; sinon mononucléose infectieuse. Rôle dans certains lymphomes et cancers.",
+    premiere_intention: ["NFS : syndrome mononucléosique (± AHAI, thrombopénie auto-immune) ; transaminases modérément ↑ (3-4N) dans 90 %", "MNI-test (agglutination d'hématies hétérologues par les IgM) — peut être négatif", "Sérologie EBV : IgM/IgG anti-VCA, IgM/IgG anti-EA, IgG anti-EBNA", "Distinguer primo-infection, infection ancienne, réactivation selon le profil sérologique"],
+    causes: [
+      { cause: "Mononucléose infectieuse", signe: "asthénie profonde, fièvre 38 °C, angine érythémato-pultacée (ou pseudo-membraneuse) bilatérale, ADP cervicales/occipitales, splénomégalie (50 %) ; guérison en 3-4 semaines", examens: ["NFS, MNI-test, sérologie EBV"] },
+      { cause: "Complications", signe: "exanthème sous aminopénicillines (amoxicilline/ampicilline), AHAI / PTI / cryoglobulinémie, atteintes neurologiques (méningite lymphocytaire, encéphalite, polyradiculonévrite)", examens: ["NFS, test de Coombs, contexte"] },
+      { cause: "Pathologies tumorales (EBV)", signe: "lymphome de Burkitt, cancer du nasopharynx, leucoplasie chevelue (immunodéprimé)", examens: ["Charge virale EBV, biopsie"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs sérologiques EBV",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["IgM anti-VCA", "Primo-infection récente"],
+          ["IgG anti-VCA", "Apparaît tôt, persiste à vie (contact)"],
+          ["IgM / IgG anti-EA (early antigen)", "Réplication active (primo-infection ou réactivation)"],
+          ["IgG anti-EBNA", "Apparaît tardivement (2-3 mois), persiste à vie = infection ancienne"]
+        ] },
+      { titre: "Interprétation des profils",
+        entetes: ["Situation", "Profil"],
+        lignes: [
+          ["Primo-infection", "IgM anti-VCA +, IgG anti-VCA +, anti-EBNA NÉGATIF"],
+          ["Infection ancienne", "IgG anti-VCA +, anti-EBNA +, IgM anti-VCA −"],
+          ["Réactivation", "IgG anti-VCA +, anti-EBNA +, ± anti-EA"],
+          ["Absence de contact", "Tous négatifs (sujet réceptif)"]
+        ] },
+      { titre: "Manifestations cliniques",
+        entetes: ["Type", "Manifestations"],
+        lignes: [
+          ["Mononucléose infectieuse", "Asthénie, fièvre, angine bilatérale, ADP, splénomégalie (50 %)"],
+          ["Médicamenteux", "Exanthème morbilliforme sous aminopénicillines (amoxicilline, ampicilline)"],
+          ["Hématologique", "AHAI, purpura thrombopénique idiopathique, cryoglobulinémie"],
+          ["Neurologique", "Méningite lymphocytaire, encéphalite, polyradiculonévrite"],
+          ["Tumoral", "Lymphome de Burkitt, cancer du nasopharynx, leucoplasie chevelue (immunodéprimé)"]
+        ] }
+    ],
+    red_flags: ["Splénomégalie (50 %) → risque de rupture splénique : éviter les sports de contact", "Angine très hypertrophique avec gêne respiratoire (obstruction)", "Complications hématologiques (AHAI, thrombopénie) ou neurologiques", "Éviter l'amoxicilline/ampicilline (exanthème) ; chez l'immunodéprimé, risque tumoral (lymphome)"],
+    conduite: ["Évoquer devant un syndrome mononucléosique : NFS, MNI-test, sérologie EBV (VCA, EA, EBNA).", "Primo-infection = IgM anti-VCA + sans anti-EBNA ; infection ancienne = anti-EBNA +.", "Le MNI-test peut être négatif (surtout chez l'enfant) → s'appuyer sur la sérologie.", "Traitement symptomatique (repos), éviction des sports de contact si splénomégalie ; voir la fiche « syndrome mononucléosique »."]
   }
 ];
