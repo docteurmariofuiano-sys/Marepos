@@ -140,13 +140,13 @@ window.MOTIFS = [
   {
     n: 2, titre: "ORL / infectieux", icone: "👂",
     frequents: [
-      { l: "Mal de gorge", f: "angine" }, { l: "Angine", f: "angine" }, { l: "Rhinopharyngite" }, { l: "Rhume" },
-      { l: "Nez bouché" }, { l: "Écoulement nasal" }, { l: "Toux", f: "toux_aigue" }, { l: "Otalgie", f: "otite" }, { l: "Otite", f: "otite" },
-      { l: "Baisse d'audition" }, { l: "Bouchon de cérumen" }, { l: "Acouphènes", f: "acouphene" },
-      { l: "Vertiges positionnels", f: "vertige" }, { l: "Sinusite" }, { l: "Douleur faciale", f: "algie_faciale" },
+      { l: "Mal de gorge", f: "angine" }, { l: "Angine", f: "angine" }, { l: "Rhinopharyngite", f: "rhinopharyngite" }, { l: "Rhume", f: "rhinopharyngite" },
+      { l: "Nez bouché", f: "rhinopharyngite" }, { l: "Écoulement nasal", f: "rhinopharyngite" }, { l: "Toux", f: "toux_aigue" }, { l: "Otalgie", f: "otite" }, { l: "Otite", f: "otite" },
+      { l: "Baisse d'audition", f: "baisse_audition" }, { l: "Bouchon de cérumen", f: "baisse_audition" }, { l: "Acouphènes", f: "acouphene" },
+      { l: "Vertiges positionnels", f: "vertige" }, { l: "Sinusite", f: "sinusite" }, { l: "Douleur faciale", f: "algie_faciale" },
       { l: "Épistaxis", f: "epistaxis" }, { l: "Aphonie / dysphonie", f: "dysphonie" },
-      { l: "Ganglion cervical", f: "adenopathie" }, { l: "Plaie buccale / aphte" },
-      { l: "Douleur dentaire" }, { l: "Infection dentaire" }, { l: "Fièvre avec symptômes ORL" }
+      { l: "Ganglion cervical", f: "adenopathie" }, { l: "Plaie buccale / aphte", f: "aphte" },
+      { l: "Douleur dentaire", f: "douleur_dentaire" }, { l: "Infection dentaire", f: "douleur_dentaire" }, { l: "Fièvre avec symptômes ORL" }
     ],
     urgences: [
       { l: "Dyspnée laryngée", f: "dysphonie" }, { l: "Stridor" }, { l: "Épistaxis abondante", f: "epistaxis" },
@@ -253,7 +253,7 @@ window.MOTIFS = [
       { l: "Urticaire avec angio-œdème", f: "eruption_urticaire" }, { l: "Anaphylaxie", f: "eruption_urticaire" }, { l: "Érysipèle fébrile", f: "grosse_jambe_rouge" },
       { l: "Fasciite nécrosante suspectée", f: "grosse_jambe_rouge" }, { l: "Purpura fébrile", f: "eruption_urticaire" },
       { l: "Stevens-Johnson / Lyell suspecté", f: "eruption_urticaire" }, { l: "Brûlure étendue", f: "brulure" }, { l: "Morsure infectée", f: "plaie" },
-      { l: "Abcès profond" }, { l: "Cellulite orbitaire" }
+      { l: "Abcès profond" }, { l: "Cellulite orbitaire", f: "orgelet_chalazion" }
     ]
   },
   {
@@ -278,14 +278,14 @@ window.MOTIFS = [
     frequents: [
       { l: "Lombalgie", f: "lombalgie" }, { l: "Cervicalgie", f: "cervicalgie" }, { l: "Dorsalgie", f: "dorsalgie" },
       { l: "Sciatique", f: "lombalgie" }, { l: "Douleur d'épaule", f: "douleur_ms" }, { l: "Tendinite" },
-      { l: "Douleur de genou", f: "douleur_mi" }, { l: "Entorse" }, { l: "Douleur de hanche", f: "douleur_mi" },
+      { l: "Douleur de genou", f: "douleur_mi" }, { l: "Entorse", f: "traumatisme_membre" }, { l: "Douleur de hanche", f: "douleur_mi" },
       { l: "Arthrose" }, { l: "Gonalgie", f: "douleur_mi" }, { l: "Douleur du poignet", f: "douleur_ms" },
       { l: "Syndrome du canal carpien", f: "douleur_ms" }, { l: "Crise de goutte", f: "arthrite" }, { l: "Douleurs articulaires inflammatoires", f: "arthrite" },
-      { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion" },
-      { l: "Fracture suspectée" }
+      { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion", f: "traumatisme_membre" },
+      { l: "Fracture suspectée", f: "traumatisme_membre" }
     ],
     urgences: [
-      { l: "Fracture" }, { l: "Luxation" }, { l: "Plaie profonde", f: "plaie" }, { l: "Traumatisme crânien" },
+      { l: "Fracture", f: "traumatisme_membre" }, { l: "Luxation", f: "traumatisme_membre" }, { l: "Plaie profonde", f: "plaie" }, { l: "Traumatisme crânien" },
       { l: "Traumatisme thoracique ou abdominal" }, { l: "Chute chez la personne âgée" },
       { l: "Douleur rachidienne avec déficit", f: "lombalgie" }, { l: "Syndrome de la queue de cheval", f: "lombalgie" },
       { l: "Arthrite septique", f: "arthrite" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique" }
@@ -294,7 +294,7 @@ window.MOTIFS = [
   {
     n: 11, titre: "Pédiatrie", icone: "🧒",
     frequents: [
-      { l: "Fièvre de l'enfant", f: "fievre_enfant" }, { l: "Toux", f: "toux_aigue" }, { l: "Rhinopharyngite" }, { l: "Otite", f: "otite" }, { l: "Angine", f: "angine" },
+      { l: "Fièvre de l'enfant", f: "fievre_enfant" }, { l: "Toux", f: "toux_aigue" }, { l: "Rhinopharyngite", f: "rhinopharyngite" }, { l: "Otite", f: "otite" }, { l: "Angine", f: "angine" },
       { l: "Gastro-entérite", f: "diarrhee_aigue" }, { l: "Vomissements", f: "nausees_vomissements" }, { l: "Diarrhée", f: "diarrhee_aigue" },
       { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Varicelle", f: "varicelle" }, { l: "Bronchiolite", f: "bronchiolite" }, { l: "Asthme de l'enfant", f: "asthme_enfant" },
       { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson", f: "pleurs_nourrisson" },
@@ -359,13 +359,13 @@ window.MOTIFS = [
   {
     n: 15, titre: "Ophtalmologie", icone: "👁️",
     frequents: [
-      { l: "Œil rouge", f: "oeil_rouge" }, { l: "Conjonctivite" }, { l: "Douleur oculaire" }, { l: "Baisse de vision" },
-      { l: "Corps étranger oculaire" }, { l: "Orgelet" }, { l: "Chalazion" }, { l: "Sécheresse oculaire" },
+      { l: "Œil rouge", f: "oeil_rouge" }, { l: "Conjonctivite", f: "conjonctivite" }, { l: "Douleur oculaire" }, { l: "Baisse de vision" },
+      { l: "Corps étranger oculaire", f: "corps_etranger_oeil" }, { l: "Orgelet", f: "orgelet_chalazion" }, { l: "Chalazion", f: "orgelet_chalazion" }, { l: "Sécheresse oculaire", f: "secheresse_oculaire" },
       { l: "Traumatisme oculaire léger" }, { l: "Vision floue", f: "diplopie" }, { l: "Céphalée avec gêne visuelle", f: "algie_faciale" }
     ],
     urgences: [
       { l: "Baisse brutale de vision", f: "diplopie" }, { l: "Douleur oculaire intense" }, { l: "Glaucome aigu" },
-      { l: "Kératite" }, { l: "Traumatisme oculaire" }, { l: "Corps étranger métallique" }, { l: "Brûlure chimique" },
+      { l: "Kératite" }, { l: "Traumatisme oculaire" }, { l: "Corps étranger métallique", f: "corps_etranger_oeil" }, { l: "Brûlure chimique", f: "corps_etranger_oeil" },
       { l: "Décollement de rétine suspecté" }, { l: "Diplopie aiguë", f: "diplopie" }, { l: "Œil rouge douloureux chez porteur de lentilles", f: "oeil_rouge" }
     ]
   },

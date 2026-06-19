@@ -4630,6 +4630,300 @@ window.KB = {
         examens_a_discuter: ["Évaluation, sevrage encadré", "Vitamine B1, accompagnement addictologique"] }
     ],
     examens_clinique: ["Évaluation de la sévérité (score de Cushman)", "Recherche de comorbidités (foie, dénutrition)", "Vitamine B1 systématique avant tout apport glucosé"]
+  },
+
+  // -------------------------------------------------------------------------
+  // RHINOPHARYNGITE / RHUME
+  // -------------------------------------------------------------------------
+  rhinopharyngite: {
+    id: "rhinopharyngite", symptome: "Rhume / rhinopharyngite (nez qui coule, bouché)", specialite: ["ORL"],
+    questions: [
+      { id: "rh_simple", label: "Tableau viral banal", type: "boolean", question: "S'agit-il d'un nez qui coule, bouché, avec éternuements et un mal de gorge léger ?" },
+      { id: "rh_duree", label: "Persistance / aggravation", type: "boolean", question: "Les symptômes durent-ils plus de 10 jours sans amélioration, ou s'aggravent-ils après une amélioration ?" },
+      { id: "rh_fievre", label: "Fièvre prolongée", type: "boolean", question: "Avez-vous une fièvre élevée persistante (plus de 3 jours) ?" },
+      { id: "rh_unilateral", label: "Corps étranger (enfant)", type: "boolean", question: "Y a-t-il un écoulement d'une seule narine, purulent ou sanglant, persistant (surtout chez l'enfant) ?" },
+      { id: "rh_dyspnee", label: "Gêne respiratoire", type: "boolean", question: "Avez-vous une gêne respiratoire, ou un nourrisson qui respire/mange mal ?" }
+    ],
+    red_flags: [
+      { id: "rh_rf_dyspnee", niveau: 3, when: { q: "rh_dyspnee", eq: true },
+        message_medecin: "Gêne respiratoire (nourrisson qui mange mal) : évaluer (bronchiolite, détresse).",
+        message_patient: "Une gêne respiratoire nécessite une évaluation médicale rapide." },
+      { id: "rh_rf_complication", niveau: 2, when: { any: [{ q: "rh_duree", eq: true }, { q: "rh_fievre", eq: true }] },
+        message_medecin: "Persistance > 10 j / aggravation / fièvre prolongée : complication (sinusite, otite, surinfection) → réévaluer.",
+        message_patient: "Des symptômes qui durent ou s'aggravent nécessitent une réévaluation." },
+      { id: "rh_rf_corps", niveau: 2, when: { q: "rh_unilateral", eq: true },
+        message_medecin: "Écoulement nasal unilatéral persistant (enfant) : corps étranger → avis ORL.",
+        message_patient: "Un écoulement d'une seule narine chez l'enfant nécessite un avis ORL." }
+    ],
+    diagnostics_differentiels: [
+      { id: "rh_virale", diagnostic: "Rhinopharyngite virale", arguments: [{ label: "tableau viral banal", w: 3, when: { q: "rh_simple", eq: true } }],
+        examens_a_discuter: ["Traitement symptomatique (pas d'antibiotique)"] },
+      { id: "rh_surinfection", diagnostic: "Surinfection / sinusite", arguments: [{ label: "persistance / aggravation", w: 3, when: { q: "rh_duree", eq: true } }, { label: "fièvre prolongée", w: 1, when: { q: "rh_fievre", eq: true } }],
+        examens_a_discuter: ["Réévaluation clinique"] },
+      { id: "rh_corps", diagnostic: "Corps étranger nasal", arguments: [{ label: "écoulement unilatéral persistant", w: 3, when: { q: "rh_unilateral", eq: true } }],
+        examens_a_discuter: ["Avis ORL"] }
+    ],
+    examens_clinique: ["Examen ORL", "Température", "Auscultation chez le nourrisson"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SINUSITE
+  // -------------------------------------------------------------------------
+  sinusite: {
+    id: "sinusite", symptome: "Sinusite", specialite: ["ORL"], urgence: true,
+    questions: [
+      { id: "si_unilaterale", label: "Sinusite aiguë typique", type: "boolean", question: "Avez-vous une douleur de la face d'un côté, qui augmente en se penchant en avant, avec un écoulement purulent ?" },
+      { id: "si_double", label: "Évolution en deux temps", type: "boolean", question: "Après un rhume qui s'améliorait, y a-t-il eu une ré-aggravation (fièvre, douleur) ?" },
+      { id: "si_complication", label: "Complication orbitaire/neuro", type: "boolean", question: "Avez-vous un gonflement/rougeur autour de l'œil, des troubles visuels, des maux de tête intenses, ou des signes neurologiques ?" },
+      { id: "si_dentaire", label: "Origine dentaire", type: "boolean", question: "Y a-t-il eu un soin dentaire récent (côté supérieur) ?" },
+      { id: "si_chronique", label: "Chronique / récidivante", type: "boolean", question: "Est-ce récidivant ou chronique (plus de 12 semaines) ?" }
+    ],
+    red_flags: [
+      { id: "si_rf_complication", niveau: 3, when: { q: "si_complication", eq: true },
+        message_medecin: "Signes de complication (cellulite orbitaire, atteinte neuro-méningée, sinusite frontale hyperalgique) : urgence (imagerie, avis).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "si_aigue", diagnostic: "Sinusite maxillaire aiguë", arguments: [{ label: "douleur unilatérale + écoulement purulent", w: 3, when: { q: "si_unilaterale", eq: true } }, { label: "évolution en deux temps", w: 2, when: { q: "si_double", eq: true } }],
+        examens_a_discuter: ["Traitement symptomatique", "Antibiothérapie si critères"] },
+      { id: "si_compliquee", diagnostic: "Sinusite compliquée", arguments: [{ label: "signes orbitaires / neuro", w: 3, when: { q: "si_complication", eq: true } }],
+        examens_a_discuter: ["TDM, avis ORL, urgence"] },
+      { id: "si_dentaire", diagnostic: "Sinusite maxillaire d'origine dentaire", arguments: [{ label: "contexte dentaire", w: 3, when: { q: "si_dentaire", eq: true } }],
+        examens_a_discuter: ["Avis ORL + dentaire"] },
+      { id: "si_chronique", diagnostic: "Sinusite chronique", arguments: [{ label: "évolution chronique / récidivante", w: 3, when: { q: "si_chronique", eq: true } }],
+        examens_a_discuter: ["Avis ORL, imagerie (TDM)"] }
+    ],
+    examens_clinique: ["Palpation des points sinusiens", "Examen ORL (rhinoscopie)", "Recherche de signes orbitaires / neurologiques"]
+  },
+
+  // -------------------------------------------------------------------------
+  // BAISSE D'AUDITION
+  // -------------------------------------------------------------------------
+  baisse_audition: {
+    id: "baisse_audition", symptome: "Baisse d'audition", specialite: ["ORL"], urgence: true,
+    questions: [
+      { id: "ba_brusque", label: "Surdité brusque", type: "boolean", question: "La baisse d'audition est-elle apparue brutalement, d'un seul côté ?" },
+      { id: "ba_bouchon", label: "Bouchon de cérumen", type: "boolean", question: "Avez-vous une sensation d'oreille bouchée, après un bain ou un nettoyage ?" },
+      { id: "ba_otite", label: "Otite", type: "boolean", question: "Y a-t-il une douleur, un écoulement, ou un contexte d'otite ?" },
+      { id: "ba_neuro", label: "Signes associés", type: "boolean", question: "Y a-t-il des vertiges, des acouphènes d'un seul côté, ou des signes neurologiques ?" },
+      { id: "ba_progressive", label: "Presbyacousie", type: "boolean", question: "Est-ce progressif, des deux côtés, avec l'âge ou une exposition au bruit ?" }
+    ],
+    red_flags: [
+      { id: "ba_rf_brusque", niveau: 3, when: { q: "ba_brusque", eq: true },
+        message_medecin: "Surdité brusque : urgence ORL (corticothérapie d'autant plus efficace qu'elle est précoce).",
+        message_patient: "Une perte d'audition brutale nécessite une évaluation médicale sans attendre." },
+      { id: "ba_rf_neuro", niveau: 2, when: { q: "ba_neuro", eq: true },
+        message_medecin: "Surdité unilatérale + acouphène / vertige : explorer (IRM, neurinome — voir fiche acouphène).",
+        message_patient: "Ces signes nécessitent un avis ORL." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ba_bouchon", diagnostic: "Bouchon de cérumen", arguments: [{ label: "oreille bouchée après bain/nettoyage", w: 3, when: { q: "ba_bouchon", eq: true } }],
+        examens_a_discuter: ["Otoscopie", "Lavage / extraction"] },
+      { id: "ba_otite", diagnostic: "Otite", arguments: [{ label: "douleur / écoulement", w: 3, when: { q: "ba_otite", eq: true } }],
+        examens_a_discuter: ["Otoscopie (voir fiche otite)"] },
+      { id: "ba_brusque", diagnostic: "Surdité brusque (de perception)", arguments: [{ label: "installation brutale unilatérale", w: 3, when: { q: "ba_brusque", eq: true } }],
+        examens_a_discuter: ["Avis ORL urgent, audiométrie"] },
+      { id: "ba_presbyacousie", diagnostic: "Presbyacousie / surdité de perception", arguments: [{ label: "progressive, bilatérale", w: 3, when: { q: "ba_progressive", eq: true } }],
+        examens_a_discuter: ["Audiométrie"] }
+    ],
+    examens_clinique: ["Otoscopie", "Acoumétrie (Weber / Rinne)", "Audiométrie"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DOULEUR DENTAIRE
+  // -------------------------------------------------------------------------
+  douleur_dentaire: {
+    id: "douleur_dentaire", symptome: "Douleur dentaire / infection dentaire", specialite: ["Odontologie"], urgence: true,
+    questions: [
+      { id: "de_plancher", label: "Cellulite cervicale extensive", type: "boolean", question: "Le gonflement touche-t-il le plancher de la bouche ou le cou, avec une gêne pour avaler ou respirer ?" },
+      { id: "de_cellulite", label: "Cellulite faciale / fièvre", type: "boolean", question: "Avez-vous un gonflement de la joue/du visage, de la fièvre, ou une difficulté à ouvrir la bouche ?" },
+      { id: "de_abces", label: "Abcès", type: "boolean", question: "Y a-t-il un abcès (gonflement de la gencive, pus, dent qui « sonne ») ?" },
+      { id: "de_pulpite", label: "Pulpite (rage de dent)", type: "boolean", question: "La douleur est-elle intense, spontanée, augmentée par le chaud/froid, irradiante ?" }
+    ],
+    red_flags: [
+      { id: "de_rf_grave", niveau: 3, when: { q: "de_plancher", eq: true },
+        message_medecin: "Cellulite cervico-faciale extensive / dyspnée / dysphagie : urgence (risque vital, drainage, antibiothérapie IV).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "de_rf_cellulite", niveau: 2, when: { q: "de_cellulite", eq: true },
+        message_medecin: "Cellulite faciale / fièvre / trismus : antibiothérapie + avis dentaire/stomatologique rapide.",
+        message_patient: "Un gonflement du visage avec fièvre nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "de_pulpite", diagnostic: "Carie / pulpite", arguments: [{ label: "rage de dent (chaud/froid)", w: 3, when: { q: "de_pulpite", eq: true } }],
+        examens_a_discuter: ["Avis dentaire", "Antalgiques"] },
+      { id: "de_abces", diagnostic: "Abcès dentaire", arguments: [{ label: "abcès / dent qui sonne", w: 3, when: { q: "de_abces", eq: true } }],
+        examens_a_discuter: ["Avis dentaire (drainage)", "Antibiothérapie si signes généraux"] },
+      { id: "de_cellulite", diagnostic: "Cellulite faciale d'origine dentaire", arguments: [{ label: "gonflement facial / fièvre", w: 3, when: { q: "de_cellulite", eq: true } }, { label: "extension cervicale", w: 2, when: { q: "de_plancher", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie, avis ; urgence si extensive"] }
+    ],
+    examens_clinique: ["Examen de la cavité buccale et des dents", "Recherche d'une cellulite, d'un trismus, d'une dysphagie", "Température"]
+  },
+
+  // -------------------------------------------------------------------------
+  // APHTE / ULCÉRATION BUCCALE
+  // -------------------------------------------------------------------------
+  aphte: {
+    id: "aphte", symptome: "Aphte / plaie de la bouche", specialite: ["Stomatologie"],
+    questions: [
+      { id: "ap2_persistant", label: "Ulcération persistante (cancer)", type: "boolean", question: "Une lésion de la bouche persiste-t-elle plus de 2-3 semaines, indurée, peu douloureuse (surtout fumeur/buveur) ?" },
+      { id: "ap2_genital", label: "Aphtose bipolaire (Behçet)", type: "boolean", question: "Y a-t-il aussi des aphtes génitaux, ou des atteintes des yeux/des articulations ?" },
+      { id: "ap2_recidivant", label: "Aphtose banale", type: "boolean", question: "Est-ce récidivant (aphtes qui reviennent régulièrement) ?" },
+      { id: "ap2_aeg", label: "AEG / nombreux", type: "boolean", question: "Y a-t-il une fièvre, une altération de l'état général, ou des aphtes très nombreux ?" }
+    ],
+    red_flags: [
+      { id: "ap2_rf_cancer", niveau: 2, when: { q: "ap2_persistant", eq: true },
+        message_medecin: "Ulcération buccale persistante > 3 semaines (fumeur/buveur) : cancer à éliminer → avis, biopsie.",
+        message_patient: "Une plaie de la bouche qui ne guérit pas nécessite un avis médical." },
+      { id: "ap2_rf_behcet", niveau: 2, when: { q: "ap2_genital", eq: true },
+        message_medecin: "Aphtose bipolaire / atteinte oculaire-articulaire : évoquer une maladie de Behçet ou systémique → avis.",
+        message_patient: "Cette association nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ap2_banal", diagnostic: "Aphtose banale", arguments: [{ label: "récidivant, isolé", w: 3, when: { q: "ap2_recidivant", eq: true } }],
+        examens_a_discuter: ["Traitement local, réassurance"] },
+      { id: "ap2_cancer", diagnostic: "Carcinome (ulcération persistante)", arguments: [{ label: "lésion persistante indurée", w: 3, when: { q: "ap2_persistant", eq: true } }],
+        examens_a_discuter: ["Biopsie"] },
+      { id: "ap2_systemique", diagnostic: "Aphtose d'une maladie systémique (Behçet, MICI)", arguments: [{ label: "aphtose bipolaire / atteintes associées", w: 3, when: { q: "ap2_genital", eq: true } }, { label: "AEG", w: 1, when: { q: "ap2_aeg", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé"] }
+    ],
+    examens_clinique: ["Examen de la cavité buccale", "Caractère de la lésion (taille, induration, durée)", "Recherche d'atteintes associées"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CONJONCTIVITE
+  // -------------------------------------------------------------------------
+  conjonctivite: {
+    id: "conjonctivite", symptome: "Conjonctivite (œil rouge qui colle)", specialite: ["Ophtalmologie"], urgence: true,
+    questions: [
+      { id: "cj_douleur", label: "Signes de gravité", type: "boolean", question: "Avez-vous une douleur importante, une baisse de vision, ou une forte sensibilité à la lumière ?" },
+      { id: "cj_lentilles", label: "Port de lentilles", type: "boolean", question: "Portez-vous des lentilles de contact ?" },
+      { id: "cj_secretions", label: "Conjonctivite infectieuse", type: "boolean", question: "Avez-vous des sécrétions (yeux collés le matin), des deux yeux, sans baisse de vision ?" },
+      { id: "cj_allergie", label: "Conjonctivite allergique", type: "boolean", question: "Y a-t-il des démangeaisons, un contexte allergique, des deux yeux ?" }
+    ],
+    red_flags: [
+      { id: "cj_rf_grave", niveau: 3, when: { any: [{ q: "cj_douleur", eq: true }, { q: "cj_lentilles", eq: true }] },
+        message_medecin: "Œil rouge douloureux / baisse de vision / port de lentilles : ce n'est pas une simple conjonctivite (kératite, uvéite, glaucome) → avis ophtalmologique urgent.",
+        message_patient: "Ces signes nécessitent une évaluation ophtalmologique urgente." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cj_infectieuse", diagnostic: "Conjonctivite infectieuse", arguments: [{ label: "sécrétions, yeux collés", w: 3, when: { q: "cj_secretions", eq: true } }],
+        examens_a_discuter: ["Hygiène, lavage", "Traitement local"] },
+      { id: "cj_allergique", diagnostic: "Conjonctivite allergique", arguments: [{ label: "démangeaisons, contexte allergique", w: 3, when: { q: "cj_allergie", eq: true } }],
+        examens_a_discuter: ["Éviction, antihistaminiques / collyre"] }
+    ],
+    examens_clinique: ["Acuité visuelle", "Examen à la fluorescéine si doute", "Examen des pupilles"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ORGELET / CHALAZION
+  // -------------------------------------------------------------------------
+  orgelet_chalazion: {
+    id: "orgelet_chalazion", symptome: "Bouton / boule de la paupière (orgelet, chalazion)", specialite: ["Ophtalmologie"], urgence: true,
+    questions: [
+      { id: "og_cellulite", label: "Cellulite orbitaire", type: "boolean", question: "Y a-t-il un gonflement rouge et chaud de toute la paupière / du pourtour de l'œil, avec fièvre, douleur aux mouvements de l'œil, ou vision double ?" },
+      { id: "og_orgelet", label: "Orgelet", type: "boolean", question: "Avez-vous un petit bouton rouge et douloureux au bord de la paupière ?" },
+      { id: "og_chalazion", label: "Chalazion", type: "boolean", question: "Avez-vous une boule indolore dans l'épaisseur de la paupière, persistante ?" }
+    ],
+    red_flags: [
+      { id: "og_rf_cellulite", niveau: 3, when: { q: "og_cellulite", eq: true },
+        message_medecin: "Cellulite orbitaire (paupière très inflammatoire, fièvre, douleur aux mouvements oculaires, diplopie) : urgence (imagerie, antibiothérapie IV).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "og_orgelet", diagnostic: "Orgelet", arguments: [{ label: "bouton rouge douloureux du bord palpébral", w: 3, when: { q: "og_orgelet", eq: true } }],
+        examens_a_discuter: ["Soins locaux chauds, hygiène des paupières"] },
+      { id: "og_chalazion", diagnostic: "Chalazion", arguments: [{ label: "boule indolore persistante", w: 3, when: { q: "og_chalazion", eq: true } }],
+        examens_a_discuter: ["Soins locaux", "Avis si persistant (incision)"] },
+      { id: "og_cellulite", diagnostic: "Cellulite orbitaire", arguments: [{ label: "inflammation orbitaire + fièvre", w: 3, when: { q: "og_cellulite", eq: true } }],
+        examens_a_discuter: ["Urgence : imagerie, antibiothérapie IV"] }
+    ],
+    examens_clinique: ["Examen de la paupière", "Mobilité oculaire", "Recherche de signes orbitaires (exophtalmie, fièvre)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SÉCHERESSE OCULAIRE
+  // -------------------------------------------------------------------------
+  secheresse_oculaire: {
+    id: "secheresse_oculaire", symptome: "Sécheresse oculaire / yeux irrités", specialite: ["Ophtalmologie"],
+    questions: [
+      { id: "so_grave", label: "Signes de gravité", type: "boolean", question: "Avez-vous une douleur importante, une baisse de vision, ou une rougeur marquée ?" },
+      { id: "so_systemique", label: "Syndrome sec", type: "boolean", question: "Avez-vous aussi une bouche sèche et des douleurs articulaires ?" },
+      { id: "so_typique", label: "Sécheresse banale", type: "boolean", question: "Avez-vous une sensation de sable, des yeux secs, une gêne fluctuante dans la journée ?" },
+      { id: "so_medic", label: "Facteurs favorisants", type: "boolean", question: "Prenez-vous des médicaments asséchants (antihistaminiques, antidépresseurs) ou passez-vous beaucoup de temps sur écran ?" }
+    ],
+    red_flags: [
+      { id: "so_rf_grave", niveau: 2, when: { q: "so_grave", eq: true },
+        message_medecin: "Douleur / baisse de vision : ce n'est pas une simple sécheresse → avis ophtalmologique.",
+        message_patient: "Ces signes nécessitent un avis ophtalmologique." },
+      { id: "so_rf_systemique", niveau: 2, when: { q: "so_systemique", eq: true },
+        message_medecin: "Syndrome sec (oculaire + buccal + articulaire) : évoquer un syndrome de Gougerot-Sjögren → avis.",
+        message_patient: "Cette association nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "so_secheresse", diagnostic: "Sécheresse oculaire", arguments: [{ label: "sensation de sable, gêne fluctuante", w: 3, when: { q: "so_typique", eq: true } }, { label: "facteurs favorisants", w: 1, when: { q: "so_medic", eq: true } }],
+        examens_a_discuter: ["Larmes artificielles", "Hygiène des écrans"] },
+      { id: "so_sjogren", diagnostic: "Syndrome de Gougerot-Sjögren", arguments: [{ label: "syndrome sec systémique", w: 3, when: { q: "so_systemique", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé, auto-anticorps (anti-SSA/SSB)"] }
+    ],
+    examens_clinique: ["Examen oculaire", "Test de Schirmer si besoin", "Recherche d'un syndrome sec systémique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CORPS ÉTRANGER OCULAIRE
+  // -------------------------------------------------------------------------
+  corps_etranger_oeil: {
+    id: "corps_etranger_oeil", symptome: "Corps étranger dans l'œil / projection", specialite: ["Ophtalmologie"], urgence: true,
+    questions: [
+      { id: "co3_chimique", label: "Brûlure chimique", type: "boolean", question: "S'agit-il d'une projection de produit chimique (acide, base, ciment) ?" },
+      { id: "co3_metal_vitesse", label: "Corps étranger intra-oculaire", type: "boolean", question: "Le corps étranger est-il métallique ou projeté à grande vitesse (meulage, marteau) ?" },
+      { id: "co3_vision", label: "Baisse de vision / douleur", type: "boolean", question: "Y a-t-il une baisse de vision ou une douleur intense persistante ?" },
+      { id: "co3_superficiel", label: "Superficiel", type: "boolean", question: "S'agit-il d'une poussière ou d'un cil sous la paupière, avec gêne mais vision conservée ?" }
+    ],
+    red_flags: [
+      { id: "co3_rf_chimique", niveau: 3, when: { q: "co3_chimique", eq: true },
+        message_medecin: "Brûlure chimique oculaire : RINÇAGE abondant immédiat (15-30 min) → urgence ophtalmologique.",
+        message_patient: "Rincez abondamment à l'eau pendant 15 minutes et consultez en urgence." },
+      { id: "co3_rf_intra", niveau: 3, when: { any: [{ q: "co3_metal_vitesse", eq: true }, { q: "co3_vision", eq: true }] },
+        message_medecin: "Projection à grande vitesse / métallique / baisse de vision : corps étranger intra-oculaire ou plaie pénétrante → urgence (ne pas appuyer, imagerie).",
+        message_patient: "Ces signes nécessitent une évaluation ophtalmologique urgente — ne frottez pas l'œil." }
+    ],
+    diagnostics_differentiels: [
+      { id: "co3_superficiel", diagnostic: "Corps étranger superficiel", arguments: [{ label: "poussière/cil, vision conservée", w: 3, when: { q: "co3_superficiel", eq: true } }],
+        examens_a_discuter: ["Éversion de la paupière, ablation", "Fluorescéine"] },
+      { id: "co3_intra", diagnostic: "Corps étranger intra-oculaire / plaie pénétrante", arguments: [{ label: "projection à grande vitesse / métallique", w: 3, when: { q: "co3_metal_vitesse", eq: true } }, { label: "baisse de vision", w: 1, when: { q: "co3_vision", eq: true } }],
+        examens_a_discuter: ["Urgence, imagerie (ne pas appuyer)"] },
+      { id: "co3_chimique", diagnostic: "Brûlure chimique", arguments: [{ label: "projection chimique", w: 3, when: { q: "co3_chimique", eq: true } }],
+        examens_a_discuter: ["Rinçage prolongé, urgence"] }
+    ],
+    examens_clinique: ["Acuité visuelle", "Éversion de la paupière", "Examen à la fluorescéine", "NE PAS appuyer si suspicion de plaie pénétrante"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TRAUMATISME DE MEMBRE
+  // -------------------------------------------------------------------------
+  traumatisme_membre: {
+    id: "traumatisme_membre", symptome: "Traumatisme de membre (entorse, contusion, fracture)", specialite: ["Traumatologie"], urgence: true,
+    questions: [
+      { id: "tm_vasculonerveux", label: "Atteinte vasculo-nerveuse", type: "boolean", question: "Le membre est-il froid, pâle, sans pouls, ou y a-t-il une perte de sensibilité/mobilité en aval ?" },
+      { id: "tm_deformation", label: "Déformation / impotence totale", type: "boolean", question: "Y a-t-il une déformation visible, un os déplacé, ou une impossibilité totale de bouger / de prendre appui ?" },
+      { id: "tm_ouverte", label: "Fracture ouverte", type: "boolean", question: "Y a-t-il une plaie en regard de l'os ?" },
+      { id: "tm_oedeme", label: "Entorse / contusion", type: "boolean", question: "Y a-t-il un gonflement et une douleur sans déformation ?" },
+      { id: "tm_appui", label: "Appui possible", type: "boolean", question: "Pouvez-vous prendre appui / faire quelques pas (ou mobiliser l'articulation) ?" }
+    ],
+    red_flags: [
+      { id: "tm_rf_grave", niveau: 3, when: { any: [{ q: "tm_vasculonerveux", eq: true }, { q: "tm_deformation", eq: true }, { q: "tm_ouverte", eq: true }] },
+        message_medecin: "Déformation / fracture ouverte / atteinte vasculo-nerveuse : urgence (immobilisation, avis chirurgical).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tm_fracture", diagnostic: "Fracture / luxation", arguments: [{ label: "déformation / impotence totale", w: 3, when: { q: "tm_deformation", eq: true } }, { label: "appui impossible", w: 1, when: { q: "tm_appui", eq: false } }],
+        examens_a_discuter: ["Radiographie", "Immobilisation"] },
+      { id: "tm_complique", diagnostic: "Fracture ouverte / atteinte vasculo-nerveuse", arguments: [{ label: "plaie en regard de l'os", w: 3, when: { q: "tm_ouverte", eq: true } }, { label: "atteinte vasculo-nerveuse", w: 2, when: { q: "tm_vasculonerveux", eq: true } }],
+        examens_a_discuter: ["Urgence chirurgicale"] },
+      { id: "tm_entorse", diagnostic: "Entorse / contusion", arguments: [{ label: "gonflement/douleur sans déformation", w: 3, when: { q: "tm_oedeme", eq: true } }, { label: "appui possible", w: 1, when: { q: "tm_appui", eq: true } }],
+        examens_a_discuter: ["Critères d'Ottawa", "Repos/glace/contention, radiographie selon critères"] }
+    ],
+    examens_clinique: ["Recherche d'une déformation", "Pouls et sensibilité en aval", "Capacité d'appui", "Application des critères d'Ottawa, radiographie selon critères"]
   }
 };
 
