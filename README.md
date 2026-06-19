@@ -24,6 +24,11 @@ dans un navigateur, coller le texte brut du laboratoire, cliquer sur
    sinon aux normes par défaut (ajustées au sexe quand pertinent).
 4. **Reconnaît des syndromes** (MRC + stade G/A, dyslipidémie mixte, syndrome
    métabolique, anémie micro/normo/macrocytaire, cytolyse/cholestase, carences…).
+   - **Grandeurs calculées** : calcium corrigé (selon albumine, utilisé pour les
+     red flags), trou anionique, osmolalité calculée, rapport ASAT/ALAT (De Ritis),
+     cholestérol non-HDL. Paramètres thyroïdiens (TSH, T4L, T3L).
+   - **Parsing** : reconnaît aussi les normes en colonne sans parenthèses
+     (`Sodium 139 mmol/L 135 - 145`) et les valeurs placées avant le libellé.
 5. **Hiérarchise** chaque anomalie : *Mineur · Significatif · Important · Urgent*.
 6. **Signale les red flags** (hyperkaliémie sévère, hyponatrémie sévère, anémie
    profonde, thrombopénie/neutropénie sévères, DFG très bas, cytolyse majeure,
