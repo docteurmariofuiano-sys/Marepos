@@ -5253,5 +5253,288 @@ window.KB = {
         examens_a_discuter: ["IPS avant contention, soins de plaie"] }
     ],
     examens_clinique: ["Examen des membres inférieurs (varices, œdème, troubles trophiques)", "Recherche de signes de TVP", "Palpation des pouls (IPS avant contention)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PRÉ-ÉCLAMPSIE
+  // -------------------------------------------------------------------------
+  preeclampsie: {
+    id: "preeclampsie", symptome: "Pré-éclampsie (HTA de la grossesse)", specialite: ["Obstétrique"], urgence: true,
+    questions: [
+      { id: "pe2_convulsion", label: "Éclampsie", type: "boolean", question: "Y a-t-il eu une convulsion ou une perte de connaissance ?" },
+      { id: "pe2_signes", label: "Signes fonctionnels", type: "boolean", question: "Êtes-vous enceinte (2e moitié) avec maux de tête, troubles visuels (mouches, voile), douleur en barre sous les côtes, ou vomissements ?" },
+      { id: "pe2_ta", label: "HTA / protéinurie", type: "boolean", question: "Votre tension est-elle élevée, ou a-t-on trouvé des protéines dans les urines ?" },
+      { id: "pe2_oedeme", label: "Œdèmes brutaux", type: "boolean", question: "Avez-vous des œdèmes brutaux du visage/des mains, ou une prise de poids rapide ?" }
+    ],
+    red_flags: [
+      { id: "pe2_rf_eclampsie", niveau: 3, when: { q: "pe2_convulsion", eq: true },
+        message_medecin: "Éclampsie (convulsion) : urgence vitale (15, maternité).",
+        message_patient: "Cette situation nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "pe2_rf_severe", niveau: 3, when: { any: [{ q: "pe2_signes", eq: true }, { q: "pe2_ta", eq: true }] },
+        message_medecin: "Pré-éclampsie (HTA gravidique + signes fonctionnels / protéinurie) : urgence obstétricale.",
+        message_patient: "Ces signes nécessitent une évaluation médicale sans attendre (maternité ou 15)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pe2_preeclampsie", diagnostic: "Pré-éclampsie", arguments: [{ label: "HTA / protéinurie", w: 3, when: { q: "pe2_ta", eq: true } }, { label: "signes fonctionnels", w: 2, when: { q: "pe2_signes", eq: true } }, { label: "œdèmes brutaux", w: 1, when: { q: "pe2_oedeme", eq: true } }],
+        examens_a_discuter: ["TA, protéinurie", "NFS-plaquettes, transaminases, uricémie", "Avis obstétrical urgent"] },
+      { id: "pe2_eclampsie", diagnostic: "Éclampsie", arguments: [{ label: "convulsion", w: 3, when: { q: "pe2_convulsion", eq: true } }],
+        examens_a_discuter: ["Urgence vitale, maternité"] }
+    ],
+    examens_clinique: ["Pression artérielle", "Bandelette urinaire (protéinurie)", "Recherche de signes fonctionnels et des réflexes", "Avis obstétrical"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SAIGNEMENT / FAUSSE COUCHE PENDANT LA GROSSESSE
+  // -------------------------------------------------------------------------
+  fausse_couche: {
+    id: "fausse_couche", symptome: "Saignement / douleur pendant la grossesse", specialite: ["Obstétrique"], urgence: true,
+    questions: [
+      { id: "fc_choc", label: "Abondance / choc", type: "boolean", question: "Le saignement est-il très abondant, avec malaise ou pâleur ?" },
+      { id: "fc_douleur", label: "Douleur (GEU)", type: "boolean", question: "Avez-vous une douleur pelvienne, surtout d'un côté ?" },
+      { id: "fc_terme", label: "Terme", type: "single_choice", question: "À quel stade de la grossesse ?",
+        options: ["Début (1er trimestre)", "Plus tard (2e/3e trimestre)", "Je ne sais pas"] },
+      { id: "fc_fievre", label: "Fièvre", type: "boolean", question: "Avez-vous de la fièvre (notamment après une fausse couche / une manœuvre) ?" }
+    ],
+    red_flags: [
+      { id: "fc_rf_geu", niveau: 3, when: { q: "fc_douleur", eq: true },
+        message_medecin: "Saignement + douleur en début de grossesse : grossesse extra-utérine à éliminer → urgence (β-hCG, échographie).",
+        message_patient: "Cette association nécessite une évaluation médicale urgente." },
+      { id: "fc_rf_choc", niveau: 3, when: { q: "fc_choc", eq: true },
+        message_medecin: "Saignement abondant / signes de choc : urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "fc_rf_tardif", niveau: 3, when: { q: "fc_terme", eq: "Plus tard (2e/3e trimestre)" },
+        message_medecin: "Saignement au 2e/3e trimestre : urgence obstétricale (placenta praevia, hématome rétroplacentaire) — pas de TV avant échographie.",
+        message_patient: "Un saignement en fin de grossesse nécessite une évaluation médicale immédiate — maternité / 15." },
+      { id: "fc_rf_infection", niveau: 2, when: { q: "fc_fievre", eq: true },
+        message_medecin: "Fièvre + saignement : endométrite / rétention infectée → avis.",
+        message_patient: "De la fièvre avec un saignement nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "fc_fausse_couche", diagnostic: "Fausse couche (1er trimestre)", arguments: [{ label: "saignement de début de grossesse", w: 3, when: { q: "fc_terme", eq: "Début (1er trimestre)" } }],
+        examens_a_discuter: ["β-hCG, échographie", "Avis gynécologique"] },
+      { id: "fc_geu", diagnostic: "Grossesse extra-utérine", arguments: [{ label: "douleur pelvienne", w: 3, when: { q: "fc_douleur", eq: true } }],
+        examens_a_discuter: ["β-hCG, échographie en urgence"] },
+      { id: "fc_tardif", diagnostic: "Saignement du 2e/3e trimestre", arguments: [{ label: "terme avancé", w: 3, when: { q: "fc_terme", eq: "Plus tard (2e/3e trimestre)" } }],
+        examens_a_discuter: ["Maternité urgente (échographie, pas de TV avant)"] }
+    ],
+    examens_clinique: ["β-hCG, échographie", "Pouls et pression artérielle", "Examen au spéculum (sauf 3e trimestre avant échographie)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DIMINUTION DES MOUVEMENTS FŒTAUX
+  // -------------------------------------------------------------------------
+  diminution_mvt_foetaux: {
+    id: "diminution_mvt_foetaux", symptome: "Diminution des mouvements du bébé", specialite: ["Obstétrique"], urgence: true,
+    questions: [
+      { id: "mf_arret", label: "Arrêt des mouvements", type: "boolean", question: "Ne sentez-vous plus du tout bouger le bébé depuis plusieurs heures ?" },
+      { id: "mf_diminution", label: "Diminution", type: "boolean", question: "Sentez-vous votre bébé bouger nettement moins que d'habitude ?" },
+      { id: "mf_autres", label: "Signes associés", type: "boolean", question: "Y a-t-il aussi des saignements, des contractions douloureuses, une perte de liquide, ou des signes de pré-éclampsie ?" }
+    ],
+    red_flags: [
+      { id: "mf_rf", niveau: 3, when: { any: [{ q: "mf_arret", eq: true }, { q: "mf_diminution", eq: true }, { q: "mf_autres", eq: true }] },
+        message_medecin: "Diminution / arrêt des mouvements fœtaux : urgence obstétricale → enregistrement du rythme cardiaque fœtal sans délai.",
+        message_patient: "Une baisse des mouvements du bébé nécessite de se rendre à la maternité sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "mf_mvt", diagnostic: "Diminution des mouvements actifs fœtaux", arguments: [{ label: "diminution", w: 3, when: { q: "mf_diminution", eq: true } }, { label: "arrêt", w: 2, when: { q: "mf_arret", eq: true } }],
+        examens_a_discuter: ["Maternité urgente : monitoring (RCF), échographie"] }
+    ],
+    examens_clinique: ["Orientation immédiate vers la maternité (RCF / monitoring)", "Ne pas temporiser"]
+  },
+
+  // -------------------------------------------------------------------------
+  // FIÈVRE DU POST-PARTUM
+  // -------------------------------------------------------------------------
+  fievre_postpartum: {
+    id: "fievre_postpartum", symptome: "Fièvre après l'accouchement (post-partum)", specialite: ["Obstétrique"], urgence: true,
+    questions: [
+      { id: "fp_sepsis", label: "Signes de gravité", type: "boolean", question: "Avez-vous des signes de gravité (malaise, confusion, tension basse) ?" },
+      { id: "fp_jambe", label: "Thrombose / EP", type: "boolean", question: "Avez-vous une jambe gonflée/douloureuse, ou un essoufflement / une douleur thoracique ?" },
+      { id: "fp_endometrite", label: "Endométrite", type: "boolean", question: "Avez-vous des douleurs du bas-ventre et des pertes malodorantes ?" },
+      { id: "fp_sein", label: "Mastite", type: "boolean", question: "Avez-vous un sein rouge, chaud, douloureux ?" }
+    ],
+    red_flags: [
+      { id: "fp_rf_sepsis", niveau: 3, when: { any: [{ q: "fp_sepsis", eq: true }, { q: "fp_jambe", eq: true }] },
+        message_medecin: "Sepsis du post-partum / suspicion d'embolie pulmonaire : urgence vitale.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "fp_rf_endometrite", niveau: 2, when: { q: "fp_endometrite", eq: true },
+        message_medecin: "Endométrite du post-partum : prélèvements, antibiothérapie, avis.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "fp_endometrite", diagnostic: "Endométrite du post-partum", arguments: [{ label: "douleurs + pertes malodorantes", w: 3, when: { q: "fp_endometrite", eq: true } }],
+        examens_a_discuter: ["Prélèvements, antibiothérapie"] },
+      { id: "fp_mastite", diagnostic: "Mastite / abcès du sein", arguments: [{ label: "sein rouge, chaud, douloureux", w: 3, when: { q: "fp_sein", eq: true } }],
+        examens_a_discuter: ["Poursuite de l'allaitement, antibiothérapie si besoin"] },
+      { id: "fp_mte", diagnostic: "Maladie thrombo-embolique", arguments: [{ label: "jambe gonflée / dyspnée", w: 3, when: { q: "fp_jambe", eq: true } }],
+        examens_a_discuter: ["Écho-doppler, angio-TDM"] }
+    ],
+    examens_clinique: ["Température, constantes", "Examen utérin (involution, douleur)", "Examen des seins", "Recherche de signes de TVP / EP"]
+  },
+
+  // -------------------------------------------------------------------------
+  // NAUSÉES DE LA GROSSESSE
+  // -------------------------------------------------------------------------
+  nausees_grossesse: {
+    id: "nausees_grossesse", symptome: "Nausées / vomissements de la grossesse", specialite: ["Obstétrique"],
+    questions: [
+      { id: "ng_hyperemesis", label: "Hyperemesis", type: "boolean", question: "Vomissez-vous au point de ne plus rien garder, avec une perte de poids et une déshydratation ?" },
+      { id: "ng_tardif", label: "Tardif / atypique", type: "boolean", question: "Apparaissent-ils tardivement (2e moitié de grossesse) ou avec une douleur abdominale / des maux de tête ?" },
+      { id: "ng_typique", label: "1er trimestre banal", type: "boolean", question: "S'agit-il de nausées du 1er trimestre, modérées, sans signe de gravité ?" }
+    ],
+    red_flags: [
+      { id: "ng_rf_hyperemesis", niveau: 2, when: { q: "ng_hyperemesis", eq: true },
+        message_medecin: "Vomissements incoercibles gravidiques (hyperemesis) : déshydratation, cétose → avis, réhydratation.",
+        message_patient: "Ne plus rien garder pendant la grossesse nécessite un avis médical rapide." },
+      { id: "ng_rf_tardif", niveau: 2, when: { q: "ng_tardif", eq: true },
+        message_medecin: "Nausées/vomissements tardifs ou avec douleur/céphalées : éliminer une cause (pré-éclampsie, hépatique, digestive).",
+        message_patient: "Ces éléments nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ng_physio", diagnostic: "Nausées du 1er trimestre (physiologiques)", arguments: [{ label: "1er trimestre, modérées", w: 3, when: { q: "ng_typique", eq: true } }],
+        examens_a_discuter: ["Mesures hygiéno-diététiques, antiémétiques autorisés"] },
+      { id: "ng_hyperemesis", diagnostic: "Hyperemesis gravidarum", arguments: [{ label: "vomissements incoercibles + perte de poids", w: 3, when: { q: "ng_hyperemesis", eq: true } }],
+        examens_a_discuter: ["Ionogramme, cétonurie", "Réhydratation"] },
+      { id: "ng_tardif", diagnostic: "Cause tardive à explorer", arguments: [{ label: "tardif / atypique", w: 3, when: { q: "ng_tardif", eq: true } }],
+        examens_a_discuter: ["TA, BU, bilan hépatique"] }
+    ],
+    examens_clinique: ["Poids, signes de déshydratation", "Pression artérielle, bandelette urinaire (cétonurie)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CONTRACEPTION
+  // -------------------------------------------------------------------------
+  contraception: {
+    id: "contraception", symptome: "Contraception (demande, oubli, urgence)", specialite: ["Gynécologie"], urgence: true,
+    questions: [
+      { id: "ct_signes_thrombose", label: "Signes de thrombose", type: "boolean", question: "Sous pilule, avez-vous une douleur/gonflement d'une jambe, une douleur thoracique, ou des maux de tête inhabituels ?" },
+      { id: "ct_oubli", label: "Oubli / contraception d'urgence", type: "boolean", question: "S'agit-il d'un oubli de pilule ou d'un rapport à risque nécessitant une contraception d'urgence ?" },
+      { id: "ct_cv", label: "Contre-indication œstrogènes", type: "boolean", question: "Avez-vous des facteurs de risque (tabac après 35 ans, HTA, migraine avec aura, antécédent de thrombose) ?" },
+      { id: "ct_demande", label: "Demande d'information", type: "boolean", question: "Souhaitez-vous une information ou un choix de contraception ?" }
+    ],
+    red_flags: [
+      { id: "ct_rf_thrombose", niveau: 3, when: { q: "ct_signes_thrombose", eq: true },
+        message_medecin: "Sous contraception œstroprogestative : signes de thrombose / EP → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ct_rf_ci", niveau: 2, when: { q: "ct_cv", eq: true },
+        message_medecin: "Facteurs de risque CV : contre-indication aux œstrogènes → privilégier une méthode sans œstrogène.",
+        message_patient: "Ce contexte nécessite d'adapter la contraception avec un médecin." },
+      { id: "ct_rf_urgence", niveau: 2, when: { q: "ct_oubli", eq: true },
+        message_medecin: "Oubli / rapport à risque : contraception d'urgence (dans les délais), proposer un dépistage IST.",
+        message_patient: "Un oubli / rapport à risque nécessite une contraception d'urgence rapidement." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ct_demande", diagnostic: "Demande de contraception", arguments: [{ label: "information / choix", w: 2, when: { q: "ct_demande", eq: true } }],
+        examens_a_discuter: ["Choix selon le profil (contre-indications, préférences)"] },
+      { id: "ct_urgence", diagnostic: "Contraception d'urgence", arguments: [{ label: "oubli / rapport à risque", w: 3, when: { q: "ct_oubli", eq: true } }],
+        examens_a_discuter: ["Pilule du lendemain / DIU au cuivre selon le délai", "Dépistage IST"] }
+    ],
+    examens_clinique: ["Recherche des contre-indications (TA, antécédents)", "Conseil contraceptif", "Dépistage IST si besoin"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TROUBLE DU CYCLE / AMÉNORRHÉE
+  // -------------------------------------------------------------------------
+  trouble_cycle: {
+    id: "trouble_cycle", symptome: "Trouble du cycle / aménorrhée", specialite: ["Gynécologie"],
+    questions: [
+      { id: "tcy_post_menopause", label: "Saignement post-ménopausique", type: "boolean", question: "Avez-vous des saignements APRÈS la ménopause ?" },
+      { id: "tcy_amenorrhee", label: "Aménorrhée", type: "boolean", question: "Avez-vous une absence de règles (en dehors d'une grossesse) ?" },
+      { id: "tcy_sopk", label: "SOPK", type: "boolean", question: "Avez-vous des règles espacées avec une pilosité excessive, de l'acné, ou un surpoids ?" },
+      { id: "tcy_abondant", label: "Ménorragies", type: "boolean", question: "Avez-vous des règles très abondantes ou prolongées ?" }
+    ],
+    red_flags: [
+      { id: "tcy_rf_grossesse", niveau: 2, when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "tcy_amenorrhee", eq: true }] },
+        message_medecin: "Aménorrhée + grossesse possible : test de grossesse en premier.",
+        message_patient: "Un test de grossesse est la première étape." },
+      { id: "tcy_rf_postmeno", niveau: 2, when: { q: "tcy_post_menopause", eq: true },
+        message_medecin: "Saignement post-ménopausique : cancer de l'endomètre à éliminer (échographie, avis — voir métrorragies).",
+        message_patient: "Un saignement après la ménopause nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tcy_amenorrhee", diagnostic: "Aménorrhée (hors grossesse)", arguments: [{ label: "absence de règles", w: 3, when: { q: "tcy_amenorrhee", eq: true } }],
+        examens_a_discuter: ["β-hCG, TSH, prolactine", "Bilan selon le contexte"] },
+      { id: "tcy_sopk", diagnostic: "Syndrome des ovaires polykystiques", arguments: [{ label: "cycles espacés + hyperandrogénie", w: 3, when: { q: "tcy_sopk", eq: true } }],
+        examens_a_discuter: ["Bilan hormonal, échographie pelvienne"] },
+      { id: "tcy_menorragies", diagnostic: "Ménorragies", arguments: [{ label: "règles abondantes / prolongées", w: 3, when: { q: "tcy_abondant", eq: true } }],
+        examens_a_discuter: ["NFS (anémie), échographie pelvienne"] },
+      { id: "tcy_postmeno", diagnostic: "Saignement post-ménopausique", arguments: [{ label: "après la ménopause", w: 3, when: { q: "tcy_post_menopause", eq: true } }],
+        examens_a_discuter: ["Échographie endovaginale, avis"] }
+    ],
+    examens_clinique: ["β-hCG", "Examen gynécologique", "Échographie pelvienne", "Bilan hormonal selon l'orientation"]
+  },
+
+  // -------------------------------------------------------------------------
+  // MASSE MAMMAIRE
+  // -------------------------------------------------------------------------
+  masse_mammaire: {
+    id: "masse_mammaire", symptome: "Boule / masse dans le sein", specialite: ["Sénologie", "Gynécologie"],
+    questions: [
+      { id: "mm_suspecte", label: "Masse suspecte", type: "boolean", question: "La masse est-elle dure, fixée, irrégulière, avec une rétraction de la peau/du mamelon, ou un ganglion sous le bras ?" },
+      { id: "mm_inflammatoire", label: "Sein inflammatoire", type: "boolean", question: "Le sein est-il rouge, chaud, gonflé, avec une peau d'orange (en dehors de l'allaitement) ?" },
+      { id: "mm_ecoulement", label: "Écoulement sanglant", type: "boolean", question: "Y a-t-il un écoulement du mamelon, surtout sanglant et d'un seul côté ?" },
+      { id: "mm_kyste", label: "Lésion bénigne", type: "boolean", question: "La masse est-elle ronde, mobile, parfois douloureuse, variant avec le cycle ?" }
+    ],
+    red_flags: [
+      { id: "mm_rf_cancer", niveau: 2, when: { any: [{ q: "mm_suspecte", eq: true }, { q: "mm_ecoulement", eq: true }, { q: "mm_inflammatoire", eq: true }] },
+        message_medecin: "Masse suspecte / écoulement sanglant / sein inflammatoire : cancer à éliminer → mammographie + échographie + avis (triple test).",
+        message_patient: "Ces caractéristiques nécessitent un avis médical et des examens du sein." }
+    ],
+    diagnostics_differentiels: [
+      { id: "mm_cancer", diagnostic: "Lésion suspecte (cancer du sein)", arguments: [{ label: "masse dure/fixée/rétraction", w: 3, when: { q: "mm_suspecte", eq: true } }, { label: "sein inflammatoire", w: 2, when: { q: "mm_inflammatoire", eq: true } }, { label: "écoulement sanglant", w: 1, when: { q: "mm_ecoulement", eq: true } }],
+        examens_a_discuter: ["Mammographie + échographie", "Avis, biopsie (triple test)"] },
+      { id: "mm_benin", diagnostic: "Lésion bénigne (kyste / adénofibrome)", arguments: [{ label: "masse mobile, variant avec le cycle", w: 3, when: { q: "mm_kyste", eq: true } }],
+        examens_a_discuter: ["Échographie, surveillance"] }
+    ],
+    examens_clinique: ["Palpation des seins et des aires ganglionnaires", "Caractériser la masse", "Imagerie selon l'âge (mammographie / échographie)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SOPK / HIRSUTISME
+  // -------------------------------------------------------------------------
+  sopk: {
+    id: "sopk", symptome: "Pilosité excessive / SOPK", specialite: ["Endocrinologie", "Gynécologie"],
+    questions: [
+      { id: "so2_brutal", label: "Hyperandrogénie tumorale", type: "boolean", question: "La pilosité / les signes masculins sont-ils apparus rapidement et de façon marquée (voix grave, masse) ?" },
+      { id: "so2_triade", label: "Triade SOPK", type: "boolean", question: "Avez-vous des règles espacées/absentes, une pilosité excessive, et/ou de l'acné ?" },
+      { id: "so2_metabolique", label: "Syndrome métabolique", type: "boolean", question: "Avez-vous un surpoids ou des anomalies du sucre (prédiabète/diabète) ?" },
+      { id: "so2_infertilite", label: "Infertilité", type: "boolean", question: "Avez-vous des difficultés à concevoir ?" }
+    ],
+    red_flags: [
+      { id: "so2_rf_tumeur", niveau: 2, when: { q: "so2_brutal", eq: true },
+        message_medecin: "Hyperandrogénie d'installation rapide / sévère : éliminer une cause tumorale (ovaire, surrénale) → testostérone, imagerie.",
+        message_patient: "Une pilosité d'apparition rapide nécessite un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "so2_sopk", diagnostic: "Syndrome des ovaires polykystiques", arguments: [{ label: "cycles espacés + hyperandrogénie", w: 3, when: { q: "so2_triade", eq: true } }, { label: "syndrome métabolique", w: 1, when: { q: "so2_metabolique", eq: true } }, { label: "infertilité", w: 1, when: { q: "so2_infertilite", eq: true } }],
+        examens_a_discuter: ["Bilan hormonal, échographie ovarienne", "Bilan métabolique"] },
+      { id: "so2_tumeur", diagnostic: "Hyperandrogénie tumorale", arguments: [{ label: "installation rapide / sévère", w: 3, when: { q: "so2_brutal", eq: true } }],
+        examens_a_discuter: ["Testostérone, imagerie surrénale/ovarienne"] }
+    ],
+    examens_clinique: ["Recherche de signes d'hyperandrogénie", "IMC", "Bilan hormonal (testostérone…)", "Échographie pelvienne, bilan métabolique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SUIVI DE GROSSESSE
+  // -------------------------------------------------------------------------
+  suivi_grossesse: {
+    id: "suivi_grossesse", symptome: "Suivi de grossesse", specialite: ["Obstétrique"], urgence: true,
+    questions: [
+      { id: "sg2_alerte", label: "Signe d'alerte", type: "boolean", question: "Avez-vous un signe d'alerte : saignement, perte de liquide, contractions douloureuses, fièvre, maux de tête/troubles visuels, ou diminution des mouvements du bébé ?" },
+      { id: "sg2_terme", label: "Terme", type: "single_choice", question: "À quel stade ?", options: ["1er trimestre", "2e trimestre", "3e trimestre"] },
+      { id: "sg2_routine", label: "Suivi de routine", type: "boolean", question: "S'agit-il d'un suivi de routine, sans symptôme ?" }
+    ],
+    red_flags: [
+      { id: "sg2_rf_alerte", niveau: 3, when: { q: "sg2_alerte", eq: true },
+        message_medecin: "Signe d'alerte pendant la grossesse (saignement, perte de liquide, contractions, fièvre, signes de pré-éclampsie, baisse des mouvements) : avis obstétrical sans délai.",
+        message_patient: "Ces signes nécessitent de contacter la maternité sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "sg2_normal", diagnostic: "Grossesse normale (suivi)", arguments: [{ label: "suivi de routine sans symptôme", w: 3, when: { q: "sg2_routine", eq: true } }],
+        examens_a_discuter: ["Suivi recommandé : consultations, échographies, biologie et dépistages selon le terme"] },
+      { id: "sg2_alerte", diagnostic: "Situation d'alerte", arguments: [{ label: "présence d'un signe d'alerte", w: 3, when: { q: "sg2_alerte", eq: true } }],
+        examens_a_discuter: ["Orientation vers la maternité"] }
+    ],
+    examens_clinique: ["Pression artérielle, bandelette urinaire", "Hauteur utérine, bruits du cœur fœtal selon le terme", "Orientation vers le suivi recommandé"]
   }
 };

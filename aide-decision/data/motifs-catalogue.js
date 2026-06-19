@@ -113,16 +113,16 @@ window.MOTIFS = [
     n: 7, titre: "Gynécologie / obstétrique", icone: "🤰",
     frequents: [
       { l: "Douleurs pelviennes", f: "algie_pelvienne" }, { l: "Saignements gynécologiques", f: "metrorragies" }, { l: "Retard de règles" },
-      { l: "Contraception" }, { l: "Suivi grossesse" }, { l: "Nausées de grossesse" }, { l: "Mycose vaginale", f: "leucorrhees" },
-      { l: "Leucorrhées", f: "leucorrhees" }, { l: "Douleur mammaire", f: "galactorrhee" }, { l: "Masse mammaire", f: "galactorrhee" },
-      { l: "Infection urinaire chez la femme enceinte" }, { l: "Ménopause", f: "bouffees_chaleur" }, { l: "Bouffées de chaleur", f: "bouffees_chaleur" },
-      { l: "Trouble du cycle" }, { l: "Dysménorrhée", f: "dysmenorrhee" }, { l: "Dyspareunie", f: "dysmenorrhee" },
-      { l: "Demande d'IVG" }, { l: "Dépistage IST", f: "ecoulement_uretral" }
+      { l: "Contraception", f: "contraception" }, { l: "Suivi grossesse", f: "suivi_grossesse" }, { l: "Nausées de grossesse", f: "nausees_grossesse" }, { l: "Mycose vaginale", f: "leucorrhees" },
+      { l: "Leucorrhées", f: "leucorrhees" }, { l: "Douleur mammaire", f: "galactorrhee" }, { l: "Masse mammaire", f: "masse_mammaire" },
+      { l: "Infection urinaire chez la femme enceinte", f: "cystite" }, { l: "Ménopause", f: "bouffees_chaleur" }, { l: "Bouffées de chaleur", f: "bouffees_chaleur" },
+      { l: "Trouble du cycle", f: "trouble_cycle" }, { l: "Dysménorrhée", f: "dysmenorrhee" }, { l: "Dyspareunie", f: "dysmenorrhee" },
+      { l: "Demande d'IVG", f: "contraception" }, { l: "Dépistage IST", f: "ecoulement_uretral" }
     ],
     urgences: [
       { l: "Grossesse extra-utérine", f: "algie_pelvienne" }, { l: "Métrorragies abondantes", f: "metrorragies" }, { l: "Douleur pelvienne aiguë", f: "algie_pelvienne" },
-      { l: "Torsion d'annexe", f: "algie_pelvienne" }, { l: "Fausse couche" }, { l: "Fièvre en post-partum" },
-      { l: "Pré-éclampsie suspectée" }, { l: "Diminution des mouvements fœtaux" }, { l: "Douleur abdominale chez la femme enceinte" },
+      { l: "Torsion d'annexe", f: "algie_pelvienne" }, { l: "Fausse couche", f: "fausse_couche" }, { l: "Fièvre en post-partum", f: "fievre_postpartum" },
+      { l: "Pré-éclampsie suspectée", f: "preeclampsie" }, { l: "Diminution des mouvements fœtaux", f: "diminution_mvt_foetaux" }, { l: "Douleur abdominale chez la femme enceinte", f: "fausse_couche" },
       { l: "Infection pelvienne sévère", f: "algie_pelvienne" }
     ]
   },
@@ -217,8 +217,8 @@ window.MOTIFS = [
       { l: "Diabète déséquilibré", b: "hyperglycemie" }, { l: "Hypoglycémies", f: "hypoglycemie" }, { l: "Hyperglycémie", b: "hyperglycemie" },
       { l: "Découverte de diabète", b: "hyperglycemie" }, { l: "Obésité", f: "obesite" }, { l: "Perte de poids", f: "asthenie" },
       { l: "Prise de poids", f: "obesite" }, { l: "Dyslipidémie", b: "dyslipidemie" }, { l: "Trouble thyroïdien", f: "goitre" },
-      { l: "Nodule thyroïdien", f: "goitre" }, { l: "Fatigue inexpliquée", f: "asthenie" }, { l: "SOPK" },
-      { l: "Hirsutisme" }, { l: "Aménorrhée", f: "galactorrhee" }, { l: "Ostéoporose" }, { l: "Carence en vitamine D" },
+      { l: "Nodule thyroïdien", f: "goitre" }, { l: "Fatigue inexpliquée", f: "asthenie" }, { l: "SOPK", f: "sopk" },
+      { l: "Hirsutisme", f: "sopk" }, { l: "Aménorrhée", f: "trouble_cycle" }, { l: "Ostéoporose" }, { l: "Carence en vitamine D" },
       { l: "Carence en B12", b: "anemie" }, { l: "Anémie", b: "anemie" }, { l: "Hyperferritinémie", b: "cytolyse" }
     ],
     urgences: [
