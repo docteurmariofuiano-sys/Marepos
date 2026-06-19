@@ -720,5 +720,40 @@ window.BIOKB = [
     ],
     red_flags: ["Complications thrombotiques (AVC, IDM, thrombose veineuse, Budd-Chiari) ou hémorragiques", "Hématocrite très élevé → hyperviscosité (céphalées, troubles visuels, vertiges)", "Transformation : myélofibrose secondaire, leucémie aiguë"],
     conduite: ["Affirmer la polyglobulie vraie (volume globulaire) puis primitive (JAK2+, EPO basse) vs secondaire (EPO élevée, hypoxie).", "Objectif : hématocrite < 45 % (saignées) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Contrôler les facteurs de risque vasculaire ; surveiller la transformation.", "Le prurit aquagénique et l'érythrose sont évocateurs."]
+  },
+  {
+    id: "thrombocytemie_essentielle", num: 78, anomalie: "Thrombocytémie essentielle",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique avec thrombocytose persistante d'origine clonale (souvent JAK2+, parfois CALR/MPL). Souvent asymptomatique ; risque thrombotique (artériel ++) et hémorragique, ± splénomégalie. Incidence 1-2,5/100 000/an, âge médian ~50-60 ans, sex-ratio H/F ≈ 1.",
+    premiere_intention: ["Confirmer une thrombocytose persistante : plaquettes > 600 G/L vérifiées à 2 reprises à ≥ 2 mois d'intervalle", "Éliminer une thrombocytose réactionnelle (cause la plus fréquente)", "Biologie moléculaire : JAK2 V617F (puis CALR, MPL) ; étude de la clonalité", "BOM : mégacaryocytes nombreux, de grande taille, hypersegmentés (« ramure de cerf »), sans fibrose"],
+    causes: [
+      { cause: "Thrombocytémie essentielle (clonale)", signe: "JAK2+ (ou CALR/MPL), thrombocytose persistante, mégacaryocytes en ramure de cerf", examens: ["JAK2 V617F / CALR / MPL", "BOM", "Clonalité, PRV-1, pousse spontanée des progéniteurs, TPO"] },
+      { cause: "Thrombocytose réactionnelle", signe: "carence martiale, inflammation/infection, cancer, post-splénectomie, rebond après thrombopénie, stress", examens: ["Ferritine, CRP", "Contexte clinique"] },
+      { cause: "Autre syndrome myéloprolifératif", signe: "polyglobulie de Vaquez (Hte élevé), LMC (Ph1+), myélofibrose", examens: ["Hémogramme, JAK2 / BCR-ABL", "BOM"] }
+    ],
+    tableaux: [
+      { titre: "Critères diagnostiques",
+        entetes: ["Type", "Critère"],
+        lignes: [
+          ["Base", "Plaquettes > 600 G/L > 2 mois + mutation JAK2"],
+          ["Complémentaire", "Pas de cause de thrombocytose réactionnelle"],
+          ["Complémentaire", "Hématocrite < 51 % (homme) ou < 47 % (femme)"],
+          ["Complémentaire", "Bilan martial normal"],
+          ["Complémentaire", "BOM : absence de fibrose"],
+          ["Complémentaire", "Absence de Ph1 / réarrangement BCR-ABL"],
+          ["Complémentaire", "Pas de signe cytogénétique ou morphologique de SMD"]
+        ] },
+      { titre: "Causes de thrombocytose réactionnelle",
+        entetes: ["Catégorie", "Exemples"],
+        lignes: [
+          ["Carence", "Carence en fer"],
+          ["Inflammation / infection", "Pathologies inflammatoires et infectieuses"],
+          ["Néoplasie", "État cancéreux sous-jacent"],
+          ["Hématologique", "Rebond après thrombopénie ; suite immédiate de splénectomie"],
+          ["Divers", "Stress"]
+        ] }
+    ],
+    red_flags: ["Accidents thrombotiques (artériels ++ : AVC, IDM, ischémie) ou hémorragiques", "Thrombocytose extrême → risque hémorragique paradoxal (maladie de Willebrand acquise)", "Transformation : myélofibrose, leucémie aiguë"],
+    conduite: ["Affirmer une thrombocytose clonale persistante et éliminer une cause réactionnelle (ferritine, CRP, contexte).", "Pseudo-hyperkaliémie possible (libération plaquettaire) — recontrôler la kaliémie sur plasma.", "Évaluer le risque thrombotique (âge, ATCD, JAK2) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Surveiller la transformation (myélofibrose, LAM)."]
   }
 ];

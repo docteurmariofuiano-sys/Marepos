@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **35 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **36 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -69,8 +69,9 @@ toxoplasmose), **LLC** (score de Matutes, facteurs pronostiques), **maladie de
 Waldenström** (IgM monoclonale, hyperviscosité), **myélome multiple**
 (CRAB, composant monoclonal, pronostic), **leucémie à tricholeucocytes**
 (monocytopénie, immunophénotype, BRAF), **LMC** (myélémie, chromosome
-Philadelphie / BCR-ABL) et **polyglobulie de Vaquez** (JAK2, EPO, seuils
-Hte/Hb). Le bloc hématologie s'appuie sur
+Philadelphie / BCR-ABL), **polyglobulie de Vaquez** (JAK2, EPO, seuils
+Hte/Hb) et **thrombocytémie essentielle** (critères, thrombocytose
+réactionnelle). Le bloc hématologie s'appuie sur
 du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
 schéma du module.
 
