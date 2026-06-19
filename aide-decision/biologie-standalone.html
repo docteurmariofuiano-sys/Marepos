@@ -2662,6 +2662,56 @@ window.BIOKB = [
     ],
     red_flags: ["Syndrome de Goodpasture (anti-MBG) : hémorragie alvéolaire + glomérulonéphrite rapidement progressive → urgence", "Myasthénie (anti-RACh) : crise myasthénique (atteinte respiratoire / déglutition)", "Polyendocrinopathie auto-immune : dépister les autres atteintes (ex. Addison + thyroïde + Biermer)", "Un auto-anticorps isolé ne suffit pas au diagnostic : confronter à la clinique"],
     conduite: ["Choisir l'auto-anticorps en fonction de l'organe cible (1re puis 2e intention).", "Penser aux associations auto-immunes (polyendocrinopathies, Biermer + thyroïde, etc.).", "Confronter systématiquement à la clinique et aux autres examens.", "Renvois internes : diabète type 1 (anti-GAD), Basedow/Hashimoto (TSH-R/TPO), Addison (21-OH), AHAI (Coombs), PTAI."]
+  },
+  {
+    id: "syndrome_inflammatoire", num: 120, anomalie: "Syndrome inflammatoire (VS, CRP, protéines de l'inflammation)",
+    specialite: "Non spécifique",
+    definition: "Le syndrome inflammatoire biologique associe une accélération de la VS, une élévation des protéines de l'inflammation (CRP précoce, puis orosomucoïde, haptoglobine, fibrinogène…) et un profil électrophorétique évocateur. La CRP et la PCT sont les marqueurs les plus utiles.",
+    premiere_intention: ["VS (peu spécifique, nombreux facteurs d'erreur) + CRP (précoce, infection bactérienne) ± PCT (infection bactérienne/fongique)", "Profil électrophorétique : ↓ albumine, ↑ α1 (orosomucoïde, α1-antitrypsine) et α2 (haptoglobine), ± ↑ γ polyclonale", "Cinétique : CRP s'élève dès la 6e heure (demi-vie ~20 h) ; orosomucoïde / haptoglobine plus tardifs", "Compléter selon le contexte (fibrinogène, ferritine, EPP, hémogramme)"],
+    causes: [
+      { cause: "Marqueurs précoces", signe: "CRP (6e h, IL-1/IL-6, infection bactérienne, suivi de l'antibiothérapie), PCT (bactérien/fongique, pas viral)", examens: ["CRP, PCT"] },
+      { cause: "Marqueurs plus tardifs", signe: "orosomucoïde (demi-vie 3 j), haptoglobine (4e jour, HPT % ≈ ORO % × 1,3), α1-antitrypsine, fibrinogène", examens: ["Orosomucoïde, haptoglobine, fibrinogène"] },
+      { cause: "Marqueurs négatifs de l'inflammation", signe: "↓ albumine, préalbumine, transferrine", examens: ["Albumine, transferrine"] }
+    ],
+    tableaux: [
+      { titre: "Facteurs faussant la VS",
+        entetes: ["Type", "Augmentent la VS", "Diminuent la VS"],
+        lignes: [
+          ["Analytiques", "Tube mal rempli / non vertical, température > 27 °C, hémolyse", "Tube trop rempli, température < 18 °C, analyse > 2 h après le prélèvement"],
+          ["Médicaments", "Contraceptifs oraux, dextrans", "Produits de contraste iodés, corticoïdes, AINS, salicylés forte dose, acide valproïque"],
+          ["Pathologies", "Anémie sévère (Hte < 30 %), macrocytose, hypergammaglobulinémie, grossesse, hypercholestérolémie, syndrome néphrotique", "Polyglobulie, microcytose, hémoglobinopathies, hypofibrinogénémie, hyperleucocytose > 50 G/L, insuffisance hépatique, CIVD, hypogammaglobulinémie"]
+        ] },
+      { titre: "Profil inflammatoire à l'électrophorèse",
+        entetes: ["Fraction", "Variation"],
+        lignes: [
+          ["Albumine", "Diminution"],
+          ["α1-globulines", "↑ (orosomucoïde, α1-antitrypsine, α1-antichymotrypsine)"],
+          ["α2-globulines", "↑ (haptoglobine, céruléoplasmine)"],
+          ["β-globulines", "Stable (↓ transferrine, ↑ complément)"],
+          ["γ-globulines", "↑ polyclonale (infections, maladies systémiques)"]
+        ] },
+      { titre: "Protéines de l'inflammation (cinétique)",
+        entetes: ["Protéine", "Demi-vie", "Caractéristiques"],
+        lignes: [
+          ["CRP", "~20 h", "Précoce (6e h), plateau 24-36 h, normalisation 6-7 j ; IL-1/IL-6 ; infection bactérienne, suivi ATB"],
+          ["Procalcitonine (PCT)", "—", "Infection bactérienne / fongique (pas virale) ; pronostic ; normalisation plus rapide que la CRP"],
+          ["Orosomucoïde", "3 j", "Inflammation aiguë/chronique ; ↑ par corticoïdes, hyperleucocytose, obésité"],
+          ["Haptoglobine", "5,4 j", "↑ dès le 4e jour ; HPT % ≈ ORO % × 1,3 ; ↓ si hémolyse"],
+          ["α1-antitrypsine", "5 j", "Serpine ; non augmentée dans les vascularites généralisées"],
+          ["Fibrinogène", "3-6 j", "↑ inflammation ; ↓ CIVD, fibrinolyse, insuffisance hépatique"],
+          ["Ferritine", "—", "↑ inflammation, surcharge en fer, hémolyse ; ↓ carence martiale"],
+          ["Transferrine / albumine / préalbumine", "—", "Marqueurs négatifs (diminuent)"]
+        ] },
+      { titre: "Interprétation d'une VS augmentée",
+        entetes: ["Situation", "Conduite"],
+        lignes: [
+          ["VS modérément ↑ isolée, asymptomatique", "Contrôler le statut clinique et la VS à quelques semaines"],
+          ["VS très augmentée (~100 mm/h)", "Évoquer infection, tumeur maligne, myélome, néphropathie chronique, maladie systémique"],
+          ["Exploration", "CRP, fibrinogène, orosomucoïde, haptoglobine, EPP"]
+        ] }
+    ],
+    red_flags: ["VS ~100 mm/h : rechercher infection, cancer, myélome, maladie systémique (Horton)", "CRP / PCT très élevées : sepsis bactérien (PCT = gravité)", "Syndrome inflammatoire chronique → anémie inflammatoire (microcytaire), thrombocytose > 500 G/L", "Dissociation VS/CRP (VS ↑ mais CRP normale : gammapathie, anémie ; ou inverse)"],
+    conduite: ["CRP = marqueur précoce et fiable ; PCT discrimine l'infection bactérienne (pas virale).", "VS très influencée par de nombreux facteurs (anémie, Ig, fibrinogène, technique) → préférer la CRP.", "Profil électrophorétique inflammatoire : ↓ albumine, ↑ α1/α2.", "Syndrome inflammatoire prolongé : anémie inflammatoire, thrombocytose."]
   }
 ];
 
