@@ -1853,6 +1853,44 @@ window.BIOKB = [
     ],
     red_flags: ["Douleur thoracique évocatrice → ECG immédiat ; sus-décalage ST = IDM → revascularisation en urgence (ne pas attendre la troponine)", "Troponine négative précoce (< 12 h) n'exclut pas un SCA → répéter", "Angor instable avec troponine élevée → prise en charge agressive (HBPM / anti-GpIIbIIIa)", "Élévation de troponine sans contexte ischémique (EP, sepsis, insuffisance cardiaque…) à interpréter"],
     conduite: ["IDM aigu = diagnostic clinique + ECG ; la troponine confirme a posteriori et stratifie le risque.", "Interférences de la troponine : fibrine / débris (centrifugation, voire ultracentrifugation), facteur rhumatoïde, anticorps hétérophiles.", "La troponine T peut être faussement élevée (IRC, poly/dermatomyosite) → préférer la troponine I.", "La taille de l'infarctus s'évalue par imagerie, pas par les marqueurs biologiques."]
+  },
+  {
+    id: "marqueurs_insuffisance_cardiaque", num: 101, anomalie: "Marqueurs biologiques de l'insuffisance cardiaque (BNP / NT-proBNP)",
+    specialite: "Cardiologie",
+    definition: "Peptides natriurétiques sécrétés par le ventricule (étirement, pression intracardiaque). Le pré-proBNP est clivé en NT-proBNP (inactif) et BNP (actif). Le BNP augmente la natriurèse, provoque une vasodilatation et inhibe le système rénine-angiotensine-aldostérone.",
+    premiere_intention: ["Devant une dyspnée : orienter vers une origine cardiaque (BNP/NT-proBNP élevés) ou pulmonaire (peu élevés)", "Marqueur diagnostique des dysfonctions ventriculaires (notamment diastoliques)", "Suivi thérapeutique de l'insuffisance cardiaque (efficacité du traitement)", "Pronostic post-IDM : dosage entre J1 et J4 (prédictif de mortalité et d'insuffisance cardiaque)"],
+    causes: [
+      { cause: "BNP (forme active)", signe: "↑ étirement ventriculaire, ↑ pression intracardiaque, HTA ; demi-vie plus courte", examens: ["BNP"] },
+      { cause: "NT-proBNP (forme inactive)", signe: "mêmes indications que le BNP ; clairance dépendante de la fonction rénale, demi-vie plus longue", examens: ["NT-proBNP"] },
+      { cause: "Élévation à interpréter", signe: "âge, insuffisance rénale (surtout NT-proBNP), autres causes d'augmentation des pressions de remplissage", examens: ["Fonction rénale, contexte"] }
+    ],
+    tableaux: [
+      { titre: "BNP vs NT-proBNP",
+        entetes: ["", "BNP", "NT-proBNP"],
+        lignes: [
+          ["Activité", "Forme active", "Forme inactive"],
+          ["Demi-vie", "Plus courte", "Plus longue"],
+          ["Clairance rénale", "Moins dépendante", "Dépendante de la fonction rénale"],
+          ["Applications", "Identiques", "Identiques"]
+        ] },
+      { titre: "Indications",
+        entetes: ["Indication", "Précision"],
+        lignes: [
+          ["Dyspnée", "Orienter l'origine cardiaque vs pulmonaire (bonne VPN)"],
+          ["Dysfonction ventriculaire", "Marqueur diagnostique (notamment diastolique)"],
+          ["Pronostic post-IDM", "Dosage J1-J4 : prédictif de mortalité / insuffisance cardiaque"],
+          ["Suivi thérapeutique", "Évaluer l'efficacité du traitement de l'insuffisance cardiaque"]
+        ] },
+      { titre: "Effets physiologiques du BNP",
+        entetes: ["Action", "Conséquence"],
+        lignes: [
+          ["Natriurèse", "Augmentée"],
+          ["Vaisseaux", "Vasodilatation"],
+          ["Système rénine-angiotensine-aldostérone", "Inhibition"]
+        ] }
+    ],
+    red_flags: ["BNP / NT-proBNP très élevés avec dyspnée → insuffisance cardiaque aiguë (OAP) probable, prise en charge urgente", "Interpréter selon l'âge et la fonction rénale (NT-proBNP surestimé en insuffisance rénale)", "Un taux bas a une bonne valeur prédictive négative pour éliminer une origine cardiaque à la dyspnée", "Élévation possible dans d'autres causes d'augmentation des pressions (embolie pulmonaire, HTAP…)"],
+    conduite: ["Utiliser le BNP / NT-proBNP pour trancher l'origine d'une dyspnée (cardiaque vs pulmonaire).", "Interpréter le NT-proBNP en tenant compte de la fonction rénale (clairance rénale, demi-vie longue).", "Suivre l'efficacité thérapeutique de l'insuffisance cardiaque par la cinétique du marqueur.", "Confronter à l'échographie cardiaque et au contexte clinique."]
   }
 ];
 
