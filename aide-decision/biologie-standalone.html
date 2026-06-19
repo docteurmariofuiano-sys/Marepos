@@ -2546,6 +2546,42 @@ window.BIOKB = [
     ],
     red_flags: ["c-ANCA / anti-PR3 → granulomatose avec polyangéite (Wegener) : atteinte ORL, pulmonaire, rénale → urgence diagnostique", "p-ANCA / anti-MPO → polyangéite microscopique (glomérulonéphrite rapidement progressive, hémorragie alvéolaire)", "Vascularite des petits vaisseaux : rechercher une atteinte rénale (protéinurie, hématurie) et pulmonaire", "p-ANCA non spécifiques possibles (MICI, médicaments, infections)"],
     conduite: ["IFI sur granulocytes (éthanol) → c-ANCA vs p-ANCA ; préciser la cible par ELISA (PR3, MPO…).", "c-ANCA/PR3 et p-ANCA/MPO = marqueurs des vascularites à ANCA (Wegener, polyangéite microscopique).", "Les p-ANCA peuvent être non spécifiques (MICI, connectivites, médicaments) : confronter à la clinique.", "Rechercher une atteinte d'organe (rein, poumon, ORL) ; avis spécialisé."]
+  },
+  {
+    id: "facteur_rhumatoide_ccp", num: 118, anomalie: "Facteur rhumatoïde et anticorps anti-CCP",
+    specialite: "Immunologie",
+    definition: "Le facteur rhumatoïde (FR) est un auto-anticorps (généralement IgM) anti-IgG. Les anticorps anti-peptides cycliques citrullinés (anti-CCP) sont très spécifiques de la polyarthrite rhumatoïde (PR), précoces et de mauvais pronostic.",
+    premiere_intention: ["PR suspectée : doser le FR IgM (ELISA / néphélémétrie, pas l'agglutination) et les anti-CCP (ELISA)", "Anti-CCP : très spécifiques de la PR (90-93 %), précoces, mauvais pronostic (PR érosive)", "Le FR est peu spécifique (Sjögren, infections, hémopathies…) : interpréter avec la clinique", "Associer FR + anti-CCP augmente la valeur diagnostique"],
+    causes: [
+      { cause: "Facteur rhumatoïde (FR)", signe: "IgM anti-IgG ; sensibilité 30-80 % dans la PR, spécificité ~90 % ; nombreux faux positifs", examens: ["ELISA, néphélémétrie / turbidimétrie"] },
+      { cause: "Anticorps anti-CCP", signe: "très spécifiques de la PR (90-93 %), détectables 2-5 ans avant les symptômes, marqueur de PR érosive", examens: ["ELISA (anti-CCP2)"] },
+      { cause: "FR positif hors PR", signe: "Sjögren, lupus, sclérodermie, infections (leishmaniose, endocardite, VHC), hémopathies, silicose, cirrhose", examens: ["Confronter à la clinique"] }
+    ],
+    tableaux: [
+      { titre: "Performances diagnostiques (PR débutante)",
+        entetes: ["Test", "Sensibilité", "Spécificité", "VPP", "VPN"],
+        lignes: [
+          ["Anti-CCP", "48 %", "96 %", "84 %", "81 %"],
+          ["FR IgM", "44 %", "90 %", "64 %", "81 %"],
+          ["Anti-CCP + FR", "39 %", "98 %", "91 %", "78 %"],
+          ["Anti-CCP ou FR", "63 %", "88 %", "72 %", "83 %"]
+        ] },
+      { titre: "Prévalence du FR IgM par contexte",
+        entetes: ["Contexte", "Prévalence"],
+        lignes: [
+          ["Sujet sain < 50 ans / > 70 ans", "5 % / 15 %"],
+          ["Polyarthrite rhumatoïde", "70-90 %"],
+          ["Gougerot-Sjögren", "30-80 %"],
+          ["Lupus systémique", "20-30 %"],
+          ["Sclérodermie", "10-20 %"],
+          ["Rhumatisme psoriasique / spondylarthropathie", "10-15 % / < 10 %"],
+          ["Infections (VHC, leishmaniose, endocardite)", "VHC 10-50 %, leishmaniose 30-50 %, endocardite 30 %"],
+          ["Hémopathies lymphoïdes (Waldenström, LLC)", "10-30 %"],
+          ["Silicose / asbestose / cirrhose", "30 % / 30 % / 10-30 %"]
+        ] }
+    ],
+    red_flags: ["Anti-CCP positif = mauvais pronostic (PR érosive) → prise en charge précoce et agressive", "FR peu spécifique : ne pas porter le diagnostic de PR sur le seul FR", "FR positif chez le sujet âgé sain (15 % après 70 ans)", "FR élevé + cryoglobulinémie → évoquer une infection par le VHC ou un Waldenström"],
+    conduite: ["Devant une polyarthrite : associer FR IgM (ELISA / néphélémétrie) et anti-CCP.", "Anti-CCP = marqueur spécifique et précoce de la PR (anti-CCP2 plus sensible).", "Un FR positif isolé n'affirme pas une PR (faux positifs nombreux) : confronter à la clinique et à l'imagerie.", "AKA / anti-filaggrine abandonnés au profit des anti-CCP."]
   }
 ];
 
