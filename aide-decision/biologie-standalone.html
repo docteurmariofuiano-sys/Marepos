@@ -2449,6 +2449,64 @@ window.BIOKB = [
     ],
     red_flags: ["Choc anaphylactique → urgence (adrénaline) ; doser tryptase / histamine a posteriori", "Œdème de Quincke avec atteinte laryngée", "Une IgE spécifique positive = SENSIBILISATION, pas forcément allergie clinique (confronter à la clinique)", "Désensibilisation uniquement avec des dérivés monoallergéniques, sous supervision"],
     conduite: ["Le diagnostic repose sur la SOMME interrogatoire + tests in vivo + in vitro ; aucun test isolé ne suffit.", "Une sensibilisation biologique (IgE+) ne signifie pas une allergie clinique.", "Allergènes : pneumallergènes (inhalés), trophallergènes (ingérés), transcutanés, médicamenteux, professionnels, venins.", "Traitement : éviction, médicaments symptomatiques, désensibilisation monoallergénique (bascule IgE → IgG4, rééquilibrage Th1/Th2)."]
+  },
+  {
+    id: "anticorps_antinucleaires", num: 116, anomalie: "Anticorps antinucléaires (ANA) et auto-immunité",
+    specialite: "Immunologie",
+    definition: "Auto-anticorps dirigés contre des antigènes du noyau (parfois cytoplasmiques), dépistés par immunofluorescence indirecte (IFI) sur cellules HEp-2. En cas de positivité, la SPÉCIFICITÉ doit être déterminée. Prévalence 15 % en population générale (peu spécifiques).",
+    premiere_intention: ["Dépistage par IFI sur cellules HEp-2 : positivité + titre + aspect de fluorescence", "Titre : 1/80 peu significatif, ≤ 1/320 faible, 1/640 significatif, > 1/640 fort", "Si IFI positive : déterminer la spécificité (anti-ADN natif, anti-ENA)", "Confronter à la clinique : ANA aussi présents dans infections virales, néoplasies, inflammations"],
+    causes: [
+      { cause: "Anti-ADN natif (fluorescence homogène)", signe: "marqueur majeur du LES, corrélé à l'évolutivité (suivi indispensable)", examens: ["Test de FARR (spécificité > 90 %, sensibilité ~70 %)", "ELISA (plus sensible, moins spécifique)"] },
+      { cause: "Anti-ENA (antigènes solubles)", signe: "Sm, SSA/Ro, SSB/La, U1-RNP, JO1, Scl70 : ELISA screening puis identification", examens: ["ELISA ENA"] },
+      { cause: "Spécificité selon l'aspect", signe: "centromérique (CREST), nucléolaire (Scl70/sclérodermie), nuclear dots SP100 (cirrhose biliaire primitive), membranaire (hépatopathie)", examens: ["IFI HEp-2"] }
+    ],
+    tableaux: [
+      { titre: "Titre des ANA (IFI)",
+        entetes: ["Titre", "Signification"],
+        lignes: [
+          ["1/80", "Peu significatif"],
+          ["Jusqu'à 1/320", "Titre faible"],
+          ["1/640", "Titre significatif"],
+          ["> 1/640", "Titre fort"]
+        ] },
+      { titre: "Aspect de fluorescence → spécificité",
+        entetes: ["Aspect", "Spécificité / orientation"],
+        lignes: [
+          ["Homogène", "Anti-ADN, anti-histones, anti-nucléosomes"],
+          ["Moucheté fin", "Anti-SSA / anti-SSB"],
+          ["Moucheté gros grains", "Anti-Sm / anti-U1RNP"],
+          ["Nucléolaire", "Anti-Scl70 → rechercher une sclérodermie"],
+          ["Membranaire", "Souvent pathologie hépatique"],
+          ["Nuclear dots", "SP100 → cirrhose biliaire primitive"],
+          ["Cytoplasmique", "Anti-mitochondries, anti-JO1, anti-ribosomes, anti-actine"],
+          ["Centromérique", "Pathognomonique du syndrome de CREST (sclérodermie)"]
+        ] },
+      { titre: "Anticorps anti-ENA (sensibilité / spécificité / pathologie)",
+        entetes: ["Auto-Ac", "Sensibilité", "Spécificité", "Pathologie"],
+        lignes: [
+          ["Anti-Sm", "~30 %", "~100 %", "LES"],
+          ["Anti-SS-A (Ro)", "~35 %", "—", "LES (lupus congénital)"],
+          ["Anti-SS-A (Ro)", "~60 %", "~70 %", "Gougerot-Sjögren"],
+          ["Anti-SS-B (La)", "~40 %", "—", "Gougerot-Sjögren"],
+          ["Anti-SS-B (La)", "~15 %", "~70 %", "LES"],
+          ["Anti-JO1", "~30 %", "—", "Polymyosite"],
+          ["Anti-U1RNP", "~35 %", "—", "LES"],
+          ["Anti-U1RNP", "~95 %", "—", "Connectivites mixtes"],
+          ["Anti-Scl-70", "~35 %", "—", "Sclérodermie"]
+        ] },
+      { titre: "Auto-anticorps et maladies (orientation)",
+        entetes: ["Anticorps", "Pathologie"],
+        lignes: [
+          ["Anti-ADN natif, anti-Sm", "Lupus érythémateux systémique"],
+          ["Anti-SS-A/Ro, anti-SS-B/La", "Gougerot-Sjögren, LES"],
+          ["Anti-RNP", "Connectivites mixtes (LES)"],
+          ["Anti-centromères", "Syndrome de CREST"],
+          ["Anti-Scl-70", "Sclérodermie"],
+          ["Anti-ARNt synthétase (JO1, PL7, PL12…), anti-SRP, anti-Mi2", "Dermatomyosite / polymyosite"]
+        ] }
+    ],
+    red_flags: ["ANA présents dans 15 % de la population générale : peu spécifiques, à interpréter avec la clinique", "Anti-ADN natif = marqueur du LES, corrélé à l'évolutivité (suivi des poussées)", "Aspect centromérique = CREST ; nucléolaire = sclérodermie", "Nuclear dots (SP100) → cirrhose biliaire primitive"],
+    conduite: ["Dépister par IFI HEp-2 (titre + aspect) ; toute IFI positive impose de préciser la spécificité.", "Anti-ADN natif (FARR/ELISA) et anti-ENA orientent le diagnostic des connectivites.", "Suivre l'anti-ADN natif dans le LES (évolutivité, réponse au traitement).", "Toujours confronter à la clinique : un ANA isolé n'affirme pas une maladie auto-immune."]
   }
 ];
 
