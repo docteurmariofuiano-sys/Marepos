@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **27 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **28 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -62,8 +62,9 @@ anémie, anémie **microcytaire** (tableau ferriprive / inflammatoire /
 β-thalassémie), anémie **hémolytique** (classification corpusculaire /
 extracorpusculaire), **AHAI** (auto-Ac chauds vs froids), **thrombopénie**
 (centrale / périphérique / répartition, seuils hémorragiques), **PTAI**
-(aigu vs chronique) et **MAT** (PTT / SHU : diagnostic biologique, schizocytes,
-ADAMTS13). Le bloc hématologie s'appuie sur du contenu **MémoBio** d'accès libre
+(aigu vs chronique), **MAT** (PTT / SHU : diagnostic biologique, schizocytes,
+ADAMTS13, vérotoxines) et **TIH** (thrombopénie induite par l'héparine, type 1
+vs type 2). Le bloc hématologie s'appuie sur du contenu **MémoBio** d'accès libre
 et des références classiques, reformaté au schéma du module.
 
 Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'app

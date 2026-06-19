@@ -432,11 +432,11 @@ window.BIOKB = [
   {
     id: "mat", num: 69, anomalie: "Microangiopathie thrombotique (MAT) — PTT / SHU",
     specialite: "Hématologie",
-    definition: "Occlusion de la microcirculation par des thrombi plaquettaires → triade : anémie hémolytique mécanique (schizocytes), thrombopénie périphérique de consommation, ischémie d'organe. Deux entités principales : PTT (purpura thrombotique thrombocytopénique, déficit en ADAMTS13) et SHU (syndrome hémolytique et urémique). URGENCE diagnostique et thérapeutique.",
+    definition: "Occlusion de la microcirculation par des thrombi plaquettaires → triade : anémie hémolytique mécanique (schizocytes), thrombopénie périphérique de consommation, ischémie d'organe. PTT (Moschcowitz) = auto-immun (anti-ADAMTS13) → défaut de clivage du facteur von Willebrand et thrombi (rares déficits congénitaux). SHU = infectieux (ECEH O157:H7) avec vérotoxines altérant l'endothélium, surtout rénal. URGENCE diagnostique et thérapeutique.",
     premiere_intention: ["Affirmer l'hémolyse mécanique : schizocytes au frottis, haptoglobine effondrée, LDH très élevé, bilirubine non conjuguée ↑, réticulocytes ↑, test de Coombs NÉGATIF", "Thrombopénie de consommation (périphérique), souvent < 50 G/L", "Hémostase NORMALE (TP, TCA, fibrinogène) — distingue la MAT de la CIVD", "Évaluer l'atteinte d'organe : créatinine (rein), examen neurologique, troponine ; activité ADAMTS13 (< 10 % → PTT)"],
     causes: [
-      { cause: "PTT (Moschcowitz)", signe: "déficit sévère en ADAMTS13 (< 10 %) : auto-immun (anti-ADAMTS13) ou congénital (Upshaw-Schulman) ; atteinte neurologique fluctuante au premier plan", examens: ["Activité ADAMTS13 + anticorps", "Frottis (schizocytes)"] },
-      { cause: "SHU typique (post-diarrhée)", signe: "surtout l'enfant ; E. coli entérohémorragique (Shiga-toxine, O157:H7) ; insuffisance rénale au premier plan, diarrhée souvent sanglante préalable", examens: ["Recherche STEC / Shiga-toxine dans les selles", "Créatinine"] },
+      { cause: "PTT (Moschcowitz)", signe: "déficit sévère en ADAMTS13 (< 10 %) → défaut de clivage du facteur von Willebrand ; auto-immun (anti-ADAMTS13) ou congénital (Upshaw-Schulman) ; signes neurologiques fluctuants (confusion, céphalées, troubles visuels), fièvre, purpura, ecchymoses, ictère à urines foncées", examens: ["Activité ADAMTS13 + anticorps anti-ADAMTS13", "Frottis (schizocytes)"] },
+      { cause: "SHU typique (post-diarrhée)", signe: "surtout l'enfant ; E. coli entérohémorragique O157:H7 (vérotoxines) ; diarrhée ou colite hémorragique précédant l'atteinte rénale (au premier plan), parfois troubles neurologiques", examens: ["Coproculture (gélose sorbitol-MacConkey)", "Recherche de vérotoxines (PCR), sérodiagnostic", "Créatinine, urée"] },
       { cause: "SHU atypique", signe: "dérégulation de la voie alterne du complément ; insuffisance rénale, formes familiales / récidivantes", examens: ["Exploration du complément (CH50, C3, facteurs H/I)"] },
       { cause: "MAT secondaires", signe: "grossesse (HELLP, pré-éclampsie), cancer, médicaments, greffe, VIH, HTA maligne", examens: ["Contexte", "Bilan étiologique orienté"] }
     ],
@@ -465,5 +465,28 @@ window.BIOKB = [
     ],
     red_flags: ["MAT = urgence vitale : schizocytes + thrombopénie, Coombs négatif, hémostase normale → avis hématologique et échanges plasmatiques en urgence (PTT)", "NE PAS transfuser de plaquettes dans le PTT (aggrave les thromboses) sauf hémorragie vitale", "Atteinte neurologique (confusion, déficit, convulsion) ou cardiaque", "Insuffisance rénale aiguë"],
     conduite: ["Toute association schizocytes + thrombopénie impose d'évoquer une MAT et de demander un avis spécialisé immédiat.", "Hémostase normale oriente vers MAT plutôt que CIVD ; ADAMTS13 effondré confirme le PTT.", "PTT : échanges plasmatiques en urgence, corticoïdes, rituximab, caplacizumab. SHU typique : traitement de support. SHU atypique : éculizumab."]
+  },
+  {
+    id: "tih", num: 70, anomalie: "Thrombopénie induite par l'héparine (TIH)",
+    specialite: "Hématologie",
+    definition: "Thrombopénie survenant sous héparine. Type 1 : précoce, bénigne, non immune. Type 2 : immuno-allergique (anticorps anti-PF4-héparine), PARADOXALEMENT thrombogène — urgence diagnostique et thérapeutique.",
+    premiere_intention: ["Surveiller la numération plaquettaire sous héparine (cinétique +++)", "Calculer la chute : type 2 = plaquettes < 100 G/L ou baisse > 40 % au-delà du 5e jour (plus tôt si exposition récente à l'héparine)", "Recherche d'anticorps anti-PF4-héparine (détecte IgG, A, M)", "Tests fonctionnels (activation plaquettaire héparine-dépendante, IgG) ; évaluent la réactivité croisée avec le danaparoïde"],
+    causes: [
+      { cause: "TIH de type 1", signe: "avant le 5e jour, plaquettes > 100 G/L, réversible, asymptomatique, sans anticorps anti-PF4 ; 10-20 % des traitements hépariniques", examens: ["Surveillance plaquettaire (pas d'anticorps)"] },
+      { cause: "TIH de type 2", signe: "après le 5e jour (sauf ré-exposition récente), plaquettes < 100 G/L ou chute > 40 %, thromboses veineuses voire artérielles, rarement hémorragies ; 1-5 % des HNF, 0,1-0,2 % des HBPM", examens: ["Anticorps anti-PF4-héparine", "Tests fonctionnels d'activation plaquettaire"] }
+    ],
+    tableaux: [
+      { titre: "TIH type 1 vs type 2",
+        entetes: ["", "Type 1", "Type 2"],
+        lignes: [
+          ["Mécanisme", "Non immun (effet direct)", "Immuno-allergique (anti-PF4-héparine)"],
+          ["Délai", "< 5e jour", "> 5e jour (plus tôt si ré-exposition)"],
+          ["Plaquettes", "> 100 G/L", "< 100 G/L ou chute > 40 %"],
+          ["Clinique", "Asymptomatique, réversible", "Thromboses veineuses/artérielles, rares hémorragies"],
+          ["Fréquence", "10-20 % des traitements", "1-5 % (HNF), 0,1-0,2 % (HBPM)"]
+        ] }
+    ],
+    red_flags: ["TIH de type 2 = urgence : thrombopénie + thromboses sous héparine → arrêt immédiat de toute héparine", "Ne pas attendre la confirmation biologique si forte suspicion clinique", "Rechercher une thrombose (veineuse ou artérielle) et une CIVD associée"],
+    conduite: ["Dès la suspicion clinique ou biologique : ARRÊT de l'héparinothérapie + contrôle quotidien des plaquettes.", "Anticoagulation de relais par danaparoïde (risque de réactivité croisée mais activité anti-Xa étalonnée contrôlable) ou lépirudine/argatroban (pas de réactivité croisée mais activité non dosable en routine).", "La remontée rapide des plaquettes après arrêt de l'héparine conforte le diagnostic.", "Rechercher une CIVD (PDF/D-dimères, facteur V, complexes solubles).", "Ne jamais ré-introduire d'héparine ; tracer l'allergie."]
   }
 ];
