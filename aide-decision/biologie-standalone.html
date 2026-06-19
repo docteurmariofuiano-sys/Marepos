@@ -2091,6 +2091,42 @@ window.BIOKB = [
     ],
     red_flags: ["Hypocalcémie aiguë symptomatique : paresthésies, tétanie, signes de Chvostek/Trousseau, laryngospasme, convulsions, QT long → urgence", "Hypocalcémie post-chirurgicale (thyroïdectomie) → surveillance", "Hypomagnésémie associée (à corriger pour corriger la calcémie)", "Insuffisance rénale chronique (cause fréquente)"],
     conduite: ["Confirmer sur le calcium corrigé / ionisé ; vérifier l'albumine et la magnésémie.", "Algorithme : créatinine (IRC ?) → PTH (hypo/hyperparathyroïdie) → phosphatémie et vitamine D.", "Hypocalcémie aiguë symptomatique = urgence (calcium IV en milieu surveillé).", "Traiter la cause : vitamine D ± calcium, correction d'une hypomagnésémie, prise en charge de l'IRC."]
+  },
+  {
+    id: "marqueurs_osseux", num: 107, anomalie: "Marqueurs phospho-calciques et du remodelage osseux",
+    specialite: "Endocrinologie",
+    definition: "Marqueurs et formules d'exploration phospho-calcique (calcémie corrigée, calcium ionisé, TRP) et marqueurs du remodelage osseux (formation : PAL osseuses, ostéocalcine, P1NP ; résorption : CTX, NTX). Utiles dans l'ostéoporose (prédiction du risque de fracture, suivi thérapeutique).",
+    premiere_intention: ["Calcémie : interpréter selon l'albumine → Ca corrigé (mmol/L) = Ca mesuré + 0,02 × (40 − albumine g/L)", "Calcium ionisé : corrigé à pH 7,4 (l'acidose augmente le calcium ionisé : compétition H+/Ca2+ sur l'albumine)", "Exploration : phosphorémie, calciurie, phosphaturie, PTH, AMPc urinaire, calcitriol, 25-OH-D, TRP", "Remodelage osseux : marqueurs de formation (ostéoblastes) et de résorption (ostéoclastes)"],
+    causes: [
+      { cause: "Marqueurs de formation osseuse", signe: "ostéoblastes : phosphatases alcalines osseuses, ostéocalcine, propeptides N-terminaux du procollagène I (P1NP, reflet de la synthèse du collagène I)", examens: ["PAL osseuses, ostéocalcine, P1NP"] },
+      { cause: "Marqueurs de résorption osseuse", signe: "sérum : CTX (télopeptides C-terminaux) ; urines : pyridinolines / désoxypyridinolines, CTX / NTX", examens: ["CTX sérique", "NTX urinaire"] },
+      { cause: "Exploration phospho-calcique", signe: "Ca corrigé/ionisé, phosphorémie, calciurie, phosphaturie, PTH, AMPc urinaire, vitamine D, TRP", examens: ["Bilan phospho-calcique complet"] }
+    ],
+    tableaux: [
+      { titre: "Formules utiles",
+        entetes: ["Paramètre", "Formule / règle"],
+        lignes: [
+          ["Calcémie corrigée", "Ca corrigé (mmol/L) = Ca mesuré + 0,02 × (40 − albumine g/L) — 1 g d'albumine fixe 0,02 mmol de Ca"],
+          ["Calcium ionisé", "Corrigé à pH 7,4 ; l'acidose ↑ le calcium ionisé (compétition H+/Ca2+ sur l'albumine)"],
+          ["TRP (réabsorption des phosphates)", "TRP = [1 − (P urinaires × créat sérique) / (P sériques × créat urinaire)] × 100"]
+        ] },
+      { titre: "Marqueurs du remodelage osseux",
+        entetes: ["Type", "Marqueurs"],
+        lignes: [
+          ["Formation (ostéoblastes)", "PAL osseuses, ostéocalcine, propeptides N-terminaux du procollagène I (P1NP)"],
+          ["Résorption — sérum", "CTX (télopeptides C-terminaux du collagène I)"],
+          ["Résorption — urines", "Pyridinolines / désoxypyridinolines (peu d'intérêt), CTX et NTX"]
+        ] },
+      { titre: "Intérêt dans l'ostéoporose",
+        entetes: ["Usage", "Précision"],
+        lignes: [
+          ["Prédiction du risque fracturaire", "Les marqueurs de résorption ont une valeur prédictive ; associés à la densité minérale osseuse, ils ↑ la spécificité sans diminuer la sensibilité"],
+          ["Suivi thérapeutique", "Retour à la normale en 3-6 mois (avant la DMO, qui varie en 1-2 ans)"],
+          ["Précaution", "Interprétation faussée à proximité d'une fracture ou d'une intervention osseuse"]
+        ] }
+    ],
+    red_flags: ["Interprétation des marqueurs osseux faussée près d'une fracture / intervention osseuse", "PAL totales peu spécifiques (origine hépatique et intestinale aussi)", "Calcémie à toujours interpréter selon l'albumine (et le pH pour le calcium ionisé)"],
+    conduite: ["Toujours corriger la calcémie selon l'albumine (ou doser le calcium ionisé, corrigé à pH 7,4).", "Le TRP évalue la réabsorption tubulaire des phosphates (fonctionnalité de la PTH).", "Ostéoporose : marqueur de résorption + densitométrie ; suivi du traitement par la cinétique du marqueur.", "Ne pas doser les marqueurs osseux juste après une fracture."]
   }
 ];
 
