@@ -3415,7 +3415,7 @@ window.KB = {
       { id: "ec_surinfecte", diagnostic: "Eczéma surinfecté", arguments: [{ label: "suintant, croûteux, fébrile", w: 3, when: { q: "ec_suintant", eq: true } }],
         examens_a_discuter: ["Antibiothérapie"] }
     ],
-    examens_clinique: ["Topographie et morphologie des lésions", "Recherche de signes de surinfection", "Recherche d'un terrain atopique", "Recherche de vésicules ombiliquées (Kaposi-Juliusberg)"]
+    examens_clinique: ["Topographie et morphologie des lésions", "Recherche de signes de surinfection", "Recherche d'un terrain atopique", "Recherche de vésicules ombiliquées (Kaposi-Juliusberg)", "Évaluer le retentissement : boucle prurit-grattage, sommeil, qualité de vie, anxiété/dépression (sur-risque dans les dermatoses chroniques)", "Si grattage/excoriations sans lésion d'eczéma typique : évoquer un prurit psychogène ou une dermatose factice (dermatillomanie)"]
   },
 
   // -------------------------------------------------------------------------
@@ -3428,12 +3428,16 @@ window.KB = {
       { id: "ps_ongles", label: "Atteinte unguéale", type: "boolean", question: "Avez-vous des ongles abîmés (piquetés, décollés) ?" },
       { id: "ps_articulaire", label: "Rhumatisme psoriasique", type: "boolean", question: "Avez-vous des douleurs articulaires inflammatoires (raideur le matin) ?" },
       { id: "ps_pustules", label: "Forme pustuleuse", type: "boolean", question: "Avez-vous une poussée de pustules avec fièvre et altération de l'état général ?" },
-      { id: "ps_etendu", label: "Érythrodermie", type: "boolean", question: "L'éruption est-elle généralisée à presque tout le corps ?" }
+      { id: "ps_etendu", label: "Érythrodermie", type: "boolean", question: "L'éruption est-elle généralisée à presque tout le corps ?" },
+      { id: "ps_retentissement", label: "Retentissement moral", type: "boolean", question: "La maladie a-t-elle un fort retentissement moral (honte, évitement, anxiété, idées noires) ou touche-t-elle une zone très visible/gênante (visage, mains, organes génitaux) ?" }
     ],
     red_flags: [
       { id: "ps_rf_grave", niveau: 2, when: { any: [{ q: "ps_pustules", eq: true }, { q: "ps_etendu", eq: true }] },
         message_medecin: "Psoriasis pustuleux généralisé ou érythrodermique : forme grave → avis dermatologique urgent.",
-        message_patient: "Cette forme nécessite un avis médical rapide." }
+        message_patient: "Cette forme nécessite un avis médical rapide." },
+      { id: "ps_rf_psy", niveau: 2, when: { q: "ps_retentissement", eq: true },
+        message_medecin: "Retentissement psychoaffectif majeur : le psoriasis comporte un sur-risque de dépression, d'anxiété et d'idéation suicidaire (d'autant plus que prurit, stigmatisation, atteinte visible). Dépister la souffrance psychique et la majorer la prise en charge (sévérité ressentie ≠ surface atteinte).",
+        message_patient: "Le retentissement moral d'un psoriasis se soigne aussi — parlez-en à votre médecin." }
     ],
     diagnostics_differentiels: [
       { id: "ps_plaques", diagnostic: "Psoriasis en plaques", arguments: [{ label: "plaques squameuses typiques", w: 3, when: { q: "ps_plaques", eq: true } }, { label: "atteinte unguéale", w: 1, when: { q: "ps_ongles", eq: true } }],
@@ -3443,7 +3447,7 @@ window.KB = {
       { id: "ps_grave", diagnostic: "Forme grave (pustuleuse / érythrodermique)", arguments: [{ label: "pustules + fièvre", w: 3, when: { q: "ps_pustules", eq: true } }, { label: "érythrodermie", w: 2, when: { q: "ps_etendu", eq: true } }],
         examens_a_discuter: ["Avis dermatologique urgent"] }
     ],
-    examens_clinique: ["Topographie (coudes, genoux, cuir chevelu, ongles)", "Signe de la tache de bougie", "Examen articulaire", "Évaluation du retentissement et de la surface atteinte"]
+    examens_clinique: ["Topographie (coudes, genoux, cuir chevelu, ongles)", "Signe de la tache de bougie", "Examen articulaire (rhumatisme psoriasique : 20-30 % des cas)", "Évaluation du retentissement psychoaffectif et de la qualité de vie (anxiété, dépression, idées suicidaires — fréquence accrue)", "Dépistage des comorbidités associées (syndrome métabolique, obésité, HTA, risque cardiovasculaire)"]
   },
 
   // -------------------------------------------------------------------------
