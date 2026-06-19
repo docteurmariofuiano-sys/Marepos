@@ -204,7 +204,7 @@ window.BIOKB = [
     id: "hyperkaliemie", num: 53, anomalie: "Hyperkaliémie",
     specialite: "Néphrologie",
     definition: "Toujours éliminer une FAUSSE hyperkaliémie (hémolyse de prélèvement). Le danger est CARDIAQUE et non corrélé aux symptômes : l'ECG guide l'urgence.",
-    premiere_intention: ["Éliminer une fausse hyperkaliémie (garrot, hémolyse, thrombocytose/hyperleucocytose)", "ECG immédiat (ondes T amples/pointues, élargissement QRS, bradycardie)", "Rechercher cause iatrogène (bloqueurs du SRAA) ± insuffisance rénale"],
+    premiere_intention: ["Éliminer une fausse hyperkaliémie (hémolyse, garrot prolongé, serrer le poing, délai d'acheminement, thrombocytose/hyperleucocytose)", "ECG immédiat (ondes T amples/pointues, élargissement QRS, bradycardie)", "Rechercher cause iatrogène (bloqueurs du SRAA) ± insuffisance rénale"],
     causes: [
       { cause: "Hyperkaliémie iatrogène", signe: "IEC/ARA2 + épargneur potassique + AINS ± IR", examens: ["Revue de l'ordonnance"] },
       { cause: "Insuffisance rénale", signe: "défaut d'excrétion", examens: ["Créatinine, DFG"] },
@@ -325,6 +325,13 @@ window.BIOKB = [
           ["ALAT", "La plus spécifique du foie (cytosol des hépatocytes)"],
           ["ASAT", "Foie et muscle (cœur) ; généralement < ALAT, SAUF origine alcoolique (déficit en pyridoxal, cofacteur de l'ALAT) → ASAT > ALAT"],
           ["LDH", "Non spécifique : marqueur de souffrance cellulaire"]
+        ] },
+      { titre: "Profil enzymatique hépatique (cytolytique vs cholestatique)",
+        entetes: ["Profil", "ALAT / ASAT", "PAL / GGT"],
+        lignes: [
+          ["Cytolytique (hépatitique)", "↑↑", "Normales ou peu ↑"],
+          ["Cholestatique", "↑ (modéré)", "↑↑"],
+          ["Repère origine PAL", "PAL + GGT ↑ → hépatobiliaire ; PAL seule ↑ → osseuse", "—"]
         ] }
     ],
     red_flags: ["Hépatite fulminante (TP ↓, facteur V ↓, encéphalopathie)", "Intoxication au paracétamol", "Hépatite ischémique (foie de choc)"],
@@ -1836,7 +1843,7 @@ window.BIOKB = [
     id: "hydratation_intracellulaire", num: 102, anomalie: "Troubles de l'hydratation intracellulaire (osmolalité efficace)",
     specialite: "Néphrologie",
     definition: "L'état d'hydratation intracellulaire est déterminé par l'osmolalité efficace (tonicité) du plasma : osmolalité efficace = Na+ × 2 + glucose. L'eau diffuse vers le compartiment le plus concentré jusqu'à l'iso-osmolalité. L'urée (diffusible) n'entre pas dans le calcul (sauf élévation brutale de l'azotémie).",
-    premiere_intention: ["Calculer l'osmolalité efficace (tonicité) : Na+ × 2 + glucose", "Hyperhydratation intracellulaire : hyponatrémie et/ou hypoglycémie (osmolalité efficace ↓ → eau vers l'intracellulaire)", "Déshydratation intracellulaire : hypernatrémie et/ou hyperglycémie (osmolalité efficace ↑ → eau vers l'extracellulaire)", "Ne pas inclure l'urée (diffusible), sauf élévation brutale de l'azotémie"],
+    premiere_intention: ["Calculer l'osmolalité efficace (tonicité) : Na+ × 2 + glucose", "Hyperhydratation intracellulaire : hyponatrémie et/ou hypoglycémie (osmolalité efficace ↓ → eau vers l'intracellulaire)", "Déshydratation intracellulaire : hypernatrémie et/ou hyperglycémie (osmolalité efficace ↑ → eau vers l'extracellulaire)", "Ne pas inclure l'urée (diffusible), sauf élévation brutale de l'azotémie", "Trou osmolaire = osmolalité mesurée − osmolalité calculée [2 × (Na + K) + urée + glucose] ; > 10 = substance osmotiquement active non dosée (alcools toxiques : éthylène glycol, méthanol)"],
     causes: [
       { cause: "Hyperhydratation intracellulaire", signe: "hyponatrémie et/ou hypoglycémie → osmolalité efficace basse, eau vers l'intracellulaire", examens: ["Natrémie, glycémie", "Osmolalité"] },
       { cause: "Déshydratation intracellulaire", signe: "hypernatrémie et/ou hyperglycémie → osmolalité efficace haute, eau vers l'extracellulaire", examens: ["Natrémie, glycémie"] },
@@ -1955,6 +1962,15 @@ window.BIOKB = [
           ["Synthèse cutanée", "7-déhydrocholestérol + UV → vitamine D (+ apport alimentaire)"],
           ["1re hydroxylation (25)", "Foie : 25-hydroxylase → 25-OH-D"],
           ["2e hydroxylation (1α)", "Rein : 1α-hydroxylase (stimulée par PTH/hypocalcémie, inhibée par la calcitonine) → calcitriol"]
+        ] },
+      { titre: "Profils dans les maladies osseuses (Ca / phosphate / PAL / PTH)",
+        entetes: ["Maladie", "Ca corrigé", "Phosphate", "PAL", "PTH"],
+        lignes: [
+          ["Hyperparathyroïdie primaire", "↑", "↓", "↑ ou N", "↑"],
+          ["Carence sévère en vit. D (ostéomalacie)", "↓", "↓", "↑", "↑"],
+          ["Maladie de Paget", "N", "N", "↑", "N"],
+          ["Métastases osseuses", "↑", "↑ ou N", "↑ ou N", "↓"],
+          ["Hypoparathyroïdie", "↓", "↑", "N", "↓ ou N"]
         ] }
     ],
     red_flags: ["Hyperparathyroïdie (hypercalcémie + PTH inadaptée)", "Carence sévère en vitamine D / insuffisance rénale (défaut de 1α-hydroxylation)", "La PTH favorise la sécrétion de gastrine (risque d'ulcère gastrique)"],
@@ -2008,7 +2024,8 @@ window.BIOKB = [
       { titre: "Formules utiles",
         entetes: ["Paramètre", "Formule / règle"],
         lignes: [
-          ["Calcémie corrigée", "Ca corrigé (mmol/L) = Ca mesuré + 0,02 × (40 − albumine g/L) — 1 g d'albumine fixe 0,02 mmol de Ca"],
+          ["Calcémie corrigée (albumine < 40)", "Ca corrigé = Ca mesuré + 0,02 × (40 − albumine g/L) — 1 g d'albumine fixe 0,02 mmol de Ca"],
+          ["Calcémie corrigée (albumine > 45)", "Ca corrigé = Ca mesuré − 0,02 × (albumine g/L − 45)"],
           ["Calcium ionisé", "Corrigé à pH 7,4 ; l'acidose ↑ le calcium ionisé (compétition H+/Ca2+ sur l'albumine)"],
           ["TRP (réabsorption des phosphates)", "TRP = [1 − (P urinaires × créat sérique) / (P sériques × créat urinaire)] × 100"]
         ] },
@@ -2865,5 +2882,45 @@ window.BIOKB = [
     ],
     red_flags: ["Encéphalite herpétique : fièvre + signes neurologiques → PCR LCR + aciclovir IV EN URGENCE (ne pas attendre la confirmation)", "Kératite herpétique : risque de cécité → avis ophtalmologique (CONTRE-INDICATION des corticoïdes locaux)", "Herpès néonatal (primo-infection maternelle en fin de grossesse) → césarienne / aciclovir", "Herpès étendu ou chronique chez l'immunodéprimé"],
     conduite: ["Diagnostic souvent clinique (vésicules en bouquet) ; PCR pour confirmer (LCR pour l'encéphalite).", "Toute suspicion d'encéphalite herpétique = aciclovir IV en urgence (avant la confirmation).", "Sérologie : utile pour le typage HSV-1/2, pas pour dater l'infection.", "Herpès génital / grossesse : avis spécialisé ; prévention de la transmission néonatale."]
+  },
+  {
+    id: "pieges_preanalytiques", num: 127, anomalie: "Pièges préanalytiques et interférences",
+    specialite: "Non spécifique",
+    definition: "De nombreux résultats anormaux sont en réalité des artefacts préanalytiques (prélèvement, tube, transport). Toujours évoquer un piège devant un résultat inattendu ou discordant et RECONTRÔLER avant d'agir. (D'après « Blood Tests Made Easy », P. Hamilton, 2022.)",
+    premiere_intention: ["Devant un résultat inattendu / discordant : évoquer un artefact et recontrôler", "Hémolyse : fausse ↑ du potassium (+ LDH, ASAT, bilirubine, phosphate…) — non détectée par les automates de biologie délocalisée (POCT)", "Tube inadapté / contamination (EDTA, citrate, héparine-lithium, perfusion) : interférences spécifiques", "Pseudohyponatrémie (hyperprotidémie / hypertriglycéridémie) : Na faussement bas au laboratoire, vrai en POCT (osmolalité normale)"],
+    causes: [
+      { cause: "Hémolyse du prélèvement", signe: "libération du contenu cellulaire ; sérum rouge", examens: ["Recontrôler ; le labo signale « hémolyse, pas de résultat »"] },
+      { cause: "Contamination par le tube", signe: "EDTA, citrate, héparine-lithium ; respecter l'ordre de prélèvement", examens: ["Recontrôler sur le bon tube"] },
+      { cause: "Contamination par une perfusion (même bras)", signe: "dilution (résultats bas) ou électrolytes perfusés (résultats hauts) ; dopamine → créatinine faussement basse", examens: ["Prélever sur le bras opposé"] },
+      { cause: "Pseudohyponatrémie", signe: "hyperprotidémie (myélome), hypertriglycéridémie ; osmolalité normale", examens: ["Osmolalité, Na sur POCT"] }
+    ],
+    tableaux: [
+      { titre: "Hémolyse : tests faussement modifiés",
+        entetes: ["Catégorie", "Tests faussés (↑)"],
+        lignes: [
+          ["Électrolytes", "Potassium, phosphate, magnésium"],
+          ["Enzymes", "LDH, ASAT, ALAT, GGT"],
+          ["Autres", "Bilirubine, ammoniaque"]
+        ] },
+      { titre: "Interférences par le tube / contamination",
+        entetes: ["Source", "Effet"],
+        lignes: [
+          ["EDTA (tube violet)", "↑ potassium ; ↓ calcium, magnésium, PAL"],
+          ["Citrate (tube bleu)", "↑ sodium (indice : chlore bas associé) ; ↓ calcium"],
+          ["Héparine-lithium (tube vert)", "↑ lithium"],
+          ["Perfusion (même bras)", "Dilution (résultats bas) ou électrolytes perfusés (résultats hauts)"],
+          ["Dopamine (perfusion)", "Créatinine faussement basse"]
+        ] },
+      { titre: "Pièges fréquents",
+        entetes: ["Piège", "Mécanisme"],
+        lignes: [
+          ["Pseudohyperkaliémie", "Hémolyse, garrot prolongé, serrer le poing, délai d'acheminement, thrombocytose, hyperleucocytose"],
+          ["Pseudohyponatrémie", "Hyperprotidémie / hypertriglycéridémie (Na bas au labo, normal en POCT) ; osmolalité normale"],
+          ["Pseudohypocalcémie", "Contamination par l'EDTA"],
+          ["Identité erronée", "Résultats totalement incohérents avec le patient → recontrôler"]
+        ] }
+    ],
+    red_flags: ["Ne jamais traiter une hyperkaliémie « POCT » sans confirmation (pas de détection d'hémolyse en délocalisé)", "Résultat totalement inattendu → erreur d'identité possible : recontrôler avant d'agir", "Interpréter selon le bon intervalle de référence (âge, sexe, grossesse) et la cinétique"],
+    conduite: ["Devant un résultat aberrant ou discordant : recontrôler avant toute décision.", "Connaître les tests sensibles à l'hémolyse (K, LDH, ASAT, phosphate…) et aux tubes (EDTA, citrate).", "Privilégier la tendance (cinétique) à une valeur isolée.", "Source : Blood Tests Made Easy (P. Hamilton, 2022)."]
   }
 ];

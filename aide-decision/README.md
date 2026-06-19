@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **84 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **85 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -105,6 +105,13 @@ et **LMMC** (leucémie myélomonocytaire chronique : monocytose, critères OMS).
 Le bloc hématologie s'appuie sur
 du contenu **MémoBio** d'accès libre et des références classiques, reformaté au
 schéma du module.
+
+Plusieurs fiches ont en outre été **vérifiées et enrichies** d'après *Blood
+Tests Made Easy* (P. Hamilton, Elsevier, 2022) : calcémie corrigée (bornes
+albumine < 40 et > 45), **trou osmolaire**, profils enzymatiques hépatiques
+(cytolytique vs cholestatique), profils des maladies osseuses (Ca/P/PAL/PTH),
+et une fiche transversale **« Pièges préanalytiques »** (hémolyse, interférences
+EDTA/citrate, pseudohyperkaliémie/pseudohyponatrémie).
 
 Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'app
 clinique. Version autonome : `biologie-standalone.html` (cross-liée aux autres
