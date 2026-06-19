@@ -5848,20 +5848,27 @@ window.KB = {
     questions: [
       { id: "sg2_alerte", label: "Signe d'alerte", type: "boolean", question: "Avez-vous un signe d'alerte : saignement, perte de liquide, contractions douloureuses, fièvre, maux de tête/troubles visuels, ou diminution des mouvements du bébé ?" },
       { id: "sg2_terme", label: "Terme", type: "single_choice", question: "À quel stade ?", options: ["1er trimestre", "2e trimestre", "3e trimestre"] },
-      { id: "sg2_routine", label: "Suivi de routine", type: "boolean", question: "S'agit-il d'un suivi de routine, sans symptôme ?" }
+      { id: "sg2_routine", label: "Suivi de routine", type: "boolean", question: "S'agit-il d'un suivi de routine, sans symptôme ?" },
+      { id: "sg2_immunite", label: "Statut immunitaire", type: "boolean", question: "Votre statut toxoplasmose / rubéole est-il NON immun (ou inconnu) ?" },
+      { id: "sg2_contage", label: "Fièvre / éruption / contage", type: "boolean", question: "Avez-vous eu de la fièvre, une éruption, ou un contact avec une personne ayant une maladie éruptive (ou un jeune enfant malade) ?" }
     ],
     red_flags: [
       { id: "sg2_rf_alerte", niveau: 3, when: { q: "sg2_alerte", eq: true },
         message_medecin: "Signe d'alerte pendant la grossesse (saignement, perte de liquide, contractions, fièvre, signes de pré-éclampsie, baisse des mouvements) : avis obstétrical sans délai.",
-        message_patient: "Ces signes nécessitent de contacter la maternité sans attendre." }
+        message_patient: "Ces signes nécessitent de contacter la maternité sans attendre." },
+      { id: "sg2_rf_fievre_eruption", niveau: 2, when: { q: "sg2_contage", eq: true },
+        message_medecin: "Fièvre/éruption ou contage maternel : évoquer une embryofœtopathie infectieuse → sérologies (toxoplasmose, rubéole, CMV, parvovirus B19, varicelle si contage), avis obstétrical. Toute fièvre isolée = penser à la listériose (hémocultures, β-lactamine).",
+        message_patient: "Une fièvre ou une éruption pendant la grossesse doit être signalée rapidement pour des examens." }
     ],
     diagnostics_differentiels: [
       { id: "sg2_normal", diagnostic: "Grossesse normale (suivi)", arguments: [{ label: "suivi de routine sans symptôme", w: 3, when: { q: "sg2_routine", eq: true } }],
         examens_a_discuter: ["Suivi recommandé : consultations, échographies, biologie et dépistages selon le terme"] },
-      { id: "sg2_alerte", diagnostic: "Situation d'alerte", arguments: [{ label: "présence d'un signe d'alerte", w: 3, when: { q: "sg2_alerte", eq: true } }],
+      { id: "sg2_prevention_infx", diagnostic: "Prévention des fœtopathies infectieuses", arguments: [{ label: "statut toxoplasmose/rubéole non immun ou inconnu", w: 2, when: { q: "sg2_immunite", eq: true } }],
+        examens_a_discuter: ["Toxoplasmose non immune : sérologie mensuelle + mesures hygiéno-diététiques (viande bien cuite, lavage fruits/légumes, éviter litière du chat)", "Rubéole non immune : éviter les contages, vaccination en post-partum (vaccin vivant contre-indiqué pendant la grossesse)", "CMV : mesures d'hygiène (lavage des mains après contact avec urines/larmes/sécrétions des jeunes enfants, ne pas partager couverts) — divisent le risque par 4", "Listériose : éviter fromages au lait cru, charcuterie, produits de la mer crus"] },
+      { id: "sg2_dd_alerte", diagnostic: "Situation d'alerte", arguments: [{ label: "présence d'un signe d'alerte", w: 3, when: { q: "sg2_alerte", eq: true } }],
         examens_a_discuter: ["Orientation vers la maternité"] }
     ],
-    examens_clinique: ["Pression artérielle, bandelette urinaire", "Hauteur utérine, bruits du cœur fœtal selon le terme", "Orientation vers le suivi recommandé"]
+    examens_clinique: ["Pression artérielle, bandelette urinaire (protéinurie, glycosurie)", "Hauteur utérine, bruits du cœur fœtal selon le terme", "Sérologies réglementaires : toxoplasmose et rubéole (mensuelles si non immune), syphilis (TPHA-VDRL), Ag HBs, VIH proposé ; groupe-Rhésus-RAI", "Orientation vers le suivi recommandé"]
   },
 
   // -------------------------------------------------------------------------
