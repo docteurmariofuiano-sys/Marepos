@@ -967,5 +967,51 @@ window.BIOKB = [
     ],
     red_flags: ["Saignement actif ou chirurgie programmée chez un patient à risque → avis spécialisé et prévention", "Type 3 (déficit sévère) : risque d'hématomes profonds, d'hémarthroses", "Type 2B : thrombopénie (ne pas confondre avec un PTI ; desmopressine à éviter)", "Inflammation / grossesse pouvant masquer une forme fruste (faux négatif)"],
     conduite: ["Diagnostic guidé par l'interrogatoire (score hémorragique) puis dosages (vWF:Ag, vWF:RCo, FVIII, rapport).", "Typer (multimères, ristocétine) : la prise en charge en dépend — desmopressine (DDAVP) surtout efficace dans le type 1, à éviter dans le type 2B (aggrave la thrombopénie).", "Concentrés de vWF (± FVIII) dans les formes sévères ou avant un geste à risque ; éviter aspirine / AINS.", "Recontrôler à distance d'un épisode inflammatoire pour ne pas méconnaître une forme fruste."]
+  },
+  {
+    id: "bilan_coagulation", num: 85, anomalie: "Anomalie du bilan de coagulation (démarche)",
+    specialite: "Hémostase",
+    definition: "Démarche d'interprétation d'un bilan d'hémostase anormal. Le TP explore la voie extrinsèque + commune (VII, X, V, II, fibrinogène), le TCA la voie intrinsèque + commune (système contact PK/KHPM, XII, XI, IX, VIII + commune), le TT/temps de reptilase la fibrinoformation. Facteurs vitamine K-dépendants : II, VII, IX, X (et protéines C et S).",
+    premiere_intention: ["Vérifier le préanalytique : absence de caillot, hématocrite 30-56 %, délai prélèvement-analyse < 4 h, tube correctement rempli", "Identifier le profil : TP abaissé isolé / TCA allongé isolé / TCA allongé + TP abaissé", "Devant un TCA allongé isolé : test de correction (indice de Rosner) — corrige (déficit) vs ne corrige pas (anticoagulant circulant)", "Confronter au contexte (traitement anticoagulant ++) et compléter par les dosages de facteurs"],
+    causes: [
+      { cause: "TP abaissé isolé", signe: "AVK, carence en vitamine K, cholestase, déficit en facteur VII", examens: ["INR", "Facteur VII", "Bilan hépatique"] },
+      { cause: "TCA allongé isolé", signe: "héparine ; déficit (hémophilie A/B, Willebrand, XI, XII/PK/KHPM) ou anticoagulant circulant (lupique, anti-facteur)", examens: ["TT / temps de reptilase", "Test de correction (Rosner)", "Dosages de facteurs"] },
+      { cause: "TCA allongé + TP abaissé", signe: "AVK à dose élevée, insuffisance hépatique, CIVD, déficit en facteurs V/II/X", examens: ["Facteur V, fibrinogène", "PDF / D-dimères, plaquettes"] }
+    ],
+    tableaux: [
+      { titre: "Exploration de la coagulation",
+        entetes: ["Test", "Voie explorée", "Facteurs"],
+        lignes: [
+          ["TP (temps de Quick)", "Extrinsèque + commune", "VII, X, V, II, I (fibrinogène)"],
+          ["TCA", "Intrinsèque + commune", "Système contact (PK, KHPM), XII, XI, IX, VIII + commune"],
+          ["TT / temps de reptilase", "Fibrinoformation", "Fibrinogène (I), action de la thrombine"]
+        ] },
+      { titre: "TP abaissé isolé",
+        entetes: ["Cause", "Orientation"],
+        lignes: [
+          ["AVK (INR faible)", "Contexte médicamenteux"],
+          ["Déficit en vitamine K", "Cinétique de décroissance : VII > IX > X > II"],
+          ["Syndrome cholestatique", "Bilirubine conjuguée, PAL, 5'NU"],
+          ["Déficit en facteur VII", "Dosage du facteur VII"]
+        ] },
+      { titre: "TCA allongé isolé",
+        entetes: ["Situation", "Étiologies"],
+        lignes: [
+          ["Héparine (HNF)", "TT allongé, temps de reptilase normal"],
+          ["Test de correction — Rosner < 12 (corrige)", "Déficit : hémophilie A (VIII), hémophilie B (IX), maladie de Willebrand, déficit en XI, déficit en XII / PK / KHPM"],
+          ["Rosner > 15 (ne corrige pas), TCK allongé", "Anticorps anti-facteur"],
+          ["Rosner > 15 (ne corrige pas), TCK normal", "Anticoagulant circulant de type lupique"]
+        ] },
+      { titre: "TCA allongé + TP abaissé",
+        entetes: ["Cause", "Orientation"],
+        lignes: [
+          ["AVK (INR élevé) / relais héparine-AVK", "Contexte médicamenteux"],
+          ["Insuffisance hépatique", "Protéines, albumine, facteur V abaissés"],
+          ["CIVD", "PDF / D-dimères, complexes solubles, facteur V et plaquettes abaissés"],
+          ["Déficit en facteurs V, II ou X", "Voie commune"]
+        ] }
+    ],
+    red_flags: ["Syndrome hémorragique actif avec anomalie du bilan → urgence", "CIVD (TCA ↑ + TP ↓ + thrombopénie + D-dimères ↑) : contexte grave (sepsis, obstétrique, cancer)", "Surdosage en AVK (INR élevé) avec saignement", "Anticoagulant circulant lupique : risque paradoxal THROMBOTIQUE (SAPL), pas hémorragique"],
+    conduite: ["Toujours éliminer une cause préanalytique avant d'interpréter.", "TCA allongé isolé : le test de correction (Rosner) distingue déficit (corrige) et anticoagulant circulant (ne corrige pas).", "Un allongement isolé du TCA sans saignement, ne corrigeant pas, évoque un anticoagulant lupique (risque thrombotique).", "Confronter systématiquement au traitement anticoagulant et au contexte (foie, sepsis)."]
   }
 ];
