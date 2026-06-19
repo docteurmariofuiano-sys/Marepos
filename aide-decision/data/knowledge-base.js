@@ -4763,12 +4763,21 @@ window.KB = {
       { id: "dp2_humeur", label: "Humeur dépressive", type: "boolean", question: "Avez-vous depuis au moins 2 semaines une tristesse et/ou une perte d'intérêt presque tous les jours ?" },
       { id: "dp2_somatique", label: "Symptômes associés", type: "boolean", question: "Avez-vous des troubles du sommeil, de l'appétit, une fatigue, des difficultés de concentration ?" },
       { id: "dp2_bipolaire", label: "Antécédent maniaque", type: "boolean", question: "Avez-vous déjà eu des périodes d'excitation, d'euphorie, de dépenses excessives, avec peu de sommeil sans fatigue ?" },
-      { id: "dp2_organique", label: "Cause organique", type: "boolean", question: "Y a-t-il une cause physique possible (hypothyroïdie, médicament, après un AVC) ?" }
+      { id: "dp2_organique", label: "Cause organique", type: "boolean", question: "Y a-t-il une cause physique possible (hypothyroïdie, médicament, après un AVC) ?" },
+      { id: "dp2_plan", label: "Scénario / moyen létal", type: "boolean", question: "Avez-vous un plan précis pour passer à l'acte, ou un accès facile à un moyen (médicaments, arme) ?" },
+      { id: "dp2_atcd_ts", label: "ATCD de tentative", type: "boolean", question: "Avez-vous déjà fait une tentative de suicide, ou un proche s'est-il suicidé / l'a tenté récemment ?" },
+      { id: "dp2_rupture", label: "Rupture / précipitant", type: "boolean", question: "Y a-t-il eu récemment une rupture, un deuil, une humiliation, un échec, ou un isolement marqué ?" }
     ],
     red_flags: [
+      { id: "dp2_rf_imminent", niveau: 3, when: { all: [{ q: "dp2_suicide", eq: true }, { q: "dp2_plan", eq: true }] },
+        message_medecin: "Idées suicidaires AVEC scénario et/ou accès à un moyen létal : danger imminent → avis psychiatrique en urgence, NE PAS laisser seul, retirer les moyens, hospitalisation à organiser.",
+        message_patient: "C'est une urgence : restez accompagné et appelez le 15 ou le 3114 (numéro national prévention suicide, 24h/24)." },
       { id: "dp2_rf_suicide", niveau: 3, when: { q: "dp2_suicide", eq: true },
-        message_medecin: "Idées suicidaires : évaluer le risque (RUD) — avis psychiatrique urgent si élevé, ne pas laisser seul.",
+        message_medecin: "Idées suicidaires : évaluation structurée du risque/urgence/dangerosité (RUD ; mnémo AERO-MINI). Rechercher ATCD de TS (récidive ~40 %, dont la moitié dans l'année ; risque relatif × 20), accès aux moyens, intentionnalité. Avis psychiatrique urgent si élevé, ne pas laisser seul.",
         message_patient: "Si vous avez des idées noires, parlez-en immédiatement à un médecin ou appelez le 3114." },
+      { id: "dp2_rf_atcd", niveau: 2, when: { q: "dp2_atcd_ts", eq: true },
+        message_medecin: "Antécédent de tentative de suicide (personnel ou proche récent) : facteur de risque majeur de récidive (RR ≈ 20 ; contagion possible) → renforcer le suivi et l'évaluation du risque même si l'humeur semble s'améliorer.",
+        message_patient: "Un antécédent de tentative justifie un suivi rapproché ; n'hésitez pas à reconsulter." },
       { id: "dp2_rf_melancolie", niveau: 2, when: { q: "dp2_melancolie", eq: true },
         message_medecin: "Dépression sévère / mélancolique (refus alimentaire, incurie) : avis psychiatrique rapide (hospitalisation à discuter).",
         message_patient: "Cet état nécessite un avis médical rapide." }
@@ -4779,9 +4788,11 @@ window.KB = {
       { id: "dp2_bipolaire", diagnostic: "Trouble bipolaire (épisode dépressif)", arguments: [{ label: "antécédent d'épisode maniaque", w: 3, when: { q: "dp2_bipolaire", eq: true } }],
         examens_a_discuter: ["Avis psychiatrique (prudence avec les antidépresseurs seuls)"] },
       { id: "dp2_organique", diagnostic: "Dépression secondaire / organique", arguments: [{ label: "cause organique possible", w: 2, when: { q: "dp2_organique", eq: true } }],
-        examens_a_discuter: ["TSH, revue des médicaments"] }
+        examens_a_discuter: ["TSH, revue des médicaments"] },
+      { id: "dp2_crise", diagnostic: "Crise suicidaire (urgence à évaluer)", arguments: [{ label: "idées suicidaires", w: 2, when: { q: "dp2_suicide", eq: true } }, { label: "scénario / accès à un moyen", w: 2, when: { q: "dp2_plan", eq: true } }, { label: "ATCD de TS / proche", w: 1, when: { q: "dp2_atcd_ts", eq: true } }, { label: "rupture / précipitant récent", w: 1, when: { q: "dp2_rupture", eq: true } }],
+        examens_a_discuter: ["Évaluation RUD (Risque/Urgence/Dangerosité)", "Avis psychiatrique ; hospitalisation si risque imminent ; retrait des moyens", "Numéro national 3114 (24h/24)"] }
     ],
-    examens_clinique: ["Évaluation du risque suicidaire", "Recherche d'antécédents de virage maniaque", "Élimination d'une cause organique (TSH)"]
+    examens_clinique: ["Évaluation structurée du risque suicidaire — RUD ; mnémo AERO-MINI : Antécédents (perso/familiaux), Enfance/maltraitance, Ruptures/précipitants, Optimisme/facteurs protecteurs — Moyens létaux, Impulsivité, Niveau de souffrance, Intentionnalité", "Chez l'adolescent : rechercher des « équivalents suicidaires » (automutilations, conduites à risque, addictions qui s'aggravent rapidement)", "Recherche d'antécédents de virage maniaque", "Élimination d'une cause organique (TSH)"]
   },
 
   // -------------------------------------------------------------------------
