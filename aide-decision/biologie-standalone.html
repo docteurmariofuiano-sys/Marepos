@@ -828,6 +828,40 @@ window.BIOKB = [
     ],
     red_flags: ["Hyperleucocytose majeure avec leucostase (troubles neuro/visuels, priapisme, détresse respiratoire) → urgence", "Phase accélérée / transformation blastique (blastes en augmentation, basophilie, cytopénies)", "Syndrome de lyse (hyperuricémie) en début de traitement"],
     conduite: ["Diagnostic = SMP avec myélémie + chromosome Philadelphie / BCR-ABL.", "Confirmer par caryotype (Ph1) et RT-PCR BCR-ABL (référence pour le suivi de la réponse moléculaire).", "Traitement par inhibiteurs de tyrosine kinase (imatinib et suivants) — pronostic transformé.", "Surveiller la réponse moléculaire ; rechercher un passage en phase accélérée/blastique."]
+  },
+  {
+    id: "vaquez", num: 77, anomalie: "Polyglobulie de Vaquez (maladie de Vaquez)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique JAK2+ avec production excessive de globules rouges (± leucocytes / plaquettes). Risque thrombo-hémorragique. Incidence 3-5/100 000/an, âge médian ~60 ans, plus fréquente chez l'homme.",
+    premiere_intention: ["Confirmer la polyglobulie vraie : Hte/Hb élevés (H : Hte > 54 %, Hb > 18 g/dL ; F : Hte > 47 %, Hb > 17 g/dL) ± hyperleucocytose ± thrombocytose", "Mutation JAK2 (V617F) — critère majeur", "EPO sérique (typiquement basse/normale) pour éliminer une polyglobulie secondaire", "Selon les cas : volume globulaire isotopique, BOM (hyperplasie, mégacaryocytes), pousse spontanée des progéniteurs érythroïdes"],
+    causes: [
+      { cause: "Polyglobulie de Vaquez (primitive)", signe: "JAK2+, EPO basse, splénomégalie, prurit aquagénique, érythrose cutanéo-muqueuse", examens: ["JAK2 V617F", "EPO sérique (basse)"] },
+      { cause: "Polyglobulie secondaire", signe: "hypoxie chronique (BPCO, SAOS, altitude, tabac) ou tumeur sécrétant l'EPO (rein…), EPO élevée", examens: ["EPO sérique (élevée)", "Gaz du sang / SaO2, imagerie rénale"] },
+      { cause: "Fausse polyglobulie (hémoconcentration)", signe: "déshydratation, syndrome de Gaisböck ; volume globulaire normal", examens: ["Volume globulaire isotopique", "Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Seuils hématologiques (polyglobulie)",
+        entetes: ["", "Homme", "Femme"],
+        lignes: [
+          ["Hématocrite", "> 54 %", "> 47 %"],
+          ["Hémoglobine", "> 18 g/dL", "> 17 g/dL"],
+          ["Globules rouges", "> 6 T/L", "> 5,5 T/L"],
+          ["Volume globulaire total", "> 36 mL/kg", "> 32 mL/kg"]
+        ] },
+      { titre: "Arguments biologiques en faveur de Vaquez",
+        entetes: ["Examen", "Résultat"],
+        lignes: [
+          ["JAK2", "Mutation V617F (critère majeur)"],
+          ["EPO sérique", "Basse ou normale"],
+          ["Progéniteurs érythroïdes", "Pousse spontanée in vitro"],
+          ["VS", "Diminuée"],
+          ["Autres", "LDH ↑, uricémie ↑, TS ↑, PAL leucocytaires > 100"],
+          ["SaO2", "> 92 % (pas d'hypoxie)"],
+          ["Moelle (BOM)", "Hyperplasie, excès de mégacaryocytes ; myélofibrose tardive"]
+        ] }
+    ],
+    red_flags: ["Complications thrombotiques (AVC, IDM, thrombose veineuse, Budd-Chiari) ou hémorragiques", "Hématocrite très élevé → hyperviscosité (céphalées, troubles visuels, vertiges)", "Transformation : myélofibrose secondaire, leucémie aiguë"],
+    conduite: ["Affirmer la polyglobulie vraie (volume globulaire) puis primitive (JAK2+, EPO basse) vs secondaire (EPO élevée, hypoxie).", "Objectif : hématocrite < 45 % (saignées) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Contrôler les facteurs de risque vasculaire ; surveiller la transformation.", "Le prurit aquagénique et l'érythrose sont évocateurs."]
   }
 ];
 
