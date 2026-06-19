@@ -303,6 +303,9 @@
     });
     refreshIntroValidity();
     renderSymptomGrid("");
+    // Accès direct à un symptôme depuis le catalogue : index.html#s=<clé>
+    var m = /#s=([a-z_]+)/.exec(location.hash);
+    if (m && KB[m[1]]) { startQuiz(m[1]); }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

@@ -62,6 +62,20 @@ Accès : lien **« 🧪 Interprétation biologique »** depuis l'en-tête de l'a
 clinique. Version autonome : `biologie-standalone.html` (cross-liée au
 `aide-decision-standalone.html`).
 
+### Catalogue des motifs de consultation — `catalogue.html`
+
+Colonne vertébrale de navigation couvrant **16 spécialités** et **423 motifs**
+(fréquents + urgences), d'après la nomenclature de consultation en médecine
+générale. Chaque motif est **relié, quand c'est pertinent, à une fiche
+décisionnelle** (parcours patient→médecin) ou à une **fiche d'interprétation
+biologique** ; **161 motifs (38 %)** sont déjà reliés et cliquables, les autres
+sont des **entrées de référence** à approfondir à partir des ouvrages du Drive
+(Manuel du Généraliste, Médecine Générale pour le Praticien, fiches dermato
+CESU). Recherche, filtre « urgences », filtre « fiche disponible ».
+
+Accès direct à une fiche : `index.html#s=<clé>` (depuis le catalogue).
+Version autonome : `catalogue-standalone.html` (cross-liée aux deux autres).
+
 La base reste extensible : voir `docs/guide-ajout-fiches.md`.
 
 ## Lancer
