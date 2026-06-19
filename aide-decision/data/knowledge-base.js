@@ -4651,5 +4651,310 @@ window.KB = {
         examens_a_discuter: ["Critères d'Ottawa", "Repos/glace/contention, radiographie selon critères"] }
     ],
     examens_clinique: ["Recherche d'une déformation", "Pouls et sensibilité en aval", "Capacité d'appui", "Application des critères d'Ottawa, radiographie selon critères"]
+  },
+
+  // -------------------------------------------------------------------------
+  // HYPOGLYCÉMIE
+  // -------------------------------------------------------------------------
+  hypoglycemie: {
+    id: "hypoglycemie", symptome: "Hypoglycémie / malaise hypoglycémique", specialite: ["Endocrinologie"], urgence: true,
+    questions: [
+      { id: "hy2_neuro", label: "Neuroglucopénie", type: "boolean", question: "Y a-t-il une confusion, des troubles du comportement, des convulsions, ou une perte de connaissance ?" },
+      { id: "hy2_diabete", label: "Diabétique traité", type: "boolean", question: "Êtes-vous diabétique sous insuline ou comprimés (sulfamides/glinides) ?" },
+      { id: "hy2_adrenergique", label: "Signes adrénergiques", type: "boolean", question: "Avez-vous des sueurs, tremblements, palpitations, une faim brutale, soulagés en vous resucrant ?" },
+      { id: "hy2_jeun", label: "Hypoglycémie organique", type: "boolean", question: "Survient-elle à jeun / à distance des repas chez une personne non diabétique ?" },
+      { id: "hy2_alcool", label: "Terrain favorisant", type: "boolean", question: "Y a-t-il une consommation d'alcool, une dénutrition, ou une insuffisance hépatique/rénale ?" }
+    ],
+    red_flags: [
+      { id: "hy2_rf_grave", niveau: 3, when: { q: "hy2_neuro", eq: true },
+        message_medecin: "Hypoglycémie avec troubles neurologiques : urgence (resucrage ; glucagon ou G30 % si troubles de conscience, 15).",
+        message_patient: "Ces signes nécessitent un resucrage immédiat et un appel au 15 si la personne ne réagit pas." },
+      { id: "hy2_rf_sulfamide", niveau: 2, when: { q: "hy2_diabete", eq: true },
+        message_medecin: "Hypoglycémie sous sulfamide/insuline : risque de récidive prolongée → surveillance, adaptation du traitement.",
+        message_patient: "Une hypoglycémie sous traitement du diabète nécessite une surveillance et un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "hy2_iatrogene", diagnostic: "Hypoglycémie iatrogène (diabétique)", arguments: [{ label: "diabète traité", w: 3, when: { q: "hy2_diabete", eq: true } }, { label: "signes adrénergiques", w: 1, when: { q: "hy2_adrenergique", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire, resucrage", "Réévaluer le traitement"] },
+      { id: "hy2_organique", diagnostic: "Hypoglycémie organique (non diabétique)", arguments: [{ label: "à jeun / à distance des repas", w: 3, when: { q: "hy2_jeun", eq: true } }],
+        examens_a_discuter: ["Confirmer la triade de Whipple", "Bilan spécialisé (insulinome…)"] },
+      { id: "hy2_toxique", diagnostic: "Hypoglycémie alcoolique / dénutrition", arguments: [{ label: "alcool / dénutrition / insuffisance d'organe", w: 2, when: { q: "hy2_alcool", eq: true } }],
+        examens_a_discuter: ["Resucrage, vitamine B1 si alcool"] }
+    ],
+    examens_clinique: ["Glycémie capillaire (confirmer)", "Resucrage", "Recherche de la cause", "Surveillance prolongée si sulfamide hypoglycémiant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // OBÉSITÉ / PRISE DE POIDS
+  // -------------------------------------------------------------------------
+  obesite: {
+    id: "obesite", symptome: "Obésité / prise de poids", specialite: ["Endocrinologie", "Médecine générale"],
+    questions: [
+      { id: "ob_imc", label: "IMC ≥ 30", type: "boolean", question: "Votre IMC est-il supérieur ou égal à 30 ?" },
+      { id: "ob_complications", label: "Complications", type: "boolean", question: "Avez-vous des complications (diabète, hypertension, apnées du sommeil, douleurs articulaires) ?" },
+      { id: "ob_secondaire", label: "Cause secondaire", type: "boolean", question: "La prise de poids est-elle rapide/inexpliquée, avec des signes hormonaux (vergetures pourpres, frilosité, médicament récent) ?" },
+      { id: "ob_tcaf", label: "Trouble du comportement alimentaire", type: "boolean", question: "Y a-t-il des compulsions alimentaires ou une hyperphagie ?" }
+    ],
+    red_flags: [
+      { id: "ob_rf_secondaire", niveau: 2, when: { q: "ob_secondaire", eq: true },
+        message_medecin: "Prise de poids rapide/inexpliquée + signes hormonaux : éliminer une cause secondaire (hypothyroïdie, Cushing, iatrogène).",
+        message_patient: "Une prise de poids rapide et inexpliquée mérite un bilan médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ob_commune", diagnostic: "Obésité commune", arguments: [{ label: "IMC ≥ 30", w: 3, when: { q: "ob_imc", eq: true } }, { label: "complications", w: 1, when: { q: "ob_complications", eq: true } }],
+        examens_a_discuter: ["Bilan des complications (glycémie, lipides, foie, TA)", "Prise en charge hygiéno-diététique et activité physique"] },
+      { id: "ob_secondaire", diagnostic: "Obésité / prise de poids secondaire", arguments: [{ label: "signes hormonaux / iatrogène", w: 3, when: { q: "ob_secondaire", eq: true } }],
+        examens_a_discuter: ["TSH, cortisol selon contexte", "Revue de l'ordonnance"] },
+      { id: "ob_tca", diagnostic: "Trouble du comportement alimentaire associé", arguments: [{ label: "compulsions / hyperphagie", w: 3, when: { q: "ob_tcaf", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé"] }
+    ],
+    examens_clinique: ["IMC, tour de taille", "Pression artérielle", "Bilan des complications", "Recherche d'une cause secondaire"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DÉPRESSION
+  // -------------------------------------------------------------------------
+  depression: {
+    id: "depression", symptome: "Dépression / mal-être (tristesse, burn-out)", specialite: ["Psychiatrie"], urgence: true,
+    questions: [
+      { id: "dp2_suicide", label: "Risque suicidaire", type: "boolean", question: "Avez-vous des idées noires, des pensées de mort, ou un projet de suicide ?" },
+      { id: "dp2_melancolie", label: "Dépression sévère", type: "boolean", question: "Y a-t-il un refus de s'alimenter/de boire, une incurie, ou un état très sévère ?" },
+      { id: "dp2_humeur", label: "Humeur dépressive", type: "boolean", question: "Avez-vous depuis au moins 2 semaines une tristesse et/ou une perte d'intérêt presque tous les jours ?" },
+      { id: "dp2_somatique", label: "Symptômes associés", type: "boolean", question: "Avez-vous des troubles du sommeil, de l'appétit, une fatigue, des difficultés de concentration ?" },
+      { id: "dp2_bipolaire", label: "Antécédent maniaque", type: "boolean", question: "Avez-vous déjà eu des périodes d'excitation, d'euphorie, de dépenses excessives, avec peu de sommeil sans fatigue ?" },
+      { id: "dp2_organique", label: "Cause organique", type: "boolean", question: "Y a-t-il une cause physique possible (hypothyroïdie, médicament, après un AVC) ?" }
+    ],
+    red_flags: [
+      { id: "dp2_rf_suicide", niveau: 3, when: { q: "dp2_suicide", eq: true },
+        message_medecin: "Idées suicidaires : évaluer le risque (RUD) — avis psychiatrique urgent si élevé, ne pas laisser seul.",
+        message_patient: "Si vous avez des idées noires, parlez-en immédiatement à un médecin ou appelez le 3114." },
+      { id: "dp2_rf_melancolie", niveau: 2, when: { q: "dp2_melancolie", eq: true },
+        message_medecin: "Dépression sévère / mélancolique (refus alimentaire, incurie) : avis psychiatrique rapide (hospitalisation à discuter).",
+        message_patient: "Cet état nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dp2_edc", diagnostic: "Épisode dépressif caractérisé", arguments: [{ label: "humeur dépressive / anhédonie > 2 sem", w: 3, when: { q: "dp2_humeur", eq: true } }, { label: "symptômes associés", w: 1, when: { q: "dp2_somatique", eq: true } }],
+        examens_a_discuter: ["Évaluation, psychothérapie ± antidépresseur, suivi"] },
+      { id: "dp2_bipolaire", diagnostic: "Trouble bipolaire (épisode dépressif)", arguments: [{ label: "antécédent d'épisode maniaque", w: 3, when: { q: "dp2_bipolaire", eq: true } }],
+        examens_a_discuter: ["Avis psychiatrique (prudence avec les antidépresseurs seuls)"] },
+      { id: "dp2_organique", diagnostic: "Dépression secondaire / organique", arguments: [{ label: "cause organique possible", w: 2, when: { q: "dp2_organique", eq: true } }],
+        examens_a_discuter: ["TSH, revue des médicaments"] }
+    ],
+    examens_clinique: ["Évaluation du risque suicidaire", "Recherche d'antécédents de virage maniaque", "Élimination d'une cause organique (TSH)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TROUBLE DU COMPORTEMENT ALIMENTAIRE
+  // -------------------------------------------------------------------------
+  trouble_alimentaire: {
+    id: "trouble_alimentaire", symptome: "Trouble du comportement alimentaire", specialite: ["Psychiatrie", "Nutrition"], urgence: true,
+    questions: [
+      { id: "ta2_gravite", label: "Signes de gravité", type: "boolean", question: "Y a-t-il des signes de gravité : malaises, cœur lent, IMC très bas, troubles ioniques connus, ou refus total de s'alimenter ?" },
+      { id: "ta2_restriction", label: "Anorexie", type: "boolean", question: "Y a-t-il une restriction alimentaire avec un poids très bas / un amaigrissement important et une peur de grossir ?" },
+      { id: "ta2_crises", label: "Boulimie / hyperphagie", type: "boolean", question: "Y a-t-il des crises de boulimie avec vomissements provoqués/laxatifs, ou des accès d'hyperphagie ?" },
+      { id: "ta2_amenorrhee", label: "Retentissement", type: "boolean", question: "Y a-t-il une aménorrhée, une fatigue, ou des malaises ?" }
+    ],
+    red_flags: [
+      { id: "ta2_rf_grave", niveau: 3, when: { q: "ta2_gravite", eq: true },
+        message_medecin: "Signes de gravité d'un TCA (IMC très bas, bradycardie, hypokaliémie, malaises, refus alimentaire) : urgence (risque vital) → avis spécialisé / hospitalisation.",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ta2_anorexie", diagnostic: "Anorexie mentale", arguments: [{ label: "restriction + poids bas + peur de grossir", w: 3, when: { q: "ta2_restriction", eq: true } }, { label: "aménorrhée / retentissement", w: 1, when: { q: "ta2_amenorrhee", eq: true } }],
+        examens_a_discuter: ["Poids/IMC, ionogramme, ECG", "Avis spécialisé"] },
+      { id: "ta2_boulimie", diagnostic: "Boulimie / hyperphagie", arguments: [{ label: "crises + comportements compensatoires", w: 3, when: { q: "ta2_crises", eq: true } }],
+        examens_a_discuter: ["Ionogramme (vomissements)", "Avis, prise en charge"] }
+    ],
+    examens_clinique: ["Poids / IMC", "Fréquence cardiaque, pression artérielle (bradycardie/hypotension)", "Ionogramme (hypokaliémie)", "ECG (QT)", "Évaluation psychiatrique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CONDUITE ADDICTIVE
+  // -------------------------------------------------------------------------
+  conduite_addictive: {
+    id: "conduite_addictive", symptome: "Addiction / conduite addictive (tabac, cannabis, alcool)", specialite: ["Addictologie"], urgence: true,
+    questions: [
+      { id: "ca_sevrage_alcool", label: "Sevrage alcoolique compliqué", type: "boolean", question: "S'agit-il d'un sevrage d'alcool avec tremblements importants, confusion ou convulsions ?" },
+      { id: "ca_psy", label: "Souffrance psychique", type: "boolean", question: "Y a-t-il une souffrance psychique, des idées noires, ou un autre trouble psychiatrique associé ?" },
+      { id: "ca_retentissement", label: "Retentissement / dépendance", type: "boolean", question: "Y a-t-il une perte de contrôle, un besoin irrépressible (craving), ou un retentissement (santé, travail, famille) ?" },
+      { id: "ca_demande", label: "Demande d'aide", type: "boolean", question: "Êtes-vous demandeur d'aide pour réduire ou arrêter ?" }
+    ],
+    red_flags: [
+      { id: "ca_rf_sevrage", niveau: 3, when: { q: "ca_sevrage_alcool", eq: true },
+        message_medecin: "Sevrage alcoolique compliqué : urgence (voir fiche sevrage alcoolique).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ca_rf_psy", niveau: 2, when: { q: "ca_psy", eq: true },
+        message_medecin: "Souffrance psychique / idées noires associées : évaluer le risque suicidaire, avis.",
+        message_patient: "Si vous avez des idées noires, parlez-en à un médecin (ou appelez le 3114)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ca_addiction", diagnostic: "Conduite addictive (tabac / cannabis / alcool)", arguments: [{ label: "retentissement / dépendance", w: 2, when: { q: "ca_retentissement", eq: true } }, { label: "demande d'aide", w: 1, when: { q: "ca_demande", eq: true } }],
+        examens_a_discuter: ["Repérage (AUDIT, Fagerström), intervention brève", "Accompagnement, substituts nicotiniques, orientation addictologie"] },
+      { id: "ca_sevrage", diagnostic: "Sevrage alcoolique", arguments: [{ label: "signes de sevrage", w: 3, when: { q: "ca_sevrage_alcool", eq: true } }],
+        examens_a_discuter: ["Voir fiche sevrage alcoolique (B1, benzodiazépines)"] }
+    ],
+    examens_clinique: ["Repérage du niveau de consommation et de la dépendance", "Évaluation du retentissement et des comorbidités psychiatriques", "Orientation vers une prise en charge addictologique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // AGITATION AIGUË
+  // -------------------------------------------------------------------------
+  agitation: {
+    id: "agitation", symptome: "Agitation aiguë / trouble du comportement", specialite: ["Psychiatrie", "Urgences"], urgence: true,
+    questions: [
+      { id: "ag2_organique", label: "Cause organique", type: "boolean", question: "Y a-t-il une cause physique possible : fièvre, confusion, diabète, intoxication, traumatisme crânien, ou personne âgée ?" },
+      { id: "ag2_danger", label: "Danger", type: "boolean", question: "La personne est-elle dangereuse pour elle-même ou autrui, ou a-t-elle des idées suicidaires ?" },
+      { id: "ag2_delire", label: "Trouble psychiatrique aigu", type: "boolean", question: "Y a-t-il des hallucinations, un délire, ou une bouffée délirante aiguë ?" },
+      { id: "ag2_substance", label: "Toxiques / sevrage", type: "boolean", question: "Y a-t-il une prise de toxiques, ou un sevrage (alcool, drogues) ?" }
+    ],
+    red_flags: [
+      { id: "ag2_rf_organique", niveau: 3, when: { q: "ag2_organique", eq: true },
+        message_medecin: "Agitation avec cause organique possible (confusion fébrile, hypoglycémie, intoxication, post-traumatique) : urgence — éliminer l'organique AVANT le psychiatrique (glycémie, constantes).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ag2_rf_danger", niveau: 3, when: { q: "ag2_danger", eq: true },
+        message_medecin: "Danger pour soi / autrui : urgence (mise en sécurité, avis psychiatrique, cadre légal si besoin).",
+        message_patient: "Cette situation nécessite une intervention immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ag2_organique", diagnostic: "Cause organique (confusion)", arguments: [{ label: "contexte organique", w: 3, when: { q: "ag2_organique", eq: true } }],
+        examens_a_discuter: ["Glycémie, constantes, bilan (voir fiche confusion)"] },
+      { id: "ag2_psychiatrique", diagnostic: "Trouble psychiatrique aigu (bouffée délirante, manie)", arguments: [{ label: "délire / hallucinations", w: 3, when: { q: "ag2_delire", eq: true } }],
+        examens_a_discuter: ["Avis psychiatrique"] },
+      { id: "ag2_substance", diagnostic: "Intoxication / sevrage", arguments: [{ label: "toxiques / sevrage", w: 3, when: { q: "ag2_substance", eq: true } }],
+        examens_a_discuter: ["Recherche de toxiques, contexte"] }
+    ],
+    examens_clinique: ["Sécuriser la personne et l'entourage", "Glycémie capillaire", "Constantes (température, SpO2, TA)", "Examen neurologique, recherche de toxiques"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CHUTE DE LA PERSONNE ÂGÉE
+  // -------------------------------------------------------------------------
+  chute_personne_agee: {
+    id: "chute_personne_agee", symptome: "Chute de la personne âgée", specialite: ["Gériatrie"], urgence: true,
+    questions: [
+      { id: "ch_gravite", label: "Traumatisme grave", type: "boolean", question: "Y a-t-il un traumatisme grave (tête, hanche, impossibilité de se relever, plaie importante), ou une prise d'anticoagulants ?" },
+      { id: "ch_malaise", label: "Malaise / PC", type: "boolean", question: "La chute a-t-elle été précédée d'un malaise, d'une perte de connaissance, ou de palpitations ?" },
+      { id: "ch_temps_sol", label: "Séjour au sol", type: "boolean", question: "La personne est-elle restée longtemps au sol (plus d'une heure) ?" },
+      { id: "ch_iatrogene", label: "Polymédication", type: "boolean", question: "Prend-elle des médicaments (somnifères, traitements de la tension, plusieurs médicaments) ?" },
+      { id: "ch_repetition", label: "Chutes répétées", type: "boolean", question: "Les chutes sont-elles répétées ?" }
+    ],
+    red_flags: [
+      { id: "ch_rf_trauma", niveau: 2, when: { q: "ch_gravite", eq: true },
+        message_medecin: "Traumatisme grave / anticoagulants : rechercher une fracture (col du fémur), un hématome (TDM cérébrale si choc à la tête sous anticoagulant).",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide." },
+      { id: "ch_rf_syncope", niveau: 2, when: { q: "ch_malaise", eq: true },
+        message_medecin: "Chute avec malaise / PC : éliminer une cause cardiaque ou neurologique (ECG ; voir fiche malaise).",
+        message_patient: "Une chute précédée d'un malaise nécessite un avis médical." },
+      { id: "ch_rf_sol", niveau: 2, when: { q: "ch_temps_sol", eq: true },
+        message_medecin: "Séjour prolongé au sol : rechercher une rhabdomyolyse, une déshydratation, une hypothermie.",
+        message_patient: "Un séjour prolongé au sol nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ch_mecanique", diagnostic: "Chute mécanique / multifactorielle", arguments: [{ label: "chutes répétées", w: 2, when: { q: "ch_repetition", eq: true } }, { label: "polymédication", w: 2, when: { q: "ch_iatrogene", eq: true } }],
+        examens_a_discuter: ["Évaluation des facteurs de risque (vue, équilibre, environnement, médicaments)", "Prévention des chutes"] },
+      { id: "ch_syncope", diagnostic: "Cause cardiaque / neurologique (malaise)", arguments: [{ label: "malaise / perte de connaissance", w: 3, when: { q: "ch_malaise", eq: true } }],
+        examens_a_discuter: ["ECG (voir fiche malaise / perte de connaissance)"] },
+      { id: "ch_trauma", diagnostic: "Complication traumatique", arguments: [{ label: "traumatisme grave", w: 3, when: { q: "ch_gravite", eq: true } }],
+        examens_a_discuter: ["Imagerie (hanche, crâne si anticoagulant)"] }
+    ],
+    examens_clinique: ["Recherche d'une fracture (raccourcissement/rotation du membre = col du fémur)", "Examen neurologique", "TA couché/debout, ECG", "Revue de l'ordonnance", "Évaluation de l'équilibre et de la marche"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PARESTHÉSIES / FOURMILLEMENTS
+  // -------------------------------------------------------------------------
+  paresthesies: {
+    id: "paresthesies", symptome: "Fourmillements / engourdissements (paresthésies)", specialite: ["Neurologie"], urgence: true,
+    questions: [
+      { id: "pe_brutal", label: "Installation brutale", type: "boolean", question: "Sont-elles apparues brutalement, d'un seul côté, avec une faiblesse ou des troubles de la parole ?" },
+      { id: "pe_medullaire", label: "Atteinte médullaire", type: "boolean", question: "Y a-t-il un niveau (à partir d'une zone du corps), des troubles pour uriner, ou une faiblesse des deux jambes ?" },
+      { id: "pe_distribution", label: "Distribution", type: "single_choice", question: "Où ressentez-vous les fourmillements ?",
+        options: ["Aux extrémités des 4 membres (gants / chaussettes)", "Dans un trajet précis (un nerf)", "D'un seul côté du corps"] },
+      { id: "pe_diabete", label: "Polyneuropathie", type: "boolean", question: "Êtes-vous diabétique, ou avez-vous une consommation d'alcool importante ?" },
+      { id: "pe_canal", label: "Canal carpien", type: "boolean", question: "Est-ce surtout les 3 premiers doigts, la nuit ?" }
+    ],
+    red_flags: [
+      { id: "pe_rf_avc", niveau: 3, when: { any: [{ q: "pe_brutal", eq: true }, { q: "pe_distribution", eq: "D'un seul côté du corps" }] },
+        message_medecin: "Paresthésies brutales unilatérales (± déficit) : AVC / AIT à éliminer → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "pe_rf_medullaire", niveau: 3, when: { q: "pe_medullaire", eq: true },
+        message_medecin: "Niveau sensitif / troubles sphinctériens / paraparésie : compression médullaire ou Guillain-Barré → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pe_avc", diagnostic: "AVC / AIT", arguments: [{ label: "installation brutale", w: 3, when: { q: "pe_brutal", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale en urgence"] },
+      { id: "pe_polyneuropathie", diagnostic: "Polyneuropathie (diabète, alcool)", arguments: [{ label: "atteinte des 4 membres (gants/chaussettes)", w: 3, when: { q: "pe_distribution", eq: "Aux extrémités des 4 membres (gants / chaussettes)" } }, { label: "diabète / alcool", w: 2, when: { q: "pe_diabete", eq: true } }],
+        examens_a_discuter: ["Glycémie / HbA1c, bilan", "Avis si besoin"] },
+      { id: "pe_canal", diagnostic: "Syndrome canalaire (canal carpien)", arguments: [{ label: "3 premiers doigts la nuit", w: 3, when: { q: "pe_canal", eq: true } }, { label: "trajet d'un nerf", w: 1, when: { q: "pe_distribution", eq: "Dans un trajet précis (un nerf)" } }],
+        examens_a_discuter: ["EMG"] },
+      { id: "pe_medullaire", diagnostic: "Cause médullaire / radiculaire", arguments: [{ label: "niveau sensitif / atteinte des 2 jambes", w: 3, when: { q: "pe_medullaire", eq: true } }],
+        examens_a_discuter: ["IRM médullaire"] }
+    ],
+    examens_clinique: ["Examen neurologique (sensibilité, force, réflexes)", "Recherche d'un niveau sensitif", "Glycémie", "Manœuvres de Tinel / Phalen"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TREMBLEMENTS
+  // -------------------------------------------------------------------------
+  tremblements: {
+    id: "tremblements", symptome: "Tremblements", specialite: ["Neurologie"],
+    questions: [
+      { id: "tr_repos", label: "Tremblement de repos (Parkinson)", type: "boolean", question: "Le tremblement est-il présent au repos, d'un côté, avec une lenteur ou une raideur ?" },
+      { id: "tr_action", label: "Tremblement d'action (essentiel)", type: "boolean", question: "Apparaît-il quand vous tendez les mains ou agissez (boire, écrire), souvent familial, amélioré par l'alcool ?" },
+      { id: "tr_thyroide", label: "Hyperthyroïdie", type: "boolean", question: "Avez-vous un amaigrissement, un cœur rapide, une intolérance à la chaleur ?" },
+      { id: "tr_substance", label: "Substance / iatrogène", type: "boolean", question: "Y a-t-il une prise de café/excitants, un sevrage (alcool), ou un médicament récent ?" },
+      { id: "tr_aigu", label: "Aigu + signes neuro", type: "boolean", question: "Est-ce apparu brutalement avec d'autres signes neurologiques ?" }
+    ],
+    red_flags: [
+      { id: "tr_rf_aigu", niveau: 2, when: { q: "tr_aigu", eq: true },
+        message_medecin: "Tremblement aigu + signes neurologiques : avis (cause centrale, sevrage sévère).",
+        message_patient: "Un tremblement d'apparition brutale avec d'autres signes nécessite un avis médical." },
+      { id: "tr_rf_thyroide", niveau: 2, when: { q: "tr_thyroide", eq: true },
+        message_medecin: "Signes d'hyperthyroïdie : doser la TSH.",
+        message_patient: "Ces signes nécessitent un bilan thyroïdien." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tr_essentiel", diagnostic: "Tremblement essentiel", arguments: [{ label: "tremblement d'action", w: 3, when: { q: "tr_action", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique, traitement si gênant"] },
+      { id: "tr_parkinson", diagnostic: "Maladie de Parkinson", arguments: [{ label: "tremblement de repos + lenteur/raideur", w: 3, when: { q: "tr_repos", eq: true } }],
+        examens_a_discuter: ["Avis neurologique"] },
+      { id: "tr_secondaire", diagnostic: "Tremblement métabolique / iatrogène", arguments: [{ label: "signes d'hyperthyroïdie", w: 2, when: { q: "tr_thyroide", eq: true } }, { label: "substance / médicament", w: 2, when: { q: "tr_substance", eq: true } }],
+        examens_a_discuter: ["TSH, revue des médicaments"] }
+    ],
+    examens_clinique: ["Caractériser (repos / action / intention)", "Recherche d'une rigidité, d'une akinésie", "Signes thyroïdiens", "Revue des médicaments"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TROUBLES DE LA MÉMOIRE
+  // -------------------------------------------------------------------------
+  troubles_memoire: {
+    id: "troubles_memoire", symptome: "Troubles de la mémoire", specialite: ["Neurologie", "Gériatrie"], urgence: true,
+    questions: [
+      { id: "me2_brutal", label: "Brutal / signes neuro (AVC)", type: "boolean", question: "Les troubles sont-ils apparus brutalement, ou avec d'autres signes neurologiques (parole, force) ?" },
+      { id: "me2_confusion", label: "Confusion aiguë", type: "boolean", question: "Y a-t-il une confusion récente, fluctuante, avec désorientation (et non un trouble installé lentement) ?" },
+      { id: "me2_progressif", label: "Syndrome démentiel", type: "boolean", question: "Les troubles s'installent-ils progressivement, avec un retentissement sur l'autonomie ?" },
+      { id: "me2_depression", label: "Dépression", type: "boolean", question: "Y a-t-il une tristesse, un ralentissement, avec une plainte de mémoire au premier plan ?" },
+      { id: "me2_curable", label: "Cause curable", type: "boolean", question: "Y a-t-il une cause potentiellement réversible : hypothyroïdie, carence en B12, médicaments, alcool ?" }
+    ],
+    red_flags: [
+      { id: "me2_rf_avc", niveau: 3, when: { q: "me2_brutal", eq: true },
+        message_medecin: "Trouble cognitif brutal / signes neurologiques : AVC → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "me2_rf_confusion", niveau: 2, when: { q: "me2_confusion", eq: true },
+        message_medecin: "Confusion récente fluctuante : syndrome confusionnel (organique) à explorer (voir fiche confusion).",
+        message_patient: "Une confusion récente nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "me2_demence", diagnostic: "Syndrome démentiel (Alzheimer…)", arguments: [{ label: "installation progressive + perte d'autonomie", w: 3, when: { q: "me2_progressif", eq: true } }],
+        examens_a_discuter: ["Évaluation cognitive (MMSE)", "Bilan (TSH, B12, imagerie cérébrale), consultation mémoire"] },
+      { id: "me2_confusion", diagnostic: "Confusion aiguë", arguments: [{ label: "confusion fluctuante récente", w: 3, when: { q: "me2_confusion", eq: true } }],
+        examens_a_discuter: ["Bilan étiologique (voir fiche confusion)"] },
+      { id: "me2_depression", diagnostic: "Dépression (pseudo-démence)", arguments: [{ label: "contexte dépressif", w: 3, when: { q: "me2_depression", eq: true } }],
+        examens_a_discuter: ["Évaluation thymique"] },
+      { id: "me2_curable", diagnostic: "Cause curable", arguments: [{ label: "hypothyroïdie / carence / iatrogène", w: 3, when: { q: "me2_curable", eq: true } }],
+        examens_a_discuter: ["TSH, B12/folates, revue des médicaments"] }
+    ],
+    examens_clinique: ["Évaluation cognitive (MMSE, test de l'horloge)", "Bilan biologique (TSH, B12, calcémie)", "Imagerie cérébrale", "Recherche d'une dépression"]
   }
 };

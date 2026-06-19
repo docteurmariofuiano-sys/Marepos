@@ -130,7 +130,7 @@ window.MOTIFS = [
       { l: "Vertiges", f: "vertige" }, { l: "Perte de poids", f: "asthenie" }, { l: "Sueurs nocturnes", f: "hyperhidrose" },
       { l: "Frissons" }, { l: "Douleurs diffuses" }, { l: "Courbatures", f: "crampes" },
       { l: "Altération de l'état général", f: "asthenie" }, { l: "Déshydratation" },
-      { l: "Chute chez la personne âgée" }, { l: "Confusion aiguë", f: "confusion" }, { l: "Somnolence inhabituelle" },
+      { l: "Chute chez la personne âgée", f: "chute_personne_agee" }, { l: "Confusion aiguë", f: "confusion" }, { l: "Somnolence inhabituelle" },
       { l: "Anxiété aiguë / crise de panique", f: "anxiete" }, { l: "Demande de certificat médical" },
       { l: "Renouvellement d'ordonnance" }, { l: "Bilan biologique perturbé", b: "anemie" },
       { l: "Effet indésirable médicamenteux" }
@@ -260,8 +260,8 @@ window.MOTIFS = [
     n: 9, titre: "Neurologie", icone: "🧠",
     frequents: [
       { l: "Céphalée", f: "cephalee" }, { l: "Migraine", f: "cephalee" }, { l: "Vertiges", f: "vertige" },
-      { l: "Troubles de l'équilibre" }, { l: "Paresthésies" }, { l: "Douleur neuropathique" }, { l: "Tremblements" },
-      { l: "Troubles de la mémoire" }, { l: "Troubles du sommeil", f: "insomnie" }, { l: "Sciatique", f: "lombalgie" },
+      { l: "Troubles de l'équilibre" }, { l: "Paresthésies", f: "paresthesies" }, { l: "Douleur neuropathique", f: "paresthesies" }, { l: "Tremblements", f: "tremblements" },
+      { l: "Troubles de la mémoire", f: "troubles_memoire" }, { l: "Troubles du sommeil", f: "insomnie" }, { l: "Sciatique", f: "lombalgie" },
       { l: "Cervicalgie avec irradiation", f: "cervicalgie" }, { l: "Névralgie faciale", f: "algie_faciale" },
       { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Syndrome des jambes sans repos" }, { l: "Malaise", f: "malaise_pc" },
       { l: "Épilepsie connue" }, { l: "Suivi post-AVC" }
@@ -281,12 +281,12 @@ window.MOTIFS = [
       { l: "Douleur de genou", f: "douleur_mi" }, { l: "Entorse", f: "traumatisme_membre" }, { l: "Douleur de hanche", f: "douleur_mi" },
       { l: "Arthrose" }, { l: "Gonalgie", f: "douleur_mi" }, { l: "Douleur du poignet", f: "douleur_ms" },
       { l: "Syndrome du canal carpien", f: "douleur_ms" }, { l: "Crise de goutte", f: "arthrite" }, { l: "Douleurs articulaires inflammatoires", f: "arthrite" },
-      { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion", f: "traumatisme_membre" },
+      { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente", f: "chute_personne_agee" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion", f: "traumatisme_membre" },
       { l: "Fracture suspectée", f: "traumatisme_membre" }
     ],
     urgences: [
       { l: "Fracture", f: "traumatisme_membre" }, { l: "Luxation", f: "traumatisme_membre" }, { l: "Plaie profonde", f: "plaie" }, { l: "Traumatisme crânien" },
-      { l: "Traumatisme thoracique ou abdominal" }, { l: "Chute chez la personne âgée" },
+      { l: "Traumatisme thoracique ou abdominal" }, { l: "Chute chez la personne âgée", f: "chute_personne_agee" },
       { l: "Douleur rachidienne avec déficit", f: "lombalgie" }, { l: "Syndrome de la queue de cheval", f: "lombalgie" },
       { l: "Arthrite septique", f: "arthrite" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique" }
     ]
@@ -312,31 +312,31 @@ window.MOTIFS = [
   {
     n: 12, titre: "Psychiatrie / santé mentale", icone: "🧩",
     frequents: [
-      { l: "Anxiété", f: "anxiete" }, { l: "Crise d'angoisse", f: "anxiete" }, { l: "Dépression" }, { l: "Burn-out" }, { l: "Insomnie", f: "insomnie" },
-      { l: "Stress professionnel" }, { l: "Trouble de l'adaptation" }, { l: "Deuil" }, { l: "Irritabilité" },
-      { l: "Trouble alimentaire" }, { l: "Addiction alcool", f: "sevrage_alcool" }, { l: "Addiction cannabis" }, { l: "Sevrage tabagique" },
+      { l: "Anxiété", f: "anxiete" }, { l: "Crise d'angoisse", f: "anxiete" }, { l: "Dépression", f: "depression" }, { l: "Burn-out", f: "depression" }, { l: "Insomnie", f: "insomnie" },
+      { l: "Stress professionnel", f: "depression" }, { l: "Trouble de l'adaptation", f: "depression" }, { l: "Deuil", f: "depression" }, { l: "Irritabilité", f: "depression" },
+      { l: "Trouble alimentaire", f: "trouble_alimentaire" }, { l: "Addiction alcool", f: "sevrage_alcool" }, { l: "Addiction cannabis", f: "conduite_addictive" }, { l: "Sevrage tabagique", f: "conduite_addictive" },
       { l: "Trouble du comportement de l'adolescent" }, { l: "Demande d'arrêt de travail" }, { l: "Idées noires", f: "anxiete" },
       { l: "Effet indésirable d'un psychotrope" }
     ],
     urgences: [
-      { l: "Risque suicidaire", f: "anxiete" }, { l: "Tentative de suicide" }, { l: "Agitation aiguë" }, { l: "Bouffée délirante" },
-      { l: "Confusion", f: "confusion" }, { l: "Sevrage alcoolique sévère", f: "sevrage_alcool" }, { l: "Intoxication médicamenteuse" },
-      { l: "Mise en danger de soi ou d'autrui" }
+      { l: "Risque suicidaire", f: "anxiete" }, { l: "Tentative de suicide", f: "depression" }, { l: "Agitation aiguë", f: "agitation" }, { l: "Bouffée délirante", f: "agitation" },
+      { l: "Confusion", f: "confusion" }, { l: "Sevrage alcoolique sévère", f: "sevrage_alcool" }, { l: "Intoxication médicamenteuse", f: "ingestion_toxique" },
+      { l: "Mise en danger de soi ou d'autrui", f: "agitation" }
     ]
   },
   {
     n: 13, titre: "Endocrino / métabolique", icone: "⚗️",
     frequents: [
-      { l: "Diabète déséquilibré", b: "hyperglycemie" }, { l: "Hypoglycémies" }, { l: "Hyperglycémie", b: "hyperglycemie" },
-      { l: "Découverte de diabète", b: "hyperglycemie" }, { l: "Obésité" }, { l: "Perte de poids", f: "asthenie" },
-      { l: "Prise de poids" }, { l: "Dyslipidémie", b: "dyslipidemie" }, { l: "Trouble thyroïdien", f: "goitre" },
+      { l: "Diabète déséquilibré", b: "hyperglycemie" }, { l: "Hypoglycémies", f: "hypoglycemie" }, { l: "Hyperglycémie", b: "hyperglycemie" },
+      { l: "Découverte de diabète", b: "hyperglycemie" }, { l: "Obésité", f: "obesite" }, { l: "Perte de poids", f: "asthenie" },
+      { l: "Prise de poids", f: "obesite" }, { l: "Dyslipidémie", b: "dyslipidemie" }, { l: "Trouble thyroïdien", f: "goitre" },
       { l: "Nodule thyroïdien", f: "goitre" }, { l: "Fatigue inexpliquée", f: "asthenie" }, { l: "SOPK" },
       { l: "Hirsutisme" }, { l: "Aménorrhée", f: "galactorrhee" }, { l: "Ostéoporose" }, { l: "Carence en vitamine D" },
       { l: "Carence en B12", b: "anemie" }, { l: "Anémie", b: "anemie" }, { l: "Hyperferritinémie", b: "cytolyse" }
     ],
     urgences: [
       { l: "Acidocétose diabétique", b: "hyperglycemie" }, { l: "Hyperglycémie sévère avec déshydratation", b: "hyperglycemie" },
-      { l: "Hypoglycémie sévère" }, { l: "Crise thyréotoxique", f: "goitre" }, { l: "Insuffisance surrénale aiguë", f: "asthenie" },
+      { l: "Hypoglycémie sévère", f: "hypoglycemie" }, { l: "Crise thyréotoxique", f: "goitre" }, { l: "Insuffisance surrénale aiguë", f: "asthenie" },
       { l: "Hypercalcémie symptomatique", b: "hypercalcemie" }, { l: "Hyponatrémie sévère", b: "hyponatremie" }
     ]
   },
@@ -379,7 +379,7 @@ window.MOTIFS = [
       { l: "Dépistage IST", f: "ecoulement_uretral" }, { l: "Dépistage cardiovasculaire", b: "dyslipidemie" },
       { l: "Dépistage diabète", b: "hyperglycemie" }, { l: "Dépistage HTA" }, { l: "Dépistage apnée du sommeil" },
       { l: "Suivi de la personne âgée" }, { l: "Évaluation de l'autonomie" }, { l: "Prévention des chutes" },
-      { l: "Conseil nutritionnel" }, { l: "Sevrage tabagique" }
+      { l: "Conseil nutritionnel" }, { l: "Sevrage tabagique", f: "conduite_addictive" }
     ],
     urgences: []
   }

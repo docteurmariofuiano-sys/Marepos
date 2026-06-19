@@ -22,7 +22,7 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (98 fiches cliniques)
+## Symptômes couverts (108 fiches cliniques)
 
 **Les 43 fiches du manuel + 15 motifs très fréquents de cabinet sont encodés**
 (58 fiches cliniques). Les 21 fiches biologiques du livre sont dans un module
@@ -68,7 +68,7 @@ Colonne vertébrale de navigation couvrant **16 spécialités** et **423 motifs*
 (fréquents + urgences), d'après la nomenclature de consultation en médecine
 générale. Chaque motif est **relié, quand c'est pertinent, à une fiche
 décisionnelle** (parcours patient→médecin) ou à une **fiche d'interprétation
-biologique** ; **284 motifs (67 %)** sont déjà reliés et cliquables, les autres
+biologique** ; **312 motifs (74 %)** sont déjà reliés et cliquables, les autres
 sont des **entrées de référence** à approfondir à partir des ouvrages du Drive
 (Manuel du Généraliste, Médecine Générale pour le Praticien, fiches dermato
 CESU). Recherche, filtre « urgences », filtre « fiche disponible ».
