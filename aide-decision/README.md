@@ -46,7 +46,7 @@ Les symptômes marqués `urgence: true` affichent un badge **URGENCE**.
 
 ### Module « Interprétation biologique » (médecin) — `biologie.html`
 
-Les **67 fiches biologiques** sont encodées dans un module **distinct, côté
+Les **70 fiches biologiques** sont encodées dans un module **distinct, côté
 médecin** : `biologie.html` (données `data/bio-kb.js`). Contrairement au
 questionnaire patient, l'entrée est un **résultat anormal** (ex. hyperkaliémie,
 TCA allongé, cytolyse, hypercalcémie…) et la sortie est structurée : **démarche
@@ -60,7 +60,8 @@ devant un bilan de coagulation anormal), électrophorèse,
 hyperéosinophilie, inversion de formule, métabolisme phospho-calcique
 (vitamine D, PTH, calcitonine), hyper/hypocalcémie, marqueurs du remodelage
 osseux (CTX/NTX, ostéoporose), hyper/hypothyroïdie (TSH/T4L, Basedow,
-Hashimoto), hyperglycémie, diabète de type 1
+Hashimoto), pathologies surrénaliennes (hypercorticisme/Cushing,
+hyperaldostéronisme, insuffisance surrénalienne), hyperglycémie, diabète de type 1
 (auto-immunité, acidocétose), diabète de type 2 (insulino-résistance, syndrome
 métabolique), diabète gestationnel (HGPO, O'Sullivan), hypercalcémie,
 hyper/hypokaliémie, hyper/hyponatrémie, hyperphosphorémie, troubles de l'hydratation

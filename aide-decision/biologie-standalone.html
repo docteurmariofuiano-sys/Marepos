@@ -2212,6 +2212,103 @@ window.BIOKB = [
     ],
     red_flags: ["Coma myxœdémateux (hypothermie, bradycardie, troubles de conscience) → urgence", "Hypothyroïdie + grossesse (risque pour le développement cérébral fœtal) → TSH dans la moitié inférieure de la normale", "Hypothyroïdie centrale (T4L basse, TSH non élevée) à ne pas méconnaître", "Retentissement cardiaque (bradycardie, épanchement péricardique)"],
     conduite: ["TSH ↑ + T4L → franche (T4L basse) ou fruste (T4L normale) ; ne pas doser la T3L.", "Anti-TPO pour confirmer l'origine auto-immune (Hashimoto) ; rechercher les maladies auto-immunes associées.", "Hypothyroïdie centrale : T4L basse avec TSH inadaptée → IRM hypophysaire.", "Substitution par lévothyroxine, surveillance de la TSH ; adaptation pendant la grossesse."]
+  },
+  {
+    id: "hypercorticisme", num: 110, anomalie: "Hypercorticisme (syndrome de Cushing)",
+    specialite: "Endocrinologie",
+    definition: "Excès de glucocorticoïdes (cortisol). Diagnostic en 2 temps : affirmer l'hypercorticisme (cortisol libre urinaire, freinage à la dexaméthasone, rupture du cycle nycthéméral), puis déterminer l'étiologie (ACTH-dépendant ou non).",
+    premiere_intention: ["Affirmer : cortisol libre urinaire des 24 h ↑, cortisol salivaire/plasmatique à minuit (rupture du cycle), test de freinage minute (1 mg dexaméthasone à 23 h)", "Absence de freinage = syndrome de Cushing", "Ionogramme : hypernatrémie, hypokaliémie, alcalose métabolique, hyperglycémie", "Étiologie : ACTH plasmatique → freinage fort, imagerie (TDM surrénale, IRM hypophyse, TDM thoraco-abdo si paranéoplasique)"],
+    causes: [
+      { cause: "Maladie de Cushing (ACTH hypophysaire)", signe: "adénome hypophysaire corticotrope ; freinage fort positif (~80 %)", examens: ["ACTH, freinage fort, IRM hypophyse", "Cathétérisme des sinus pétreux"] },
+      { cause: "Sécrétion paranéoplasique d'ACTH (ou CRF)", signe: "néoplasie (poumon…) ; pas de freinage fort", examens: ["ACTH élevée, TDM thoraco-abdominale"] },
+      { cause: "Adénome / corticosurrénalome (ACTH-indépendant)", signe: "ACTH freinée ; tumeur surrénalienne", examens: ["ACTH basse, TDM surrénale"] },
+      { cause: "Cushing iatrogène", signe: "corticothérapie (à éliminer en premier)", examens: ["Interrogatoire"] }
+    ],
+    tableaux: [
+      { titre: "Retentissement de l'hypercorticisme",
+        entetes: ["Mécanisme", "Clinique", "Biologie"],
+        lignes: [
+          ["Catabolisme protéique", "Ostéoporose, vergetures pourpres, amyotrophie, ecchymoses", "—"],
+          ["Néoglucogenèse", "Intolérance au glucose, diabète", "Hyperglycémie"],
+          ["Lipolyse", "Obésité facio-tronculaire", "Hypertriglycéridémie, hypercholestérolémie"],
+          ["Effet minéralocorticoïde", "HTA", "Hypernatrémie, hypokaliémie, alcalose métabolique"],
+          ["Immunosuppression", "Infections, thromboses veineuses", "—"],
+          ["SNC", "Troubles du sommeil, anxiété, dépression", "—"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Étape", "Examens"],
+        lignes: [
+          ["Affirmer l'hypercorticisme", "Cortisol libre urinaire 24 h ↑, cortisol à minuit (plasma/salive), 17-OH et 17-cétostéroïdes urinaires ↑"],
+          ["Rupture du rétrocontrôle", "Freinage minute (1 mg dexaméthasone à 23 h) : pas de freinage"],
+          ["Étiologie", "ACTH plasmatique ; freinage fort (8 mg) ; tests CRF / métopirone ; imagerie"]
+        ] }
+    ],
+    red_flags: ["Complications : diabète, HTA, infections, thromboses veineuses, ostéoporose / fractures", "Hypokaliémie profonde (effet minéralocorticoïde)", "Cushing paranéoplasique (cancer sous-jacent)", "Hypercortisolisme sévère"],
+    conduite: ["Diagnostic en 2 temps : affirmer l'hypercorticisme, puis l'étiologie (ACTH-dépendant vs indépendant).", "Éliminer un Cushing iatrogène (corticothérapie) en premier.", "Freinage fort + cathétérisme des sinus pétreux pour différencier hypophysaire et paranéoplasique.", "Traitement étiologique (chirurgie) ; avis endocrinologique spécialisé."]
+  },
+  {
+    id: "hyperaldosteronisme", num: 111, anomalie: "Hyperaldostéronisme",
+    specialite: "Endocrinologie",
+    definition: "Excès d'aldostérone : HTA + hypokaliémie. L'hyperaldostéronisme PRIMAIRE (adénome de Conn, hyperplasie bilatérale) freine la rénine (activité rénine basse). À distinguer du secondaire (rénine élevée).",
+    premiere_intention: ["Évoquer devant HTA + hypokaliémie ; bilan en conditions standardisées (hors antihypertenseurs sauf inhibiteurs calciques / centraux, apports Na/K normaux)", "Ionogramme : hypokaliémie + hyperkaliurèse, alcalose métabolique, natrémie normale/haute, rapport UNa/UK < 1", "Diagnostic : aldostérone élevée + activité rénine plasmatique BASSE (peu stimulable) ; rapport aldostérone/rénine > 30", "Imagerie (TDM surrénale) ; tests dynamiques (captopril, surcharge sodée, orthostatisme)"],
+    causes: [
+      { cause: "Adénome de Conn", signe: "adénome surrénalien sécrétant ; exérèse chirurgicale", examens: ["TDM surrénale", "Aldostérone / rénine"] },
+      { cause: "Hyperplasie bilatérale des surrénales", signe: "traitement par spironolactone", examens: ["TDM, test au captopril"] },
+      { cause: "Hyperaldostéronisme secondaire (différentiel)", signe: "rénine ÉLEVÉE ; hypovolémie, tumeur à rénine, syndrome de Bartter, insuffisance hépatique/cardiaque, cirrhose", examens: ["Activité rénine élevée"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Kaliémie", "Hypokaliémie + hyperkaliurèse (fuite urinaire)"],
+          ["Natrémie", "Normale ou haute (rétention sodée, compensée par le FAN)"],
+          ["Équilibre acido-basique", "Alcalose métabolique (fuite urinaire des H+)"],
+          ["Urines", "Acidification (NH4+), rapport UNa/UK < 1"],
+          ["Hormones", "Aldostérone ↑ ; activité rénine BASSE ; aldostérone/rénine > 30"]
+        ] },
+      { titre: "Primaire vs secondaire",
+        entetes: ["", "Primaire", "Secondaire"],
+        lignes: [
+          ["Aldostérone", "Élevée", "Élevée"],
+          ["Rénine", "Basse", "Élevée"],
+          ["Causes", "Adénome de Conn, hyperplasie bilatérale", "Hypovolémie, tumeur à rénine, Bartter, insuffisance hépatique/cardiaque, cirrhose"]
+        ] }
+    ],
+    red_flags: ["HTA sévère / résistante avec hypokaliémie", "Hypokaliémie profonde (troubles du rythme, tétanie, signes ECG)", "Diabète par freinage de l'insuline (hypokaliémie)", "Bilan faussé par les antihypertenseurs (sauf inhibiteurs calciques / centraux)"],
+    conduite: ["Évoquer devant HTA + hypokaliémie ; bilan en conditions standardisées.", "Affirmer : aldostérone ↑ + rénine basse + rapport aldo/rénine > 30 ; distinguer du secondaire (rénine élevée).", "TDM surrénale + tests dynamiques pour distinguer adénome (Conn) et hyperplasie.", "Traitement : chirurgie si adénome, spironolactone si hyperplasie."]
+  },
+  {
+    id: "insuffisance_surrenalienne", num: 112, anomalie: "Insuffisance surrénalienne",
+    specialite: "Endocrinologie",
+    definition: "Déficit en hormones corticosurrénaliennes. Primaire (maladie d'Addison) : lésion des 2 surrénales — auto-immune (70 %), tuberculose (20 %), VIH, tumeur… ; ACTH élevée, mélanodermie. Secondaire : déficit en ACTH (pas de mélanodermie, minéralocorticoïdes conservés).",
+    premiere_intention: ["Évoquer devant : asthénie, hypotension, troubles digestifs, mélanodermie (plis, paumes, muqueuses), goût pour le sel", "Orientation : hyponatrémie/hypochlorémie, HYPERKALIÉMIE, acidose métabolique, hypoglycémie, hémoconcentration, hyperazotémie", "Certitude : cortisolémie basse, ACTH élevée (primaire), cortisol libre urinaire ↓ ; test au Synacthène (ACTH)", "Auto-anticorps anti-21-hydroxylase (formes auto-immunes) ; imagerie surrénalienne"],
+    causes: [
+      { cause: "Insuffisance surrénalienne primaire (Addison)", signe: "auto-immune (70 %), tuberculose (20 %), VIH, tumorale, congénitale ; ACTH ↑, mélanodermie", examens: ["Cortisol, ACTH", "Anti-21-hydroxylase, TDM surrénale"] },
+      { cause: "Insuffisance surrénalienne secondaire", signe: "déficit hypophysaire en ACTH ; pas de mélanodermie, minéralocorticoïdes conservés", examens: ["ACTH basse/normale", "Test au Synacthène, IRM hypophyse"] }
+    ],
+    tableaux: [
+      { titre: "Signes d'orientation biologiques",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Natrémie / chlore", "Hyponatrémie, hypochlorémie"],
+          ["Kaliémie", "Hyperkaliémie"],
+          ["Équilibre acido-basique", "Acidose métabolique"],
+          ["Glycémie", "Hypoglycémie (↑ sensibilité à l'insuline)"],
+          ["Hématocrite", "Élevé (hémoconcentration)"],
+          ["Azote", "Hyperazotémie"]
+        ] },
+      { titre: "Diagnostic de certitude",
+        entetes: ["Examen", "Résultat"],
+        lignes: [
+          ["Cortisolémie", "Diminuée"],
+          ["ACTH", "Augmentée (primaire) ; basse/normale (secondaire)"],
+          ["Cortisol libre / 17-OH urinaires", "Diminués"],
+          ["Test au Synacthène (ACTH)", "Pas de réponse (primaire) ; réponse possible (secondaire)"],
+          ["Anticorps", "Anti-21-hydroxylase (formes auto-immunes)"]
+        ] }
+    ],
+    red_flags: ["Insuffisance surrénale AIGUË : déshydratation, choc, hyperkaliémie, hypoglycémie → URGENCE vitale (hydrocortisone IV)", "Facteur de stress (infection, chirurgie) chez un insuffisant surrénalien → augmenter les doses", "Hyperkaliémie menaçante", "Mélanodermie + asthénie + hypotension = évoquer une maladie d'Addison"],
+    conduite: ["Orientation : hyponatrémie + hyperkaliémie + hypoglycémie ; certitude : cortisol bas + ACTH (élevée si primaire).", "Test au Synacthène ; anti-21-hydroxylase ; imagerie surrénalienne.", "Traitement : hydrocortisone (doses ↑ en cas de stress) ; fludrocortisone dans la maladie d'Addison ; régime normosodé.", "Explorer les autres axes endocriniens (polyendocrinopathie auto-immune)."]
   }
 ];
 

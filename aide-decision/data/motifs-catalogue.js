@@ -224,7 +224,7 @@ window.MOTIFS = [
     ],
     urgences: [
       { l: "Acidocétose diabétique", b: "hyperglycemie" }, { l: "Hyperglycémie sévère avec déshydratation", b: "hyperglycemie" },
-      { l: "Hypoglycémie sévère", f: "hypoglycemie" }, { l: "Crise thyréotoxique", f: "goitre" }, { l: "Insuffisance surrénale aiguë", f: "asthenie" },
+      { l: "Hypoglycémie sévère", f: "hypoglycemie" }, { l: "Crise thyréotoxique", f: "goitre" }, { l: "Insuffisance surrénale aiguë", b: "insuffisance_surrenalienne" },
       { l: "Hypercalcémie symptomatique", b: "hypercalcemie" }, { l: "Hyponatrémie sévère", b: "hyponatremie" }
     ]
   },
