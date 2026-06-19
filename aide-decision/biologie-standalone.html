@@ -521,6 +521,55 @@ window.BIOKB = [
     ],
     red_flags: ["Hémolyse aiguë (fièvre, frissons, état de choc)", "Syndrome d'Evans (AHAI + thrombopénie auto-immune) → rechercher un lupus", "Mauvaise tolérance → transfusion (avec précautions, sang réchauffé si Ac froids)"],
     conduite: ["Test de Coombs direct = examen clé ; test d'élution et Coombs indirect précisent la spécificité de l'anticorps.", "Toujours rechercher une cause secondaire (LED, hémopathie lymphoïde, infection, médicament).", "Traitements selon le type : corticothérapie, immunoglobulines IV, immunosuppresseurs, anti-CD20 (rituximab), splénectomie ; pour les formes à Ac froids, protection contre le froid."]
+  },
+  {
+    id: "thrombopenie", num: 67, anomalie: "Thrombopénie (plaquettes basses)",
+    specialite: "Hématologie",
+    definition: "Plaquettes < 150 G/L. Éliminer d'abord une FAUSSE thrombopénie (agrégats à l'EDTA, satellitisme, microcaillot). Mécanismes : centrale (défaut de production), périphérique (destruction/consommation), répartition (hypersplénisme) ou hémodilution.",
+    premiere_intention: ["Éliminer une fausse thrombopénie : contrôle sur tube citraté + frottis (agrégats, satellitisme)", "Apprécier le risque hémorragique (purpura, muqueuses) et la profondeur de la thrombopénie", "NFS + frottis : autres lignées, schizocytes (→ MAT), blastes", "Bilan d'hémostase (TP, TCA, fibrinogène, D-dimères) ; myélogramme si origine centrale suspectée"],
+    causes: [
+      { cause: "Fausse thrombopénie", signe: "agrégats (EDTA), satellitisme, microcaillot — plaquettes normales sur citrate", examens: ["Contrôle sur tube citraté", "Frottis sanguin"] },
+      { cause: "Centrale (défaut de production)", signe: "carence B9/B12, alcoolisme aigu, aplasie / envahissement médullaire / myélodysplasie / myélofibrose, iatrogène, constitutionnelle", examens: ["B12/folates", "Myélogramme", "Revue des médicaments"] },
+      { cause: "Périphérique — auto-immune", signe: "PTAI ; LED, SAPL, Sjögren ; hémopathies (LLC, Hodgkin) ; immuno-allergique (héparine → TIH, quinine, sulfamides, rifampicine, pénicilline, digoxine) ; infections virales", examens: ["Coombs plaquettaire", "ACAN", "Sérologies virales", "Recherche TIH si héparine"] },
+      { cause: "Périphérique — consommation (MAT / CIVD)", signe: "PTT, SHU, CIVD : schizocytes, troubles de l'hémostase ; parasitaires (paludisme, toxoplasmose, leishmaniose)", examens: ["Frottis (schizocytes)", "TP/TCA, fibrinogène, D-dimères", "Avis urgent"] },
+      { cause: "Allo-immune", signe: "post-transfusionnelle ; allo-immunisation materno-fœtale", examens: ["Contexte", "Recherche d'allo-anticorps"] },
+      { cause: "Répartition / hémodilution", signe: "hypersplénisme (HTP, hémopathies, infections) ; transfusions / perfusions massives ; hypothermie ; thrombopénie gestationnelle", examens: ["Échographie (rate, foie)", "Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Signes hémorragiques et seuils",
+        entetes: ["Manifestation", "Fréquence / seuil"],
+        lignes: [
+          ["Purpura cutané (pétéchial)", "≈ 80 %"],
+          ["Hémorragie muqueuse", "≈ 40 % (adulte)"],
+          ["Hémorragie rétinienne", "si plaquettes < 20 G/L → fond d'œil"]
+        ] }
+    ],
+    red_flags: ["Thrombopénie profonde < 20 G/L (hémorragie spontanée possible) → fond d'œil, avis urgent", "Schizocytes + thrombopénie = microangiopathie thrombotique (PTT/SHU) → urgence", "Thrombopénie + CIVD / sepsis", "Thrombopénie sous héparine (TIH) → arrêt de l'héparine + avis", "Syndrome hémorragique actif"],
+    conduite: ["Toujours éliminer une fausse thrombopénie avant tout bilan.", "Découverte récente avec schizocytes, CIVD ou syndrome hémorragique = urgence.", "Le PTAI est un diagnostic d'élimination (voir fiche dédiée)."]
+  },
+  {
+    id: "ptai", num: 68, anomalie: "Purpura thrombopénique auto-immun (PTAI / PTI)",
+    specialite: "Hématologie",
+    definition: "Thrombopénie périphérique par auto-anticorps anti-plaquettes. Diagnostic d'ÉLIMINATION. Forme aiguë (surtout l'enfant de 2-6 ans, incidence ≈ 4/100 000/an) ou chronique (surtout l'adulte, prédominance féminine).",
+    premiere_intention: ["Thrombopénie isolée, régénérative (VPM et plaquettes réticulées augmentés, > 20-30 %)", "NFS et frottis normaux par ailleurs (pas de schizocytes, pas de blastes)", "Exclure les autres causes : médicaments, infections, MAT, hémopathie, carence", "Sérologies virales (rubéole, VZV, VIH, EBV), ACAN, bilirubine, transaminases"],
+    causes: [
+      { cause: "PTAI aigu", signe: "surtout l'enfant (2-6 ans), début brutal, plaquettes < 20 G/L, manifestations hémorragiques, parfois précédé d'une infection virale", examens: ["NFS, frottis", "Sérologies virales"] },
+      { cause: "PTAI chronique", signe: "surtout l'adulte, sex-ratio F/H ≈ 3, thrombopénie modérée (50-80 G/L), manifestations modérées, rémissions spontanées rares", examens: ["Suivi NFS", "ACAN"] },
+      { cause: "Formes secondaires à rechercher", signe: "LED / SAPL, hémopathie lymphoïde (LLC), VIH / VHC, médicaments", examens: ["ACAN", "Sérologies VIH/VHC", "Revue médicamenteuse"] }
+    ],
+    tableaux: [
+      { titre: "PTAI aigu vs chronique",
+        entetes: ["", "Aigu", "Chronique"],
+        lignes: [
+          ["Terrain", "Surtout l'enfant (2-6 ans)", "Surtout l'adulte, F/H ≈ 3"],
+          ["Début", "Brutal, parfois post-viral", "Insidieux"],
+          ["Plaquettes", "< 20 G/L", "Modérée (50-80 G/L)"],
+          ["Hémorragie", "Manifestations possibles", "Modérées ou absentes"],
+          ["Évolution", "Guérison fréquente", "Rémissions spontanées rares"]
+        ] }
+    ],
+    red_flags: ["Plaquettes < 20 G/L avec syndrome hémorragique → fond d'œil, avis hématologique urgent", "Hémorragie muqueuse abondante ou signe neurologique (hémorragie intracrânienne, rare mais grave)"],
+    conduite: ["Diagnostic d'élimination : thrombopénie isolée régénérative, autres causes exclues.", "Coombs plaquettaire positif dans ≈ 80 % (auto-Ac anti-GpIIbIIIa, anti-GpIb/IX) ; myélogramme (avant corticoïdes chez l'adulte ou si atypie) = moelle riche en mégacaryocytes.", "Plaquettes réticulées > 20-30 % (caractère périphérique).", "Traitement selon profondeur et risque : abstention/surveillance, corticoïdes, immunoglobulines IV ; 2e ligne : agonistes du TPO, rituximab, splénectomie."]
   }
 ];
 

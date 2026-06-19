@@ -231,7 +231,7 @@ window.MOTIFS = [
   {
     n: 14, titre: "Hématologie / infectieux systémique", icone: "🩸",
     frequents: [
-      { l: "Anémie", b: "anemie" }, { l: "Leucopénie", b: "inversion_formule" }, { l: "Thrombopénie", b: "ts_hemostase_primaire" },
+      { l: "Anémie", b: "anemie" }, { l: "Leucopénie", b: "inversion_formule" }, { l: "Thrombopénie", b: "thrombopenie" },
       { l: "Hyperleucocytose", b: "inversion_formule" }, { l: "Syndrome inflammatoire", b: "electrophorese" },
       { l: "Fièvre prolongée", f: "fievre_tropiques" }, { l: "Adénopathies", f: "adenopathie" }, { l: "Splénomégalie", f: "adenopathie" },
       { l: "Hématomes faciles", b: "ts_hemostase_primaire" }, { l: "Fatigue avec pâleur", b: "anemie" },
@@ -240,7 +240,7 @@ window.MOTIFS = [
     ],
     urgences: [
       { l: "Neutropénie fébrile", f: "fievre_adulte" }, { l: "Purpura extensif", f: "eruption_urticaire" }, { l: "Anémie sévère symptomatique", b: "anemie" },
-      { l: "Thrombopénie profonde", b: "ts_hemostase_primaire" }, { l: "Sepsis", f: "fievre_adulte" }, { l: "Méningococcémie suspectée", f: "fievre_adulte" },
+      { l: "Thrombopénie profonde", b: "thrombopenie" }, { l: "Sepsis", f: "fievre_adulte" }, { l: "Méningococcémie suspectée", f: "fievre_adulte" },
       { l: "Syndrome hémorragique", b: "tp_bas" }, { l: "Complication de chimiothérapie", f: "fievre_adulte" }
     ]
   },
