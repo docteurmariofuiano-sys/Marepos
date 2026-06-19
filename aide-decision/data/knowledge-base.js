@@ -4013,5 +4013,349 @@ window.KB = {
         examens_a_discuter: ["Radiographie, avis (extraction)"] }
     ],
     examens_clinique: ["Identifier le produit, la quantité, l'heure", "État de conscience et constantes", "Examen de la bouche (caustique)", "Contacter le centre antipoison"]
+  },
+
+  // -------------------------------------------------------------------------
+  // FIÈVRE DE L'ADULTE
+  // -------------------------------------------------------------------------
+  fievre_adulte: {
+    id: "fievre_adulte", symptome: "Fièvre de l'adulte", specialite: ["Médecine interne", "Infectiologie"], urgence: true,
+    questions: [
+      { id: "fa_sepsis", label: "Signes de gravité (sepsis)", type: "boolean", question: "Avez-vous : confusion, malaise/tension basse en vous levant, marbrures, ou une respiration rapide ?" },
+      { id: "fa_purpura", label: "Purpura", type: "boolean", question: "Avez-vous des taches rouges/violacées qui ne s'effacent PAS à la pression ?" },
+      { id: "fa_raideur", label: "Syndrome méningé", type: "boolean", question: "Avez-vous une raideur de la nuque avec maux de tête et gêne à la lumière ?" },
+      { id: "fa_immuno", label: "Terrain à risque", type: "boolean", question: "Êtes-vous immunodéprimé, sous chimiothérapie, ou sans rate ?" },
+      { id: "fa_voyage", label: "Retour des tropiques", type: "boolean", question: "Revenez-vous d'un pays tropical (moins de 3 mois) ?" },
+      { id: "fa_duree", label: "Fièvre prolongée", type: "boolean", question: "La fièvre dure-t-elle depuis plus de 3 semaines ?" },
+      { id: "fa_localisation", label: "Point d'appel", type: "boolean", question: "Avez-vous un point d'appel (urinaire, pulmonaire, ORL, cutané, digestif) ?" }
+    ],
+    red_flags: [
+      { id: "fa_rf_sepsis", niveau: 3, when: { any: [{ q: "fa_sepsis", eq: true }, { q: "fa_purpura", eq: true }, { q: "fa_raideur", eq: true }] },
+        message_medecin: "Sepsis / purpura fébrile / syndrome méningé : urgence vitale (15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "fa_rf_neutropenie", niveau: 3, when: { q: "fa_immuno", eq: true },
+        message_medecin: "Fièvre chez l'immunodéprimé / neutropénique / asplénique : urgence (antibiothérapie sans délai).",
+        message_patient: "Une fièvre sur ce terrain nécessite une évaluation médicale immédiate." },
+      { id: "fa_rf_voyage", niveau: 3, when: { q: "fa_voyage", eq: true },
+        message_medecin: "Fièvre au retour des tropiques : éliminer un paludisme en urgence (voir fiche dédiée).",
+        message_patient: "Une fièvre au retour de voyage nécessite une évaluation médicale rapide." },
+      { id: "fa_rf_prolongee", niveau: 2, when: { q: "fa_duree", eq: true },
+        message_medecin: "Fièvre prolongée > 3 semaines : démarche structurée (infection, néoplasie, maladie inflammatoire).",
+        message_patient: "Une fièvre qui dure nécessite un bilan médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "fa_foyer", diagnostic: "Infection avec foyer identifié", arguments: [{ label: "point d'appel", w: 3, when: { q: "fa_localisation", eq: true } }],
+        examens_a_discuter: ["Examen orienté", "BU/ECBU, radiographie, prélèvements ciblés"] },
+      { id: "fa_sepsis", diagnostic: "Sepsis", arguments: [{ label: "signes de gravité", w: 3, when: { q: "fa_sepsis", eq: true } }, { label: "purpura", w: 1, when: { q: "fa_purpura", eq: true } }],
+        examens_a_discuter: ["Lactates, hémocultures", "Hospitalisation"] },
+      { id: "fa_voyage", diagnostic: "Fièvre du voyageur (paludisme)", arguments: [{ label: "retour des tropiques", w: 3, when: { q: "fa_voyage", eq: true } }],
+        examens_a_discuter: ["Frottis sanguin + goutte épaisse en urgence"] },
+      { id: "fa_prolongee", diagnostic: "Fièvre prolongée inexpliquée", arguments: [{ label: "durée > 3 semaines", w: 3, when: { q: "fa_duree", eq: true } }],
+        examens_a_discuter: ["Bilan structuré (infectieux, néoplasique, inflammatoire)"] }
+    ],
+    examens_clinique: ["Constantes complètes (TA, FC, FR, SpO2, TRC)", "Recherche d'un purpura et d'une raideur méningée", "Recherche d'un foyer (ORL, pulmonaire, urinaire, cutané, abdominal)", "Examen orienté par le terrain"]
+  },
+
+  // -------------------------------------------------------------------------
+  // REFLUX GASTRO-ŒSOPHAGIEN
+  // -------------------------------------------------------------------------
+  rgo: {
+    id: "rgo", symptome: "Reflux gastro-œsophagien (brûlures d'estomac)", specialite: ["Digestif"],
+    questions: [
+      { id: "rg_pyrosis", label: "Pyrosis", type: "boolean", question: "Avez-vous des brûlures qui remontent derrière le sternum, surtout après les repas ou allongé ?" },
+      { id: "rg_dysphagie", label: "Dysphagie", type: "boolean", question: "Avez-vous du mal à avaler, une sensation de blocage (surtout pour les solides) ?" },
+      { id: "rg_aeg", label: "Signes d'alarme", type: "boolean", question: "Avez-vous maigri, une anémie, ou des vomissements de sang / selles noires ?" },
+      { id: "rg_age50", label: "Âge > 50 + récent", type: "boolean", question: "Avez-vous plus de 50 ans avec des symptômes récents ?" },
+      { id: "rg_cardiaque", label: "Cause cardiaque", type: "boolean", question: "Les douleurs surviennent-elles à l'effort, ou avez-vous des facteurs de risque cardiaque ?" }
+    ],
+    red_flags: [
+      { id: "rg_rf_alarme", niveau: 2, when: { any: [{ q: "rg_dysphagie", eq: true }, { q: "rg_aeg", eq: true }] },
+        message_medecin: "Signes d'alarme digestifs (dysphagie, amaigrissement, anémie, hémorragie) : endoscopie haute (éliminer un cancer).",
+        message_patient: "Ces signes nécessitent un avis médical et une endoscopie." },
+      { id: "rg_rf_cardiaque", niveau: 2, when: { q: "rg_cardiaque", eq: true },
+        message_medecin: "Douleur d'effort : éliminer une cause cardiaque avant d'étiqueter « RGO » (ECG).",
+        message_patient: "Une douleur à l'effort doit être évaluée par un médecin." }
+    ],
+    diagnostics_differentiels: [
+      { id: "rg_simple", diagnostic: "RGO non compliqué", arguments: [{ label: "pyrosis typique", w: 3, when: { q: "rg_pyrosis", eq: true } }, { label: "sans dysphagie", w: 1, when: { q: "rg_dysphagie", eq: false } }],
+        examens_a_discuter: ["Règles hygiéno-diététiques", "Épreuve par IPP"] },
+      { id: "rg_complique", diagnostic: "Œsophagite / complication / cancer", arguments: [{ label: "dysphagie", w: 2, when: { q: "rg_dysphagie", eq: true } }, { label: "signes d'alarme", w: 2, when: { q: "rg_aeg", eq: true } }, { label: "> 50 ans récent", w: 1, when: { q: "rg_age50", eq: true } }],
+        examens_a_discuter: ["Endoscopie œso-gastro-duodénale"] },
+      { id: "rg_cardiaque", diagnostic: "Cause cardiaque à éliminer", arguments: [{ label: "douleur d'effort / FdR CV", w: 3, when: { q: "rg_cardiaque", eq: true } }],
+        examens_a_discuter: ["ECG"] }
+    ],
+    examens_clinique: ["Recherche de signes d'alarme digestifs", "ECG si doute cardiaque", "Poids"]
+  },
+
+  // -------------------------------------------------------------------------
+  // RECTORRAGIES
+  // -------------------------------------------------------------------------
+  rectorragie: {
+    id: "rectorragie", symptome: "Sang rouge par l'anus (rectorragie)", specialite: ["Digestif", "Proctologie"], urgence: true,
+    questions: [
+      { id: "re_choc", label: "Abondance / choc", type: "boolean", question: "Le saignement est-il abondant, avec malaise, pâleur, ou cœur rapide ?" },
+      { id: "re_age50", label: "Cancer (>50 / transit)", type: "boolean", question: "Avez-vous plus de 50 ans, ou un changement récent du transit / un amaigrissement ?" },
+      { id: "re_anemie", label: "Anémie", type: "boolean", question: "Êtes-vous pâle/fatigué, ou a-t-on trouvé une anémie ?" },
+      { id: "re_hemorroides", label: "Origine proctologique", type: "boolean", question: "Le sang est-il rouge vif, sur le papier ou autour des selles, avec douleur anale / hémorroïdes connues ?" },
+      { id: "re_mici", label: "MICI", type: "boolean", question: "Y a-t-il des glaires, des diarrhées chroniques, des douleurs abdominales ?" },
+      { id: "re_atcdfam", label: "ATCD familial CCR", type: "boolean", question: "Avez-vous des antécédents familiaux de cancer du côlon ?" }
+    ],
+    red_flags: [
+      { id: "re_rf_choc", niveau: 3, when: { q: "re_choc", eq: true },
+        message_medecin: "Rectorragie abondante / signes de choc : urgence (voir aussi hémorragie digestive).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "re_rf_cancer", niveau: 2, when: { any: [{ q: "re_age50", eq: true }, { q: "re_anemie", eq: true }] },
+        message_medecin: "Rectorragie après 50 ans / avec anémie / changement du transit : coloscopie (cancer colorectal).",
+        message_patient: "Ce saignement nécessite un avis médical et une coloscopie." }
+    ],
+    diagnostics_differentiels: [
+      { id: "re_procto", diagnostic: "Hémorroïdes / fissure anale", arguments: [{ label: "sang rouge vif, douleur anale", w: 3, when: { q: "re_hemorroides", eq: true } }],
+        examens_a_discuter: ["Examen proctologique, anuscopie", "Traitement local"] },
+      { id: "re_cancer", diagnostic: "Cancer colorectal", arguments: [{ label: "> 50 ans / transit modifié", w: 2, when: { q: "re_age50", eq: true } }, { label: "anémie", w: 2, when: { q: "re_anemie", eq: true } }, { label: "ATCD familial", w: 1, when: { q: "re_atcdfam", eq: true } }],
+        examens_a_discuter: ["Coloscopie"] },
+      { id: "re_mici", diagnostic: "MICI", arguments: [{ label: "glaires, diarrhée chronique, douleurs", w: 3, when: { q: "re_mici", eq: true } }],
+        examens_a_discuter: ["Calprotectine, coloscopie + biopsies"] },
+      { id: "re_choc", diagnostic: "Hémorragie abondante", arguments: [{ label: "signes de choc", w: 3, when: { q: "re_choc", eq: true } }],
+        examens_a_discuter: ["Prise en charge urgente (voir hémorragie digestive)"] }
+    ],
+    examens_clinique: ["Examen anal, toucher rectal, anuscopie", "Recherche d'anémie", "Pouls, pression artérielle si abondant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DYSPHAGIE
+  // -------------------------------------------------------------------------
+  dysphagie: {
+    id: "dysphagie", symptome: "Difficulté à avaler (dysphagie)", specialite: ["Digestif", "ORL"], urgence: true,
+    questions: [
+      { id: "dy2_aphagie", label: "Aphagie / blocage aigu", type: "boolean", question: "N'arrivez-vous plus du tout à avaler (même votre salive), ou avez-vous un blocage alimentaire aigu ?" },
+      { id: "dy2_solide_progressif", label: "Solides progressif", type: "boolean", question: "Le blocage est-il surtout pour les solides et s'aggrave-t-il progressivement ?" },
+      { id: "dy2_aeg", label: "AEG / tabac-alcool", type: "boolean", question: "Avez-vous maigri, ou êtes-vous fumeur/buveur ?" },
+      { id: "dy2_neuro", label: "Trouble de déglutition", type: "boolean", question: "Avez-vous des fausses routes, une voix nasonnée, ou d'autres signes neurologiques ?" },
+      { id: "dy2_douleur", label: "Odynophagie infectieuse", type: "boolean", question: "Est-ce douloureux à la déglutition, avec un contexte infectieux ?" }
+    ],
+    red_flags: [
+      { id: "dy2_rf_aphagie", niveau: 3, when: { q: "dy2_aphagie", eq: true },
+        message_medecin: "Aphagie / blocage alimentaire aigu : urgence (corps étranger, endoscopie).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "dy2_rf_cancer", niveau: 2, when: { any: [{ q: "dy2_solide_progressif", eq: true }, { q: "dy2_aeg", eq: true }] },
+        message_medecin: "Dysphagie aux solides progressive (± fumeur/amaigrissement) : cancer œsophagien à éliminer → endoscopie.",
+        message_patient: "Une difficulté à avaler qui s'aggrave nécessite un avis médical et une endoscopie." },
+      { id: "dy2_rf_neuro", niveau: 2, when: { q: "dy2_neuro", eq: true },
+        message_medecin: "Dysphagie avec fausses routes / signes neuro : trouble de la déglutition (cause neurologique) → avis.",
+        message_patient: "Des fausses routes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dy2_cancer", diagnostic: "Cancer de l'œsophage", arguments: [{ label: "dysphagie solides progressive", w: 3, when: { q: "dy2_solide_progressif", eq: true } }, { label: "AEG / tabac-alcool", w: 2, when: { q: "dy2_aeg", eq: true } }],
+        examens_a_discuter: ["Endoscopie œso-gastro-duodénale"] },
+      { id: "dy2_neuro", diagnostic: "Trouble moteur / neurologique de la déglutition", arguments: [{ label: "fausses routes / signes neuro", w: 3, when: { q: "dy2_neuro", eq: true } }],
+        examens_a_discuter: ["Avis neurologique / ORL", "Exploration de la déglutition"] },
+      { id: "dy2_oesophagite", diagnostic: "Œsophagite (infectieuse / RGO)", arguments: [{ label: "odynophagie", w: 3, when: { q: "dy2_douleur", eq: true } }],
+        examens_a_discuter: ["Traitement, endoscopie si persistance"] },
+      { id: "dy2_corps", diagnostic: "Corps étranger / blocage aigu", arguments: [{ label: "aphagie aiguë", w: 3, when: { q: "dy2_aphagie", eq: true } }],
+        examens_a_discuter: ["Endoscopie en urgence"] }
+    ],
+    examens_clinique: ["Examen ORL", "État nutritionnel (poids)", "Examen neurologique", "Recherche d'adénopathies cervicales"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ARTHRITE / DOULEUR ARTICULAIRE AIGUË
+  // -------------------------------------------------------------------------
+  arthrite: {
+    id: "arthrite", symptome: "Articulation douloureuse / gonflée (arthrite)", specialite: ["Rhumatologie"], urgence: true,
+    questions: [
+      { id: "ar_septique", label: "Monoarthrite fébrile", type: "boolean", question: "Une seule articulation est-elle brutalement gonflée, rouge, chaude et très douloureuse, avec de la fièvre ?" },
+      { id: "ar_porte", label: "Porte d'entrée / prothèse", type: "boolean", question: "Y a-t-il une plaie, une infection récente, ou une prothèse articulaire ?" },
+      { id: "ar_goutte", label: "Microcristalline", type: "boolean", question: "Est-ce une crise brutale très douloureuse du gros orteil ou du genou, récidivante ?" },
+      { id: "ar_inflammatoire", label: "Rhumatisme inflammatoire", type: "boolean", question: "Avez-vous plusieurs articulations douloureuses avec une raideur matinale prolongée (> 30 min) ?" },
+      { id: "ar_traumatisme", label: "Traumatisme", type: "boolean", question: "Y a-t-il eu un traumatisme ?" }
+    ],
+    red_flags: [
+      { id: "ar_rf_septique", niveau: 3, when: { q: "ar_septique", eq: true },
+        message_medecin: "Monoarthrite aiguë fébrile : arthrite septique jusqu'à preuve du contraire → ponction articulaire en URGENCE (avant antibiotiques).",
+        message_patient: "Une articulation chaude et douloureuse avec fièvre nécessite une évaluation médicale immédiate." },
+      { id: "ar_rf_prothese", niveau: 2, when: { q: "ar_porte", eq: true },
+        message_medecin: "Porte d'entrée / prothèse : risque d'arthrite septique → avis.",
+        message_patient: "Ce contexte nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ar_septique", diagnostic: "Arthrite septique", arguments: [{ label: "monoarthrite fébrile", w: 3, when: { q: "ar_septique", eq: true } }, { label: "porte d'entrée / prothèse", w: 1, when: { q: "ar_porte", eq: true } }],
+        examens_a_discuter: ["Ponction articulaire en urgence", "Hémocultures"] },
+      { id: "ar_goutte", diagnostic: "Arthrite microcristalline (goutte)", arguments: [{ label: "crise du gros orteil récidivante", w: 3, when: { q: "ar_goutte", eq: true } }],
+        examens_a_discuter: ["Uricémie (à distance), ponction si doute", "AINS / colchicine"] },
+      { id: "ar_inflammatoire", diagnostic: "Rhumatisme inflammatoire (PR…)", arguments: [{ label: "polyarthrite + raideur matinale", w: 3, when: { q: "ar_inflammatoire", eq: true } }],
+        examens_a_discuter: ["VS/CRP, facteur rhumatoïde, anti-CCP", "Avis rhumatologique"] },
+      { id: "ar_trauma", diagnostic: "Cause traumatique", arguments: [{ label: "traumatisme", w: 3, when: { q: "ar_traumatisme", eq: true } }],
+        examens_a_discuter: ["Radiographie"] }
+    ],
+    examens_clinique: ["Examen articulaire (épanchement, chaleur, rougeur)", "Température", "Recherche d'une porte d'entrée", "Ponction articulaire si monoarthrite fébrile"]
+  },
+
+  // -------------------------------------------------------------------------
+  // INCONTINENCE URINAIRE
+  // -------------------------------------------------------------------------
+  incontinence_urinaire: {
+    id: "incontinence_urinaire", symptome: "Fuites urinaires (incontinence)", specialite: ["Urologie", "Gynécologie"],
+    questions: [
+      { id: "in_neuro", label: "Cause neurologique", type: "boolean", question: "L'incontinence est-elle récente, avec des troubles neurologiques (faiblesse des jambes, perte de sensibilité autour de l'anus) ?" },
+      { id: "in_retention", label: "Regorgement", type: "boolean", question: "Avez-vous des fuites avec l'impression de ne jamais bien vider la vessie (mictions par regorgement) ?" },
+      { id: "in_infection", label: "Hématurie / infection", type: "boolean", question: "Y a-t-il des brûlures, du sang dans les urines, ou de la fièvre ?" },
+      { id: "in_effort", label: "Incontinence d'effort", type: "boolean", question: "Les fuites surviennent-elles à l'effort (toux, rire, port de charge) ?" },
+      { id: "in_urgenturie", label: "Hyperactivité vésicale", type: "boolean", question: "Avez-vous des envies pressantes et soudaines avec fuites avant d'arriver aux toilettes ?" }
+    ],
+    red_flags: [
+      { id: "in_rf_neuro", niveau: 3, when: { q: "in_neuro", eq: true },
+        message_medecin: "Incontinence récente + signes neurologiques (sensibilité périnéale) : syndrome de la queue de cheval / atteinte médullaire → urgence (IRM).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "in_rf_retention", niveau: 2, when: { q: "in_retention", eq: true },
+        message_medecin: "Incontinence par regorgement : rechercher une rétention chronique / un globe → échographie post-mictionnelle, avis.",
+        message_patient: "Ce type de fuite nécessite un avis médical." },
+      { id: "in_rf_infection", niveau: 2, when: { q: "in_infection", eq: true },
+        message_medecin: "Hématurie / signes infectieux : explorer (ECBU ; voir hématurie/cystite).",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "in_effort", diagnostic: "Incontinence urinaire d'effort", arguments: [{ label: "fuites à l'effort", w: 3, when: { q: "in_effort", eq: true } }],
+        examens_a_discuter: ["Rééducation périnéale", "Avis spécialisé"] },
+      { id: "in_urgenturie", diagnostic: "Incontinence par urgenturie (hyperactivité vésicale)", arguments: [{ label: "urgenturies", w: 3, when: { q: "in_urgenturie", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire, mesures comportementales"] },
+      { id: "in_regorgement", diagnostic: "Incontinence par regorgement (rétention)", arguments: [{ label: "mauvaise vidange", w: 3, when: { q: "in_retention", eq: true } }],
+        examens_a_discuter: ["Échographie post-mictionnelle"] },
+      { id: "in_neuro", diagnostic: "Cause neurologique", arguments: [{ label: "signes neurologiques", w: 3, when: { q: "in_neuro", eq: true } }],
+        examens_a_discuter: ["IRM, avis neurologique"] }
+    ],
+    examens_clinique: ["Bandelette urinaire", "Recherche d'un globe vésical", "Examen neurologique périnéal", "Caractériser le type d'incontinence"]
+  },
+
+  // -------------------------------------------------------------------------
+  // RÉTENTION URINAIRE
+  // -------------------------------------------------------------------------
+  retention_urinaire: {
+    id: "retention_urinaire", symptome: "Impossibilité d'uriner (rétention)", specialite: ["Urologie"], urgence: true,
+    questions: [
+      { id: "rt_aigue", label: "Globe douloureux", type: "boolean", question: "N'arrivez-vous plus du tout à uriner, avec une envie douloureuse et un ventre tendu en bas ?" },
+      { id: "rt_neuro", label: "Cause neurologique", type: "boolean", question: "Avez-vous des troubles neurologiques (faiblesse des jambes, perte de sensibilité autour de l'anus) ?" },
+      { id: "rt_anurie", label: "Anurie (IRA)", type: "boolean", question: "Est-ce plutôt une absence totale d'urines SANS envie ni ventre tendu (les reins ne produisent plus) ?" },
+      { id: "rt_fievre", label: "Prostatite", type: "boolean", question: "Avez-vous de la fièvre (prostatite, infection) ?" },
+      { id: "rt_medic", label: "Iatrogène", type: "boolean", question: "Avez-vous pris un nouveau médicament (anticholinergique, opiacé) ?" }
+    ],
+    red_flags: [
+      { id: "rt_rf_aigue", niveau: 3, when: { q: "rt_aigue", eq: true },
+        message_medecin: "Rétention aiguë d'urine (globe douloureux) : urgence (sondage / cathéter sus-pubien).",
+        message_patient: "Ne plus pouvoir uriner avec un ventre tendu et douloureux nécessite une évaluation médicale immédiate." },
+      { id: "rt_rf_neuro", niveau: 3, when: { q: "rt_neuro", eq: true },
+        message_medecin: "Rétention + signes neurologiques : syndrome de la queue de cheval / atteinte médullaire → urgence (IRM).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "rt_rf_anurie", niveau: 3, when: { q: "rt_anurie", eq: true },
+        message_medecin: "Anurie (pas d'urine sans globe) : insuffisance rénale aiguë → urgence (créatinine, échographie).",
+        message_patient: "Cette situation nécessite une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "rt_aigue", diagnostic: "Rétention aiguë d'urine", arguments: [{ label: "globe douloureux", w: 3, when: { q: "rt_aigue", eq: true } }, { label: "médicament favorisant", w: 1, when: { q: "rt_medic", eq: true } }],
+        examens_a_discuter: ["Sondage / cathéter sus-pubien en urgence", "Rechercher la cause (prostate, fécalome, médicament)"] },
+      { id: "rt_neuro", diagnostic: "Cause neurologique", arguments: [{ label: "signes neurologiques", w: 3, when: { q: "rt_neuro", eq: true } }],
+        examens_a_discuter: ["IRM médullaire"] },
+      { id: "rt_anurie", diagnostic: "Anurie (insuffisance rénale aiguë)", arguments: [{ label: "absence d'urine sans globe", w: 3, when: { q: "rt_anurie", eq: true } }],
+        examens_a_discuter: ["Créatinine, échographie rénale"] },
+      { id: "rt_prostatite", diagnostic: "Prostatite (rétention fébrile)", arguments: [{ label: "fièvre", w: 2, when: { q: "rt_fievre", eq: true } }],
+        examens_a_discuter: ["ECBU, avis urologique"] }
+    ],
+    examens_clinique: ["Palpation/percussion sus-pubienne (globe)", "Toucher rectal (prostate)", "Examen neurologique périnéal", "Créatinine, bandelette urinaire"]
+  },
+
+  // -------------------------------------------------------------------------
+  // MÉTRORRAGIES
+  // -------------------------------------------------------------------------
+  metrorragies: {
+    id: "metrorragies", symptome: "Saignements gynécologiques (métrorragies)", specialite: ["Gynécologie"], urgence: true,
+    questions: [
+      { id: "me_choc", label: "Abondance / choc", type: "boolean", question: "Le saignement est-il très abondant, avec malaise, pâleur, ou cœur rapide ?" },
+      { id: "me_douleur", label: "Douleur pelvienne", type: "boolean", question: "Y a-t-il une douleur du bas-ventre associée ?" },
+      { id: "me_menopause", label: "Post-ménopause", type: "boolean", question: "Êtes-vous ménopausée (saignement après l'arrêt définitif des règles) ?" },
+      { id: "me_postcoital", label: "Post-coïtal", type: "boolean", question: "Le saignement survient-il surtout après les rapports ?" },
+      { id: "me_contraception", label: "Iatrogène / DIU", type: "boolean", question: "Avez-vous un changement récent de contraception, ou un stérilet ?" }
+    ],
+    red_flags: [
+      { id: "me_rf_geu", niveau: 3, when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "me_douleur", eq: true }] },
+        message_medecin: "Saignement + douleur + grossesse possible : grossesse extra-utérine → urgence (β-hCG, échographie ; voir algie pelvienne).",
+        message_patient: "Cette association nécessite une évaluation médicale urgente." },
+      { id: "me_rf_choc", niveau: 3, when: { q: "me_choc", eq: true },
+        message_medecin: "Métrorragies abondantes / signes de choc : urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "me_rf_menopause", niveau: 2, when: { q: "me_menopause", eq: true },
+        message_medecin: "Saignement post-ménopausique : cancer de l'endomètre jusqu'à preuve du contraire → échographie endovaginale + avis gynéco.",
+        message_patient: "Un saignement après la ménopause nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "me_obstetrical", diagnostic: "Cause obstétricale (grossesse / GEU)", arguments: [{ label: "grossesse possible", w: 3, when: { ctx: "grossessePossible", eq: true } }, { label: "douleur associée", w: 1, when: { q: "me_douleur", eq: true } }],
+        examens_a_discuter: ["β-hCG, échographie pelvienne"] },
+      { id: "me_endometre", diagnostic: "Cancer de l'endomètre (post-ménopause)", arguments: [{ label: "saignement post-ménopausique", w: 3, when: { q: "me_menopause", eq: true } }],
+        examens_a_discuter: ["Échographie endovaginale", "Biopsie d'endomètre"] },
+      { id: "me_cervical", diagnostic: "Cause cervicale (cervicite, polype, cancer du col)", arguments: [{ label: "saignement post-coïtal", w: 3, when: { q: "me_postcoital", eq: true } }],
+        examens_a_discuter: ["Examen au spéculum, frottis"] },
+      { id: "me_fonctionnel", diagnostic: "Cause fonctionnelle / iatrogène", arguments: [{ label: "contraception / DIU", w: 2, when: { q: "me_contraception", eq: true } }],
+        examens_a_discuter: ["Réévaluation, échographie"] }
+    ],
+    examens_clinique: ["Examen au spéculum", "β-hCG", "Échographie pelvienne", "Pouls et pression artérielle si abondant"]
+  },
+
+  // -------------------------------------------------------------------------
+  // INSOMNIE
+  // -------------------------------------------------------------------------
+  insomnie: {
+    id: "insomnie", symptome: "Insomnie / troubles du sommeil", specialite: ["Médecine générale", "Psychiatrie"],
+    questions: [
+      { id: "is_humeur", label: "Dépression", type: "boolean", question: "Avez-vous une tristesse, une perte d'intérêt, ou des idées noires ?" },
+      { id: "is_apnee", label: "Apnées du sommeil", type: "boolean", question: "Ronflez-vous avec des pauses respiratoires et une somnolence dans la journée ?" },
+      { id: "is_organique", label: "Cause organique", type: "boolean", question: "L'insomnie est-elle liée à des douleurs, des envies fréquentes d'uriner, ou une gêne respiratoire nocturne ?" },
+      { id: "is_substance", label: "Substances / hygiène", type: "boolean", question: "Consommez-vous excitants (café), alcool, écrans tardifs, ou des médicaments stimulants ?" },
+      { id: "is_anxiete", label: "Anxiété", type: "boolean", question: "Est-ce lié à un stress, une anxiété, des ruminations ?" }
+    ],
+    red_flags: [
+      { id: "is_rf_depression", niveau: 2, when: { q: "is_humeur", eq: true },
+        message_medecin: "Insomnie + symptômes dépressifs / idées noires : évaluer une dépression et le risque suicidaire (voir fiche anxiété).",
+        message_patient: "Si vous avez des idées noires, parlez-en à un médecin (ou appelez le 3114)." },
+      { id: "is_rf_apnee", niveau: 2, when: { q: "is_apnee", eq: true },
+        message_medecin: "Ronflements + pauses + somnolence : syndrome d'apnées du sommeil → dépistage (polygraphie).",
+        message_patient: "Ces signes méritent un dépistage du sommeil." }
+    ],
+    diagnostics_differentiels: [
+      { id: "is_psychophysio", diagnostic: "Insomnie psychophysiologique / anxieuse", arguments: [{ label: "stress, ruminations", w: 3, when: { q: "is_anxiete", eq: true } }],
+        examens_a_discuter: ["Hygiène du sommeil, TCC de l'insomnie"] },
+      { id: "is_depression", diagnostic: "Dépression", arguments: [{ label: "symptômes dépressifs", w: 3, when: { q: "is_humeur", eq: true } }],
+        examens_a_discuter: ["Évaluation thymique, suivi"] },
+      { id: "is_apnee", diagnostic: "Syndrome d'apnées du sommeil", arguments: [{ label: "ronflements + pauses + somnolence", w: 3, when: { q: "is_apnee", eq: true } }],
+        examens_a_discuter: ["Polygraphie ventilatoire"] },
+      { id: "is_organique", diagnostic: "Cause organique / iatrogène", arguments: [{ label: "douleurs/nycturie/dyspnée", w: 2, when: { q: "is_organique", eq: true } }, { label: "excitants / substances", w: 2, when: { q: "is_substance", eq: true } }],
+        examens_a_discuter: ["Traiter la cause, revue des excitants et médicaments"] }
+    ],
+    examens_clinique: ["Agenda du sommeil", "Dépistage d'une dépression", "Signes d'apnées (IMC, tour de cou)", "Revue des substances et médicaments"]
+  },
+
+  // -------------------------------------------------------------------------
+  // SEVRAGE ALCOOLIQUE
+  // -------------------------------------------------------------------------
+  sevrage_alcool: {
+    id: "sevrage_alcool", symptome: "Sevrage / dépendance à l'alcool", specialite: ["Addictologie", "Psychiatrie"], urgence: true,
+    questions: [
+      { id: "se_dt", label: "Delirium tremens", type: "boolean", question: "Y a-t-il une confusion, des tremblements importants, des hallucinations, de la fièvre ou des sueurs profuses après l'arrêt de l'alcool ?" },
+      { id: "se_convulsion", label: "Crise convulsive", type: "boolean", question: "Y a-t-il eu une crise convulsive ?" },
+      { id: "se_tremblements", label: "Sevrage simple", type: "boolean", question: "Avez-vous des tremblements, de l'anxiété, des sueurs ou des nausées le matin, soulagés par l'alcool ?" },
+      { id: "se_comorbid", label: "Comorbidités", type: "boolean", question: "Y a-t-il une maladie du foie, une dénutrition, ou d'autres pathologies ?" },
+      { id: "se_demande", label: "Demande d'aide", type: "boolean", question: "Êtes-vous demandeur d'aide pour réduire ou arrêter votre consommation ?" }
+    ],
+    red_flags: [
+      { id: "se_rf_dt", niveau: 3, when: { any: [{ q: "se_dt", eq: true }, { q: "se_convulsion", eq: true }] },
+        message_medecin: "Delirium tremens / crise convulsive de sevrage : urgence vitale (hospitalisation, benzodiazépines, hydratation, vitamine B1).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "se_simple", diagnostic: "Syndrome de sevrage simple", arguments: [{ label: "tremblements / sueurs matinales", w: 3, when: { q: "se_tremblements", eq: true } }],
+        examens_a_discuter: ["Benzodiazépines, hydratation", "Vitamine B1 (thiamine) AVANT tout apport glucosé"] },
+      { id: "se_complique", diagnostic: "Sevrage compliqué (DT, convulsions)", arguments: [{ label: "delirium tremens", w: 3, when: { q: "se_dt", eq: true } }, { label: "convulsions", w: 2, when: { q: "se_convulsion", eq: true } }],
+        examens_a_discuter: ["Hospitalisation"] },
+      { id: "se_programme", diagnostic: "Sevrage programmé / accompagnement", arguments: [{ label: "demande d'aide", w: 2, when: { q: "se_demande", eq: true } }, { label: "comorbidités", w: 1, when: { q: "se_comorbid", eq: true } }],
+        examens_a_discuter: ["Évaluation, sevrage encadré", "Vitamine B1, accompagnement addictologique"] }
+    ],
+    examens_clinique: ["Évaluation de la sévérité (score de Cushman)", "Recherche de comorbidités (foie, dénutrition)", "Vitamine B1 systématique avant tout apport glucosé"]
   }
 };

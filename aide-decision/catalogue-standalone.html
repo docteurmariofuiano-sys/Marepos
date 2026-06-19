@@ -126,7 +126,7 @@ window.MOTIFS = [
   {
     n: 1, titre: "Motifs généraux très fréquents", icone: "🩺",
     frequents: [
-      { l: "Fièvre" }, { l: "Fatigue / asthénie", f: "asthenie" }, { l: "Malaise", f: "malaise_pc" },
+      { l: "Fièvre", f: "fievre_adulte" }, { l: "Fatigue / asthénie", f: "asthenie" }, { l: "Malaise", f: "malaise_pc" },
       { l: "Vertiges", f: "vertige" }, { l: "Perte de poids", f: "asthenie" }, { l: "Sueurs nocturnes", f: "hyperhidrose" },
       { l: "Frissons" }, { l: "Douleurs diffuses" }, { l: "Courbatures", f: "crampes" },
       { l: "Altération de l'état général", f: "asthenie" }, { l: "Déshydratation" },
@@ -193,10 +193,10 @@ window.MOTIFS = [
     n: 5, titre: "Digestif", icone: "🩻",
     frequents: [
       { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Nausées", f: "nausees_vomissements" }, { l: "Vomissements", f: "nausees_vomissements" }, { l: "Diarrhée aiguë", f: "diarrhee_aigue" },
-      { l: "Constipation", f: "constipation" }, { l: "Reflux gastro-œsophagien" }, { l: "Douleur épigastrique" },
-      { l: "Ballonnements" }, { l: "Troubles du transit", f: "diarrhee_chronique" }, { l: "Rectorragies" },
-      { l: "Hémorroïdes" }, { l: "Fissure anale" }, { l: "Sang dans les selles", f: "hematemese_melena" },
-      { l: "Perte d'appétit", f: "asthenie" }, { l: "Dysphagie" }, { l: "Ictère", f: "ictere" },
+      { l: "Constipation", f: "constipation" }, { l: "Reflux gastro-œsophagien", f: "rgo" }, { l: "Douleur épigastrique" },
+      { l: "Ballonnements" }, { l: "Troubles du transit", f: "diarrhee_chronique" }, { l: "Rectorragies", f: "rectorragie" },
+      { l: "Hémorroïdes", f: "rectorragie" }, { l: "Fissure anale", f: "rectorragie" }, { l: "Sang dans les selles", f: "hematemese_melena" },
+      { l: "Perte d'appétit", f: "asthenie" }, { l: "Dysphagie", f: "dysphagie" }, { l: "Ictère", f: "ictere" },
       { l: "Colique hépatique", f: "douleur_abdominale" }, { l: "Suspicion gastro-entérite", f: "diarrhee_aigue" },
       { l: "Intolérance alimentaire" }, { l: "Douleur post-prandiale" }
     ],
@@ -211,21 +211,21 @@ window.MOTIFS = [
     n: 6, titre: "Urologie / néphrologie", icone: "🚽",
     frequents: [
       { l: "Brûlures urinaires", f: "cystite" }, { l: "Pollakiurie" }, { l: "Cystite", f: "cystite" }, { l: "Douleur lombaire", f: "lombalgie" },
-      { l: "Colique néphrétique", f: "hematurie" }, { l: "Hématurie", f: "hematurie" }, { l: "Incontinence urinaire" },
-      { l: "Rétention urinaire" }, { l: "Trouble de l'érection", f: "difficultes_sexuelles" }, { l: "Douleur testiculaire", f: "grosse_bourse" },
+      { l: "Colique néphrétique", f: "hematurie" }, { l: "Hématurie", f: "hematurie" }, { l: "Incontinence urinaire", f: "incontinence_urinaire" },
+      { l: "Rétention urinaire", f: "retention_urinaire" }, { l: "Trouble de l'érection", f: "difficultes_sexuelles" }, { l: "Douleur testiculaire", f: "grosse_bourse" },
       { l: "Infection urinaire récidivante", f: "cystite" }, { l: "Prostatite" }, { l: "Bilan rénal perturbé", b: "hyperkaliemie" },
       { l: "Œdèmes" }, { l: "Protéinurie", b: "hyperkaliemie" }, { l: "Sang dans le sperme", f: "hemospermie" }
     ],
     urgences: [
-      { l: "Pyélonéphrite fébrile", f: "cystite" }, { l: "Colique néphrétique hyperalgique", f: "hematurie" }, { l: "Anurie" },
-      { l: "Rétention aiguë d'urine" }, { l: "Hématurie avec caillots", f: "hematurie" },
+      { l: "Pyélonéphrite fébrile", f: "cystite" }, { l: "Colique néphrétique hyperalgique", f: "hematurie" }, { l: "Anurie", f: "retention_urinaire" },
+      { l: "Rétention aiguë d'urine", f: "retention_urinaire" }, { l: "Hématurie avec caillots", f: "hematurie" },
       { l: "Torsion testiculaire", f: "grosse_bourse" }, { l: "Insuffisance rénale aiguë", b: "hyperkaliemie" }, { l: "Sepsis urinaire" }
     ]
   },
   {
     n: 7, titre: "Gynécologie / obstétrique", icone: "🤰",
     frequents: [
-      { l: "Douleurs pelviennes", f: "algie_pelvienne" }, { l: "Saignements gynécologiques" }, { l: "Retard de règles" },
+      { l: "Douleurs pelviennes", f: "algie_pelvienne" }, { l: "Saignements gynécologiques", f: "metrorragies" }, { l: "Retard de règles" },
       { l: "Contraception" }, { l: "Suivi grossesse" }, { l: "Nausées de grossesse" }, { l: "Mycose vaginale", f: "leucorrhees" },
       { l: "Leucorrhées", f: "leucorrhees" }, { l: "Douleur mammaire", f: "galactorrhee" }, { l: "Masse mammaire", f: "galactorrhee" },
       { l: "Infection urinaire chez la femme enceinte" }, { l: "Ménopause", f: "bouffees_chaleur" }, { l: "Bouffées de chaleur", f: "bouffees_chaleur" },
@@ -233,7 +233,7 @@ window.MOTIFS = [
       { l: "Demande d'IVG" }, { l: "Dépistage IST", f: "ecoulement_uretral" }
     ],
     urgences: [
-      { l: "Grossesse extra-utérine", f: "algie_pelvienne" }, { l: "Métrorragies abondantes" }, { l: "Douleur pelvienne aiguë", f: "algie_pelvienne" },
+      { l: "Grossesse extra-utérine", f: "algie_pelvienne" }, { l: "Métrorragies abondantes", f: "metrorragies" }, { l: "Douleur pelvienne aiguë", f: "algie_pelvienne" },
       { l: "Torsion d'annexe", f: "algie_pelvienne" }, { l: "Fausse couche" }, { l: "Fièvre en post-partum" },
       { l: "Pré-éclampsie suspectée" }, { l: "Diminution des mouvements fœtaux" }, { l: "Douleur abdominale chez la femme enceinte" },
       { l: "Infection pelvienne sévère", f: "algie_pelvienne" }
@@ -261,7 +261,7 @@ window.MOTIFS = [
     frequents: [
       { l: "Céphalée", f: "cephalee" }, { l: "Migraine", f: "cephalee" }, { l: "Vertiges", f: "vertige" },
       { l: "Troubles de l'équilibre" }, { l: "Paresthésies" }, { l: "Douleur neuropathique" }, { l: "Tremblements" },
-      { l: "Troubles de la mémoire" }, { l: "Troubles du sommeil" }, { l: "Sciatique", f: "lombalgie" },
+      { l: "Troubles de la mémoire" }, { l: "Troubles du sommeil", f: "insomnie" }, { l: "Sciatique", f: "lombalgie" },
       { l: "Cervicalgie avec irradiation", f: "cervicalgie" }, { l: "Névralgie faciale", f: "algie_faciale" },
       { l: "Paralysie faciale périphérique", f: "paralysie_faciale" }, { l: "Syndrome des jambes sans repos" }, { l: "Malaise", f: "malaise_pc" },
       { l: "Épilepsie connue" }, { l: "Suivi post-AVC" }
@@ -280,7 +280,7 @@ window.MOTIFS = [
       { l: "Sciatique", f: "lombalgie" }, { l: "Douleur d'épaule", f: "douleur_ms" }, { l: "Tendinite" },
       { l: "Douleur de genou", f: "douleur_mi" }, { l: "Entorse" }, { l: "Douleur de hanche", f: "douleur_mi" },
       { l: "Arthrose" }, { l: "Gonalgie", f: "douleur_mi" }, { l: "Douleur du poignet", f: "douleur_ms" },
-      { l: "Syndrome du canal carpien", f: "douleur_ms" }, { l: "Crise de goutte" }, { l: "Douleurs articulaires inflammatoires" },
+      { l: "Syndrome du canal carpien", f: "douleur_ms" }, { l: "Crise de goutte", f: "arthrite" }, { l: "Douleurs articulaires inflammatoires", f: "arthrite" },
       { l: "Fibromyalgie" }, { l: "Chute sans gravité apparente" }, { l: "Plaie simple", f: "plaie" }, { l: "Contusion" },
       { l: "Fracture suspectée" }
     ],
@@ -288,7 +288,7 @@ window.MOTIFS = [
       { l: "Fracture" }, { l: "Luxation" }, { l: "Plaie profonde", f: "plaie" }, { l: "Traumatisme crânien" },
       { l: "Traumatisme thoracique ou abdominal" }, { l: "Chute chez la personne âgée" },
       { l: "Douleur rachidienne avec déficit", f: "lombalgie" }, { l: "Syndrome de la queue de cheval", f: "lombalgie" },
-      { l: "Arthrite septique" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique" }
+      { l: "Arthrite septique", f: "arthrite" }, { l: "Ischémie aiguë de membre", f: "douleur_mi" }, { l: "Accident de la voie publique" }
     ]
   },
   {
@@ -298,7 +298,7 @@ window.MOTIFS = [
       { l: "Gastro-entérite", f: "diarrhee_aigue" }, { l: "Vomissements", f: "nausees_vomissements" }, { l: "Diarrhée", f: "diarrhee_aigue" },
       { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Varicelle", f: "varicelle" }, { l: "Bronchiolite", f: "bronchiolite" }, { l: "Asthme de l'enfant", f: "asthme_enfant" },
       { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson", f: "pleurs_nourrisson" },
-      { l: "Troubles du sommeil" }, { l: "Retard de langage" }, { l: "Troubles du comportement" },
+      { l: "Troubles du sommeil", f: "insomnie" }, { l: "Retard de langage" }, { l: "Troubles du comportement" },
       { l: "Difficultés scolaires" }, { l: "Vaccination" }, { l: "Certificat sport" }, { l: "Suivi de croissance" },
       { l: "Suspicion infection urinaire", f: "cystite" }
     ],
@@ -312,15 +312,15 @@ window.MOTIFS = [
   {
     n: 12, titre: "Psychiatrie / santé mentale", icone: "🧩",
     frequents: [
-      { l: "Anxiété", f: "anxiete" }, { l: "Crise d'angoisse", f: "anxiete" }, { l: "Dépression" }, { l: "Burn-out" }, { l: "Insomnie" },
+      { l: "Anxiété", f: "anxiete" }, { l: "Crise d'angoisse", f: "anxiete" }, { l: "Dépression" }, { l: "Burn-out" }, { l: "Insomnie", f: "insomnie" },
       { l: "Stress professionnel" }, { l: "Trouble de l'adaptation" }, { l: "Deuil" }, { l: "Irritabilité" },
-      { l: "Trouble alimentaire" }, { l: "Addiction alcool" }, { l: "Addiction cannabis" }, { l: "Sevrage tabagique" },
+      { l: "Trouble alimentaire" }, { l: "Addiction alcool", f: "sevrage_alcool" }, { l: "Addiction cannabis" }, { l: "Sevrage tabagique" },
       { l: "Trouble du comportement de l'adolescent" }, { l: "Demande d'arrêt de travail" }, { l: "Idées noires", f: "anxiete" },
       { l: "Effet indésirable d'un psychotrope" }
     ],
     urgences: [
       { l: "Risque suicidaire", f: "anxiete" }, { l: "Tentative de suicide" }, { l: "Agitation aiguë" }, { l: "Bouffée délirante" },
-      { l: "Confusion", f: "confusion" }, { l: "Sevrage alcoolique sévère" }, { l: "Intoxication médicamenteuse" },
+      { l: "Confusion", f: "confusion" }, { l: "Sevrage alcoolique sévère", f: "sevrage_alcool" }, { l: "Intoxication médicamenteuse" },
       { l: "Mise en danger de soi ou d'autrui" }
     ]
   },
