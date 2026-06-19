@@ -1630,5 +1630,48 @@ window.BIOKB = [
     ],
     red_flags: ["Décompensation : ictère, ascite, encéphalopathie, hémorragie digestive (rupture de varices œsophagiennes)", "Hémorragie digestive sur varices → urgence", "Infection du liquide d'ascite, syndrome hépato-rénal", "Carcinome hépatocellulaire (AFP élevée, nodule à l'imagerie)"],
     conduite: ["Classer la gravité (Child-Pugh A/B/C) ; dépister les varices (endoscopie) et le CHC (échographie + AFP / 6 mois).", "Traitement étiologique : sevrage alcoolique, antiviraux (hépatites B/C), corticoïdes (auto-immune), saignées (hémochromatose).", "Hypertension portale : β-bloquants non sélectifs ; éviter AINS / aspirine et les hépatotoxiques.", "Transplantation hépatique dans les formes avancées."]
+  },
+  {
+    id: "pancreatite_aigue", num: 99, anomalie: "Pancréatite aiguë",
+    specialite: "Gastro-entérologie",
+    definition: "Inflammation aiguë du pancréas : douleur abdominale (signe le plus constant, ~90-100 %) + lipase > 3N. Distinguer la forme œdémateuse (mortalité ~0) de la forme nécrotico-hémorragique (mortalité ~20 %). Deux causes dominent : lithiase biliaire et alcool (~40 % chacune).",
+    premiere_intention: ["Diagnostic : lipase > 3N (valeur diagnostique supérieure à l'amylase) ; l'association amylase-lipase n'apporte rien de plus", "Douleur abdominale + vomissements ; rechercher des signes de gravité (choc, oligurie, fièvre, polypnée, signes neurologiques)", "Imagerie si doute : TDM avec injection (IRM si insuffisance rénale ; écho ininterprétable dans 40 % des cas)", "Rechercher l'étiologie : lithiase (ALAT > 3N précoce, VPP 95 %), alcool ; bilan TG et calcémie"],
+    causes: [
+      { cause: "Lithiase biliaire (40 %)", signe: "âge > 50 ans, femme ; ALAT > 3N précoce (meilleur marqueur, VPP 95 %) — à rechercher en priorité (traitement spécifique)", examens: ["ALAT précoce", "Échographie / écho-endoscopie"] },
+      { cause: "Alcool (40 %)", signe: "intoxication alcoolique chronique", examens: ["Interrogatoire"] },
+      { cause: "Idiopathique (> 10 %)", signe: "bilan étiologique négatif", examens: ["Bilan complet"] },
+      { cause: "Autres causes", signe: "médicamenteuse, post-opératoire, infectieuse, hypertriglycéridémie (> 10 g/L), hypercalcémie, génétique (sujet jeune), obstructive néoplasique, maladies systémiques (Crohn, lupus, vascularite)", examens: ["TG, calcémie", "Imagerie"] }
+    ],
+    tableaux: [
+      { titre: "Score de Ranson (≥ 3 = grave)",
+        entetes: ["Moment", "Critères"],
+        lignes: [
+          ["À l'admission", "Âge > 50 ans ; leucocytes > 16 G/L ; glycémie > 11 mmol/L (sauf diabète) ; LDH > 350 U/L (1,5N) ; ASAT > 250 U/L (6N)"],
+          ["Durant les 48 h", "Hématocrite ↓ > 10 % ; urée ↑ > 1,8 mmol/L ; calcémie < 2 mmol/L ; PaO2 < 60 mmHg ; déficit en base > 4 mmol/L ; séquestration liquidienne > 6 L"]
+        ] },
+      { titre: "Score d'Imrie (≥ 3 = grave)",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Âge", "> 55 ans"],
+          ["Leucocytes", "> 15 G/L"],
+          ["Glycémie", "> 10 mmol/L (sauf diabète)"],
+          ["LDH", "> 600 U/L (3,5N)"],
+          ["Urée sanguine", "> 16 mmol/L"],
+          ["Calcémie", "< 2 mmol/L"],
+          ["PaO2", "< 60 mmHg"],
+          ["Albuminémie", "< 32 g/L"],
+          ["ASAT", "> 100 U/L (2N)"]
+        ] },
+      { titre: "Autres marqueurs de gravité",
+        entetes: ["Marqueur", "Seuil / signification"],
+        lignes: [
+          ["Terrain", "Âge > 80 ans, IMC > 30, défaillance d'organe préexistante"],
+          ["CRP", "> 150 mg/L à la 48e heure"],
+          ["TDM", "Index de sévérité (inflammation + nécrose pancréatiques)"],
+          ["Défaillance d'organe", "Hémodynamique, respiratoire, neurologique (Glasgow < 13), rénale (créat > 170 µmol/L), hématologique (plaquettes < 80 G/L)"]
+        ] }
+    ],
+    red_flags: ["Signes de gravité : état de choc, oligurie, polypnée, confusion → réanimation", "Pancréatite nécrotico-hémorragique (mortalité ~20 %) : Ranson/Imrie ≥ 3, CRP > 150 à 48 h, index TDM > 4", "Défaillance d'organe (hémodynamique, respiratoire, rénale, neurologique, hématologique)", "Origine lithiasique avec angiocholite → recherche et levée de l'obstacle (CPRE)"],
+    conduite: ["Affirmer le diagnostic : douleur + lipase > 3N ; TDM en cas de doute.", "Hospitalisation systématique ; rechercher une défaillance viscérale plusieurs fois/jour les 48 premières heures.", "Évaluer la gravité (Ranson/Imrie ≥ 3, CRP > 150, index TDM > 4, terrain) → surveillance renforcée clinico-radio-biologique.", "Antalgiques (morphiniques), réhydratation, jeûne puis réalimentation après 48 h sans douleur ; cholécystectomie si lithiase ; réanimation / drainage de nécrose / antibiothérapie si complications."]
   }
 ];
