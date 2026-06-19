@@ -3672,5 +3672,346 @@ window.KB = {
         examens_a_discuter: ["Exploration chirurgicale"] }
     ],
     examens_clinique: ["Explorer la plaie (profondeur, tendons, nerfs, vaisseaux, corps étranger)", "Statut antitétanique", "Recherche de signes d'infection", "Évaluation fonctionnelle en aval"]
+  },
+
+  // -------------------------------------------------------------------------
+  // FIÈVRE DE L'ENFANT
+  // -------------------------------------------------------------------------
+  fievre_enfant: {
+    id: "fievre_enfant", symptome: "Fièvre de l'enfant", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "fe_age3m", label: "Nourrisson < 3 mois", type: "boolean", question: "L'enfant a-t-il moins de 3 mois ?" },
+      { id: "fe_purpura", label: "Purpura", type: "boolean", question: "Y a-t-il des taches rouges ou violacées qui ne s'effacent PAS à la pression ?" },
+      { id: "fe_conscience", label: "Signes de gravité", type: "boolean", question: "L'enfant est-il anormalement somnolent, geignard, difficile à réveiller, ou a-t-il un teint gris/marbré ?" },
+      { id: "fe_respi", label: "Détresse respiratoire", type: "boolean", question: "Respire-t-il vite, avec des signes de lutte, ou des lèvres bleues ?" },
+      { id: "fe_raideur", label: "Syndrome méningé", type: "boolean", question: "Y a-t-il une raideur de la nuque, des maux de tête, ou des vomissements en jet ?" },
+      { id: "fe_hydratation", label: "Déshydratation", type: "boolean", question: "Refuse-t-il de boire, avec une bouche sèche et des couches sèches ?" },
+      { id: "fe_duree", label: "Fièvre prolongée", type: "boolean", question: "La fièvre dure-t-elle depuis plus de 5 jours ?" },
+      { id: "fe_eruption", label: "Éruption", type: "boolean", question: "Y a-t-il une éruption cutanée ?" }
+    ],
+    red_flags: [
+      { id: "fe_rf_nourrisson", niveau: 3, when: { q: "fe_age3m", eq: true },
+        message_medecin: "Fièvre du nourrisson < 3 mois : risque d'infection bactérienne sévère → avis pédiatrique et bilan en urgence.",
+        message_patient: "Une fièvre chez un bébé de moins de 3 mois nécessite une évaluation médicale immédiate." },
+      { id: "fe_rf_purpura", niveau: 3, when: { q: "fe_purpura", eq: true },
+        message_medecin: "Purpura fébrile : purpura fulminans → antibiotique immédiat, 15.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "fe_rf_sepsis", niveau: 3, when: { any: [{ q: "fe_conscience", eq: true }, { q: "fe_respi", eq: true }, { q: "fe_raideur", eq: true }] },
+        message_medecin: "Signes de gravité (conscience, détresse respiratoire, teint gris/marbré, syndrome méningé) : sepsis / méningite → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "fe_rf_deshyd", niveau: 2, when: { q: "fe_hydratation", eq: true },
+        message_medecin: "Refus de boire / déshydratation : évaluation, réhydratation.",
+        message_patient: "Un enfant qui ne boit plus nécessite un avis médical rapide." },
+      { id: "fe_rf_prolongee", niveau: 2, when: { q: "fe_duree", eq: true },
+        message_medecin: "Fièvre > 5 jours : rechercher un foyer, penser à la maladie de Kawasaki → avis.",
+        message_patient: "Une fièvre qui dure plus de 5 jours nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "fe_virale", diagnostic: "Infection virale bénigne", arguments: [{ label: "sans signe de gravité", w: 2, when: { all: [{ q: "fe_conscience", eq: false }, { q: "fe_respi", eq: false }, { q: "fe_purpura", eq: false }] } }],
+        examens_a_discuter: ["Traitement symptomatique, surveillance", "Consignes de reconsultation"] },
+      { id: "fe_sepsis", diagnostic: "Infection bactérienne sévère / sepsis", arguments: [{ label: "troubles de conscience / teint gris", w: 2, when: { q: "fe_conscience", eq: true } }, { label: "détresse respiratoire", w: 2, when: { q: "fe_respi", eq: true } }, { label: "purpura", w: 2, when: { q: "fe_purpura", eq: true } }],
+        examens_a_discuter: ["Bilan infectieux, hospitalisation"] },
+      { id: "fe_meningite", diagnostic: "Méningite", arguments: [{ label: "syndrome méningé", w: 3, when: { q: "fe_raideur", eq: true } }],
+        examens_a_discuter: ["Ponction lombaire"] },
+      { id: "fe_foyer", diagnostic: "Foyer infectieux (ORL, pulmonaire, urinaire)", arguments: [{ label: "fièvre prolongée", w: 1, when: { q: "fe_duree", eq: true } }, { label: "signes respiratoires", w: 1, when: { q: "fe_respi", eq: true } }],
+        examens_a_discuter: ["Examen complet (ORL, pulmonaire)", "Bandelette urinaire / ECBU systématique chez le petit"] },
+      { id: "fe_kawasaki", diagnostic: "Maladie de Kawasaki", arguments: [{ label: "fièvre > 5 jours", w: 2, when: { q: "fe_duree", eq: true } }, { label: "éruption", w: 1, when: { q: "fe_eruption", eq: true } }],
+        examens_a_discuter: ["Avis pédiatrique (critères de Kawasaki)"] }
+    ],
+    examens_clinique: ["Constantes (FC, FR, SpO2, temps de recoloration cutané)", "Recherche d'un purpura", "État de conscience et tonus", "Recherche d'un foyer (ORL, pulmonaire, BU)", "Évaluation de l'hydratation"]
+  },
+
+  // -------------------------------------------------------------------------
+  // BRONCHIOLITE
+  // -------------------------------------------------------------------------
+  bronchiolite: {
+    id: "bronchiolite", symptome: "Bronchiolite du nourrisson", specialite: ["Pédiatrie", "Pneumologie"], urgence: true,
+    questions: [
+      { id: "bo_age", label: "Tableau typique", type: "boolean", question: "L'enfant a-t-il moins de 2 ans, avec un rhume puis une toux et des sifflements ?" },
+      { id: "bo_cyanose", label: "Signes de gravité", type: "boolean", question: "A-t-il les lèvres bleues, un teint gris, une somnolence inhabituelle, ou des pauses respiratoires ?" },
+      { id: "bo_lutte", label: "Détresse respiratoire", type: "boolean", question: "A-t-il des signes de lutte (creusement entre/sous les côtes) ou respire-t-il très vite ?" },
+      { id: "bo_alimentation", label: "Difficultés alimentaires", type: "boolean", question: "Mange/boit-il moins de la moitié de ses biberons habituels ?" },
+      { id: "bo_terrain", label: "Terrain à risque", type: "boolean", question: "Est-il prématuré, âgé de moins de 6 semaines, ou a-t-il une maladie cardiaque/pulmonaire ?" }
+    ],
+    red_flags: [
+      { id: "bo_rf_grave", niveau: 3, when: { any: [{ q: "bo_cyanose", eq: true }, { q: "bo_lutte", eq: true }] },
+        message_medecin: "Bronchiolite avec signes de gravité (détresse respiratoire, apnées, cyanose) : urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "bo_rf_alim", niveau: 2, when: { q: "bo_alimentation", eq: true },
+        message_medecin: "Prise alimentaire < 50 % : critère d'hospitalisation à évaluer.",
+        message_patient: "Un bébé qui mange moins de la moitié nécessite un avis médical rapide." },
+      { id: "bo_rf_terrain", niveau: 2, when: { q: "bo_terrain", eq: true },
+        message_medecin: "Terrain à risque (prématuré, < 6 semaines, cardiopathie) : surveillance rapprochée.",
+        message_patient: "Ce contexte nécessite une surveillance médicale rapprochée." }
+    ],
+    diagnostics_differentiels: [
+      { id: "bo_bronchiolite", diagnostic: "Bronchiolite", arguments: [{ label: "tableau typique du nourrisson", w: 3, when: { q: "bo_age", eq: true } }],
+        examens_a_discuter: ["Désobstruction nasale, fractionnement des repas", "Surveillance (ni antibiotique ni kiné systématiques)"] },
+      { id: "bo_grave", diagnostic: "Bronchiolite grave", arguments: [{ label: "signes de lutte", w: 2, when: { q: "bo_lutte", eq: true } }, { label: "cyanose / apnées", w: 2, when: { q: "bo_cyanose", eq: true } }, { label: "difficultés alimentaires", w: 1, when: { q: "bo_alimentation", eq: true } }],
+        examens_a_discuter: ["Hospitalisation, oxygénothérapie"] }
+    ],
+    examens_clinique: ["Fréquence respiratoire, SpO2", "Signes de lutte", "Auscultation pulmonaire", "Évaluation de la prise alimentaire et de l'hydratation"]
+  },
+
+  // -------------------------------------------------------------------------
+  // OTITE
+  // -------------------------------------------------------------------------
+  otite: {
+    id: "otite", symptome: "Otite / otalgie", specialite: ["ORL", "Pédiatrie"],
+    questions: [
+      { id: "ot_douleur", label: "Otalgie", type: "boolean", question: "L'oreille est-elle douloureuse (ou l'enfant se touche l'oreille, pleure, a de la fièvre) ?" },
+      { id: "ot_ecoulement", label: "Otorrhée", type: "boolean", question: "Y a-t-il un écoulement de l'oreille ?" },
+      { id: "ot_complication", label: "Mastoïdite", type: "boolean", question: "Y a-t-il un gonflement rouge et douloureux derrière l'oreille, ou un enfant très abattu ?" }
+    ],
+    red_flags: [
+      { id: "ot_rf_mastoidite", niveau: 2, when: { q: "ot_complication", eq: true },
+        message_medecin: "Tuméfaction rétro-auriculaire / signes généraux : mastoïdite → avis ORL urgent.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ot_oma", diagnostic: "Otite moyenne aiguë", arguments: [{ label: "otalgie fébrile", w: 3, when: { q: "ot_douleur", eq: true } }],
+        examens_a_discuter: ["Otoscopie (tympan bombé/rouge)", "Antibiothérapie selon âge et critères"] },
+      { id: "ot_externe", diagnostic: "Otite externe", arguments: [{ label: "écoulement + douleur à la traction", w: 2, when: { q: "ot_ecoulement", eq: true } }],
+        examens_a_discuter: ["Otoscopie", "Traitement local"] },
+      { id: "ot_mastoidite", diagnostic: "Mastoïdite", arguments: [{ label: "tuméfaction rétro-auriculaire", w: 3, when: { q: "ot_complication", eq: true } }],
+        examens_a_discuter: ["Avis ORL, imagerie"] }
+    ],
+    examens_clinique: ["Otoscopie des deux tympans", "Température", "Recherche d'une complication (mastoïdite)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ANGINE
+  // -------------------------------------------------------------------------
+  angine: {
+    id: "angine", symptome: "Angine / mal de gorge", specialite: ["ORL"], urgence: true,
+    questions: [
+      { id: "ag_dysphagie", label: "Détresse / hypersialorrhée", type: "boolean", question: "L'enfant ne peut plus avaler sa salive, bave, a une voix étouffée ou une difficulté à respirer ?" },
+      { id: "ag_unilateral", label: "Phlegmon", type: "boolean", question: "Y a-t-il un gonflement d'un seul côté de la gorge avec une difficulté à ouvrir la bouche (trismus) ?" },
+      { id: "ag_viral", label: "Signes viraux", type: "boolean", question: "Y a-t-il une toux, un rhume, une voix enrouée (signes plutôt viraux) ?" },
+      { id: "ag_scarlatine", label: "Scarlatine", type: "boolean", question: "Y a-t-il une éruption rouge râpeuse et une langue framboisée ?" },
+      { id: "ag_age", label: "Âge < 3 ans", type: "boolean", question: "L'enfant a-t-il moins de 3 ans ?" }
+    ],
+    red_flags: [
+      { id: "ag_rf_respi", niveau: 3, when: { q: "ag_dysphagie", eq: true },
+        message_medecin: "Dysphagie majeure / hypersialorrhée / dyspnée : phlegmon ou épiglottite → urgence (ne pas allonger, ne pas examiner à l'abaisse-langue, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ag_rf_phlegmon", niveau: 2, when: { q: "ag_unilateral", eq: true },
+        message_medecin: "Tuméfaction unilatérale + trismus : phlegmon péri-amygdalien → avis ORL.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ag_virale", diagnostic: "Angine virale", arguments: [{ label: "signes viraux", w: 3, when: { q: "ag_viral", eq: true } }, { label: "âge < 3 ans", w: 1, when: { q: "ag_age", eq: true } }],
+        examens_a_discuter: ["TDR (test rapide) négatif", "Traitement symptomatique"] },
+      { id: "ag_strepto", diagnostic: "Angine à streptocoque", arguments: [{ label: "absence de signes viraux", w: 2, when: { q: "ag_viral", eq: false } }, { label: "scarlatine associée", w: 1, when: { q: "ag_scarlatine", eq: true } }],
+        examens_a_discuter: ["TDR streptococcique", "Antibiothérapie si positif"] },
+      { id: "ag_scarlatine", diagnostic: "Scarlatine", arguments: [{ label: "éruption + langue framboisée", w: 3, when: { q: "ag_scarlatine", eq: true } }],
+        examens_a_discuter: ["TDR, antibiothérapie", "Éviction"] },
+      { id: "ag_complication", diagnostic: "Complication (phlegmon / épiglottite)", arguments: [{ label: "dysphagie / dyspnée", w: 3, when: { q: "ag_dysphagie", eq: true } }, { label: "tuméfaction unilatérale", w: 2, when: { q: "ag_unilateral", eq: true } }],
+        examens_a_discuter: ["Avis ORL urgent"] }
+    ],
+    examens_clinique: ["Examen de la gorge (PAS d'abaisse-langue si suspicion d'épiglottite)", "TDR streptococcique", "Recherche d'une éruption", "Palpation des adénopathies cervicales"]
+  },
+
+  // -------------------------------------------------------------------------
+  // VARICELLE
+  // -------------------------------------------------------------------------
+  varicelle: {
+    id: "varicelle", symptome: "Varicelle", specialite: ["Pédiatrie", "Dermatologie"],
+    questions: [
+      { id: "va_typique", label: "Tableau typique", type: "boolean", question: "Y a-t-il des boutons à différents stades (vésicules, croûtes) qui démangent, avec un peu de fièvre ?" },
+      { id: "va_respi", label: "Pneumopathie", type: "boolean", question: "Y a-t-il une gêne respiratoire ou une toux importante ?" },
+      { id: "va_neuro", label: "Atteinte neurologique", type: "boolean", question: "Y a-t-il des troubles de l'équilibre, une somnolence, ou des convulsions ?" },
+      { id: "va_surinfection", label: "Surinfection", type: "boolean", question: "Certaines lésions sont-elles très rouges, chaudes, avec du pus ou une fièvre élevée ?" },
+      { id: "va_immuno", label: "Terrain à risque", type: "boolean", question: "La personne est-elle immunodéprimée, un nouveau-né, ou une femme enceinte ?" }
+    ],
+    red_flags: [
+      { id: "va_rf_grave", niveau: 3, when: { any: [{ q: "va_respi", eq: true }, { q: "va_neuro", eq: true }] },
+        message_medecin: "Varicelle compliquée (pneumopathie varicelleuse, atteinte neurologique) : urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "va_rf_immuno", niveau: 2, when: { q: "va_immuno", eq: true },
+        message_medecin: "Varicelle chez l'immunodéprimé / nouveau-né / femme enceinte : risque de forme grave → avis, antiviral.",
+        message_patient: "Ce contexte nécessite un avis médical rapide." },
+      { id: "va_rf_surinfection", niveau: 2, when: { q: "va_surinfection", eq: true },
+        message_medecin: "Surinfection cutanée (impétiginisation, dermohypodermite) : antibiothérapie ; éliminer une fasciite. Éviter les AINS.",
+        message_patient: "Une surinfection nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "va_commune", diagnostic: "Varicelle commune", arguments: [{ label: "éruption d'âges différents prurigineuse", w: 3, when: { q: "va_typique", eq: true } }],
+        examens_a_discuter: ["Traitement symptomatique (PAS d'AINS ni d'aspirine)", "Soins locaux, éviction"] },
+      { id: "va_compliquee", diagnostic: "Forme compliquée", arguments: [{ label: "atteinte respiratoire", w: 3, when: { q: "va_respi", eq: true } }, { label: "atteinte neurologique", w: 2, when: { q: "va_neuro", eq: true } }],
+        examens_a_discuter: ["Avis, hospitalisation"] },
+      { id: "va_risque", diagnostic: "Forme à risque (immunodéprimé / grossesse)", arguments: [{ label: "terrain à risque", w: 3, when: { q: "va_immuno", eq: true } }],
+        examens_a_discuter: ["Aciclovir, avis spécialisé"] }
+    ],
+    examens_clinique: ["Morphologie (lésions d'âges différents)", "Recherche de surinfection", "État général, respiratoire et neurologique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CONVULSION FÉBRILE
+  // -------------------------------------------------------------------------
+  convulsion_febrile: {
+    id: "convulsion_febrile", symptome: "Convulsion fébrile de l'enfant", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "cf_age", label: "Tranche d'âge typique", type: "boolean", question: "L'enfant a-t-il entre 6 mois et 5 ans, avec de la fièvre ?" },
+      { id: "cf_typique", label: "Crise simple", type: "boolean", question: "La crise a-t-elle été brève (moins de 15 min), généralisée, unique, avec un retour rapide à la normale ?" },
+      { id: "cf_meningite", label: "Signes méningés / gravité", type: "boolean", question: "Y a-t-il une raideur de la nuque, des troubles de la conscience persistants, un purpura, ou un mauvais état général ?" },
+      { id: "cf_prolongee", label: "Crise complexe", type: "boolean", question: "La crise a-t-elle duré plus de 15 minutes, s'est-elle répétée, ou n'a-t-elle touché qu'une partie du corps ?" },
+      { id: "cf_deficit", label: "Récupération anormale", type: "boolean", question: "L'enfant récupère-t-il mal, ou un déficit persiste-t-il ?" }
+    ],
+    red_flags: [
+      { id: "cf_rf_meningite", niveau: 3, when: { any: [{ q: "cf_meningite", eq: true }, { q: "cf_deficit", eq: true }] },
+        message_medecin: "Convulsion fébrile + signes méningés / mauvais état / déficit : éliminer une méningo-encéphalite → urgence (PL).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "cf_rf_atypique", niveau: 2, when: { q: "cf_prolongee", eq: true },
+        message_medecin: "Convulsion fébrile complexe (> 15 min, répétée ou focale) : avis, explorations.",
+        message_patient: "Ce type de crise nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cf_simple", diagnostic: "Convulsion fébrile simple", arguments: [{ label: "tranche d'âge typique", w: 2, when: { q: "cf_age", eq: true } }, { label: "crise brève généralisée unique", w: 3, when: { q: "cf_typique", eq: true } }],
+        examens_a_discuter: ["Traiter la fièvre, rassurer, surveillance", "Ni EEG ni imagerie systématiques"] },
+      { id: "cf_complexe", diagnostic: "Convulsion fébrile complexe", arguments: [{ label: "crise prolongée / répétée / focale", w: 3, when: { q: "cf_prolongee", eq: true } }],
+        examens_a_discuter: ["Avis neuropédiatrique"] },
+      { id: "cf_meningoencephalite", diagnostic: "Méningo-encéphalite", arguments: [{ label: "signes méningés / mauvais état", w: 3, when: { q: "cf_meningite", eq: true } }],
+        examens_a_discuter: ["Ponction lombaire, imagerie"] }
+    ],
+    examens_clinique: ["État neurologique et de conscience", "Recherche d'une raideur méningée et d'un purpura", "Recherche d'un foyer infectieux", "Glycémie capillaire"]
+  },
+
+  // -------------------------------------------------------------------------
+  // BOITERIE DE L'ENFANT
+  // -------------------------------------------------------------------------
+  boiterie_enfant: {
+    id: "boiterie_enfant", symptome: "Boiterie de l'enfant", specialite: ["Pédiatrie", "Orthopédie"], urgence: true,
+    questions: [
+      { id: "be_fievre", label: "Boiterie fébrile", type: "boolean", question: "L'enfant a-t-il de la fièvre, refuse-t-il de marcher ou de bouger la hanche, ou semble-t-il très douloureux ?" },
+      { id: "be_aeg", label: "AEG / douleurs nocturnes", type: "boolean", question: "Y a-t-il une altération de l'état général, des douleurs nocturnes, ou un amaigrissement ?" },
+      { id: "be_age_epiphys", label: "Épiphysiolyse", type: "boolean", question: "Est-ce un adolescent (souvent en surpoids) avec une douleur de hanche ou de genou ?" },
+      { id: "be_trauma", label: "Traumatisme", type: "boolean", question: "Y a-t-il eu un traumatisme ?" },
+      { id: "be_virose", label: "Rhume de hanche", type: "boolean", question: "Y a-t-il eu une virose récente, avec une boiterie peu douloureuse et sans fièvre ?" }
+    ],
+    red_flags: [
+      { id: "be_rf_septique", niveau: 3, when: { q: "be_fievre", eq: true },
+        message_medecin: "Boiterie fébrile : arthrite septique / ostéomyélite jusqu'à preuve du contraire → urgence (NFS/CRP, échographie, avis chirurgical).",
+        message_patient: "Une boiterie avec fièvre nécessite une évaluation médicale immédiate." },
+      { id: "be_rf_tumeur", niveau: 2, when: { q: "be_aeg", eq: true },
+        message_medecin: "AEG / douleurs nocturnes : éliminer une cause tumorale ou hématologique (leucémie, tumeur osseuse).",
+        message_patient: "Ces signes nécessitent un avis médical et un bilan." },
+      { id: "be_rf_epiphysiolyse", niveau: 2, when: { q: "be_age_epiphys", eq: true },
+        message_medecin: "Adolescent + douleur hanche/genou : épiphysiolyse → radiographie, mise en décharge, avis orthopédique.",
+        message_patient: "Ce tableau nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "be_septique", diagnostic: "Arthrite septique / ostéomyélite", arguments: [{ label: "boiterie fébrile", w: 3, when: { q: "be_fievre", eq: true } }],
+        examens_a_discuter: ["NFS/CRP, hémocultures", "Échographie, avis chirurgical"] },
+      { id: "be_synovite", diagnostic: "Synovite aiguë transitoire (rhume de hanche)", arguments: [{ label: "virose récente, apyrétique", w: 3, when: { q: "be_virose", eq: true } }],
+        examens_a_discuter: ["Diagnostic d'élimination, surveillance"] },
+      { id: "be_epiphysiolyse", diagnostic: "Épiphysiolyse fémorale supérieure", arguments: [{ label: "adolescent, douleur hanche/genou", w: 3, when: { q: "be_age_epiphys", eq: true } }],
+        examens_a_discuter: ["Radiographie de hanche (face + profil)"] },
+      { id: "be_trauma", diagnostic: "Traumatisme / fracture", arguments: [{ label: "notion de traumatisme", w: 3, when: { q: "be_trauma", eq: true } }],
+        examens_a_discuter: ["Radiographie"] },
+      { id: "be_tumeur", diagnostic: "Cause tumorale / hématologique", arguments: [{ label: "AEG / douleurs nocturnes", w: 3, when: { q: "be_aeg", eq: true } }],
+        examens_a_discuter: ["NFS, imagerie, avis spécialisé"] }
+    ],
+    examens_clinique: ["Examen de la hanche et du membre (mobilité, douleur)", "Température, NFS/CRP si fièvre", "Radiographie selon le contexte", "Recherche de signes généraux"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PLEURS DU NOURRISSON
+  // -------------------------------------------------------------------------
+  pleurs_nourrisson: {
+    id: "pleurs_nourrisson", symptome: "Pleurs du nourrisson", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "pn_invagination", label: "Invagination", type: "boolean", question: "Y a-t-il des crises de pleurs avec pâleur ou refus de boire, des vomissements, ou du sang dans les selles ?" },
+      { id: "pn_aigu", label: "Geignard / abattu", type: "boolean", question: "Les pleurs sont-ils inhabituels, intenses, inconsolables, ou l'enfant est-il anormalement abattu entre les crises ?" },
+      { id: "pn_fievre", label: "Fièvre / infection", type: "boolean", question: "Y a-t-il de la fièvre ou des signes d'infection ?" },
+      { id: "pn_traumatisme", label: "Point d'appel traumatique", type: "boolean", question: "Y a-t-il eu une chute, un traumatisme, ou un membre qui ne bouge pas / un gonflement ?" },
+      { id: "pn_alimentation", label: "Difficultés alimentaires", type: "boolean", question: "L'enfant mange-t-il mal ou prend-il mal du poids ?" }
+    ],
+    red_flags: [
+      { id: "pn_rf_invagination", niveau: 3, when: { q: "pn_invagination", eq: true },
+        message_medecin: "Crises de pleurs + pâleur/vomissements/rectorragies : invagination intestinale aiguë → urgence (échographie).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "pn_rf_grave", niveau: 3, when: { any: [{ q: "pn_aigu", eq: true }, { q: "pn_fievre", eq: true }] },
+        message_medecin: "Nourrisson geignard / abattu ou fébrile : éliminer une infection sévère ou une cause organique → examen complet, avis.",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide." },
+      { id: "pn_rf_trauma", niveau: 2, when: { q: "pn_traumatisme", eq: true },
+        message_medecin: "Point d'appel traumatique : examiner (fracture ?) et rester vigilant sur une maltraitance.",
+        message_patient: "Ce contexte nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pn_organique", diagnostic: "Cause organique à rechercher", arguments: [{ label: "nourrisson abattu", w: 2, when: { q: "pn_aigu", eq: true } }, { label: "fièvre / infection", w: 2, when: { q: "pn_fievre", eq: true } }],
+        examens_a_discuter: ["Examen complet déshabillé (ORL, abdomen, peau, urines, membres, yeux)"] },
+      { id: "pn_invagination", diagnostic: "Invagination intestinale aiguë", arguments: [{ label: "pleurs + pâleur + vomissements / rectorragies", w: 3, when: { q: "pn_invagination", eq: true } }],
+        examens_a_discuter: ["Échographie abdominale, avis chirurgical"] },
+      { id: "pn_coliques", diagnostic: "Coliques du nourrisson (diagnostic d'élimination)", arguments: [{ label: "examen normal, sans signe d'alarme", w: 2, when: { all: [{ q: "pn_aigu", eq: false }, { q: "pn_fievre", eq: false }, { q: "pn_invagination", eq: false }] } }],
+        examens_a_discuter: ["Réassurance après examen complet normal"] }
+    ],
+    examens_clinique: ["Examen complet déshabillé (ORL, abdomen, fontanelle, peau/purpura, BU, membres, yeux)", "Courbe de poids", "Recherche d'un point d'appel"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ASTHME DE L'ENFANT (crise)
+  // -------------------------------------------------------------------------
+  asthme_enfant: {
+    id: "asthme_enfant", symptome: "Crise d'asthme de l'enfant", specialite: ["Pédiatrie", "Pneumologie"], urgence: true,
+    questions: [
+      { id: "ae_siffle", label: "Sifflements / gêne", type: "boolean", question: "L'enfant a-t-il des sifflements, une toux, une gêne pour respirer ?" },
+      { id: "ae_cyanose", label: "Cyanose", type: "boolean", question: "A-t-il les lèvres bleues ?" },
+      { id: "ae_lutte", label: "Signes de lutte / épuisement", type: "boolean", question: "A-t-il des signes de lutte (creusement des côtes), respire-t-il très vite, ou est-il épuisé/somnolent ?" },
+      { id: "ae_parle", label: "Difficulté à parler / téter", type: "boolean", question: "A-t-il du mal à parler/finir ses phrases, ou à téter/manger à cause de l'essoufflement ?" },
+      { id: "ae_connu", label: "Asthme connu, traitement inefficace", type: "boolean", question: "Est-il asthmatique connu, et son traitement de crise est-il inefficace ?" }
+    ],
+    red_flags: [
+      { id: "ae_rf_grave", niveau: 3, when: { any: [{ q: "ae_cyanose", eq: true }, { q: "ae_lutte", eq: true }, { q: "ae_parle", eq: true }] },
+        message_medecin: "Crise d'asthme sévère (parole difficile, signes de lutte, cyanose, épuisement) : urgence (bronchodilatateurs, oxygène, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ae_crise", diagnostic: "Crise d'asthme", arguments: [{ label: "sifflements / gêne", w: 3, when: { q: "ae_siffle", eq: true } }, { label: "asthme connu", w: 1, when: { q: "ae_connu", eq: true } }],
+        examens_a_discuter: ["Bronchodilatateurs (chambre d'inhalation)", "Corticoïdes oraux si besoin, réévaluation"] },
+      { id: "ae_severe", diagnostic: "Crise sévère", arguments: [{ label: "signes de lutte / épuisement", w: 2, when: { q: "ae_lutte", eq: true } }, { label: "difficulté à parler", w: 2, when: { q: "ae_parle", eq: true } }, { label: "cyanose", w: 2, when: { q: "ae_cyanose", eq: true } }],
+        examens_a_discuter: ["Urgence : bronchodilatateurs continus, oxygène"] }
+    ],
+    examens_clinique: ["Fréquence respiratoire, SpO2", "Signes de lutte", "Auscultation (sibilants, silence auscultatoire = gravité)", "Capacité à parler / s'alimenter", "DEP si l'âge le permet"]
+  },
+
+  // -------------------------------------------------------------------------
+  // INGESTION TOXIQUE
+  // -------------------------------------------------------------------------
+  ingestion_toxique: {
+    id: "ingestion_toxique", symptome: "Ingestion accidentelle (toxique / corps étranger)", specialite: ["Pédiatrie", "Urgences"], urgence: true,
+    questions: [
+      { id: "it_symptomes", label: "Signes de gravité", type: "boolean", question: "La personne a-t-elle des troubles de la conscience, des vomissements, ou des difficultés à respirer ?" },
+      { id: "it_caustique", label: "Caustique", type: "boolean", question: "S'agit-il d'un produit caustique (déboucheur, soude, acide) avec brûlures de la bouche, bave ou douleur ?" },
+      { id: "it_pile", label: "Pile bouton / aimants", type: "boolean", question: "S'agit-il d'une pile bouton ou de plusieurs aimants ?" },
+      { id: "it_petrole", label: "Produit pétrolier", type: "boolean", question: "S'agit-il d'un produit pétrolier (white-spirit, essence) avec une toux ?" },
+      { id: "it_produit", label: "Médicament / produit", type: "boolean", question: "A-t-elle avalé un médicament, un produit ménager, une plante ou un objet ?" }
+    ],
+    red_flags: [
+      { id: "it_rf_grave", niveau: 3, when: { q: "it_symptomes", eq: true },
+        message_medecin: "Signes de gravité (conscience, respiration) après ingestion : urgence (15, centre antipoison).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "it_rf_caustique", niveau: 3, when: { q: "it_caustique", eq: true },
+        message_medecin: "Ingestion de caustique : NE PAS faire vomir ni faire boire → urgence (endoscopie).",
+        message_patient: "Ne faites pas vomir, ne donnez rien à boire, et consultez en urgence — appelez le 15." },
+      { id: "it_rf_pile", niveau: 3, when: { q: "it_pile", eq: true },
+        message_medecin: "Pile bouton / aimants multiples : urgence (risque de perforation) → radiographie, avis.",
+        message_patient: "Cette situation nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "it_rf_petrole", niveau: 2, when: { q: "it_petrole", eq: true },
+        message_medecin: "Produit pétrolier : risque d'inhalation (ne pas faire vomir) → avis.",
+        message_patient: "Ne faites pas vomir et demandez un avis médical (centre antipoison)." },
+      { id: "it_rf_general", niveau: 2, when: { q: "it_produit", eq: true },
+        message_medecin: "Toute ingestion suspecte : contacter le centre antipoison, ne rien administrer sans avis.",
+        message_patient: "Contactez un centre antipoison ou un médecin avant de donner quoi que ce soit." }
+    ],
+    diagnostics_differentiels: [
+      { id: "it_toxique", diagnostic: "Ingestion à risque toxique", arguments: [{ label: "produit / médicament", w: 2, when: { q: "it_produit", eq: true } }, { label: "signes de gravité", w: 2, when: { q: "it_symptomes", eq: true } }],
+        examens_a_discuter: ["Identifier produit, dose, heure", "Centre antipoison"] },
+      { id: "it_caustique", diagnostic: "Ingestion de caustique", arguments: [{ label: "produit caustique", w: 3, when: { q: "it_caustique", eq: true } }],
+        examens_a_discuter: ["À jeun, endoscopie", "Ne pas faire vomir"] },
+      { id: "it_corps", diagnostic: "Corps étranger dangereux (pile / aimants)", arguments: [{ label: "pile bouton / aimants", w: 3, when: { q: "it_pile", eq: true } }],
+        examens_a_discuter: ["Radiographie, avis (extraction)"] }
+    ],
+    examens_clinique: ["Identifier le produit, la quantité, l'heure", "État de conscience et constantes", "Examen de la bouche (caustique)", "Contacter le centre antipoison"]
   }
 };

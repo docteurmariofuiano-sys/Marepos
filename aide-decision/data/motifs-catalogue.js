@@ -27,8 +27,8 @@ window.MOTIFS = [
   {
     n: 2, titre: "ORL / infectieux", icone: "👂",
     frequents: [
-      { l: "Mal de gorge" }, { l: "Angine" }, { l: "Rhinopharyngite" }, { l: "Rhume" },
-      { l: "Nez bouché" }, { l: "Écoulement nasal" }, { l: "Toux", f: "toux_aigue" }, { l: "Otalgie" }, { l: "Otite" },
+      { l: "Mal de gorge", f: "angine" }, { l: "Angine", f: "angine" }, { l: "Rhinopharyngite" }, { l: "Rhume" },
+      { l: "Nez bouché" }, { l: "Écoulement nasal" }, { l: "Toux", f: "toux_aigue" }, { l: "Otalgie", f: "otite" }, { l: "Otite", f: "otite" },
       { l: "Baisse d'audition" }, { l: "Bouchon de cérumen" }, { l: "Acouphènes", f: "acouphene" },
       { l: "Vertiges positionnels", f: "vertige" }, { l: "Sinusite" }, { l: "Douleur faciale", f: "algie_faciale" },
       { l: "Épistaxis", f: "epistaxis" }, { l: "Aphonie / dysphonie", f: "dysphonie" },
@@ -181,19 +181,19 @@ window.MOTIFS = [
   {
     n: 11, titre: "Pédiatrie", icone: "🧒",
     frequents: [
-      { l: "Fièvre de l'enfant" }, { l: "Toux", f: "toux_aigue" }, { l: "Rhinopharyngite" }, { l: "Otite" }, { l: "Angine" },
+      { l: "Fièvre de l'enfant", f: "fievre_enfant" }, { l: "Toux", f: "toux_aigue" }, { l: "Rhinopharyngite" }, { l: "Otite", f: "otite" }, { l: "Angine", f: "angine" },
       { l: "Gastro-entérite", f: "diarrhee_aigue" }, { l: "Vomissements", f: "nausees_vomissements" }, { l: "Diarrhée", f: "diarrhee_aigue" },
-      { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Varicelle" }, { l: "Bronchiolite" }, { l: "Asthme de l'enfant" },
-      { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson" },
+      { l: "Éruption cutanée", f: "eruption_urticaire" }, { l: "Varicelle", f: "varicelle" }, { l: "Bronchiolite", f: "bronchiolite" }, { l: "Asthme de l'enfant", f: "asthme_enfant" },
+      { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson", f: "pleurs_nourrisson" },
       { l: "Troubles du sommeil" }, { l: "Retard de langage" }, { l: "Troubles du comportement" },
       { l: "Difficultés scolaires" }, { l: "Vaccination" }, { l: "Certificat sport" }, { l: "Suivi de croissance" },
-      { l: "Suspicion infection urinaire" }
+      { l: "Suspicion infection urinaire", f: "cystite" }
     ],
     urgences: [
-      { l: "Fièvre du nourrisson < 3 mois" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère" },
-      { l: "Déshydratation" }, { l: "Convulsion fébrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien" },
-      { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile" }, { l: "Ingestion toxique" },
-      { l: "Corps étranger inhalé ou ingéré" }, { l: "Maltraitance suspectée" }
+      { l: "Fièvre du nourrisson < 3 mois" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
+      { l: "Déshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien" },
+      { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
+      { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée" }
     ]
   },
   {
