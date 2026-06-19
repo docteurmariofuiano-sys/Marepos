@@ -249,16 +249,62 @@ window.BIOKB = [
   {
     id: "dyslipidemie", num: 60, anomalie: "Élévation du cholestérol (dyslipidémie)",
     specialite: "Métabolisme",
-    definition: "Avant de traiter : éliminer une cause secondaire et raisonner sur le risque CV global. Dépôts lipidiques + ATCD CV précoces = forme familiale.",
-    premiere_intention: ["Caractériser : LDL pure, hypertriglycéridémie, ou mixte", "Éliminer une cause secondaire (TSH, glycémie, créatinine)", "Évaluer le risque CV global (cible de LDL)"],
+    definition: "Exploration des anomalies lipidiques (EAL) à interpréter selon le risque CV global. Bilan après 12 h de jeûne : aspect du sérum, triglycérides, cholestérol total, HDL, LDL calculé (Friedewald). Avant de traiter : éliminer une cause secondaire.",
+    premiere_intention: ["EAL après 12 h de jeûne : aspect du sérum, TG, cholestérol total, HDL ; LDL par la formule de Friedewald", "Friedewald : LDL (g/L) = CT − HDL − (TG/5) — non applicable si TG ≥ 4 g/L → dosage direct du LDL", "Un rapport cholestérol total / HDL > 5 = marqueur de risque CV", "2e intention : apo AI, apo B, Lp(a) ; lipidogramme (type III : présence d'IDL)"],
     causes: [
       { cause: "Dyslipidémie commune / polygénique", signe: "la plus fréquente, multifactorielle", examens: ["Bilan lipidique, FdR CV"] },
       { cause: "Hypercholestérolémie familiale", signe: "LDL très élevé + xanthomes + ATCD CV précoces", examens: ["Dépistage familial, score clinique"] },
-      { cause: "Dyslipidémie secondaire", signe: "hypothyroïdie, diabète, néphrotique, alcool, iatrogène", examens: ["TSH, glycémie, créatinine, protéinurie"] },
+      { cause: "Dyslipidémie secondaire", signe: "hypothyroïdie, syndrome néphrotique, IRC, cholestase, alcool, iatrogène (corticoïdes, œstroprogestatifs, β-bloquants, diurétiques)", examens: ["TSH, glycémie, créatinine, protéinurie", "Bilan hépatique"] },
       { cause: "Hypertriglycéridémie majeure", signe: "risque de pancréatite aiguë", examens: ["Triglycérides, lipase si douleur"] }
     ],
-    red_flags: ["Hypertriglycéridémie majeure (pancréatite aiguë)", "Hypercholestérolémie familiale (risque CV précoce)"],
-    conduite: ["Xanthomes tendineux / arc cornéen avant 45 ans → suspecter une forme familiale, dépistage familial."]
+    tableaux: [
+      { titre: "Facteurs de risque CV (HAS) et facteur protecteur",
+        entetes: ["Facteur", "Score"],
+        lignes: [
+          ["Âge : > 50 ans (homme), > 60 ans (femme)", "+1"],
+          ["ATCD familial coronarien précoce (parent 1er degré : H < 55 ans, F < 65 ans)", "+1"],
+          ["Tabagisme actuel ou arrêté < 3 ans", "+1"],
+          ["HTA permanente (traitée ou non)", "+1"],
+          ["HDL cholestérol < 0,4 g/L", "+1"],
+          ["Protecteur : HDL cholestérol > 0,6 g/L", "−1"]
+        ] },
+      { titre: "Cible de LDL cholestérol selon le nombre de FdR",
+        entetes: ["Catégorie", "Cible LDL"],
+        lignes: [
+          ["Aucun facteur de risque", "< 2,2 g/L (5,7 mmol/L)"],
+          ["1 facteur de risque", "< 1,9 g/L (4,9 mmol/L)"],
+          ["2 facteurs de risque", "< 1,6 g/L (4,1 mmol/L)"],
+          ["> 2 facteurs de risque", "< 1,3 g/L (3,4 mmol/L)"],
+          ["ATCD de maladie cardio-vasculaire", "< 1 g/L (2,6 mmol/L)"]
+        ] },
+      { titre: "Cible de LDL chez le diabétique (HAS)",
+        entetes: ["Profil", "Cible LDL"],
+        lignes: [
+          ["Diabète < 5 ans, sans FdR additionnel ni microangiopathie", "< 1,9 g/L"],
+          ["Au plus 1 FdR additionnel au diabète", "< 1,6 g/L"],
+          ["≥ 2 FdR additionnels, diabète < 10 ans", "< 1,3 g/L"],
+          ["ATCD CV, ou très haut risque (atteinte rénale, diabète > 10 ans + ≥ 2 FdR, risque > 20 %/10 ans)", "< 1 g/L"]
+        ] },
+      { titre: "Mécanisme d'action des hypolipémiants",
+        entetes: ["Classe", "Mécanisme"],
+        lignes: [
+          ["Statines", "↓ synthèse hépatique du cholestérol (inhibition HMG-CoA réductase) ; ↑ catabolisme des LDL (surexpression des R-LDL)"],
+          ["Fibrates", "↓ synthèse hépatique ; ↑ catabolisme des VLDL ; ↑ lipolyse (LPL) ; agonistes PPAR"],
+          ["Résines", "↓ absorption intestinale du cholestérol et du cycle entéro-hépatique des acides biliaires ; ↑ R-LDL ; ↓ vitamines liposolubles"],
+          ["Ézétimibe", "↓ absorption du cholestérol alimentaire et biliaire (transporteur des entérocytes) sans toucher vitamines/TG/acides biliaires"],
+          ["Acide nicotinique", "Action sur la fibre lisse artériolaire ; effet hypocholestérolémiant (métabolisme des catécholamines, oxydation du cholestérol)"]
+        ] },
+      { titre: "Impact sur le bilan lipidique",
+        entetes: ["Fraction", "Statines (+ézétimibe)", "Fibrates", "Résines", "Ézétimibe", "Ac. nicotinique"],
+        lignes: [
+          ["Cholestérol total", "↓ 20-50 %", "↓ 10-30 %", "↓ 7-10 %", "↓ 13 %", "↓ 10-20 %"],
+          ["LDL cholestérol", "↓ 15-60 %", "↓ 10-30 %", "↓ 15-18 %", "↓ 19 %", "↓ 8-22 %"],
+          ["HDL cholestérol", "↑ 5-12 %", "↑ 10-15 %", "↑ 3 %", "↓ 3 %", "↑ 16-26 %"],
+          ["Triglycérides", "↓ 15-30 %", "↓ 40-50 %", "↑ 5 %", "↓ 8 %", "↓ 11-34 %"]
+        ] }
+    ],
+    red_flags: ["Hypertriglycéridémie majeure (TG > 10 g/L) → risque de pancréatite aiguë", "Hypercholestérolémie familiale (LDL très élevé, xanthomes, risque CV précoce)", "Association fibrate + statine déconseillée (risque de rhabdomyolyse) — réservée au spécialiste", "Pas de bilan lipidique justifié au-delà de 80 ans"],
+    conduite: ["Xanthomes tendineux / arc cornéen avant 45 ans → suspecter une forme familiale, dépistage familial.", "Toujours éliminer une dyslipidémie secondaire (hypothyroïdie, néphrotique, IRC, cholestase, alcool, iatrogène) avant de traiter.", "Hygiéno-diététique d'abord (AGS → AGMI/AGPI, oméga-3, fibres, poids, activité, alcool) ; médicament si objectif non atteint à 3 mois (d'emblée en prévention secondaire).", "Hypercholestérolémie (IIa/IIb/III) : statine ± résine/ézétimibe ; hypertriglycéridémie majeure : fibrate. Bilan normal → contrôle ≤ 1 fois/5 ans."]
   },
   {
     id: "cpk", num: 61, anomalie: "Élévation des CPK (créatine-kinase)",
