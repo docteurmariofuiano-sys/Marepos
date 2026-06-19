@@ -22,12 +22,12 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (43 fiches cliniques)
+## Symptômes couverts (58 fiches cliniques)
 
-**TOUS les symptômes cliniques du manuel sont encodés** (43 fiches). Les 21 fiches
-restantes du livre sont des fiches d'**interprétation biologique** (anomalies de
-l'hémostase, ionogramme, transaminases, etc.) — elles ne se prêtent pas à un
-questionnaire patient et relèveraient d'un module médecin distinct (voir plus bas).
+**Les 43 fiches du manuel + 15 motifs très fréquents de cabinet sont encodés**
+(58 fiches cliniques). Les 21 fiches biologiques du livre sont dans un module
+médecin distinct (voir plus bas), et le catalogue des 16 spécialités relie le
+tout (voir plus bas).
 
 **Fiches URGENCE (10)** : `douleur thoracique` · `dyspnée aiguë` · `déficit
 neurologique transitoire` · `fièvre au retour des tropiques` · `grosse bourse` ·
@@ -68,7 +68,7 @@ Colonne vertébrale de navigation couvrant **16 spécialités** et **423 motifs*
 (fréquents + urgences), d'après la nomenclature de consultation en médecine
 générale. Chaque motif est **relié, quand c'est pertinent, à une fiche
 décisionnelle** (parcours patient→médecin) ou à une **fiche d'interprétation
-biologique** ; **161 motifs (38 %)** sont déjà reliés et cliquables, les autres
+biologique** ; **209 motifs (49 %)** sont déjà reliés et cliquables, les autres
 sont des **entrées de référence** à approfondir à partir des ouvrages du Drive
 (Manuel du Généraliste, Médecine Générale pour le Praticien, fiches dermato
 CESU). Recherche, filtre « urgences », filtre « fiche disponible ».

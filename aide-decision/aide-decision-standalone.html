@@ -3042,6 +3042,592 @@ window.KB = {
       "Palpation thyroïdienne",
       "Recherche d'adénopathies / d'altération de l'état général"
     ]
+  },
+
+  // -------------------------------------------------------------------------
+  // CÉPHALÉE
+  // -------------------------------------------------------------------------
+  cephalee: {
+    id: "cephalee", symptome: "Mal de tête (céphalée)", specialite: ["Neurologie"], urgence: true,
+    questions: [
+      { id: "ce2_brutal", label: "Coup de tonnerre", type: "boolean",
+        question: "La douleur est-elle apparue brutalement, atteignant son maximum en quelques secondes ?" },
+      { id: "ce2_fievre_raideur", label: "Fièvre + raideur de nuque", type: "boolean",
+        question: "Avez-vous de la fièvre avec une raideur de la nuque ?" },
+      { id: "ce2_deficit", label: "Signes neurologiques", type: "boolean",
+        question: "Avez-vous des signes neurologiques (faiblesse, troubles de la parole, de la vision, confusion) ?" },
+      { id: "ce2_horton", label: "Horton", type: "boolean",
+        question: "Avez-vous plus de 50 ans avec une douleur de la tempe, une douleur de la mâchoire en mangeant, ou des troubles visuels ?" },
+      { id: "ce2_pulsatile", label: "Profil migraineux", type: "boolean",
+        question: "Est-ce une douleur pulsatile d'un côté, avec gêne à la lumière/au bruit et nausées ?" },
+      { id: "ce2_etau", label: "Céphalée de tension", type: "boolean",
+        question: "Est-ce un serrement « en casque » des deux côtés, sans nausée ?" },
+      { id: "ce2_matin", label: "HTIC", type: "boolean",
+        question: "Est-elle présente le matin au réveil avec des vomissements, ou déclenchée par l'effort/la toux ?" },
+      { id: "ce2_recent", label: "Céphalée inhabituelle/récente", type: "boolean",
+        question: "Est-ce une céphalée inhabituelle, récente, ou qui s'aggrave progressivement ?" }
+    ],
+    red_flags: [
+      { id: "ce2_rf_thunderclap", niveau: 3, when: { q: "ce2_brutal", eq: true },
+        message_medecin: "Céphalée en coup de tonnerre : hémorragie méningée à éliminer (TDM sans injection ± PL) — urgence (15).",
+        message_patient: "Une douleur aussi brutale nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ce2_rf_meningite", niveau: 3, when: { q: "ce2_fievre_raideur", eq: true },
+        message_medecin: "Céphalée fébrile + raideur de nuque : méningite → urgence.",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ce2_rf_deficit", niveau: 3, when: { q: "ce2_deficit", eq: true },
+        message_medecin: "Céphalée + signes neurologiques : cause secondaire (AVC, processus expansif) → imagerie urgente.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ce2_rf_horton", niveau: 3, when: { q: "ce2_horton", eq: true },
+        message_medecin: "Suspicion de maladie de Horton (> 50 ans) : VS/CRP en urgence, risque de cécité.",
+        message_patient: "Ces signes nécessitent une évaluation médicale sans attendre." },
+      { id: "ce2_rf_htic", niveau: 2, when: { q: "ce2_matin", eq: true },
+        message_medecin: "Céphalée matinale avec vomissements / déclenchée à l'effort : suspicion d'HTIC → imagerie.",
+        message_patient: "Ce profil nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ce2_hsa", diagnostic: "Hémorragie méningée", arguments: [{ label: "début en coup de tonnerre", w: 3, when: { q: "ce2_brutal", eq: true } }],
+        examens_a_discuter: ["TDM cérébrale sans injection", "PL si TDM normale"] },
+      { id: "ce2_meningite", diagnostic: "Méningite", arguments: [{ label: "fièvre + raideur de nuque", w: 3, when: { q: "ce2_fievre_raideur", eq: true } }],
+        examens_a_discuter: ["Ponction lombaire", "Hémocultures"] },
+      { id: "ce2_migraine", diagnostic: "Migraine", arguments: [{ label: "pulsatile + photo/phonophobie + nausées", w: 3, when: { q: "ce2_pulsatile", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique", "Agenda des crises"] },
+      { id: "ce2_tension", diagnostic: "Céphalée de tension", arguments: [{ label: "serrement « en casque » bilatéral", w: 3, when: { q: "ce2_etau", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique"] },
+      { id: "ce2_horton", diagnostic: "Maladie de Horton", arguments: [{ label: "> 50 ans, signes temporaux/visuels", w: 3, when: { q: "ce2_horton", eq: true } }],
+        examens_a_discuter: ["VS / CRP en urgence", "Biopsie de l'artère temporale"] },
+      { id: "ce2_secondaire", diagnostic: "Céphalée secondaire / HTIC", arguments: [{ label: "récente/inhabituelle, évolutive", w: 2, when: { q: "ce2_recent", eq: true } }, { label: "matinale + vomissements / effort", w: 2, when: { q: "ce2_matin", eq: true } }, { label: "signes neurologiques", w: 2, when: { q: "ce2_deficit", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale"] }
+    ],
+    examens_clinique: ["Examen neurologique complet", "Recherche d'une raideur méningée", "Fond d'œil (œdème papillaire)", "Palpation des artères temporales", "Pression artérielle, température"]
+  },
+
+  // -------------------------------------------------------------------------
+  // VERTIGES
+  // -------------------------------------------------------------------------
+  vertige: {
+    id: "vertige", symptome: "Vertiges", specialite: ["ORL", "Neurologie"], urgence: true,
+    questions: [
+      { id: "ve_rotatoire", label: "Vrai vertige rotatoire", type: "boolean",
+        question: "Avez-vous l'impression que tout tourne autour de vous ?" },
+      { id: "ve_position", label: "Positionnel bref", type: "boolean",
+        question: "Est-ce déclenché par les changements de position de la tête, par brèves crises de moins d'une minute ?" },
+      { id: "ve_audition", label: "Signes cochléaires", type: "boolean",
+        question: "Y a-t-il une baisse d'audition ou des acouphènes associés ?" },
+      { id: "ve_neuro", label: "Signes centraux", type: "boolean",
+        question: "Avez-vous des signes neurologiques : vision double, troubles de la parole, faiblesse, troubles de la marche marqués ?" },
+      { id: "ve_cephalee", label: "Céphalée associée", type: "boolean",
+        question: "Avez-vous une céphalée brutale ou inhabituelle associée ?" },
+      { id: "ve_duree", label: "Durée", type: "single_choice",
+        question: "Combien de temps durent les vertiges ?",
+        options: ["Quelques secondes à 1 minute", "Plusieurs minutes à heures", "En continu, plusieurs jours"] },
+      { id: "ve_instable", label: "Instabilité non rotatoire", type: "boolean",
+        question: "Est-ce plutôt une instabilité ou un déséquilibre, sans sensation de rotation ?" }
+    ],
+    red_flags: [
+      { id: "ve_rf_central", niveau: 3, when: { any: [{ q: "ve_neuro", eq: true }, { q: "ve_cephalee", eq: true }] },
+        message_medecin: "Vertige + signes neurologiques ou céphalée : cause centrale (AVC du tronc/cervelet) → urgence (test HINTS, imagerie).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ve_vppb", diagnostic: "Vertige positionnel paroxystique bénin (VPPB)", arguments: [{ label: "déclenché par la position", w: 3, when: { q: "ve_position", eq: true } }, { label: "accès de quelques secondes", w: 2, when: { q: "ve_duree", eq: "Quelques secondes à 1 minute" } }],
+        examens_a_discuter: ["Manœuvre de Dix-Hallpike", "Manœuvre libératrice (Epley)"] },
+      { id: "ve_meniere", diagnostic: "Maladie de Ménière", arguments: [{ label: "signes cochléaires", w: 2, when: { q: "ve_audition", eq: true } }, { label: "crises de minutes à heures", w: 2, when: { q: "ve_duree", eq: "Plusieurs minutes à heures" } }],
+        examens_a_discuter: ["Audiométrie", "Avis ORL"] },
+      { id: "ve_nevrite", diagnostic: "Névrite vestibulaire", arguments: [{ label: "vertige continu plusieurs jours", w: 3, when: { q: "ve_duree", eq: "En continu, plusieurs jours" } }, { label: "rotatoire sans signe cochléaire", w: 1, when: { q: "ve_rotatoire", eq: true } }],
+        examens_a_discuter: ["Examen vestibulaire, test HINTS", "Traitement symptomatique"] },
+      { id: "ve_central", diagnostic: "Cause centrale (AVC)", arguments: [{ label: "signes neurologiques", w: 3, when: { q: "ve_neuro", eq: true } }, { label: "céphalée associée", w: 2, when: { q: "ve_cephalee", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale", "Avis neurologique urgent"] },
+      { id: "ve_instabilite", diagnostic: "Instabilité non vertigineuse", arguments: [{ label: "déséquilibre sans rotation", w: 3, when: { q: "ve_instable", eq: true } }],
+        examens_a_discuter: ["Examen neurologique", "TA couché/debout, revue des médicaments"] }
+    ],
+    examens_clinique: ["Recherche d'un nystagmus", "Manœuvre de Dix-Hallpike", "Test HINTS (différencier périphérique/central)", "Examen neurologique et de la marche", "TA couché/debout"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TOUX AIGUË
+  // -------------------------------------------------------------------------
+  toux_aigue: {
+    id: "toux_aigue", symptome: "Toux aiguë (moins de 3 semaines)", specialite: ["Pneumologie", "ORL"], urgence: true,
+    questions: [
+      { id: "ta_gravite", label: "Détresse respiratoire", type: "boolean",
+        question: "Avez-vous une difficulté à respirer marquée, les lèvres bleues, ou somnolez-vous ?" },
+      { id: "ta_fievre", label: "Fièvre", type: "boolean", question: "Avez-vous de la fièvre ?" },
+      { id: "ta_dyspnee", label: "Dyspnée / douleur thoracique", type: "boolean",
+        question: "Êtes-vous essoufflé ou avez-vous une douleur dans la poitrine ?" },
+      { id: "ta_expecto", label: "Expectoration", type: "boolean", question: "Crachez-vous (crachats colorés) ?" },
+      { id: "ta_fausse_route", label: "Inhalation", type: "boolean",
+        question: "Y a-t-il eu une fausse route ou l'inhalation possible d'un corps étranger ?" },
+      { id: "ta_hemopt", label: "Hémoptysie", type: "boolean", question: "Crachez-vous du sang ?" },
+      { id: "ta_contage", label: "Contexte épidémique", type: "boolean", question: "Y a-t-il un contexte de grippe / COVID / rhume ?" }
+    ],
+    red_flags: [
+      { id: "ta_rf_detresse", niveau: 3, when: { q: "ta_gravite", eq: true },
+        message_medecin: "Détresse respiratoire : urgence (SpO2, oxygène, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ta_rf_corps", niveau: 3, when: { q: "ta_fausse_route", eq: true },
+        message_medecin: "Suspicion d'inhalation de corps étranger : urgence (manœuvres, endoscopie).",
+        message_patient: "Une fausse route avec gêne nécessite une évaluation immédiate — appelez le 15." },
+      { id: "ta_rf_pneumonie", niveau: 2, when: { all: [{ q: "ta_fievre", eq: true }, { q: "ta_dyspnee", eq: true }] },
+        message_medecin: "Fièvre + dyspnée : pneumonie / complication → examen, radiographie thoracique.",
+        message_patient: "Cette association nécessite un avis médical rapide." },
+      { id: "ta_rf_hemopt", niveau: 2, when: { q: "ta_hemopt", eq: true },
+        message_medecin: "Hémoptysie : explorer (voir fiche dédiée).",
+        message_patient: "Cracher du sang nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ta_virale", diagnostic: "Infection virale des voies aériennes", arguments: [{ label: "contexte épidémique", w: 2, when: { q: "ta_contage", eq: true } }, { label: "pas de dyspnée", w: 1, when: { q: "ta_dyspnee", eq: false } }],
+        examens_a_discuter: ["Traitement symptomatique"] },
+      { id: "ta_pneumonie", diagnostic: "Pneumonie", arguments: [{ label: "fièvre", w: 2, when: { q: "ta_fievre", eq: true } }, { label: "dyspnée", w: 2, when: { q: "ta_dyspnee", eq: true } }, { label: "expectoration", w: 1, when: { q: "ta_expecto", eq: true } }],
+        examens_a_discuter: ["Auscultation", "Radiographie thoracique, CRP"] },
+      { id: "ta_bronchite", diagnostic: "Bronchite aiguë", arguments: [{ label: "expectoration sans foyer", w: 2, when: { q: "ta_expecto", eq: true } }],
+        examens_a_discuter: ["Traitement symptomatique (pas d'antibiotique systématique)"] }
+    ],
+    examens_clinique: ["SpO2, fréquence respiratoire", "Auscultation pulmonaire", "Température", "Examen ORL"]
+  },
+
+  // -------------------------------------------------------------------------
+  // TOUX CHRONIQUE
+  // -------------------------------------------------------------------------
+  toux_chronique: {
+    id: "toux_chronique", symptome: "Toux chronique (plus de 8 semaines)", specialite: ["Pneumologie"],
+    questions: [
+      { id: "tc_tabac", label: "Tabac + signaux", type: "boolean",
+        question: "Fumez-vous, avec une modification récente de la toux ou un amaigrissement ?" },
+      { id: "tc_hemopt", label: "Hémoptysie", type: "boolean", question: "Crachez-vous du sang ?" },
+      { id: "tc_rgo", label: "RGO", type: "boolean", question: "Avez-vous des remontées acides ou des brûlures derrière le sternum ?" },
+      { id: "tc_ecoulement", label: "Écoulement postérieur", type: "boolean", question: "Avez-vous un écoulement nasal qui coule dans la gorge ou une sinusite chronique ?" },
+      { id: "tc_asthme", label: "Asthme/équivalent", type: "boolean", question: "La toux est-elle nocturne, avec sifflements, ou déclenchée à l'effort ?" },
+      { id: "tc_iec", label: "IEC", type: "boolean", question: "Prenez-vous un médicament pour la tension dont le nom finit par « -pril » (IEC) ?" },
+      { id: "tc_dyspnee", label: "Dyspnée progressive", type: "boolean", question: "Êtes-vous essoufflé de façon progressive ?" }
+    ],
+    red_flags: [
+      { id: "tc_rf_cancer", niveau: 2, when: { q: "tc_tabac", eq: true },
+        message_medecin: "Toux chronique du fumeur (± modification récente / amaigrissement) : éliminer un cancer bronchique → radiographie/TDM, avis.",
+        message_patient: "Une toux qui dure chez un fumeur nécessite un avis médical et des examens." },
+      { id: "tc_rf_hemopt", niveau: 2, when: { q: "tc_hemopt", eq: true },
+        message_medecin: "Hémoptysie : explorer (TDM, fibroscopie).",
+        message_patient: "Cracher du sang nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tc_tabac", diagnostic: "Toux du fumeur / BPCO / cancer bronchique", arguments: [{ label: "tabac ± signaux d'alarme", w: 3, when: { q: "tc_tabac", eq: true } }, { label: "dyspnée progressive", w: 1, when: { q: "tc_dyspnee", eq: true } }],
+        examens_a_discuter: ["Radiographie thoracique, EFR", "TDM si signaux d'alarme"] },
+      { id: "tc_rgo", diagnostic: "Reflux gastro-œsophagien", arguments: [{ label: "pyrosis / remontées", w: 3, when: { q: "tc_rgo", eq: true } }],
+        examens_a_discuter: ["Épreuve thérapeutique par IPP"] },
+      { id: "tc_orl", diagnostic: "Écoulement postérieur / pathologie ORL", arguments: [{ label: "rhinorrhée postérieure / sinusite", w: 3, when: { q: "tc_ecoulement", eq: true } }],
+        examens_a_discuter: ["Avis ORL", "Traitement local"] },
+      { id: "tc_asthme", diagnostic: "Asthme / toux équivalent d'asthme", arguments: [{ label: "toux nocturne, sifflements, effort", w: 3, when: { q: "tc_asthme", eq: true } }],
+        examens_a_discuter: ["EFR avec test de réversibilité"] },
+      { id: "tc_iec", diagnostic: "Toux iatrogène (IEC)", arguments: [{ label: "prise d'un IEC", w: 3, when: { q: "tc_iec", eq: true } }],
+        examens_a_discuter: ["Arrêt / substitution de l'IEC (test d'épreuve)"] }
+    ],
+    examens_clinique: ["Auscultation pulmonaire", "Examen ORL", "Radiographie thoracique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // DOULEUR ABDOMINALE
+  // -------------------------------------------------------------------------
+  douleur_abdominale: {
+    id: "douleur_abdominale", symptome: "Douleur du ventre (douleur abdominale)", specialite: ["Digestif", "Chirurgie"], urgence: true,
+    questions: [
+      { id: "ab_siege", label: "Siège", type: "single_choice", question: "Où la douleur est-elle principalement ?",
+        options: ["En haut à droite (sous les côtes)", "Au creux de l'estomac", "En bas à droite", "En bas (pelvis)", "Diffuse / tout le ventre"] },
+      { id: "ab_defense", label: "Défense / contracture", type: "boolean", question: "Le ventre est-il dur et très douloureux quand on appuie ?" },
+      { id: "ab_brutal", label: "Début brutal intense", type: "boolean", question: "La douleur est-elle apparue brutalement, très intense d'emblée ?" },
+      { id: "ab_vomit", label: "Occlusion", type: "boolean", question: "Avez-vous des vomissements avec un arrêt des gaz et des selles ?" },
+      { id: "ab_fievre", label: "Fièvre", type: "boolean", question: "Avez-vous de la fièvre ?" },
+      { id: "ab_sang", label: "Saignement digestif", type: "boolean", question: "Avez-vous du sang dans les selles ou des selles noires ?" },
+      { id: "ab_cardiaque", label: "Signes cardiaques", type: "boolean", question: "Avez-vous une douleur en haut du ventre avec essoufflement, sueurs, ou des antécédents cardiaques ?" }
+    ],
+    red_flags: [
+      { id: "ab_rf_chir", niveau: 3, when: { any: [{ q: "ab_defense", eq: true }, { q: "ab_vomit", eq: true }] },
+        message_medecin: "Défense abdominale ou occlusion (vomissements + arrêt du transit) : urgence chirurgicale.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ab_rf_vasculaire", niveau: 3, when: { all: [{ q: "ab_brutal", eq: true }, { ctx: "age", gte: 65 }] },
+        message_medecin: "Douleur brutale intense chez le sujet âgé : éliminer une ischémie mésentérique, un anévrisme rompu.",
+        message_patient: "Cette douleur nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ab_rf_geu", niveau: 3, when: { ctx: "grossessePossible", eq: true },
+        message_medecin: "Femme en âge de procréer : β-hCG d'emblée (grossesse extra-utérine — voir fiche algie pelvienne).",
+        message_patient: "Un test de grossesse fera partie du bilan ; consultez sans tarder." },
+      { id: "ab_rf_cardiaque", niveau: 3, when: { q: "ab_cardiaque", eq: true },
+        message_medecin: "Douleur épigastrique + signes cardiaques : éliminer un syndrome coronarien (ECG).",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ab_appendicite", diagnostic: "Appendicite", arguments: [{ label: "fosse iliaque droite", w: 3, when: { q: "ab_siege", eq: "En bas à droite" } }, { label: "fièvre", w: 1, when: { q: "ab_fievre", eq: true } }, { label: "défense", w: 1, when: { q: "ab_defense", eq: true } }],
+        examens_a_discuter: ["NFS/CRP", "Échographie / TDM", "Avis chirurgical"] },
+      { id: "ab_biliaire", diagnostic: "Pathologie biliaire (colique hépatique / cholécystite)", arguments: [{ label: "hypochondre droit", w: 3, when: { q: "ab_siege", eq: "En haut à droite (sous les côtes)" } }, { label: "fièvre", w: 1, when: { q: "ab_fievre", eq: true } }],
+        examens_a_discuter: ["Échographie hépato-biliaire", "Bilan hépatique"] },
+      { id: "ab_gastrique", diagnostic: "Ulcère / gastrite", arguments: [{ label: "épigastrique", w: 3, when: { q: "ab_siege", eq: "Au creux de l'estomac" } }],
+        examens_a_discuter: ["IPP, recherche H. pylori", "Endoscopie si signes d'alarme"] },
+      { id: "ab_occlusion", diagnostic: "Occlusion intestinale", arguments: [{ label: "vomissements + arrêt du transit", w: 3, when: { q: "ab_vomit", eq: true } }],
+        examens_a_discuter: ["Imagerie abdominale", "Avis chirurgical"] },
+      { id: "ab_pelvien", diagnostic: "Cause pelvienne / gynécologique", arguments: [{ label: "douleur pelvienne", w: 2, when: { q: "ab_siege", eq: "En bas (pelvis)" } }, { label: "grossesse possible", w: 1, when: { ctx: "grossessePossible", eq: true } }],
+        examens_a_discuter: ["β-hCG, échographie pelvienne (voir fiche algie pelvienne)"] },
+      { id: "ab_vasculaire", diagnostic: "Cause vasculaire (ischémie mésentérique, anévrisme)", arguments: [{ label: "début brutal", w: 2, when: { q: "ab_brutal", eq: true } }, { label: "sujet âgé", w: 2, when: { ctx: "age", gte: 65 } }],
+        examens_a_discuter: ["Angio-TDM abdominale", "Lactates"] }
+    ],
+    examens_clinique: ["Palpation abdominale (défense, contracture)", "Toucher rectal", "β-hCG chez la femme en âge de procréer", "ECG si douleur épigastrique", "Bandelette urinaire, température"]
+  },
+
+  // -------------------------------------------------------------------------
+  // NAUSÉES / VOMISSEMENTS
+  // -------------------------------------------------------------------------
+  nausees_vomissements: {
+    id: "nausees_vomissements", symptome: "Nausées et vomissements", specialite: ["Digestif"], urgence: true,
+    questions: [
+      { id: "nv_neuro", label: "Cause neurologique", type: "boolean", question: "Avez-vous des maux de tête intenses, une raideur de nuque, ou des signes neurologiques ?" },
+      { id: "nv_abdo", label: "Cause chirurgicale", type: "boolean", question: "Avez-vous une douleur abdominale importante, un ventre dur, ou un arrêt des selles ?" },
+      { id: "nv_sang", label: "Hématémèse", type: "boolean", question: "Vomissez-vous du sang ?" },
+      { id: "nv_cardiaque", label: "Signes cardiaques", type: "boolean", question: "Avez-vous une douleur thoracique ou des sueurs associées ?" },
+      { id: "nv_deshyd", label: "Déshydratation", type: "boolean", question: "N'arrivez-vous plus à boire, avec une déshydratation ?" },
+      { id: "nv_vertige", label: "Cause vestibulaire", type: "boolean", question: "Y a-t-il des vertiges associés ?" },
+      { id: "nv_medic", label: "Iatrogène / toxique", type: "boolean", question: "Avez-vous commencé un médicament, une chimiothérapie, ou bu de l'alcool en excès ?" }
+    ],
+    red_flags: [
+      { id: "nv_rf_neuro", niveau: 3, when: { q: "nv_neuro", eq: true },
+        message_medecin: "Vomissements + céphalée/raideur/signes neuro : cause neurologique (HTIC, méningite, hémorragie) → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "nv_rf_abdo", niveau: 3, when: { q: "nv_abdo", eq: true },
+        message_medecin: "Vomissements + douleur abdominale / arrêt du transit : urgence chirurgicale (occlusion).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "nv_rf_sang", niveau: 3, when: { q: "nv_sang", eq: true },
+        message_medecin: "Hématémèse : urgence (voir fiche dédiée).",
+        message_patient: "Vomir du sang nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "nv_rf_cardiaque", niveau: 3, when: { q: "nv_cardiaque", eq: true },
+        message_medecin: "Nausées + douleur thoracique/sueurs : éliminer un syndrome coronarien (ECG).",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "nv_rf_deshyd", niveau: 2, when: { q: "nv_deshyd", eq: true },
+        message_medecin: "Intolérance alimentaire totale / déshydratation : réhydratation, surveillance.",
+        message_patient: "Ne plus pouvoir boire nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "nv_neuro", diagnostic: "Cause neurologique", arguments: [{ label: "céphalée/raideur/signes neuro", w: 3, when: { q: "nv_neuro", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale, PL selon contexte"] },
+      { id: "nv_chir", diagnostic: "Cause digestive chirurgicale (occlusion)", arguments: [{ label: "douleur abdo / arrêt du transit", w: 3, when: { q: "nv_abdo", eq: true } }],
+        examens_a_discuter: ["Imagerie abdominale, avis chirurgical"] },
+      { id: "nv_vestibulaire", diagnostic: "Cause vestibulaire", arguments: [{ label: "vertiges associés", w: 3, when: { q: "nv_vertige", eq: true } }],
+        examens_a_discuter: ["Examen vestibulaire (voir fiche vertiges)"] },
+      { id: "nv_iatrogene", diagnostic: "Cause iatrogène / toxique", arguments: [{ label: "médicament / alcool", w: 3, when: { q: "nv_medic", eq: true } }],
+        examens_a_discuter: ["Revue de l'ordonnance"] },
+      { id: "nv_digestive", diagnostic: "Cause digestive bénigne (gastro-entérite)", arguments: [{ label: "sans signe d'alarme", w: 2, when: { all: [{ q: "nv_neuro", eq: false }, { q: "nv_abdo", eq: false }] } }],
+        examens_a_discuter: ["Réhydratation, surveillance"] }
+    ],
+    examens_clinique: ["Recherche de signes de déshydratation", "Palpation abdominale", "Examen neurologique", "β-hCG chez la femme en âge de procréer", "ECG si signes cardiaques"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PALPITATIONS
+  // -------------------------------------------------------------------------
+  palpitations: {
+    id: "palpitations", symptome: "Palpitations", specialite: ["Cardiologie"], urgence: true,
+    questions: [
+      { id: "pa_syncope", label: "Signes de gravité", type: "boolean", question: "Pendant les palpitations, avez-vous un malaise, une perte de connaissance ou une douleur thoracique ?" },
+      { id: "pa_regulier", label: "Type de rythme", type: "single_choice", question: "Comment ressentez-vous le rythme ?",
+        options: ["Rapide et régulier", "Rapide et irrégulier", "À-coups isolés (extrasystoles)"] },
+      { id: "pa_effort", label: "À l'effort", type: "boolean", question: "Surviennent-elles à l'effort ?" },
+      { id: "pa_cardiopathie", label: "Cardiopathie / mort subite", type: "boolean", question: "Avez-vous une maladie cardiaque connue ou des morts subites dans la famille ?" },
+      { id: "pa_thyroide", label: "Hyperthyroïdie", type: "boolean", question: "Avez-vous un amaigrissement, des tremblements, une intolérance à la chaleur ?" },
+      { id: "pa_anxiete", label: "Contexte anxieux", type: "boolean", question: "Surviennent-elles dans un contexte de stress, avec fourmillements et oppression ?" },
+      { id: "pa_excitants", label: "Excitants", type: "boolean", question: "Consommez-vous café, alcool, tabac, ou des excitants ?" }
+    ],
+    red_flags: [
+      { id: "pa_rf_grave", niveau: 3, when: { any: [{ q: "pa_syncope", eq: true }, { all: [{ q: "pa_effort", eq: true }, { q: "pa_cardiopathie", eq: true }] }] },
+        message_medecin: "Palpitations + syncope/douleur thoracique, ou à l'effort sur cardiopathie : trouble du rythme grave possible → ECG, avis cardiologique urgent.",
+        message_patient: "Ces signes nécessitent une évaluation médicale rapide avec un électrocardiogramme." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pa_rythme", diagnostic: "Trouble du rythme (FA, tachycardie)", arguments: [{ label: "rapide irrégulier", w: 2, when: { q: "pa_regulier", eq: "Rapide et irrégulier" } }, { label: "rapide régulier", w: 2, when: { q: "pa_regulier", eq: "Rapide et régulier" } }, { label: "cardiopathie", w: 1, when: { q: "pa_cardiopathie", eq: true } }],
+        examens_a_discuter: ["ECG (idéalement pendant les palpitations)", "Holter ECG"] },
+      { id: "pa_thyroide", diagnostic: "Hyperthyroïdie", arguments: [{ label: "amaigrissement, tremblements, thermophobie", w: 3, when: { q: "pa_thyroide", eq: true } }],
+        examens_a_discuter: ["TSH"] },
+      { id: "pa_benin", diagnostic: "Palpitations bénignes / extrasystoles", arguments: [{ label: "à-coups isolés", w: 3, when: { q: "pa_regulier", eq: "À-coups isolés (extrasystoles)" } }, { label: "excitants", w: 1, when: { q: "pa_excitants", eq: true } }],
+        examens_a_discuter: ["ECG (souvent normal), réassurance"] },
+      { id: "pa_anxiete", diagnostic: "Anxiété", arguments: [{ label: "contexte anxieux", w: 3, when: { q: "pa_anxiete", eq: true } }],
+        examens_a_discuter: ["Évaluation, après élimination de l'organique"] }
+    ],
+    examens_clinique: ["ECG", "Fréquence et régularité du pouls", "Pression artérielle", "TSH", "Auscultation cardiaque"]
+  },
+
+  // -------------------------------------------------------------------------
+  // HTA / POUSSÉE HYPERTENSIVE
+  // -------------------------------------------------------------------------
+  hta: {
+    id: "hta", symptome: "Hypertension artérielle / poussée tensionnelle", specialite: ["Cardiologie"], urgence: true,
+    questions: [
+      { id: "ht_signes", label: "Souffrance d'organe", type: "boolean", question: "Avez-vous : douleur thoracique, essoufflement, maux de tête intenses, troubles visuels, ou signes neurologiques ?" },
+      { id: "ht_chiffres", label: "Chiffres très élevés", type: "boolean", question: "La tension est-elle très élevée (≥ 180/110) ?" },
+      { id: "ht_contexte", label: "Découverte fortuite", type: "boolean", question: "Est-ce une découverte fortuite, sans aucun symptôme ?" },
+      { id: "ht_renal", label: "Comorbidités", type: "boolean", question: "Avez-vous une maladie rénale, un diabète, ou des œdèmes ?" }
+    ],
+    red_flags: [
+      { id: "ht_rf_urgence", niveau: 3, when: { all: [{ q: "ht_chiffres", eq: true }, { q: "ht_signes", eq: true }] },
+        message_medecin: "Élévation tensionnelle avec souffrance d'organe (neuro/thoracique/visuelle) = URGENCE hypertensive → prise en charge immédiate.",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ht_rf_grossesse", niveau: 3, when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "ht_chiffres", eq: true }] },
+        message_medecin: "HTA + grossesse possible : éliminer une pré-éclampsie → avis obstétrical urgent.",
+        message_patient: "Cette association nécessite une évaluation médicale sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ht_essentielle", diagnostic: "HTA essentielle (à confirmer)", arguments: [{ label: "découverte fortuite asymptomatique", w: 3, when: { q: "ht_contexte", eq: true } }],
+        examens_a_discuter: ["Confirmation (MAPA / automesure)", "Bilan OMS, retentissement (ECG, créatinine, bandelette)"] },
+      { id: "ht_urgence", diagnostic: "Urgence / poussée hypertensive", arguments: [{ label: "souffrance d'organe", w: 3, when: { q: "ht_signes", eq: true } }, { label: "chiffres très élevés", w: 2, when: { q: "ht_chiffres", eq: true } }],
+        examens_a_discuter: ["Recherche de souffrance d'organe (fond d'œil, ECG, créatinine, troponine)"] },
+      { id: "ht_secondaire", diagnostic: "HTA secondaire", arguments: [{ label: "sujet jeune", w: 2, when: { ctx: "age", lte: 35 } }, { label: "atteinte rénale / comorbidités", w: 2, when: { q: "ht_renal", eq: true } }],
+        examens_a_discuter: ["Bilan d'HTA secondaire (rénine/aldostérone, échographie rénale)"] }
+    ],
+    examens_clinique: ["Confirmer la TA au repos, aux deux bras", "Recherche d'une souffrance d'organe (fond d'œil, ECG, bandelette)", "Examen neurologique", "Auscultation cardiaque et des trajets vasculaires"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ŒIL ROUGE
+  // -------------------------------------------------------------------------
+  oeil_rouge: {
+    id: "oeil_rouge", symptome: "Œil rouge", specialite: ["Ophtalmologie"], urgence: true,
+    questions: [
+      { id: "or_douleur", label: "Douleur vraie", type: "boolean", question: "Avez-vous une douleur oculaire importante (et non une simple gêne) ?" },
+      { id: "or_vision", label: "Baisse de vision", type: "boolean", question: "Avez-vous une baisse de la vision ?" },
+      { id: "or_lentilles", label: "Port de lentilles", type: "boolean", question: "Portez-vous des lentilles de contact ?" },
+      { id: "or_trauma", label: "Traumatisme / projection", type: "boolean", question: "Y a-t-il eu un traumatisme ou une projection (produit chimique, corps étranger) ?" },
+      { id: "or_halos", label: "Glaucome aigu", type: "boolean", question: "Voyez-vous des halos autour des lumières, avec un œil dur et des maux de tête/nausées ?" },
+      { id: "or_secretions", label: "Sécrétions", type: "boolean", question: "Avez-vous des sécrétions (yeux collés le matin) ?" },
+      { id: "or_localise", label: "Hémorragie sous-conjonctivale", type: "boolean", question: "La rougeur est-elle localisée, indolore, sans baisse de vision ?" }
+    ],
+    red_flags: [
+      { id: "or_rf_grave", niveau: 3, when: { any: [{ q: "or_douleur", eq: true }, { q: "or_vision", eq: true }, { q: "or_halos", eq: true }, { q: "or_lentilles", eq: true }] },
+        message_medecin: "Œil rouge DOULOUREUX et/ou baisse de vision, halos, ou sous lentilles (kératite, uvéite, glaucome aigu) : avis ophtalmologique urgent.",
+        message_patient: "Ces signes nécessitent une évaluation ophtalmologique urgente." },
+      { id: "or_rf_chimique", niveau: 3, when: { q: "or_trauma", eq: true },
+        message_medecin: "Traumatisme / brûlure chimique oculaire : rinçage abondant immédiat, avis urgent.",
+        message_patient: "Rincez abondamment à l'eau et consultez en urgence." }
+    ],
+    diagnostics_differentiels: [
+      { id: "or_conjonctivite", diagnostic: "Conjonctivite", arguments: [{ label: "sécrétions sans douleur vraie", w: 3, when: { q: "or_secretions", eq: true } }, { label: "pas de douleur", w: 1, when: { q: "or_douleur", eq: false } }],
+        examens_a_discuter: ["Hygiène, traitement local"] },
+      { id: "or_hemorragie", diagnostic: "Hémorragie sous-conjonctivale (bénigne)", arguments: [{ label: "rougeur localisée indolore", w: 3, when: { q: "or_localise", eq: true } }],
+        examens_a_discuter: ["Réassurance", "Vérifier la TA / l'hémostase si récidive"] },
+      { id: "or_keratite", diagnostic: "Kératite (notamment sous lentilles)", arguments: [{ label: "port de lentilles", w: 2, when: { q: "or_lentilles", eq: true } }, { label: "douleur", w: 2, when: { q: "or_douleur", eq: true } }],
+        examens_a_discuter: ["Examen à la fluorescéine", "Avis ophtalmologique urgent"] },
+      { id: "or_glaucome", diagnostic: "Glaucome aigu par fermeture de l'angle", arguments: [{ label: "halos + œil dur + nausées", w: 3, when: { q: "or_halos", eq: true } }],
+        examens_a_discuter: ["Mesure du tonus oculaire", "Urgence ophtalmologique"] },
+      { id: "or_uveite", diagnostic: "Uvéite", arguments: [{ label: "douleur + baisse de vision", w: 2, when: { all: [{ q: "or_douleur", eq: true }, { q: "or_vision", eq: true }] } }],
+        examens_a_discuter: ["Avis ophtalmologique"] }
+    ],
+    examens_clinique: ["Acuité visuelle", "Examen à la fluorescéine", "Examen des pupilles", "Palpation du tonus oculaire", "Recherche d'un corps étranger"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CYSTITE / BRÛLURES URINAIRES
+  // -------------------------------------------------------------------------
+  cystite: {
+    id: "cystite", symptome: "Brûlures urinaires / infection urinaire", specialite: ["Urologie", "Néphrologie"],
+    questions: [
+      { id: "cy_fievre", label: "Fièvre / douleur lombaire", type: "boolean", question: "Avez-vous de la fièvre, des frissons, ou une douleur du dos / du flanc ?" },
+      { id: "cy_brulures", label: "Signes de cystite", type: "boolean", question: "Avez-vous des brûlures en urinant et des envies fréquentes ?" },
+      { id: "cy_recidive", label: "Récidivante", type: "boolean", question: "Est-ce récidivant (au moins 4 épisodes par an) ?" },
+      { id: "cy_terrain", label: "Terrain à risque", type: "boolean", question: "Êtes-vous diabétique, immunodéprimé, ou avez-vous une anomalie des voies urinaires ?" },
+      { id: "cy_hematurie", label: "Hématurie", type: "boolean", question: "Y a-t-il du sang dans les urines ?" }
+    ],
+    red_flags: [
+      { id: "cy_rf_pna", niveau: 2, when: { q: "cy_fievre", eq: true },
+        message_medecin: "Fièvre / douleur lombaire : pyélonéphrite (infection urinaire haute) → ECBU, antibiothérapie ; signes de gravité (sepsis) = urgence.",
+        message_patient: "De la fièvre avec une infection urinaire nécessite un avis médical rapide." },
+      { id: "cy_rf_grossesse", niveau: 2, when: { ctx: "grossessePossible", eq: true },
+        message_medecin: "Infection urinaire + grossesse possible : ECBU systématique et traitement (risque obstétrical).",
+        message_patient: "En cas de grossesse possible, une analyse d'urines est nécessaire." },
+      { id: "cy_rf_homme", niveau: 2, when: { ctx: "sexe", eq: "Homme" },
+        message_medecin: "Infection urinaire de l'homme : prostatite à évoquer → ECBU, jamais « cystite simple ».",
+        message_patient: "Chez l'homme, ce symptôme nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cy_simple", diagnostic: "Cystite simple", arguments: [{ label: "signes de cystite isolés", w: 3, when: { q: "cy_brulures", eq: true } }, { label: "pas de fièvre", w: 1, when: { q: "cy_fievre", eq: false } }],
+        examens_a_discuter: ["Bandelette urinaire", "ECBU si compliquée ou récidivante"] },
+      { id: "cy_pna", diagnostic: "Pyélonéphrite aiguë", arguments: [{ label: "fièvre / douleur lombaire", w: 3, when: { q: "cy_fievre", eq: true } }],
+        examens_a_discuter: ["ECBU, NFS/CRP", "Échographie si signes de gravité ou doute"] },
+      { id: "cy_compliquee", diagnostic: "Cystite à risque de complication", arguments: [{ label: "grossesse possible", w: 2, when: { ctx: "grossessePossible", eq: true } }, { label: "terrain à risque", w: 2, when: { q: "cy_terrain", eq: true } }, { label: "récidivante", w: 1, when: { q: "cy_recidive", eq: true } }],
+        examens_a_discuter: ["ECBU systématique"] },
+      { id: "cy_prostatite", diagnostic: "Prostatite (homme)", arguments: [{ label: "homme", w: 3, when: { ctx: "sexe", eq: "Homme" } }],
+        examens_a_discuter: ["ECBU", "Avis urologique"] }
+    ],
+    examens_clinique: ["Bandelette urinaire / ECBU", "Température", "Palpation lombaire (signe de Giordano)", "Toucher rectal si homme (prostate)"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ÉRUPTION CUTANÉE / URTICAIRE
+  // -------------------------------------------------------------------------
+  eruption_urticaire: {
+    id: "eruption_urticaire", symptome: "Éruption cutanée / urticaire", specialite: ["Dermatologie"], urgence: true,
+    questions: [
+      { id: "er2_anaphylaxie", label: "Anaphylaxie / Quincke", type: "boolean", question: "Avez-vous un gonflement du visage, des lèvres ou de la gorge, une gêne respiratoire, ou un malaise ?" },
+      { id: "er2_purpura", label: "Purpura", type: "boolean", question: "Y a-t-il des taches rouges ou violacées qui ne s'effacent PAS à la pression ?" },
+      { id: "er2_fievre", label: "Fièvre", type: "boolean", question: "Avez-vous de la fièvre ?" },
+      { id: "er2_muqueuses", label: "Atteinte muqueuse / bulles", type: "boolean", question: "Y a-t-il des bulles, un décollement de la peau, ou une atteinte de la bouche / des yeux ?" },
+      { id: "er2_urticaire", label: "Urticaire typique", type: "boolean", question: "Est-ce des plaques rouges qui démangent et changent de place en quelques heures ?" },
+      { id: "er2_medic", label: "Médicament récent", type: "boolean", question: "Avez-vous pris un nouveau médicament récemment ?" },
+      { id: "er2_prurit", label: "Prurit / eczéma", type: "boolean", question: "Est-ce surtout des démangeaisons, avec une peau sèche ou un eczéma ?" }
+    ],
+    red_flags: [
+      { id: "er2_rf_anaphylaxie", niveau: 3, when: { q: "er2_anaphylaxie", eq: true },
+        message_medecin: "Œdème de Quincke / anaphylaxie : urgence vitale (adrénaline IM, 15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "er2_rf_purpura", niveau: 3, when: { all: [{ q: "er2_purpura", eq: true }, { q: "er2_fievre", eq: true }] },
+        message_medecin: "Purpura fébrile : purpura fulminans à éliminer → antibiotique immédiat, 15.",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "er2_rf_grave", niveau: 3, when: { q: "er2_muqueuses", eq: true },
+        message_medecin: "Atteinte muqueuse / bulles / décollement : toxidermie grave (Stevens-Johnson, Lyell) → urgence, arrêt du médicament suspect.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "er2_urticaire", diagnostic: "Urticaire", arguments: [{ label: "plaques mobiles et prurigineuses", w: 3, when: { q: "er2_urticaire", eq: true } }],
+        examens_a_discuter: ["Éviction du facteur déclenchant", "Antihistaminiques"] },
+      { id: "er2_toxidermie", diagnostic: "Toxidermie médicamenteuse", arguments: [{ label: "médicament récent", w: 3, when: { q: "er2_medic", eq: true } }, { label: "atteinte muqueuse", w: 1, when: { q: "er2_muqueuses", eq: true } }],
+        examens_a_discuter: ["Arrêt du médicament", "Surveillance (signes de gravité)"] },
+      { id: "er2_purpura", diagnostic: "Purpura", arguments: [{ label: "taches ne s'effaçant pas à la pression", w: 3, when: { q: "er2_purpura", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes", "Urgence si fébrile"] },
+      { id: "er2_eczema", diagnostic: "Eczéma / dermatite", arguments: [{ label: "prurit, peau sèche", w: 2, when: { q: "er2_prurit", eq: true } }],
+        examens_a_discuter: ["Dermocorticoïdes, émollients, éviction"] }
+    ],
+    examens_clinique: ["Examiner toute la peau ET les muqueuses", "Vitropression (purpura ?)", "Recherche d'un signe de Nikolsky", "Constantes (TA, FC, SpO2) si signe de gravité"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ANXIÉTÉ / CRISE D'ANGOISSE
+  // -------------------------------------------------------------------------
+  anxiete: {
+    id: "anxiete", symptome: "Anxiété / crise d'angoisse", specialite: ["Psychiatrie"], urgence: true,
+    questions: [
+      { id: "an_suicide", label: "Risque suicidaire", type: "boolean", question: "Avez-vous des idées noires ou des pensées de mort ?" },
+      { id: "an_cardiaque", label: "Symptômes organiques", type: "boolean", question: "Pendant les crises : douleur thoracique, essoufflement marqué ou malaise, surtout si vous avez des facteurs de risque cardiaque ?" },
+      { id: "an_panique", label: "Trouble panique", type: "boolean", question: "Avez-vous des crises brutales de peur intense avec palpitations, fourmillements, sensation de mort imminente ?" },
+      { id: "an_thyroide", label: "Hyperthyroïdie", type: "boolean", question: "Avez-vous un amaigrissement, des tremblements, un cœur rapide en permanence ?" },
+      { id: "an_depression", label: "Dépression associée", type: "boolean", question: "Avez-vous une tristesse, une perte d'intérêt, des troubles du sommeil persistants ?" },
+      { id: "an_substance", label: "Substance / sevrage", type: "boolean", question: "Consommez-vous des excitants, ou êtes-vous en sevrage (alcool, médicaments) ?" }
+    ],
+    red_flags: [
+      { id: "an_rf_suicide", niveau: 3, when: { q: "an_suicide", eq: true },
+        message_medecin: "Idées suicidaires : évaluer le risque suicidaire (RUD) — ne pas laisser seul, avis psychiatrique urgent si risque élevé.",
+        message_patient: "Si vous avez des idées noires, parlez-en immédiatement à un médecin ou appelez le 3114 (numéro national prévention suicide)." },
+      { id: "an_rf_cardiaque", niveau: 2, when: { q: "an_cardiaque", eq: true },
+        message_medecin: "Symptômes pouvant mimer une cause organique (cardiaque, EP) : éliminer l'organique avant de retenir l'anxiété (ECG selon contexte).",
+        message_patient: "Ces symptômes méritent un examen médical pour écarter une cause physique." },
+      { id: "an_rf_thyroide", niveau: 2, when: { q: "an_thyroide", eq: true },
+        message_medecin: "Éliminer une hyperthyroïdie (TSH).",
+        message_patient: "Un bilan thyroïdien pourra être proposé." }
+    ],
+    diagnostics_differentiels: [
+      { id: "an_panique", diagnostic: "Trouble panique / anxiété", arguments: [{ label: "crises de panique typiques", w: 3, when: { q: "an_panique", eq: true } }],
+        examens_a_discuter: ["Après élimination de l'organique : TCC, suivi"] },
+      { id: "an_depression", diagnostic: "Épisode dépressif associé", arguments: [{ label: "tristesse, anhédonie, sommeil", w: 3, when: { q: "an_depression", eq: true } }],
+        examens_a_discuter: ["Évaluation thymique, suivi"] },
+      { id: "an_organique", diagnostic: "Cause organique (cardiaque, thyroïdienne, substance)", arguments: [{ label: "symptômes cardiaques", w: 2, when: { q: "an_cardiaque", eq: true } }, { label: "signes d'hyperthyroïdie", w: 2, when: { q: "an_thyroide", eq: true } }, { label: "substance / sevrage", w: 1, when: { q: "an_substance", eq: true } }],
+        examens_a_discuter: ["ECG, TSH selon le contexte"] }
+    ],
+    examens_clinique: ["Évaluation du risque suicidaire", "Constantes (FC, TA, SpO2)", "ECG / TSH si doute organique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // CONFUSION AIGUË
+  // -------------------------------------------------------------------------
+  confusion: {
+    id: "confusion", symptome: "Confusion aiguë", specialite: ["Neurologie", "Médecine interne"], urgence: true,
+    questions: [
+      { id: "co2_diabete", label: "Hypoglycémie", type: "boolean", question: "La personne est-elle diabétique (sous insuline ou comprimés) ?" },
+      { id: "co2_fievre", label: "Fièvre", type: "boolean", question: "Y a-t-il de la fièvre ?" },
+      { id: "co2_deficit", label: "Signes neurologiques", type: "boolean", question: "Y a-t-il des signes neurologiques (faiblesse, troubles de la parole, céphalée) ?" },
+      { id: "co2_brutal", label: "Début brutal", type: "boolean", question: "Est-ce apparu brutalement (en heures ou jours) ?" },
+      { id: "co2_medic", label: "Iatrogène / sevrage", type: "boolean", question: "Y a-t-il eu un changement de médicament, un sevrage (alcool), ou une intoxication ?" },
+      { id: "co2_globe", label: "Facteur déclenchant", type: "boolean", question: "Y a-t-il une rétention d'urine, une constipation, une déshydratation, ou une infection (urinaire, pulmonaire) ?" }
+    ],
+    red_flags: [
+      { id: "co2_rf_neuro", niveau: 3, when: { any: [{ q: "co2_deficit", eq: true }, { q: "co2_fievre", eq: true }] },
+        message_medecin: "Confusion fébrile ou avec signes neurologiques : méningo-encéphalite / AVC → urgence (imagerie, PL).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "co2_rf_hypo", niveau: 3, when: { q: "co2_diabete", eq: true },
+        message_medecin: "Glycémie capillaire immédiate (hypoglycémie = cause réversible à éliminer en premier).",
+        message_patient: "Une vérification de la glycémie est nécessaire sans délai." },
+      { id: "co2_rf_global", niveau: 2, when: { always: true },
+        message_medecin: "Toute confusion aiguë est organique jusqu'à preuve du contraire : bilan étiologique (métabolique, infectieux, médicamenteux, neurologique).",
+        message_patient: "Une confusion récente nécessite une évaluation médicale." }
+    ],
+    diagnostics_differentiels: [
+      { id: "co2_neuro", diagnostic: "Cause neurologique (AVC, hémorragie)", arguments: [{ label: "signes neurologiques", w: 3, when: { q: "co2_deficit", eq: true } }, { label: "début brutal", w: 1, when: { q: "co2_brutal", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale"] },
+      { id: "co2_infectieuse", diagnostic: "Cause infectieuse", arguments: [{ label: "fièvre", w: 3, when: { q: "co2_fievre", eq: true } }, { label: "facteur déclenchant (infection)", w: 1, when: { q: "co2_globe", eq: true } }],
+        examens_a_discuter: ["Hémocultures, ECBU, radiographie", "PL si suspicion méningée"] },
+      { id: "co2_metabolique", diagnostic: "Cause métabolique / iatrogène", arguments: [{ label: "médicament / sevrage", w: 2, when: { q: "co2_medic", eq: true } }, { label: "diabète (hypoglycémie)", w: 2, when: { q: "co2_diabete", eq: true } }],
+        examens_a_discuter: ["Glycémie, ionogramme, calcémie", "Revue de l'ordonnance"] },
+      { id: "co2_age", diagnostic: "Syndrome confusionnel du sujet âgé", arguments: [{ label: "sujet âgé", w: 2, when: { ctx: "age", gte: 75 } }, { label: "facteur déclenchant (globe, fécalome, infection)", w: 2, when: { q: "co2_globe", eq: true } }],
+        examens_a_discuter: ["Rechercher : globe vésical, fécalome, infection, déshydratation"] }
+    ],
+    examens_clinique: ["Glycémie capillaire (en premier)", "Constantes (température, SpO2, TA)", "Examen neurologique", "Recherche d'un globe vésical / fécalome", "Bilan métabolique et infectieux"]
+  },
+
+  // -------------------------------------------------------------------------
+  // PARALYSIE FACIALE
+  // -------------------------------------------------------------------------
+  paralysie_faciale: {
+    id: "paralysie_faciale", symptome: "Paralysie faciale", specialite: ["Neurologie", "ORL"], urgence: true,
+    questions: [
+      { id: "pf_central", label: "Front épargné (central)", type: "boolean", question: "Pouvez-vous encore plisser le front et fermer fort l'œil du côté atteint (le haut du visage est-il épargné) ?" },
+      { id: "pf_autres", label: "Autres signes neuro", type: "boolean", question: "Avez-vous d'autres signes : faiblesse d'un membre, troubles de la parole, de la vision ?" },
+      { id: "pf_otalgie", label: "Zona auriculaire", type: "boolean", question: "Avez-vous des douleurs ou des vésicules dans l'oreille, ou une éruption ?" },
+      { id: "pf_fievre", label: "Contexte infectieux / Lyme", type: "boolean", question: "Avez-vous de la fièvre, ou un contexte de piqûre de tique / maladie de Lyme ?" },
+      { id: "pf_complet", label: "Inocclusion palpébrale", type: "boolean", question: "La fermeture de l'œil est-elle impossible de ce côté ?" }
+    ],
+    red_flags: [
+      { id: "pf_rf_central", niveau: 3, when: { any: [{ q: "pf_central", eq: true }, { q: "pf_autres", eq: true }] },
+        message_medecin: "Atteinte respectant le front ou autres signes neurologiques : paralysie faciale CENTRALE (AVC) → urgence (imagerie).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "pf_rf_zona", niveau: 2, when: { q: "pf_otalgie", eq: true },
+        message_medecin: "Zona auriculaire (syndrome de Ramsay-Hunt) : antiviral précoce, avis ORL.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." },
+      { id: "pf_rf_oeil", niveau: 2, when: { q: "pf_complet", eq: true },
+        message_medecin: "Inocclusion palpébrale : protection cornéenne (larmes artificielles, occlusion nocturne).",
+        message_patient: "Protégez votre œil (larmes artificielles) et consultez rapidement." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pf_bell", diagnostic: "Paralysie faciale périphérique a frigore (de Bell)", arguments: [{ label: "front non épargné, isolée", w: 2, when: { q: "pf_central", eq: false } }, { label: "pas d'autre signe neurologique", w: 2, when: { q: "pf_autres", eq: false } }],
+        examens_a_discuter: ["Corticothérapie précoce", "Protection oculaire"] },
+      { id: "pf_centrale", diagnostic: "Paralysie faciale centrale (AVC)", arguments: [{ label: "front épargné", w: 3, when: { q: "pf_central", eq: true } }, { label: "autres signes neuro", w: 2, when: { q: "pf_autres", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale urgente"] },
+      { id: "pf_zona", diagnostic: "Zona auriculaire (Ramsay-Hunt)", arguments: [{ label: "douleur / vésicules de l'oreille", w: 3, when: { q: "pf_otalgie", eq: true } }],
+        examens_a_discuter: ["Antiviral, avis ORL"] },
+      { id: "pf_lyme", diagnostic: "Cause infectieuse (Lyme)", arguments: [{ label: "fièvre / contexte de Lyme", w: 2, when: { q: "pf_fievre", eq: true } }],
+        examens_a_discuter: ["Sérologie de Lyme selon le contexte"] }
+    ],
+    examens_clinique: ["Tester le front (différencier central / périphérique)", "Tester la fermeture de l'œil", "Examen neurologique complet", "Otoscopie (vésicules)", "Recherche d'une morsure de tique"]
+  },
+
+  // -------------------------------------------------------------------------
+  // ICTÈRE
+  // -------------------------------------------------------------------------
+  ictere: {
+    id: "ictere", symptome: "Jaunisse (ictère)", specialite: ["Hépato-gastro-entérologie"], urgence: true,
+    questions: [
+      { id: "ic_douleur", label: "Angiocholite", type: "boolean", question: "Avez-vous une douleur sous les côtes à droite avec de la fièvre et des frissons ?" },
+      { id: "ic_encephalo", label: "Encéphalopathie", type: "boolean", question: "Avez-vous une confusion ou une somnolence inhabituelle ?" },
+      { id: "ic_urines", label: "Cholestase", type: "boolean", question: "Vos urines sont-elles foncées et vos selles décolorées ?" },
+      { id: "ic_aeg", label: "AEG / amaigrissement", type: "boolean", question: "Avez-vous maigri ou une altération de l'état général ?" },
+      { id: "ic_alcool", label: "Alcool / hépatite", type: "boolean", question: "Avez-vous une consommation d'alcool importante ou une hépatite connue ?" },
+      { id: "ic_medic", label: "Hépatotoxique", type: "boolean", question: "Avez-vous pris un médicament hépatotoxique (paracétamol en excès) récemment ?" },
+      { id: "ic_prurit", label: "Prurit", type: "boolean", question: "Avez-vous des démangeaisons ?" }
+    ],
+    red_flags: [
+      { id: "ic_rf_angiocholite", niveau: 3, when: { q: "ic_douleur", eq: true },
+        message_medecin: "Ictère + douleur + fièvre/frissons : angiocholite (obstacle biliaire infecté) → urgence.",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ic_rf_fulminante", niveau: 3, when: { q: "ic_encephalo", eq: true },
+        message_medecin: "Ictère + confusion : insuffisance hépatique aiguë (TP / facteur V) → urgence.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ic_obstacle", diagnostic: "Ictère cholestatique / obstacle (lithiase, cancer)", arguments: [{ label: "urines foncées + selles décolorées", w: 2, when: { q: "ic_urines", eq: true } }, { label: "douleur biliaire", w: 2, when: { q: "ic_douleur", eq: true } }, { label: "prurit", w: 1, when: { q: "ic_prurit", eq: true } }],
+        examens_a_discuter: ["Bilan hépatique (PAL/GGT, bilirubine conjuguée)", "Échographie des voies biliaires"] },
+      { id: "ic_hepatite", diagnostic: "Hépatite (virale, alcoolique, médicamenteuse)", arguments: [{ label: "alcool / hépatite connue", w: 2, when: { q: "ic_alcool", eq: true } }, { label: "médicament hépatotoxique", w: 2, when: { q: "ic_medic", eq: true } }],
+        examens_a_discuter: ["Transaminases, TP/facteur V", "Sérologies virales, paracétamolémie"] },
+      { id: "ic_cancer", diagnostic: "Cancer (pancréas, voies biliaires)", arguments: [{ label: "AEG / amaigrissement", w: 2, when: { q: "ic_aeg", eq: true } }, { label: "ictère + urines foncées", w: 1, when: { q: "ic_urines", eq: true } }],
+        examens_a_discuter: ["Imagerie (échographie / TDM)", "Avis spécialisé"] }
+    ],
+    examens_clinique: ["Examen de la peau et des conjonctives", "Palpation hépatique + recherche d'une grosse vésicule", "Recherche d'ascite et de signes d'encéphalopathie", "Bilan hépatique"]
   }
 };
 
