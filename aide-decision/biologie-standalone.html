@@ -1465,6 +1465,42 @@ window.BIOKB = [
     ],
     red_flags: ["Complications cardio-vasculaires (le syndrome métabolique est prothrombotique, pro-inflammatoire, dyslipidémique, hypertensif)", "Hyperglycémie majeure / coma hyperosmolaire (sujet âgé, déshydratation)", "Découverte tardive avec complications déjà présentes (rétinopathie, néphropathie, neuropathie, pied diabétique)", "Dyslipidémie de type IV/IIb et stéatose hépatique associées"],
     conduite: ["Affirmer le DT2 (glycémie > 1,26 g/L × 2) ; profil : âge > 40 ans, surpoids abdominal, pas de cétose.", "Dépister et prendre en charge le syndrome métabolique global (TA, lipides, poids, tabac).", "Mesures hygiéno-diététiques en première ligne, puis antidiabétiques oraux et/ou insuline ; statine/fibrate, traitement de l'HTA.", "Vaccinations (grippe, pneumocoque) ; dépistage annuel des complications (ophtalmo, rénal, neuro, cardio, pied, dentaire)."]
+  },
+  {
+    id: "diabete_gestationnel", num: 93, anomalie: "Diabète gestationnel (dépistage et diagnostic)",
+    specialite: "Endocrinologie",
+    definition: "Trouble de la tolérance glucidique apparu ou diagnostiqué pendant la grossesse. Dépistage ciblé (facteurs de risque, dès le début) et entre 24 et 28 SA. Diagnostic par HGPO 75 g (stratégie en 1 temps, CNGOF) ou stratégie en 2 temps (O'Sullivan puis HGPO).",
+    premiere_intention: ["Dépistage précoce si facteurs de risque : IMC ≥ 25, âge ≥ 35 ans, ethnie à risque, ATCD personnel d'intolérance/diabète, ATCD familial au 1er degré, ATCD obstétrical (mort fœtale in utero, macrosomie)", "Dépistage de toutes les femmes entre 24 et 28 SA", "Stratégie en 1 temps (CNGOF) : HGPO 75 g (glycémie à jeun, 1 h, 2 h) après 8-14 h de jeûne", "Conditions : ≥ 150 g de glucides/j les 3 jours précédents, activité habituelle, pas de tabac pendant le test ; la glycosurie n'est PAS recommandée"],
+    causes: [
+      { cause: "Stratégie en 1 temps (CNGOF)", signe: "HGPO 75 g ; 1 valeur anormale pose le diagnostic", examens: ["Glycémie à jeun, 1 h, 2 h"] },
+      { cause: "Stratégie en 2 temps", signe: "test d'O'Sullivan (50 g, glycémie à 1 h) = dépistage (20 % des positifs sont des DG), puis HGPO de confirmation", examens: ["O'Sullivan", "HGPO 75 g ou 100 g"] },
+      { cause: "Facteurs de risque", signe: "IMC ≥ 25, âge ≥ 35, ethnie, ATCD personnels / familiaux / obstétricaux", examens: ["Dépistage précoce ciblé"] }
+    ],
+    tableaux: [
+      { titre: "HGPO 75 g — valeurs seuils selon les sociétés",
+        entetes: ["Société", "À jeun", "1 h", "2 h", "Diagnostic"],
+        lignes: [
+          ["CNGOF", "0,92 g/L (5,1 mmol/L)", "1,80 g/L (10)", "1,53 g/L (8,5)", "1 valeur anormale"],
+          ["OMS", "1,26 g/L (7)", "—", "1,40 g/L (7,8)", "1 valeur anormale"],
+          ["ADA", "0,95 g/L (5,3)", "1,80 g/L (10)", "1,55 g/L (8,6)", "2 valeurs / 3"]
+        ] },
+      { titre: "Test d'O'Sullivan (50 g, glycémie à 1 h)",
+        entetes: ["Glycémie à 1 h", "Conclusion"],
+        lignes: [
+          ["< 1,30 g/L", "Pas de groupe à risque"],
+          ["1,30-1,40 g/L", "Peu de risque ; HGPO 75/100 g si patiente à risque"],
+          ["1,40-2 g/L", "HGPO 75/100 g pour poser le diagnostic"],
+          ["> 2 g/L", "Diabète gestationnel diagnostiqué"]
+        ] },
+      { titre: "HGPO 100 g — seuils (test positif si 2 valeurs / 4)",
+        entetes: ["Société", "À jeun", "1 h", "2 h", "3 h"],
+        lignes: [
+          ["NDDG", "1,05 g/L (5,8)", "1,90 g/L (10,6)", "1,65 g/L (9,2)", "1,45 g/L (8,1)"],
+          ["Carpenter & Coustan", "0,95 g/L (5,3)", "1,80 g/L (10,0)", "1,55 g/L (8,6)", "1,40 g/L (7,8)"]
+        ] }
+    ],
+    red_flags: ["Macrosomie fœtale, hydramnios → surveillance obstétricale rapprochée", "Glycémie à jeun d'emblée élevée : évoquer un diabète préexistant (type 2) méconnu", "Mauvais équilibre glycémique : complications materno-fœtales (pré-éclampsie, dystocie, hypoglycémie néonatale)", "O'Sullivan ne POSE PAS le diagnostic (sauf > 2 g/L) : ne pas étiqueter sur ce seul test"],
+    conduite: ["Privilégier la stratégie en 1 temps (HGPO 75 g, seuils CNGOF) ; 1 valeur anormale suffit.", "Le test d'O'Sullivan dépiste mais ne diagnostique pas (confirmer par HGPO), sauf glycémie à 1 h > 2 g/L.", "Respecter les conditions du test (≥ 150 g glucides/j les 3 jours avant, jeûne 8-14 h, pas de tabac).", "En cas de diagnostic : autosurveillance, mesures diététiques ± insuline ; surveillance obstétricale et dépistage du diabète en post-partum."]
   }
 ];
 
