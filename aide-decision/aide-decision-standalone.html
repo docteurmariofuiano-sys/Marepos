@@ -1363,6 +1363,646 @@ window.KB = {
       "Critères de Light sur le liquide de ponction",
       "Recherche d'une cause systémique vs locale"
     ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 41 — LOMBALGIES
+  // -------------------------------------------------------------------------
+  lombalgie: {
+    id: "lombalgie",
+    symptome: "Mal de dos (lombalgie)",
+    specialite: ["Rhumatologie"],
+    questions: [
+      { id: "lo_horaire", label: "Rythme de la douleur", type: "single_choice",
+        question: "Quand la douleur est-elle la plus forte ?",
+        options: ["À l'effort, le soir (soulagée par le repos)", "La nuit ou au réveil, avec une raideur matinale prolongée"] },
+      { id: "lo_effort", label: "Effort déclenchant", type: "boolean",
+        question: "Est-elle apparue après un effort ou le port d'une charge ?" },
+      { id: "lo_radiculaire", label: "Irradiation dans la jambe", type: "boolean",
+        question: "La douleur descend-elle dans la jambe (fesse, cuisse, mollet) ?" },
+      { id: "lo_selle", label: "Anesthésie en selle", type: "boolean",
+        question: "Avez-vous une perte de sensibilité autour de l'anus ou des organes génitaux ?" },
+      { id: "lo_sphincter", label: "Troubles sphinctériens", type: "boolean",
+        question: "Avez-vous du mal à uriner, ou des fuites d'urines/de selles depuis le début des douleurs ?" },
+      { id: "lo_deficit", label: "Déficit moteur", type: "boolean",
+        question: "Avez-vous une faiblesse d'une jambe ou du pied ?" },
+      { id: "lo_aeg", label: "Fièvre / AEG / cancer", type: "boolean",
+        question: "Avez-vous de la fièvre, ou avez-vous maigri / un cancer connu ?" },
+      { id: "lo_nocturne", label: "Douleur non mécanique", type: "boolean",
+        question: "La douleur est-elle permanente, présente la nuit, non soulagée par le repos ?" },
+      { id: "lo_trauma", label: "Contexte fracturaire", type: "boolean",
+        question: "Y a-t-il eu un traumatisme, ou avez-vous de l'ostéoporose / une corticothérapie ?" }
+    ],
+    red_flags: [
+      { id: "lo_rf_queue", niveau: 3,
+        when: { any: [{ q: "lo_selle", eq: true }, { q: "lo_sphincter", eq: true }] },
+        message_medecin: "Syndrome de la queue de cheval (anesthésie en selle / troubles sphinctériens) : URGENCE — IRM et décompression chirurgicale sans délai.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "lo_rf_infect", niveau: 2,
+        when: { all: [{ q: "lo_aeg", eq: true }, { q: "lo_horaire", eq: "La nuit ou au réveil, avec une raideur matinale prolongée" }] },
+        message_medecin: "Lombalgie inflammatoire fébrile / AEG : spondylodiscite, tumeur ou métastase à éliminer (VS/CRP, imagerie).",
+        message_patient: "Ces éléments nécessitent un avis médical rapide." },
+      { id: "lo_rf_deficit", niveau: 2,
+        when: { q: "lo_deficit", eq: true },
+        message_medecin: "Déficit moteur radiculaire : avis spécialisé (risque de déficit progressif).",
+        message_patient: "Une faiblesse de la jambe nécessite un avis médical rapide." },
+      { id: "lo_rf_fracture", niveau: 2,
+        when: { q: "lo_trauma", eq: true },
+        message_medecin: "Contexte fracturaire (traumatisme, ostéoporose, corticoïdes) : radiographie / imagerie.",
+        message_patient: "Ce contexte nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "lo_commune", diagnostic: "Lombalgie commune",
+        arguments: [{ label: "rythme mécanique", w: 2, when: { q: "lo_horaire", eq: "À l'effort, le soir (soulagée par le repos)" } },
+                    { label: "effort déclenchant", w: 2, when: { q: "lo_effort", eq: true } }],
+        examens_a_discuter: ["Pas d'imagerie d'emblée (en l'absence de drapeau rouge)", "Traitement symptomatique, maintien de l'activité"] },
+      { id: "lo_sciatique", diagnostic: "Lombosciatique / lombocruralgie discale",
+        arguments: [{ label: "douleur radiculaire systématisée", w: 3, when: { q: "lo_radiculaire", eq: true } },
+                    { label: "déficit moteur", w: 1, when: { q: "lo_deficit", eq: true } }],
+        examens_a_discuter: ["Examen neurologique (Lasègue)", "Imagerie si déficit ou résistance au traitement"] },
+      { id: "lo_symptomatique", diagnostic: "Lombalgie symptomatique (spondylodiscite, tumeur, fracture)",
+        arguments: [{ label: "rythme inflammatoire", w: 2, when: { q: "lo_horaire", eq: "La nuit ou au réveil, avec une raideur matinale prolongée" } },
+                    { label: "fièvre / AEG / cancer", w: 3, when: { q: "lo_aeg", eq: true } },
+                    { label: "douleur nocturne non mécanique", w: 2, when: { q: "lo_nocturne", eq: true } }],
+        examens_a_discuter: ["VS / CRP", "Imagerie (IRM rachidienne)"] },
+      { id: "lo_queue", diagnostic: "Syndrome de la queue de cheval",
+        arguments: [{ label: "anesthésie en selle", w: 3, when: { q: "lo_selle", eq: true } },
+                    { label: "troubles sphinctériens", w: 3, when: { q: "lo_sphincter", eq: true } }],
+        examens_a_discuter: ["IRM en urgence", "Avis neurochirurgical"] }
+    ],
+    examens_clinique: [
+      "Examen neurologique des membres inférieurs (force, réflexes, sensibilité)",
+      "Manœuvre de Lasègue",
+      "Sensibilité périnéale et tonus sphinctérien si suspicion de queue de cheval",
+      "Palpation / percussion du rachis",
+      "Température"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 11 — DIARRHÉE AIGUË
+  // -------------------------------------------------------------------------
+  diarrhee_aigue: {
+    id: "diarrhee_aigue",
+    symptome: "Diarrhée aiguë",
+    specialite: ["Digestif", "Infectiologie"],
+    questions: [
+      { id: "da_duree", label: "Durée", type: "single_choice",
+        question: "Depuis combien de temps ?",
+        options: ["Moins de 14 jours", "Plus de 14 jours"] },
+      { id: "da_sang", label: "Selles glairo-sanglantes", type: "boolean",
+        question: "Y a-t-il du sang ou des glaires dans les selles ?" },
+      { id: "da_fievre", label: "Fièvre", type: "boolean",
+        question: "Avez-vous de la fièvre ?" },
+      { id: "da_deshyd", label: "Déshydratation", type: "boolean",
+        question: "Avez-vous très soif, peu d'urines, des vertiges en vous levant ?" },
+      { id: "da_collectif", label: "Toxi-infection collective", type: "boolean",
+        question: "D'autres personnes ayant mangé la même chose sont-elles malades ?" },
+      { id: "da_voyage", label: "Voyage récent", type: "boolean",
+        question: "Revenez-vous d'un voyage récent à l'étranger ?" },
+      { id: "da_atb", label: "Antibiotiques récents", type: "boolean",
+        question: "Avez-vous pris des antibiotiques dans les semaines précédentes ?" },
+      { id: "da_terrain", label: "Terrain fragile", type: "boolean",
+        question: "Êtes-vous âgé, immunodéprimé, ou avez-vous des maladies chroniques importantes ?" }
+    ],
+    red_flags: [
+      { id: "da_rf_deshyd", niveau: 3,
+        when: { q: "da_deshyd", eq: true },
+        message_medecin: "Déshydratation sévère / choc : urgence (réhydratation). La gravité tient à la déshydratation et au terrain, pas au nombre de selles.",
+        message_patient: "Ces signes nécessitent une évaluation médicale sans attendre." },
+      { id: "da_rf_palu", niveau: 3,
+        when: { all: [{ q: "da_voyage", eq: true }, { q: "da_fievre", eq: true }] },
+        message_medecin: "Retour de zone d'endémie + fièvre : éliminer un paludisme (frottis-goutte épaisse) en plus de la cause digestive.",
+        message_patient: "Une fièvre au retour de voyage nécessite un avis médical rapide." },
+      { id: "da_rf_dysenterie", niveau: 2,
+        when: { all: [{ q: "da_sang", eq: true }, { q: "da_fievre", eq: true }] },
+        message_medecin: "Syndrome dysentérique fébrile (bactérie invasive) : coproculture ; avis rapide surtout si terrain fragile.",
+        message_patient: "Cette association nécessite un avis médical rapide." },
+      { id: "da_rf_cdiff", niveau: 2,
+        when: { q: "da_atb", eq: true },
+        message_medecin: "Diarrhée post-antibiotique : évoquer une colite à C. difficile (recherche de toxines).",
+        message_patient: "Ce contexte nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "da_virale", diagnostic: "Diarrhée hydrique virale / toxinique",
+        arguments: [{ label: "contexte épidémique / collectif", w: 2, when: { q: "da_collectif", eq: true } },
+                    { label: "pas de sang", w: 1, when: { q: "da_sang", eq: false } }],
+        examens_a_discuter: ["Réhydratation orale", "Pas de coproculture systématique"] },
+      { id: "da_dysenterie", diagnostic: "Syndrome dysentérique (bactérie invasive)",
+        arguments: [{ label: "selles glairo-sanglantes", w: 3, when: { q: "da_sang", eq: true } },
+                    { label: "fièvre", w: 2, when: { q: "da_fievre", eq: true } }],
+        examens_a_discuter: ["Coproculture", "Antibiothérapie selon terrain"] },
+      { id: "da_cdiff", diagnostic: "Colite à C. difficile",
+        arguments: [{ label: "diarrhée post-antibiotique", w: 3, when: { q: "da_atb", eq: true } }],
+        examens_a_discuter: ["Recherche de toxines de C. difficile"] },
+      { id: "da_non_inf", diagnostic: "Cause non infectieuse (médicament, MICI)",
+        arguments: [{ label: "durée > 14 jours", w: 2, when: { q: "da_duree", eq: "Plus de 14 jours" } }],
+        examens_a_discuter: ["Revue des médicaments", "Avis spécialisé si persistance"] }
+    ],
+    examens_clinique: [
+      "Poids, signes de déshydratation (pli cutané, TA couché/debout)",
+      "Température",
+      "Palpation abdominale",
+      "Toucher rectal si selles glairo-sanglantes",
+      "Évaluation du terrain (âge, comorbidités)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 08 — CERVICALGIES
+  // -------------------------------------------------------------------------
+  cervicalgie: {
+    id: "cervicalgie",
+    symptome: "Douleur du cou (cervicalgie)",
+    specialite: ["Rhumatologie", "Neurologie"],
+    questions: [
+      { id: "ce_horaire", label: "Rythme", type: "single_choice",
+        question: "Quand est-ce le plus douloureux ?",
+        options: ["À l'effort / le soir (mécanique)", "La nuit / au réveil avec raideur (inflammatoire)"] },
+      { id: "ce_trauma", label: "Traumatisme", type: "boolean",
+        question: "Y a-t-il eu un traumatisme ou un faux mouvement ?" },
+      { id: "ce_radiculaire", label: "Irradiation dans le bras", type: "boolean",
+        question: "La douleur descend-elle dans le bras ?" },
+      { id: "ce_deficit", label: "Déficit / paresthésies MS", type: "boolean",
+        question: "Avez-vous une faiblesse ou des fourmillements dans le bras ou la main ?" },
+      { id: "ce_medullaire", label: "Syndrome médullaire", type: "boolean",
+        question: "Avez-vous des troubles de la marche, des décharges électriques en penchant la tête, ou des troubles pour uriner ?" },
+      { id: "ce_fievre", label: "Fièvre / AEG / cancer", type: "boolean",
+        question: "Avez-vous de la fièvre, ou un cancer connu / un amaigrissement ?" },
+      { id: "ce_meninge", label: "Syndrome méningé", type: "boolean",
+        question: "Avez-vous une raideur de la nuque avec fièvre et mal de tête ?" }
+    ],
+    red_flags: [
+      { id: "ce_rf_myelo", niveau: 3,
+        when: { q: "ce_medullaire", eq: true },
+        message_medecin: "Syndrome médullaire (troubles de la marche, Lhermitte, troubles sphinctériens) : myélopathie → IRM urgente.",
+        message_patient: "Ces signes nécessitent une évaluation médicale sans attendre." },
+      { id: "ce_rf_meningite", niveau: 3,
+        when: { q: "ce_meninge", eq: true },
+        message_medecin: "Raideur de nuque fébrile : éliminer une méningite (urgence).",
+        message_patient: "Cette association nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "ce_rf_infect", niveau: 2,
+        when: { q: "ce_fievre", eq: true },
+        message_medecin: "Cervicalgie fébrile / AEG : spondylodiscite ou tumeur à éliminer.",
+        message_patient: "Ces éléments nécessitent un avis médical rapide." },
+      { id: "ce_rf_trauma", niveau: 2,
+        when: { q: "ce_trauma", eq: true },
+        message_medecin: "Cervicalgie post-traumatique : rechercher une instabilité (imagerie).",
+        message_patient: "Un traumatisme du cou nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ce_commune", diagnostic: "Cervicalgie commune",
+        arguments: [{ label: "rythme mécanique", w: 3, when: { q: "ce_horaire", eq: "À l'effort / le soir (mécanique)" } }],
+        examens_a_discuter: ["Traitement symptomatique", "Pas d'imagerie d'emblée sans drapeau"] },
+      { id: "ce_ncb", diagnostic: "Névralgie cervico-brachiale",
+        arguments: [{ label: "irradiation radiculaire dans le bras", w: 3, when: { q: "ce_radiculaire", eq: true } },
+                    { label: "déficit / paresthésies", w: 1, when: { q: "ce_deficit", eq: true } }],
+        examens_a_discuter: ["Examen neurologique du membre supérieur", "Imagerie si déficit"] },
+      { id: "ce_myelopathie", diagnostic: "Myélopathie cervicarthrosique",
+        arguments: [{ label: "signes médullaires", w: 3, when: { q: "ce_medullaire", eq: true } }],
+        examens_a_discuter: ["IRM médullaire", "Avis neurochirurgical"] },
+      { id: "ce_symptomatique", diagnostic: "Cervicalgie symptomatique (infection / tumeur)",
+        arguments: [{ label: "fièvre / AEG", w: 3, when: { q: "ce_fievre", eq: true } },
+                    { label: "rythme inflammatoire", w: 1, when: { q: "ce_horaire", eq: "La nuit / au réveil avec raideur (inflammatoire)" } }],
+        examens_a_discuter: ["VS / CRP", "Imagerie"] }
+    ],
+    examens_clinique: [
+      "Mobilité cervicale",
+      "Examen neurologique des membres supérieurs ET inférieurs (syndrome pyramidal)",
+      "Recherche du signe de Lhermitte",
+      "Recherche d'une raideur méningée",
+      "Température"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 09 — CONSTIPATION
+  // -------------------------------------------------------------------------
+  constipation: {
+    id: "constipation",
+    symptome: "Constipation",
+    specialite: ["Digestif"],
+    questions: [
+      { id: "co_anciennete", label: "Ancienneté", type: "single_choice",
+        question: "Depuis quand ?",
+        options: ["Récente (changement récent du transit)", "Ancienne / chronique"] },
+      { id: "co_sang", label: "Rectorragies / méléna", type: "boolean",
+        question: "Avez-vous du sang dans les selles ou des selles noires ?" },
+      { id: "co_anemie", label: "Anémie", type: "boolean",
+        question: "Êtes-vous pâle/fatigué, ou a-t-on trouvé une anémie ?" },
+      { id: "co_amaigr", label: "Amaigrissement", type: "boolean",
+        question: "Avez-vous maigri sans le vouloir ?" },
+      { id: "co_atcdfam", label: "ATCD familial CCR", type: "boolean",
+        question: "Avez-vous des antécédents familiaux de cancer du côlon ?" },
+      { id: "co_occlusion", label: "Syndrome occlusif", type: "boolean",
+        question: "Avez-vous des douleurs du ventre, des vomissements et un arrêt des gaz et des selles ?" },
+      { id: "co_medic", label: "Cause médicamenteuse", type: "boolean",
+        question: "Prenez-vous des opioïdes (codéine, morphine), du fer, ou certains traitements de la tension ?" },
+      { id: "co_thyro", label: "Hypothyroïdie", type: "boolean",
+        question: "Êtes-vous frileux et fatigué (hypothyroïdie possible) ?" }
+    ],
+    red_flags: [
+      { id: "co_rf_cancer", niveau: 2,
+        when: { all: [{ q: "co_anciennete", eq: "Récente (changement récent du transit)" }, { any: [{ ctx: "age", gte: 50 }, { q: "co_sang", eq: true }, { q: "co_anemie", eq: true }, { q: "co_amaigr", eq: true }] }] },
+        message_medecin: "Constipation récente après 50 ans ou avec rectorragie/anémie/amaigrissement : coloscopie (cancer colorectal).",
+        message_patient: "Ce changement nécessite un avis médical et des examens." },
+      { id: "co_rf_occlusion", niveau: 3,
+        when: { q: "co_occlusion", eq: true },
+        message_medecin: "Syndrome occlusif (douleur + vomissements + arrêt des gaz) : urgence chirurgicale.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "co_fonctionnelle", diagnostic: "Constipation fonctionnelle",
+        arguments: [{ label: "ancienne, sans signe d'alarme", w: 3, when: { q: "co_anciennete", eq: "Ancienne / chronique" } }],
+        examens_a_discuter: ["Mesures hygiéno-diététiques (fibres, hydratation)", "Laxatifs osmotiques"] },
+      { id: "co_cancer", diagnostic: "Cancer colorectal",
+        arguments: [{ label: "constipation récente", w: 2, when: { q: "co_anciennete", eq: "Récente (changement récent du transit)" } },
+                    { label: "rectorragies", w: 2, when: { q: "co_sang", eq: true } },
+                    { label: "anémie", w: 2, when: { q: "co_anemie", eq: true } },
+                    { label: "âge > 50 ans", w: 1, when: { ctx: "age", gte: 50 } }],
+        examens_a_discuter: ["Coloscopie"] },
+      { id: "co_secondaire", diagnostic: "Cause métabolique / médicamenteuse",
+        arguments: [{ label: "médicament constipant", w: 2, when: { q: "co_medic", eq: true } },
+                    { label: "signes d'hypothyroïdie", w: 2, when: { q: "co_thyro", eq: true } }],
+        examens_a_discuter: ["TSH, calcémie, kaliémie", "Revue de l'ordonnance"] },
+      { id: "co_occlusion", diagnostic: "Occlusion",
+        arguments: [{ label: "douleur + vomissements + arrêt des gaz", w: 3, when: { q: "co_occlusion", eq: true } }],
+        examens_a_discuter: ["Imagerie abdominale", "Avis chirurgical"] }
+    ],
+    examens_clinique: [
+      "Palpation abdominale",
+      "Toucher rectal (masse, sang, fécalome)",
+      "Recherche de pâleur (anémie)",
+      "TSH / calcémie / kaliémie selon le contexte"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 34 — HÉMATURIE
+  // -------------------------------------------------------------------------
+  hematurie: {
+    id: "hematurie",
+    symptome: "Sang dans les urines (hématurie)",
+    specialite: ["Urologie", "Néphrologie"],
+    questions: [
+      { id: "ha_visible", label: "Macroscopique", type: "boolean",
+        question: "Voyez-vous du sang dans les urines à l'œil nu ?" },
+      { id: "ha_chrono", label: "Chronologie", type: "single_choice",
+        question: "À quel moment de la miction le sang apparaît-il ?",
+        options: ["Au début", "À la fin", "Pendant toute la miction / je ne sais pas"] },
+      { id: "ha_caillots", label: "Caillots", type: "boolean",
+        question: "Y a-t-il des caillots de sang ?" },
+      { id: "ha_douleur", label: "Douleur", type: "boolean",
+        question: "Est-ce douloureux (brûlures urinaires, douleur du flanc) ?" },
+      { id: "ha_tabac", label: "Tabac / exposition pro", type: "boolean",
+        question: "Fumez-vous, ou avez-vous une exposition professionnelle (peintures, colorants, caoutchouc) ?" },
+      { id: "ha_irritatif", label: "Signes infectieux", type: "boolean",
+        question: "Avez-vous des brûlures urinaires, des envies fréquentes ou de la fièvre ?" },
+      { id: "ha_colique", label: "Colique néphrétique", type: "boolean",
+        question: "Avez-vous une douleur du flanc qui irradie vers le bas, par vagues ?" },
+      { id: "ha_oedeme", label: "Syndrome néphrologique", type: "boolean",
+        question: "Avez-vous des œdèmes, de l'hypertension, ou des urines mousseuses ?" }
+    ],
+    red_flags: [
+      { id: "ha_rf_cancer", niveau: 2,
+        when: { all: [{ q: "ha_visible", eq: true }, { not: { q: "ha_douleur", eq: true } }] },
+        message_medecin: "Hématurie macroscopique INDOLORE = cancer urologique jusqu'à preuve du contraire (surtout fumeur > 50 ans) : bilan complet même si épisode unique (cystoscopie + uro-TDM).",
+        message_patient: "Du sang dans les urines, même sans douleur, nécessite un bilan médical." },
+      { id: "ha_rf_retention", niveau: 2,
+        when: { q: "ha_caillots", eq: true },
+        message_medecin: "Hématurie avec caillots : risque de rétention/caillotage vésical → avis urologique.",
+        message_patient: "La présence de caillots nécessite un avis médical rapide." },
+      { id: "ha_rf_gn", niveau: 2,
+        when: { q: "ha_oedeme", eq: true },
+        message_medecin: "Hématurie + œdèmes / HTA / protéinurie : glomérulonéphrite (possiblement rapidement progressive) → avis néphrologique.",
+        message_patient: "Ces signes nécessitent un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ha_tumeur", diagnostic: "Tumeur urothéliale / rénale",
+        arguments: [{ label: "hématurie macroscopique indolore", w: 3, when: { all: [{ q: "ha_visible", eq: true }, { not: { q: "ha_douleur", eq: true } }] } },
+                    { label: "tabac / exposition", w: 2, when: { q: "ha_tabac", eq: true } }],
+        examens_a_discuter: ["Cystoscopie", "Uro-TDM", "Cytologie urinaire"] },
+      { id: "ha_lithiase", diagnostic: "Lithiase urinaire",
+        arguments: [{ label: "colique néphrétique", w: 3, when: { q: "ha_colique", eq: true } },
+                    { label: "douleur", w: 1, when: { q: "ha_douleur", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire", "Échographie / uro-scanner"] },
+      { id: "ha_infection", diagnostic: "Infection urinaire",
+        arguments: [{ label: "signes irritatifs / fièvre", w: 3, when: { q: "ha_irritatif", eq: true } }],
+        examens_a_discuter: ["ECBU"] },
+      { id: "ha_gn", diagnostic: "Glomérulonéphrite",
+        arguments: [{ label: "œdèmes / HTA / protéinurie", w: 3, when: { q: "ha_oedeme", eq: true } }],
+        examens_a_discuter: ["Protéinurie, créatinine", "Avis néphrologique"] }
+    ],
+    examens_clinique: [
+      "Bandelette urinaire / ECBU",
+      "Pression artérielle",
+      "Palpation des fosses lombaires",
+      "Toucher rectal (prostate) chez l'homme",
+      "Recherche d'œdèmes"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 40 — LEUCORRHÉES
+  // -------------------------------------------------------------------------
+  leucorrhees: {
+    id: "leucorrhees",
+    symptome: "Pertes vaginales anormales (leucorrhées)",
+    specialite: ["Gynécologie"],
+    questions: [
+      { id: "le_aspect", label: "Aspect des pertes", type: "single_choice",
+        question: "Quel est l'aspect des pertes ?",
+        options: ["Blanches, épaisses (comme du lait caillé)", "Grises, liquides, avec une odeur de poisson", "Verdâtres, mousseuses", "Autre / je ne sais pas"] },
+      { id: "le_prurit", label: "Prurit / brûlures", type: "boolean",
+        question: "Avez-vous des démangeaisons ou des brûlures de la vulve ?" },
+      { id: "le_odeur", label: "Mauvaise odeur", type: "boolean",
+        question: "Y a-t-il une mauvaise odeur ?" },
+      { id: "le_douleur", label: "Douleur pelvienne / fièvre", type: "boolean",
+        question: "Avez-vous des douleurs du bas-ventre et/ou de la fièvre ?" },
+      { id: "le_ist", label: "Risque d'IST", type: "boolean",
+        question: "Avez-vous un risque d'infection sexuellement transmissible (nouveau partenaire, rapports non protégés) ?" },
+      { id: "le_terrain", label: "Terrain à candidose", type: "boolean",
+        question: "Avez-vous pris des antibiotiques récemment, êtes-vous diabétique ou enceinte ?" }
+    ],
+    red_flags: [
+      { id: "le_rf_salpingite", niveau: 2,
+        when: { q: "le_douleur", eq: true },
+        message_medecin: "Leucorrhées + douleurs pelviennes / fièvre : salpingite (infection génitale haute) → avis gynéco rapide (risque d'infertilité).",
+        message_patient: "Cette association nécessite un avis médical rapide." },
+      { id: "le_rf_grossesse", niveau: 2,
+        when: { all: [{ ctx: "grossessePossible", eq: true }, { q: "le_aspect", eq: "Grises, liquides, avec une odeur de poisson" }] },
+        message_medecin: "Vaginose pendant une grossesse possible : risque d'accouchement prématuré → confirmer et traiter.",
+        message_patient: "Un avis médical est recommandé pour ces pertes." }
+    ],
+    diagnostics_differentiels: [
+      { id: "le_candidose", diagnostic: "Candidose vulvo-vaginale",
+        arguments: [{ label: "pertes blanches caillebottées", w: 3, when: { q: "le_aspect", eq: "Blanches, épaisses (comme du lait caillé)" } },
+                    { label: "prurit intense", w: 2, when: { q: "le_prurit", eq: true } },
+                    { label: "terrain favorisant", w: 1, when: { q: "le_terrain", eq: true } }],
+        examens_a_discuter: ["Examen au spéculum, pH < 4,5", "Antifongique local"] },
+      { id: "le_vaginose", diagnostic: "Vaginose bactérienne",
+        arguments: [{ label: "pertes grises homogènes", w: 3, when: { q: "le_aspect", eq: "Grises, liquides, avec une odeur de poisson" } },
+                    { label: "odeur de poisson", w: 2, when: { q: "le_odeur", eq: true } }],
+        examens_a_discuter: ["pH > 4,5, sniff-test à la potasse", "Métronidazole"] },
+      { id: "le_trichomonas", diagnostic: "Trichomonase (IST)",
+        arguments: [{ label: "pertes verdâtres spumeuses", w: 3, when: { q: "le_aspect", eq: "Verdâtres, mousseuses" } },
+                    { label: "risque d'IST", w: 1, when: { q: "le_ist", eq: true } }],
+        examens_a_discuter: ["Prélèvement vaginal", "Traitement des partenaires, dépistage IST"] },
+      { id: "le_cervicite", diagnostic: "Cervicite (Chlamydia / gonocoque)",
+        arguments: [{ label: "risque d'IST", w: 2, when: { q: "le_ist", eq: true } },
+                    { label: "douleur pelvienne", w: 1, when: { q: "le_douleur", eq: true } }],
+        examens_a_discuter: ["PCR Chlamydia / gonocoque", "Dépistage IST complet"] }
+    ],
+    examens_clinique: [
+      "Examen au spéculum",
+      "Mesure du pH vaginal",
+      "Sniff-test (test à la potasse)",
+      "Prélèvements vaginaux",
+      "Recherche de douleur à la mobilisation utérine"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 25 — ÉPISTAXIS
+  // -------------------------------------------------------------------------
+  epistaxis: {
+    id: "epistaxis",
+    symptome: "Saignement de nez (épistaxis)",
+    specialite: ["ORL"],
+    questions: [
+      { id: "ep2_cote", label: "Côté", type: "single_choice",
+        question: "Le saignement vient-il d'une narine ou des deux ?",
+        options: ["Une narine", "Les deux"] },
+      { id: "ep2_post", label: "Saignement postérieur", type: "boolean",
+        question: "Le sang coule-t-il beaucoup dans la gorge (vous devez l'avaler) ?" },
+      { id: "ep2_abondance", label: "Abondance / retentissement", type: "boolean",
+        question: "Est-ce abondant ou répété, avec pâleur ou malaise ?" },
+      { id: "ep2_trauma", label: "Traumatisme / grattage", type: "boolean",
+        question: "Y a-t-il eu un grattage ou un traumatisme du nez ?" },
+      { id: "ep2_hta", label: "HTA", type: "boolean",
+        question: "Avez-vous de l'hypertension artérielle ?" },
+      { id: "ep2_anticoag", label: "Anticoagulants / AINS", type: "boolean",
+        question: "Prenez-vous des anticoagulants, de l'aspirine ou des anti-inflammatoires ?" },
+      { id: "ep2_unilat_recid", label: "Unilatéral récidivant + obstruction", type: "boolean",
+        question: "Avez-vous des saignements répétés toujours de la même narine, avec le nez bouché de ce côté ?" },
+      { id: "ep2_telangiec", label: "Rendu-Osler", type: "boolean",
+        question: "Avez-vous de petites taches rouges (vaisseaux dilatés) sur les lèvres/la langue/les doigts, ou des cas familiaux de saignements de nez ?" }
+    ],
+    red_flags: [
+      { id: "ep2_rf_hemorr", niveau: 3,
+        when: { any: [{ q: "ep2_post", eq: true }, { q: "ep2_abondance", eq: true }] },
+        message_medecin: "Épistaxis postérieure / abondante avec retentissement : urgence (méchage, contrôle hémodynamique, avis ORL).",
+        message_patient: "Un saignement de nez abondant nécessite une évaluation médicale sans attendre." },
+      { id: "ep2_rf_hemostase", niveau: 2,
+        when: { q: "ep2_anticoag", eq: true },
+        message_medecin: "Épistaxis sous anticoagulant / antiagrégant : évaluer l'hémostase, rechercher un surdosage.",
+        message_patient: "Ce contexte nécessite un avis médical." },
+      { id: "ep2_rf_tumeur", niveau: 2,
+        when: { q: "ep2_unilat_recid", eq: true },
+        message_medecin: "Épistaxis unilatérales répétées + obstruction nasale : éliminer une cause tumorale (avis ORL, nasofibroscopie).",
+        message_patient: "Des saignements répétés du même côté nécessitent un avis ORL." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ep2_benigne", diagnostic: "Épistaxis bénigne antérieure (tache vasculaire)",
+        arguments: [{ label: "traumatisme / grattage", w: 2, when: { q: "ep2_trauma", eq: true } },
+                    { label: "unilatérale", w: 1, when: { q: "ep2_cote", eq: "Une narine" } }],
+        examens_a_discuter: ["Compression bidigitale", "Cautérisation de la tache vasculaire"] },
+      { id: "ep2_hemostase", diagnostic: "Épistaxis sur trouble de l'hémostase",
+        arguments: [{ label: "anticoagulant / antiagrégant", w: 3, when: { q: "ep2_anticoag", eq: true } }],
+        examens_a_discuter: ["Bilan d'hémostase", "NFS-plaquettes, INR si AVK"] },
+      { id: "ep2_posterieure", diagnostic: "Épistaxis postérieure",
+        arguments: [{ label: "saignement postérieur", w: 3, when: { q: "ep2_post", eq: true } },
+                    { label: "HTA", w: 1, when: { q: "ep2_hta", eq: true } }],
+        examens_a_discuter: ["Méchage postérieur", "Avis ORL, contrôle tensionnel"] },
+      { id: "ep2_tumeur", diagnostic: "Cause tumorale",
+        arguments: [{ label: "unilatérale récidivante + obstruction", w: 3, when: { q: "ep2_unilat_recid", eq: true } }],
+        examens_a_discuter: ["Nasofibroscopie", "Imagerie"] }
+    ],
+    examens_clinique: [
+      "Rhinoscopie antérieure (rechercher la tache vasculaire)",
+      "Pression artérielle",
+      "Recherche de pâleur / retentissement",
+      "Examen cutanéo-muqueux (télangiectasies)"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 30 — GRAIN DE BEAUTÉ (LÉSION MÉLANOCYTAIRE)
+  // -------------------------------------------------------------------------
+  grain_beaute: {
+    id: "grain_beaute",
+    symptome: "Grain de beauté suspect (lésion de la peau)",
+    specialite: ["Dermatologie"],
+    questions: [
+      { id: "gr_nouveau", label: "Vilain petit canard", type: "boolean",
+        question: "La lésion est-elle apparue récemment ou est-elle différente de vos autres grains de beauté ?" },
+      { id: "gr_evolution", label: "Évolutivité (E)", type: "boolean",
+        question: "A-t-elle changé récemment (taille, couleur, relief) ?" },
+      { id: "gr_asymetrie", label: "ABCD", type: "boolean",
+        question: "Est-elle asymétrique, avec des bords irréguliers et plusieurs couleurs ?" },
+      { id: "gr_taille", label: "Diamètre > 6 mm", type: "boolean",
+        question: "Mesure-t-elle plus de 6 mm (plus large qu'une gomme de crayon) ?" },
+      { id: "gr_saignement", label: "Saignement / nodule", type: "boolean",
+        question: "Saigne-t-elle spontanément, ou est-elle devenue un relief / une plaie ?" },
+      { id: "gr_atcd", label: "ATCD de mélanome", type: "boolean",
+        question: "Avez-vous des antécédents personnels ou familiaux de mélanome ?" },
+      { id: "gr_phototype", label: "Phototype à risque", type: "boolean",
+        question: "Avez-vous la peau claire, des coups de soleil, de nombreux grains de beauté ?" }
+    ],
+    red_flags: [
+      { id: "gr_rf_melanome", niveau: 2,
+        when: { any: [{ q: "gr_evolution", eq: true }, { q: "gr_asymetrie", eq: true }, { q: "gr_nouveau", eq: true }, { q: "gr_saignement", eq: true }] },
+        message_medecin: "Lésion mélanocytaire évolutive/asymétrique (règle ABCDE) ou « vilain petit canard » : suspicion de mélanome → exérèse + histologie au moindre doute (ne pas faire de biopsie partielle).",
+        message_patient: "Cette lésion mérite d'être montrée rapidement à un médecin pour examen." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gr_melanome", diagnostic: "Mélanome (à éliminer)",
+        arguments: [{ label: "asymétrie / bords / couleurs (ABCD)", w: 3, when: { q: "gr_asymetrie", eq: true } },
+                    { label: "évolutivité (E)", w: 3, when: { q: "gr_evolution", eq: true } },
+                    { label: "« vilain petit canard »", w: 2, when: { q: "gr_nouveau", eq: true } },
+                    { label: "diamètre > 6 mm", w: 1, when: { q: "gr_taille", eq: true } },
+                    { label: "saignement / nodule", w: 2, when: { q: "gr_saignement", eq: true } }],
+        examens_a_discuter: ["Dermoscopie", "Exérèse complète + examen histologique"] },
+      { id: "gr_nevus", diagnostic: "Nævus banal",
+        arguments: [{ label: "lésion stable et symétrique", w: 2, when: { all: [{ not: { q: "gr_evolution", eq: true } }, { not: { q: "gr_asymetrie", eq: true } }] } }],
+        examens_a_discuter: ["Surveillance, photographie de suivi", "Réévaluation en cas de changement"] }
+    ],
+    examens_clinique: [
+      "Examen de TOUTE la peau (règle ABCDE)",
+      "Dermoscopie",
+      "Comparaison aux autres nævus (« vilain petit canard »)",
+      "Palpation des aires ganglionnaires de drainage"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 16 — DOULEURS DU MEMBRE INFÉRIEUR
+  // -------------------------------------------------------------------------
+  douleur_mi: {
+    id: "douleur_mi",
+    symptome: "Douleur de la jambe (membre inférieur)",
+    specialite: ["Vasculaire", "Rhumatologie", "Neurologie"],
+    questions: [
+      { id: "mi_type", label: "Circonstances", type: "single_choice",
+        question: "Quand la douleur survient-elle ?",
+        options: ["À la marche, soulagée à l'arrêt", "Permanente / brutale", "En position assise ou penché en avant elle est soulagée"] },
+      { id: "mi_brutal", label: "Ischémie aiguë", type: "boolean",
+        question: "Est-elle apparue brutalement, avec une jambe froide, pâle, sans pouls ?" },
+      { id: "mi_froid", label: "Froideur / pâleur", type: "boolean",
+        question: "La jambe est-elle froide ou pâle ?" },
+      { id: "mi_mollet", label: "Signes de TVP", type: "boolean",
+        question: "Avez-vous un mollet gonflé, chaud et douloureux d'un seul côté ?" },
+      { id: "mi_radiculaire", label: "Trajet radiculaire", type: "boolean",
+        question: "La douleur suit-elle un trajet (fesse → cuisse → mollet ou pied) ?" },
+      { id: "mi_fdr", label: "Facteurs de risque", type: "boolean",
+        question: "Avez-vous des facteurs de risque (tabac, diabète) ou un contexte récent (immobilisation, chirurgie, cancer) ?" },
+      { id: "mi_dispro", label: "Douleur disproportionnée + sepsis", type: "boolean",
+        question: "La douleur est-elle énorme par rapport à l'aspect de la peau, avec fièvre ou malaise ?" }
+    ],
+    red_flags: [
+      { id: "mi_rf_ischemie", niveau: 3,
+        when: { any: [{ q: "mi_brutal", eq: true }, { q: "mi_froid", eq: true }] },
+        message_medecin: "Ischémie aiguë de membre (5 P : douleur, pâleur, abolition des pouls, paresthésies, paralysie) : URGENCE de revascularisation (appeler le 15).",
+        message_patient: "Une jambe brutalement froide et douloureuse nécessite une évaluation médicale immédiate — appelez le 15." },
+      { id: "mi_rf_fasciite", niveau: 3,
+        when: { q: "mi_dispro", eq: true },
+        message_medecin: "Douleur disproportionnée + sepsis : fasciite nécrosante à éliminer (urgence chirurgicale).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "mi_rf_tvp", niveau: 2,
+        when: { q: "mi_mollet", eq: true },
+        message_medecin: "Tableau de TVP (mollet gonflé, chaud, douloureux) : écho-doppler (risque d'embolie pulmonaire).",
+        message_patient: "Ce tableau nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "mi_ischemie", diagnostic: "Ischémie aiguë de membre",
+        arguments: [{ label: "début brutal", w: 3, when: { q: "mi_brutal", eq: true } },
+                    { label: "froideur / pâleur", w: 2, when: { q: "mi_froid", eq: true } }],
+        examens_a_discuter: ["Palpation des pouls", "Avis chirurgical vasculaire urgent"] },
+      { id: "mi_tvp", diagnostic: "Thrombose veineuse profonde (TVP)",
+        arguments: [{ label: "mollet gonflé/chaud/douloureux", w: 3, when: { q: "mi_mollet", eq: true } },
+                    { label: "facteurs de risque", w: 1, when: { q: "mi_fdr", eq: true } }],
+        examens_a_discuter: ["Score de Wells", "D-dimères / écho-doppler veineux"] },
+      { id: "mi_aomi", diagnostic: "AOMI / claudication artérielle",
+        arguments: [{ label: "douleur à la marche, périmètre fixe", w: 3, when: { q: "mi_type", eq: "À la marche, soulagée à l'arrêt" } },
+                    { label: "facteurs de risque vasculaire", w: 1, when: { q: "mi_fdr", eq: true } }],
+        examens_a_discuter: ["Palpation des pouls périphériques", "Index de pression systolique (IPS)"] },
+      { id: "mi_radiculalgie", diagnostic: "Sciatique / cruralgie",
+        arguments: [{ label: "trajet radiculaire", w: 3, when: { q: "mi_radiculaire", eq: true } }],
+        examens_a_discuter: ["Examen neurologique (Lasègue)"] },
+      { id: "mi_canal", diagnostic: "Canal lombaire étroit (claudication neurogène)",
+        arguments: [{ label: "soulagée à la flexion / assis", w: 3, when: { q: "mi_type", eq: "En position assise ou penché en avant elle est soulagée" } }],
+        examens_a_discuter: ["Imagerie rachidienne (IRM)"] }
+    ],
+    examens_clinique: [
+      "Palpation des pouls périphériques",
+      "Température et coloration du membre",
+      "Mesure comparative des mollets",
+      "Manœuvre de Lasègue",
+      "Index de pression systolique si claudication"
+    ]
+  },
+
+  // -------------------------------------------------------------------------
+  // 22 — DYSPNÉE CHRONIQUE
+  // -------------------------------------------------------------------------
+  dyspnee_chronique: {
+    id: "dyspnee_chronique",
+    symptome: "Essoufflement chronique (dyspnée chronique)",
+    specialite: ["Pneumologie", "Cardiologie"],
+    questions: [
+      { id: "dc_effort", label: "Niveau d'effort", type: "single_choice",
+        question: "À quel moment êtes-vous essoufflé ?",
+        options: ["Pour des efforts importants", "Pour des efforts modérés (marche, escaliers)", "Au moindre effort ou au repos"] },
+      { id: "dc_orthopnee", label: "Orthopnée / DPN", type: "boolean",
+        question: "Êtes-vous gêné pour respirer allongé, ou réveillé la nuit par un essoufflement ?" },
+      { id: "dc_oedeme", label: "Œdèmes / prise de poids", type: "boolean",
+        question: "Avez-vous les jambes gonflées (œdèmes) ou pris du poids récemment ?" },
+      { id: "dc_tabac", label: "Tabac + toux chronique", type: "boolean",
+        question: "Fumez-vous, avec une toux et des crachats chroniques ?" },
+      { id: "dc_sibilants", label: "Sibilants variables", type: "boolean",
+        question: "Avez-vous des sifflements respiratoires variables (parfois mieux, parfois moins bien) ?" },
+      { id: "dc_crepitants", label: "Toux sèche progressive", type: "boolean",
+        question: "Avez-vous une toux sèche persistante qui s'aggrave progressivement ?" },
+      { id: "dc_anemie", label: "Anémie / autre", type: "boolean",
+        question: "Êtes-vous pâle et fatigué ?" },
+      { id: "dc_progression", label: "Aggravation rapide", type: "boolean",
+        question: "L'essoufflement s'aggrave-t-il rapidement ces dernières semaines ?" }
+    ],
+    red_flags: [
+      { id: "dc_rf_progression", niveau: 2,
+        when: { any: [{ q: "dc_progression", eq: true }, { q: "dc_effort", eq: "Au moindre effort ou au repos" }] },
+        message_medecin: "Dyspnée chronique rapidement progressive ou au repos : éliminer fibrose, néoplasie, HTAP ou décompensation cardiaque → avis rapide.",
+        message_patient: "Un essoufflement qui s'aggrave nécessite un avis médical rapide." },
+      { id: "dc_rf_ic", niveau: 2,
+        when: { all: [{ q: "dc_orthopnee", eq: true }, { q: "dc_oedeme", eq: true }] },
+        message_medecin: "Signes d'insuffisance cardiaque (orthopnée + œdèmes) : évaluation cardiologique (BNP, échocardiographie).",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dc_ic", diagnostic: "Insuffisance cardiaque",
+        arguments: [{ label: "orthopnée / dyspnée paroxystique nocturne", w: 3, when: { q: "dc_orthopnee", eq: true } },
+                    { label: "œdèmes des membres inférieurs", w: 2, when: { q: "dc_oedeme", eq: true } }],
+        examens_a_discuter: ["BNP / NT-proBNP", "ECG, échocardiographie"] },
+      { id: "dc_bpco", diagnostic: "BPCO",
+        arguments: [{ label: "tabac + toux/expectoration chronique", w: 3, when: { q: "dc_tabac", eq: true } }],
+        examens_a_discuter: ["EFR (trouble ventilatoire obstructif non réversible)", "Radiographie thoracique"] },
+      { id: "dc_asthme", diagnostic: "Asthme",
+        arguments: [{ label: "sibilants variables", w: 3, when: { q: "dc_sibilants", eq: true } }],
+        examens_a_discuter: ["EFR avec test de réversibilité"] },
+      { id: "dc_pid", diagnostic: "Pneumopathie interstitielle / fibrose",
+        arguments: [{ label: "toux sèche progressive", w: 3, when: { q: "dc_crepitants", eq: true } }],
+        examens_a_discuter: ["TDM thoracique", "EFR, auscultation (crépitants velcro)"] },
+      { id: "dc_autre", diagnostic: "Cause non cardio-pulmonaire (anémie, thyroïde, déconditionnement)",
+        arguments: [{ label: "pâleur / fatigue", w: 2, when: { q: "dc_anemie", eq: true } }],
+        examens_a_discuter: ["NFS", "TSH"] }
+    ],
+    examens_clinique: [
+      "Auscultation cardiaque et pulmonaire (crépitants, sibilants)",
+      "Recherche d'œdèmes des membres inférieurs",
+      "SpO2",
+      "Recherche d'un hippocratisme digital",
+      "Poids, fréquence cardiaque et respiratoire"
+    ]
   }
 };
 
