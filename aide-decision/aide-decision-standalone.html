@@ -264,6 +264,17 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
 
         <div class="grid2">
           <label class="field">
+            <span>Nom <em class="req">obligatoire</em></span>
+            <input type="text" id="ctx-nom" placeholder="Nom du patient" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Prénom <em class="req">obligatoire</em></span>
+            <input type="text" id="ctx-prenom" placeholder="Prénom du patient" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="grid2">
+          <label class="field">
             <span>Âge</span>
             <input type="number" id="ctx-age" min="0" max="120" placeholder="ex. 45" />
           </label>
@@ -6811,7 +6822,11 @@ window.ANTECEDENTS = {
   "use strict";
 
   var DATA = window.ANTECEDENTS || { allergies: [], medicaux: [], chirurgicaux: [] };
-  var root = null, onValidate = null;
+  var root = null, onValidate = null, getIdentity = null;
+  function identity() {
+    var id = getIdentity ? getIdentity() : null;
+    return { nom: (id && id.nom) || "", prenom: (id && id.prenom) || "" };
+  }
 
   function esc(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -6841,18 +6856,11 @@ window.ANTECEDENTS = {
 
   function template() {
     return "" +
-    "<p class='atcd-intro muted'>Renseignez l'identité (obligatoire), les allergies et les antécédents. " +
-    "Tout est facultatif sauf le nom et le prénom. Données conservées localement, non transmises.</p>" +
+    "<p class='atcd-intro muted'>Renseignez les allergies et les antécédents (facultatif). " +
+    "Données conservées localement, non transmises.</p>" +
 
-    // 1. Identité
-    "<fieldset class='atcd-sec'><legend>1 · Identité du patient <em class='req'>obligatoire</em></legend>" +
-      "<div class='grid2'>" +
-        "<label class='field'><span>Nom</span><input type='text' id='atcd-nom' placeholder='Nom du patient' autocomplete='off'></label>" +
-        "<label class='field'><span>Prénom</span><input type='text' id='atcd-prenom' placeholder='Prénom du patient' autocomplete='off'></label>" +
-      "</div></fieldset>" +
-
-    // 2. Allergies
-    "<fieldset class='atcd-sec'><legend>2 · Allergies connues</legend>" +
+    // 1. Allergies
+    "<fieldset class='atcd-sec'><legend>1 · Allergies connues</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-allergie-none'><span><strong>Pas d'allergie connue</strong></span></label>" +
       "<div class='atcd-grid' id='atcd-allergie-list'>" +
         DATA.allergies.map(function (a) { return checkboxHtml(a, "al"); }).join("") +
@@ -6866,7 +6874,7 @@ window.ANTECEDENTS = {
       "<input type='search' id='atcd-search' placeholder='Rechercher un antécédent (ex. diabète, prothèse, asthme…)' autocomplete='off'></div>" +
 
     // 3. ATCD médicaux
-    "<fieldset class='atcd-sec'><legend>3 · Antécédents médicaux</legend>" +
+    "<fieldset class='atcd-sec'><legend>2 · Antécédents médicaux</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-med-none'><span><strong>Pas d'antécédent médical connu</strong></span></label>" +
       "<div id='atcd-med-groups'>" + groupsHtml(DATA.medicaux, "med") + "</div>" +
       "<label class='field'><span>Autres antécédents médicaux à préciser</span>" +
@@ -6874,7 +6882,7 @@ window.ANTECEDENTS = {
     "</fieldset>" +
 
     // 4. ATCD chirurgicaux
-    "<fieldset class='atcd-sec'><legend>4 · Antécédents chirurgicaux</legend>" +
+    "<fieldset class='atcd-sec'><legend>3 · Antécédents chirurgicaux</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-chir-none'><span><strong>Pas d'antécédent chirurgical connu</strong></span></label>" +
       "<div id='atcd-chir-groups'>" + groupsHtml(DATA.chirurgicaux, "chir") + "</div>" +
       "<label class='field'><span>Autres antécédents chirurgicaux à préciser</span>" +
@@ -6901,10 +6909,7 @@ window.ANTECEDENTS = {
     var pasMed = q("#atcd-med-none").checked;
     var pasChir = q("#atcd-chir-none").checked;
     return {
-      patient: {
-        nom: q("#atcd-nom").value.trim(),
-        prenom: q("#atcd-prenom").value.trim()
-      },
+      patient: identity(),
       allergies: {
         pas_allergie_connue: pasAllergie,
         liste: pasAllergie ? [] : checkedLabels("#atcd-allergie-list"),
@@ -6958,8 +6963,8 @@ window.ANTECEDENTS = {
   }
 
   function isValid() {
-    var d = getData();
-    return !!(d.patient.nom && d.patient.prenom);
+    var id = identity();
+    return !!(id.nom && id.prenom);
   }
 
   // ------------------------------------------------------------------- actions
@@ -7060,7 +7065,9 @@ window.ANTECEDENTS = {
 
   // ------------------------------------------------------------------- montage
   function render(rootEl, opts) {
-    root = rootEl; onValidate = (opts && opts.onValidate) || null;
+    root = rootEl;
+    onValidate = (opts && opts.onValidate) || null;
+    getIdentity = (opts && opts.getIdentity) || null;
     root.innerHTML = template();
 
     q("#atcd-allergie-none").addEventListener("change", applyNoneToggles);
@@ -7074,7 +7081,7 @@ window.ANTECEDENTS = {
     q("#atcd-export").addEventListener("click", exportJson);
     q("#atcd-copy").addEventListener("click", function () { copyText(getSummary(), "Résumé médical copié."); });
     q("#atcd-validate").addEventListener("click", function () {
-      if (!isValid()) { flash("Le nom et le prénom sont obligatoires.", false); q("#atcd-nom").focus(); return; }
+      if (!isValid()) { flash("Le nom et le prénom sont obligatoires (1re page).", false); return; }
       if (onValidate) onValidate(getData());
     });
     updateCounts();
@@ -7171,6 +7178,8 @@ window.ANTECEDENTS = {
     var nonMesuree = el("ctx-temp-nonmesuree").checked;
     var temp = nonMesuree ? null : parseTemp(el("ctx-temp").value);
     session.ctx = {
+      nom: el("ctx-nom").value.trim(),
+      prenom: el("ctx-prenom").value.trim(),
       age: isNaN(age) ? null : age,
       sexe: sexe || null,
       grossessePossible: grossesse || (ageProcreer && sexe === "Femme" && el("ctx-grossesse").checked),
@@ -7190,7 +7199,8 @@ window.ANTECEDENTS = {
     el("ctx-temp").disabled = nonMesuree;
     if (nonMesuree) el("ctx-temp").value = "";
     var tempOk = nonMesuree || parseTemp(el("ctx-temp").value) != null;
-    el("toSymptom").disabled = !(el("ctx-consent").checked && tempOk);
+    var nameOk = el("ctx-nom").value.trim() && el("ctx-prenom").value.trim();
+    el("toSymptom").disabled = !(el("ctx-consent").checked && tempOk && nameOk);
   }
 
   // Règles d'orientation explicites liées à la fièvre (indépendantes du motif)
@@ -7627,13 +7637,18 @@ window.ANTECEDENTS = {
     ["ctx-sexe", "ctx-consent", "ctx-temp-nonmesuree"].forEach(function (id) {
       el(id).addEventListener("change", refreshIntroValidity);
     });
-    el("ctx-temp").addEventListener("input", refreshIntroValidity);
+    ["ctx-temp", "ctx-nom", "ctx-prenom"].forEach(function (id) {
+      el(id).addEventListener("input", refreshIntroValidity);
+    });
     el("toSymptom").addEventListener("click", function () {
       readContext(); show("step-antecedents");
     });
     // Module « Informations patient et antécédents »
     if (window.Antecedents) {
       window.Antecedents.render(el("antecedents-root"), {
+        getIdentity: function () {
+          return { nom: el("ctx-nom").value.trim(), prenom: el("ctx-prenom").value.trim() };
+        },
         onValidate: function (data) {
           session.patient = data;
           deriveCtxFromAntecedents();
@@ -7651,6 +7666,7 @@ window.ANTECEDENTS = {
     el("restart").addEventListener("click", function () {
       session = { ctx: {}, patient: null, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
       el("ctx-consent").checked = false;
+      el("ctx-nom").value = ""; el("ctx-prenom").value = "";
       el("ctx-temp").value = ""; el("ctx-temp-nonmesuree").checked = false;
       el("symptomSearch").value = "";
       if (window.Antecedents) window.Antecedents.clear();

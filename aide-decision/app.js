@@ -82,6 +82,8 @@
     var nonMesuree = el("ctx-temp-nonmesuree").checked;
     var temp = nonMesuree ? null : parseTemp(el("ctx-temp").value);
     session.ctx = {
+      nom: el("ctx-nom").value.trim(),
+      prenom: el("ctx-prenom").value.trim(),
       age: isNaN(age) ? null : age,
       sexe: sexe || null,
       grossessePossible: grossesse || (ageProcreer && sexe === "Femme" && el("ctx-grossesse").checked),
@@ -101,7 +103,8 @@
     el("ctx-temp").disabled = nonMesuree;
     if (nonMesuree) el("ctx-temp").value = "";
     var tempOk = nonMesuree || parseTemp(el("ctx-temp").value) != null;
-    el("toSymptom").disabled = !(el("ctx-consent").checked && tempOk);
+    var nameOk = el("ctx-nom").value.trim() && el("ctx-prenom").value.trim();
+    el("toSymptom").disabled = !(el("ctx-consent").checked && tempOk && nameOk);
   }
 
   // Règles d'orientation explicites liées à la fièvre (indépendantes du motif)
@@ -538,13 +541,18 @@
     ["ctx-sexe", "ctx-consent", "ctx-temp-nonmesuree"].forEach(function (id) {
       el(id).addEventListener("change", refreshIntroValidity);
     });
-    el("ctx-temp").addEventListener("input", refreshIntroValidity);
+    ["ctx-temp", "ctx-nom", "ctx-prenom"].forEach(function (id) {
+      el(id).addEventListener("input", refreshIntroValidity);
+    });
     el("toSymptom").addEventListener("click", function () {
       readContext(); show("step-antecedents");
     });
     // Module « Informations patient et antécédents »
     if (window.Antecedents) {
       window.Antecedents.render(el("antecedents-root"), {
+        getIdentity: function () {
+          return { nom: el("ctx-nom").value.trim(), prenom: el("ctx-prenom").value.trim() };
+        },
         onValidate: function (data) {
           session.patient = data;
           deriveCtxFromAntecedents();
@@ -562,6 +570,7 @@
     el("restart").addEventListener("click", function () {
       session = { ctx: {}, patient: null, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
       el("ctx-consent").checked = false;
+      el("ctx-nom").value = ""; el("ctx-prenom").value = "";
       el("ctx-temp").value = ""; el("ctx-temp-nonmesuree").checked = false;
       el("symptomSearch").value = "";
       if (window.Antecedents) window.Antecedents.clear();

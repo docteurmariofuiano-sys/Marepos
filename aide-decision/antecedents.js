@@ -9,7 +9,11 @@
   "use strict";
 
   var DATA = window.ANTECEDENTS || { allergies: [], medicaux: [], chirurgicaux: [] };
-  var root = null, onValidate = null;
+  var root = null, onValidate = null, getIdentity = null;
+  function identity() {
+    var id = getIdentity ? getIdentity() : null;
+    return { nom: (id && id.nom) || "", prenom: (id && id.prenom) || "" };
+  }
 
   function esc(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -39,18 +43,11 @@
 
   function template() {
     return "" +
-    "<p class='atcd-intro muted'>Renseignez l'identité (obligatoire), les allergies et les antécédents. " +
-    "Tout est facultatif sauf le nom et le prénom. Données conservées localement, non transmises.</p>" +
+    "<p class='atcd-intro muted'>Renseignez les allergies et les antécédents (facultatif). " +
+    "Données conservées localement, non transmises.</p>" +
 
-    // 1. Identité
-    "<fieldset class='atcd-sec'><legend>1 · Identité du patient <em class='req'>obligatoire</em></legend>" +
-      "<div class='grid2'>" +
-        "<label class='field'><span>Nom</span><input type='text' id='atcd-nom' placeholder='Nom du patient' autocomplete='off'></label>" +
-        "<label class='field'><span>Prénom</span><input type='text' id='atcd-prenom' placeholder='Prénom du patient' autocomplete='off'></label>" +
-      "</div></fieldset>" +
-
-    // 2. Allergies
-    "<fieldset class='atcd-sec'><legend>2 · Allergies connues</legend>" +
+    // 1. Allergies
+    "<fieldset class='atcd-sec'><legend>1 · Allergies connues</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-allergie-none'><span><strong>Pas d'allergie connue</strong></span></label>" +
       "<div class='atcd-grid' id='atcd-allergie-list'>" +
         DATA.allergies.map(function (a) { return checkboxHtml(a, "al"); }).join("") +
@@ -64,7 +61,7 @@
       "<input type='search' id='atcd-search' placeholder='Rechercher un antécédent (ex. diabète, prothèse, asthme…)' autocomplete='off'></div>" +
 
     // 3. ATCD médicaux
-    "<fieldset class='atcd-sec'><legend>3 · Antécédents médicaux</legend>" +
+    "<fieldset class='atcd-sec'><legend>2 · Antécédents médicaux</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-med-none'><span><strong>Pas d'antécédent médical connu</strong></span></label>" +
       "<div id='atcd-med-groups'>" + groupsHtml(DATA.medicaux, "med") + "</div>" +
       "<label class='field'><span>Autres antécédents médicaux à préciser</span>" +
@@ -72,7 +69,7 @@
     "</fieldset>" +
 
     // 4. ATCD chirurgicaux
-    "<fieldset class='atcd-sec'><legend>4 · Antécédents chirurgicaux</legend>" +
+    "<fieldset class='atcd-sec'><legend>3 · Antécédents chirurgicaux</legend>" +
       "<label class='field check none-box'><input type='checkbox' id='atcd-chir-none'><span><strong>Pas d'antécédent chirurgical connu</strong></span></label>" +
       "<div id='atcd-chir-groups'>" + groupsHtml(DATA.chirurgicaux, "chir") + "</div>" +
       "<label class='field'><span>Autres antécédents chirurgicaux à préciser</span>" +
@@ -99,10 +96,7 @@
     var pasMed = q("#atcd-med-none").checked;
     var pasChir = q("#atcd-chir-none").checked;
     return {
-      patient: {
-        nom: q("#atcd-nom").value.trim(),
-        prenom: q("#atcd-prenom").value.trim()
-      },
+      patient: identity(),
       allergies: {
         pas_allergie_connue: pasAllergie,
         liste: pasAllergie ? [] : checkedLabels("#atcd-allergie-list"),
@@ -156,8 +150,8 @@
   }
 
   function isValid() {
-    var d = getData();
-    return !!(d.patient.nom && d.patient.prenom);
+    var id = identity();
+    return !!(id.nom && id.prenom);
   }
 
   // ------------------------------------------------------------------- actions
@@ -258,7 +252,9 @@
 
   // ------------------------------------------------------------------- montage
   function render(rootEl, opts) {
-    root = rootEl; onValidate = (opts && opts.onValidate) || null;
+    root = rootEl;
+    onValidate = (opts && opts.onValidate) || null;
+    getIdentity = (opts && opts.getIdentity) || null;
     root.innerHTML = template();
 
     q("#atcd-allergie-none").addEventListener("change", applyNoneToggles);
@@ -272,7 +268,7 @@
     q("#atcd-export").addEventListener("click", exportJson);
     q("#atcd-copy").addEventListener("click", function () { copyText(getSummary(), "Résumé médical copié."); });
     q("#atcd-validate").addEventListener("click", function () {
-      if (!isValid()) { flash("Le nom et le prénom sont obligatoires.", false); q("#atcd-nom").focus(); return; }
+      if (!isValid()) { flash("Le nom et le prénom sont obligatoires (1re page).", false); return; }
       if (onValidate) onValidate(getData());
     });
     updateCounts();
