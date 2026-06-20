@@ -4921,11 +4921,11 @@ window.KB = {
       { id: "og_orgelet", diagnostic: "Orgelet", arguments: [{ label: "bouton rouge douloureux du bord palpébral", w: 3, when: { q: "og_orgelet", eq: true } }],
         examens_a_discuter: ["Soins locaux chauds, hygiène des paupières"] },
       { id: "og_chalazion", diagnostic: "Chalazion", arguments: [{ label: "boule indolore persistante", w: 3, when: { q: "og_chalazion", eq: true } }],
-        examens_a_discuter: ["Soins locaux", "Avis si persistant (incision)"] },
+        examens_a_discuter: ["Soins locaux (compresses chaudes, massage), hygiène des paupières ; traiter une blépharite associée", "Avis si persistant (incision/curetage) ; un chalazion RÉCIDIVANT toujours au même endroit chez l'adulte doit faire envisager un carcinome sébacé (avis + examen anatomopathologique)"] },
       { id: "og_cellulite", diagnostic: "Cellulite orbitaire", arguments: [{ label: "inflammation orbitaire + fièvre", w: 3, when: { q: "og_cellulite", eq: true } }],
-        examens_a_discuter: ["Urgence : imagerie, antibiothérapie IV"] }
+        examens_a_discuter: ["Urgence : imagerie (TDM), antibiothérapie IV ; distinguer la cellulite préseptale (plus bénigne) de l'orbitaire (exophtalmie, ophtalmoplégie, baisse de vision)"] }
     ],
-    examens_clinique: ["Examen de la paupière", "Mobilité oculaire", "Recherche de signes orbitaires (exophtalmie, fièvre)"]
+    examens_clinique: ["Examen de la paupière (bord palpébral, blépharite) et caractère récidivant", "Mobilité oculaire, acuité visuelle", "Recherche de signes orbitaires (exophtalmie, douleur aux mouvements, fièvre)"]
   },
 
   // -------------------------------------------------------------------------
@@ -4949,11 +4949,13 @@ window.KB = {
     ],
     diagnostics_differentiels: [
       { id: "so_secheresse", diagnostic: "Sécheresse oculaire", arguments: [{ label: "sensation de sable, gêne fluctuante", w: 3, when: { q: "so_typique", eq: true } }, { label: "facteurs favorisants", w: 1, when: { q: "so_medic", eq: true } }],
-        examens_a_discuter: ["Larmes artificielles", "Hygiène des écrans"] },
+        examens_a_discuter: ["Larmes artificielles (sans conservateur si usage fréquent)", "Hygiène des écrans (clignements, pauses), revue des médicaments asséchants"] },
+      { id: "so_blepharite", diagnostic: "Blépharite / dysfonction des glandes de Meibomius", arguments: [{ label: "irritation chronique, bords des paupières (souvent associée à la sécheresse)", w: 2, when: { q: "so_typique", eq: true } }],
+        examens_a_discuter: ["Hygiène des paupières, compresses chaudes, massage palpébral", "Cause très fréquente de sécheresse/irritation ; souvent associée à une rosacée"] },
       { id: "so_sjogren", diagnostic: "Syndrome de Gougerot-Sjögren", arguments: [{ label: "syndrome sec systémique", w: 3, when: { q: "so_systemique", eq: true } }],
         examens_a_discuter: ["Avis spécialisé, auto-anticorps (anti-SSA/SSB)"] }
     ],
-    examens_clinique: ["Examen oculaire", "Test de Schirmer si besoin", "Recherche d'un syndrome sec systémique"]
+    examens_clinique: ["Examen oculaire et des bords palpébraux (blépharite)", "Test de Schirmer si besoin", "Recherche d'un syndrome sec systémique et revue des médicaments asséchants"]
   },
 
   // -------------------------------------------------------------------------
@@ -5392,11 +5394,13 @@ window.KB = {
     ],
     diagnostics_differentiels: [
       { id: "sg_grippal", diagnostic: "Syndrome grippal (grippe / COVID)", arguments: [{ label: "tableau typique épidémique", w: 3, when: { q: "sg_typique", eq: true } }],
-        examens_a_discuter: ["Tests selon contexte", "Traitement symptomatique, isolement"] },
-      { id: "sg_complique", diagnostic: "Forme compliquée", arguments: [{ label: "signes de gravité", w: 2, when: { q: "sg_gravite", eq: true } }, { label: "aggravation / prolongation", w: 2, when: { q: "sg_prolonge", eq: true } }],
-        examens_a_discuter: ["Radiographie thoracique, évaluation"] }
+        examens_a_discuter: ["Traitement symptomatique, isolement, hydratation ; test antigénique/PCR selon le contexte", "Antiviral (oseltamivir) précoce si terrain à risque/forme grave ; prévention par la vaccination annuelle des sujets à risque"] },
+      { id: "sg_surinfection", diagnostic: "Surinfection bactérienne (pneumonie post-grippale)", arguments: [{ label: "aggravation ou reprise de la fièvre après amélioration (évolution biphasique)", w: 3, when: { q: "sg_prolonge", eq: true } }],
+        examens_a_discuter: ["Reprise fébrile / foyer auscultatoire après une amélioration = pneumonie bactérienne (pneumocoque, S. aureus) → radiographie, antibiothérapie", "CRP selon le contexte"] },
+      { id: "sg_complique", diagnostic: "Forme grave / décompensation", arguments: [{ label: "signes de gravité", w: 3, when: { q: "sg_gravite", eq: true } }, { label: "terrain à risque", w: 1, when: { q: "sg_terrain", eq: true } }],
+        examens_a_discuter: ["Radiographie thoracique, gaz du sang/SpO2 ; rechercher une décompensation de comorbidité (BPCO, insuffisance cardiaque, diabète)"] }
     ],
-    examens_clinique: ["SpO2", "Auscultation pulmonaire", "Température", "Recherche de signes de gravité"]
+    examens_clinique: ["SpO2", "Auscultation pulmonaire (foyer = surinfection)", "Température (évolution biphasique ?)", "Recherche de signes de gravité et de décompensation d'une maladie chronique"]
   },
 
   // -------------------------------------------------------------------------
@@ -6083,11 +6087,11 @@ window.KB = {
     ],
     diagnostics_differentiels: [
       { id: "de2_deshy", diagnostic: "Déshydratation", arguments: [{ label: "signes cliniques de déshydratation", w: 3, when: { q: "de2_clinique", eq: true } }, { label: "pertes importantes", w: 1, when: { q: "de2_pertes", eq: true } }],
-        examens_a_discuter: ["Réhydratation (orale ou IV)", "Traiter la cause ; ionogramme/créatinine si sévère"] },
+        examens_a_discuter: ["Réhydratation : soluté de réhydratation orale (SRO) chez le nourrisson/personne âgée (ne pas donner que de l'eau pure) ; voie IV si échec/sévérité", "Traiter la cause ; ionogramme, créatinine, glycémie capillaire si sévère"] },
       { id: "de2_grave", diagnostic: "Déshydratation grave", arguments: [{ label: "signes de choc", w: 3, when: { q: "de2_choc", eq: true } }, { label: "terrain à risque", w: 1, when: { q: "de2_terrain", eq: true } }],
-        examens_a_discuter: ["Hospitalisation, réhydratation IV"] }
+        examens_a_discuter: ["Hospitalisation, réhydratation IV ; rechercher une décompensation diabétique (coma hyperosmolaire/acidocétose : glycémie, cétonurie) et une hypernatrémie chez le sujet âgé"] }
     ],
-    examens_clinique: ["Pression artérielle couché/debout, fréquence cardiaque", "Pli cutané, état des muqueuses", "Diurèse, poids", "Ionogramme / créatinine si sévère"]
+    examens_clinique: ["Pression artérielle couché/debout, fréquence cardiaque", "Pli cutané, état des muqueuses, poids (référence)", "Diurèse, glycémie capillaire", "Ionogramme (natrémie), créatinine si sévère"]
   },
 
   // -------------------------------------------------------------------------
