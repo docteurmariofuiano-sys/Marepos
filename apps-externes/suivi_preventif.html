@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suivi préventif CNAM - Cabinet médical</title>
+  <!-- SÉCURITÉ / HDS : librairies chargées depuis des CDN. Pour la production sur
+       données patients, AUTO-HÉBERGER les 4 fichiers (servis localement), figer les
+       versions et ajouter une intégrité SRI (integrity=...). lucide n'est plus en
+       @latest (risque de code arbitraire non reproductible supprimé). -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    :root {
+      --ink: #132238;
+      --muted: #62738a;
+      --line: #d9e2ec;
+      --soft: #f4f8fb;
+      --panel: #ffffff;
+      --blue: #0b63b6;
+      --blue-deep: #08467f;
+      --teal: #0f8f88;
+      --amber: #b76b00;
+      --red: #b42318;
+      --green: #16794c;
+      --violet: #6650a4;
+      --shadow: 0 16px 40px rgba(19, 34, 56, .08);
+      --radius: 8px;
+      font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(11, 99, 182, .08), transparent 260px),
+        repeating-linear-gradient(90deg, rgba(19,34,56,.028), rgba(19,34,56,.028) 1px, transparent 1px, transparent 48px),
+        var(--soft);
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 7px;
+      padding: 10px 12px;
+      min-height: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    button:hover { transform: translateY(-1px); border-color: #9ab1c7; }
+    button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+    button.danger { background: #fff5f3; color: var(--red); border-color: #ffd1ca; }
+    button.ghost { background: transparent; }
+    button.small { min-height: 32px; padding: 6px 9px; font-size: 12px; }
+    button.icon { width: 36px; padding: 0; }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 11px;
+      min-height: 40px;
+    }
+    textarea { resize: vertical; min-height: 88px; line-height: 1.35; }
+    label { font-weight: 700; font-size: 12px; color: #40546b; }
+
+    .app-shell { max-width: 1480px; margin: 0 auto; padding: 22px; }
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      padding: 18px 0 14px;
+    }
+    .title h1 {
+      margin: 0 0 6px;
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      color: #0b315b;
+    }
+    .title p { margin: 4px 0; color: var(--muted); max-width: 920px; line-height: 1.45; }
+    .notice {
+      border: 1px solid #b9d4ec;
+      background: #eff7ff;
+      border-left: 5px solid var(--blue);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      color: #244560;
+      line-height: 1.4;
+    }
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 9px;
+      background: rgba(244, 248, 251, .92);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin: 8px 0 18px;
+    }
+    .tab {
+      white-space: nowrap;
+      min-width: fit-content;
+      background: transparent;
+      border-color: transparent;
+      color: #40546b;
+    }
+    .tab.active { background: #fff; color: var(--blue-deep); border-color: #c7d8e8; box-shadow: 0 6px 18px rgba(19,34,56,.07); }
+    .screen { display: none; }
+    .screen.active { display: block; animation: rise .18s ease-out; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .grid { display: grid; gap: 14px; }
+    .grid.two { grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .panel {
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .panel h2, .panel h3 { margin: 0 0 12px; letter-spacing: 0; }
+    .panel h2 { font-size: 20px; }
+    .panel h3 { font-size: 15px; color: #263e57; }
+    .subtle { color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 12px; }
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px;
+      min-height: 98px;
+    }
+    .kpi span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .kpi strong { display: block; margin-top: 8px; font-size: 28px; color: #0b315b; }
+    .kpi.accent { border-top: 4px solid var(--teal); }
+    .kpi.warn { border-top: 4px solid var(--amber); }
+    .kpi.danger { border-top: 4px solid var(--red); }
+
+    .dropzone {
+      border: 2px dashed #9abbd9;
+      border-radius: var(--radius);
+      padding: 26px;
+      background: #f7fbff;
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .dropzone.dragover { border-color: var(--blue); background: #eaf5ff; }
+    .dropzone .upload-icon { color: var(--blue); width: 44px; height: 44px; margin-bottom: 8px; }
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+    .file-list { display: grid; gap: 8px; margin-top: 12px; }
+    .file-row {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 11px;
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) minmax(230px, 330px) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      background: #fff;
+    }
+    .badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex: 0 0 auto;
+    }
+    .badge.high::before { background: var(--red); }
+    .badge.standard::before { background: var(--amber); }
+    .badge.done::before { background: var(--green); }
+    .badge.excluded::before { background: #333b45; }
+    .badge.call::before { background: var(--violet); }
+    .badge.prepared::before { background: var(--blue); }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    th, td {
+      border-bottom: 1px solid #e7edf3;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #eef5fb;
+      color: #244560;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    tr:hover td { background: #fbfdff; }
+    .compact-text { max-width: 360px; line-height: 1.35; }
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: end;
+    }
+    .patient-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .patient-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .patient-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      border-bottom: 1px solid #e7edf3;
+      padding-bottom: 10px;
+    }
+    .patient-head strong { font-size: 17px; }
+    .text-block {
+      white-space: pre-wrap;
+      background: #f8fafc;
+      border: 1px solid #e1e9f1;
+      border-radius: var(--radius);
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      max-height: 170px;
+      overflow: auto;
+    }
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #10243b;
+      color: #fff;
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 20;
+      max-width: 380px;
+    }
+    .footer {
+      margin-top: 22px;
+      padding: 14px 0;
+      color: #56677a;
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+      line-height: 1.5;
+    }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 31, 50, .45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 30;
+    }
+    .modal.open { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      width: min(760px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid #e7edf3; }
+    .switch-row input { width: auto; min-height: auto; }
+
+    @media (max-width: 980px) {
+      .topbar, .grid.two, .grid.three, .grid.four, .kpis, .filters, .settings-grid { grid-template-columns: 1fr; }
+      .file-row { grid-template-columns: 1fr; }
+      .app-shell { padding: 14px; }
+      table { min-width: 860px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="title">
+        <h1>Outil d’aide au suivi préventif de la patientèle médecin traitant</h1>
+        <p>Importez vos exports CNAM pour identifier rapidement les patients nécessitant une vérification, un rappel ou une action de prévention.</p>
+        <p>L’outil prépare les messages à copier dans votre logiciel métier et les scripts d’appel pour votre secrétariat.</p>
+      </div>
+      <div class="notice">
+        <strong>Aide organisationnelle.</strong><br>
+        Les actions proposées doivent être validées par le médecin selon le dossier clinique du patient. Aucun message n’est envoyé automatiquement.
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Navigation">
+      <button class="tab active" data-screen="import"><i data-lucide="upload"></i> Import</button>
+      <button class="tab" data-screen="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+      <button class="tab" data-screen="worklist"><i data-lucide="list-checks"></i> Liste de travail</button>
+      <button class="tab" data-screen="prep"><i data-lucide="clipboard-list"></i> Préparation rappel</button>
+      <button class="tab" data-screen="journal"><i data-lucide="history"></i> Journal</button>
+      <button class="tab" data-screen="settings"><i data-lucide="settings"></i> Paramètres</button>
+    </nav>
+
+    <main>
+      <section id="import" class="screen active">
+        <div class="grid two">
+          <div class="panel">
+            <h2>Import des fichiers CNAM</h2>
+            <div class="notice">
+              Attention : ces données sont confidentielles. Elles doivent être conservées uniquement le temps nécessaire à l’accompagnement de la patientèle, stockées dans un espace sécurisé, puis supprimées une fois les actions effectuées.
+            </div>
+            <div id="dropzone" class="dropzone" tabindex="0">
+              <div>
+                <i class="upload-icon" data-lucide="file-up"></i>
+                <h3>Déposez vos fichiers PDF, CSV ou Excel</h3>
+                <p class="subtle">Les fichiers sont lus localement dans le navigateur. Les fichiers importés ne sont pas conservés automatiquement.</p>
+                <div class="actions" style="justify-content:center;margin-top:12px">
+                  <button class="primary" id="pickFiles"><i data-lucide="folder-open"></i> Importer fichiers CNAM</button>
+                  <button id="loadDemo"><i data-lucide="beaker"></i> Charger données de démonstration</button>
+                  <button class="danger" id="clearAll"><i data-lucide="trash-2"></i> Supprimer toutes les données</button>
+                </div>
+                <input id="fileInput" type="file" multiple accept=".pdf,.csv,.xlsx,.xls" hidden>
+              </div>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+          <div class="panel">
+            <h2>Contrôles qualité</h2>
+            <div id="qualityList" class="grid"></div>
+            <h3 style="margin-top:16px">Documentation courte</h3>
+            <p class="subtle">Importez un export CNAM, vérifiez l’indicateur détecté, puis traitez les patients affichés dans la liste de travail. Les boutons copient les textes préparés ; l’envoi reste manuel dans votre logiciel métier. Utilisez l’export Excel, CSV ou PDF pour conserver une trace sécurisée si nécessaire.</p>
+            <p class="subtle"><strong>Confidentialité :</strong> le NIR est masqué par défaut. Les identifiants insuffisamment masqués déclenchent une alerte et sont automatiquement masqués dans l’interface et les exports.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="screen">
+        <div class="kpis" id="kpis"></div>
+        <div class="grid two" style="margin-top:14px">
+          <div class="panel">
+            <div class="actions" style="justify-content:space-between;margin-bottom:12px">
+              <h2>Patients à vérifier</h2>
+              <div class="actions">
+                <button id="exportExcel"><i data-lucide="file-spreadsheet"></i> Excel</button>
+                <button id="exportCsv"><i data-lucide="file-text"></i> CSV</button>
+                <button id="exportPdf"><i data-lucide="file-down"></i> PDF</button>
+              </div>
+            </div>
+            <div id="dashboardPatients"></div>
+          </div>
+          <div class="panel">
+            <h2>Synthèse par indicateur</h2>
+            <div id="indicatorSummary"></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:14px">
+          <h2>Travail du secrétariat</h2>
+          <div class="kpis" id="secretariatStats"></div>
+        </div>
+      </section>
+
+      <section id="worklist" class="screen">
+        <div class="panel">
+          <div class="actions" style="justify-content:space-between;margin-bottom:12px">
+            <h2>Liste de travail - patients à vérifier</h2>
+            <button id="resetFilters"><i data-lucide="filter-x"></i> Réinitialiser</button>
+          </div>
+          <div class="filters">
+            <div><label>Indicateur</label><select id="filterIndicator"></select></div>
+            <div><label>Priorité</label><select id="filterPriority"><option value="">Toutes</option><option>Haute</option><option>Standard</option></select></div>
+            <div><label>Âge minimum</label><input id="filterAge" type="number" min="0" placeholder="Ex. 50"></div>
+            <div><label>État du rappel</label><select id="filterState"></select></div>
+            <div><label>Nom ou prénom</label><input id="filterSearch" placeholder="Rechercher"></div>
+            <div><label>Tri</label><select id="sortBy"><option value="priority">Priorité</option><option value="age">Âge</option><option value="indicator">Indicateur</option><option value="state">État du rappel</option><option value="name">Nom</option></select></div>
+          </div>
+          <div id="workTable"></div>
+        </div>
+      </section>
+
+      <section id="prep" class="screen">
+        <div class="panel">
+          <div class="actions" style="justify-content:space-between;margin-bottom:12px">
+            <h2>Préparation du rappel patient</h2>
+            <div style="max-width:340px"><input id="prepSearch" placeholder="Filtrer par patient ou indicateur"></div>
+          </div>
+          <div id="patientCards" class="patient-cards"></div>
+        </div>
+      </section>
+
+      <section id="journal" class="screen">
+        <div class="panel">
+          <div class="actions" style="justify-content:space-between;margin-bottom:12px">
+            <h2>Journal des actions</h2>
+            <div class="actions">
+              <button id="exportJournalCsv"><i data-lucide="file-text"></i> CSV journal</button>
+              <button id="exportJournalPdf"><i data-lucide="file-down"></i> PDF journal</button>
+              <button id="clearJournal" class="danger"><i data-lucide="eraser"></i> Vider le journal</button>
+            </div>
+          </div>
+          <div id="journalTable"></div>
+        </div>
+      </section>
+
+      <section id="settings" class="screen">
+        <div class="panel">
+          <h2>Paramètres</h2>
+          <div class="settings-grid">
+            <div><label>Nom du médecin</label><input id="doctorName" placeholder="Dr [NOM_DU_MEDECIN]"></div>
+            <div><label>Nom du cabinet</label><input id="practiceName" placeholder="Cabinet médical"></div>
+            <div><label>Utilisateur du journal</label><input id="userName" placeholder="Assistante"></div>
+            <div><label>Signature des messages</label><input id="signature" placeholder="Le secrétariat du Dr [NOM_DU_MEDECIN]"></div>
+          </div>
+          <div class="switch-row">
+            <div><strong>Journal local</strong><br><span class="subtle">Enregistre les changements d’état, copies et commentaires dans ce navigateur.</span></div>
+            <input id="journalEnabled" type="checkbox">
+          </div>
+          <div class="switch-row">
+            <div><strong>Afficher l’identifiant masqué</strong><br><span class="subtle">Le NIR complet n’est jamais affiché.</span></div>
+            <input id="showMaskedNir" type="checkbox">
+          </div>
+          <div class="switch-row">
+            <div><strong>Mode démonstration</strong><br><span class="subtle">Permet de travailler avec des données fictives.</span></div>
+            <input id="demoMode" type="checkbox">
+          </div>
+          <h3 style="margin-top:16px">Modèles de messages et scripts</h3>
+          <p class="subtle">Les modèles intégrés sont neutres, courts, sans diagnostic, sans NIR et adaptés au copier-coller. Ils peuvent être personnalisés directement dans les champs générés avant copie si besoin.</p>
+          <div class="actions" style="margin-top:12px"><button class="primary" id="saveSettings"><i data-lucide="save"></i> Enregistrer les paramètres</button></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Données confidentielles - usage réservé au médecin et à son équipe autorisée. Les fichiers importés doivent être supprimés après traitement. L’outil ne remplace pas l’analyse médicale du dossier patient. Aucune donnée ne doit être transmise à des tiers non autorisés.
+    </footer>
+  </div>
+
+  <div id="scriptModal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="actions" style="justify-content:space-between;margin-bottom:10px">
+        <h2 id="modalTitle">Script d’appel</h2>
+        <button class="icon" id="closeModal" aria-label="Fermer"><i data-lucide="x"></i></button>
+      </div>
+      <div id="modalText" class="text-block"></div>
+      <div class="actions" style="margin-top:12px"><button class="primary" id="copyModal"><i data-lucide="copy"></i> Copier</button></div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script type="module">
+    import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs";
+
+    const INDICATEURS = {
+      "Dépistage de la maladie rénale chronique": ["maladie renale chronique", "depistage de la maladie renale chronique", "mrc", "fonction renale", "albuminurie", "dfg"],
+      "Dépistage du diabète": ["depistage du diabete", "diabete depistage", "glycemie", "hba1c"],
+      "Suivi biologique du diabète": ["suivi biologique du diabete", "diabete suivi biologique", "hba1c diabete"],
+      "Dépistage organisé du cancer colorectal": ["cancer colorectal", "depistage organise du cancer colorectal", "test immunologique", "hemoccult", "fit"],
+      "Dépistage organisé du cancer du col de l’utérus": ["cancer du col", "col de l uterus", "col de l'uterus", "test hpv", "frottis"],
+      "Dépistage organisé du cancer du sein": ["cancer du sein", "depistage organise du cancer du sein", "mammographie", "sein"],
+      "Examen médical à 8 mois": ["examen medical a 8 mois", "8 mois"],
+      "Examen médical à 2 ans": ["examen medical a 2 ans", "2 ans", "24 mois"],
+      "Suivi bucco-dentaire annuel": ["suivi bucco dentaire", "bucco-dentaire", "bucco dentaire", "dentiste"],
+      "Vaccin Covid": ["vaccin covid", "covid", "sars cov 2"],
+      "Vaccin grippe": ["vaccin grippe", "grippe", "vaccination antigrippale"],
+      "Vaccin HPV": ["vaccin hpv", "hpv", "papillomavirus"],
+      "Vaccin méningocoque ACWY": ["vaccin meningocoque acwy", "meningocoque", "acwy"],
+      "Vaccin pneumocoque": ["vaccin pneumocoque", "pneumocoque"],
+      "Vaccin ROR": ["vaccin ror", "ror", "rougeole", "oreillons", "rubeole"]
+    };
+
+    const RAPPEL_STATES = [
+      "Non traité", "Message préparé", "Message envoyé via Doctolib", "Message envoyé via Maiia",
+      "Message envoyé via logiciel métier", "Appel à faire", "Appel effectué", "Patient injoignable",
+      "Message vocal laissé", "RDV pris", "Refus patient", "Déjà fait selon patient", "À vérifier dans dossier",
+      "Prescription à prévoir", "À revoir par le médecin", "Action clôturée"
+    ];
+
+    const ACTIONS = {
+      "Dépistage de la maladie rénale chronique": "Vérifier si créatinine, DFG et albuminurie/créatininurie sont à jour selon le dossier clinique.",
+      "Dépistage du diabète": "Vérifier si un dépistage glycémique ou HbA1c est indiqué selon le profil patient.",
+      "Suivi biologique du diabète": "Vérifier HbA1c, bilan rénal, lipidique et albuminurie selon suivi habituel.",
+      "Dépistage organisé du cancer colorectal": "Vérifier éligibilité et statut du dépistage organisé ; proposer test immunologique ou orientation selon dossier.",
+      "Dépistage organisé du cancer du col de l’utérus": "Vérifier dernier frottis/test HPV et proposer dépistage si nécessaire.",
+      "Dépistage organisé du cancer du sein": "Vérifier mammographie organisée selon âge, antécédents et dernière date connue.",
+      "Examen médical à 8 mois": "Programmer ou vérifier la réalisation de l’examen obligatoire.",
+      "Examen médical à 2 ans": "Programmer ou vérifier la réalisation de l’examen obligatoire.",
+      "Suivi bucco-dentaire annuel": "Vérifier si le suivi bucco-dentaire annuel est réalisé.",
+      "Vaccin Covid": "Vérifier statut vaccinal et indication d’un rappel.",
+      "Vaccin grippe": "Vérifier indication de vaccination saisonnière.",
+      "Vaccin HPV": "Vérifier schéma vaccinal HPV.",
+      "Vaccin méningocoque ACWY": "Vérifier schéma vaccinal selon âge/recommandations.",
+      "Vaccin pneumocoque": "Vérifier indication et schéma vaccinal.",
+      "Vaccin ROR": "Vérifier statut vaccinal ROR."
+    };
+
+    const DEMO_PATIENTS = [
+      { nom: "DUPONT", prenom: "MARIE", age: 68, nir_masque: "x660899351xx", statut: "À vérifier", indicateur: "Dépistage de la maladie rénale chronique", date_export: "20/06/2026" },
+      { nom: "MARTIN", prenom: "PAUL", age: 52, nir_masque: "xxx192025129", statut: "À vérifier", indicateur: "Dépistage organisé du cancer colorectal", date_export: "20/06/2026" },
+      { nom: "BERNARD", prenom: "LUCIE", age: 13, nir_masque: "xxx499351143", statut: "À vérifier", indicateur: "Vaccin HPV", date_export: "20/06/2026" },
+      { nom: "ROBERT", prenom: "ALAIN", age: 74, nir_masque: "1xxxxx441", statut: "Fait", indicateur: "Vaccin grippe", date_export: "20/06/2026" },
+      { nom: "PETIT", prenom: "SARA", age: 2, nir_masque: "2xxxxx221", statut: "À faire", indicateur: "Examen médical à 2 ans", date_export: "20/06/2026" },
+      { nom: "MOREAU", prenom: "NADIA", age: 46, nir_masque: "2xxxxx812", statut: "Exclu(e)", indicateur: "Dépistage organisé du cancer du col de l’utérus", date_export: "20/06/2026" }
+    ];
+
+    const state = {
+      files: [],
+      patients: [],
+      journal: JSON.parse(localStorage.getItem("cnamJournal") || "[]"),
+      quality: [],
+      settings: {
+        doctorName: "Dr [NOM_DU_MEDECIN]",
+        practiceName: "Cabinet médical",
+        userName: "Assistante",
+        signature: "Le secrétariat du Dr [NOM_DU_MEDECIN]",
+        journalEnabled: true,
+        showMaskedNir: true,
+        demoMode: false,
+        ...JSON.parse(localStorage.getItem("cnamSettings") || "{}")
+      }
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function normaliserTexte(texte) {
+      return (texte || "")
+        .toString()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[’‘]/g, "'")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function estAVerifier(statut) {
+      const s = normaliserTexte(statut);
+      return ["a verifier", "a controler", "a faire", "non fait", "incomplet", "manquant", "a programmer", "a rappeler"].some(mot => s.includes(mot));
+    }
+
+    function estTermine(statut) {
+      const s = normaliserTexte(statut);
+      if (s.includes("non fait")) return false;
+      return ["fait", "realise", "ok", "termine"].some(mot => s.includes(mot));
+    }
+
+    function estExclu(statut) {
+      const s = normaliserTexte(statut);
+      return ["exclu", "exclue", "exclu(e)", "non concerne", "non concernee"].some(mot => s.includes(mot));
+    }
+
+    function masquerNIR(nir) {
+      if (!nir) return "";
+      const clean = nir.toString().replace(/\s+/g, "");
+      if (clean.length <= 6) return "xxxxxx";
+      return clean.slice(0, 2) + "xxxx" + clean.slice(-3);
+    }
+
+    function nirSembleComplet(nir) {
+      const clean = (nir || "").toString().replace(/\D/g, "");
+      return clean.length >= 11;
+    }
+
+    function detecterIndicateur(...parts) {
+      const source = normaliserTexte(parts.filter(Boolean).join(" "));
+      let best = { name: "", score: 0 };
+      for (const [name, keys] of Object.entries(INDICATEURS)) {
+        const score = keys.reduce((total, key) => total + (source.includes(normaliserTexte(key)) ? 1 : 0), 0);
+        if (score > best.score) best = { name, score };
+      }
+      return best.score ? best.name : "";
+    }
+
+    function normaliserStatut(statut) {
+      if (estExclu(statut)) return "Exclu";
+      if (estAVerifier(statut)) return "À vérifier";
+      if (estTermine(statut)) return "Fait";
+      return cleanText(statut || "");
+    }
+
+    function cleanText(value) {
+      return (value ?? "").toString().replace(/\s+/g, " ").trim();
+    }
+
+    function prioritePour(patient) {
+      const i = normaliserTexte(patient.indicateur);
+      if (!estAVerifier(patient.statut)) return "Standard";
+      if (i.includes("suivi biologique du diabete") || i.includes("maladie renale") || i.includes("cancer colorectal") || i.includes("cancer du sein") || i.includes("cancer du col")) return "Haute";
+      if ((i.includes("pneumocoque") || i.includes("grippe")) && Number(patient.age) >= 65) return "Haute";
+      if (i.includes("8 mois") || i.includes("2 ans")) return "Haute";
+      if ((i.includes("hpv") || i.includes("meningocoque") || i.includes("ror")) && Number(patient.age) <= 18) return "Haute";
+      return "Standard";
+    }
+
+    function enrichirPatient(raw, sourceFile = "") {
+      const nirOriginal = raw.nir_masque || raw.nir || raw.identifiant || "";
+      const indicateur = raw.indicateur || detecterIndicateur(sourceFile, raw.indicateur || "") || "Indicateur non reconnu";
+      const patient = {
+        id: crypto.randomUUID(),
+        nom: cleanText(raw.nom || raw.Nom || raw.patient || "").toUpperCase(),
+        prenom: cleanText(raw.prenom || raw.Prénom || raw.Prenom || "").replace(/\b\w/g, l => l.toUpperCase()),
+        age: parseInt(raw.age || raw["Âge"] || raw["Age"] || "", 10) || "",
+        nir_masque: masquerNIR(nirOriginal),
+        statut: normaliserStatut(raw.statut || raw.Statut || raw.etat || raw["État"] || ""),
+        indicateur,
+        date_export: raw.date_export || detecterDate(raw.date_export || sourceFile) || new Date().toLocaleDateString("fr-FR"),
+        etat_rappel: raw.etat_rappel || "Non traité",
+        commentaire: raw.commentaire || "",
+        derniere_action: raw.derniere_action || "",
+        sourceFile,
+        nirAlerte: nirSembleComplet(nirOriginal)
+      };
+      patient.priorite = raw.priorite || prioritePour(patient);
+      patient.action_recommandee = ACTIONS[patient.indicateur] || "Vérifier le statut de l’action de prévention dans le dossier clinique.";
+      patient.message_patient = messagePatient(patient);
+      patient.script_appel = scriptAppel(patient);
+      patient.consigne_interne = consigneInterne(patient);
+      return patient;
+    }
+
+    function detecterDate(text) {
+      const m = (text || "").toString().match(/\b(\d{2}\/\d{2}\/\d{4})\b/);
+      return m ? m[1] : "";
+    }
+
+    function contexteMessage(indicateur) {
+      const i = normaliserTexte(indicateur);
+      if (i.includes("vaccin")) return "vaccination";
+      if (i.includes("8 mois") || i.includes("2 ans")) return "enfant";
+      if (i.includes("bucco")) return "bucco";
+      if (i.includes("depistage") || i.includes("maladie renale") || i.includes("diabete")) return "depistage";
+      return "generique";
+    }
+
+    function signature() {
+      return state.settings.signature || `Le secrétariat du ${state.settings.doctorName}`;
+    }
+
+    function messagePatient(patient) {
+      const dr = state.settings.doctorName || "Dr [NOM_DU_MEDECIN]";
+      const sign = signature();
+      const type = contexteMessage(patient.indicateur);
+      const templates = {
+        generique: `Bonjour,\n\nDans le cadre de votre suivi médical habituel, le cabinet du ${dr} souhaite faire le point avec vous sur une action de prévention ou de suivi à vérifier.\n\nMerci de contacter le cabinet ou de prendre rendez-vous si nécessaire.\n\nCordialement,\n${sign}`,
+        depistage: `Bonjour,\n\nLe cabinet du ${dr} souhaite vérifier avec vous si un bilan ou un dépistage recommandé dans le cadre de votre suivi est bien à jour.\n\nMerci de contacter le secrétariat afin que nous puissions faire le point avec vous.\n\nCordialement,\n${sign}`,
+        vaccination: `Bonjour,\n\nLe cabinet du ${dr} souhaite vérifier avec vous si vos vaccinations sont bien à jour.\n\nMerci de contacter le secrétariat ou de prendre rendez-vous si besoin.\n\nCordialement,\n${sign}`,
+        enfant: `Bonjour,\n\nLe cabinet du ${dr} souhaite vérifier que l’examen de suivi recommandé pour votre enfant est bien programmé ou déjà réalisé.\n\nMerci de contacter le secrétariat afin de faire le point.\n\nCordialement,\n${sign}`,
+        bucco: `Bonjour,\n\nDans le cadre de votre suivi préventif, le cabinet du ${dr} souhaite vérifier que votre suivi bucco-dentaire est bien à jour.\n\nMerci de contacter le cabinet si besoin.\n\nCordialement,\n${sign}`
+      };
+      return templates[type] || templates.generique;
+    }
+
+    function scriptAppel(patient) {
+      const dr = state.settings.doctorName || "Dr [NOM_DU_MEDECIN]";
+      const nom = patient.nom || "[NOM_PATIENT]";
+      const type = contexteMessage(patient.indicateur);
+      if (type === "vaccination") return `Bonjour Madame/Monsieur ${nom},\n\nJe vous appelle de la part du cabinet du ${dr}.\n\nNous faisons le point sur les vaccinations recommandées dans le cadre du suivi médical.\n\nLe médecin souhaite vérifier si votre statut vaccinal est bien à jour.\n\nSouhaitez-vous prendre rendez-vous ou demander au médecin de vérifier votre dossier ?`;
+      if (type === "enfant") return `Bonjour,\n\nJe vous appelle de la part du cabinet du ${dr} concernant le suivi médical de votre enfant.\n\nLe médecin souhaite vérifier que l’examen de suivi recommandé est bien prévu ou déjà réalisé.\n\nSouhaitez-vous programmer un rendez-vous ?`;
+      if (type === "depistage" || type === "bucco") return `Bonjour Madame/Monsieur ${nom},\n\nJe vous appelle de la part du cabinet du ${dr}.\n\nNous faisons le point sur certains bilans ou dépistages recommandés dans le cadre du suivi médical habituel.\n\nLe médecin souhaite vérifier si tout est bien à jour dans votre dossier.\n\nSouhaitez-vous prendre rendez-vous pour faire le point ?`;
+      return `Bonjour Madame/Monsieur ${nom},\n\nJe vous appelle de la part du cabinet du ${dr}.\n\nNous faisons actuellement le point sur le suivi préventif des patients du cabinet.\n\nLe médecin souhaite vérifier avec vous si certains éléments de votre suivi sont bien à jour.\n\nSouhaitez-vous que nous programmions un rendez-vous ou que nous transmettions un message au médecin pour vérifier votre dossier ?`;
+    }
+
+    function consigneInterne(patient) {
+      const base = `Patient à rappeler dans le cadre de l’indicateur : ${patient.indicateur}.\nStatut CNAM : ${patient.statut}.\nObjectif : vérifier si l’action de prévention est déjà réalisée, si elle est à programmer, ou si le médecin doit contrôler le dossier.\nNe pas communiquer de détail médical sensible par message.\nNe pas mentionner le NIR.\nNe pas donner de diagnostic par téléphone.`;
+      if (patient.indicateur === "Dépistage de la maladie rénale chronique") return `Patient à vérifier pour l’indicateur “Dépistage de la maladie rénale chronique”.\nVérifier si créatinine, DFG et albuminurie/créatininurie sont déjà disponibles dans le dossier.\nSi non disponible, proposer un rendez-vous ou demander au médecin s’il souhaite prescrire le bilan.\n\n${base}`;
+      if (patient.indicateur === "Dépistage organisé du cancer colorectal") return `Patient à vérifier pour le dépistage organisé colorectal.\nNe pas annoncer “vous devez faire un dépistage cancer” par message automatique.\nVérifier si le test est déjà fait, refusé, non reçu, ou à proposer selon le dossier.\n\n${base}`;
+      return base;
+    }
+
+    function ajouterJournal(patient, action, commentaire = "") {
+      if (!state.settings.journalEnabled) return;
+      const now = new Date();
+      state.journal.unshift({
+        date: now.toLocaleDateString("fr-FR"),
+        heure: now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+        patient: `${patient.nom} ${patient.prenom}`.trim(),
+        indicateur: patient.indicateur,
+        action,
+        utilisateur: state.settings.userName || "Utilisateur",
+        commentaire
+      });
+      localStorage.setItem("cnamJournal", JSON.stringify(state.journal));
+      renderJournal();
+    }
+
+    function updatePatient(id, patch, journalAction = "") {
+      const patient = state.patients.find(p => p.id === id);
+      if (!patient) return;
+      Object.assign(patient, patch);
+      patient.derniere_action = journalAction || patient.derniere_action;
+      if (journalAction) ajouterJournal(patient, journalAction, patient.commentaire);
+      renderAll();
+    }
+
+    function patientsAVerifier() { return state.patients.filter(p => estAVerifier(p.statut)); }
+    function patientsFaits() { return state.patients.filter(p => estTermine(p.statut)); }
+    function patientsExclus() { return state.patients.filter(p => estExclu(p.statut)); }
+
+    function stats() {
+      const total = state.patients.length;
+      const verif = patientsAVerifier().length;
+      const faits = patientsFaits().length;
+      const exclus = patientsExclus().length;
+      const declaredTotal = state.files.reduce((sum, f) => sum + (Number(f.declaredTotal) || 0), 0);
+      const taux = total ? Math.round((faits / Math.max(1, total - exclus)) * 100) : 0;
+      const restant = total ? Math.round((verif / Math.max(1, total - exclus)) * 100) : 0;
+      return { total, verif, faits, exclus, declaredTotal, taux, restant };
+    }
+
+    function addQuality(type, message, level = "info") {
+      state.quality.unshift({ type, message, level });
+    }
+
+    function dedupePatients(patients) {
+      const seen = new Map();
+      for (const p of patients) {
+        const key = normaliserTexte(`${p.nom}|${p.prenom}|${p.age}|${p.nir_masque}`);
+        if (seen.has(key)) {
+          const existing = seen.get(key);
+          existing.indicateur = [...new Set([existing.indicateur, p.indicateur])].join(" + ");
+          addQuality("Doublon probable", `${p.nom} ${p.prenom} semble présent dans plusieurs fichiers.`, "warn");
+        } else seen.set(key, p);
+      }
+      return [...seen.values()];
+    }
+
+    async function handleFiles(files) {
+      for (const file of files) {
+        try {
+          const ext = file.name.split(".").pop().toLowerCase();
+          let result;
+          if (ext === "pdf") result = await parsePdf(file);
+          else if (ext === "csv") result = await parseCsvFile(file);
+          else if (["xlsx", "xls"].includes(ext)) result = await parseExcel(file);
+          else throw new Error("Format non reconnu");
+          const indicateur = result.indicateur || detecterIndicateur(file.name, result.text) || "";
+          const patients = result.rows.map(r => enrichirPatient({ ...r, indicateur: indicateur || r.indicateur, date_export: result.dateExport || r.date_export }, file.name));
+          state.files.push({ id: crypto.randomUUID(), name: file.name, indicateur: indicateur || "Indicateur non reconnu", count: patients.length, declaredTotal: result.declaredTotal || "", declaredDate: result.declaredDate || "" });
+          if (!indicateur) addQuality("Indicateur non reconnu", `Le fichier ${file.name} a été importé, mais l’indicateur n’a pas été reconnu. Vous pouvez le sélectionner manuellement.`, "warn");
+          if (!patients.length) addQuality("Aucun patient", `Aucun tableau exploitable n’a été détecté dans ${file.name}.`, "warn");
+          patients.filter(p => p.nirAlerte).forEach(p => addQuality("NIR insuffisamment masqué", `${p.nom} ${p.prenom} : l’identifiant patient a été automatiquement masqué.`, "danger"));
+          patients.filter(p => p.age && (p.age < 0 || p.age > 120)).forEach(p => addQuality("Âge incohérent", `${p.nom} ${p.prenom} : âge à vérifier.`, "warn"));
+          state.patients = dedupePatients([...state.patients, ...patients]);
+        } catch (err) {
+          state.files.push({ id: crypto.randomUUID(), name: file.name, indicateur: "Fichier illisible", count: 0 });
+          addQuality("Fichier illisible", `${file.name} : ${err.message || "lecture impossible"}.`, "danger");
+        }
+      }
+      if (!patientsAVerifier().length && state.patients.length) addQuality("Aucun patient à vérifier", "Aucun patient avec statut nécessitant une action n’a été trouvé.", "info");
+      renderAll();
+    }
+
+    async function parsePdf(file) {
+      const data = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data }).promise;
+      let text = "";
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const lines = groupPdfLines(content.items);
+        text += "\n" + lines.join("\n");
+      }
+      if (text.trim().length < 30) throw new Error("PDF scanné ou texte non sélectionnable. OCR non lancé dans cette version locale.");
+      const rows = parseTextTable(text);
+      return { text, rows, indicateur: detecterIndicateur(file.name, text), declaredTotal: detecterTotalPatients(text), declaredDate: detecterDateReference(text), dateExport: detecterDate(text) };
+    }
+
+    function groupPdfLines(items) {
+      const byY = new Map();
+      items.forEach(item => {
+        const y = Math.round(item.transform[5] / 4) * 4;
+        const arr = byY.get(y) || [];
+        arr.push({ x: item.transform[4], str: item.str });
+        byY.set(y, arr);
+      });
+      return [...byY.entries()]
+        .sort((a, b) => b[0] - a[0])
+        .map(([, arr]) => arr.sort((a, b) => a.x - b.x).map(x => x.str).join(" ").replace(/\s+/g, " ").trim())
+        .filter(line => line && !normaliserTexte(line).includes("assurance maladie"));
+    }
+
+    function parseTextTable(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const rows = [];
+      const headerIndex = lines.findIndex(l => /nom|patient/i.test(l) && /statut|etat|état/i.test(l));
+      if (headerIndex === -1) {
+        addQuality("Tableau non détecté", "Aucun en-tête contenant Nom/Patient et Statut n’a été détecté dans le PDF.", "warn");
+      }
+      for (const line of lines.slice(Math.max(0, headerIndex + 1))) {
+        if (/page \d+|total|patient[eè]le|statut/i.test(line) && !/\d{1,3}/.test(line)) continue;
+        const cols = line.split(/\s{2,}|\t|;/).map(cleanText).filter(Boolean);
+        let row = {};
+        if (cols.length >= 5) {
+          row = { nom: cols[0], prenom: cols[1], age: cols[2], nir_masque: cols[3], statut: cols.slice(4).join(" ") };
+        } else {
+          row = parsePatientLine(line);
+        }
+        if (row.nom && row.statut) rows.push(row);
+      }
+      return rows;
+    }
+
+    function parsePatientLine(line) {
+      const m = line.match(/^(.+?)\s+(\d{1,3})\s+([xX0-9*]{5,})\s+(.+)$/);
+      if (!m) return {};
+      const identity = cleanText(m[1]).split(/\s+/);
+      if (identity.length < 2) return {};
+      return {
+        nom: identity.shift(),
+        prenom: identity.join(" "),
+        age: m[2],
+        nir_masque: m[3],
+        statut: m[4]
+      };
+    }
+
+    function detecterTotalPatients(text) {
+      const m = (text || "").match(/Nombre de patients au\s+\d{2}\/\d{2}\/\d{4}\s*:\s*(\d+)/i);
+      return m ? Number(m[1]) : "";
+    }
+
+    function detecterDateReference(text) {
+      const m = (text || "").match(/Nombre de patients au\s+(\d{2}\/\d{2}\/\d{4})/i);
+      return m ? m[1] : "";
+    }
+
+    async function parseCsvFile(file) {
+      const text = await file.text();
+      const rows = parseDelimited(text);
+      return { text, rows, indicateur: detecterIndicateur(file.name, text.slice(0, 2000)) };
+    }
+
+    function parseDelimited(text) {
+      const delimiter = (text.split("\n")[0].match(/;/g) || []).length >= (text.split("\n")[0].match(/,/g) || []).length ? ";" : ",";
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      const headers = splitCsvLine(lines.shift(), delimiter).map(normaliserTexte);
+      if (!headers.some(h => h.includes("statut") || h.includes("etat"))) addQuality("Colonne manquante", "Aucune colonne “Statut” n’a été détectée. Vérifiez le format du fichier.", "warn");
+      return lines.map(line => {
+        const values = splitCsvLine(line, delimiter);
+        const obj = {};
+        headers.forEach((h, i) => obj[headerToField(h)] = values[i] || "");
+        return obj;
+      }).filter(r => Object.values(r).some(Boolean));
+    }
+
+    function splitCsvLine(line, delimiter) {
+      const out = [];
+      let cur = "", quoted = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') quoted = !quoted;
+        else if (ch === delimiter && !quoted) { out.push(cur.trim()); cur = ""; }
+        else cur += ch;
+      }
+      out.push(cur.trim());
+      return out;
+    }
+
+    async function parseExcel(file) {
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: "array" });
+      const rows = [];
+      let searchable = file.name;
+      wb.SheetNames.forEach(name => {
+        const sheet = XLSX.utils.sheet_to_json(wb.Sheets[name], { defval: "" });
+        searchable += " " + name + " " + JSON.stringify(sheet.slice(0, 3));
+        sheet.forEach(raw => {
+          const obj = {};
+          Object.entries(raw).forEach(([key, value]) => obj[headerToField(normaliserTexte(key))] = value);
+          rows.push(obj);
+        });
+      });
+      return { text: searchable, rows, indicateur: detecterIndicateur(searchable) };
+    }
+
+    function headerToField(header) {
+      if (header.includes("prenom")) return "prenom";
+      if (header.includes("nom") && !header.includes("prenom")) return "nom";
+      if (header.includes("patient")) return "nom";
+      if (header.includes("age")) return "age";
+      if (header.includes("nir") || header.includes("identifiant")) return "nir_masque";
+      if (header.includes("statut") || header.includes("etat")) return "statut";
+      if (header.includes("indicateur")) return "indicateur";
+      if (header.includes("date")) return "date_export";
+      return header;
+    }
+
+    function loadDemo() {
+      state.settings.demoMode = true;
+      state.files.push({ id: crypto.randomUUID(), name: "Données de démonstration fictives", indicateur: "Indicateurs multiples", count: DEMO_PATIENTS.length });
+      state.patients = dedupePatients([...state.patients, ...DEMO_PATIENTS.map(p => enrichirPatient(p, "demo"))]);
+      ajouterJournal({ nom: "MODE", prenom: "DÉMO", indicateur: "Démonstration" }, "Chargement des données de démonstration", "");
+      saveSettings();
+      renderAll();
+      toast("Données de démonstration chargées.");
+    }
+
+    function clearAll() {
+      if (!confirm("Supprimer toutes les données importées, patients et journal local ?")) return;
+      state.files = [];
+      state.patients = [];
+      state.quality = [];
+      state.journal = [];
+      localStorage.removeItem("cnamJournal");
+      renderAll();
+      toast("Toutes les données ont été supprimées.");
+    }
+
+    function renderAll() {
+      state.patients.forEach(p => {
+        p.priorite = prioritePour(p);
+        p.action_recommandee = ACTIONS[p.indicateur] || p.action_recommandee;
+        p.message_patient = messagePatient(p);
+        p.script_appel = scriptAppel(p);
+        p.consigne_interne = consigneInterne(p);
+      });
+      renderFiles();
+      renderQuality();
+      renderKpis();
+      renderDashboardPatients();
+      renderIndicatorSummary();
+      renderSecretariat();
+      renderFilters();
+      renderWorkTable();
+      renderPatientCards();
+      renderJournal();
+      if (window.lucide && lucide.createIcons) { try { lucide.createIcons(); } catch(e){} }
+    }
+
+    function renderFiles() {
+      $("fileList").innerHTML = state.files.length ? state.files.map(f => `
+        <div class="file-row">
+          <div><strong>${escapeHtml(f.name)}</strong><br><span class="subtle">${f.count} patient(s) extrait(s)${f.declaredTotal ? ` - Total CNAM au ${escapeHtml(f.declaredDate)} : ${escapeHtml(f.declaredTotal)}` : ""}</span></div>
+          <select data-file-indicator="${f.id}">
+            <option value="">Sélectionner l’indicateur correspondant</option>
+            ${Object.keys(INDICATEURS).map(i => `<option ${f.indicateur === i ? "selected" : ""}>${i}</option>`).join("")}
+          </select>
+          <span class="badge ${f.indicateur.includes("non reconnu") || f.indicateur.includes("illisible") ? "excluded" : "prepared"}">${escapeHtml(f.indicateur)}</span>
+        </div>`).join("") : `<div class="empty">Aucun fichier importé pour le moment.</div>`;
+      document.querySelectorAll("[data-file-indicator]").forEach(sel => sel.addEventListener("change", e => {
+        const file = state.files.find(f => f.id === e.target.dataset.fileIndicator);
+        if (!file) return;
+        file.indicateur = e.target.value || "Indicateur non reconnu";
+        state.patients.filter(p => p.sourceFile === file.name || p.indicateur === "Indicateur non reconnu").forEach(p => p.indicateur = file.indicateur);
+        renderAll();
+      }));
+    }
+
+    function renderQuality() {
+      $("qualityList").innerHTML = state.quality.length ? state.quality.slice(0, 12).map(q => `
+        <div class="notice" style="border-left-color:${q.level === "danger" ? "var(--red)" : q.level === "warn" ? "var(--amber)" : "var(--teal)"}">
+          <strong>${escapeHtml(q.type)}</strong><br>${escapeHtml(q.message)}
+        </div>`).join("") : `<div class="empty">Aucun signalement qualité.</div>`;
+    }
+
+    function renderKpis() {
+      const s = stats();
+      $("kpis").innerHTML = [
+        ["Fichiers importés", state.files.length, "accent"],
+        ["Total CNAM déclaré", s.declaredTotal || "Non indiqué", ""],
+        ["Patients analysés", s.total, ""],
+        ["Patients à vérifier", s.verif, "danger"],
+        ["Actions faites", s.faits, "accent"],
+        ["Patients exclus", s.exclus, ""],
+        ["Taux de réalisation", `${s.taux}%`, "accent"],
+        ["Actions restantes", `${s.restant}%`, "warn"],
+        ["Messages à préparer", patientsAVerifier().filter(p => p.etat_rappel === "Non traité").length, "warn"]
+      ].map(([label, value, cls]) => `<div class="kpi ${cls}"><span>${label}</span><strong>${value}</strong></div>`).join("");
+    }
+
+    function renderDashboardPatients() {
+      const rows = patientsAVerifier().slice(0, 12);
+      $("dashboardPatients").innerHTML = rows.length ? table(["Priorité", "Nom", "Prénom", "Âge", "Indicateur", "Action proposée", "État du rappel"], rows.map(p => [
+        badge(p.priorite), p.nom, p.prenom, p.age, p.indicateur, p.action_recommandee, p.etat_rappel
+      ])) : `<div class="empty">Aucun patient à vérifier.</div>`;
+    }
+
+    function renderIndicatorSummary() {
+      const grouped = {};
+      state.patients.forEach(p => {
+        grouped[p.indicateur] ||= { total: 0, verif: 0, fait: 0, exclu: 0 };
+        grouped[p.indicateur].total++;
+        if (estAVerifier(p.statut)) grouped[p.indicateur].verif++;
+        if (estTermine(p.statut)) grouped[p.indicateur].fait++;
+        if (estExclu(p.statut)) grouped[p.indicateur].exclu++;
+      });
+      const rows = Object.entries(grouped).map(([i, g]) => {
+        const taux = g.total ? Math.round((g.fait / Math.max(1, g.total - g.exclu)) * 100) + "%" : "0%";
+        return [i, g.total, g.verif, g.fait, g.exclu, taux, g.verif];
+      });
+      $("indicatorSummary").innerHTML = rows.length ? table(["Indicateur", "Total patients", "À vérifier", "Fait", "Exclu", "Taux réalisé", "Actions restantes"], rows) : `<div class="empty">Aucune donnée.</div>`;
+    }
+
+    function renderSecretariat() {
+      const todo = patientsAVerifier();
+      const count = (name) => state.patients.filter(p => p.etat_rappel === name).length;
+      $("secretariatStats").innerHTML = [
+        ["Patients non traités", todo.filter(p => p.etat_rappel === "Non traité").length, "danger"],
+        ["Messages à envoyer", todo.filter(p => p.etat_rappel.includes("Message préparé")).length, "warn"],
+        ["Patients à appeler", todo.filter(p => p.etat_rappel === "Appel à faire").length, "warn"],
+        ["Patients injoignables", count("Patient injoignable"), ""],
+        ["RDV pris", count("RDV pris"), "accent"],
+        ["Refus patients", count("Refus patient"), ""],
+        ["Actions clôturées", count("Action clôturée"), "accent"]
+      ].map(([label, value, cls]) => `<div class="kpi ${cls}"><span>${label}</span><strong>${value}</strong></div>`).join("");
+    }
+
+    function renderFilters() {
+      const indicatorOptions = ["", ...Object.keys(INDICATEURS)];
+      $("filterIndicator").innerHTML = indicatorOptions.map(i => `<option value="${escapeHtml(i)}">${i || "Tous"}</option>`).join("");
+      $("filterState").innerHTML = ["", ...RAPPEL_STATES].map(i => `<option value="${escapeHtml(i)}">${i || "Tous"}</option>`).join("");
+    }
+
+    function filteredWorklist() {
+      const ind = $("filterIndicator").value;
+      const prio = $("filterPriority").value;
+      const age = Number($("filterAge").value || 0);
+      const etat = $("filterState").value;
+      const search = normaliserTexte($("filterSearch").value);
+      let rows = patientsAVerifier().filter(p =>
+        (!ind || p.indicateur === ind) &&
+        (!prio || p.priorite === prio) &&
+        (!age || Number(p.age) >= age) &&
+        (!etat || p.etat_rappel === etat) &&
+        (!search || normaliserTexte(`${p.nom} ${p.prenom} ${p.indicateur}`).includes(search))
+      );
+      const sort = $("sortBy").value;
+      rows.sort((a, b) => {
+        if (sort === "priority") return (a.priorite === "Haute" ? 0 : 1) - (b.priorite === "Haute" ? 0 : 1);
+        if (sort === "age") return Number(b.age || 0) - Number(a.age || 0);
+        if (sort === "indicator") return a.indicateur.localeCompare(b.indicateur);
+        if (sort === "state") return a.etat_rappel.localeCompare(b.etat_rappel);
+        return a.nom.localeCompare(b.nom);
+      });
+      return rows;
+    }
+
+    function renderWorkTable() {
+      const rows = filteredWorklist();
+      $("workTable").innerHTML = rows.length ? `<div class="table-wrap"><table>
+        <thead><tr>${["☐", "Priorité", "Nom", "Prénom", "Âge", "Indicateur", "Action recommandée", "Message patient", "Script appel", "État du rappel", "Commentaire", "Dernière action"].map(h => `<th>${h}</th>`).join("")}</tr></thead>
+        <tbody>${rows.map(p => `<tr>
+          <td><input type="checkbox" style="width:auto;min-height:auto"></td>
+          <td>${badge(p.priorite)}</td>
+          <td>${escapeHtml(p.nom)}</td>
+          <td>${escapeHtml(p.prenom)}</td>
+          <td>${escapeHtml(p.age)}</td>
+          <td>${escapeHtml(p.indicateur)}${state.settings.showMaskedNir ? `<br><span class="subtle">ID : ${escapeHtml(p.nir_masque)}</span>` : ""}</td>
+          <td class="compact-text">${escapeHtml(p.action_recommandee)}</td>
+          <td>${rowButtons(p, "message")}</td>
+          <td>${rowButtons(p, "script")}</td>
+          <td><select data-state="${p.id}">${RAPPEL_STATES.map(s => `<option ${p.etat_rappel === s ? "selected" : ""}>${s}</option>`).join("")}</select></td>
+          <td><textarea data-comment="${p.id}" placeholder="Commentaire libre">${escapeHtml(p.commentaire)}</textarea></td>
+          <td>${escapeHtml(p.derniere_action || "")}</td>
+        </tr>`).join("")}</tbody>
+      </table></div>` : `<div class="empty">Aucun patient ne correspond aux filtres.</div>`;
+      bindRowEvents();
+    }
+
+    function rowButtons(p, type) {
+      if (type === "message") return `<div class="actions"><button class="small" data-copy-message="${p.id}"><i data-lucide="copy"></i> Copier</button><button class="small" data-action="${p.id}|Message envoyé via Doctolib">Doctolib</button><button class="small" data-action="${p.id}|Message envoyé via Maiia">Maiia</button><button class="small" data-action="${p.id}|Message envoyé via logiciel métier">Logiciel</button></div>`;
+      return `<div class="actions"><button class="small" data-show-script="${p.id}"><i data-lucide="phone"></i> Afficher</button><button class="small" data-copy-consigne="${p.id}"><i data-lucide="clipboard"></i> Consigne</button><button class="small" data-action="${p.id}|Appel effectué">Appel</button><button class="small" data-action="${p.id}|Patient injoignable">Injoignable</button><button class="small" data-action="${p.id}|RDV pris">RDV</button><button class="small" data-action="${p.id}|Refus patient">Refus</button><button class="small" data-action="${p.id}|Action clôturée">Clôturer</button></div>`;
+    }
+
+    function bindRowEvents() {
+      document.querySelectorAll("[data-state]").forEach(el => el.addEventListener("change", e => updatePatient(e.target.dataset.state, { etat_rappel: e.target.value }, e.target.value)));
+      document.querySelectorAll("[data-comment]").forEach(el => el.addEventListener("change", e => updatePatient(e.target.dataset.comment, { commentaire: e.target.value }, "Commentaire mis à jour")));
+      document.querySelectorAll("[data-copy-message]").forEach(el => el.addEventListener("click", () => copyFor(el.dataset.copyMessage, "message_patient", "Message préparé")));
+      document.querySelectorAll("[data-copy-consigne]").forEach(el => el.addEventListener("click", () => copyFor(el.dataset.copyConsigne, "consigne_interne", "Consigne interne copiée")));
+      document.querySelectorAll("[data-show-script]").forEach(el => el.addEventListener("click", () => showScript(el.dataset.showScript)));
+      document.querySelectorAll("[data-action]").forEach(el => el.addEventListener("click", e => {
+        const [id, action] = e.currentTarget.dataset.action.split("|");
+        updatePatient(id, { etat_rappel: action }, action);
+        toast(action);
+      }));
+      if (window.lucide && lucide.createIcons) { try { lucide.createIcons(); } catch(e){} }
+    }
+
+    function renderPatientCards() {
+      const search = normaliserTexte($("prepSearch").value);
+      const rows = patientsAVerifier().filter(p => !search || normaliserTexte(`${p.nom} ${p.prenom} ${p.indicateur}`).includes(search));
+      $("patientCards").innerHTML = rows.length ? rows.map(p => `
+        <article class="patient-card">
+          <div class="patient-head">
+            <div><strong>${escapeHtml(p.nom)} ${escapeHtml(p.prenom)}</strong><br><span class="subtle">Âge : ${escapeHtml(p.age)} - Statut CNAM : ${escapeHtml(p.statut)}</span></div>
+            ${badge(p.priorite)}
+          </div>
+          <div><strong>Indicateur</strong><br>${escapeHtml(p.indicateur)}</div>
+          <div><strong>Action recommandée interne</strong><div class="text-block">${escapeHtml(p.action_recommandee)}</div></div>
+          <div><strong>Message patient à copier</strong><div class="text-block">${escapeHtml(p.message_patient)}</div><button class="small" data-copy-message="${p.id}"><i data-lucide="copy"></i> Copier message</button></div>
+          <div><strong>Script d’appel</strong><div class="text-block">${escapeHtml(p.script_appel)}</div><button class="small" data-show-script="${p.id}"><i data-lucide="phone"></i> Afficher script</button></div>
+          <div><strong>Consigne interne</strong><div class="text-block">${escapeHtml(p.consigne_interne)}</div><button class="small" data-copy-consigne="${p.id}"><i data-lucide="clipboard"></i> Copier consigne interne</button></div>
+          <div class="grid two">
+            <div><label>État du rappel</label><select data-state="${p.id}">${RAPPEL_STATES.map(s => `<option ${p.etat_rappel === s ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+            <div><label>Commentaire</label><textarea data-comment="${p.id}">${escapeHtml(p.commentaire)}</textarea></div>
+          </div>
+        </article>`).join("") : `<div class="empty">Aucun patient à préparer.</div>`;
+      bindRowEvents();
+    }
+
+    function renderJournal() {
+      $("journalTable").innerHTML = state.journal.length ? table(["Date", "Heure", "Patient", "Indicateur", "Action", "Utilisateur", "Commentaire"], state.journal.map(j => [j.date, j.heure, j.patient, j.indicateur, j.action, j.utilisateur, j.commentaire])) : `<div class="empty">Journal vide.</div>`;
+    }
+
+    function table(headers, rows) {
+      return `<div class="table-wrap"><table><thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${typeof c === "string" && c.includes("<span") ? c : escapeHtml(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    }
+
+    function badge(value) {
+      const cls = value === "Haute" ? "high" : value === "Standard" ? "standard" : value === "Fait" ? "done" : value === "Exclu" ? "excluded" : value?.includes("Appel") ? "call" : "prepared";
+      return `<span class="badge ${cls}">${escapeHtml(value)}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return (value ?? "").toString().replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
+    }
+
+    async function copyFor(id, field, action) {
+      const patient = state.patients.find(p => p.id === id);
+      if (!patient) return;
+      await navigator.clipboard.writeText(patient[field] || "");
+      if (action === "Message préparé") updatePatient(id, { etat_rappel: "Message préparé" }, action);
+      else ajouterJournal(patient, action, patient.commentaire);
+      toast("Texte copié.");
+    }
+
+    function showScript(id) {
+      const p = state.patients.find(x => x.id === id);
+      if (!p) return;
+      $("modalTitle").textContent = `Script d’appel - ${p.nom} ${p.prenom}`;
+      $("modalText").textContent = p.script_appel + "\n\nMessage vocal si injoignable :\n\nBonjour,\n\nIci le secrétariat du " + (state.settings.doctorName || "Dr [NOM_DU_MEDECIN]") + ".\n\nNous souhaitions vous joindre concernant votre suivi médical habituel.\n\nVous pouvez rappeler le cabinet ou prendre rendez-vous si nécessaire.\n\nMerci, bonne journée.";
+      $("scriptModal").classList.add("open");
+      $("copyModal").onclick = async () => {
+        await navigator.clipboard.writeText($("modalText").textContent);
+        ajouterJournal(p, "Script d’appel copié", p.commentaire);
+        toast("Script copié.");
+      };
+    }
+
+    function exportRows() {
+      return state.patients.map(p => ({
+        Nom: p.nom,
+        Prénom: p.prenom,
+        Âge: p.age,
+        "NIR masqué": p.nir_masque,
+        Indicateur: p.indicateur,
+        Statut: p.statut,
+        Priorité: p.priorite,
+        "Action recommandée": p.action_recommandee,
+        "Message patient": p.message_patient,
+        "Script appel": p.script_appel,
+        "État du rappel": p.etat_rappel,
+        Commentaire: p.commentaire,
+        "Dernière action": p.derniere_action
+      }));
+    }
+
+    function exportCsv(rows = exportRows(), filename = "patients_cnam.csv") {
+      const keys = Object.keys(rows[0] || { Nom: "", Prénom: "", Âge: "", "NIR masqué": "", Indicateur: "", Statut: "", Priorité: "", "Action recommandée": "", "Message patient": "", "Script appel": "", "État du rappel": "", Commentaire: "", "Dernière action": "" });
+      const csv = [keys.join(";"), ...rows.map(r => keys.map(k => `"${(r[k] ?? "").toString().replace(/"/g, '""')}"`).join(";"))].join("\n");
+      downloadBlob(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }), filename);
+    }
+
+    function exportExcel() {
+      const wb = XLSX.utils.book_new();
+      const s = stats();
+      const summary = [{ "Fichiers importés": state.files.length, "Patients analysés": s.total, "Patients à vérifier": s.verif, "Patients faits": s.faits, "Patients exclus": s.exclus, "Taux réalisation": s.taux + "%", "Actions restantes": s.restant + "%" }];
+      const sheets = {
+        "Synthèse globale": summary,
+        "Patients à vérifier": exportRows().filter(r => estAVerifier(r.Statut)),
+        "Patients par indicateur": indicatorRows(),
+        "Messages préparés": exportRows().filter(r => r["État du rappel"].includes("Message")),
+        "Appels à faire": exportRows().filter(r => r["État du rappel"].includes("Appel")),
+        "Patients contactés": exportRows().filter(r => ["Appel effectué", "RDV pris", "Déjà fait selon patient"].includes(r["État du rappel"])),
+        "Patients injoignables": exportRows().filter(r => r["État du rappel"] === "Patient injoignable"),
+        "Refus patients": exportRows().filter(r => r["État du rappel"] === "Refus patient"),
+        "Actions clôturées": exportRows().filter(r => r["État du rappel"] === "Action clôturée"),
+        "Journal des actions": state.journal
+      };
+      Object.entries(sheets).forEach(([name, rows]) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length ? rows : [{}]), name.slice(0, 31)));
+      XLSX.writeFile(wb, `export_cnam_${dateFile()}.xlsx`);
+    }
+
+    function indicatorRows() {
+      const out = {};
+      state.patients.forEach(p => {
+        out[p.indicateur] ||= { Indicateur: p.indicateur, "Total patients": 0, "À vérifier": 0, Fait: 0, Exclu: 0, "Taux réalisé": "0%", "Actions restantes": 0 };
+        out[p.indicateur]["Total patients"]++;
+        if (estAVerifier(p.statut)) out[p.indicateur]["À vérifier"]++;
+        if (estTermine(p.statut)) out[p.indicateur].Fait++;
+        if (estExclu(p.statut)) out[p.indicateur].Exclu++;
+      });
+      return Object.values(out).map(r => ({ ...r, "Taux réalisé": Math.round((r.Fait / Math.max(1, r["Total patients"] - r.Exclu)) * 100) + "%", "Actions restantes": r["À vérifier"] }));
+    }
+
+    function exportPdf(kind = "full") {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const s = stats();
+      let y = 42;
+      const line = (text, size = 10, bold = false) => {
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setFontSize(size);
+        const chunks = doc.splitTextToSize(text, 510);
+        chunks.forEach(chunk => {
+          if (y > 780) { doc.addPage(); y = 42; }
+          doc.text(chunk, 42, y);
+          y += size + 5;
+        });
+      };
+      line(kind === "journal" ? "Journal des actions" : "Export CNAM - suivi préventif", 16, true);
+      line(`Date de génération : ${new Date().toLocaleString("fr-FR")}`);
+      if (kind !== "journal") {
+        line(`Fichiers analysés : ${state.files.length} | Total patients : ${s.total} | À vérifier : ${s.verif} | Faits : ${s.faits} | Exclus : ${s.exclus}`);
+        line("Classement par indicateur", 12, true);
+        indicatorRows().forEach(r => line(`${r.Indicateur} - total ${r["Total patients"]}, à vérifier ${r["À vérifier"]}, fait ${r.Fait}, exclu ${r.Exclu}`));
+        line("Classement par priorité", 12, true);
+        patientsAVerifier().sort((a, b) => a.priorite.localeCompare(b.priorite)).forEach(p => line(`${p.priorite} - ${p.nom} ${p.prenom}, ${p.age || "-"} ans - ${p.indicateur} - ${p.etat_rappel}`));
+        line("Mention de confidentialité : données confidentielles, usage réservé au médecin et à son équipe autorisée. L’outil ne remplace pas l’analyse médicale du dossier patient.", 9, true);
+        doc.save(`export_cnam_${dateFile()}.pdf`);
+      } else {
+        state.journal.forEach(j => line(`${j.date} ${j.heure} - ${j.patient} - ${j.indicateur} - ${j.action} - ${j.utilisateur} - ${j.commentaire}`));
+        doc.save(`journal_cnam_${dateFile()}.pdf`);
+      }
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function dateFile() { return new Date().toISOString().slice(0, 10); }
+
+    function saveSettings() {
+      ["doctorName", "practiceName", "userName", "signature"].forEach(id => state.settings[id] = $(id).value || state.settings[id]);
+      ["journalEnabled", "showMaskedNir", "demoMode"].forEach(id => state.settings[id] = $(id).checked);
+      localStorage.setItem("cnamSettings", JSON.stringify(state.settings));
+      renderAll();
+      toast("Paramètres enregistrés.");
+    }
+
+    function loadSettingsForm() {
+      ["doctorName", "practiceName", "userName", "signature"].forEach(id => $(id).value = state.settings[id] || "");
+      ["journalEnabled", "showMaskedNir", "demoMode"].forEach(id => $(id).checked = !!state.settings[id]);
+    }
+
+    function toast(msg) {
+      $("toast").textContent = msg;
+      $("toast").style.display = "block";
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => $("toast").style.display = "none", 2600);
+    }
+
+    function bindStaticEvents() {
+      document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab, .screen").forEach(el => el.classList.remove("active"));
+        tab.classList.add("active");
+        $(tab.dataset.screen).classList.add("active");
+      }));
+      $("pickFiles").addEventListener("click", () => $("fileInput").click());
+      $("fileInput").addEventListener("change", e => handleFiles([...e.target.files]));
+      ["dragenter", "dragover"].forEach(ev => $("dropzone").addEventListener(ev, e => { e.preventDefault(); $("dropzone").classList.add("dragover"); }));
+      ["dragleave", "drop"].forEach(ev => $("dropzone").addEventListener(ev, e => { e.preventDefault(); $("dropzone").classList.remove("dragover"); }));
+      $("dropzone").addEventListener("drop", e => handleFiles([...e.dataTransfer.files]));
+      $("loadDemo").addEventListener("click", loadDemo);
+      $("clearAll").addEventListener("click", clearAll);
+      $("exportCsv").addEventListener("click", () => exportCsv());
+      $("exportExcel").addEventListener("click", exportExcel);
+      $("exportPdf").addEventListener("click", () => exportPdf("full"));
+      $("exportJournalCsv").addEventListener("click", () => exportCsv(state.journal, `journal_cnam_${dateFile()}.csv`));
+      $("exportJournalPdf").addEventListener("click", () => exportPdf("journal"));
+      $("clearJournal").addEventListener("click", () => { if (confirm("Vider le journal local ?")) { state.journal = []; localStorage.removeItem("cnamJournal"); renderJournal(); } });
+      $("saveSettings").addEventListener("click", saveSettings);
+      $("closeModal").addEventListener("click", () => $("scriptModal").classList.remove("open"));
+      $("scriptModal").addEventListener("click", e => { if (e.target.id === "scriptModal") $("scriptModal").classList.remove("open"); });
+      ["filterIndicator", "filterPriority", "filterAge", "filterState", "filterSearch", "sortBy", "prepSearch"].forEach(id => $(id).addEventListener("input", () => { renderWorkTable(); renderPatientCards(); }));
+      $("resetFilters").addEventListener("click", () => {
+        ["filterIndicator", "filterPriority", "filterAge", "filterState", "filterSearch"].forEach(id => $(id).value = "");
+        $("sortBy").value = "priority";
+        renderWorkTable();
+      });
+    }
+
+    bindStaticEvents();
+    loadSettingsForm();
+    renderAll();
+  </script>
+</body>
+</html>
