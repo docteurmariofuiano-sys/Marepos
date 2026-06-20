@@ -78,6 +78,11 @@
     convulsion_non_febrile: { population: "enfant" }, trouble_conscience_enfant: { population: "enfant" },
     deficit_moteur_enfant: { population: "enfant" }, ataxie_enfant: { population: "enfant" },
     anaphylaxie_enfant: { population: "enfant" }, purpura_enfant: { population: "enfant" },
+    croissance_enfant: { population: "enfant" }, puberte_anormale: { population: "enfant" },
+    rgo_nourrisson: { population: "enfant" }, difficultes_alimentaires_enfant: { population: "enfant" },
+    ictere_nourrisson: { population: "enfant" }, souffle_cardiaque_enfant: { population: "enfant" },
+    adenopathie_enfant: { population: "enfant" }, cephalee_enfant: { population: "enfant" },
+    douleur_abdo_recurrente_enfant: { population: "enfant" },
     // Adulte (peu pertinents chez le jeune enfant)
     difficultes_sexuelles: { population: "adulte" }, bouffees_chaleur: { population: "adulte" },
     osteoporose: { population: "adulte" }, sevrage_alcool: { population: "adulte" },

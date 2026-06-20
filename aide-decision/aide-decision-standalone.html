@@ -6522,6 +6522,243 @@ window.KB = {
         examens_a_discuter: ["Bandelette urinaire et TA (atteinte rénale), surveillance des douleurs abdominales (invagination)"] }
     ],
     examens_clinique: ["Vitropression (un purpura ne s'efface pas)", "Température, recherche de signes de sepsis (marbrures, TRC, conscience)", "Recherche d'un syndrome hémorragique muqueux", "Si purpura déclive : TA + bandelette urinaire (purpura rhumatoïde)"]
+  },
+
+  // =========================================================================
+  // PÉDIATRIE — LOT B (1/2) : motifs fréquents (fiches dédiées enfant)
+  // =========================================================================
+  croissance_enfant: {
+    id: "croissance_enfant", symptome: "Cassure de la courbe / défaut de croissance (enfant)", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "ce_cassure", label: "Cassure de la courbe", type: "boolean", question: "La courbe de poids et/ou de taille marque-t-elle un infléchissement ou une cassure (changement de couloir) ?" },
+      { id: "ce_digestif", label: "Signes digestifs", type: "boolean", question: "Y a-t-il une diarrhée chronique, des vomissements répétés, ou des selles anormales ?" },
+      { id: "ce_chronique", label: "Signe d'appel organique", type: "boolean", question: "Y a-t-il des signes évoquant une maladie (fatigue, fièvre prolongée, essoufflement, infections répétées) ?" },
+      { id: "ce_apport", label: "Apports / contexte", type: "boolean", question: "L'enfant mange-t-il peu, ou y a-t-il un contexte familial/social difficile ?" },
+      { id: "ce_taille", label: "Atteinte de la taille", type: "boolean", question: "La taille est-elle nettement insuffisante pour l'âge (petite taille) ou la croissance s'est-elle arrêtée ?" }
+    ],
+    red_flags: [
+      { id: "ce_rf_cassure", niveau: 2, when: { q: "ce_cassure", eq: true },
+        message_medecin: "Cassure staturo-pondérale : ne pas banaliser → reconstituer les courbes (poids, taille, PC), calculer la vitesse de croissance, et rechercher une cause carentielle, organique (malabsorption, maladie chronique, endocrinienne) ou un contexte de négligence.",
+        message_patient: "Un changement net sur la courbe de croissance nécessite un bilan médical." },
+      { id: "ce_rf_organique", niveau: 2, when: { q: "ce_chronique", eq: true },
+        message_medecin: "Signes d'appel organiques associés au retard de croissance → bilan orienté et avis pédiatrique.",
+        message_patient: "Ces signes nécessitent un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ce_carentiel", diagnostic: "Défaut d'apport / carence", arguments: [{ label: "apports insuffisants / contexte social", w: 2, when: { q: "ce_apport", eq: true } }],
+        examens_a_discuter: ["Enquête alimentaire ; rechercher une négligence ; supplémentation et réévaluation"] },
+      { id: "ce_malabsorption", diagnostic: "Malabsorption / maladie digestive (cœliaque, mucoviscidose)", arguments: [{ label: "signes digestifs", w: 3, when: { q: "ce_digestif", eq: true } }],
+        examens_a_discuter: ["Sérologie maladie cœliaque, bilan nutritionnel ; test de la sueur si point d'appel"] },
+      { id: "ce_endocrino", diagnostic: "Cause endocrinienne / maladie chronique", arguments: [{ label: "atteinte prédominante de la taille", w: 2, when: { q: "ce_taille", eq: true } }, { label: "signe d'appel organique", w: 1, when: { q: "ce_chronique", eq: true } }],
+        examens_a_discuter: ["Vitesse de croissance, âge osseux, TSH/IGF-1 ; avis endocrinopédiatrique"] }
+    ],
+    examens_clinique: ["Tracer poids, taille et périmètre crânien sur les courbes ; vitesse de croissance", "Mesurer la taille des parents (taille cible)", "Examen complet (digestif, signes de maladie chronique)", "Évaluation du contexte alimentaire et psychosocial"]
+  },
+
+  puberte_anormale: {
+    id: "puberte_anormale", symptome: "Puberté précoce ou retardée (enfant)", specialite: ["Pédiatrie", "Endocrinologie"],
+    questions: [
+      { id: "pa_precoce", label: "Puberté précoce", type: "boolean", question: "Des signes de puberté (seins, pilosité, règles, développement des organes génitaux) apparaissent-ils avant 8 ans chez la fille ou 9 ans chez le garçon ?" },
+      { id: "pa_retard", label: "Retard pubertaire", type: "boolean", question: "Aucun signe de puberté n'apparaît-il à 13 ans (fille) ou 14 ans (garçon) ?" },
+      { id: "pa_rapide", label: "Évolution rapide", type: "boolean", question: "Les signes évoluent-ils rapidement, avec une accélération de la croissance ?" },
+      { id: "pa_neuro", label: "Signes neurologiques", type: "boolean", question: "Y a-t-il des maux de tête, des troubles de la vision, ou d'autres signes neurologiques ?" }
+    ],
+    red_flags: [
+      { id: "pa_rf_neuro", niveau: 2, when: { all: [{ q: "pa_precoce", eq: true }, { q: "pa_neuro", eq: true }] },
+        message_medecin: "Puberté précoce avec signes neurologiques : rechercher une cause centrale (tumeur/anomalie hypothalamo-hypophysaire) → IRM cérébrale, avis endocrinopédiatrique.",
+        message_patient: "Ces signes nécessitent un avis spécialisé et une imagerie." },
+      { id: "pa_rf_precoce", niveau: 1, when: { q: "pa_precoce", eq: true },
+        message_medecin: "Puberté précoce (avant 8 ans fille / 9 ans garçon) : avis endocrinopédiatrique (distinguer précoce centrale vs périphérique ; âge osseux, bilan hormonal).",
+        message_patient: "Une puberté très précoce mérite un avis spécialisé." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pa_precoce_dd", diagnostic: "Puberté précoce (centrale ou périphérique)", arguments: [{ label: "signes pubertaires précoces", w: 3, when: { q: "pa_precoce", eq: true } }, { label: "évolution rapide", w: 1, when: { q: "pa_rapide", eq: true } }],
+        examens_a_discuter: ["Âge osseux, bilan hormonal (LH/FSH, œstradiol/testostérone), échographie pelvienne ; IRM si centrale"] },
+      { id: "pa_retard_dd", diagnostic: "Retard pubertaire", arguments: [{ label: "absence de puberté à l'âge attendu", w: 3, when: { q: "pa_retard", eq: true } }],
+        examens_a_discuter: ["Souvent retard simple (constitutionnel) ; éliminer un hypogonadisme (bilan hormonal, caryotype si besoin)"] }
+    ],
+    examens_clinique: ["Stade pubertaire de Tanner", "Courbe de croissance et vitesse de croissance", "Recherche de signes neurologiques (puberté précoce centrale)", "Avis endocrinopédiatrique"]
+  },
+
+  rgo_nourrisson: {
+    id: "rgo_nourrisson", symptome: "Régurgitations / reflux du nourrisson", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "rn_simple", label: "Régurgitations simples", type: "boolean", question: "S'agit-il de régurgitations après les biberons chez un bébé qui va bien, mange bien et grossit bien ?" },
+      { id: "rn_retentissement", label: "Retentissement", type: "boolean", question: "Y a-t-il une mauvaise prise de poids, un refus alimentaire, des pleurs importants ou un malaise lors des repas ?" },
+      { id: "rn_jet", label: "Vomissements en jet", type: "boolean", question: "Le bébé (surtout 3-6 semaines) vomit-il en jet, juste après les biberons, en restant affamé ?" },
+      { id: "rn_alarme", label: "Vomissements alarmants", type: "boolean", question: "Les vomissements sont-ils verts (bilieux), sanglants, ou accompagnés de fièvre / ventre ballonné ?" }
+    ],
+    red_flags: [
+      { id: "rn_rf_alarme", niveau: 3, when: { q: "rn_alarme", eq: true },
+        message_medecin: "Vomissements bilieux (verts), sanglants ou fébriles avec météorisme : ce n'est PAS un simple RGO → urgence chirurgicale/médicale (occlusion, volvulus, invagination, infection) → avis sans délai.",
+        message_patient: "Des vomissements verts, sanglants ou avec fièvre nécessitent une évaluation en urgence (15)." },
+      { id: "rn_rf_pylore", niveau: 2, when: { q: "rn_jet", eq: true },
+        message_medecin: "Vomissements en jet d'un nourrisson de 3-6 semaines, affamé, avec stagnation pondérale : sténose hypertrophique du pylore → échographie, avis chirurgical.",
+        message_patient: "Ce type de vomissements nécessite un avis médical rapide." },
+      { id: "rn_rf_retentissement", niveau: 2, when: { q: "rn_retentissement", eq: true },
+        message_medecin: "RGO avec retentissement (cassure pondérale, pleurs/refus, malaise) : RGO-maladie ou APLV → mesures, avis (et reconsidérer le diagnostic).",
+        message_patient: "Un reflux qui retentit sur le poids ou le confort nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "rn_physio", diagnostic: "RGO physiologique du nourrisson (bénin)", arguments: [{ label: "régurgitations simples, bébé qui va bien", w: 3, when: { q: "rn_simple", eq: true } }],
+        examens_a_discuter: ["Réassurance ; mesures posturales, fractionnement, épaississement du lait ; évolution favorable spontanée vers 12-18 mois"] },
+      { id: "rn_maladie", diagnostic: "RGO-maladie / APLV", arguments: [{ label: "retentissement (poids, pleurs, refus)", w: 3, when: { q: "rn_retentissement", eq: true } }],
+        examens_a_discuter: ["Test d'éviction des protéines de lait de vache ; avis ; traitement antireflux si indiqué"] },
+      { id: "rn_pylore", diagnostic: "Sténose hypertrophique du pylore", arguments: [{ label: "vomissements en jet 3-6 sem", w: 3, when: { q: "rn_jet", eq: true } }],
+        examens_a_discuter: ["Échographie pylorique ; ionogramme (alcalose) ; chirurgie"] }
+    ],
+    examens_clinique: ["Courbe de poids (élément clé)", "Conditions et technique d'alimentation", "Examen abdominal (météorisme, olive pylorique)", "Distinguer régurgitations simples (bénignes) du RGO-maladie"]
+  },
+
+  difficultes_alimentaires_enfant: {
+    id: "difficultes_alimentaires_enfant", symptome: "Difficultés alimentaires / refus de manger (enfant)", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "dae_poids", label: "Retentissement pondéral", type: "boolean", question: "Le refus de manger retentit-il sur le poids (stagnation, amaigrissement) ou l'hydratation ?" },
+      { id: "dae_dysphagie", label: "Douleur / fausse route", type: "boolean", question: "Y a-t-il une douleur à la déglutition, des fausses routes, ou un blocage des aliments ?" },
+      { id: "dae_maladie", label: "Contexte de maladie", type: "boolean", question: "Le refus est-il récent, dans un contexte de fièvre, d'angine, d'aphtes ou d'une autre maladie ?" },
+      { id: "dae_selectif", label: "Sélectivité / comportement", type: "boolean", question: "S'agit-il plutôt d'une sélectivité alimentaire ou de difficultés de comportement aux repas, chez un enfant par ailleurs en bonne santé ?" }
+    ],
+    red_flags: [
+      { id: "dae_rf_poids", niveau: 2, when: { q: "dae_poids", eq: true },
+        message_medecin: "Difficultés alimentaires avec retentissement pondéral / déshydratation : évaluer la gravité (courbe, hydratation) et la cause → avis.",
+        message_patient: "Un refus alimentaire qui retentit sur le poids nécessite un avis médical." },
+      { id: "dae_rf_dysphagie", niveau: 2, when: { q: "dae_dysphagie", eq: true },
+        message_medecin: "Dysphagie / fausses routes / blocage : éliminer une cause organique (ORL, œsophagienne, corps étranger, neurologique) → examen ORL, avis.",
+        message_patient: "Une douleur ou un blocage à la déglutition nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dae_organique", diagnostic: "Cause organique (douloureuse / infectieuse)", arguments: [{ label: "contexte de maladie", w: 2, when: { q: "dae_maladie", eq: true } }, { label: "douleur/fausse route", w: 2, when: { q: "dae_dysphagie", eq: true } }],
+        examens_a_discuter: ["Examen bucco-dentaire et ORL ; traiter la cause (angine, gingivostomatite, RGO)"] },
+      { id: "dae_comportemental", diagnostic: "Trouble de l'oralité / difficulté comportementale", arguments: [{ label: "sélectivité, enfant en bonne santé", w: 3, when: { q: "dae_selectif", eq: true } }],
+        examens_a_discuter: ["Conseils alimentaires (ne pas forcer, repas structurés) ; orthophonie/oralité si trouble installé"] }
+    ],
+    examens_clinique: ["Courbe de croissance, état d'hydratation", "Examen bucco-dentaire et ORL", "Observation d'un repas ; contexte familial", "Distinguer cause organique vs comportementale"]
+  },
+
+  ictere_nourrisson: {
+    id: "ictere_nourrisson", symptome: "Jaunisse du nouveau-né / nourrisson", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "in_precoce", label: "Ictère précoce/intense", type: "boolean", question: "L'ictère est-il apparu très tôt (avant 24 h de vie) ou est-il intense (jaune jusqu'aux jambes) ?" },
+      { id: "in_prolonge", label: "Ictère prolongé", type: "boolean", question: "L'ictère dure-t-il plus de 2 semaines ?" },
+      { id: "in_selles", label: "Selles décolorées", type: "boolean", question: "Les selles sont-elles décolorées (blanches/mastic) et les urines foncées ?" },
+      { id: "in_tolerance", label: "Mauvaise tolérance", type: "boolean", question: "Le bébé est-il somnolent, refuse-t-il de téter, ou a-t-il de la fièvre / une hypothermie ?" }
+    ],
+    red_flags: [
+      { id: "in_rf_precoce", niveau: 3, when: { any: [{ q: "in_precoce", eq: true }, { q: "in_tolerance", eq: true }] },
+        message_medecin: "Ictère néonatal précoce (< 24 h), intense, ou avec mauvaise tolérance : dosage urgent de la bilirubine (risque d'ictère nucléaire) → photothérapie selon les courbes ; rechercher une hémolyse / une infection.",
+        message_patient: "Un ictère précoce ou un bébé qui va mal nécessite une évaluation en urgence." },
+      { id: "in_rf_cholestase", niveau: 2, when: { all: [{ q: "in_selles", eq: true }] },
+        message_medecin: "Ictère + selles décolorées + urines foncées = cholestase : éliminer une ATRÉSIE DES VOIES BILIAIRES (diagnostic urgent, chirurgie idéalement avant 6 semaines) → bilirubine conjuguée, avis hépatopédiatrique sans délai.",
+        message_patient: "Un ictère avec des selles décolorées nécessite un avis médical rapide." },
+      { id: "in_rf_prolonge", niveau: 2, when: { q: "in_prolonge", eq: true },
+        message_medecin: "Ictère prolongé (> 2 semaines) : doser la bilirubine totale ET conjuguée — une cholestase (bili conjuguée ↑) impose un bilan urgent ; sinon ictère au lait de mère (bénin) après élimination.",
+        message_patient: "Un ictère qui dure plus de 2 semaines doit être contrôlé." }
+    ],
+    diagnostics_differentiels: [
+      { id: "in_physio", diagnostic: "Ictère physiologique / au lait de mère (bénin)", arguments: [{ label: "ictère prolongé, bébé qui va bien", w: 2, when: { q: "in_prolonge", eq: true } }],
+        examens_a_discuter: ["Diagnostic d'élimination (bilirubine non conjuguée, selles et urines normales) ; surveillance"] },
+      { id: "in_pathologique", diagnostic: "Ictère pathologique (hémolyse, infection)", arguments: [{ label: "précoce/intense ou mauvaise tolérance", w: 3, when: { q: "in_precoce", eq: true } }, { label: "mauvaise tolérance", w: 1, when: { q: "in_tolerance", eq: true } }],
+        examens_a_discuter: ["Bilirubine, NFS-réticulocytes, groupe-Coombs, CRP ; photothérapie"] },
+      { id: "in_cholestase", diagnostic: "Cholestase (atrésie des voies biliaires)", arguments: [{ label: "selles décolorées / urines foncées", w: 3, when: { q: "in_selles", eq: true } }],
+        examens_a_discuter: ["Bilirubine conjuguée, échographie hépatique, avis hépatopédiatrique urgent"] }
+    ],
+    examens_clinique: ["Apprécier l'intensité et l'extension de l'ictère (céphalo-caudale)", "Examiner la couleur des selles et des urines (cholestase)", "Évaluer la tolérance (tonus, tétée, température)", "Doser bilirubine totale et conjuguée selon le contexte"]
+  },
+
+  souffle_cardiaque_enfant: {
+    id: "souffle_cardiaque_enfant", symptome: "Souffle cardiaque de l'enfant", specialite: ["Pédiatrie", "Cardiologie"],
+    questions: [
+      { id: "sce_fonctionnel", label: "Signes fonctionnels", type: "boolean", question: "Y a-t-il un essoufflement, une fatigue à l'effort, une mauvaise prise de poids, ou des malaises/syncopes (surtout à l'effort) ?" },
+      { id: "sce_cyanose", label: "Cyanose", type: "boolean", question: "Y a-t-il une coloration bleue des lèvres ou des extrémités ?" },
+      { id: "sce_anodin", label: "Découverte anodine", type: "boolean", question: "Le souffle a-t-il été découvert par hasard (lors d'une fièvre par exemple) chez un enfant sans aucun symptôme ?" },
+      { id: "sce_atcd", label: "Antécédents familiaux", type: "boolean", question: "Y a-t-il des antécédents familiaux de cardiopathie ou de mort subite précoce ?" }
+    ],
+    red_flags: [
+      { id: "sce_rf_organique", niveau: 2, when: { any: [{ q: "sce_fonctionnel", eq: true }, { q: "sce_cyanose", eq: true }] },
+        message_medecin: "Souffle + signes fonctionnels (dyspnée, syncope d'effort, mauvaise croissance) ou cyanose : souffle organique probable → échocardiographie et avis cardiopédiatrique ; une syncope à l'effort doit faire éliminer une cardiopathie.",
+        message_patient: "Un souffle avec essoufflement, fatigue ou malaise nécessite un avis cardiologique." }
+    ],
+    diagnostics_differentiels: [
+      { id: "sce_innocent", diagnostic: "Souffle innocent / fonctionnel (bénin)", arguments: [{ label: "découverte fortuite, enfant asymptomatique", w: 3, when: { q: "sce_anodin", eq: true } }],
+        examens_a_discuter: ["Très fréquent et bénin (souffle doux, systolique, variable) ; réassurance ; avis si doute"] },
+      { id: "sce_organique", diagnostic: "Souffle organique (cardiopathie)", arguments: [{ label: "signes fonctionnels", w: 3, when: { q: "sce_fonctionnel", eq: true } }, { label: "cyanose", w: 2, when: { q: "sce_cyanose", eq: true } }, { label: "antécédents familiaux", w: 1, when: { q: "sce_atcd", eq: true } }],
+        examens_a_discuter: ["Échocardiographie, ECG ; avis cardiopédiatrique"] }
+    ],
+    examens_clinique: ["Caractères du souffle (intensité, timing, irradiation, variabilité)", "Palpation des pouls fémoraux et mesure de la TA (coarctation)", "Recherche de signes d'insuffisance cardiaque, courbe de croissance", "Coloration (cyanose)"]
+  },
+
+  adenopathie_enfant: {
+    id: "adenopathie_enfant", symptome: "Ganglion / adénopathie de l'enfant", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "ade_loc", label: "Localisation", type: "single_choice", question: "Où est le ganglion ?", options: ["Cou (sous la mâchoire, nuque)", "Au-dessus de la clavicule", "Aisselle / aine", "Plusieurs endroits"] },
+      { id: "ade_infect", label: "Contexte infectieux", type: "boolean", question: "Y a-t-il une infection récente dans la zone (angine, dent, plaie, griffure de chat) ou un rhume ?" },
+      { id: "ade_dur", label: "Caractères suspects", type: "boolean", question: "Le ganglion est-il dur, fixé, indolore, mesure-t-il plus de 2 cm, ou persiste-t-il depuis plus de 4-6 semaines ?" },
+      { id: "ade_general", label: "Signes généraux", type: "boolean", question: "Y a-t-il une fièvre prolongée, des sueurs nocturnes, un amaigrissement, ou une pâleur / des bleus faciles ?" }
+    ],
+    red_flags: [
+      { id: "ade_rf_susclav", niveau: 2, when: { q: "ade_loc", eq: "Au-dessus de la clavicule" },
+        message_medecin: "Adénopathie sus-claviculaire chez l'enfant : toujours suspecte → bilan et avis (imagerie, NFS, ± biopsie).",
+        message_patient: "Un ganglion au-dessus de la clavicule nécessite un avis médical." },
+      { id: "ade_rf_malin", niveau: 2, when: { any: [{ q: "ade_dur", eq: true }, { q: "ade_general", eq: true }] },
+        message_medecin: "Adénopathie dure/fixée/> 2 cm/persistante, ou signes généraux (fièvre prolongée, sueurs, amaigrissement, pâleur/saignements) : éliminer une hémopathie (leucémie, lymphome) → NFS, LDH, avis ; biopsie (pas la simple ponction).",
+        message_patient: "Ces caractéristiques nécessitent un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ade_reactionnelle", diagnostic: "Adénopathie réactionnelle (infectieuse, bénigne)", arguments: [{ label: "contexte infectieux / porte d'entrée", w: 3, when: { q: "ade_infect", eq: true } }, { label: "siège cervical", w: 1, when: { q: "ade_loc", eq: "Cou (sous la mâchoire, nuque)" } }],
+        examens_a_discuter: ["Cause la plus fréquente (virale/ORL, maladie des griffes du chat) ; réévaluation à 2-4 semaines"] },
+      { id: "ade_hemopathie", diagnostic: "Hémopathie / cause maligne", arguments: [{ label: "caractères suspects", w: 3, when: { q: "ade_dur", eq: true } }, { label: "signes généraux", w: 2, when: { q: "ade_general", eq: true } }, { label: "polyadénopathie", w: 1, when: { q: "ade_loc", eq: "Plusieurs endroits" } }],
+        examens_a_discuter: ["NFS-plaquettes, frottis, LDH ; échographie ; avis (biopsie ganglionnaire)"] }
+    ],
+    examens_clinique: ["Palpation de toutes les aires ganglionnaires ; taille, consistance, mobilité", "Recherche d'une porte d'entrée et d'une infection ORL/dentaire", "Palpation du foie et de la rate ; recherche de pâleur/purpura", "NFS si caractères suspects ou signes généraux"]
+  },
+
+  cephalee_enfant: {
+    id: "cephalee_enfant", symptome: "Maux de tête de l'enfant", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "cee_brutal", label: "Brutale / fébrile", type: "boolean", question: "La douleur est-elle apparue très brutalement, ou s'accompagne-t-elle de fièvre avec une raideur de la nuque ou une gêne à la lumière ?" },
+      { id: "cee_htic", label: "Signes d'HTIC", type: "boolean", question: "Les maux de tête sont-ils présents le matin au réveil avec des vomissements, s'aggravent-ils progressivement, réveillent-ils la nuit, ou s'accompagnent-ils de signes neurologiques (vision, équilibre, comportement) ?" },
+      { id: "cee_migraine", label: "Profil migraineux", type: "boolean", question: "Sont-ils récurrents, par crises, parfois pulsatiles avec gêne à la lumière/au bruit et nausées, soulagés par le repos ?" },
+      { id: "cee_contexte", label: "Contexte de vie", type: "boolean", question: "Y a-t-il un contexte d'écrans, de manque de sommeil, de stress, ou de troubles de la vue (lit de loin, plisse les yeux) ?" }
+    ],
+    red_flags: [
+      { id: "cee_rf_urgence", niveau: 3, when: { q: "cee_brutal", eq: true },
+        message_medecin: "Céphalée brutale (coup de tonnerre) ou fébrile avec syndrome méningé : hémorragie méningée / méningite → urgence (15).",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate (15)." },
+      { id: "cee_rf_htic", niveau: 2, when: { q: "cee_htic", eq: true },
+        message_medecin: "Céphalées avec signes d'hypertension intracrânienne (matinales, vomissements, aggravation progressive, réveil nocturne, signes neuro) : éliminer un processus expansif → imagerie cérébrale, fond d'œil, avis.",
+        message_patient: "Ces caractéristiques nécessitent un avis médical rapide et un examen." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cee_primaire", diagnostic: "Céphalée primaire (migraine / tension)", arguments: [{ label: "profil migraineux récurrent", w: 3, when: { q: "cee_migraine", eq: true } }, { label: "contexte de vie (sommeil, écrans, stress)", w: 1, when: { q: "cee_contexte", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique ; règles hygiéno-diététiques (sommeil, écrans, hydratation) ; traitement de crise adapté à l'enfant"] },
+      { id: "cee_secondaire", diagnostic: "Céphalée secondaire (HTIC, ORL/ophtalmo, méningée)", arguments: [{ label: "signes d'HTIC", w: 3, when: { q: "cee_htic", eq: true } }, { label: "brutale/fébrile", w: 2, when: { q: "cee_brutal", eq: true } }],
+        examens_a_discuter: ["Examen neurologique, fond d'œil, TA ; imagerie si signes d'alarme ; avis ORL/ophtalmo (sinusite, trouble de la vue)"] }
+    ],
+    examens_clinique: ["Examen neurologique complet et fond d'œil", "Mesure de la TA, du périmètre crânien (jeune enfant)", "Recherche d'un syndrome méningé", "Évaluer la vue et le contexte de vie (sommeil, écrans)"]
+  },
+
+  douleur_abdo_recurrente_enfant: {
+    id: "douleur_abdo_recurrente_enfant", symptome: "Douleurs abdominales récurrentes (enfant)", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "dare_alarme", label: "Signes d'alarme", type: "boolean", question: "Y a-t-il : une perte de poids, des douleurs qui réveillent la nuit, du sang dans les selles, des vomissements, de la fièvre, une douleur localisée loin du nombril, ou un retard de croissance ?" },
+      { id: "dare_fonctionnel", label: "Profil fonctionnel", type: "boolean", question: "Les douleurs sont-elles plutôt autour du nombril, sans retentissement, chez un enfant qui grandit et joue normalement ?" },
+      { id: "dare_transit", label: "Constipation / transit", type: "boolean", question: "Y a-t-il une constipation, ou des selles irrégulières associées ?" },
+      { id: "dare_urinaire", label: "Signes urinaires", type: "boolean", question: "Y a-t-il des brûlures pour uriner, des envies fréquentes, ou une énurésie récente ?" }
+    ],
+    red_flags: [
+      { id: "dare_rf_alarme", niveau: 2, when: { q: "dare_alarme", eq: true },
+        message_medecin: "Douleurs abdominales récurrentes AVEC signes d'alarme (amaigrissement, réveil nocturne, sang dans les selles, fièvre, douleur latéralisée, cassure pondérale) : évoquer une cause organique (cœliaque, MICI, ulcère, cause urinaire/gynéco) → bilan orienté, avis.",
+        message_patient: "Ces signes nécessitent un bilan médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dare_fonctionnel_dd", diagnostic: "Douleur abdominale fonctionnelle", arguments: [{ label: "péri-ombilicale, sans signe d'alarme", w: 3, when: { q: "dare_fonctionnel", eq: true } }],
+        examens_a_discuter: ["Très fréquente et bénigne (après élimination de l'organique) ; réassurance, approche globale (stress, école) ; pas d'examens superflus"] },
+      { id: "dare_constipation", diagnostic: "Constipation", arguments: [{ label: "constipation / transit irrégulier", w: 2, when: { q: "dare_transit", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique ; traitement de la constipation (mesures + laxatifs osmotiques)"] },
+      { id: "dare_organique", diagnostic: "Cause organique (digestive, urinaire)", arguments: [{ label: "signes d'alarme", w: 3, when: { q: "dare_alarme", eq: true } }, { label: "signes urinaires", w: 1, when: { q: "dare_urinaire", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire/ECBU ; sérologie cœliaque, NFS-CRP selon le contexte ; avis si MICI suspectée"] }
+    ],
+    examens_clinique: ["Courbe de croissance (élément clé)", "Palpation abdominale, recherche d'un fécalome", "Bandelette urinaire", "Rechercher des signes d'alarme orientant vers l'organique"]
   }
 };
 
@@ -6717,7 +6954,12 @@ window.MOTIFS = [
       { l: "Douleur abdominale", f: "douleur_abdominale" }, { l: "Constipation", f: "constipation" }, { l: "Pleurs du nourrisson", f: "pleurs_nourrisson" },
       { l: "Troubles du sommeil", f: "insomnie" }, { l: "Retard de langage", p: "retard_langage" }, { l: "Troubles du comportement", p: "troubles_comportement_enfant" },
       { l: "Difficultés scolaires", p: "troubles_comportement_enfant" }, { l: "Vaccination", p: "vaccination" }, { l: "Certificat sport", p: "certificat_sport" }, { l: "Suivi de croissance", p: "suivi_croissance" },
-      { l: "Suspicion infection urinaire", f: "cystite" }
+      { l: "Suspicion infection urinaire", f: "cystite" },
+      { l: "Cassure de la courbe / petite taille", f: "croissance_enfant" }, { l: "Puberté précoce ou retardée", f: "puberte_anormale" },
+      { l: "Régurgitations / reflux du nourrisson", f: "rgo_nourrisson" }, { l: "Difficultés alimentaires / refus de manger", f: "difficultes_alimentaires_enfant" },
+      { l: "Jaunisse du nourrisson", f: "ictere_nourrisson" }, { l: "Souffle cardiaque", f: "souffle_cardiaque_enfant" },
+      { l: "Ganglion / adénopathie", f: "adenopathie_enfant" }, { l: "Maux de tête de l'enfant", f: "cephalee_enfant" },
+      { l: "Douleurs abdominales récurrentes", f: "douleur_abdo_recurrente_enfant" }
     ],
     urgences: [
       { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
@@ -7470,6 +7712,11 @@ window.ANTECEDENTS = {
     convulsion_non_febrile: { population: "enfant" }, trouble_conscience_enfant: { population: "enfant" },
     deficit_moteur_enfant: { population: "enfant" }, ataxie_enfant: { population: "enfant" },
     anaphylaxie_enfant: { population: "enfant" }, purpura_enfant: { population: "enfant" },
+    croissance_enfant: { population: "enfant" }, puberte_anormale: { population: "enfant" },
+    rgo_nourrisson: { population: "enfant" }, difficultes_alimentaires_enfant: { population: "enfant" },
+    ictere_nourrisson: { population: "enfant" }, souffle_cardiaque_enfant: { population: "enfant" },
+    adenopathie_enfant: { population: "enfant" }, cephalee_enfant: { population: "enfant" },
+    douleur_abdo_recurrente_enfant: { population: "enfant" },
     // Adulte (peu pertinents chez le jeune enfant)
     difficultes_sexuelles: { population: "adulte" }, bouffees_chaleur: { population: "adulte" },
     osteoporose: { population: "adulte" }, sevrage_alcool: { population: "adulte" },
