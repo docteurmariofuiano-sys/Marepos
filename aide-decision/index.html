@@ -101,6 +101,12 @@
         <button class="btn primary" id="toSymptom" disabled>Continuer</button>
       </div>
 
+      <!-- Étape 0 bis : informations patient et antécédents -->
+      <div class="card step" id="step-antecedents" hidden>
+        <h2>Informations patient et antécédents</h2>
+        <div id="antecedents-root"></div>
+      </div>
+
       <!-- Étape 1 : choix des motifs dans le catalogue (sélection multiple) -->
       <div class="card step" id="step-symptom" hidden>
         <h2>Qu'est-ce qui vous amène ?</h2>
@@ -160,7 +166,9 @@
 
   <script src="data/knowledge-base.js"></script>
   <script src="data/motifs-catalogue.js"></script>
+  <script src="data/antecedents.js"></script>
   <script src="engine.js"></script>
+  <script src="antecedents.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

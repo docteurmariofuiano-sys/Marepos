@@ -11,7 +11,10 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
 ## Ce que fait le prototype
 
 1. **Espace patient** — saisie du contexte (âge, sexe, **température obligatoire**
-   — seuil fièvre ≥ 38,5 °C —, grossesse possible, antécédents), puis **sélection
+   — seuil fièvre ≥ 38,5 °C —, grossesse possible, antécédents), une section
+   **« Informations patient et antécédents »** (identité **obligatoire**, allergies,
+   antécédents médicaux et chirurgicaux par spécialité — cases repliables +
+   recherche, **export JSON** et **résumé médical** copiable), puis **sélection
    de 1 à 5 motifs** dans un **catalogue groupé par spécialité** (cases à cocher,
    recherche). Les motifs cochés ouvrent un **questionnaire adaptatif** regroupé
    **par motif** ; les questions conditionnelles s'affichent selon les réponses.

@@ -98,6 +98,42 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
 .motif-chip.disabled{opacity:.4;cursor:not-allowed}
 .motif-chip.disabled:hover{border-color:var(--line);background:#fff}
 
+/* ===== Informations patient et antécédents ===== */
+.hide{display:none!important}
+.atcd-intro{margin:0 0 14px}
+.atcd-sec{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px}
+.atcd-sec legend{font-weight:700;font-size:.95rem;color:var(--brand-d);padding:0 8px}
+.atcd-sec .req{margin-left:6px}
+.none-box{background:#f4f8fb;border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin:0 0 12px}
+.atcd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 14px}
+.atcd-chk{display:flex;gap:8px;align-items:flex-start;font-size:.88rem;padding:5px 4px;cursor:pointer;border-radius:6px}
+.atcd-chk:hover{background:#f1f8f9}
+.atcd-chk input{margin-top:3px;flex:none}
+.atcd-group{border:1px solid var(--line);border-radius:10px;margin:0 0 8px;background:#fbfdff;overflow:hidden}
+.atcd-group>summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;list-style:none}
+.atcd-group>summary::-webkit-details-marker{display:none}
+.atcd-group>summary::before{content:"▸";color:var(--brand);font-size:.8rem;margin-right:6px;transition:.15s}
+.atcd-group[open]>summary::before{transform:rotate(90deg)}
+.ag-title{flex:1}
+.ag-count{min-width:20px;text-align:center;font-size:.72rem;font-weight:800;color:transparent}
+.ag-count.on{color:#fff;background:var(--brand);border-radius:999px;padding:1px 7px}
+.atcd-group .atcd-grid{padding:6px 14px 12px}
+.atcd-group.is-disabled,.is-disabled{opacity:.5}
+.atcd-searchwrap{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;
+  padding:0 12px;margin:0 0 14px;background:#fff}
+.atcd-searchwrap input{border:0;outline:0;padding:11px 4px;width:100%;font-size:.95rem;background:transparent}
+.atcd-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.atcd-actions .btn{flex:1 1 auto;min-width:140px}
+.atcd-actions .btn.primary{flex:2 1 220px}
+.atcd-msg{margin:10px 0 0;font-size:.88rem;min-height:1.1em}
+.atcd-msg.ok{color:var(--u1)}
+.atcd-msg.err{color:var(--u3);font-weight:600}
+.atcd-sec textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:.92rem;margin-top:6px}
+/* bloc patient dans la synthèse */
+.pat-name{font-weight:700;font-size:1.05rem;margin:0 0 8px}
+.allerg-warn{background:var(--u3-bg);border:1px solid #f5c2bd;color:#9a2b21;font-weight:600;padding:9px 12px;border-radius:8px;margin:0 0 6px}
+
 /* quiz groupé par motif */
 .quiz-section{margin:0 0 8px}
 .quiz-sec-title{margin:18px 0 2px;font-size:.92rem;color:var(--brand-d);border-bottom:2px solid #e6eef0;padding-bottom:6px}

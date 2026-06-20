@@ -18,7 +18,7 @@
 
   // État de la consultation en cours
   // selected : { motifId -> {label, fkey} } ; symptomKeys : fiches uniques dérivées
-  var session = { ctx: {}, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
+  var session = { ctx: {}, patient: null, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
 
   // ----------- Catalogue patient : motifs reliés à une fiche décisionnelle ----
   // Construit à partir de window.MOTIFS (catalogue), groupé par spécialité.
@@ -410,6 +410,8 @@
           "<div class='urg-badge'>Niveau " + session.niveau + "<small>" + esc(urg.libelle) + "</small></div>" +
         "</div>" +
 
+        patientInfoHtml() +
+
         block("Motifs déclarés (patient)", "<p>" + motifs + "</p>") +
 
         block("Éléments importants (déclaratif patient)",
@@ -451,11 +453,60 @@
     return "<section class='syn-block'><h3>" + esc(title) + "</h3>" + html + "</section>";
   }
 
+  // Bloc « Informations patient » (identité, allergies mises en avant, ATCD)
+  function patientInfoHtml() {
+    var p = session.patient;
+    if (!p) return "";
+    var name = (p.patient.prenom + " " + p.patient.nom).trim();
+
+    var allergHtml;
+    if (p.allergies.pas_allergie_connue) {
+      allergHtml = "<p class='ok'>Pas d'allergie connue.</p>";
+    } else {
+      var al = (p.allergies.liste || []).slice();
+      if (p.allergies.details) al.push(p.allergies.details);
+      allergHtml = al.length
+        ? "<p class='allerg-warn'>⚠ Allergies : " + al.map(esc).join(" · ") + "</p>"
+        : "<p class='muted'>Allergies non renseignées.</p>";
+    }
+
+    function listLine(labelTxt, none, arr, autres) {
+      if (none) return "<p><strong>" + labelTxt + " :</strong> aucun connu.</p>";
+      var a = (arr || []).slice();
+      if (autres) a.push(autres);
+      return "<p><strong>" + labelTxt + " :</strong> " + (a.length ? a.map(esc).join(" · ") : "non renseignés") + "</p>";
+    }
+
+    return block("Informations patient",
+      (name ? "<p class='pat-name'>" + esc(name) + "</p>" : "") +
+      allergHtml +
+      listLine("Antécédents médicaux", p.pas_antecedent_medical, p.antecedents_medicaux, p.antecedents_medicaux_autres) +
+      listLine("Antécédents chirurgicaux", p.pas_antecedent_chirurgical, p.antecedents_chirurgicaux, p.antecedents_chirurgicaux_autres));
+  }
+
   // ----------------------------------------------------------------- navigation
   function show(stepId) {
-    ["step-intro", "step-symptom", "step-quiz", "step-patient-result"].forEach(function (s) {
+    ["step-intro", "step-antecedents", "step-symptom", "step-quiz", "step-patient-result"].forEach(function (s) {
       el(s).hidden = s !== stepId;
     });
+  }
+
+  // Dérive des indicateurs de contexte (pour les règles) à partir des antécédents
+  function deriveCtxFromAntecedents() {
+    var p = session.patient; if (!p) return;
+    var all = (p.antecedents_medicaux || []).concat(p.antecedents_chirurgicaux || []);
+    var add = session.ctx.antecedents || [];
+    function has(x) { return all.indexOf(x) !== -1; }
+    function some(list) { return list.some(has); }
+    function flag(name, cond) { if (cond && add.indexOf(name) === -1) add.push(name); }
+    flag("immunodépression", some(["VIH", "Leucémie", "Lymphome", "Myélome",
+      "Chimiothérapie antérieure", "Immunothérapie antérieure", "Transplantation rénale", "Splénectomie"]));
+    flag("terrain cardiovasculaire", some(["Hypertension artérielle", "Insuffisance cardiaque",
+      "Infarctus du myocarde", "Angor / maladie coronarienne", "Fibrillation auriculaire",
+      "Valvulopathie", "Cardiomyopathie", "AVC", "AIT", "Artériopathie des membres inférieurs"]));
+    flag("diabète", some(["Diabète de type 1", "Diabète de type 2"]));
+    flag("cancer connu", has("Métastases connues") || all.some(function (l) { return /^Cancer /.test(l) || l === "Mélanome"; }));
+    session.ctx.antecedents = add;
   }
 
   function setMode(mode) {
@@ -488,8 +539,18 @@
     });
     el("ctx-temp").addEventListener("input", refreshIntroValidity);
     el("toSymptom").addEventListener("click", function () {
-      readContext(); renderSymptomGrid(""); updateSelectBar(); show("step-symptom");
+      readContext(); show("step-antecedents");
     });
+    // Module « Informations patient et antécédents »
+    if (window.Antecedents) {
+      window.Antecedents.render(el("antecedents-root"), {
+        onValidate: function (data) {
+          session.patient = data;
+          deriveCtxFromAntecedents();
+          renderSymptomGrid(""); updateSelectBar(); show("step-symptom");
+        }
+      });
+    }
     el("symptomSearch").addEventListener("input", function (e) { renderSymptomGrid(e.target.value); });
     el("toQuiz").addEventListener("click", startQuiz);
     el("backToSymptom").addEventListener("click", function () {
@@ -498,10 +559,11 @@
     el("submitQuiz").addEventListener("click", function (e) { e.preventDefault(); showPatientResult(); });
     el("goMedecin").addEventListener("click", function () { setMode("medecin"); });
     el("restart").addEventListener("click", function () {
-      session = { ctx: {}, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
+      session = { ctx: {}, patient: null, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
       el("ctx-consent").checked = false;
       el("ctx-temp").value = ""; el("ctx-temp-nonmesuree").checked = false;
       el("symptomSearch").value = "";
+      if (window.Antecedents) window.Antecedents.clear();
       refreshIntroValidity(); show("step-intro");
     });
     el("loadDemo").addEventListener("click", loadDemo);
