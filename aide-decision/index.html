@@ -63,6 +63,19 @@
           </label>
         </div>
 
+        <div class="grid2">
+          <label class="field">
+            <span>Température (°C) <em class="req">obligatoire</em></span>
+            <input type="number" id="ctx-temp" min="33" max="44" step="0.1" inputmode="decimal" placeholder="ex. 38,2" />
+          </label>
+          <label class="field check temp-nm">
+            <input type="checkbox" id="ctx-temp-nonmesuree" />
+            <span>Température non prise</span>
+          </label>
+        </div>
+        <p class="hint" id="ctx-temp-hint">La <strong>fièvre (≥ 38,5 °C)</strong> aide à orienter, quel que soit le motif.
+          Indiquez la température mesurée, ou cochez « non prise ».</p>
+
         <label class="field check" id="ctx-grossesse-wrap" hidden>
           <input type="checkbox" id="ctx-grossesse" />
           <span>Une grossesse est possible (rapports sans contraception fiable)</span>

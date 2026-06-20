@@ -97,6 +97,8 @@
     var bits = [];
     if (ctx.age != null && ctx.age !== "") bits.push(ctx.age + " ans");
     if (ctx.sexe) bits.push(ctx.sexe.toLowerCase());
+    if (ctx.temperature != null) bits.push(ctx.temperature + " °C" + (ctx.fievre ? " (fièvre)" : " (apyrétique)"));
+    else if (ctx.temperatureMesuree === false) bits.push("température non prise");
     if (ctx.grossessePossible) bits.push("grossesse possible");
     (ctx.antecedents || []).forEach(function (a) { bits.push(a); });
     return bits.join(", ");

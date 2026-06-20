@@ -47,6 +47,9 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips label{display:flex;gap:6px;align-items:center;background:#f4f8fb;border:1px solid var(--line);
   padding:6px 11px;border-radius:999px;font-size:.85rem;cursor:pointer}
+.req{font-style:normal;font-size:.7rem;font-weight:700;color:var(--u3);background:var(--u3-bg);border-radius:5px;padding:1px 6px;margin-left:4px}
+.field.check.temp-nm{align-self:end;padding-bottom:11px}
+.hint{margin:-4px 0 8px;font-size:.82rem;color:var(--soft)}
 
 /* buttons */
 .btn{border:0;border-radius:10px;padding:11px 18px;font-size:.95rem;font-weight:600;cursor:pointer}

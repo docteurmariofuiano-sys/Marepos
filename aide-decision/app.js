@@ -22,6 +22,18 @@
   var SYMPTOMS = Object.keys(KB).filter(function (k) { return k !== "meta"; })
     .sort(function (a, b) { return KB[a].symptome.localeCompare(KB[b].symptome, "fr"); });
 
+  var FIEVRE_SEUIL = 38.5;
+
+  // Lit une température (accepte la virgule), renvoie un nombre °C plausible ou null
+  function parseTemp(s) {
+    if (s == null) return null;
+    s = String(s).replace(",", ".").trim();
+    if (s === "") return null;
+    var n = parseFloat(s);
+    if (isNaN(n) || n < 30 || n > 45) return null;
+    return n;
+  }
+
   // ---------------------------------------------------------------- contexte
   function readContext() {
     var atcd = [];
@@ -30,11 +42,16 @@
     var sexe = el("ctx-sexe").value;
     var grossesse = el("ctx-grossesse").checked && sexe === "Femme";
     var ageProcreer = sexe === "Femme" && !isNaN(age) && age >= 12 && age <= 51;
+    var nonMesuree = el("ctx-temp-nonmesuree").checked;
+    var temp = nonMesuree ? null : parseTemp(el("ctx-temp").value);
     session.ctx = {
       age: isNaN(age) ? null : age,
       sexe: sexe || null,
       grossessePossible: grossesse || (ageProcreer && sexe === "Femme" && el("ctx-grossesse").checked),
       ageProcreer: ageProcreer,
+      temperature: temp,
+      temperatureMesuree: !nonMesuree,
+      fievre: temp != null && temp >= FIEVRE_SEUIL,
       antecedents: atcd
     };
     if (ageProcreer && el("ctx-grossesse").checked) session.ctx.grossessePossible = true;
@@ -43,7 +60,31 @@
   function refreshIntroValidity() {
     var sexe = el("ctx-sexe").value;
     el("ctx-grossesse-wrap").hidden = sexe !== "Femme";
-    el("toSymptom").disabled = !el("ctx-consent").checked;
+    var nonMesuree = el("ctx-temp-nonmesuree").checked;
+    el("ctx-temp").disabled = nonMesuree;
+    if (nonMesuree) el("ctx-temp").value = "";
+    var tempOk = nonMesuree || parseTemp(el("ctx-temp").value) != null;
+    el("toSymptom").disabled = !(el("ctx-consent").checked && tempOk);
+  }
+
+  // Règles d'orientation explicites liées à la fièvre (indépendantes du motif)
+  function feverOrientation(ctx) {
+    var out = [];
+    var t = ctx.temperature, atcd = ctx.antecedents || [];
+    if (t == null) return out;
+    if (t >= 41) {
+      out.push({ niveau: 3, message: "Hyperpyrexie ≥ 41 °C : urgence (sepsis, coup de chaleur) — évaluation immédiate." });
+    }
+    if (t >= FIEVRE_SEUIL && atcd.indexOf("immunodépression") !== -1) {
+      out.push({ niveau: 3, message: "Fièvre chez un patient immunodéprimé : neutropénie fébrile / infection grave à éliminer en URGENCE (NFS, hémocultures, avis sans délai)." });
+    }
+    if (t >= FIEVRE_SEUIL && ctx.grossessePossible) {
+      out.push({ niveau: 2, message: "Fièvre avec grossesse possible : éliminer une listériose, une pyélonéphrite, une chorioamniotite — avis rapide (hémocultures, ECBU)." });
+    }
+    if (t >= FIEVRE_SEUIL && atcd.indexOf("terrain cardiovasculaire") !== -1) {
+      out.push({ niveau: 2, message: "Fièvre prolongée sur valvulopathie/prothèse possible : penser à l'endocardite (hémocultures avant antibiotiques)." });
+    }
+    return out;
   }
 
   // ----------------------------------------------------- grille des motifs (multi)
@@ -200,9 +241,11 @@
     session.results = session.symptomKeys.map(function (key) {
       return { key: key, fiche: KB[key], result: Engine.run(KB[key], session.answers, session.ctx) };
     });
+    session.feverFlags = feverOrientation(session.ctx);
     session.niveau = session.results.reduce(function (m, r) {
       return Math.max(m, r.result.niveau);
     }, 1);
+    session.feverFlags.forEach(function (x) { session.niveau = Math.max(session.niveau, x.niveau); });
     return session.results;
   }
 
@@ -249,8 +292,13 @@
     // Motifs
     var motifs = session.results.map(function (r) { return esc(r.fiche.symptome); }).join(" · ");
 
-    // Éléments importants (recap agrégé, dédupliqué)
+    // Éléments importants (recap agrégé, dédupliqué) — la température en tête
     var recapAll = [];
+    if (ctx.temperature != null) {
+      recapAll.push("Température : " + ctx.temperature + " °C" + (ctx.fievre ? " — fièvre (≥ 38,5)" : " — apyrétique"));
+    } else if (ctx.temperatureMesuree === false) {
+      recapAll.push("Température non prise");
+    }
     session.results.forEach(function (r) {
       Engine.recap(r.fiche, session.answers, ctx).forEach(function (l) { recapAll.push(l); });
     });
@@ -262,6 +310,10 @@
       r.result.redFlags.forEach(function (x) {
         allFlags.push({ niveau: x.niveau, message: x.message_medecin, symptome: r.fiche.symptome });
       });
+    });
+    // Orientation liée à la fièvre (contexte, indépendante du motif)
+    (session.feverFlags || []).forEach(function (x) {
+      allFlags.push({ niveau: x.niveau, message: x.message, symptome: "Fièvre" });
     });
     allFlags.sort(function (a, b) { return b.niveau - a.niveau; });
 
@@ -371,7 +423,8 @@
 
   // --------------------------------------------------------------------- démo
   function loadDemo() {
-    session.ctx = { age: 38, sexe: "Homme", grossessePossible: false, ageProcreer: false, antecedents: [] };
+    session.ctx = { age: 38, sexe: "Homme", grossessePossible: false, ageProcreer: false,
+      temperature: 37.0, temperatureMesuree: true, fievre: false, antecedents: [] };
     session.symptomKeys = ["acouphene"];
     session.answers = {
       ac_cote: "Une seule oreille", ac_pulsatile: false, ac_hypoacousie: true,
@@ -384,9 +437,10 @@
 
   // ------------------------------------------------------------------- listeners
   function init() {
-    ["ctx-sexe", "ctx-consent"].forEach(function (id) {
+    ["ctx-sexe", "ctx-consent", "ctx-temp-nonmesuree"].forEach(function (id) {
       el(id).addEventListener("change", refreshIntroValidity);
     });
+    el("ctx-temp").addEventListener("input", refreshIntroValidity);
     el("toSymptom").addEventListener("click", function () {
       readContext(); renderSymptomGrid(""); updateSelectBar(); show("step-symptom");
     });
@@ -399,7 +453,9 @@
     el("goMedecin").addEventListener("click", function () { setMode("medecin"); });
     el("restart").addEventListener("click", function () {
       session = { ctx: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
-      el("ctx-consent").checked = false; refreshIntroValidity(); show("step-intro");
+      el("ctx-consent").checked = false;
+      el("ctx-temp").value = ""; el("ctx-temp-nonmesuree").checked = false;
+      refreshIntroValidity(); show("step-intro");
     });
     el("loadDemo").addEventListener("click", loadDemo);
     el("modeSwitch").addEventListener("click", function (e) {
