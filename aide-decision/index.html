@@ -101,14 +101,14 @@
         <button class="btn primary" id="toSymptom" disabled>Continuer</button>
       </div>
 
-      <!-- Étape 1 : choix des motifs (sélection multiple) -->
+      <!-- Étape 1 : choix des motifs dans le catalogue (sélection multiple) -->
       <div class="card step" id="step-symptom" hidden>
         <h2>Qu'est-ce qui vous amène ?</h2>
-        <p class="lead">Cochez les motifs qui vous concernent — <strong>idéalement 3 à 5</strong>.
-          Inutile de choisir « le bon » : sélectionnez tout ce qui vous gêne, l'outil regroupera
-          les questions utiles.</p>
-        <input type="search" id="symptomSearch" class="search" placeholder="Rechercher (ex. fatigue, ganglion, fièvre, toux…)" />
-        <div class="symptom-grid" id="symptomGrid"></div>
+        <p class="lead">Parcourez les motifs par thème et <strong>cochez ceux qui vous concernent
+          (idéalement 3 à 5)</strong>. Inutile de choisir « le bon » : sélectionnez tout ce qui vous
+          gêne, l'outil regroupera les questions utiles pour le médecin.</p>
+        <input type="search" id="symptomSearch" class="search" placeholder="Rechercher un motif (ex. fatigue, ganglion, fièvre, toux…)" />
+        <div class="catalog" id="symptomGrid"></div>
         <div class="select-bar" id="selectBar">
           <span class="select-count" id="selectCount">0 sélectionné</span>
           <button class="btn primary" id="toQuiz" disabled>Continuer</button>
@@ -159,6 +159,7 @@
   </footer>
 
   <script src="data/knowledge-base.js"></script>
+  <script src="data/motifs-catalogue.js"></script>
   <script src="engine.js"></script>
   <script src="app.js"></script>
 </body>

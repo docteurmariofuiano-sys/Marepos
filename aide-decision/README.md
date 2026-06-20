@@ -10,9 +10,14 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
 
 ## Ce que fait le prototype
 
-1. **Espace patient** — saisie du contexte (âge, sexe, grossesse possible,
-   antécédents), choix du symptôme, puis **questionnaire adaptatif** en langage
-   simple (les questions conditionnelles s'affichent selon les réponses).
+1. **Espace patient** — saisie du contexte (âge, sexe, **température obligatoire**
+   — seuil fièvre ≥ 38,5 °C —, grossesse possible, antécédents), puis **sélection
+   de 1 à 5 motifs** dans un **catalogue groupé par spécialité** (cases à cocher,
+   recherche). Les motifs cochés ouvrent un **questionnaire adaptatif** regroupé
+   **par motif** ; les questions conditionnelles s'affichent selon les réponses.
+   La synthèse médecin **agrège** les motifs (urgence = niveau le plus élevé,
+   red flags en union, différentiels par motif) et intègre une **orientation liée
+   à la fièvre** (hyperpyrexie, immunodépression, grossesse, terrain CV).
 2. **Moteur de règles** (`engine.js`) — évalue des prédicats explicites :
    - **red flags d'abord** → fixent le niveau d'urgence (1/2/3) ;
    - **diagnostics différentiels** scorés par poids d'arguments ;

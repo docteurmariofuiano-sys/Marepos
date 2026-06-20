@@ -14,13 +14,49 @@
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   };
+  var norm = function (s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); };
 
   // État de la consultation en cours
-  var session = { ctx: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
+  // selected : { motifId -> {label, fkey} } ; symptomKeys : fiches uniques dérivées
+  var session = { ctx: {}, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
 
-  // Liste des symptômes (clé interne -> fiche), triée par libellé
-  var SYMPTOMS = Object.keys(KB).filter(function (k) { return k !== "meta"; })
-    .sort(function (a, b) { return KB[a].symptome.localeCompare(KB[b].symptome, "fr"); });
+  // ----------- Catalogue patient : motifs reliés à une fiche décisionnelle ----
+  // Construit à partir de window.MOTIFS (catalogue), groupé par spécialité.
+  // Seuls les motifs cliniques (m.f existant dans KB) sont proposés au patient.
+  var PATIENT_CATS = [];
+  (function buildCatalog() {
+    var uid = 0;
+    (window.MOTIFS || []).forEach(function (c) {
+      var items = [];
+      ["frequents", "urgences"].forEach(function (grp) {
+        (c[grp] || []).forEach(function (m) {
+          if (m.f && KB[m.f]) {
+            items.push({ id: "m" + (uid++), label: m.l, fkey: m.f, urg: grp === "urgences" });
+          }
+        });
+      });
+      if (items.length) PATIENT_CATS.push({ n: c.n, titre: c.titre, icone: c.icone, items: items });
+    });
+  })();
+
+  // Repli si le catalogue n'est pas chargé : liste plate des fiches
+  if (!PATIENT_CATS.length) {
+    var items = Object.keys(KB).filter(function (k) { return k !== "meta"; })
+      .sort(function (a, b) { return KB[a].symptome.localeCompare(KB[b].symptome, "fr"); })
+      .map(function (k, i) { return { id: "m" + i, label: KB[k].symptome, fkey: k, urg: !!KB[k].urgence }; });
+    PATIENT_CATS.push({ n: 0, titre: "Tous les motifs", icone: "🩺", items: items });
+  }
+
+  function countChecked() { return Object.keys(session.selected).length; }
+
+  function deriveSymptomKeys() {
+    var keys = [];
+    Object.keys(session.selected).forEach(function (id) {
+      var f = session.selected[id].fkey;
+      if (keys.indexOf(f) === -1) keys.push(f);
+    });
+    session.symptomKeys = keys;
+  }
 
   var FIEVRE_SEUIL = 38.5;
 
@@ -87,42 +123,52 @@
     return out;
   }
 
-  // ----------------------------------------------------- grille des motifs (multi)
+  // ------------------------------- catalogue des motifs (groupé, multi-sélection)
   function renderSymptomGrid(filter) {
-    var q = (filter || "").toLowerCase();
+    var q = norm(filter || "");
     var grid = el("symptomGrid");
-    var full = session.symptomKeys.length >= MAX_SELECT;
+    var full = countChecked() >= MAX_SELECT;
     grid.innerHTML = "";
-    SYMPTOMS.forEach(function (key) {
-      var f = KB[key];
-      var hay = (f.symptome + " " + f.specialite.join(" ")).toLowerCase();
-      if (q && hay.indexOf(q) === -1) return;
-      var selected = session.symptomKeys.indexOf(key) !== -1;
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "symptom-card" + (f.urgence ? " is-urg" : "") +
-        (selected ? " sel" : "") + (!selected && full ? " disabled" : "");
-      var urgTag = f.urgence ? "<span class='sc-urg'>URGENCE</span>" : "";
-      var check = "<span class='sc-check' aria-hidden='true'>" + (selected ? "✓" : "") + "</span>";
-      b.innerHTML = check + "<span class='sc-title'>" + esc(f.symptome) + urgTag + "</span>" +
-        "<span class='sc-spec'>" + esc(f.specialite.join(" · ")) + "</span>";
-      b.setAttribute("aria-pressed", selected ? "true" : "false");
-      b.onclick = function () { toggleSymptom(key); };
-      grid.appendChild(b);
+    PATIENT_CATS.forEach(function (c) {
+      var items = c.items.filter(function (it) { return !q || norm(it.label).indexOf(q) !== -1; });
+      if (!items.length) return;
+      var sec = document.createElement("section");
+      sec.className = "cat-group";
+      var h = document.createElement("h3");
+      h.className = "cat-group-title";
+      h.innerHTML = "<span class='cat-ico' aria-hidden='true'>" + esc(c.icone || "•") + "</span> " + esc(c.titre);
+      sec.appendChild(h);
+      var box = document.createElement("div");
+      box.className = "motif-chips";
+      items.forEach(function (it) {
+        var selected = !!session.selected[it.id];
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "motif-chip" + (it.urg ? " is-urg" : "") +
+          (selected ? " sel" : "") + (!selected && full ? " disabled" : "");
+        b.innerHTML = "<span class='mc-check' aria-hidden='true'>" + (selected ? "✓" : "") + "</span>" +
+          "<span class='mc-label'>" + esc(it.label) + "</span>" +
+          (it.urg ? "<span class='sc-urg'>URGENCE</span>" : "");
+        b.setAttribute("aria-pressed", selected ? "true" : "false");
+        b.onclick = function () { toggleMotif(it); };
+        box.appendChild(b);
+      });
+      sec.appendChild(box);
+      grid.appendChild(sec);
     });
     if (!grid.children.length) {
       grid.innerHTML = "<p class='muted'>Aucun motif ne correspond à votre recherche.</p>";
     }
   }
 
-  function toggleSymptom(key) {
-    var i = session.symptomKeys.indexOf(key);
-    if (i !== -1) {
-      session.symptomKeys.splice(i, 1);
+  function toggleMotif(it) {
+    if (session.selected[it.id]) {
+      delete session.selected[it.id];
     } else {
-      if (session.symptomKeys.length >= MAX_SELECT) { flashLimit(); return; }
-      session.symptomKeys.push(key);
+      if (countChecked() >= MAX_SELECT) { flashLimit(); return; }
+      session.selected[it.id] = { label: it.label, fkey: it.fkey };
     }
+    deriveSymptomKeys();
     renderSymptomGrid(el("symptomSearch").value);
     updateSelectBar();
   }
@@ -135,12 +181,12 @@
   }
 
   function updateSelectBar() {
-    var n = session.symptomKeys.length;
+    var n = countChecked();
     var c = el("selectCount");
     if (!c.classList.contains("limit")) {
       c.textContent = n === 0
-        ? "Aucun motif sélectionné (idéalement 3 à 5)"
-        : n + (n > 1 ? " motifs sélectionnés" : " motif sélectionné") + " · " + (MAX_SELECT - n) + " possible(s) en plus";
+        ? "Aucun motif coché (idéalement 3 à 5)"
+        : n + (n > 1 ? " motifs cochés" : " motif coché") + " · " + (MAX_SELECT - n) + " possible(s) en plus";
     }
     el("toQuiz").disabled = n < 1;
   }
@@ -452,9 +498,10 @@
     el("submitQuiz").addEventListener("click", function (e) { e.preventDefault(); showPatientResult(); });
     el("goMedecin").addEventListener("click", function () { setMode("medecin"); });
     el("restart").addEventListener("click", function () {
-      session = { ctx: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
+      session = { ctx: {}, selected: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
       el("ctx-consent").checked = false;
       el("ctx-temp").value = ""; el("ctx-temp-nonmesuree").checked = false;
+      el("symptomSearch").value = "";
       refreshIntroValidity(); show("step-intro");
     });
     el("loadDemo").addEventListener("click", loadDemo);
