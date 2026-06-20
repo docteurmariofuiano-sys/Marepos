@@ -1,11 +1,14 @@
 /* ============================================================================
- * CONTRÔLEUR UI — parcours patient -> moteur -> synthèse médecin.
+ * CONTRÔLEUR UI — parcours patient (sélection multi-motifs) -> moteur -> synthèse.
+ * Le patient coche 1 à 5 motifs ; les questions sont regroupées par motif ;
+ * la synthèse médecin agrège red flags et diagnostics différentiels.
  * Aucune donnée n'est transmise (mode local / prototype).
  * ========================================================================== */
 (function () {
   "use strict";
 
   var KB = window.KB, Engine = window.Engine;
+  var MAX_SELECT = 5;
   var el = function (id) { return document.getElementById(id); };
   var esc = function (s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -13,10 +16,11 @@
   };
 
   // État de la consultation en cours
-  var session = { ctx: {}, symptomKey: null, answers: {}, result: null };
+  var session = { ctx: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
 
-  // Liste des symptômes (clé interne -> fiche)
-  var SYMPTOMS = Object.keys(KB).filter(function (k) { return k !== "meta"; });
+  // Liste des symptômes (clé interne -> fiche), triée par libellé
+  var SYMPTOMS = Object.keys(KB).filter(function (k) { return k !== "meta"; })
+    .sort(function (a, b) { return KB[a].symptome.localeCompare(KB[b].symptome, "fr"); });
 
   // ---------------------------------------------------------------- contexte
   function readContext() {
@@ -33,7 +37,6 @@
       ageProcreer: ageProcreer,
       antecedents: atcd
     };
-    // Si femme en âge de procréer, la grossesse est "possible" par prudence sauf info contraire
     if (ageProcreer && el("ctx-grossesse").checked) session.ctx.grossessePossible = true;
   }
 
@@ -43,47 +46,93 @@
     el("toSymptom").disabled = !el("ctx-consent").checked;
   }
 
-  // ----------------------------------------------------------- grille symptômes
+  // ----------------------------------------------------- grille des motifs (multi)
   function renderSymptomGrid(filter) {
     var q = (filter || "").toLowerCase();
     var grid = el("symptomGrid");
+    var full = session.symptomKeys.length >= MAX_SELECT;
     grid.innerHTML = "";
     SYMPTOMS.forEach(function (key) {
       var f = KB[key];
       var hay = (f.symptome + " " + f.specialite.join(" ")).toLowerCase();
       if (q && hay.indexOf(q) === -1) return;
+      var selected = session.symptomKeys.indexOf(key) !== -1;
       var b = document.createElement("button");
-      b.className = "symptom-card" + (f.urgence ? " is-urg" : "");
+      b.type = "button";
+      b.className = "symptom-card" + (f.urgence ? " is-urg" : "") +
+        (selected ? " sel" : "") + (!selected && full ? " disabled" : "");
       var urgTag = f.urgence ? "<span class='sc-urg'>URGENCE</span>" : "";
-      b.innerHTML = "<span class='sc-title'>" + esc(f.symptome) + urgTag + "</span>" +
+      var check = "<span class='sc-check' aria-hidden='true'>" + (selected ? "✓" : "") + "</span>";
+      b.innerHTML = check + "<span class='sc-title'>" + esc(f.symptome) + urgTag + "</span>" +
         "<span class='sc-spec'>" + esc(f.specialite.join(" · ")) + "</span>";
-      b.onclick = function () { startQuiz(key); };
+      b.setAttribute("aria-pressed", selected ? "true" : "false");
+      b.onclick = function () { toggleSymptom(key); };
       grid.appendChild(b);
     });
     if (!grid.children.length) {
-      grid.innerHTML = "<p class='muted'>Aucun symptôme ne correspond. D'autres fiches seront ajoutées " +
-        "(le manuel en compte 64).</p>";
+      grid.innerHTML = "<p class='muted'>Aucun motif ne correspond à votre recherche.</p>";
     }
   }
 
+  function toggleSymptom(key) {
+    var i = session.symptomKeys.indexOf(key);
+    if (i !== -1) {
+      session.symptomKeys.splice(i, 1);
+    } else {
+      if (session.symptomKeys.length >= MAX_SELECT) { flashLimit(); return; }
+      session.symptomKeys.push(key);
+    }
+    renderSymptomGrid(el("symptomSearch").value);
+    updateSelectBar();
+  }
+
+  function flashLimit() {
+    var c = el("selectCount");
+    c.classList.add("limit");
+    c.textContent = "Maximum " + MAX_SELECT + " motifs — décochez-en un pour en ajouter un autre";
+    setTimeout(function () { c.classList.remove("limit"); updateSelectBar(); }, 1800);
+  }
+
+  function updateSelectBar() {
+    var n = session.symptomKeys.length;
+    var c = el("selectCount");
+    if (!c.classList.contains("limit")) {
+      c.textContent = n === 0
+        ? "Aucun motif sélectionné (idéalement 3 à 5)"
+        : n + (n > 1 ? " motifs sélectionnés" : " motif sélectionné") + " · " + (MAX_SELECT - n) + " possible(s) en plus";
+    }
+    el("toQuiz").disabled = n < 1;
+  }
+
   // -------------------------------------------------------------- questionnaire
-  function startQuiz(key) {
-    session.symptomKey = key;
-    session.answers = {};
-    el("quizTitle").textContent = KB[key].symptome;
+  function startQuiz() {
+    if (!session.symptomKeys.length) return;
+    session.results = null;
     renderQuiz();
     show("step-quiz");
   }
 
   function renderQuiz() {
-    var f = KB[session.symptomKey];
     var form = el("quizForm");
     form.innerHTML = "";
-    var visible = Engine.visibleQuestions(f, session.answers, session.ctx);
-    visible.forEach(function (qq) {
-      form.appendChild(renderQuestion(qq));
+    var totalVisible = [];
+    session.symptomKeys.forEach(function (key) {
+      var f = KB[key];
+      var visible = Engine.visibleQuestions(f, session.answers, session.ctx);
+      if (!visible.length) return;
+      var sec = document.createElement("section");
+      sec.className = "quiz-section";
+      var h = document.createElement("h3");
+      h.className = "quiz-sec-title";
+      h.innerHTML = esc(f.symptome) + (f.urgence ? " <span class='sc-urg'>URGENCE</span>" : "");
+      sec.appendChild(h);
+      visible.forEach(function (qq) {
+        sec.appendChild(renderQuestion(qq));
+        totalVisible.push(qq);
+      });
+      form.appendChild(sec);
     });
-    updateProgress(visible);
+    updateProgress(totalVisible);
   }
 
   function renderQuestion(qq) {
@@ -148,20 +197,24 @@
 
   // ------------------------------------------------------------------ résultats
   function compute() {
-    var f = KB[session.symptomKey];
-    session.result = Engine.run(f, session.answers, session.ctx);
-    return session.result;
+    session.results = session.symptomKeys.map(function (key) {
+      return { key: key, fiche: KB[key], result: Engine.run(KB[key], session.answers, session.ctx) };
+    });
+    session.niveau = session.results.reduce(function (m, r) {
+      return Math.max(m, r.result.niveau);
+    }, 1);
+    return session.results;
   }
 
   function showPatientResult() {
-    var r = compute();
+    compute();
     var msg = el("patientMessage");
     var prudent;
-    if (r.niveau >= 3) {
+    if (session.niveau >= 3) {
       prudent = "<p class='alert u3'>Certains éléments de vos réponses nécessitent une " +
         "<strong>évaluation médicale sans attendre</strong>. Contactez votre médecin, une " +
         "structure de soins, ou le 15 si vous vous sentez mal.</p>";
-    } else if (r.niveau === 2) {
+    } else if (session.niveau === 2) {
       prudent = "<p class='alert u2'>Certains éléments nécessitent un <strong>avis médical " +
         "rapide</strong> afin d'éliminer une cause à ne pas négliger. Prenez rendez-vous prochainement.</p>";
     } else {
@@ -175,64 +228,113 @@
   }
 
   // ------------------------------------------------------------- synthèse médecin
+  function dedup(arr) {
+    var out = [];
+    arr.forEach(function (x) { if (out.indexOf(x) === -1) out.push(x); });
+    return out;
+  }
+
   function renderSynthese() {
-    if (!session.result) { el("medecinEmpty").hidden = false; el("medecinSynthese").hidden = true; return; }
-    var f = KB[session.symptomKey], r = session.result, ctx = session.ctx;
+    if (!session.results || !session.results.length) {
+      el("medecinEmpty").hidden = false; el("medecinSynthese").hidden = true; return;
+    }
     el("medecinEmpty").hidden = true;
     var box = el("medecinSynthese");
     box.hidden = false;
 
-    var recapLines = Engine.recap(f, session.answers, session.ctx);
+    var ctx = session.ctx;
     var ctxLine = Engine.humanizeContext(ctx);
+    var urg = Engine.URGENCE[session.niveau];
 
-    var rf = r.redFlags.length
-      ? "<ul class='rf'>" + r.redFlags.map(function (x) {
+    // Motifs
+    var motifs = session.results.map(function (r) { return esc(r.fiche.symptome); }).join(" · ");
+
+    // Éléments importants (recap agrégé, dédupliqué)
+    var recapAll = [];
+    session.results.forEach(function (r) {
+      Engine.recap(r.fiche, session.answers, ctx).forEach(function (l) { recapAll.push(l); });
+    });
+    recapAll = dedup(recapAll);
+
+    // Red flags agrégés (union, triés par niveau décroissant, tagués par motif)
+    var allFlags = [];
+    session.results.forEach(function (r) {
+      r.result.redFlags.forEach(function (x) {
+        allFlags.push({ niveau: x.niveau, message: x.message_medecin, symptome: r.fiche.symptome });
+      });
+    });
+    allFlags.sort(function (a, b) { return b.niveau - a.niveau; });
+
+    var rfHtml = allFlags.length
+      ? "<ul class='rf'>" + allFlags.map(function (x) {
           return "<li><span class='u-tag " + Engine.URGENCE[x.niveau].classe + "'>N" + x.niveau +
-            "</span> " + esc(x.message_medecin) + "</li>"; }).join("") + "</ul>"
+            "</span> <span class='rf-tag'>" + esc(x.symptome) + "</span> " + esc(x.message) + "</li>";
+        }).join("") + "</ul>"
       : "<p class='ok'>Pas de red flag vital immédiat détecté sur les éléments déclarés. " +
         "La vigilance clinique reste de mise.</p>";
 
-    var hyp = r.hypotheses.length
-      ? "<ol class='hyp'>" + r.hypotheses.slice(0, 4).map(function (h) {
-          var args = h.arguments_pour.length
-            ? " <span class='args'>(" + h.arguments_pour.map(esc).join(" · ") + ")</span>" : "";
-          return "<li><strong>" + esc(h.diagnostic) + "</strong>" + args +
-            " <span class='score'>score " + h.score + "/" + h.maxScore + "</span></li>"; }).join("") + "</ol>"
-      : "<p class='muted'>Pas d'orientation différentielle marquée : compléter l'interrogatoire et l'examen.</p>";
+    // Hypothèses par motif
+    var hypBlocks = session.results.map(function (r) {
+      var hyp = r.result.hypotheses.length
+        ? "<ol class='hyp'>" + r.result.hypotheses.slice(0, 4).map(function (h) {
+            var args = h.arguments_pour.length
+              ? " <span class='args'>(" + h.arguments_pour.map(esc).join(" · ") + ")</span>" : "";
+            return "<li><strong>" + esc(h.diagnostic) + "</strong>" + args +
+              " <span class='score'>score " + h.score + "/" + h.maxScore + "</span></li>";
+          }).join("") + "</ol>"
+        : "<p class='muted'>Pas d'orientation différentielle marquée : compléter l'interrogatoire et l'examen.</p>";
+      var tag = r.result.niveau >= 2
+        ? " <span class='u-tag " + r.result.urgence.classe + "'>N" + r.result.niveau + "</span>" : "";
+      return "<div class='syn-motif'><h4>" + esc(r.fiche.symptome) + tag +
+        " <small>" + esc(r.fiche.specialite.join(" · ")) + "</small></h4>" + hyp + "</div>";
+    }).join("");
 
+    // À vérifier à l'examen clinique (union dédupliquée)
+    var verifAll = [];
+    session.results.forEach(function (r) {
+      r.result.points_a_verifier.forEach(function (p) { verifAll.push(p); });
+    });
+    verifAll = dedup(verifAll);
+
+    // Examens complémentaires (union dédupliquée)
+    var examAll = [];
+    session.results.forEach(function (r) {
+      r.result.examens_a_discuter.forEach(function (e) { examAll.push(e); });
+    });
+    examAll = dedup(examAll);
+
+    var n = session.results.length;
     box.innerHTML =
       "<div class='card synthese'>" +
-        "<div class='syn-head " + r.urgence.classe + "'>" +
-          "<div><h2>Synthèse clinique — " + esc(f.symptome) + "</h2>" +
-            "<p class='syn-sub'>" + esc(f.specialite.join(" · ")) +
-            (ctxLine ? " — " + esc(ctxLine) : "") + "</p></div>" +
-          "<div class='urg-badge'>Niveau " + r.niveau + "<small>" + esc(r.urgence.libelle) + "</small></div>" +
+        "<div class='syn-head " + urg.classe + "'>" +
+          "<div><h2>Synthèse clinique — " + n + (n > 1 ? " motifs" : " motif") + "</h2>" +
+            "<p class='syn-sub'>" + motifs + (ctxLine ? " — " + esc(ctxLine) : "") + "</p></div>" +
+          "<div class='urg-badge'>Niveau " + session.niveau + "<small>" + esc(urg.libelle) + "</small></div>" +
         "</div>" +
 
-        block("Motif principal", "<p>" + esc(f.symptome) +
-          (ctxLine ? " — " + esc(ctxLine) : "") + "</p>") +
+        block("Motifs déclarés (patient)", "<p>" + motifs + "</p>") +
 
         block("Éléments importants (déclaratif patient)",
-          recapLines.length ? "<ul class='recap'>" + recapLines.map(function (l) {
+          recapAll.length ? "<ul class='recap'>" + recapAll.map(function (l) {
             return "<li>" + esc(l) + "</li>"; }).join("") + "</ul>"
             : "<p class='muted'>Questionnaire incomplet.</p>") +
 
-        block("⚠ Red flags / signes d'alerte", rf) +
+        block("⚠ Red flags / signes d'alerte (tous motifs)", rfHtml) +
 
-        block("Hypothèses à envisager (classées)", hyp) +
+        block("Hypothèses à envisager — par motif", hypBlocks) +
 
         block("À vérifier à l'examen clinique",
-          "<ul class='verif'>" + r.points_a_verifier.map(function (p) {
+          "<ul class='verif'>" + verifAll.map(function (p) {
             return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>") +
 
         block("Examens complémentaires à discuter",
-          r.examens_a_discuter.length
-            ? "<ul class='exam'>" + r.examens_a_discuter.map(function (e) {
+          examAll.length
+            ? "<ul class='exam'>" + examAll.map(function (e) {
                 return "<li>" + esc(e) + "</li>"; }).join("") + "</ul>"
             : "<p class='muted'>Selon l'examen clinique.</p>") +
 
         block("Orientation proposée",
-          "<p class='orient " + r.urgence.classe + "'>" + esc(r.urgence.orientation) + "</p>") +
+          "<p class='orient " + urg.classe + "'>" + esc(urg.orientation) + "</p>") +
 
         "<div class='doctor-notes'>" +
           "<label><span>Conclusion / notes du médecin (modifiable)</span>" +
@@ -270,7 +372,7 @@
   // --------------------------------------------------------------------- démo
   function loadDemo() {
     session.ctx = { age: 38, sexe: "Homme", grossessePossible: false, ageProcreer: false, antecedents: [] };
-    session.symptomKey = "acouphene";
+    session.symptomKeys = ["acouphene"];
     session.answers = {
       ac_cote: "Une seule oreille", ac_pulsatile: false, ac_hypoacousie: true,
       ac_brusque: false, ac_vertige: false, ac_otalgie: false,
@@ -286,14 +388,17 @@
       el(id).addEventListener("change", refreshIntroValidity);
     });
     el("toSymptom").addEventListener("click", function () {
-      readContext(); renderSymptomGrid(""); show("step-symptom");
+      readContext(); renderSymptomGrid(""); updateSelectBar(); show("step-symptom");
     });
     el("symptomSearch").addEventListener("input", function (e) { renderSymptomGrid(e.target.value); });
-    el("backToSymptom").addEventListener("click", function () { show("step-symptom"); });
+    el("toQuiz").addEventListener("click", startQuiz);
+    el("backToSymptom").addEventListener("click", function () {
+      renderSymptomGrid(el("symptomSearch").value); updateSelectBar(); show("step-symptom");
+    });
     el("submitQuiz").addEventListener("click", function (e) { e.preventDefault(); showPatientResult(); });
     el("goMedecin").addEventListener("click", function () { setMode("medecin"); });
     el("restart").addEventListener("click", function () {
-      session = { ctx: {}, symptomKey: null, answers: {}, result: null };
+      session = { ctx: {}, symptomKeys: [], answers: {}, results: null, niveau: 1 };
       el("ctx-consent").checked = false; refreshIntroValidity(); show("step-intro");
     });
     el("loadDemo").addEventListener("click", loadDemo);
@@ -303,9 +408,10 @@
     });
     refreshIntroValidity();
     renderSymptomGrid("");
-    // Accès direct à un symptôme depuis le catalogue : index.html#s=<clé>
+    updateSelectBar();
+    // Accès direct à un motif depuis le catalogue : index.html#s=<clé>
     var m = /#s=([a-z_]+)/.exec(location.hash);
-    if (m && KB[m[1]]) { startQuiz(m[1]); }
+    if (m && KB[m[1]]) { session.symptomKeys = [m[1]]; startQuiz(); }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
