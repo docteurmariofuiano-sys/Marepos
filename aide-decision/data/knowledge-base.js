@@ -5850,5 +5850,296 @@ window.KB = {
         examens_a_discuter: ["Bilan nutritionnel, sérologie cœliaque"] }
     ],
     examens_clinique: ["Poids / IMC, pâleur", "Examen neurologique (B12)", "Bilan ciblé (ferritine, B12/folates, vitamine D, calcémie)"]
+  },
+
+  // =========================================================================
+  // PÉDIATRIE — LOT A : urgences (fiches dédiées enfant)
+  // Sources : Pédiatrie pour le praticien (Elsevier 2020) ; Pédiatrie en poche.
+  // =========================================================================
+  malaise_nourrisson: {
+    id: "malaise_nourrisson", symptome: "Malaise grave du nourrisson (ALTE/BRUE)", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "mn_respi", label: "Pause respiratoire", type: "boolean", question: "Pendant l'épisode, l'enfant a-t-il cessé de respirer ou eu une pause respiratoire ?" },
+      { id: "mn_couleur", label: "Changement de couleur", type: "boolean", question: "A-t-il changé de couleur (bleu, gris, ou très pâle) ?" },
+      { id: "mn_tonus", label: "Perte de tonus/contact", type: "boolean", question: "Est-il devenu tout mou, ou ne répondait-il plus (perte de connaissance) ?" },
+      { id: "mn_actuel", label: "Signes persistants", type: "boolean", question: "Présente-t-il ENCORE des signes anormaux maintenant (somnolence, gêne respiratoire, teint anormal) ?" },
+      { id: "mn_terrain", label: "Terrain à risque", type: "boolean", question: "L'enfant a-t-il moins de 2 mois, ou est-il né prématurément ?" },
+      { id: "mn_contexte", label: "Contexte", type: "single_choice", question: "Dans quelles circonstances ?", options: ["Après un biberon / une régurgitation", "Pendant le sommeil", "Au cours d'une fièvre / infection", "Aucun facteur déclenchant"] }
+    ],
+    red_flags: [
+      { id: "mn_rf_grave", niveau: 3, when: { any: [{ q: "mn_respi", eq: true }, { q: "mn_couleur", eq: true }, { q: "mn_tonus", eq: true }, { q: "mn_actuel", eq: true }] },
+        message_medecin: "Malaise grave du nourrisson (apnée, cyanose/pâleur, hypotonie ou signes persistants) : tout malaise vrai du nourrisson impose une hospitalisation pour surveillance et bilan étiologique (RGO, infection/coqueluche/bronchiolite, cause cardiaque, neuro, métabolique, et ÉLIMINER une maltraitance) — appeler le 15.",
+        message_patient: "Un malaise du bébé doit toujours être évalué en urgence : appelez le 15." },
+      { id: "mn_rf_terrain", niveau: 3, when: { q: "mn_terrain", eq: true },
+        message_medecin: "Nourrisson < 2 mois ou ancien prématuré : risque accru (apnées, infection grave) → hospitalisation systématique.",
+        message_patient: "À cet âge, un malaise nécessite une prise en charge hospitalière." }
+    ],
+    diagnostics_differentiels: [
+      { id: "mn_rgo", diagnostic: "RGO / fausse route alimentaire", arguments: [{ label: "survenue après un biberon/régurgitation", w: 2, when: { q: "mn_contexte", eq: "Après un biberon / une régurgitation" } }],
+        examens_a_discuter: ["Évaluer les conditions d'alimentation ; le RGO reste un diagnostic d'élimination"] },
+      { id: "mn_infection", diagnostic: "Cause infectieuse (coqueluche, bronchiolite, sepsis, infection urinaire)", arguments: [{ label: "contexte fébrile / infectieux", w: 2, when: { q: "mn_contexte", eq: "Au cours d'une fièvre / infection" } }],
+        examens_a_discuter: ["Bilan infectieux selon l'âge (NFS-CRP, ECBU, PCR coqueluche, etc.)"] },
+      { id: "mn_autre", diagnostic: "Cause cardiaque / neurologique / métabolique", arguments: [{ label: "aucun facteur déclenchant", w: 2, when: { q: "mn_contexte", eq: "Aucun facteur déclenchant" } }],
+        examens_a_discuter: ["ECG, glycémie, ionogramme, avis pédiatrique ; imagerie cérébrale si point d'appel (et fond d'œil : bébé secoué)"] }
+    ],
+    examens_clinique: ["SpO2, fréquences cardiaque et respiratoire, température", "Examen complet (neuro, cardio-pulmonaire, abdomen)", "Recherche d'un contexte infectieux et de signes de maltraitance (bébé secoué)", "Hospitalisation pour surveillance et bilan"]
+  },
+
+  dyspnee_laryngee: {
+    id: "dyspnee_laryngee", symptome: "Gêne respiratoire haute / stridor de l'enfant (laryngite…)", specialite: ["Pédiatrie", "ORL"], urgence: true,
+    questions: [
+      { id: "dl_inspi", label: "Bruit inspiratoire", type: "boolean", question: "Le bruit anormal survient-il en INSPIRANT (bruit rauque), avec une voix/un cri modifié ou une toux qui ressemble à un aboiement ?" },
+      { id: "dl_etranger", label: "Syndrome de pénétration", type: "boolean", question: "Est-ce apparu brutalement, en jouant avec un petit objet ou en mangeant (quinte de toux/suffocation soudaine) ?" },
+      { id: "dl_epiglottite", label: "Épiglottite", type: "boolean", question: "L'enfant bave, ne peut plus avaler, reste assis penché en avant, avec une forte fièvre et un air très malade ?" },
+      { id: "dl_lutte", label: "Détresse respiratoire", type: "boolean", question: "Y a-t-il des signes de lutte (creusement entre/sous les côtes, battement des ailes du nez), une coloration bleue, ou un épuisement ?" },
+      { id: "dl_repos", label: "Gêne au repos", type: "boolean", question: "La gêne ou le bruit sont-ils présents même au repos (pas seulement quand il pleure ou s'agite) ?" }
+    ],
+    red_flags: [
+      { id: "dl_rf_epiglottite", niveau: 3, when: { q: "dl_epiglottite", eq: true },
+        message_medecin: "Suspicion d'épiglottite (hypersialorrhée, dysphagie, position assise penchée en avant, fièvre élevée) : URGENCE — ne pas allonger l'enfant, ne PAS examiner la gorge ni l'abaisse-langue, laisser au calme, appeler le 15 (intubation en milieu spécialisé).",
+        message_patient: "Ces signes sont une urgence vitale : appelez le 15, gardez l'enfant assis et au calme." },
+      { id: "dl_rf_etranger", niveau: 3, when: { q: "dl_etranger", eq: true },
+        message_medecin: "Syndrome de pénétration : corps étranger laryngé/trachéal → urgence (manœuvres de désobstruction si asphyxie, sinon extraction endoscopique).",
+        message_patient: "Une suffocation brutale après un objet/aliment est une urgence : appelez le 15." },
+      { id: "dl_rf_detresse", niveau: 3, when: { any: [{ q: "dl_lutte", eq: true }, { q: "dl_repos", eq: true }] },
+        message_medecin: "Dyspnée laryngée avec signes de lutte / au repos : détresse respiratoire → oxygène, avis urgent (15).",
+        message_patient: "Une gêne respiratoire importante au repos nécessite d'appeler le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dl_laryngite", diagnostic: "Laryngite aiguë sous-glottique (virale)", arguments: [{ label: "stridor inspiratoire + toux aboyante, contexte viral", w: 3, when: { q: "dl_inspi", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique ; corticoïde (bétaméthasone/dexaméthasone) ; aérosol d'adrénaline si forme sévère ; humidification, calme"] },
+      { id: "dl_corps", diagnostic: "Corps étranger des voies aériennes", arguments: [{ label: "syndrome de pénétration", w: 3, when: { q: "dl_etranger", eq: true } }],
+        examens_a_discuter: ["Endoscopie ; radiographie selon le contexte"] },
+      { id: "dl_epiglottite_dd", diagnostic: "Épiglottite (rare depuis Hib)", arguments: [{ label: "dysphagie fébrile, bave, position penchée", w: 3, when: { q: "dl_epiglottite", eq: true } }],
+        examens_a_discuter: ["Prise en charge spécialisée immédiate, antibiothérapie ; ne rien introduire dans la bouche"] }
+    ],
+    examens_clinique: ["Apprécier la gravité : signes de lutte, SpO2, retentissement (épuisement, troubles de conscience)", "Ne PAS examiner la gorge ni allonger si épiglottite suspectée", "Caractériser le bruit (inspiratoire = obstacle haut)", "Type de toux (aboyante = laryngite)"]
+  },
+
+  convulsion_non_febrile: {
+    id: "convulsion_non_febrile", symptome: "Crise / convulsion sans fièvre de l'enfant", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "cn_fievre", label: "Fièvre associée", type: "boolean", question: "L'enfant avait-il de la fièvre au moment de la crise ?" },
+      { id: "cn_duree", label: "Crise prolongée", type: "boolean", question: "La crise a-t-elle duré plus de 5 minutes, ou les crises se sont-elles répétées sans reprise de connaissance ?" },
+      { id: "cn_recup", label: "Récupération", type: "boolean", question: "L'enfant a-t-il complètement récupéré ensuite (conscience et comportement normaux) ?" },
+      { id: "cn_focal", label: "Signes focaux/déficit", type: "boolean", question: "La crise touchait-elle un seul côté du corps, ou reste-t-il une faiblesse/anomalie après la crise ?" },
+      { id: "cn_premiere", label: "Première crise", type: "boolean", question: "Est-ce la première crise de ce type ?" },
+      { id: "cn_cause", label: "Cause possible", type: "boolean", question: "Y a-t-il un contexte particulier : traumatisme crânien, prise de toxique/médicament, diabète, ou maladie connue ?" }
+    ],
+    red_flags: [
+      { id: "cn_rf_status", niveau: 3, when: { q: "cn_duree", eq: true },
+        message_medecin: "Crise > 5 min ou crises subintrantes = état de mal épileptique → URGENCE (benzodiazépine, 15).",
+        message_patient: "Une crise qui dure ou se répète est une urgence : appelez le 15." },
+      { id: "cn_rf_focal", niveau: 3, when: { any: [{ q: "cn_focal", eq: true }, { q: "cn_recup", eq: false }] },
+        message_medecin: "Crise focale ou déficit/trouble de conscience post-critique persistant : éliminer une cause aiguë (infection SNC, AVC, lésion, métabolique) → avis urgent, imagerie.",
+        message_patient: "Ces éléments nécessitent une évaluation médicale immédiate (15)." },
+      { id: "cn_rf_cause", niveau: 3, when: { q: "cn_cause", eq: true },
+        message_medecin: "Crise dans un contexte (TC, toxique, diabète) : rechercher une cause symptomatique aiguë (hypoglycémie, hyponatrémie, intoxication, hématome) → glycémie, ionogramme, avis.",
+        message_patient: "Ce contexte nécessite une évaluation médicale rapide." },
+      { id: "cn_rf_premiere", niveau: 2, when: { all: [{ q: "cn_premiere", eq: true }, { q: "cn_fievre", eq: false }] },
+        message_medecin: "Première crise non fébrile : bilan et avis neuropédiatrique (glycémie, ionogramme ; EEG/imagerie à organiser).",
+        message_patient: "Une première crise sans fièvre nécessite un avis médical et un bilan." }
+    ],
+    diagnostics_differentiels: [
+      { id: "cn_epilepsie", diagnostic: "Crise épileptique / épilepsie", arguments: [{ label: "crise non fébrile", w: 2, when: { q: "cn_fievre", eq: false } }, { label: "première crise", w: 1, when: { q: "cn_premiere", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire, ionogramme ; EEG et imagerie cérébrale (selon le contexte) ; avis neuropédiatrique"] },
+      { id: "cn_symptomatique", diagnostic: "Crise symptomatique aiguë (métabolique, toxique, lésionnelle, infectieuse)", arguments: [{ label: "contexte évocateur", w: 3, when: { q: "cn_cause", eq: true } }, { label: "signes focaux/déficit", w: 1, when: { q: "cn_focal", eq: true } }],
+        examens_a_discuter: ["Glycémie, ionogramme, calcémie ; toxiques ; imagerie ; PL si suspicion d'infection du SNC"] },
+      { id: "cn_febrile", diagnostic: "Convulsion fébrile (voir fiche dédiée)", arguments: [{ label: "fièvre au moment de la crise", w: 3, when: { q: "cn_fievre", eq: true } }],
+        examens_a_discuter: ["Voir la fiche « Convulsion fébrile de l'enfant »"] }
+    ],
+    examens_clinique: ["Glycémie capillaire immédiate", "Examen neurologique (déficit focal, syndrome méningé)", "Recherche d'un traumatisme, d'une prise toxique", "Surveillance et mise en sécurité pendant la crise (PLS)"]
+  },
+
+  trouble_conscience_enfant: {
+    id: "trouble_conscience_enfant", symptome: "Trouble de la conscience / somnolence anormale de l'enfant", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "tce_niveau", label: "Niveau de vigilance", type: "single_choice", question: "Comment réagit l'enfant ?", options: ["Difficile à réveiller / ne réagit pas", "Très somnolent mais réveillable", "Conscient mais comportement anormal"] },
+      { id: "tce_fievre", label: "Fièvre + méningé", type: "boolean", question: "Y a-t-il de la fièvre avec une raideur de la nuque, une gêne à la lumière, ou des taches violacées (purpura) ?" },
+      { id: "tce_trauma", label: "Traumatisme crânien", type: "boolean", question: "Y a-t-il eu un traumatisme crânien récent ?" },
+      { id: "tce_toxique", label: "Toxique possible", type: "boolean", question: "L'enfant a-t-il pu avaler un médicament ou un produit toxique ?" },
+      { id: "tce_diabete", label: "Diabète / acidocétose", type: "boolean", question: "Est-il diabétique, ou a-t-il bu/uriné énormément et maigri ces derniers jours, avec une respiration rapide ?" }
+    ],
+    red_flags: [
+      { id: "tce_rf_coma", niveau: 3, when: { q: "tce_niveau", eq: "Difficile à réveiller / ne réagit pas" },
+        message_medecin: "Trouble de la conscience (enfant difficile à réveiller) : URGENCE → PLS, libération des voies aériennes, glycémie capillaire immédiate, 15.",
+        message_patient: "Un enfant difficile à réveiller est une urgence vitale : appelez le 15." },
+      { id: "tce_rf_meningite", niveau: 3, when: { q: "tce_fievre", eq: true },
+        message_medecin: "Trouble de conscience fébrile ± syndrome méningé / purpura : méningite/méningo-encéphalite, purpura fulminans → URGENCE (antibiotique sans délai si purpura, 15).",
+        message_patient: "Cette association est une urgence vitale : appelez le 15." },
+      { id: "tce_rf_trauma", niveau: 3, when: { q: "tce_trauma", eq: true },
+        message_medecin: "Trouble de conscience après traumatisme crânien : lésion intracrânienne à éliminer → imagerie, 15.",
+        message_patient: "Après un choc à la tête, ces signes nécessitent le 15." },
+      { id: "tce_rf_toxique", niveau: 3, when: { q: "tce_toxique", eq: true },
+        message_medecin: "Suspicion d'intoxication : centre antipoison, 15 ; ne pas faire vomir.",
+        message_patient: "Appelez le 15 / centre antipoison sans faire vomir l'enfant." },
+      { id: "tce_rf_diabete", niveau: 3, when: { q: "tce_diabete", eq: true },
+        message_medecin: "Polyuro-polydipsie + amaigrissement + polypnée / somnolence : acidocétose diabétique inaugurale → glycémie/cétonémie, 15.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate (15)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "tce_inf", diagnostic: "Cause infectieuse (méningite, encéphalite, sepsis)", arguments: [{ label: "fièvre + syndrome méningé/purpura", w: 3, when: { q: "tce_fievre", eq: true } }],
+        examens_a_discuter: ["Hémocultures, PL (après imagerie si signes de localisation), antibiothérapie urgente si purpura"] },
+      { id: "tce_metab", diagnostic: "Cause métabolique (hypoglycémie, acidocétose)", arguments: [{ label: "diabète / acidocétose", w: 3, when: { q: "tce_diabete", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire et cétonémie, ionogramme, gaz du sang"] },
+      { id: "tce_tox", diagnostic: "Intoxication", arguments: [{ label: "toxique possible", w: 3, when: { q: "tce_toxique", eq: true } }],
+        examens_a_discuter: ["Centre antipoison, recherche de toxiques ; antidote si indiqué"] },
+      { id: "tce_trauma_dd", diagnostic: "Cause traumatique", arguments: [{ label: "traumatisme crânien", w: 3, when: { q: "tce_trauma", eq: true } }],
+        examens_a_discuter: ["TDM cérébrale ; surveillance neurologique"] }
+    ],
+    examens_clinique: ["Score de Glasgow pédiatrique, pupilles, glycémie capillaire", "Recherche d'un syndrome méningé, d'un purpura", "Constantes (FC, FR, TA, SpO2, température)", "Recherche d'un traumatisme / d'une intoxication"]
+  },
+
+  deficit_moteur_enfant: {
+    id: "deficit_moteur_enfant", symptome: "Faiblesse / paralysie d'apparition récente (enfant)", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "dme_topo", label: "Topographie", type: "single_choice", question: "Où est la faiblesse ?", options: ["Un seul côté du corps", "Les deux jambes / le bas du corps", "Les quatre membres / progressive vers le haut"] },
+      { id: "dme_rapide", label: "Installation rapide", type: "boolean", question: "La faiblesse s'est-elle installée rapidement (quelques heures à quelques jours) ?" },
+      { id: "dme_dos", label: "Atteinte médullaire", type: "boolean", question: "Y a-t-il une douleur du dos, une difficulté à uriner/se retenir, ou un engourdissement avec une « limite » sur le corps ?" },
+      { id: "dme_marche", label: "Perte de la marche", type: "boolean", question: "L'enfant ne marche plus ou ne tient plus debout alors qu'il le faisait avant ?" },
+      { id: "dme_fievre", label: "Fièvre", type: "boolean", question: "Y a-t-il de la fièvre associée ?" }
+    ],
+    red_flags: [
+      { id: "dme_rf_medullaire", niveau: 3, when: { q: "dme_dos", eq: true },
+        message_medecin: "Déficit + douleur rachidienne / troubles sphinctériens / niveau sensitif : compression médullaire ou myélite → URGENCE (IRM médullaire, avis), 15.",
+        message_patient: "Ces signes nécessitent une prise en charge en urgence (15)." },
+      { id: "dme_rf_hemicorps", niveau: 3, when: { q: "dme_topo", eq: "Un seul côté du corps" },
+        message_medecin: "Déficit d'un hémicorps d'installation rapide : AVC de l'enfant possible (l'AVC existe en pédiatrie) → imagerie cérébrale en urgence, 15.",
+        message_patient: "Une faiblesse d'un côté du corps est une urgence : appelez le 15." },
+      { id: "dme_rf_gbs", niveau: 2, when: { all: [{ q: "dme_topo", eq: "Les quatre membres / progressive vers le haut" }, { q: "dme_rapide", eq: true }] },
+        message_medecin: "Déficit ascendant et symétrique : syndrome de Guillain-Barré → hospitalisation (surveillance respiratoire et déglutition), avis neuropédiatrique.",
+        message_patient: "Une faiblesse qui monte dans le corps nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "dme_gbs", diagnostic: "Polyradiculonévrite (Guillain-Barré)", arguments: [{ label: "déficit ascendant, symétrique", w: 3, when: { q: "dme_topo", eq: "Les quatre membres / progressive vers le haut" } }],
+        examens_a_discuter: ["Examen : aréflexie ; surveillance respiratoire ; avis neuropédiatrique (PL, électromyogramme)"] },
+      { id: "dme_medullaire", diagnostic: "Myélite / compression médullaire", arguments: [{ label: "douleur dorsale, troubles sphinctériens, niveau sensitif", w: 3, when: { q: "dme_dos", eq: true } }],
+        examens_a_discuter: ["IRM médullaire en urgence"] },
+      { id: "dme_avc", diagnostic: "AVC / cause centrale", arguments: [{ label: "déficit d'un hémicorps", w: 3, when: { q: "dme_topo", eq: "Un seul côté du corps" } }],
+        examens_a_discuter: ["Imagerie cérébrale en urgence"] },
+      { id: "dme_myosite", diagnostic: "Myosite post-virale / cause musculaire", arguments: [{ label: "fièvre/contexte viral, douleurs musculaires", w: 1, when: { q: "dme_fievre", eq: true } }],
+        examens_a_discuter: ["CPK ; contexte viral (myosite bénigne de l'enfant)"] }
+    ],
+    examens_clinique: ["Examen neurologique : force, réflexes (aréflexie ?), niveau sensitif, marche", "Recherche d'un globe vésical (rétention)", "Topographie du déficit (oriente la cause)", "Constantes, recherche de fièvre"]
+  },
+
+  ataxie_enfant: {
+    id: "ataxie_enfant", symptome: "Trouble de l'équilibre / marche instable récente (enfant)", specialite: ["Pédiatrie", "Neurologie"], urgence: true,
+    questions: [
+      { id: "ae_marche", label: "Marche ébrieuse", type: "boolean", question: "L'enfant marche-t-il de façon instable (comme « ivre »), tombe-t-il, ou n'arrive-t-il plus à tenir assis/debout, depuis peu ?" },
+      { id: "ae_htic", label: "Signes d'HTIC/tumeur", type: "boolean", question: "Y a-t-il des maux de tête avec vomissements (surtout le matin), une vision double, ou un comportement anormal ?" },
+      { id: "ae_intox", label: "Toxique", type: "boolean", question: "L'enfant a-t-il pu avaler un médicament, de l'alcool ou un produit toxique ?" },
+      { id: "ae_postviral", label: "Contexte viral récent", type: "boolean", question: "A-t-il eu récemment une infection virale ou une varicelle dans les jours précédents ?" },
+      { id: "ae_yeux", label: "Mouvements oculaires anormaux", type: "boolean", question: "Avez-vous remarqué des mouvements anormaux et saccadés des yeux ?" }
+    ],
+    red_flags: [
+      { id: "ae_rf_htic", niveau: 3, when: { q: "ae_htic", eq: true },
+        message_medecin: "Ataxie + signes d'hypertension intracrânienne (céphalées/vomissements matinaux, diplopie) : tumeur de la fosse postérieure à éliminer → imagerie cérébrale urgente.",
+        message_patient: "Ces signes nécessitent un avis médical rapide et une imagerie." },
+      { id: "ae_rf_intox", niveau: 2, when: { q: "ae_intox", eq: true },
+        message_medecin: "Ataxie d'origine toxique possible : centre antipoison, recherche de toxiques.",
+        message_patient: "Appelez le 15 / centre antipoison." },
+      { id: "ae_rf_opso", niveau: 2, when: { q: "ae_yeux", eq: true },
+        message_medecin: "Mouvements oculaires saccadés (opsoclonies) + ataxie/myoclonies : syndrome opsoclonie-myoclonie (rechercher un neuroblastome) → avis spécialisé.",
+        message_patient: "Ces mouvements des yeux nécessitent un avis spécialisé." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ae_postviral", diagnostic: "Ataxie cérébelleuse aiguë post-infectieuse", arguments: [{ label: "contexte viral / post-varicelle", w: 3, when: { q: "ae_postviral", eq: true } }],
+        examens_a_discuter: ["Diagnostic souvent clinique (cause la plus fréquente, bénigne) après élimination des causes graves ; surveillance"] },
+      { id: "ae_tumeur", diagnostic: "Tumeur de la fosse postérieure", arguments: [{ label: "signes d'HTIC", w: 3, when: { q: "ae_htic", eq: true } }],
+        examens_a_discuter: ["Imagerie cérébrale (IRM)"] },
+      { id: "ae_intox_dd", diagnostic: "Intoxication", arguments: [{ label: "toxique possible", w: 3, when: { q: "ae_intox", eq: true } }],
+        examens_a_discuter: ["Recherche de toxiques, centre antipoison"] },
+      { id: "ae_opso", diagnostic: "Syndrome opsoclonie-myoclonie (neuroblastome)", arguments: [{ label: "opsoclonies", w: 3, when: { q: "ae_yeux", eq: true } }],
+        examens_a_discuter: ["Avis spécialisé ; recherche d'un neuroblastome (catécholamines urinaires, imagerie)"] }
+    ],
+    examens_clinique: ["Examen cérébelleux (équilibre, coordination, marche)", "Recherche de signes d'HTIC (fond d'œil), de signes de localisation", "Recherche de toxiques", "Mouvements oculaires anormaux"]
+  },
+
+  anaphylaxie_enfant: {
+    id: "anaphylaxie_enfant", symptome: "Réaction allergique aiguë / anaphylaxie (enfant)", specialite: ["Pédiatrie", "Allergologie"], urgence: true,
+    questions: [
+      { id: "an_respi", label: "Atteinte respiratoire", type: "boolean", question: "Y a-t-il une gêne pour respirer, un sifflement, une gorge serrée, une voix modifiée ou une difficulté à avaler ?" },
+      { id: "an_circ", label: "Atteinte circulatoire", type: "boolean", question: "Y a-t-il un malaise, une grande pâleur, une somnolence importante ou une perte de connaissance ?" },
+      { id: "an_cutane", label: "Atteinte cutanée", type: "boolean", question: "Y a-t-il une éruption qui démange (urticaire) sur tout le corps, ou un gonflement des lèvres/paupières ?" },
+      { id: "an_digestif", label: "Atteinte digestive", type: "boolean", question: "Y a-t-il des vomissements ou des douleurs au ventre apparus brutalement ?" },
+      { id: "an_declencheur", label: "Déclencheur", type: "boolean", question: "Est-ce survenu juste après un aliment, une piqûre d'insecte ou un médicament ?" }
+    ],
+    red_flags: [
+      { id: "an_rf_anaphylaxie", niveau: 3, when: { any: [{ q: "an_respi", eq: true }, { q: "an_circ", eq: true }] },
+        message_medecin: "Anaphylaxie (atteinte respiratoire et/ou circulatoire) : ADRÉNALINE intramusculaire (face antéro-externe de la cuisse) SANS DÉLAI, puis 15 ; allonger jambes surélevées (assis si gêne respiratoire). Utiliser le stylo auto-injecteur si disponible.",
+        message_patient: "C'est une urgence vitale : injectez l'adrénaline (stylo) si vous en avez un et appelez le 15." },
+      { id: "an_rf_evolutif", niveau: 2, when: { all: [{ q: "an_cutane", eq: true }, { q: "an_declencheur", eq: true }] },
+        message_medecin: "Réaction allergique (urticaire/angio-œdème) après un allergène : surveiller l'apparition de signes respiratoires/circulatoires (peut évoluer vers l'anaphylaxie), antihistaminique, avis ; prévoir un bilan allergologique et une trousse d'urgence (PAI).",
+        message_patient: "Surveillez de près : en cas de gêne respiratoire ou de malaise, appelez le 15." }
+    ],
+    diagnostics_differentiels: [
+      { id: "an_anaphylaxie", diagnostic: "Anaphylaxie", arguments: [{ label: "atteinte respiratoire", w: 3, when: { q: "an_respi", eq: true } }, { label: "atteinte circulatoire", w: 3, when: { q: "an_circ", eq: true } }, { label: "atteinte digestive aiguë", w: 1, when: { q: "an_digestif", eq: true } }],
+        examens_a_discuter: ["Adrénaline IM, oxygène, remplissage ; surveillance (réaction biphasique) ; tryptase ; bilan allergologique à distance"] },
+      { id: "an_urticaire", diagnostic: "Urticaire / angio-œdème isolé", arguments: [{ label: "atteinte cutanée sans signe respiratoire/circulatoire", w: 2, when: { q: "an_cutane", eq: true } }],
+        examens_a_discuter: ["Antihistaminique ; surveillance ; éviction de l'allergène suspecté"] }
+    ],
+    examens_clinique: ["Rechercher une atteinte de ≥ 2 systèmes (cutané, respiratoire, circulatoire, digestif)", "Constantes : TA, FC, SpO2 ; auscultation (sibilants, stridor)", "Identifier l'allergène (aliment, hyménoptère, médicament)", "Prescrire une trousse d'urgence (auto-injecteur d'adrénaline) et un PAI"]
+  },
+
+  grosse_bourse_enfant: {
+    id: "grosse_bourse_enfant", symptome: "Grosse bourse / douleur d'un testicule (garçon)", specialite: ["Pédiatrie", "Chirurgie", "Urologie"], urgence: true,
+    questions: [
+      { id: "gbe_brutal", label: "Douleur brutale", type: "boolean", question: "La douleur d'une bourse est-elle apparue brutalement (parfois avec des vomissements), depuis quelques heures ?" },
+      { id: "gbe_rouge", label: "Bourse inflammatoire", type: "boolean", question: "La bourse est-elle gonflée, rouge et très douloureuse ?" },
+      { id: "gbe_pointbleu", label: "Point bleuté", type: "boolean", question: "Voit-on un petit point bleuté au sommet du testicule, avec une douleur plus localisée ?" },
+      { id: "gbe_fievre", label: "Fièvre / urinaire", type: "boolean", question: "Y a-t-il de la fièvre, des brûlures pour uriner, ou un écoulement ?" },
+      { id: "gbe_indolore", label: "Gonflement indolore", type: "boolean", question: "S'agit-il d'un gonflement SANS douleur (la bourse n'est pas douloureuse) ?" }
+    ],
+    red_flags: [
+      { id: "gbe_rf_torsion", niveau: 3, when: { any: [{ q: "gbe_brutal", eq: true }, { q: "gbe_rouge", eq: true }] },
+        message_medecin: "Bourse aiguë douloureuse = TORSION du cordon spermatique jusqu'à preuve du contraire : URGENCE chirurgicale (idéalement < 6 h) → avis chirurgical immédiat (15). L'échographie-doppler ne doit pas retarder l'exploration.",
+        message_patient: "Une douleur brutale d'un testicule est une urgence : appelez le 15 / allez aux urgences sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gbe_torsion", diagnostic: "Torsion du cordon spermatique", arguments: [{ label: "douleur brutale, bourse inflammatoire", w: 3, when: { q: "gbe_brutal", eq: true } }, { label: "bourse rouge/gonflée", w: 1, when: { q: "gbe_rouge", eq: true } }],
+        examens_a_discuter: ["Exploration chirurgicale en urgence (ne pas retarder) ; réflexe crémastérien aboli"] },
+      { id: "gbe_hydatide", diagnostic: "Torsion d'hydatide testiculaire", arguments: [{ label: "point bleuté, douleur localisée", w: 3, when: { q: "gbe_pointbleu", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique/échographique ; en cas de doute avec une torsion → exploration"] },
+      { id: "gbe_orchi", diagnostic: "Orchi-épididymite", arguments: [{ label: "fièvre / signes urinaires", w: 3, when: { q: "gbe_fievre", eq: true } }],
+        examens_a_discuter: ["ECBU ; échographie ; ne pas éliminer une torsion sans avis"] },
+      { id: "gbe_indolore", diagnostic: "Cause indolore (hydrocèle, hernie, kyste)", arguments: [{ label: "gonflement indolore", w: 3, when: { q: "gbe_indolore", eq: true } }],
+        examens_a_discuter: ["Échographie ; avis chirurgical programmé (hernie inguinale à opérer, surveiller le risque d'étranglement)"] }
+    ],
+    examens_clinique: ["Inspection/palpation scrotale, réflexe crémastérien", "Devant toute bourse aiguë douloureuse : avis chirurgical en urgence (ne pas attendre l'imagerie)", "Recherche de fièvre / signes urinaires", "Caractère réductible (hernie) ou non"]
+  },
+
+  purpura_enfant: {
+    id: "purpura_enfant", symptome: "Purpura / taches rouges qui ne s'effacent pas (enfant)", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "pue_fievre", label: "Fièvre", type: "boolean", question: "L'enfant a-t-il de la fièvre ?" },
+      { id: "pue_efface", label: "Vitropression", type: "boolean", question: "Les taches DISPARAISSENT-elles quand on appuie dessus (par exemple avec un verre transparent) ?" },
+      { id: "pue_extension", label: "Extension rapide / AEG", type: "boolean", question: "Les taches s'étendent-elles rapidement, et l'enfant est-il abattu, geignard ou marbré ?" },
+      { id: "pue_jambes", label: "Profil rhumatoïde", type: "boolean", question: "Les taches sont-elles surtout sur les jambes/fesses, en relief, avec des douleurs articulaires ou au ventre ?" },
+      { id: "pue_saignement", label: "Syndrome hémorragique", type: "boolean", question: "Y a-t-il des saignements (nez, gencives) ou des bleus qui apparaissent facilement ?" }
+    ],
+    red_flags: [
+      { id: "pue_rf_fulminans", niveau: 3, when: { all: [{ q: "pue_fievre", eq: true }, { q: "pue_efface", eq: false }] },
+        message_medecin: "Purpura fébrile ne s'effaçant pas à la vitropression : purpura fulminans (méningococcémie) jusqu'à preuve du contraire → URGENCE ABSOLUE : antibiotique (ceftriaxone/céfotaxime) en injection SANS DÉLAI et appel du 15.",
+        message_patient: "Des taches qui ne s'effacent pas avec de la fièvre sont une urgence vitale : appelez le 15 immédiatement." },
+      { id: "pue_rf_extension", niveau: 3, when: { q: "pue_extension", eq: true },
+        message_medecin: "Purpura extensif avec altération de l'état général / marbrures : sepsis → URGENCE (15, antibiotique si purpura fébrile).",
+        message_patient: "Ces signes sont une urgence vitale : appelez le 15." },
+      { id: "pue_rf_thrombopenie", niveau: 2, when: { q: "pue_saignement", eq: true },
+        message_medecin: "Purpura + syndrome hémorragique (sans fièvre) : thrombopénie (PTI) probable → NFS-plaquettes en urgence, avis ; éviter les traumatismes et l'aspirine/AINS.",
+        message_patient: "Ces signes nécessitent un bilan sanguin rapide." },
+      { id: "pue_rf_rhumatoide", niveau: 2, when: { q: "pue_jambes", eq: true },
+        message_medecin: "Purpura déclive (jambes/fesses) + signes articulaires/digestifs : purpura rhumatoïde (vascularite à IgA) → surveiller TA, bandelette urinaire (atteinte rénale) et douleurs abdominales (invagination).",
+        message_patient: "Ce type de purpura nécessite un suivi médical (tension, urines)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pue_fulminans", diagnostic: "Purpura fulminans / sepsis (méningocoque)", arguments: [{ label: "fièvre + purpura ne s'effaçant pas", w: 3, when: { q: "pue_fievre", eq: true } }, { label: "extension rapide / AEG", w: 2, when: { q: "pue_extension", eq: true } }],
+        examens_a_discuter: ["Antibiotique en urgence AVANT le transfert, hémocultures, 15 — ne pas attendre les examens"] },
+      { id: "pue_pti", diagnostic: "Thrombopénie (PTI)", arguments: [{ label: "syndrome hémorragique sans fièvre", w: 3, when: { q: "pue_saignement", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes, frottis ; avis hématopédiatrique"] },
+      { id: "pue_rhumatoide", diagnostic: "Purpura rhumatoïde (vascularite à IgA)", arguments: [{ label: "purpura déclive + articulaire/digestif", w: 3, when: { q: "pue_jambes", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire et TA (atteinte rénale), surveillance des douleurs abdominales (invagination)"] }
+    ],
+    examens_clinique: ["Vitropression (un purpura ne s'efface pas)", "Température, recherche de signes de sepsis (marbrures, TRC, conscience)", "Recherche d'un syndrome hémorragique muqueux", "Si purpura déclive : TA + bandelette urinaire (purpura rhumatoïde)"]
   }
 };

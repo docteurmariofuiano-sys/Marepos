@@ -58,6 +58,50 @@
     session.symptomKeys = keys;
   }
 
+  // -------- Pertinence des motifs selon l'âge et le sexe (filtre du catalogue) --
+  // sexe : "F" / "M" (motif spécifique d'un sexe) ; population : "enfant" / "adulte".
+  // Seuil enfant/adulte : 15 ans. Métadonnées centralisées (modifiables ici).
+  var RESTRICTIONS = {
+    // Féminin
+    leucorrhees: { sexe: "F" }, dysmenorrhee: { sexe: "F" }, metrorragies: { sexe: "F" },
+    sopk: { sexe: "F" }, suivi_grossesse: { sexe: "F" }, nausees_grossesse: { sexe: "F" },
+    preeclampsie: { sexe: "F" }, fausse_couche: { sexe: "F" }, diminution_mvt_foetaux: { sexe: "F" },
+    fievre_postpartum: { sexe: "F" }, contraception: { sexe: "F" }, trouble_cycle: { sexe: "F" },
+    // Masculin
+    hemospermie: { sexe: "M", population: "adulte" }, prostatite: { sexe: "M", population: "adulte" },
+    grosse_bourse: { sexe: "M", population: "adulte" }, grosse_bourse_enfant: { sexe: "M", population: "enfant" },
+    // Pédiatrique
+    fievre_enfant: { population: "enfant" }, bronchiolite: { population: "enfant" },
+    convulsion_febrile: { population: "enfant" }, boiterie_enfant: { population: "enfant" },
+    pleurs_nourrisson: { population: "enfant" }, asthme_enfant: { population: "enfant" },
+    malaise_nourrisson: { population: "enfant" }, dyspnee_laryngee: { population: "enfant" },
+    convulsion_non_febrile: { population: "enfant" }, trouble_conscience_enfant: { population: "enfant" },
+    deficit_moteur_enfant: { population: "enfant" }, ataxie_enfant: { population: "enfant" },
+    anaphylaxie_enfant: { population: "enfant" }, purpura_enfant: { population: "enfant" },
+    // Adulte (peu pertinents chez le jeune enfant)
+    difficultes_sexuelles: { population: "adulte" }, bouffees_chaleur: { population: "adulte" },
+    osteoporose: { population: "adulte" }, sevrage_alcool: { population: "adulte" },
+    incontinence_urinaire: { population: "adulte" }, retention_urinaire: { population: "adulte" }
+  };
+
+  function ageBracket(ctx) {
+    if (ctx == null || ctx.age == null) return null;
+    return ctx.age < 15 ? "enfant" : "adulte";
+  }
+  function sexeCode(ctx) {
+    if (!ctx || !ctx.sexe) return null;
+    return ctx.sexe === "Femme" ? "F" : ctx.sexe === "Homme" ? "M" : null;
+  }
+  function ficheAllowed(fkey) {
+    var r = RESTRICTIONS[fkey];
+    if (!r) return true;
+    var sc = sexeCode(session.ctx);
+    if (r.sexe && sc && r.sexe !== sc) return false;          // sexe non concerné
+    var br = ageBracket(session.ctx);
+    if (r.population && br && r.population !== br) return false; // tranche d'âge non concernée
+    return true;
+  }
+
   var FIEVRE_SEUIL = 38.5;
 
   // Lit une température (accepte la virgule), renvoie un nombre °C plausible ou null
@@ -134,7 +178,9 @@
     var full = countChecked() >= MAX_SELECT;
     grid.innerHTML = "";
     PATIENT_CATS.forEach(function (c) {
-      var items = c.items.filter(function (it) { return !q || norm(it.label).indexOf(q) !== -1; });
+      var items = c.items.filter(function (it) {
+        return ficheAllowed(it.fkey) && (!q || norm(it.label).indexOf(q) !== -1);
+      });
       if (!items.length) return;
       var sec = document.createElement("section");
       sec.className = "cat-group";

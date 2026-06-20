@@ -192,7 +192,12 @@ window.MOTIFS = [
     ],
     urgences: [
       { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
-      { l: "Déshydratation", f: "deshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Purpura fébrile", f: "eruption_urticaire" }, { l: "Traumatisme crânien", f: "traumatisme_cranien" },
+      { l: "Gêne respiratoire haute / stridor (laryngite)", f: "dyspnee_laryngee" }, { l: "Malaise grave du nourrisson", f: "malaise_nourrisson" },
+      { l: "Déshydratation", f: "deshydratation" }, { l: "Convulsion fébrile", f: "convulsion_febrile" }, { l: "Convulsion sans fièvre", f: "convulsion_non_febrile" },
+      { l: "Enfant difficile à réveiller / somnolence anormale", f: "trouble_conscience_enfant" }, { l: "Faiblesse / paralysie récente", f: "deficit_moteur_enfant" },
+      { l: "Trouble de l'équilibre / marche instable", f: "ataxie_enfant" }, { l: "Réaction allergique / anaphylaxie", f: "anaphylaxie_enfant" },
+      { l: "Grosse bourse / douleur d'un testicule", f: "grosse_bourse_enfant" }, { l: "Purpura (taches qui ne s'effacent pas)", f: "purpura_enfant" },
+      { l: "Traumatisme crânien", f: "traumatisme_cranien" },
       { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
       { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée", p: "maltraitance" }
     ]

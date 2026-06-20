@@ -30,7 +30,14 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (133 fiches cliniques)
+## Symptômes couverts (142 fiches cliniques)
+
+> Le catalogue patient **filtre les motifs selon l'âge et le sexe** saisis (un
+> homme ne voit pas les motifs féminins, un adulte ne voit pas les motifs du
+> nourrisson, etc.). Métadonnées dans `app.js` (`RESTRICTIONS`, seuil enfant 15 ans).
+> **Pédiatrie — Lot A (urgences)** : malaise grave du nourrisson, stridor/laryngite,
+> convulsion sans fièvre, trouble de conscience, déficit moteur aigu, ataxie aiguë,
+> anaphylaxie, grosse bourse aiguë, purpura.
 
 **Les 43 fiches du manuel + 15 motifs très fréquents de cabinet sont encodés**
 (58 fiches cliniques). Les 21 fiches biologiques du livre sont dans un module
