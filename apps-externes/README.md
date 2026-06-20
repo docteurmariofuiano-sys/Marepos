@@ -28,5 +28,17 @@ aucune ressource externe, aucune police Google → conformes RGPD/HDS).
 **Non inclus ici :**
 - `cotation` (NGAP/CCAM) — non modifiée ; nécessite une base tarifaire datée/sourcée (Ameli) + disclaimer avant toute diffusion.
 
+## Portail unifié (préparation — NON déclenché)
+
+`portail-registry.json` est le **catalogue préparatoire** du futur portail unifié.
+Il déclare les groupes et applications (avec fichier, description, statut d'audit,
+caractère 100 % local). **GynoAide** y est intégré comme sous-portail
+(`index-accueil.html` → `contraception.html` + `menopause.html`).
+
+> Le portail (page de lancement) n'est **pas encore construit** (`"portail_genere": false`),
+> en attente des applications restantes à fournir. Quand le catalogue sera complet,
+> la page d'accueil unifiée sera générée à partir de ce registre.
+
+
 > Aide à la décision — ne remplace pas le jugement médical. À intégrer ensuite à
 > la suite (portail unifié, contexte patient partagé, hébergement HDS).

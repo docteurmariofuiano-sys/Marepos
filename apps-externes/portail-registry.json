@@ -1,0 +1,46 @@
+{
+  "_commentaire": "Registre préparatoire du futur PORTAIL UNIFIÉ. Catalogue des applications de la suite, à enrichir au fur et à mesure. Le portail (page de lancement) sera GÉNÉRÉ à partir de ce fichier quand toutes les apps seront fournies — il n'est PAS encore construit (volontaire).",
+  "version": "0.1-draft",
+  "portail_genere": false,
+  "groupes": [
+    {
+      "id": "gynaide",
+      "titre": "GynoAide",
+      "emoji": "🩺",
+      "description": "Gynécologie en médecine générale : femme en âge de procréer et femme ménopausée.",
+      "type": "sous-portail",
+      "entree": "index-accueil.html",
+      "audit": "concordant (HAS/CNGOF/GEMVi/CRAT/ANSM) — aucune correction nécessaire",
+      "apps": [
+        {
+          "id": "contraception",
+          "titre": "Contraception",
+          "emoji": "🤰",
+          "fichier": "contraception.html",
+          "description": "Choix/renouvellement de pilule, oubli, contraception d'urgence, relais, situations particulières, IVG, grossesse & allaitement.",
+          "local": true,
+          "audit": "concordant — aucune correction"
+        },
+        {
+          "id": "menopause",
+          "titre": "Ménopause",
+          "emoji": "🌸",
+          "fichier": "menopause.html",
+          "description": "Péri/ménopause, score de symptômes, décision THM, choix du traitement, alternatives, SGUM, sein/ACR, os, cardio-métabolique.",
+          "local": true,
+          "audit": "concordant — aucune correction"
+        }
+      ]
+    }
+  ],
+  "apps_a_classer": [
+    { "id": "vertiges",    "titre": "Bilan ORL — vertiges",        "fichier": "bilan_orl_vertiges.html",   "local": true, "audit": "corrigé (HINTS/INFARCT)" },
+    { "id": "biologie",    "titre": "Lecture de bilan biologique",  "fichier": "biologie_lecture_bilan.html","local": true, "audit": "corrigé (troponine, calcémie corrigée)" },
+    { "id": "evaluations", "titre": "Échelles & évaluations",       "fichier": "evaluations_medicales.html", "local": true, "audit": "corrigé (MoCA, CHA2DS2-VASc, AUDIT, RMQD)" },
+    { "id": "dermato",     "titre": "Dermatologie",                 "fichier": "dermato.html",               "local": true, "audit": "corrigé (palier urgence vitale)" },
+    { "id": "preventif",   "titre": "Suivi préventif CNAM",         "fichier": "suivi_preventif.html",       "local": true, "audit": "sain (durcissement sécurité)" }
+  ],
+  "exclus": [
+    { "id": "cotation", "titre": "Cotation NGAP/CCAM", "raison": "non modifiée sur consigne — nécessite base tarifaire Ameli datée/sourcée + disclaimer avant diffusion" }
+  ]
+}
