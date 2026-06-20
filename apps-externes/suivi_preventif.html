@@ -4,14 +4,45 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Suivi préventif CNAM - Cabinet médical</title>
-  <!-- SÉCURITÉ / HDS : librairies chargées depuis des CDN. Pour la production sur
-       données patients, AUTO-HÉBERGER les 4 fichiers (servis localement), figer les
-       versions et ajouter une intégrité SRI (integrity=...). lucide n'est plus en
-       @latest (risque de code arbitraire non reproductible supprimé). -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!--
+    LIBRAIRIES — stratégie local-first pour conformité HDS / RGPD :
+    • En production HDS : créer le dossier vendor/ et y placer les 4 fichiers
+      (voir apps-externes/vendor/README.md + fetch_vendor.sh).
+      Quand vendor/ est peuplé, AUCUNE requête externe n'est émise.
+    • Sans vendor/ (développement / test) : repli automatique vers les CDN
+      épinglés ci-dessous (versions figées, no-referrer, crossorigin).
+
+    Versions figées :
+      pdf.js   4.7.76   (cdnjs)
+      xlsx     0.18.5   (jsdelivr)
+      jspdf    2.5.1    (jsdelivr)
+      lucide   0.460.0  (unpkg)
+  -->
+  <script>
+  /* Loader local-first pour XLSX, jsPDF, lucide (UMD globals) */
+  (function(){
+    var libs = [
+      ['vendor/xlsx.full.min.js',   'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'],
+      ['vendor/jspdf.umd.min.js',   'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'],
+      ['vendor/lucide.min.js',      'https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js']
+    ];
+    libs.forEach(function(pair){
+      var s = document.createElement('script');
+      s.src = pair[0];
+      s.crossOrigin = 'anonymous';
+      s.referrerPolicy = 'no-referrer';
+      s.onerror = function(){
+        var fb = document.createElement('script');
+        fb.src = pair[1];
+        fb.crossOrigin = 'anonymous';
+        fb.referrerPolicy = 'no-referrer';
+        document.head.appendChild(fb);
+      };
+      document.head.appendChild(s);
+    });
+  })();
+  /* pdf.js est un ES module — chargé dynamiquement plus bas (import local → repli CDN) */
+  </script>
   <style>
     :root {
       --ink: #132238;
@@ -507,8 +538,15 @@
   <div id="toast" class="toast"></div>
 
   <script type="module">
-    import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs";
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs";
+    /* pdf.js — local-first (vendor/) avec repli CDN automatique */
+    let pdfjsLib;
+    try {
+      pdfjsLib = await import('./vendor/pdf.min.mjs');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.mjs';
+    } catch {
+      pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs';
+    }
 
     const INDICATEURS = {
       "Dépistage de la maladie rénale chronique": ["maladie renale chronique", "depistage de la maladie renale chronique", "mrc", "fonction renale", "albuminurie", "dfg"],
