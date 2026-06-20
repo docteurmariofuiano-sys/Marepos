@@ -4,10 +4,22 @@
  * ========================================================================== */
 window.ANTECEDENTS = {
   allergies: [
-    "Pénicilline / amoxicilline", "Céphalosporines", "Macrolides", "AINS",
-    "Aspirine", "Iode / produit de contraste iodé", "Gadolinium", "Latex",
-    "Anesthésiques locaux", "Morphine / opioïdes", "Sulfamides", "Antiseptiques",
-    "Nickel", "Allergies alimentaires", "Allergies aux vaccins", "Autre allergie"
+    "Pénicilline / amoxicilline (Clamoxyl, Augmentin, Selexid…)",
+    "Céphalosporines (Orelox, Oroken, ceftriaxone…)",
+    "Macrolides (azithromycine, clarithromycine, Zithromax…)",
+    "AINS / anti-inflammatoires (ibuprofène, Advil, Nurofen, Voltarène…)",
+    "Aspirine (Aspégic, Kardégic…)",
+    "Iode / produit de contraste iodé (scanner avec injection)",
+    "Gadolinium (IRM avec injection)",
+    "Latex (gants, ballons)",
+    "Anesthésiques locaux (lidocaïne, Xylocaïne…)",
+    "Morphine / opioïdes (codéine, tramadol, morphine, oxycodone…)",
+    "Sulfamides (Bactrim, cotrimoxazole…)",
+    "Antiseptiques (Bétadine, chlorhexidine…)",
+    "Nickel (bijoux, boutons métalliques)",
+    "Allergies alimentaires (arachide, fruits à coque, œuf, lait, fruits de mer…)",
+    "Allergies aux vaccins",
+    "Autre allergie"
   ],
 
   medicaux: [
