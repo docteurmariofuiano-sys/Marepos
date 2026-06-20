@@ -5516,21 +5516,21 @@ window.KB = {
     ],
     red_flags: [
       { id: "ng_rf_hyperemesis", niveau: 2, when: { q: "ng_hyperemesis", eq: true },
-        message_medecin: "Vomissements incoercibles gravidiques (hyperemesis) : déshydratation, cétose → avis, réhydratation.",
+        message_medecin: "Vomissements incoercibles gravidiques (hyperemesis) : déshydratation, cétose, troubles ioniques → avis, réhydratation IV. IMPORTANT : supplémenter en vitamine B1 (thiamine) AVANT toute perfusion de sérum glucosé (prévention de l'encéphalopathie de Gayet-Wernicke). Évoquer une môle/grossesse multiple si hCG très élevée.",
         message_patient: "Ne plus rien garder pendant la grossesse nécessite un avis médical rapide." },
       { id: "ng_rf_tardif", niveau: 2, when: { q: "ng_tardif", eq: true },
-        message_medecin: "Nausées/vomissements tardifs ou avec douleur/céphalées : éliminer une cause (pré-éclampsie, hépatique, digestive).",
+        message_medecin: "Nausées/vomissements tardifs ou avec douleur/céphalées : éliminer une cause (pré-éclampsie/HELLP, stéatose hépatique aiguë gravidique, cause digestive, neurologique).",
         message_patient: "Ces éléments nécessitent un avis médical." }
     ],
     diagnostics_differentiels: [
       { id: "ng_physio", diagnostic: "Nausées du 1er trimestre (physiologiques)", arguments: [{ label: "1er trimestre, modérées", w: 3, when: { q: "ng_typique", eq: true } }],
-        examens_a_discuter: ["Mesures hygiéno-diététiques, antiémétiques autorisés"] },
+        examens_a_discuter: ["Mesures hygiéno-diététiques ; antiémétiques autorisés (doxylamine-pyridoxine en 1re intention, puis métoclopramide/ondansétron selon avis)"] },
       { id: "ng_hyperemesis", diagnostic: "Hyperemesis gravidarum", arguments: [{ label: "vomissements incoercibles + perte de poids", w: 3, when: { q: "ng_hyperemesis", eq: true } }],
-        examens_a_discuter: ["Ionogramme, cétonurie", "Réhydratation"] },
-      { id: "ng_tardif", diagnostic: "Cause tardive à explorer", arguments: [{ label: "tardif / atypique", w: 3, when: { q: "ng_tardif", eq: true } }],
-        examens_a_discuter: ["TA, BU, bilan hépatique"] }
+        examens_a_discuter: ["Ionogramme, cétonurie, fonction rénale, bilan hépatique ; vitamine B1 avant le glucosé", "Réhydratation IV ; échographie (môle hydatiforme, grossesse multiple) ; TSH (thyrotoxicose gestationnelle)"] },
+      { id: "ng_tardif", diagnostic: "Cause tardive à explorer (pré-éclampsie, hépatique, digestive)", arguments: [{ label: "tardif / atypique", w: 3, when: { q: "ng_tardif", eq: true } }],
+        examens_a_discuter: ["TA, bandelette urinaire (protéinurie), bilan hépatique (HELLP/SHAG), NFS-plaquettes"] }
     ],
-    examens_clinique: ["Poids, signes de déshydratation", "Pression artérielle, bandelette urinaire (cétonurie)"]
+    examens_clinique: ["Poids, signes de déshydratation", "Pression artérielle, bandelette urinaire (cétonurie, protéinurie)", "Hauteur utérine / échographie si suspicion de môle ou de grossesse multiple"]
   },
 
   // -------------------------------------------------------------------------
@@ -5542,26 +5542,30 @@ window.KB = {
       { id: "ct_signes_thrombose", label: "Signes de thrombose", type: "boolean", question: "Sous pilule, avez-vous une douleur/gonflement d'une jambe, une douleur thoracique, ou des maux de tête inhabituels ?" },
       { id: "ct_oubli", label: "Oubli / contraception d'urgence", type: "boolean", question: "S'agit-il d'un oubli de pilule ou d'un rapport à risque nécessitant une contraception d'urgence ?" },
       { id: "ct_cv", label: "Contre-indication œstrogènes", type: "boolean", question: "Avez-vous des facteurs de risque (tabac après 35 ans, HTA, migraine avec aura, antécédent de thrombose) ?" },
-      { id: "ct_demande", label: "Demande d'information", type: "boolean", question: "Souhaitez-vous une information ou un choix de contraception ?" }
+      { id: "ct_demande", label: "Demande d'information", type: "boolean", question: "Souhaitez-vous une information ou un choix de contraception ?" },
+      { id: "ct_geu", label: "Suspicion de grossesse / GEU", type: "boolean", question: "Avez-vous un retard de règles ou un doute sur une grossesse, avec une douleur du bas-ventre et/ou des saignements ?" }
     ],
     red_flags: [
       { id: "ct_rf_thrombose", niveau: 3, when: { q: "ct_signes_thrombose", eq: true },
-        message_medecin: "Sous contraception œstroprogestative : signes de thrombose / EP → urgence.",
+        message_medecin: "Sous contraception œstroprogestative : signes de thrombose veineuse / EP / AVC → urgence (15), arrêt de la pilule.",
         message_patient: "Ces signes nécessitent une évaluation médicale immédiate — appelez le 15." },
+      { id: "ct_rf_geu", niveau: 3, when: { q: "ct_geu", eq: true },
+        message_medecin: "Douleur pelvienne + retard de règles/saignement (y compris sous contraception, surtout DIU ou microprogestatif) : éliminer une grossesse extra-utérine → test de grossesse, β-hCG, échographie en urgence.",
+        message_patient: "Une douleur du ventre avec un retard de règles nécessite une évaluation médicale rapide." },
       { id: "ct_rf_ci", niveau: 2, when: { q: "ct_cv", eq: true },
-        message_medecin: "Facteurs de risque CV : contre-indication aux œstrogènes → privilégier une méthode sans œstrogène.",
+        message_medecin: "Facteurs de risque CV (tabac > 35 ans, HTA, migraine avec aura, ATCD thrombo-embolique) : contre-indication aux œstrogènes → privilégier une méthode sans œstrogène (microprogestatif, DIU, implant).",
         message_patient: "Ce contexte nécessite d'adapter la contraception avec un médecin." },
       { id: "ct_rf_urgence", niveau: 2, when: { q: "ct_oubli", eq: true },
-        message_medecin: "Oubli / rapport à risque : contraception d'urgence (dans les délais), proposer un dépistage IST.",
-        message_patient: "Un oubli / rapport à risque nécessite une contraception d'urgence rapidement." }
+        message_medecin: "Oubli / rapport à risque : contraception d'urgence selon le délai — lévonorgestrel ≤ 72 h, ulipristal ≤ 120 h, DIU au cuivre ≤ 5 j (le plus efficace). Ne protège pas les rapports suivants ; test de grossesse si retard ; proposer un dépistage IST.",
+        message_patient: "Un oubli / rapport à risque nécessite une contraception d'urgence rapidement (au plus tôt)." }
     ],
     diagnostics_differentiels: [
       { id: "ct_demande", diagnostic: "Demande de contraception", arguments: [{ label: "information / choix", w: 2, when: { q: "ct_demande", eq: true } }],
-        examens_a_discuter: ["Choix selon le profil (contre-indications, préférences)"] },
+        examens_a_discuter: ["Choix selon le profil (contre-indications, préférences, observance) ; éliminer une grossesse en cours avant de débuter", "Méthodes les plus efficaces (LARC) : DIU, implant ; pas de bilan systématique avant une pilule chez une femme jeune sans facteur de risque (interrogatoire + TA + bilan lipidique/glycémie selon recommandations)"] },
       { id: "ct_urgence", diagnostic: "Contraception d'urgence", arguments: [{ label: "oubli / rapport à risque", w: 3, when: { q: "ct_oubli", eq: true } }],
-        examens_a_discuter: ["Pilule du lendemain / DIU au cuivre selon le délai", "Dépistage IST"] }
+        examens_a_discuter: ["Lévonorgestrel (≤ 72 h) / ulipristal acétate (≤ 120 h) / DIU au cuivre (≤ 5 j, le plus efficace)", "Reprise/poursuite d'une contraception ensuite ; dépistage IST ; test de grossesse si retard"] }
     ],
-    examens_clinique: ["Recherche des contre-indications (TA, antécédents)", "Conseil contraceptif", "Dépistage IST si besoin"]
+    examens_clinique: ["Recherche des contre-indications (TA, antécédents personnels/familiaux thrombo-emboliques, migraine avec aura, tabac)", "Éliminer une grossesse en cours / une GEU si signe d'appel", "Conseil contraceptif adapté et information sur la conduite à tenir en cas d'oubli", "Dépistage IST si besoin"]
   },
 
   // -------------------------------------------------------------------------
@@ -5605,20 +5609,29 @@ window.KB = {
       { id: "mm_suspecte", label: "Masse suspecte", type: "boolean", question: "La masse est-elle dure, fixée, irrégulière, avec une rétraction de la peau/du mamelon, ou un ganglion sous le bras ?" },
       { id: "mm_inflammatoire", label: "Sein inflammatoire", type: "boolean", question: "Le sein est-il rouge, chaud, gonflé, avec une peau d'orange (en dehors de l'allaitement) ?" },
       { id: "mm_ecoulement", label: "Écoulement sanglant", type: "boolean", question: "Y a-t-il un écoulement du mamelon, surtout sanglant et d'un seul côté ?" },
-      { id: "mm_kyste", label: "Lésion bénigne", type: "boolean", question: "La masse est-elle ronde, mobile, parfois douloureuse, variant avec le cycle ?" }
+      { id: "mm_kyste", label: "Lésion bénigne", type: "boolean", question: "La masse est-elle ronde, mobile, parfois douloureuse, variant avec le cycle ?" },
+      { id: "mm_paget", label: "Eczéma du mamelon", type: "boolean", question: "Y a-t-il une lésion type eczéma/croûte du mamelon, d'un seul côté, qui ne guérit pas malgré les crèmes ?" }
     ],
     red_flags: [
-      { id: "mm_rf_cancer", niveau: 2, when: { any: [{ q: "mm_suspecte", eq: true }, { q: "mm_ecoulement", eq: true }, { q: "mm_inflammatoire", eq: true }] },
-        message_medecin: "Masse suspecte / écoulement sanglant / sein inflammatoire : cancer à éliminer → mammographie + échographie + avis (triple test).",
-        message_patient: "Ces caractéristiques nécessitent un avis médical et des examens du sein." }
+      { id: "mm_rf_cancer", niveau: 2, when: { any: [{ q: "mm_suspecte", eq: true }, { q: "mm_ecoulement", eq: true }] },
+        message_medecin: "Masse dure/fixée/rétraction ou écoulement sanglant unipore : cancer à éliminer → mammographie + échographie + avis (triple test : clinique + imagerie + biopsie). Toute masse persistante justifie une imagerie même d'allure bénigne.",
+        message_patient: "Ces caractéristiques nécessitent un avis médical et des examens du sein." },
+      { id: "mm_rf_inflammatoire", niveau: 2, when: { q: "mm_inflammatoire", eq: true },
+        message_medecin: "Sein inflammatoire hors allaitement (ou mastite ne régressant pas sous antibiotiques en 48-72 h) : éliminer un CANCER INFLAMMATOIRE → mammographie/échographie + biopsie sans délai (ne pas se contenter d'antibiotiques).",
+        message_patient: "Un sein rouge et gonflé en dehors de l'allaitement nécessite un avis médical." },
+      { id: "mm_rf_paget", niveau: 2, when: { q: "mm_paget", eq: true },
+        message_medecin: "Lésion eczématiforme unilatérale du mamelon persistante : évoquer une maladie de Paget du mamelon (cancer) → avis et biopsie, ne pas traiter indéfiniment comme un eczéma.",
+        message_patient: "Une lésion du mamelon qui ne guérit pas nécessite un avis spécialisé." }
     ],
     diagnostics_differentiels: [
-      { id: "mm_cancer", diagnostic: "Lésion suspecte (cancer du sein)", arguments: [{ label: "masse dure/fixée/rétraction", w: 3, when: { q: "mm_suspecte", eq: true } }, { label: "sein inflammatoire", w: 2, when: { q: "mm_inflammatoire", eq: true } }, { label: "écoulement sanglant", w: 1, when: { q: "mm_ecoulement", eq: true } }],
+      { id: "mm_cancer", diagnostic: "Lésion suspecte (cancer du sein)", arguments: [{ label: "masse dure/fixée/rétraction", w: 3, when: { q: "mm_suspecte", eq: true } }, { label: "sein inflammatoire", w: 2, when: { q: "mm_inflammatoire", eq: true } }, { label: "écoulement sanglant unipore", w: 1, when: { q: "mm_ecoulement", eq: true } }, { label: "eczéma du mamelon (Paget)", w: 1, when: { q: "mm_paget", eq: true } }],
         examens_a_discuter: ["Mammographie + échographie", "Avis, biopsie (triple test)"] },
+      { id: "mm_inflammatoire_dd", diagnostic: "Sein inflammatoire (mastite/abcès vs cancer inflammatoire)", arguments: [{ label: "sein rouge, chaud, gonflé", w: 3, when: { q: "mm_inflammatoire", eq: true } }],
+        examens_a_discuter: ["Mastite d'allaitement : antibiothérapie + poursuite de l'allaitement/drainage", "Si hors allaitement ou pas d'amélioration sous antibiotiques : imagerie + biopsie (cancer inflammatoire)"] },
       { id: "mm_benin", diagnostic: "Lésion bénigne (kyste / adénofibrome)", arguments: [{ label: "masse mobile, variant avec le cycle", w: 3, when: { q: "mm_kyste", eq: true } }],
-        examens_a_discuter: ["Échographie, surveillance"] }
+        examens_a_discuter: ["Échographie (± mammographie selon l'âge) ; cytoponction d'un kyste symptomatique ; surveillance"] }
     ],
-    examens_clinique: ["Palpation des seins et des aires ganglionnaires", "Caractériser la masse", "Imagerie selon l'âge (mammographie / échographie)"]
+    examens_clinique: ["Palpation des seins et des aires ganglionnaires (axillaires, sus-claviculaires)", "Caractériser la masse (taille, mobilité, consistance), examiner peau et mamelon (rétraction, Paget)", "Imagerie selon l'âge (échographie avant 30 ans, mammographie + échographie après) ; biopsie si suspicion"]
   },
 
   // -------------------------------------------------------------------------
@@ -5630,20 +5643,26 @@ window.KB = {
       { id: "so2_brutal", label: "Hyperandrogénie tumorale", type: "boolean", question: "La pilosité / les signes masculins sont-ils apparus rapidement et de façon marquée (voix grave, masse) ?" },
       { id: "so2_triade", label: "Triade SOPK", type: "boolean", question: "Avez-vous des règles espacées/absentes, une pilosité excessive, et/ou de l'acné ?" },
       { id: "so2_metabolique", label: "Syndrome métabolique", type: "boolean", question: "Avez-vous un surpoids ou des anomalies du sucre (prédiabète/diabète) ?" },
-      { id: "so2_infertilite", label: "Infertilité", type: "boolean", question: "Avez-vous des difficultés à concevoir ?" }
+      { id: "so2_infertilite", label: "Infertilité", type: "boolean", question: "Avez-vous des difficultés à concevoir ?" },
+      { id: "so2_amenorrhee", label: "Aménorrhée prolongée", type: "boolean", question: "Passez-vous de longues périodes (plusieurs mois) sans règles ?" }
     ],
     red_flags: [
       { id: "so2_rf_tumeur", niveau: 2, when: { q: "so2_brutal", eq: true },
-        message_medecin: "Hyperandrogénie d'installation rapide / sévère : éliminer une cause tumorale (ovaire, surrénale) → testostérone, imagerie.",
-        message_patient: "Une pilosité d'apparition rapide nécessite un avis médical et un bilan." }
+        message_medecin: "Hyperandrogénie d'installation rapide / sévère (virilisation : voix grave, clitoromégalie) : éliminer une cause TUMORALE (ovaire, surrénale) → testostérone (élevée), imagerie ; ce n'est pas un SOPK.",
+        message_patient: "Une pilosité d'apparition rapide nécessite un avis médical et un bilan." },
+      { id: "so2_rf_endometre", niveau: 1, when: { q: "so2_amenorrhee", eq: true },
+        message_medecin: "Aménorrhée/spanioménorrhée prolongée du SOPK : l'anovulation chronique expose à l'hyperplasie et au cancer de l'endomètre → assurer une protection endométriale (progestatif cyclique ou contraception), surveiller.",
+        message_patient: "Des règles très espacées au long cours doivent être suivies médicalement." }
     ],
     diagnostics_differentiels: [
       { id: "so2_sopk", diagnostic: "Syndrome des ovaires polykystiques", arguments: [{ label: "cycles espacés + hyperandrogénie", w: 3, when: { q: "so2_triade", eq: true } }, { label: "syndrome métabolique", w: 1, when: { q: "so2_metabolique", eq: true } }, { label: "infertilité", w: 1, when: { q: "so2_infertilite", eq: true } }],
-        examens_a_discuter: ["Bilan hormonal, échographie ovarienne", "Bilan métabolique"] },
+        examens_a_discuter: ["Diagnostic de Rotterdam (2 critères sur 3 : oligo-anovulation, hyperandrogénie clinique/biologique, aspect échographique d'ovaires polykystiques) APRÈS exclusion des autres causes", "Bilan : testostérone, SDHEA, 17-OH-progestérone, prolactine, TSH ; échographie ovarienne", "Bilan métabolique (HGPO/glycémie, lipides) ; mode de vie ; protection endométriale ; prise en charge de l'infertilité si désir de grossesse"] },
+      { id: "so2_autres", diagnostic: "Autres causes d'hyperandrogénie / d'aménorrhée (à éliminer)", arguments: [{ label: "à exclure avant de retenir un SOPK", w: 1, when: { q: "so2_triade", eq: true } }],
+        examens_a_discuter: ["Hyperplasie congénitale des surrénales à révélation tardive (17-OH-progestérone), hyperprolactinémie, dysthyroïdie, syndrome de Cushing", "Orienter selon les anomalies"] },
       { id: "so2_tumeur", diagnostic: "Hyperandrogénie tumorale", arguments: [{ label: "installation rapide / sévère", w: 3, when: { q: "so2_brutal", eq: true } }],
-        examens_a_discuter: ["Testostérone, imagerie surrénale/ovarienne"] }
+        examens_a_discuter: ["Testostérone (très élevée), SDHEA, imagerie surrénale/ovarienne"] }
     ],
-    examens_clinique: ["Recherche de signes d'hyperandrogénie", "IMC", "Bilan hormonal (testostérone…)", "Échographie pelvienne, bilan métabolique"]
+    examens_clinique: ["Recherche de signes d'hyperandrogénie (score de Ferriman-Gallwey) et de virilisation", "IMC, tour de taille, pression artérielle (syndrome métabolique)", "Bilan hormonal (testostérone, SDHEA, 17-OHP, prolactine, TSH)", "Échographie pelvienne, bilan métabolique (glycémie/HGPO, lipides)"]
   },
 
   // -------------------------------------------------------------------------
