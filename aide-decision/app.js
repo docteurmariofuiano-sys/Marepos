@@ -72,8 +72,9 @@
 
   // ---------------------------------------------------------------- contexte
   function readContext() {
-    var atcd = [];
-    el("ctx-atcd").querySelectorAll("input:checked").forEach(function (c) { atcd.push(c.value); });
+    // Les antécédents détaillés sont saisis à l'étape « Informations patient » ;
+    // les indicateurs de contexte en sont dérivés (deriveCtxFromAntecedents).
+    var atcd = (session.ctx && session.ctx.antecedents) || [];
     var age = parseInt(el("ctx-age").value, 10);
     var sexe = el("ctx-sexe").value;
     var grossesse = el("ctx-grossesse").checked && sexe === "Femme";

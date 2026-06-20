@@ -295,17 +295,6 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
           <span>Une grossesse est possible (rapports sans contraception fiable)</span>
         </label>
 
-        <fieldset class="field">
-          <legend>Avez-vous l'un de ces antécédents ? (facultatif)</legend>
-          <div class="chips" id="ctx-atcd">
-            <label><input type="checkbox" value="cancer connu" /> Cancer connu</label>
-            <label><input type="checkbox" value="immunodépression" /> Immunodépression</label>
-            <label><input type="checkbox" value="sous anticoagulant" /> Anticoagulant</label>
-            <label><input type="checkbox" value="terrain cardiovasculaire" /> Maladie cardiovasculaire</label>
-            <label><input type="checkbox" value="diabète" /> Diabète</label>
-          </div>
-        </fieldset>
-
         <label class="field consent">
           <input type="checkbox" id="ctx-consent" />
           <span>J'ai compris que cet outil ne pose pas de diagnostic et j'accepte de répondre
@@ -7172,8 +7161,9 @@ window.ANTECEDENTS = {
 
   // ---------------------------------------------------------------- contexte
   function readContext() {
-    var atcd = [];
-    el("ctx-atcd").querySelectorAll("input:checked").forEach(function (c) { atcd.push(c.value); });
+    // Les antécédents détaillés sont saisis à l'étape « Informations patient » ;
+    // les indicateurs de contexte en sont dérivés (deriveCtxFromAntecedents).
+    var atcd = (session.ctx && session.ctx.antecedents) || [];
     var age = parseInt(el("ctx-age").value, 10);
     var sexe = el("ctx-sexe").value;
     var grossesse = el("ctx-grossesse").checked && sexe === "Femme";
