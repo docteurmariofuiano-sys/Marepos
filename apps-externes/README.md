@@ -28,6 +28,12 @@ aucune ressource externe, aucune police Google → conformes RGPD/HDS).
 **Non inclus ici :**
 - `cotation` (NGAP/CCAM) — non modifiée ; nécessite une base tarifaire datée/sourcée (Ameli) + disclaimer avant toute diffusion.
 
+## Cardiologie
+
+| Fichier | Verdict d'audit |
+|---|---|
+| `ecg_assistant.html` | **Cliniquement solide et concordant**, prudent (orienté sécurité). Aide à la lecture ECG 12 dérivations (honnête : n'auto-lit pas l'image, organise l'interprétation à partir des mesures/anomalies saisies ou d'un texte machine). Seuils corrects : QTc H < 450 / F < 460, ≥ 500 = alerte forte ; PR > 200 allongé (> 240 + syncope = urgent) ; QRS ≥ 120 large ; hypokaliémie < 3,5 / Mg < 0,7 / Ca < 2,2. Escalade rouge juste : STEMI + douleur, ST− diffus + ST+ aVR/V1, postérieur, TV à QRS larges, torsades, BAV haut degré, syncope + trouble conductif, hyperkaliémie, Brugada 1. Caveat clé présent (« un ECG normal n'exclut pas un SCA, une EP »). 100 % local (localStorage + presse-papier, aucune ressource externe, option export anonymisé) ; disclaimer fort. Liens externes = simples citations (ESC EHJ, NCBI). **Aucune correction nécessaire.** |
+
 ## Portail unifié (préparation — NON déclenché)
 
 `portail-registry.json` est le **catalogue préparatoire** du futur portail unifié.

@@ -38,7 +38,8 @@
     { "id": "biologie",    "titre": "Lecture de bilan biologique",  "fichier": "biologie_lecture_bilan.html","local": true, "audit": "corrigé (troponine, calcémie corrigée)" },
     { "id": "evaluations", "titre": "Échelles & évaluations",       "fichier": "evaluations_medicales.html", "local": true, "audit": "corrigé (MoCA, CHA2DS2-VASc, AUDIT, RMQD)" },
     { "id": "dermato",     "titre": "Dermatologie",                 "fichier": "dermato.html",               "local": true, "audit": "corrigé (palier urgence vitale)" },
-    { "id": "preventif",   "titre": "Suivi préventif CNAM",         "fichier": "suivi_preventif.html",       "local": true, "audit": "sain (durcissement sécurité)" }
+    { "id": "preventif",   "titre": "Suivi préventif CNAM",         "fichier": "suivi_preventif.html",       "local": true, "audit": "sain (durcissement sécurité)" },
+    { "id": "ecg",         "titre": "ECG Cabinet — lecture assistée","fichier": "ecg_assistant.html",        "local": true, "audit": "concordant (ESC/recos ECG) — aucune correction" }
   ],
   "exclus": [
     { "id": "cotation", "titre": "Cotation NGAP/CCAM", "raison": "non modifiée sur consigne — nécessite base tarifaire Ameli datée/sourcée + disclaimer avant diffusion" }
