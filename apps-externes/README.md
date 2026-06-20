@@ -9,9 +9,10 @@ Outils autonomes (HTML/JS, 100 % local, aucune IA externe) de la future suite,
 | `biologie_lecture_bilan.html` | Troponine (seuil dépendant du dosage/sexe + cinétique, non-IDM) ; **calcémie corrigée par l'albumine** (calcul automatique si albumine présente). |
 | `evaluations_medicales.html` | MoCA (correction scolarité ≤ 12 ans correcte) ; **CHA₂DS₂-VASc sexe-conscient** (ESC) ; AUDIT (bandes OMS 8/16/20) ; RMQD (12 items) ; Google Fonts retiré (RGPD) ; **bandeau médico-légal persistant**. |
 
+| `dermato.html` | App déjà très solide (red flag → priorité ROUGE, mélanome/ABCDE, module photo honnêtement non-IA, disclaimers OK). Ajout d'un palier **URGENCE VITALE (15/SAMU)** distinct du simple avis urgent (fasciite nécrosante, purpura fulminans, SJS/Lyell, DRESS, sepsis cutané, érythrodermie fébrile, eczema herpeticum). |
+
 **Non inclus ici :**
 - `cotation` (NGAP/CCAM) — non modifiée ; nécessite une base tarifaire datée/sourcée (Ameli) + disclaimer avant toute diffusion.
-- `dermato` — en attente du fichier source pour audit.
 
 > Aide à la décision — ne remplace pas le jugement médical. À intégrer ensuite à
 > la suite (portail unifié, contexte patient partagé, hébergement HDS).

@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dermato Consult - aide au diagnostic</title>
+  <style>
+    :root {
+      --ink: #182027;
+      --muted: #64717c;
+      --paper: #f7f6f1;
+      --panel: #ffffff;
+      --line: #d9ddd8;
+      --teal: #0a6c74;
+      --teal-soft: #d9eef0;
+      --green: #2f7d4a;
+      --orange: #b56419;
+      --red: #b3261e;
+      --blue: #2b5f92;
+      --violet: #684aa3;
+      --shadow: 0 12px 35px rgba(24, 32, 39, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(10,108,116,.08) 0 1px, transparent 1px 100%),
+        linear-gradient(rgba(10,108,116,.06) 0 1px, transparent 1px 100%),
+        var(--paper);
+      background-size: 28px 28px;
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(247, 246, 241, .94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 2.4vw, 2.6rem);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .94rem;
+      margin-top: 3px;
+    }
+
+    .score-pill {
+      min-width: 245px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    .score-pill strong {
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    .score-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: var(--green);
+      vertical-align: -1px;
+    }
+
+    .score-red .score-dot { background: var(--red); }
+    .score-orange .score-dot { background: var(--orange); }
+    .score-green .score-dot { background: var(--green); }
+
+    main {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 22px 20px 48px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr) 360px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    nav, aside, section.step, .notice {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    nav {
+      position: sticky;
+      top: 92px;
+      padding: 10px;
+    }
+
+    .navbtn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      padding: 10px 12px;
+      margin: 2px 0;
+      border-left: 4px solid transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .navbtn.active {
+      background: var(--teal-soft);
+      border-left-color: var(--teal);
+      font-weight: 700;
+    }
+
+    .content { min-width: 0; }
+
+    section.step {
+      display: none;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    section.step.active { display: block; }
+
+    h2 {
+      margin: 0 0 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 18px 0 10px;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    label.field {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%;
+      border: 1px solid #cbd2cc;
+      background: #fbfbf8;
+      color: var(--ink);
+      padding: 9px 10px;
+      border-radius: 4px;
+      font: inherit;
+    }
+
+    textarea { min-height: 82px; resize: vertical; }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 8px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      min-height: 42px;
+      gap: 8px;
+      border: 1px solid #d7dcd7;
+      background: #fbfbf8;
+      padding: 8px 9px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: .93rem;
+    }
+
+    .chip input { accent-color: var(--teal); }
+
+    .tree {
+      display: grid;
+      gap: 12px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      background: #fbfbf8;
+      padding: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .scale-row {
+      display: grid;
+      grid-template-columns: 180px 1fr 42px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    input[type="range"] { width: 100%; accent-color: var(--teal); }
+
+    aside {
+      position: sticky;
+      top: 92px;
+      padding: 14px;
+      max-height: calc(100vh - 112px);
+      overflow: auto;
+    }
+
+    .alert {
+      border-left: 6px solid var(--red);
+      background: #fff3f1;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .warning {
+      border-left: 6px solid var(--orange);
+      background: #fff8ed;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .ok {
+      border-left: 6px solid var(--green);
+      background: #eff8f1;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dx-card {
+      border: 1px solid var(--line);
+      background: #fbfbf8;
+      padding: 12px;
+      margin: 10px 0;
+    }
+
+    .dx-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: .78rem;
+      background: var(--teal-soft);
+      color: #084e55;
+      white-space: nowrap;
+    }
+
+    .badge.red { background: #ffd8d2; color: var(--red); }
+    .badge.orange { background: #ffe5c5; color: var(--orange); }
+    .badge.green { background: #dff0e4; color: var(--green); }
+
+    ul.compact {
+      margin: 7px 0 0;
+      padding-left: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    button.action {
+      border: 1px solid #b8c3bd;
+      background: var(--ink);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.action.secondary {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .photo-workbench {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .drop-zone {
+      border: 2px dashed #9bb6b4;
+      background: #f5fbfa;
+      min-height: 130px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      cursor: pointer;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .photo-stage {
+      border: 1px solid var(--line);
+      background: #111;
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .photo-stage img {
+      max-width: 100%;
+      max-height: 620px;
+      transform-origin: center;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .compare-slot {
+      border: 1px solid var(--line);
+      min-height: 180px;
+      background: #151515;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .compare-slot img {
+      max-width: 100%;
+      max-height: 260px;
+    }
+
+    .photo-controls {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      background: #fbfbf8;
+      padding: 12px;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .metric {
+      border-left: 4px solid var(--line);
+      background: #fbfbf8;
+      padding: 8px;
+      font-size: .9rem;
+    }
+
+    .metric.good { border-left-color: var(--green); }
+    .metric.warn { border-left-color: var(--orange); }
+    .metric.bad { border-left-color: var(--red); }
+
+    @media (max-width: 900px) {
+      .photo-workbench { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+
+    .summarybox {
+      width: 100%;
+      min-height: 420px;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: .88rem;
+      white-space: pre-wrap;
+    }
+
+    .lesion-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .lesion-card {
+      border: 1px solid var(--line);
+      background: #fbfbf8;
+      padding: 13px;
+      min-height: 210px;
+    }
+
+    .lesion-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border: 1px solid var(--line);
+      margin-bottom: 10px;
+      background-image: url("dermato-lesions-reference.png");
+      background-size: 400% 300%;
+      background-repeat: no-repeat;
+      background-color: #ead3c8;
+    }
+
+    .lesion-icon {
+      width: 58px;
+      height: 58px;
+      border: 2px solid var(--ink);
+      margin-bottom: 10px;
+      display: grid;
+      place-items: center;
+      background: #f4d4c4;
+    }
+
+    .icon-macule { border-radius: 50%; background: #e56c59; opacity: .8; }
+    .icon-papule { border-radius: 50%; box-shadow: inset -8px -8px 0 rgba(0,0,0,.12); }
+    .icon-plaque { width: 86px; border-radius: 10px; background: #d75245; }
+    .icon-vesicule { border-radius: 50%; background: radial-gradient(circle at 38% 35%, #fff 0 18%, #9cd1ef 19% 55%, #427aa1 56%); }
+    .icon-bulle { border-radius: 50%; width: 72px; height: 72px; background: radial-gradient(circle at 35% 32%, #fff 0 16%, #c6ecff 17% 60%, #6ca9c9 61%); }
+    .icon-pustule { border-radius: 50%; background: radial-gradient(circle, #fff3a1 0 34%, #d97255 35%); }
+    .icon-squame { background: repeating-linear-gradient(135deg, #f2f0df 0 8px, #c8c3a7 9px 12px); }
+    .icon-croute { background: #9a5b24; clip-path: polygon(12% 32%, 30% 10%, 55% 21%, 84% 14%, 96% 56%, 74% 88%, 40% 82%, 15% 70%); }
+    .icon-ulc { border-radius: 50%; background: radial-gradient(circle, #6b1d1c 0 28%, #f2b4a1 29% 53%, #d65a48 54%); }
+    .icon-nodule { border-radius: 48% 52% 45% 55%; background: #c37b61; box-shadow: inset -9px -10px 0 rgba(0,0,0,.16); }
+    .icon-purpura { border-radius: 50%; background: #75459b; }
+    .icon-urticaire { border-radius: 999px; width: 88px; background: #f3a2a6; }
+
+    .notice {
+      padding: 14px;
+      margin-bottom: 18px;
+      border-left: 6px solid var(--blue);
+    }
+
+    .fitz-box {
+      border: 1px solid #b9cbc6;
+      background: linear-gradient(180deg, #eef8f7, #fbfbf8);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .fitz-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .fitz-step {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 10px;
+      min-height: 92px;
+    }
+
+    .fitz-step strong {
+      display: block;
+      color: var(--teal);
+      margin-bottom: 5px;
+    }
+
+    .clinical-path {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .path-card {
+      border: 1px solid #cbd8d4;
+      background: #fbfbf8;
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+      cursor: pointer;
+      min-height: 104px;
+    }
+
+    .path-card input { accent-color: var(--teal); }
+
+    .path-card span {
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .body-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: #fbfbf8;
+    }
+
+    .body-zone {
+      min-height: 58px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .small { color: var(--muted); font-size: .86rem; }
+
+    @media (max-width: 1180px) {
+      main { grid-template-columns: 230px minmax(0, 1fr); }
+      aside { grid-column: 1 / -1; position: static; max-height: none; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar, main { grid-template-columns: 1fr; }
+      .fitz-flow { grid-template-columns: 1fr; }
+      nav { position: static; }
+      .grid, .grid.three { grid-template-columns: 1fr; }
+      .scale-row { grid-template-columns: 1fr; }
+      .score-pill { min-width: 0; }
+    }
+
+    @media print {
+      header, nav, .actions, .step:not(#synthese), #aide { display: none !important; }
+      main { display: block; padding: 0; }
+      aside, section.step { display: block !important; box-shadow: none; border: 0; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Dermato Consult</h1>
+        <div class="subtitle">Aide structurée au diagnostic dermatologique pour consultation de médecine générale</div>
+      </div>
+      <div id="scorePill" class="score-pill score-green">
+        <strong><span class="score-dot"></span>Priorité verte</strong>
+        <span class="small">Aucune alerte saisie pour l'instant</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav id="tabs" aria-label="Étapes">
+      <button class="navbtn active" data-step="patient">Patient</button>
+      <button class="navbtn" data-step="motif">Motif</button>
+      <button class="navbtn" data-step="lesion">Lésion élémentaire</button>
+      <button class="navbtn" data-step="aide">Aide visuelle</button>
+      <button class="navbtn" data-step="interrogatoire">Interrogatoire</button>
+      <button class="navbtn" data-step="gravite">Red flags</button>
+      <button class="navbtn" data-step="photo">Photographie</button>
+      <button class="navbtn" data-step="synthese">Synthèse</button>
+    </nav>
+
+    <div class="content">
+      <div class="notice">
+        Cet outil est une aide à la décision pour médecin. Il ne remplace pas l'examen clinique, le raisonnement médical ni l'avis dermatologique. En cas de doute, de signe de gravité, de terrain fragile ou d'évolution rapide, demander un avis spécialisé.
+      </div>
+
+      <form id="dermForm">
+        <section class="step active" id="patient">
+          <h2>Identité et contexte patient</h2>
+          <div class="grid three">
+            <label class="field">Nom <input name="nom" type="text"></label>
+            <label class="field">Prénom <input name="prenom" type="text"></label>
+            <label class="field">Âge <input name="age" type="number" min="0" max="120"></label>
+            <label class="field">Sexe
+              <select name="sexe"><option></option><option>Femme</option><option>Homme</option><option>Autre / non précisé</option></select>
+            </label>
+            <label class="field">Grossesse possible ou en cours
+              <select name="grossesse"><option>Non / non concerné</option><option>Possible</option><option>En cours</option><option>Inconnu</option></select>
+            </label>
+            <label class="field">Phototype cutané
+              <select name="phototype"><option>Non connu</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>VI</option></select>
+            </label>
+            <label class="field">Profession / exposition <input name="profession" type="text"></label>
+            <label class="field">Antécédents dermatologiques <input name="atcdDerm" type="text"></label>
+            <label class="field">Allergies <input name="allergies" type="text" placeholder="Pas d'allergie connue"></label>
+          </div>
+          <h3>Terrains et antécédents personnels</h3>
+          <div class="chips" data-checks="terrain"></div>
+          <h3>Antécédents familiaux</h3>
+          <div class="chips" data-checks="famille"></div>
+          <h3>Traitements en cours ou récents</h3>
+          <div class="chips" data-checks="traitements"></div>
+        </section>
+
+        <section class="step" id="motif">
+          <h2>Motif de consultation</h2>
+          <h3>Parcours clinique</h3>
+          <div class="clinical-path" data-path-cards="parcours"></div>
+          <div class="chips" data-checks="motif"></div>
+          <h3>Plainte libre</h3>
+          <textarea name="plainte" placeholder="Mots du patient, contexte, inquiétude principale..."></textarea>
+        </section>
+
+        <section class="step" id="lesion">
+          <h2>Analyse de la lésion élémentaire</h2>
+          <div class="fitz-box">
+            <strong>Approche Fitzpatrick adaptée</strong>
+            <div class="small">Commencer par l'impression clinique et l'examen complet, puis décrire quatre critères cardinaux: type de lésion, forme, arrangement et distribution. Ajouter couleur, diascopie, consistance et profondeur présumée avant de conclure.</div>
+            <div class="fitz-flow">
+              <div class="fitz-step"><strong>1. Gravité visible</strong>Patient malade, fièvre, AEG, douleur intense, muqueuses, œil.</div>
+              <div class="fitz-step"><strong>2. Type de lésion</strong>Raised, depressed, flat, surface change, fluid-filled, vascular.</div>
+              <div class="fitz-step"><strong>3. Architecture</strong>Forme individuelle, arrangement des lésions, extension.</div>
+              <div class="fitz-step"><strong>4. Contexte</strong>Topographie, histoire, traitements, examens ciblés.</div>
+            </div>
+          </div>
+          <h3>Impression initiale et examen</h3>
+          <div class="chips" data-checks="fitzInitial"></div>
+          <div class="tree" id="lesionTree"></div>
+          <h3>Forme des lésions individuelles</h3>
+          <div class="chips" data-checks="forme"></div>
+          <h3>Arrangement des lésions multiples</h3>
+          <div class="chips" data-checks="arrangement"></div>
+          <h3>Extension</h3>
+          <div class="chips" data-checks="extension"></div>
+          <h3>Texture / surface</h3>
+          <div class="chips" data-checks="surface"></div>
+          <h3>Couleur</h3>
+          <div class="chips" data-checks="couleur"></div>
+          <h3>Vitropression</h3>
+          <div class="chips" data-radios="vitropression"></div>
+          <h3>Consistance / palpation</h3>
+          <div class="chips" data-checks="consistance"></div>
+          <h3>Composant anatomique présumé</h3>
+          <div class="chips" data-checks="composant"></div>
+                    <h3>Si lésion isolée, pigmentée ou tumorale</h3>
+          <div class="chips" data-checks="tumorFlags"></div>
+          <h3>Description libre</h3>
+          <textarea name="description" placeholder="Taille, forme, bordures, nombre, disposition, consistance, photos, dermoscopie..."></textarea>
+        </section>
+
+
+
+        <section class="step" id="aide">
+          <h2>Aide visuelle des lésions élémentaires</h2>
+          <div class="lesion-cards" id="visualCards"></div>
+        </section>
+        <section class="step" id="interrogatoire">
+          <h2>Interrogatoire dermatologique structuré</h2>
+          <div class="grid">
+            <label class="field">Date de début <input name="debutDate" type="text" placeholder="Exacte ou approximative"></label>
+            <label class="field">Retentissement sommeil
+              <select name="sommeil"><option>Aucun</option><option>Léger</option><option>Modéré</option><option>Sévère</option></select>
+            </label>
+            <label class="field">Retentissement travail
+              <select name="travail"><option>Aucun</option><option>Léger</option><option>Modéré</option><option>Sévère</option></select>
+            </label>
+            <label class="field">Gêne esthétique
+              <select name="esthetique"><option>Faible</option><option>Modérée</option><option>Importante</option></select>
+            </label>
+          </div>
+          <div class="scale-row"><strong>Prurit</strong><input name="prurit" type="range" min="0" max="10" value="0"><output>0</output></div>
+          <div class="scale-row"><strong>Douleur</strong><input name="douleur" type="range" min="0" max="10" value="0"><output>0</output></div>
+          <div class="scale-row"><strong>Brûlure</strong><input name="brulure" type="range" min="0" max="10" value="0"><output>0</output></div>
+          <h3>Date et mode de début</h3><div class="chips" data-checks="debut"></div>
+          <h3>Évolution</h3><div class="chips" data-checks="evolution"></div>
+          <h3>Chronologie</h3><div class="chips" data-checks="chronologie"></div>
+          <h3>Facteurs déclenchants</h3><div class="chips" data-checks="declenchants"></div>
+          <h3>Facteurs aggravants</h3><div class="chips" data-checks="aggravants"></div>
+          <h3>Facteurs calmants</h3><div class="chips" data-checks="calmants"></div>
+          <h3>Topographie</h3><div class="chips" data-checks="topographie"></div>
+          <h3>Carte de distribution Fitzpatrick</h3><div class="body-map" data-body-map="bodyMap"></div>
+          <h3>Distribution</h3><div class="chips" data-checks="distribution"></div>
+          <h3>Contexte associé</h3><div class="chips" data-checks="contexte"></div>
+          <h3>Lien symptômes / lésions</h3><div class="chips" data-checks="lien"></div>
+          <h3>Prurit collectif</h3><div class="chips" data-radios="collectif"></div>
+          <h3>Traitements déjà essayés</h3><div class="chips" data-checks="essais"></div>
+        </section>
+
+        <section class="step" id="gravite">
+          <h2>Red flags dermatologiques</h2>
+          <div class="chips" data-checks="redflags"></div>
+        </section>
+
+                <section class="step" id="photo">
+          <h2>Photographie et analyse d'image</h2>
+          <div class="notice">
+            Analyse photo-assistée locale: l'application évalue la qualité technique de l'image et structure les signes visibles saisis par le médecin. Elle ne réalise pas un diagnostic automatisé fiable et ne remplace pas l'examen clinique, la palpation, la dermoscopie ou l'avis spécialisé.
+          </div>
+
+          <div class="photo-workbench">
+            <div>
+              <h3>Importer ou capturer une photo</h3>
+              <label class="drop-zone" id="photoDrop">
+                <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+                <span><strong>Glisser-déposer une photo ici</strong><br>ou cliquer pour importer depuis ordinateur/smartphone/caméra.</span>
+              </label>
+              <div class="photo-stage">
+                <img id="photoPreview" alt="Aperçu de la photographie clinique" hidden>
+                <span id="photoEmpty" class="small">Aucune photo chargée</span>
+              </div>
+
+              <h3>Comparaison dans le temps</h3>
+              <div class="grid">
+                <label class="field">Photo comparative antérieure
+                  <input id="photoCompareInput" type="file" accept="image/*">
+                </label>
+                <label class="field">Commentaire d'évolution
+                  <input name="photoComment" type="text" placeholder="Amélioration, aggravation, extension, taille...">
+                </label>
+              </div>
+              <div class="compare-grid">
+                <div class="compare-slot"><img id="photoComparePreview" alt="Photo comparative" hidden><span class="small">Ancienne photo</span></div>
+                <div class="compare-slot"><img id="photoCompareCurrent" alt="Photo actuelle pour comparaison" hidden><span class="small">Photo actuelle</span></div>
+              </div>
+            </div>
+
+            <div class="photo-controls">
+              <h3>Affichage</h3>
+              <label class="field">Zoom <input id="photoZoom" type="range" min="100" max="250" value="100"></label>
+              <label class="field">Rotation <input id="photoRotate" type="range" min="-180" max="180" value="0"></label>
+              <label class="field">Luminosité <input id="photoBrightness" type="range" min="60" max="160" value="100"></label>
+              <label class="field">Contraste <input id="photoContrast" type="range" min="60" max="180" value="100"></label>
+              <button type="button" class="action secondary" id="photoResetView">Réinitialiser l'affichage</button>
+
+              <h3>Qualité calculée</h3>
+              <div id="photoMetrics" class="metric-list"></div>
+            </div>
+          </div>
+
+          <h3>Contexte et sécurité</h3>
+          <div class="grid">
+            <label class="field">Photo prise
+              <select name="photoPrise"><option>Non</option><option>Oui</option></select>
+            </label>
+            <label class="field">Consentement patient
+              <select name="consentement"><option>Non documenté</option><option>Oui</option><option>Non</option></select>
+            </label>
+            <label class="field">Localisation anatomique <input name="photoLocalisation" type="text"></label>
+            <label class="field">Date <input name="photoDate" type="date"></label>
+            <label class="field">Type de photo
+              <select name="photoCategory"><option>Lésion dermatologique</option><option>Plaie / ulcère / escarre</option><option>Brûlure</option><option>Œdème / rougeur</option><option>Muqueuse visible</option><option>Ongle</option><option>Tuméfaction superficielle</option><option>ORL simple</option><option>Ophtalmologique simple</option><option>Autre</option></select>
+            </label>
+            <label class="field">Échelle visible
+              <select name="photoScale"><option>Non</option><option>Oui, règle</option><option>Oui, pièce/objet connu</option><option>Inconnu</option></select>
+            </label>
+            <label class="field">Dermoscopie réalisée
+              <select name="dermoscopie"><option>Non</option><option>Oui</option><option>Non disponible</option></select>
+            </label>
+            <label class="field">Besoin de téléexpertise
+              <select name="teleexpertise"><option>Non</option><option>Oui</option><option>À discuter</option></select>
+            </label>
+          </div>
+
+          <h3>Signes visibles à cocher</h3>
+          <div class="chips" data-checks="photoSigns"></div>
+          <h3>Critères ABCDE / pigmentés</h3>
+          <div class="chips" data-checks="photoABCDE"></div>
+          <h3>Plaies et brûlures</h3>
+          <div class="chips" data-checks="photoWound"></div>
+          <h3>Signes de gravité photo/contexte</h3>
+          <div class="chips" data-checks="photoRedFlags"></div>
+
+          <h3>Compte rendu photo</h3>
+          <div class="actions">
+            <button type="button" class="action" id="copyPhotoReport">Copier l'analyse photo</button>
+          </div>
+          <textarea id="photoReport" class="summarybox" readonly></textarea>
+          <p class="small">Les photos ne sont pas stockées par cette application locale au-delà de l'aperçu dans le navigateur. Vérifier le consentement, l'identification anatomique, la date et la sécurité du stockage utilisé.</p>
+        </section>
+
+<section class="step" id="synthese">
+          <h2>Synthèse médicale automatique</h2>
+          <div class="actions">
+            <button type="button" class="action" id="copySummary">Copier la synthèse</button>
+            <button type="button" class="action secondary" id="printPage">Imprimer / exporter PDF</button>
+            <button type="button" class="action secondary" id="resetForm">Réinitialiser</button>
+          </div>
+          <textarea id="summary" class="summarybox" readonly></textarea>
+        </section>
+      </form>
+    </div>
+
+    <aside>
+      <h2>Analyse</h2>
+      <div id="alerts"></div>
+      <h3>Raisonnement morphologique</h3>
+      <div id="reasoning"></div>
+      <h3>Diagnostics probables</h3>
+      <div id="diagnostics"></div>
+      <h3>Orientation pratique</h3>
+      <div id="orientation"></div>
+      <h3>Examens utiles</h3>
+      <div id="examens"></div>
+      <h3>Traitement initial prudent</h3>
+      <div id="traitement"></div>
+      <p class="small">Sources internes mobilisées: fiches CESU dermatologie Marseille et approche morphologique du chapitre 4 de Fitzpatrick's Dermatology in General Medicine, 7e éd. Adaptation locale prudente, sans substitution à l'avis spécialisé.</p>
+    </aside>
+  </main>
+
+  <script>
+    const OPTIONS = {
+      parcours: ["Éruption / rash diffus ou multiple", "Lésion isolée / growth", "Prurit sans lésion primitive évidente", "Atteinte muqueuse, génitale, cheveux ou ongles"],
+      terrain: ["Atopie", "Psoriasis", "Maladie auto-immune", "Diabète", "Immunodépression", "VIH", "Cancer", "Insuffisance rénale", "Insuffisance hépatique", "Hémopathie", "Greffe", "Traitement immunosuppresseur"],
+      famille: ["Psoriasis", "Mélanome", "Atopie", "Maladies auto-immunes"],
+      traitements: ["Anticoagulants", "Antiagrégants", "Corticoïdes", "Immunosuppresseurs", "Biothérapies", "Antibiotiques récents", "AINS", "Antiépileptiques", "Allopurinol", "IEC", "Sartans", "Diurétiques", "Lithium", "Antipaludéens de synthèse", "Chimiothérapie", "Immunothérapie anticancéreuse"],
+      motif: ["Éruption cutanée", "Prurit", "Douleur cutanée", "Brûlure", "Lésion pigmentée", "Plaie / ulcération", "Lésion génitale", "Lésion buccale", "Chute de cheveux", "Ongles", "Suspicion infection", "Suspicion allergie", "Suspicion tumeur cutanée", "Autre"],
+      bodyMap: ["Cuir chevelu", "Visage", "Muqueuses", "Tronc", "Dos", "Plis", "Membres supérieurs", "Mains", "Paumes", "Ongles", "Membres inférieurs", "Pieds", "Plantes", "Génital / péri-anal", "Zones photo-exposées", "Acral", "Dermatomérique", "Généralisé"],
+      fitzInitial: ["Patient paraît malade", "Examen peau complet réalisé", "Cuir chevelu examiné", "Bouche/muqueuses examinées", "Paumes et plantes examinées", "Ongles examinés", "Aires ganglionnaires palpées", "Lésion mesurée", "Photographie de documentation", "Dermoscopie ou loupe utilisée"],
+      forme: ["Annulaire", "Arciforme", "Linéaire", "Ronde", "Ovalaire", "Ombiliquée", "Iris / en cocarde", "Serpigineuse", "Polycyclique", "Irrégulière", "Verruqueuse", "Pédiculée", "Dôme", "Plateau"],
+      arrangement: ["Isolée", "Dispersée", "Groupée", "Confluente", "Linéaire", "Herpétiforme", "Zostériforme", "Dermatomérique", "Folliculaire", "Réticulée", "Bilatérale symétrique", "Asymétrique"],
+      extension: ["Circonscrite", "Régionale", "Généralisée", "Universelle", "< 1% surface corporelle", "1-10% surface corporelle", "> 10% surface corporelle", "> 90% surface corporelle / érythrodermie"],
+      surface: ["Squameuse", "Verruqueuse", "Lisse", "Suintante", "Croûteuse", "Nécrotique", "Atrophique", "Indurée", "Chaude", "Froide", "Douloureuse", "Non douloureuse"],
+      couleur: ["Rouge", "Rosée", "Violacée", "Brune", "Noire", "Blanche", "Jaune", "Bleutée", "Chair", "Dépigmentée"],
+      vitropression: ["Oui", "Non", "Non testé"],
+      consistance: ["Molle", "Doughy / pâteuse", "Ferme", "Dure", "Infiltrée", "Mobile", "Fixée", "Fluctuante", "Tendue", "Flasque", "Sèche", "Humide", "Sensible", "Chaude"],
+      composant: ["Épidermique", "Dermique", "Hypodermique / sous-cutané", "Annexiel / folliculaire", "Vasculaire", "Jonction dermo-épidermique", "Muqueux", "Mixte / incertain"],
+      tumorFlags: ["ABCDE positif", "Évolution récente", "Ugly duckling", "Saignement", "Ulcération", "Ne cicatrise pas", "Croissance rapide", "Aspect perlé/télangiectasique", "Lésion kératosique douloureuse", "Pigmentation polychrome", "Bords irréguliers", "Localisation acrale", "Bande unguéale pigmentée", "Signe de Hutchinson", "Immunodépression/transplantation", "Antécédent personnel de cancer cutané"],
+      photoSigns: ["Macule", "Papule", "Plaque", "Nodule", "Vésicule", "Bulle", "Pustule", "Croûte", "Érosion", "Ulcération", "Squames", "Kératose", "Cicatrice", "Purpura", "Angiome", "Lésion pigmentée", "Lésion dépigmentée", "Lésion érythémateuse", "Lésion érythémato-squameuse", "Œdème", "Suintement", "Saignement", "Lymphangite visible"],
+      photoABCDE: ["Asymétrie", "Bords irréguliers", "Couleur hétérogène", "Diamètre > 6 mm si mesurable", "Évolution rapportée", "Noir intense", "Bleu-gris", "Blanc cicatriciel", "Rouge associé", "Ulcération", "Saignement", "Modification rapide", "Vilain petit canard"],
+      photoWound: ["Coupure", "Ulcère", "Escarre", "Brûlure", "Morsure", "Plaie traumatique", "Fond fibrineux", "Nécrose", "Bourgeonnement", "Exsudat", "Rougeur périphérique", "Œdème périphérique", "Berges décollées", "Berges inflammatoires"],
+      photoRedFlags: ["Mélanome possible", "Carcinome cutané possible", "Ulcération suspecte", "Nécrose", "Infection extensive", "Dermohypodermite possible", "Abcès", "Lymphangite", "Purpura extensif", "Brûlure profonde", "Atteinte visage/œil/génital/mains", "Plaie chez diabétique ou immunodéprimé", "Lésion très douloureuse", "Évolution rapide", "Fièvre associée", "Altération de l'état général"],
+      debut: ["Début brutal", "Début progressif", "Première poussée", "Récidive", "Lésion ancienne modifiée"],
+      evolution: ["Aiguë < 6 semaines", "Subaiguë", "Chronique > 6 semaines", "Par poussées", "Paroxystique", "Continue", "Extension rapide", "Régression spontanée", "Lésion fixe", "Lésion migratrice", "Lésions fugaces < 24 h"],
+      chronologie: ["Matin", "Soir", "Nuit", "Après douche/bain", "Après effort/sport", "Après repas", "Après exposition solaire", "Période hivernale", "Période estivale", "Après prise médicamenteuse", "Après infection récente", "Après contact sexuel", "Après voyage", "Après piqûre/morsure"],
+      declenchants: ["Stress", "Irritants", "Cosmétiques", "Produits ménagers", "Profession", "Métaux/nickel", "Plantes", "Animaux", "Soleil", "Froid", "Chaleur", "Hypersudation", "Sport", "Frottement", "Vêtements", "Produits d'hygiène", "Nouveau médicament", "Vaccination récente", "Infection récente", "Rapport sexuel à risque", "Voyage", "Baignade", "Sauna/hammam"],
+      aggravants: ["Chaleur", "Sueurs", "Sport", "Douches chaudes", "Bains", "Repas", "Alcool", "Épices", "Stress", "Grattage", "Soleil", "Froid", "Frottement", "Occlusion", "Rasage", "Produits cosmétiques"],
+      calmants: ["Froid", "Détente", "Antihistaminiques", "Dermocorticoïdes", "Émollients", "Éviction d'un produit", "Repos", "Antibiotiques", "Antifongiques", "Antiviraux", "Aucun"],
+      topographie: ["Cuir chevelu", "Visage", "Paupières", "Lèvres", "Bouche", "Oreilles", "Cou", "Tronc", "Dos", "Abdomen", "Plis axillaires", "Plis inguinaux", "Plis sous-mammaires", "Ombilic", "Membres supérieurs", "Coudes", "Poignets", "Mains", "Espaces interdigitaux", "Paumes", "Ongles", "Membres inférieurs", "Genoux", "Chevilles", "Pieds", "Plantes", "Organes génitaux", "Région péri-anale", "Muqueuses", "Généralisation"],
+      distribution: ["Localisée", "Régionale", "Généralisée", "Symétrique", "Asymétrique", "Linéaire", "Annulaire", "En cocarde", "Métamérique", "Folliculaire", "En plaques", "En nappes", "En gouttes", "Photo-exposée", "Zones de frottement", "Plis", "Zones séborrhéiques", "Paumes/plantes", "Muqueuses"],
+      contexte: ["Fièvre", "Altération de l'état général", "Amaigrissement", "Sueurs nocturnes", "Arthralgies", "Myalgies", "Dyspnée", "Douleur thoracique", "Diarrhée", "Douleurs abdominales", "Ictère", "Adénopathies", "Signes neurologiques", "Douleur oculaire", "Rougeur oculaire", "Photophobie", "Ulcérations buccales", "Ulcérations génitales", "Signes urinaires", "Signes ORL", "Infection récente", "Immunodépression", "Grossesse", "Nouveau traitement", "Toxiques", "Drogues", "Exposition professionnelle"],
+      lien: ["Prurit avant les lésions", "Prurit pendant les lésions", "Prurit après les lésions", "Douleur avant l'éruption", "Douleur pendant l'éruption", "Brûlure avant l'éruption", "Lésion apparue après grattage", "Lésions uniquement secondaires au grattage", "Pas de symptôme fonctionnel"],
+      collectif: ["Oui, entourage atteint", "Oui, conjoint atteint", "Oui, enfants atteints", "Oui, collectivité/crèche/école/EHPAD", "Non", "Inconnu"],
+      essais: ["Aucun traitement", "Émollients: amélioration", "Émollients: aggravation", "Dermocorticoïdes: amélioration", "Dermocorticoïdes: aggravation", "Antihistaminiques: amélioration", "Antihistaminiques: aucun effet", "Antibiotiques: amélioration", "Antifongiques: amélioration", "Antiviraux: amélioration", "Antiseptiques: irritation", "Arrêt d'un produit: amélioration", "Arrêt d'un médicament: amélioration"],
+      redflags: ["Éruption fébrile avec altération de l'état général", "Purpura fébrile", "Purpura extensif ou nécrotique", "Bulles extensives", "Décollement cutané", "Atteinte muqueuse sévère", "Suspicion Stevens-Johnson / Lyell", "Éruption médicamenteuse sévère", "Œdème du visage + fièvre + éruption + adénopathies: suspicion DRESS", "Douleur cutanée intense disproportionnée", "Nécrose cutanée", "Infection rapidement extensive", "Suspicion fasciite nécrosante", "Érysipèle/cellulite avec signes systémiques", "Zona ophtalmique", "Herpès chez immunodéprimé ou nourrisson", "Eczéma herpeticum / Kaposi-Juliusberg", "Dermatomyosite avec faiblesse musculaire ou dyspnée", "Lésion pigmentée très suspecte de mélanome", "Ulcération chronique ou tumeur qui saigne/pousse rapidement", "Atteinte oculaire douloureuse ou photophobie", "Immunodépression avec lésions atypiques extensives"]
+    };
+
+    const LESION_TREE = {
+      "A. Raised lesions / lésions en relief": ["Papule", "Plaque", "Nodule", "Tumeur", "Kyste", "Urticaire / papule œdémateuse fugace", "Cicatrice hypertrophique / chéloïde", "Comédon", "Sillon / burrow", "Corne cutanée", "Sclérose", "Calcinose"],
+      "B. Depressed lesions / pertes ou dépressions": ["Érosion", "Ulcération", "Atrophie", "Cicatrice atrophique", "Strie", "Sinus / trajet fistuleux"],
+      "C. Flat lesions / lésions planes": ["Macule rouge / érythémateuse", "Macule pigmentée brune/noire", "Macule achromique ou hypochromique", "Patch / nappe", "Érythème diffus", "Érythrodermie", "Poïkilodermie", "Livedo"],
+      "D. Surface change / modification de surface": ["Squame", "Croûte", "Excoriation", "Fissure", "Lichenification", "Kératodermie", "Eschare", "Végétation", "Kératose"],
+      "E. Fluid-filled lesions / contenu liquidien": ["Vésicule", "Bulle", "Pustule", "Furoncle", "Abcès"],
+      "F. Vascular lesions / vasculaire": ["Purpura ne s'effaçant pas à la vitropression", "Télangiectasie", "Infarctus cutané / nécrose vasculaire"]
+    };
+
+    const VISUALS = [
+      ["macule", "icon-macule", "Modification plane de couleur, sans relief palpable.", "Roséole virale, lentigo, vitiligo.", "Confondre érythème et purpura sans vitropression.", "0% 0%"],
+      ["papule", "icon-papule", "Petite élevure solide et circonscrite, souvent < 1 cm.", "Lichen plan, prurigo, verrue plane.", "Ne pas appeler vésicule une papule sans liquide.", "33.333% 0%"],
+      ["plaque", "icon-plaque", "Relief large, infiltré, souvent par confluence de papules.", "Psoriasis, eczéma chronique, lupus subaigu.", "Oublier de décrire bordure, squames et topographie.", "66.666% 0%"],
+      ["vésicule", "icon-vesicule", "Petite collection liquidienne claire.", "Herpès, zona, varicelle, eczéma aigu.", "Une vésicule douloureuse groupée impose HSV/VZV dans les hypothèses.", "100% 0%"],
+      ["bulle", "icon-bulle", "Collection liquidienne plus grande, tendue ou flasque.", "Pemphigoïde, pemphigus, brûlure, toxidermie sévère.", "Bulles extensives ou muqueuses = avis urgent.", "0% 50%"],
+      ["pustule", "icon-pustule", "Lésion liquidienne contenant du pus ou des polynucléaires.", "Acné, folliculite, impétigo, psoriasis pustuleux.", "Pustule virale possible dans VZV, pas toujours bactérienne.", "33.333% 50%"],
+      ["squame", "icon-squame", "Lamelle cornée qui se détache.", "Psoriasis, dermatophytie, pityriasis versicolor.", "Gratter doucement peut aider; éviter gestes agressifs.", "66.666% 50%"],
+      ["croûte", "icon-croute", "Concrétion séchée sur lésion suintante ou érodée.", "Impétigo, eczéma suintant, herpès croûteux.", "Croûte de miel oriente impétiginisation.", "100% 50%"],
+      ["ulcération", "icon-ulc", "Perte de substance profonde, guérissant avec cicatrice.", "Ulcère veineux, carcinome, pyoderma gangrenosum.", "Ulcération chronique ou tumorale doit être adressée/biopsiée.", "0% 100%"],
+      ["nodule", "icon-nodule", "Lésion solide profonde, palpable, > 1 cm.", "Érythème noueux, kyste, abcès, dermatofibrome.", "Douleur intense et signes systémiques changent l'urgence.", "33.333% 100%"],
+      ["purpura", "icon-purpura", "Macule rouge-violacée ne s'effaçant pas à la vitropression.", "Vascularite, thrombopénie, purpura infectieux.", "Purpura fébrile ou nécrotique = urgence.", "66.666% 100%"],
+      ["urticaire", "icon-urticaire", "Papule œdémateuse prurigineuse fugace, souvent < 24 h.", "Urticaire aiguë, chronique, physique.", "Rechercher angio-œdème, dyspnée, hypotension.", "100% 100%"]
+    ];
+
+    const KB = [
+      dx("Eczéma de contact irritatif", ["Plaque","Érosion"], ["Mains","Visage","Plis"], ["Prurit","Brûlure"], ["Irritants","Produits ménagers","Profession","Produits d'hygiène"], ["Aiguë < 6 semaines","Chronique > 6 semaines"], ["Éviction, protection, émollients, dermocorticoïde adapté si inflammation probable; réévaluer 7-10 jours."], ["Eczéma allergique","Dermatite atopique","Dermatophytie"], "non urgent"),
+      dx("Eczéma de contact allergique", ["Plaque","Vésicule","Érosion"], ["Paupières","Cou","Mains","Organes génitaux"], ["Prurit"], ["Cosmétiques","Métaux/nickel","Nouveau médicament","Produits d'hygiène"], ["Après prise médicamenteuse"], ["Éviction du suspect, photos, traitement anti-inflammatoire local prudent; tests épicutanés si récidive."], ["Eczéma irritatif","Dermatite atopique","Lupus cutané"], "avis dermatologique"),
+      dx("Dermatite atopique", ["Plaque","Lichenification","Excoriation"], ["Plis","Visage","Mains"], ["Prurit"], ["Atopie","Stress","Froid"], ["Chronique > 6 semaines","Par poussées"], ["Émollients quotidiens, hygiène douce, dermocorticoïde adapté en poussée; surveiller surinfection/herpès."], ["Eczéma de contact","Gale","Psoriasis"], "non urgent"),
+      dx("Psoriasis", ["Plaque","Squame"], ["Coudes","Genoux","Cuir chevelu","Ongles"], ["Prurit"], ["Stress","Infection récente"], ["Chronique > 6 semaines","Par poussées"], ["Émollients, dermocorticoïde/kératolytique selon zone si diagnostic probable; rechercher rhumatisme."], ["Eczéma","Dermatophytie","Lichen plan"], "avis dermatologique"),
+      dx("Dermatite séborrhéique", ["Plaque","Squame"], ["Zones séborrhéiques","Cuir chevelu","Visage"], ["Prurit"], ["Stress","Période hivernale"], ["Chronique > 6 semaines","Par poussées"], ["Hygiène douce, antifongique local ou anti-inflammatoire faible selon zone; prudence visage."], ["Psoriasis","Rosacée","Lupus"], "non urgent"),
+      dx("Lichen plan", ["Papule","Plaque"], ["Poignets","Chevilles","Bouche","Organes génitaux"], ["Prurit"], ["Nouveau médicament"], ["Chronique > 6 semaines"], ["Avis dermatologique si atteinte muqueuse; rechercher médicaments inducteurs et VHC selon contexte."], ["Psoriasis","Syphilis secondaire","Lichen scléreux"], "avis dermatologique"),
+      dx("Pityriasis rosé de Gibert", ["Macule rouge / érythémateuse","Plaque","Squame"], ["Tronc"], ["Prurit"], ["Infection récente"], ["Aiguë < 6 semaines"], ["Rassurer si typique, émollients/antiprurigineux; reconsidérer si paumes/plantes, muqueuses ou doute IST."], ["Syphilis secondaire","Dermatophytie","Psoriasis en gouttes"], "non urgent"),
+      dx("Urticaire aiguë", ["Urticaire / papule œdémateuse fugace"], ["Généralisation"], ["Prurit"], ["Repas","Nouveau médicament","Infection récente"], ["Lésions fugaces < 24 h"], ["Antihistaminique selon indication; urgence si angio-œdème, dyspnée ou malaise."], ["Urticaire chronique","Vascularite urticarienne","Anaphylaxie"], "non urgent"),
+      dx("Urticaire chronique", ["Urticaire / papule œdémateuse fugace"], ["Généralisation"], ["Prurit"], ["Stress","Froid","Chaleur","Sport"], ["Chronique > 6 semaines","Lésions fugaces < 24 h"], ["Documenter fréquence, facteurs physiques, retentissement; avis si résistant ou atypique."], ["Vascularite urticarienne","Mastocytose","Eczéma"], "avis dermatologique"),
+      dx("Prurigo", ["Papule","Nodule","Excoriation","Croûte"], ["Membres supérieurs","Membres inférieurs","Dos"], ["Prurit"], ["Grattage","Stress"], ["Chronique > 6 semaines"], ["Chercher cause du prurit, émollients, casser le cercle prurit-grattage; avis si nodulaire sévère."], ["Gale","Dermatite atopique","Prurit systémique"], "avis dermatologique"),
+      dx("Rosacée", ["Papule","Pustule","Érythème diffus"], ["Visage"], ["Brûlure"], ["Chaleur","Alcool","Épices","Soleil"], ["Chronique > 6 semaines","Par poussées"], ["Photoprotection, éviter déclencheurs; avis si atteinte oculaire ou forme sévère."], ["Acné","Dermatite séborrhéique","Lupus"], "non urgent"),
+      dx("Acné", ["Papule","Pustule","Nodule"], ["Visage","Dos","Tronc"], ["Douleur"], ["Stress","Occlusion"], ["Chronique > 6 semaines"], ["Évaluer sévérité, cicatrices, grossesse; éviter traitements tératogènes sans cadre spécialisé."], ["Rosacée","Folliculite","Hidradénite"], "non urgent"),
+      dx("Hidradénite suppurée", ["Nodule","Ulcération","Cicatrice"], ["Plis axillaires","Plis inguinaux","Région péri-anale"], ["Douleur"], ["Frottement","Hypersudation","Tabac"], ["Chronique > 6 semaines","Récidive"], ["Sevrage tabac/poids si pertinent, soins locaux, avis dermato si fistules/cicatrices."], ["Furoncles récidivants","Kyste infecté","IST"], "avis dermatologique"),
+      dx("Impétigo", ["Croûte","Érosion","Pustule"], ["Visage","Membres supérieurs"], ["Prurit"], ["Atopie","Collectivité/crèche/école/EHPAD"], ["Aiguë < 6 semaines"], ["Hygiène, éviction collectivité selon contexte, prélèvement si étendu/récidivant; discuter antibiothérapie selon gravité."], ["Eczéma impétiginisé","Herpès","Gale surinfectée"], "non urgent"),
+      dx("Érysipèle / cellulite", ["Érythème diffus","Plaque"], ["Membres inférieurs","Visage"], ["Douleur"], ["Porte d'entrée","Diabète"], ["Début brutal","Extension rapide"], ["Marquer les limites, rechercher signes systémiques; avis rapide/urgence si terrain fragile ou sepsis."], ["Fasciite nécrosante","TVP","Eczéma aigu"], "avis rapide"),
+      dx("Folliculite", ["Pustule","Papule"], ["Zones pileuses","Tronc","Fesses"], ["Prurit","Douleur"], ["Rasage","Occlusion","Sport"], ["Aiguë < 6 semaines"], ["Hygiène, éviter friction/rasage, prélèvement si récidive ou terrain fragile."], ["Acné","Furoncle","Pityrosporum folliculitis"], "non urgent"),
+      dx("Furoncle / abcès", ["Nodule","Pustule"], ["Zones pileuses"], ["Douleur"], ["Diabète","Frottement"], ["Début brutal"], ["Ne pas manipuler; évaluer fluctuation, fièvre, terrain; avis si visage, extension, récidive."], ["Kyste infecté","Hidradénite","Fasciite"], "avis rapide"),
+      dx("Zona", ["Vésicule","Pustule","Croûte"], ["Métamérique","Tronc","Visage"], ["Douleur","Brûlure"], ["Immunodépression","Âge élevé"], ["Début brutal","Douleur avant l'éruption"], ["Antiviral à discuter précocement selon délai/terrain; urgence si ophtalmique ou immunodéprimé."], ["Herpès","Dermatite de contact","Érysipèle"], "avis rapide"),
+      dx("Herpès", ["Vésicule","Érosion","Croûte"], ["Lèvres","Organes génitaux","Bouche"], ["Brûlure","Douleur"], ["Stress","Soleil","Rapport sexuel à risque"], ["Récidive","Douleur avant l'éruption"], ["PCR si doute, terrain fragile, grossesse ou localisation génitale; antiviral à discuter précocement."], ["Zona","Aphte","Syphilis"], "avis dermatologique"),
+      dx("Varicelle", ["Vésicule","Pustule","Croûte"], ["Cuir chevelu","Tronc","Visage"], ["Prurit"], ["Contact infectieux"], ["Aiguë < 6 semaines"], ["Éviter AINS/aspirine, surveiller adulte/grossesse/immunodépression; avis si forme sévère."], ["Prurigo","Mpox","Impétigo"], "avis rapide"),
+      dx("Molluscum contagiosum", ["Papule","Tumeur"], ["Tronc","Plis","Membres"], ["Prurit"], ["Collectivité/crèche/école/EHPAD","Atopie"], ["Chronique > 6 semaines"], ["Rassurer si immunocompétent, éviter traumatisme; avis si diffus, inflammatoire ou immunodéprimé."], ["Verrues","Condylomes","Carcinome si adulte atypique"], "non urgent"),
+      dx("Verrues virales", ["Papule","Kératose","Végétation"], ["Mains","Pieds","Ongles"], ["Douleur"], ["Collectivité","Microtraumatismes"], ["Chronique > 6 semaines"], ["Dermoscopie si plantaire adulte; prudence lésion verruqueuse adulte atypique."], ["Cor plantaire","Carcinome épidermoïde","Mélanome acral"], "non urgent"),
+      dx("Gale", ["Papule","Excoriation","Croûte"], ["Espaces interdigitaux","Poignets","Organes génitaux","Ombilic"], ["Prurit"], ["Nuit","Collectivité/crèche/école/EHPAD","Oui, entourage atteint"], ["Aiguë < 6 semaines"], ["Traiter patient, contacts et linge selon protocole local; rechercher formes profuses chez fragile."], ["Eczéma","Prurigo","Pédiculose"], "avis dermatologique"),
+      dx("Pédiculose", ["Excoriation","Croûte"], ["Cuir chevelu"], ["Prurit"], ["Collectivité/crèche/école/EHPAD"], ["Aiguë < 6 semaines"], ["Confirmer lentes vivantes/poux, traiter contacts proches et textile selon protocole."], ["Eczéma du cuir chevelu","Impétigo","Gale"], "non urgent"),
+      dx("Dermatophytie / tinea corporis", ["Plaque","Squame"], ["Tronc","Membres","Plis"], ["Prurit"], ["Animaux","Sport","Baignade"], ["Annulaire","Extension périphérique"], ["Prélèvement mycologique si doute/ongles/cuir chevelu; antifongique local si forme simple probable."], ["Eczéma nummulaire","Psoriasis","Pityriasis rosé"], "non urgent"),
+      dx("Intertrigo candidosique", ["Érythème diffus","Pustule","Érosion"], ["Plis inguinaux","Plis sous-mammaires","Plis"], ["Prurit","Brûlure"], ["Diabète","Chaleur","Occlusion"], ["Aiguë < 6 semaines"], ["Séchage des plis, antifongique local si probable; rechercher diabète si récidive."], ["Dermatophytie des plis","Erythrasma","Psoriasis inversé"], "non urgent"),
+      dx("Pityriasis versicolor", ["Macule achromique ou hypochromique","Squame"], ["Tronc","Dos"], ["Prurit"], ["Chaleur","Hypersudation","Période estivale"], ["Chronique > 6 semaines"], ["Grattage doux, lampe de Wood si disponible; antifongique local, expliquer repigmentation lente."], ["Vitiligo","Hypopigmentation post-inflammatoire","Lèpre en zone à risque"], "non urgent"),
+      dx("Syphilis secondaire", ["Macule rouge / érythémateuse","Papule","Squame"], ["Paumes","Plantes","Organes génitaux","Bouche"], ["Prurit"], ["Rapport sexuel à risque"], ["Subaiguë"], ["Sérologies IST, examen muqueux; adresser/traiter selon recommandations et partenaires."], ["Pityriasis rosé","Psoriasis","Toxidermie"], "avis rapide"),
+      dx("Lupus cutané", ["Plaque","Érythème diffus","Squame"], ["Visage","Zones photo-exposées"], ["Brûlure"], ["Soleil"], ["Chronique > 6 semaines","Photo-exposée"], ["Photoprotection, rechercher signes systémiques; avis dermatologique/rhumatologique."], ["Rosacée","Dermatite séborrhéique","Dermatomyosite"], "avis dermatologique"),
+      dx("Dermatomyosite", ["Papule","Érythème diffus"], ["Paupières","Mains","Zones photo-exposées"], ["Douleur"], ["Soleil"], ["Subaiguë"], ["Urgent si faiblesse musculaire, dyspnée ou dysphagie; bilan spécialisé."], ["Lupus","Eczéma","Toxidermie"], "avis rapide"),
+      dx("Sclérodermie / morphée", ["Plaque","Atrophie"], ["Tronc","Membres"], ["Douleur"], ["Auto-immunité"], ["Chronique > 6 semaines"], ["Évaluer induration, Raynaud, signes viscéraux; avis dermatologique."], ["Lichen scléreux","Cicatrice","Dermatofibrome"], "avis dermatologique"),
+      dx("Vascularite cutanée", ["Purpura ne s'effaçant pas à la vitropression","Ulcération","Nécrose"], ["Membres inférieurs"], ["Douleur"], ["Nouveau médicament","Infection récente"], ["Aiguë < 6 semaines"], ["Bilan systémique, NFS/plaquettes/CRP/rénal/urines; biopsie si indiqué; urgence si fièvre/nécrose."], ["Purpura thrombopénique","Méningococcémie","Embolies"], "avis rapide"),
+      dx("Pemphigoïde bulleuse", ["Bulle","Urticaire / papule œdémateuse fugace"], ["Plis","Membres","Tronc"], ["Prurit"], ["Âge élevé","Diurétiques"], ["Chronique > 6 semaines"], ["Biopsie + IFD, avis dermatologique; rechercher médicaments inducteurs."], ["Pemphigus","Toxidermie bulleuse","Gale croûteuse"], "avis rapide"),
+      dx("Pemphigus", ["Bulle","Érosion"], ["Bouche","Muqueuses","Tronc"], ["Douleur"], ["Auto-immunité"], ["Subaiguë"], ["Avis dermatologique rapide; atteinte buccale/érosions persistantes à ne pas banaliser."], ["Aphtose","SJS/Lyell","Pemphigoïde"], "avis rapide"),
+      dx("Érythème polymorphe", ["En cocarde","Bulle"], ["Paumes","Plantes","Membres"], ["Brûlure"], ["Après infection récente","Herpès"], ["Aiguë < 6 semaines"], ["Rechercher HSV, atteinte muqueuse; avis si forme majeure ou doute toxidermie."], ["SJS/Lyell","Urticaire","Toxidermie"], "avis dermatologique"),
+      dx("Syndrome de Sweet", ["Plaque","Nodule"], ["Visage","Cou","Membres supérieurs"], ["Douleur"], ["Fièvre","Hémopathie"], ["Début brutal"], ["NFS/CRP, rechercher contexte infectieux, inflammatoire ou hématologique; avis rapide."], ["Érysipèle","Vascularite","Pyoderma gangrenosum"], "avis rapide"),
+      dx("Naevus banal", ["Macule pigmentée brune/noire"], ["Tronc","Membres"], [], [], ["Lésion fixe"], ["Surveillance si banal; dermoscopie si doute ou changement."], ["Naevus atypique","Mélanome","Lentigo"], "non urgent"),
+      dx("Naevus atypique", ["Macule pigmentée brune/noire"], ["Tronc","Dos"], [], ["Phototype clair","ATCD familial mélanome"], ["Lésion ancienne modifiée"], ["Dermoscopie, comparaison photo, avis dermatologique si ABCDE ou doute."], ["Mélanome","Naevus banal","Kératose séborrhéique"], "avis dermatologique"),
+      dx("Mélanome suspect", ["Macule pigmentée brune/noire","Tumeur"], ["Dos","Membres","Ongles","Plantes"], [], ["Phototype I","Phototype II","ATCD familial mélanome"], ["Lésion ancienne modifiée"], ["Avis dermatologique/chirurgical rapide; ne pas rassurer une lésion ABCDE positive."], ["Naevus atypique","Kératose séborrhéique","Hématome sous-corné"], "avis rapide"),
+      dx("Carcinome basocellulaire", ["Papule","Tumeur","Ulcération"], ["Visage","Zones photo-exposées"], ["Saignement"], ["Soleil"], ["Chronique > 6 semaines"], ["Dermoscopie et avis dermatologique; urgence relative sauf croissance rapide/localisation critique."], ["Carcinome épidermoïde","Mélanome achromique","Kératoacanthome"], "avis dermatologique"),
+      dx("Carcinome épidermoïde", ["Kératose","Tumeur","Ulcération"], ["Zones photo-exposées","Lèvres","Mains"], ["Douleur"], ["Soleil","Immunodépression","Greffe"], ["Chronique > 6 semaines","Extension rapide"], ["Avis dermatologique rapide, surtout immunodéprimé, lèvre, ulcération ou croissance rapide."], ["Kératose actinique","Kératoacanthome","Verrue"], "avis rapide"),
+      dx("Kératose actinique", ["Kératose","Squame"], ["Visage","Cuir chevelu","Mains"], ["Douleur"], ["Soleil"], ["Chronique > 6 semaines"], ["Photoprotection, dermoscopie/avis pour lésions épaisses, douloureuses ou ulcérées."], ["Carcinome épidermoïde","Psoriasis","Kératose séborrhéique"], "avis dermatologique"),
+      dx("Kératose séborrhéique", ["Kératose","Plaque"], ["Tronc","Visage"], ["Prurit"], ["Âge élevé"], ["Chronique > 6 semaines"], ["Rassurer si typique; dermoscopie si pigmentée atypique ou changement."], ["Mélanome","CBC pigmenté","Naevus"], "non urgent"),
+      dx("Dermatofibrome", ["Nodule"], ["Membres inférieurs"], [], ["Traumatisme"], ["Chronique > 6 semaines"], ["Surveillance si typique; avis si croissance, douleur, atypie."], ["Dermatofibrosarcome","Naevus","Kyste"], "non urgent"),
+      dx("Angiome", ["Télangiectasie","Macule rouge / érythémateuse"], ["Tronc","Visage"], [], [], ["Lésion fixe"], ["Rassurer si typique; avis si saignement, doute ou enfant avec localisation à risque."], ["Purpura","CBC","Tumeur vasculaire"], "non urgent"),
+      dx("Vitiligo", ["Macule achromique ou hypochromique"], ["Visage","Mains","Organes génitaux"], [], ["Auto-immunité"], ["Chronique > 6 semaines","Symétrique"], ["Lampe de Wood si disponible, photoprotection, rechercher contexte auto-immun; avis dermatologique."], ["Pityriasis versicolor","Hypopigmentation post-inflammatoire","Lichen scléreux"], "avis dermatologique"),
+      dx("Mélasma", ["Macule pigmentée brune/noire"], ["Visage"], [], ["Soleil","Grossesse"], ["Chronique > 6 semaines"], ["Photoprotection stricte, éviter traitements irritants; avis si doute pigmentaire."], ["Lentigo","Lupus","Hyperpigmentation post-inflammatoire"], "non urgent"),
+      dx("Lentigo solaire", ["Macule pigmentée brune/noire"], ["Visage","Mains","Zones photo-exposées"], [], ["Soleil"], ["Chronique > 6 semaines"], ["Dermoscopie si atypie; photoprotection."], ["Mélanome lentigo maligna","Kératose séborrhéique","Naevus"], "non urgent"),
+      dx("Xérose cutanée", ["Squame","Excoriation"], ["Membres inférieurs","Généralisation"], ["Prurit"], ["Âge élevé","Froid","Douches chaudes"], ["Chronique > 6 semaines"], ["Émollients, hygiène douce, chercher causes systémiques si prurit nu persistant."], ["Eczéma asteatosique","Prurit urémique","Pemphigoïde débutante"], "non urgent"),
+      dx("Prurit cholestatique", ["Excoriation"], ["Paumes","Plantes","Généralisation"], ["Prurit"], ["Ictère"], ["Chronique > 6 semaines","Nuit"], ["Bilan hépatique/bilirubine; avis selon anomalies ou ictère."], ["Prurit urémique","Prurit médicamenteux","Gale"], "avis rapide"),
+      dx("Prurit urémique", ["Excoriation"], ["Généralisation"], ["Prurit"], ["Insuffisance rénale"], ["Chronique > 6 semaines"], ["Bilan rénal si non connu, optimiser cause; avis néphro/dermato selon contexte."], ["Xérose","Gale","Prurit médicamenteux"], "avis dermatologique"),
+      dx("Prurit hématologique", ["Excoriation"], ["Généralisation"], ["Prurit"], ["Amaigrissement","Sueurs nocturnes","Adénopathies","Après douche/bain"], ["Chronique > 6 semaines"], ["NFS/plaquettes/ferritine/LDH selon contexte; avis rapide si signes généraux."], ["Prurit psychogène","Gale","Pemphigoïde débutante"], "avis rapide"),
+      dx("Prurit médicamenteux", ["Excoriation","Érythème diffus"], ["Généralisation"], ["Prurit"], ["Nouveau médicament","IEC","Sartans","Antibiotiques récents","Allopurinol"], ["Après prise médicamenteuse"], ["Réévaluer médicaments; urgence si fièvre, visage œdématié, muqueuses ou atteinte viscérale."], ["Toxidermie","Prurit systémique","Urticaire"], "avis dermatologique"),
+      dx("Prurit neuropathique", ["Excoriation"], ["Dos","Membres supérieurs","Membres inférieurs"], ["Prurit","Brûlure"], ["Douleur neurologique"], ["Chronique > 6 semaines"], ["Évoquer notalgie, brachioradial, post-zostérien; avis si atypique."], ["Prurit psychogène","Eczéma","Zona"], "non urgent"),
+      dx("Psychodermatose / dermatillomanie", ["Excoriation","Croûte"], ["Visage","Membres supérieurs"], ["Prurit"], ["Stress"], ["Chronique > 6 semaines"], ["Alliance thérapeutique, traiter lésions, ne pas nier la souffrance; envisager prise en charge conjointe."], ["Gale","Prurigo","Trouble factice"], "avis dermatologique")
+    ];
+
+    function dx(name, lesions, topo, symptoms, triggers, time, care, diff, urgency) {
+      return {name, lesions, topo, symptoms, triggers, time, care, diff, urgency};
+    }
+
+    function renderOptions() {
+      document.querySelectorAll("[data-checks]").forEach(box => {
+        const key = box.dataset.checks;
+        box.innerHTML = OPTIONS[key].map(v => `<label class="chip"><input type="checkbox" name="${key}" value="${escapeHtml(v)}"> <span>${v}</span></label>`).join("");
+      });
+      document.querySelectorAll("[data-radios]").forEach(box => {
+        const key = box.dataset.radios;
+        box.innerHTML = OPTIONS[key].map((v, i) => `<label class="chip"><input type="radio" name="${key}" value="${escapeHtml(v)}" ${i === 0 ? "checked" : ""}> <span>${v}</span></label>`).join("");
+      });
+      document.querySelectorAll("[data-path-cards]").forEach(box => {
+        const key = box.dataset.pathCards;
+        box.innerHTML = OPTIONS[key].map((v, i) => `<label class="path-card"><input type="radio" name="${key}" value="${escapeHtml(v)}" ${i === 0 ? "checked" : ""}> <span>${v}</span><small>${pathHelp(v)}</small></label>`).join("");
+      });
+      document.querySelectorAll("[data-body-map]").forEach(box => {
+        const key = box.dataset.bodyMap;
+        box.innerHTML = OPTIONS[key].map(v => `<label class="chip body-zone"><input type="checkbox" name="${key}" value="${escapeHtml(v)}"> <span>${v}</span></label>`).join("");
+      });
+      document.getElementById("lesionTree").innerHTML = Object.entries(LESION_TREE).map(([group, items]) => `
+        <details open>
+          <summary>${group}</summary>
+          <div class="chips">${items.map(v => `<label class="chip"><input type="checkbox" name="lesion" value="${escapeHtml(v)}"> <span>${v}</span></label>`).join("")}</div>
+        </details>
+      `).join("");
+      document.getElementById("visualCards").innerHTML = VISUALS.map(([name, cls, def, examples, trap, pos]) => `
+        <article class="lesion-card">
+          <div class="lesion-photo" style="background-position: ${pos};" role="img" aria-label="Exemple réaliste: ${name}"></div>
+          <h3>${capitalize(name)}</h3>
+          <p><strong>Définition.</strong> ${def}</p>
+          <p><strong>Exemples.</strong> ${examples}</p>
+          <p><strong>Piège.</strong> ${trap}</p>
+        </article>
+      `).join("");
+    }
+
+    function collect() {
+      const form = document.getElementById("dermForm");
+      const data = Object.fromEntries(new FormData(form).entries());
+      for (const key of Object.keys(OPTIONS).concat(["lesion"])) {
+        data[key] = [...form.querySelectorAll(`[name="${key}"]:checked`)].map(x => x.value);
+      }
+      data.vitropression = form.querySelector("[name='vitropression']:checked")?.value || "";
+      data.collectif = form.querySelector("[name='collectif']:checked")?.value || "";
+      data.parcours = form.querySelector("[name='parcours']:checked")?.value || "Éruption / rash diffus ou multiple";
+      data.prurit = Number(form.prurit.value);
+      data.douleur = Number(form.douleur.value);
+      data.brulure = Number(form.brulure.value);
+      return data;
+    }
+
+    function evaluate(data) {
+      const pool = [
+        ...data.lesion, ...data.surface, ...data.couleur, ...data.topographie,
+        ...data.distribution, ...data.bodyMap, ...data.forme, ...data.arrangement, ...data.extension,
+        ...data.consistance, ...data.composant, ...data.fitzInitial, ...data.tumorFlags,
+        ...data.declenchants, ...data.aggravants,
+        ...data.chronologie, ...data.evolution, ...data.contexte,
+        ...data.terrain, ...data.traitements, ...data.motif, data.collectif
+      ];
+      const foundRed = detectRedFlags(data);
+      const glance = morphologyInsights(data);
+      const scored = KB.map(item => {
+        let score = 0;
+        let args = [];
+        score += matchList(item.lesions, data.lesion, args, "lésion compatible");
+        score += matchList(item.topo, [...data.topographie, ...data.distribution, ...data.arrangement, ...data.extension], args, "topographie compatible");
+        score += matchList(item.triggers, pool, args, "contexte/facteur compatible");
+        score += matchList(item.time, [...data.evolution, ...data.chronologie, ...data.debut], args, "temporalité compatible");
+        if (item.symptoms.includes("Prurit") && data.prurit >= 4) { score += 2; args.push("prurit significatif"); }
+        if (item.symptoms.includes("Douleur") && data.douleur >= 4) { score += 2; args.push("douleur significative"); }
+        if (item.symptoms.includes("Brûlure") && data.brulure >= 4) { score += 2; args.push("brûlure significative"); }
+        if (item.name.includes("Mélanome") && (data.motif.includes("Lésion pigmentée") || data.redflags.includes("Lésion pigmentée très suspecte de mélanome"))) score += 5;
+        if (data.parcours.startsWith("Lésion isolée") && /Mélanome|Carcinome|Naevus|Kératose|Dermatofibrome|Angiome/.test(item.name)) score += 2;
+        if (data.parcours.startsWith("Éruption") && /Eczéma|Psoriasis|Urticaire|Pityriasis|Toxidermie|Varicelle|Syphilis|Lupus|Dermatomyosite|Vascularite/.test(item.name)) score += 1;
+        if (data.tumorFlags.some(v => ["ABCDE positif","Ugly duckling","Pigmentation polychrome","Bords irréguliers","Signe de Hutchinson","Bande unguéale pigmentée"].includes(v)) && item.name.includes("Mélanome")) { score += 9; args.push("critères tumoraux pigmentés inquiétants"); }
+        if (data.tumorFlags.some(v => ["Saignement","Ulcération","Ne cicatrise pas","Croissance rapide"].includes(v)) && /Carcinome|Mélanome/.test(item.name)) { score += 4; args.push("croissance/saignement/ulcération"); }
+        if (data.tumorFlags.includes("Aspect perlé/télangiectasique") && item.name.includes("basocellulaire")) { score += 7; args.push("aspect perlé ou télangiectasique"); }
+        if (data.tumorFlags.includes("Lésion kératosique douloureuse") && item.name.includes("épidermoïde")) { score += 6; args.push("kératose douloureuse suspecte"); }
+        if (item.name.includes("Gale") && data.collectif.startsWith("Oui")) { score += 4; args.push("prurit collectif"); }
+        if (item.name.includes("Vascularite") && data.vitropression === "Non") score += 3;
+        const against = [];
+        if (item.lesions.length && data.lesion.length && !item.lesions.some(v => data.lesion.includes(v))) against.push("lésion élémentaire non typique");
+        if (item.topo.length && data.topographie.length && !item.topo.some(v => data.topographie.includes(v) || data.distribution.includes(v) || data.arrangement.includes(v) || data.extension.includes(v))) against.push("topographie non typique");
+        return {...item, score, args, against};
+      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 6);
+
+      const enough = data.lesion.length || data.motif.length || data.topographie.length || data.bodyMap.length || data.tumorFlags.length || data.prurit || data.douleur || data.brulure;
+      if (!enough) scored.length = 0;
+      const priority = priorityLevel(data, foundRed, scored);
+      return {foundRed, scored, priority, enough, glance};
+    }
+
+    function matchList(expected, actual, args, label) {
+      const matches = expected.filter(v => actual.includes(v));
+      matches.forEach(v => args.push(`${label}: ${v}`));
+      return matches.length * 2;
+    }
+
+    function detectRedFlags(data) {
+      const explicit = [...data.redflags];
+      const ctx = new Set(data.contexte);
+      const lesion = new Set(data.lesion);
+      if (data.fitzInitial.includes("Patient paraît malade")) explicit.push("Impression clinique: patient paraît malade");
+      if (data.tumorFlags.some(v => ["ABCDE positif","Ugly duckling","Signe de Hutchinson","Bande unguéale pigmentée"].includes(v))) explicit.push("Lésion pigmentée/tumorale très suspecte: avis dermatologique rapide recommandé");
+      if (data.photoRedFlags && data.photoRedFlags.length) explicit.push(...data.photoRedFlags.map(v => "Photo/contexte: " + v));
+      if (data.tumorFlags.includes("Croissance rapide") && (data.tumorFlags.includes("Saignement") || data.tumorFlags.includes("Ulcération"))) explicit.push("Tumeur qui pousse rapidement, saigne ou s'ulcère");
+      if (data.extension.includes("> 90% surface corporelle / érythrodermie") || lesion.has("Érythrodermie")) explicit.push("Érythrodermie ou atteinte cutanée quasi généralisée");
+      if (lesion.has("Infarctus cutané / nécrose vasculaire")) explicit.push("Suspicion infarctus cutané / nécrose vasculaire");
+      if (ctx.has("Fièvre") && ctx.has("Altération de l'état général")) explicit.push("Éruption fébrile avec altération de l'état général");
+      if (lesion.has("Purpura ne s'effaçant pas à la vitropression") && ctx.has("Fièvre")) explicit.push("Purpura fébrile");
+      if (data.douleur >= 8 && (data.surface.includes("Nécrotique") || lesion.has("Nécrose"))) explicit.push("Douleur cutanée intense disproportionnée / nécrose");
+      if ((data.topographie.includes("Paupières") || data.topographie.includes("Visage")) && (ctx.has("Douleur oculaire") || ctx.has("Photophobie"))) explicit.push("Atteinte oculaire douloureuse ou photophobie");
+      if (data.traitements.includes("Allopurinol") && ctx.has("Fièvre") && ctx.has("Adénopathies")) explicit.push("Suspicion toxidermie sévère / DRESS");
+      return [...new Set(explicit)];
+    }
+
+    function priorityLevel(data, red, scored) {
+      if (red.length || scored.some(x => x.urgency === "avis rapide" && (x.name.includes("Mélanome") || x.name.includes("Vascularite") || x.name.includes("Pemph") || x.name.includes("Érysipèle")))) return "red";
+      const fragile = data.terrain.some(v => ["Immunodépression","VIH","Cancer","Greffe","Diabète","Insuffisance rénale","Hémopathie"].includes(v)) || data.grossesse === "Possible" || data.grossesse === "En cours";
+      if (data.tumorFlags.some(v => ["Évolution récente","Saignement","Ulcération","Ne cicatrise pas","Croissance rapide","Immunodépression/transplantation"].includes(v))) return "orange";
+      if (fragile || data.evolution.includes("Extension rapide") || data.esthetique === "Importante" || data.sommeil === "Sévère" || data.travail === "Sévère" || !scored.length) return "orange";
+      return "green";
+    }
+
+    function renderAnalysis() {
+      const data = collect();
+      const result = evaluate(data);
+      renderScore(result.priority, result.foundRed);
+      renderAlerts(result);
+      renderReasoning(result, data);
+      renderDiagnostics(result, data);
+      renderPlans(result, data);
+      renderPhotoReport(data);
+      renderSummary(result, data);
+    }
+
+    function renderScore(priority, red) {
+      const pill = document.getElementById("scorePill");
+      const labels = {green: "Priorité verte", orange: "Priorité orange", red: "Priorité rouge"};
+      const desc = {
+        green: "Compatible dermatose bénigne fréquente si examen concordant",
+        orange: "Diagnostic incertain, terrain fragile, extension ou retentissement",
+        red: "Red flag, urgence possible, mélanome ou infection sévère à exclure"
+      };
+      pill.className = `score-pill score-${priority}`;
+      pill.innerHTML = `<strong><span class="score-dot"></span>${labels[priority]}</strong><span class="small">${red.length ? red[0] : desc[priority]}</span>`;
+    }
+
+    function renderAlerts(result) {
+      const box = document.getElementById("alerts");
+      if (result.foundRed.length) {
+        // Tier « urgence vitale » : ces drapeaux imposent le 15/SAMU, pas un simple avis différé.
+        const VITAL = ["fasciite", "purpura fébrile", "purpura extensif", "nécrotique", "nécrose",
+          "stevens", "lyell", "décollement", "muqueuse sévère", "dress", "médicamenteuse sévère",
+          "rapidement extensive", "signes systémiques", "altération de l'état général",
+          "kaposi-juliusberg", "herpeticum", "érythrodermie", "quasi généralisée", "infarctus", "méningoc"];
+        const vital = result.foundRed.filter(x => VITAL.some(k => x.toLowerCase().includes(k)));
+        const vitalBanner = vital.length ? `<div class="alert" style="border-left-color:var(--red);background:#fdf0ef;"><strong>⚠ URGENCE potentiellement VITALE — appeler le 15 (SAMU) / orienter aux urgences SANS DÉLAI.</strong><ul class="compact">${vital.map(x => `<li>${x}</li>`).join("")}</ul><p>Fasciite nécrosante, purpura fulminans, toxidermie grave (Stevens-Johnson/Lyell, DRESS), sepsis cutané, eczéma herpeticum ou érythrodermie fébrile : pronostic vital engagé, ne pas différer.</p></div>` : "";
+        box.innerHTML = vitalBanner + `<div class="alert"><strong>Avis spécialisé urgent recommandé.</strong><ul class="compact">${result.foundRed.map(x => `<li>${x}</li>`).join("")}</ul><p>Ne pas retarder la prise en charge. Photographier si possible. Ne pas débuter de corticoïde local fort sur infection suspecte sans avis.</p></div>`;
+      } else if (!result.enough) {
+        box.innerHTML = `<div class="warning"><strong>Données insuffisantes.</strong><p>Renseigner au minimum la lésion élémentaire, la topographie et la temporalité. L'outil ne doit pas conclure à un diagnostic unique.</p></div>`;
+      } else {
+        box.innerHTML = `<div class="ok"><strong>Aucun red flag détecté dans les données saisies.</strong><p>Vérifier l'examen complet: peau, muqueuses, phanères, aires ganglionnaires.</p></div>`;
+      }
+    }
+
+    function renderReasoning(result, data) {
+      const path = data.parcours || "Éruption / rash diffus ou multiple";
+      const morphology = [join(data.lesion), join(data.forme), join(data.arrangement)].filter(x => x !== "Non renseigné").join(" | ") || "Morphologie à compléter";
+      const distribution = [join(data.bodyMap), join(data.topographie), join(data.distribution)].filter(x => x !== "Non renseigné").join(" | ") || "Distribution à compléter";
+      const context = [join(data.contexte), join(data.terrain), join(data.traitements)].filter(x => x !== "Non renseigné").join(" | ") || "Contexte à compléter";
+      const glance = result.glance.length ? '<ul class="compact">' + result.glance.map(x => '<li>' + x + '</li>').join("") + '</ul>' : '<p class="small">Aucun motif morphologique très spécifique détecté pour l\'instant.</p>';
+      document.getElementById("reasoning").innerHTML = '<div class="dx-card"><p><strong>Parcours.</strong> ' + path + '</p><p><strong>Morphologie.</strong> ' + morphology + '</p><p><strong>Distribution.</strong> ' + distribution + '</p><p><strong>Contexte.</strong> ' + context + '</p><strong>Diagnostic at a glance</strong>' + glance + '</div>';
+    }
+
+    function renderDiagnostics(result) {
+      const box = document.getElementById("diagnostics");
+      if (!result.scored.length) {
+        box.innerHTML = `<p class="small">Aucune hiérarchisation fiable pour l'instant.</p>`;
+        return;
+      }
+      box.innerHTML = result.scored.map((x, i) => {
+        const conf = x.score >= 10 ? "élevé" : x.score >= 6 ? "modéré" : "faible";
+        const uclass = x.urgency === "avis rapide" ? "red" : x.urgency === "avis dermatologique" ? "orange" : "green";
+        return `<article class="dx-card">
+          <div class="dx-head"><span>${i === 0 ? "Hypothèse principale: " : ""}${x.name}</span><span class="badge ${uclass}">${x.urgency}</span></div>
+          <p><span class="badge">Confiance ${conf}</span></p>
+          <p><strong>Arguments pour.</strong> ${x.args.length ? x.args.slice(0, 5).join("; ") : "arguments faibles ou incomplets"}</p>
+          <p><strong>Arguments contre.</strong> ${x.against.length ? x.against.slice(0, 3).join("; ") : "aucun argument contre majeur saisi"}</p>
+          <p><strong>Différentiels.</strong> ${x.diff.join(", ")}</p>
+        </article>`;
+      }).join("");
+    }
+
+    function renderPlans(result, data) {
+      const red = result.priority === "red";
+      const orange = result.priority === "orange";
+      const top = result.scored[0];
+      const exams = new Set(["Photographies standardisées", "Examen complet peau, muqueuses, phanères, aires ganglionnaires"]);
+      if (data.motif.includes("Lésion pigmentée") || data.lesion.includes("Macule pigmentée brune/noire") || data.lesion.includes("Tumeur") || data.tumorFlags.length) exams.add("Dermoscopie ou avis dermatologique pour lésion pigmentée/tumorale; exérèse/biopsie selon suspicion clinique");
+      if (data.vitropression === "Non" || data.lesion.includes("Purpura ne s'effaçant pas à la vitropression")) exams.add("Bilan purpura selon contexte: NFS-plaquettes, CRP, rénal, urines; biopsie si vascularite suspecte");
+      if (data.surface.includes("Squameuse") || data.distribution.includes("Annulaire") || data.topographie.includes("Ongles")) exams.add("Prélèvement mycologique si squames annulaires, intertrigo ou ongles");
+      if (data.lesion.includes("Pustule") || data.surface.includes("Croûteuse")) exams.add("Prélèvement bactériologique si impétigo étendu, plaie infectée ou abcès récidivant");
+      if (data.lesion.includes("Vésicule") && (data.douleur >= 4 || data.brulure >= 4)) exams.add("PCR HSV/VZV si doute sur vésicules douloureuses ou terrain fragile");
+      if (data.prurit >= 4 && data.evolution.includes("Chronique > 6 semaines")) exams.add("Prurit chronique: NFS, ferritine, créatinine, bilan hépatique, TSH, glycémie/HbA1c selon contexte");
+      if (data.declenchants.includes("Rapport sexuel à risque") || data.topographie.includes("Organes génitaux")) exams.add("Sérologies IST et prélèvements selon contexte");
+
+      const orientation = red ? "Urgences / hospitalisation ou avis spécialisé immédiat selon tableau." :
+        orange ? "Téléexpertise ou consultation dermatologique rapide si doute, terrain fragile, extension ou échec." :
+        "Surveillance simple ou traitement symptomatique initial avec réévaluation planifiée.";
+      document.getElementById("orientation").innerHTML = `<div class="${red ? "alert" : orange ? "warning" : "ok"}">${orientation}</div>`;
+      document.getElementById("examens").innerHTML = `<ul class="compact">${[...exams].map(x => `<li>${x}</li>`).join("")}</ul>`;
+      const care = top ? top.care[0] : "Mesures prudentes: hygiène douce, émollients si xérose/prurit, éviter irritants, ne pas masquer infection sévère par corticoïdes seuls.";
+      document.getElementById("traitement").innerHTML = `<ul class="compact">
+        <li>${care}</li>
+        <li>Prudence visage, plis, organes génitaux, enfant, grossesse, immunodépression, muqueuses et œil.</li>
+        <li>Réévaluer rapidement si aggravation, fièvre, douleur, extension ou absence d'amélioration.</li>
+      </ul>`;
+    }
+
+    function renderSummary(result, data) {
+      const top = result.scored[0];
+      const diffs = top ? top.diff.join(", ") : "non hiérarchisés faute de données suffisantes";
+      const summary = `Motif :
+Parcours: ${data.parcours || "Non renseigné"}.
+${join(data.motif) || data.plainte || "Non renseigné"}
+
+Description lésionnelle :
+Approche Fitzpatrick: ${join(data.fitzInitial)}.
+Type morphologique: ${join(data.lesion)}.
+Forme: ${join(data.forme)}. Arrangement: ${join(data.arrangement)}. Extension: ${join(data.extension)}.
+Surface: ${join(data.surface)}. Couleur: ${join(data.couleur)}. Vitropression/diascopie: ${data.vitropression}.
+Consistance: ${join(data.consistance)}. Composant présumé: ${join(data.composant)}.
+Critères pigmentés/tumoraux: ${join(data.tumorFlags)}.
+${data.description || ""}
+
+Topographie :
+Carte Fitzpatrick: ${join(data.bodyMap)}.
+${join(data.topographie)}. Distribution: ${join(data.distribution)}.
+
+Évolution :
+Début: ${data.debutDate || "non précisé"}; ${join(data.debut)}; ${join(data.evolution)}; chronologie: ${join(data.chronologie)}.
+
+Symptômes associés :
+Prurit ${data.prurit}/10, douleur ${data.douleur}/10, brûlure ${data.brulure}/10. Sommeil: ${data.sommeil}. Travail: ${data.travail}. Gêne esthétique: ${data.esthetique}.
+
+Facteurs déclenchants/aggravants/calmants :
+Déclenchants: ${join(data.declenchants)}.
+Aggravants: ${join(data.aggravants)}.
+Calmants: ${join(data.calmants)}.
+
+Contexte :
+Terrain: ${join(data.terrain)}. Grossesse: ${data.grossesse}. Traitements: ${join(data.traitements)}. Contexte associé: ${join(data.contexte)}. Prurit collectif: ${data.collectif}.
+
+Traitements essayés :
+${join(data.essais)}
+
+Hypothèses diagnostiques :
+${top ? "Hypothèse principale: " + top.name + ". Arguments: " + (top.args.join("; ") || "arguments incomplets") + ". Diagnostics différentiels: " + diffs + "." : "Données insuffisantes: ne pas proposer de diagnostic unique. Compléter l'examen et l'interrogatoire."}
+
+Signes de gravité :
+${result.foundRed.length ? result.foundRed.join("; ") : "Aucun signe de gravité renseigné/détecté par l'outil."}
+
+Conduite proposée :
+${document.getElementById("orientation").innerText}
+${document.getElementById("traitement").innerText}
+
+Avis dermatologique :
+${result.priority === "red" ? "Oui, urgent / sans délai." : result.priority === "orange" ? "Oui ou téléexpertise rapide selon contexte." : "Non systématique si évolution favorable; oui si doute, échec ou récidive."}
+
+Photos réalisées :
+${data.photoPrise}. Consentement: ${data.consentement}. Localisation: ${data.photoLocalisation || "non précisée"}. Type: ${data.photoCategory || "non précisé"}. Échelle: ${data.photoScale || "non précisée"}. Dermoscopie: ${data.dermoscopie}. Téléexpertise: ${data.teleexpertise}.
+Analyse photo:
+${document.getElementById("photoReport")?.value || "Non réalisée."}
+
+Limites de l'analyse :
+Outil d'aide à la décision uniquement. Ne remplace ni l'examen clinique complet, ni la dermoscopie, ni la biopsie/prélèvement si indiqué, ni l'avis spécialisé.`;
+      document.getElementById("summary").value = summary;
+    }
+
+    const photoState = {
+      loaded: false,
+      fileName: "",
+      metrics: null,
+      currentUrl: "",
+      compareUrl: "",
+      zoom: 100,
+      rotate: 0,
+      brightness: 100,
+      contrast: 100
+    };
+
+    function initPhotoTools() {
+      const input = document.getElementById("photoInput");
+      const compare = document.getElementById("photoCompareInput");
+      const drop = document.getElementById("photoDrop");
+      if (!input || input.dataset.ready) return;
+      input.dataset.ready = "1";
+      drop.addEventListener("click", e => { e.preventDefault(); input.click(); });
+      drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("dragover"); });
+      drop.addEventListener("dragleave", () => drop.classList.remove("dragover"));
+      drop.addEventListener("drop", e => {
+        e.preventDefault();
+        drop.classList.remove("dragover");
+        const file = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) loadClinicalPhoto(file, "current");
+      });
+      input.addEventListener("change", e => {
+        const file = e.target.files && e.target.files[0];
+        if (file) loadClinicalPhoto(file, "current");
+      });
+      compare.addEventListener("change", e => {
+        const file = e.target.files && e.target.files[0];
+        if (file) loadClinicalPhoto(file, "compare");
+      });
+      ["photoZoom", "photoRotate", "photoBrightness", "photoContrast"].forEach(id => {
+        document.getElementById(id)?.addEventListener("input", updatePhotoView);
+      });
+      document.getElementById("photoResetView")?.addEventListener("click", () => {
+        ["photoZoom", "photoRotate", "photoBrightness", "photoContrast"].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = id === "photoZoom" || id === "photoBrightness" || id === "photoContrast" ? 100 : 0;
+        });
+        updatePhotoView();
+      });
+      document.getElementById("copyPhotoReport")?.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(document.getElementById("photoReport").value);
+        document.getElementById("copyPhotoReport").textContent = "Analyse copiée";
+        setTimeout(() => document.getElementById("copyPhotoReport").textContent = "Copier l'analyse photo", 1400);
+      });
+      renderPhotoMetrics();
+    }
+
+    function loadClinicalPhoto(file, target) {
+      if (!file.type.startsWith("image/")) return;
+      const url = URL.createObjectURL(file);
+      if (target === "compare") {
+        photoState.compareUrl = url;
+        const img = document.getElementById("photoComparePreview");
+        img.src = url;
+        img.hidden = false;
+        img.nextElementSibling?.remove();
+        return;
+      }
+      photoState.loaded = true;
+      photoState.fileName = file.name;
+      photoState.currentUrl = url;
+      const preview = document.getElementById("photoPreview");
+      preview.onload = () => analyzePhotoQuality(preview, file);
+      preview.src = url;
+      preview.hidden = false;
+      document.getElementById("photoEmpty").hidden = true;
+      const cmp = document.getElementById("photoCompareCurrent");
+      cmp.src = url;
+      cmp.hidden = false;
+      cmp.nextElementSibling?.remove();
+      const prise = document.querySelector("[name='photoPrise']");
+      if (prise) prise.value = "Oui";
+      updatePhotoView();
+      renderAnalysis();
+    }
+
+    function updatePhotoView() {
+      photoState.zoom = Number(document.getElementById("photoZoom")?.value || 100);
+      photoState.rotate = Number(document.getElementById("photoRotate")?.value || 0);
+      photoState.brightness = Number(document.getElementById("photoBrightness")?.value || 100);
+      photoState.contrast = Number(document.getElementById("photoContrast")?.value || 100);
+      const img = document.getElementById("photoPreview");
+      if (img) {
+        img.style.transform = `scale(${photoState.zoom / 100}) rotate(${photoState.rotate}deg)`;
+        img.style.filter = `brightness(${photoState.brightness}%) contrast(${photoState.contrast}%)`;
+      }
+    }
+
+    function analyzePhotoQuality(img, file) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const size = 256;
+      canvas.width = size;
+      canvas.height = size;
+      const ratio = Math.min(size / img.naturalWidth, size / img.naturalHeight);
+      const w = Math.max(1, Math.round(img.naturalWidth * ratio));
+      const h = Math.max(1, Math.round(img.naturalHeight * ratio));
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+      const data = ctx.getImageData(0, 0, size, size).data;
+      let sum = 0, sum2 = 0;
+      const gray = new Float32Array(size * size);
+      for (let i = 0, j = 0; i < data.length; i += 4, j++) {
+        const g = data[i] * .299 + data[i + 1] * .587 + data[i + 2] * .114;
+        gray[j] = g;
+        sum += g;
+        sum2 += g * g;
+      }
+      const n = gray.length;
+      const brightness = sum / n;
+      const contrast = Math.sqrt(Math.max(0, sum2 / n - brightness * brightness));
+      let lapSum = 0, lap2 = 0, count = 0;
+      for (let y = 1; y < size - 1; y++) {
+        for (let x = 1; x < size - 1; x++) {
+          const idx = y * size + x;
+          const lap = -4 * gray[idx] + gray[idx - 1] + gray[idx + 1] + gray[idx - size] + gray[idx + size];
+          lapSum += lap;
+          lap2 += lap * lap;
+          count++;
+        }
+      }
+      const lapMean = lapSum / count;
+      const sharpness = lap2 / count - lapMean * lapMean;
+      photoState.metrics = {
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+        megapixels: Math.round((img.naturalWidth * img.naturalHeight / 1000000) * 10) / 10,
+        fileKB: Math.round(file.size / 1024),
+        brightness: Math.round(brightness),
+        contrast: Math.round(contrast),
+        sharpness: Math.round(sharpness)
+      };
+      renderPhotoMetrics();
+      renderAnalysis();
+    }
+
+    function metricStatus(label, value, status) {
+      return `<div class="metric ${status}"><strong>${label}</strong><br>${value}</div>`;
+    }
+
+    function photoQualityAssessment(data = collect()) {
+      const m = photoState.metrics;
+      const rows = [];
+      const advice = [];
+      if (!m) {
+        return { usable: "non évaluée", rows: [metricStatus("Image", "Aucune photo chargée", "warn")], advice: ["Importer une photo d'ensemble puis une photo rapprochée."] };
+      }
+      const resolutionOk = m.width >= 900 && m.height >= 900;
+      const sharpOk = m.sharpness >= 55;
+      const lightOk = m.brightness >= 55 && m.brightness <= 205;
+      const contrastOk = m.contrast >= 28;
+      rows.push(metricStatus("Résolution", `${m.width} × ${m.height} px (${m.megapixels} Mpx)`, resolutionOk ? "good" : "warn"));
+      rows.push(metricStatus("Netteté estimée", `${m.sharpness}`, sharpOk ? "good" : "warn"));
+      rows.push(metricStatus("Luminosité", `${m.brightness}/255`, lightOk ? "good" : "warn"));
+      rows.push(metricStatus("Contraste", `${m.contrast}`, contrastOk ? "good" : "warn"));
+      rows.push(metricStatus("Échelle", data.photoScale && data.photoScale !== "Non" ? data.photoScale : "Absente ou non renseignée", data.photoScale && data.photoScale !== "Non" ? "good" : "warn"));
+      if (!resolutionOk) advice.push("Reprendre la photo de plus près ou avec une meilleure résolution.");
+      if (!sharpOk) advice.push("Stabiliser le téléphone et refaire la mise au point sur la lésion.");
+      if (!lightOk) advice.push("Améliorer l'éclairage et éviter le flash direct/reflets.");
+      if (!contrastOk) advice.push("Améliorer le contraste: lumière diffuse, fond neutre, éviter surexposition.");
+      if (!data.photoScale || data.photoScale === "Non") advice.push("Ajouter une règle ou une pièce pour l'échelle.");
+      advice.push("Prendre une photo d'ensemble puis une photo rapprochée.");
+      const score = [resolutionOk, sharpOk, lightOk, contrastOk].filter(Boolean).length + (data.photoScale && data.photoScale !== "Non" ? 1 : 0);
+      return { usable: score >= 4 ? "oui" : score >= 2 ? "partiellement" : "non", rows, advice: [...new Set(advice)] };
+    }
+
+    function renderPhotoMetrics() {
+      const box = document.getElementById("photoMetrics");
+      if (!box) return;
+      const q = photoQualityAssessment();
+      box.innerHTML = q.rows.join("") + '<div class="metric ' + (q.usable === "oui" ? "good" : q.usable === "partiellement" ? "warn" : "bad") + '"><strong>Image exploitable</strong><br>' + q.usable + '</div>';
+    }
+
+    function photoHypotheses(data) {
+      const h = [];
+      const s = new Set([...(data.photoSigns || []), ...(data.photoABCDE || []), ...(data.photoWound || []), ...(data.photoRedFlags || [])]);
+      if (s.has("Lésion pigmentée") || data.photoABCDE?.length) h.push("Lésion pigmentée à caractériser: naevus atypique / mélanome à exclure selon ABCDE et dermoscopie.");
+      if (s.has("Ulcère") || s.has("Ulcération") || s.has("Fond fibrineux")) h.push("Plaie ou ulcération: évaluer profondeur, infection, vascularisation et nécessité d'avis spécialisé.");
+      if (s.has("Nécrose")) h.push("Lésion nécrotique: avis rapide/urgent selon douleur, extension, terrain et signes généraux.");
+      if (s.has("Pustule") || s.has("Croûte") || s.has("Exsudat")) h.push("Infection superficielle, impétiginisation, folliculite ou abcès à discuter selon contexte.");
+      if (s.has("Squames") && (s.has("Plaque") || s.has("Lésion érythémato-squameuse"))) h.push("Dermatose érythémato-squameuse: eczéma, psoriasis ou mycose selon topographie et bordure.");
+      if (s.has("Vésicule") || s.has("Bulle")) h.push("Dermatose vésiculo-bulleuse ou infection virale: préciser douleur, groupement, muqueuses et terrain.");
+      if (s.has("Œdème") || s.has("Rougeur périphérique")) h.push("Inflammation locale: dermohypodermite, réaction allergique/piqûre ou plaie inflammatoire selon clinique.");
+      return h.slice(0, 3);
+    }
+
+    function photoQuestions(data) {
+      const base = [
+        "Depuis quand la lésion est-elle présente ?",
+        "Début brutal ou progressif ?",
+        "La lésion augmente-t-elle de taille ?",
+        "Douleur, prurit, brûlure ?",
+        "Saignement ou écoulement ?",
+        "Fièvre ou altération de l'état général ?",
+        "Traumatisme, piqûre, morsure ou brûlure ?",
+        "Nouveau médicament ou produit irritant ?",
+        "Exposition solaire récente ?",
+        "Diabète, immunodépression ou antécédent de cancer cutané ?",
+        "Lésion unique ou multiples ?",
+        "Autres personnes atteintes dans l'entourage ?"
+      ];
+      if (data.photoABCDE?.length || data.photoSigns?.includes("Lésion pigmentée")) base.unshift("Évolution rapportée par le patient: taille, couleur, forme, symptômes ?");
+      if (data.photoWound?.length) base.unshift("Vaccination tétanos à jour ? Terrain vasculaire ou neuropathique ?");
+      return [...new Set(base)].slice(0, 12);
+    }
+
+    function renderPhotoReport(data) {
+      const el = document.getElementById("photoReport");
+      if (!el) return;
+      const q = photoQualityAssessment(data);
+      const hypotheses = photoHypotheses(data);
+      const questions = photoQuestions(data);
+      const red = data.photoRedFlags?.length ? data.photoRedFlags : [];
+      const orientation = red.length ? "Consultation rapide/urgence ou avis spécialisé selon signe de gravité et terrain." :
+        hypotheses.some(h => /mélanome|nécrotique|ulcération/i.test(h)) ? "Avis spécialisé rapide ou téléexpertise avec photos de qualité." :
+        "Surveillance ou consultation programmée selon examen clinique et évolution.";
+      el.value = `ANALYSE DE LA PHOTOGRAPHIE
+
+1. Qualité de l'image :
+- Netteté : ${photoState.metrics ? photoState.metrics.sharpness : "non évaluée"}
+- Luminosité : ${photoState.metrics ? photoState.metrics.brightness + "/255" : "non évaluée"}
+- Cadrage : à confirmer cliniquement
+- Échelle de mesure : ${data.photoScale || "Non renseignée"}
+- Image exploitable : ${q.usable}
+- Conseils si insuffisante : ${q.advice.join(" ")}
+
+2. Description objective :
+- Localisation : ${data.photoLocalisation || "non renseignée"}
+- Type de photo : ${data.photoCategory || "non renseigné"}
+- Type de lésion visible : ${join(data.photoSigns)}
+- Nombre : à préciser
+- Taille approximative : ${data.photoScale && data.photoScale !== "Non" ? "mesurable si règle/objet visible" : "non mesurable sans échelle"}
+- Couleur / forme / bords / surface / relief : à compléter avec examen clinique; signes cochés: ${join([...data.photoSigns, ...data.photoABCDE, ...data.photoWound])}
+- Signes associés visibles : ${join(data.photoRedFlags)}
+
+3. Hypothèses diagnostiques possibles :
+${hypotheses.length ? hypotheses.map((h, i) => "- Hypothèse " + (i + 1) + " : " + h).join("\n") : "- Données insuffisantes pour hiérarchiser sur photo seule."}
+
+4. Signes de gravité recherchés :
+- Présents : ${red.length ? red.join(", ") : "Non renseignés"}
+- Absents : non affirmables sur photo seule
+- Non évaluables sur photo : douleur, chaleur, profondeur réelle, palpation, extension sous-cutanée, signes généraux
+
+5. Questions complémentaires nécessaires :
+${questions.map(q => "- " + q).join("\n")}
+
+6. Orientation proposée :
+- ${orientation}
+- Avis dermatologique / ORL / ophtalmologique / chirurgie selon localisation, gravité, terrain et examen clinique.
+
+7. Limites :
+Cette analyse repose uniquement sur une photographie et des signes cochés. Elle ne remplace pas l'examen clinique, la palpation, la dermoscopie, les prélèvements, la biopsie ou l'avis spécialisé.`;
+    }
+
+    function pathHelp(v) {
+      if (v.startsWith("Éruption")) return "Plusieurs lésions: morphologie dominante, distribution, signes généraux.";
+      if (v.startsWith("Lésion isolée")) return "Une lésion/growth: évolution, saignement, dermoscopie, biopsie si doute.";
+      if (v.startsWith("Prurit")) return "Chercher dermatose discrète, gale, pemphigoïde débutante et causes systémiques.";
+      return "Muqueuses, cheveux, ongles ou génital: examen ciblé et seuil bas d'avis spécialisé.";
+    }
+
+    function morphologyInsights(data) {
+      const notes = [];
+      const has = (arr, v) => arr.includes(v);
+      if (has(data.lesion, "Urticaire / papule œdémateuse fugace") && has(data.evolution, "Lésions fugaces < 24 h")) notes.push("Papules œdémateuses fugaces: urticaire probable si chaque lésion disparaît en moins de 24 h.");
+      if ((has(data.lesion, "Vésicule") || has(data.lesion, "Pustule")) && (has(data.arrangement, "Groupée") || has(data.arrangement, "Herpétiforme")) && (data.douleur >= 4 || data.brulure >= 4)) notes.push("Vésicules groupées douloureuses/brûlantes: HSV/VZV à discuter; PCR si doute ou terrain fragile.");
+      if ((has(data.arrangement, "Zostériforme") || has(data.bodyMap, "Dermatomérique")) && (data.douleur >= 4 || data.brulure >= 4)) notes.push("Topographie dermatomérique douloureuse: zona à évoquer, urgence si visage/œil/immunodépression.");
+      if (has(data.forme, "Ombiliquée")) notes.push("Lésions ombiliquées: penser molluscum, mais biopsie/avis si adulte immunodéprimé ou atypie.");
+      if (has(data.lesion, "Purpura ne s'effaçant pas à la vitropression") || data.vitropression === "Non") notes.push("Rougeur non effaçable à la diascopie: purpura, chercher fièvre, nécrose, thrombopénie ou vascularite.");
+      if (has(data.forme, "Annulaire") && has(data.surface, "Squameuse")) notes.push("Plaque annulaire squameuse: dermatophytie à rechercher avant corticoïde local fort.");
+      if ((has(data.topographie, "Coudes") || has(data.topographie, "Genoux") || has(data.bodyMap, "Cuir chevelu")) && has(data.surface, "Squameuse") && has(data.lesion, "Plaque")) notes.push("Plaques squameuses coudes/genoux/cuir chevelu: psoriasis dans les hypothèses fortes.");
+      if (data.tumorFlags.includes("Aspect perlé/télangiectasique")) notes.push("Papule/nodule perlé télangiectasique: carcinome basocellulaire à exclure.");
+      if (data.tumorFlags.some(v => ["ABCDE positif","Ugly duckling","Pigmentation polychrome","Bords irréguliers"].includes(v))) notes.push("Critères ABCDE/ugly duckling: ne pas rassurer sans dermoscopie ou avis spécialisé rapide.");
+      if (data.tumorFlags.includes("Signe de Hutchinson") || data.tumorFlags.includes("Bande unguéale pigmentée")) notes.push("Pigmentation unguéale suspecte: avis dermatologique rapide, mélanome acral/unguéal à exclure.");
+      return notes;
+    }
+
+    function join(arr) { return Array.isArray(arr) && arr.length ? arr.join(", ") : "Non renseigné"; }
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    function escapeHtml(s) { return String(s).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;"); }
+
+    document.getElementById("tabs").addEventListener("click", e => {
+      const btn = e.target.closest(".navbtn");
+      if (!btn) return;
+      document.querySelectorAll(".navbtn").forEach(b => b.classList.toggle("active", b === btn));
+      document.querySelectorAll(".step").forEach(s => s.classList.toggle("active", s.id === btn.dataset.step));
+      window.scrollTo({top: 0, behavior: "smooth"});
+    });
+
+    document.addEventListener("input", e => {
+      if (e.target.type === "range") e.target.nextElementSibling.value = e.target.value;
+      renderAnalysis();
+    });
+    document.addEventListener("change", renderAnalysis);
+
+    document.getElementById("copySummary").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(document.getElementById("summary").value);
+      document.getElementById("copySummary").textContent = "Synthèse copiée";
+      setTimeout(() => document.getElementById("copySummary").textContent = "Copier la synthèse", 1400);
+    });
+    document.getElementById("printPage").addEventListener("click", () => window.print());
+    document.getElementById("resetForm").addEventListener("click", () => {
+      document.getElementById("dermForm").reset();
+      document.querySelectorAll("input[type='range']").forEach(r => r.nextElementSibling.value = r.value);
+      renderAnalysis();
+    });
+
+    renderOptions();
+    initPhotoTools();
+    renderAnalysis();
+  </script>
+</body>
+</html>
