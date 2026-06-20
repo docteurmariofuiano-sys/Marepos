@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procédures & prévention — Aide-mémoire (médecin)</title>
+  <meta name="description" content="Aide-mémoire médecin pour les motifs administratifs, préventifs et développementaux (certificats, arrêts, ALD, MDPH, vaccinations, dépistages, suivi de l'enfant, vigilance/signalement, petite chirurgie) : points clés et signaux d'escalade. Non diagnostique." />
+  <style>
+:root{
+  --bg:#eef4f1;--surface:#fff;--ink:#1b2733;--soft:#5b6b7b;--line:#e0eae5;
+  --brand:#0f7a52;--brand-d:#0a5a3c; /* vert : domaine procédures/prévention */
+  --u3:#d92d20;--u3-bg:#fdf0ef;--ok:#0d8a4f;
+  --radius:13px;--shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1160px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.brand-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.backlink{color:#fff;font-size:.82rem;text-decoration:none;opacity:.92}
+.backlink:hover{text-decoration:underline}
+.badge-count{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.legal-banner{background:#eef7f2;border-bottom:1px solid #cfe6da;color:#0a5a3c;font-size:.82rem;padding:10px 20px;text-align:center}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.toolbar-inner{max-width:1160px;margin:0 auto;padding:12px 20px;display:flex;gap:12px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1 1 320px;min-width:220px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.55}
+#search{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;background:#fbfdfc}
+#search:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(15,122,82,.15)}
+.layout{max-width:1160px;margin:18px auto;padding:0 20px;display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
+.sidebar{position:sticky;top:66px;max-height:calc(100vh - 86px);overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.proc-list{list-style:none;margin:0;padding:6px}
+.cat-head{display:flex;gap:8px;align-items:center;padding:11px 10px 5px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-d)}
+.cat-head .cat-ico{font-size:.95rem}
+.proc-item{display:flex;gap:8px;align-items:center;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent}
+.proc-item:hover{background:#eef7f2}
+.proc-item.active{background:#e3f2ea;border-color:#c4e3d3}
+.proc-title{font-size:.9rem;font-weight:600;flex:1}
+.proc-flag{color:var(--u3);font-size:.82rem}
+.no-result{padding:20px;text-align:center;color:var(--soft);font-size:.9rem}
+.content{min-height:60vh}
+.placeholder{display:flex;align-items:center;justify-content:center;min-height:50vh}
+.placeholder-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;max-width:560px;text-align:center}
+.proc-detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.detail-head{padding:20px 24px;border-bottom:1px solid var(--line);background:#f6fbf8}
+.detail-eyebrow{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.detail-ico{font-size:1.05rem}
+.detail-cat{font-size:.82rem;color:var(--soft);font-weight:600}
+.detail-head h2{margin:2px 0 0;font-size:1.35rem}
+.blk{padding:16px 24px;border-bottom:1px solid var(--line)}
+.blk:last-child{border-bottom:none}
+.blk h3{margin:0 0 10px;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-d)}
+.pts{margin:0;padding-left:18px;font-size:.93rem}
+.pts li{margin:5px 0}
+.sec-rf h3{color:var(--u3)}
+.sec-rf{background:var(--u3-bg)}
+.rf{list-style:none;margin:0;padding-left:4px}
+.rf li{position:relative;padding:5px 0 5px 24px;border-bottom:1px dashed rgba(217,45,32,.18);font-size:.93rem}
+.rf li:last-child{border-bottom:none}
+.rf li::before{content:"⚠";position:absolute;left:2px;top:5px;font-size:.85rem}
+.foot{max-width:1160px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.sidebar{position:static;max-height:48vh}}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">📋</span>
+        <div>
+          <h1>Procédures & prévention</h1>
+          <p class="subtitle">Aide-mémoire administratif, préventif & développemental — usage médecin</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <a class="backlink" href="aide-decision-standalone.html">← Aide au raisonnement clinique</a>
+        <span class="badge-count" id="countBadge"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal-banner" role="note">
+    <strong>Outil destiné au médecin.</strong> Check-lists et points clés à
+    <strong>adapter aux recommandations en vigueur</strong> (HAS, calendrier vaccinal,
+    Assurance Maladie) et au contexte local. Ne remplace pas le jugement clinique.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher (ex. certificat, arrêt, ALD, MDPH, vaccin, dépistage, maltraitance…)" autocomplete="off" />
+      </div>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="sidebar"><ul class="proc-list" id="procList"></ul>
+      <p class="no-result" id="noResult" hidden>Aucune procédure ne correspond.</p>
+    </aside>
+    <section class="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <h2>Choisissez une procédure</h2>
+          <p>Sélectionnez un motif à gauche : l'outil affiche une <strong>check-list de
+            points clés</strong> et, le cas échéant, les <strong>signaux de vigilance /
+            d'escalade</strong>. Ces fiches couvrent les motifs administratifs, préventifs
+            et développementaux du cabinet (certificats, arrêts, ALD/MDPH, vaccinations,
+            dépistages, suivi de l'enfant, vigilance & signalement, petite chirurgie).</p>
+        </div>
+      </div>
+      <article class="proc-detail" id="detail" hidden></article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Aide-mémoire — <strong>ne remplace pas le médecin</strong>. À confronter aux
+      recommandations en vigueur. Source d'inspiration : Manuel du Généraliste, Dr Mario Fuiano.</p>
+  </footer>
+
+  <script>
+/* ============================================================================
+ * PROCÉDURES & PRÉVENTION — aide-mémoire médecin (NON diagnostique).
+ * Pour les motifs administratifs / préventifs / développementaux : check-lists,
+ * points clés et signaux d'escalade. À adapter aux recommandations en vigueur
+ * (HAS, calendrier vaccinal, Assurance Maladie) et au contexte local.
+ *
+ * Format : catégories -> items { id, titre, points:[...], alerte:[...]? }
+ * ========================================================================== */
+window.PROCEDURES = [
+  {
+    cat: "Certificats & aptitude", icone: "📜",
+    items: [
+      { id: "certificat_medical", titre: "Certificat médical",
+        points: ["Ne certifier que des faits médicaux personnellement constatés", "Remis en main propre à l'intéressé (jamais à un tiers, sauf exceptions légales)", "Daté, signé, identité du médecin ; pas d'antidate", "Pas de mention diagnostique non nécessaire ; rester factuel"],
+        alerte: ["Refuser tout certificat de complaisance ou tendancieux (responsabilité ordinale)"] },
+      { id: "certificat_sport", titre: "Certificat de non contre-indication au sport",
+        points: ["Interrogatoire (auto-questionnaire selon l'âge), antécédents familiaux de mort subite", "Examen cardiovasculaire (auscultation, TA, pouls), appareil locomoteur", "ECG de repos selon l'âge/le niveau et les recommandations", "Validité réglementaire variable (renouvellement par questionnaire possible)"],
+        alerte: ["Douleur thoracique/syncope à l'effort, souffle, ATCD familial de mort subite → bilan cardio avant"] },
+      { id: "aptitude", titre: "Certificat d'aptitude / inaptitude",
+        points: ["Distinguer aptitude scolaire/sportive et avis (la médecine du travail relève du médecin du travail)", "Fonder l'avis sur l'examen et les exigences de l'activité", "Formuler en termes de capacités/limitations, sans divulguer le diagnostic"] },
+      { id: "ci_voyage", titre: "Contre-indication / préparation au voyage",
+        points: ["Vaccins selon destination (fièvre jaune, hépatites, typhoïde, rage…)", "Prophylaxie antipaludique adaptée à la zone", "Trousse, conseils (eau, alimentation, moustiques), assurance rapatriement", "Adapter selon terrain (grossesse, immunodépression, maladies chroniques)"] },
+      { id: "pai", titre: "PAI (projet d'accueil individualisé) scolaire",
+        points: ["Pour maladie chronique (asthme, allergie/anaphylaxie, diabète, épilepsie…)", "Protocole d'urgence + traitements à l'école (ex. stylo d'adrénaline, glucagon)", "Coordination médecin traitant – médecin scolaire – famille – établissement"] }
+    ]
+  },
+  {
+    cat: "Arrêt de travail & dossiers sociaux", icone: "🗂️",
+    items: [
+      { id: "arret_travail", titre: "Arrêt de travail",
+        points: ["Durée adaptée à la pathologie et au poste (référentiels indicatifs Assurance Maladie)", "Téléservice / formulaire ; respecter les heures de sortie", "Réévaluer ; anticiper la reprise (temps partiel thérapeutique, visite de pré-reprise)"] },
+      { id: "accident_travail", titre: "Accident du travail / maladie professionnelle",
+        points: ["Certificat médical initial (CMI) décrivant les lésions, sans interprétation de l'imputabilité", "Remettre les volets au patient ; certificats de prolongation/final ensuite", "Distinguer AT (fait accidentel) et MP (tableaux)"] },
+      { id: "ald", titre: "Reconnaissance ALD (affection de longue durée)",
+        points: ["Protocole de soins (PIRES) précisant les soins en rapport avec l'ALD", "Exonération du ticket modérateur pour les soins liés", "Liste ALD30 + ALD hors liste / polypathologie selon critères"] },
+      { id: "mdph", titre: "Dossier MDPH",
+        points: ["Certificat médical MDPH détaillé (retentissement fonctionnel, autonomie)", "Décrire les limitations d'activité et besoins (AAH, PCH, RQTH, AEEH, orientation)", "Coordination avec les intervenants (kiné, ergo, écoles…)"] }
+    ]
+  },
+  {
+    cat: "Renouvellements & suivi", icone: "🔁",
+    items: [
+      { id: "renouvellement", titre: "Renouvellement d'ordonnance / traitement chronique",
+        points: ["Vérifier tolérance, observance, effets indésirables, interactions", "Contrôles biologiques périodiques selon le traitement", "Déprescription / révision si polymédication, surtout chez le sujet âgé"],
+        alerte: ["Tout effet indésirable grave ou signe d'alarme → réévaluation clinique"] },
+      { id: "bilan_annuel", titre: "Bilan de santé / consultation annuelle",
+        points: ["Mise à jour des dépistages selon l'âge et le sexe", "Facteurs de risque CV (TA, IMC, tabac, lipides, glycémie)", "Vaccinations à jour, mode de vie (activité, alcool, sommeil)"] },
+      { id: "suivi_anticoagulant", titre: "Suivi d'un traitement anticoagulant",
+        points: ["AVK : INR dans la cible selon l'indication ; carnet de suivi", "AOD : fonction rénale (DFG), pas d'INR ; vigilance interactions", "Éducation : signes de saignement, conduite en cas d'oubli, gestes/chirurgies"],
+        alerte: ["Saignement actif, INR très élevé, traumatisme crânien sous anticoagulant → urgence"] },
+      { id: "suivi_pa", titre: "Suivi de la personne âgée / autonomie",
+        points: ["Évaluation gériatrique : cognition (MMSE), thymie, nutrition (MNA), marche/équilibre", "Autonomie (ADL/IADL), iatrogénie, sensoriel (vue, audition)", "Repérer la fragilité ; coordination médico-sociale"],
+        alerte: ["Confusion récente, chutes répétées, dénutrition, syndrome de glissement → évaluation"] }
+    ]
+  },
+  {
+    cat: "Prévention & dépistage", icone: "🛡️",
+    items: [
+      { id: "vaccination", titre: "Vaccination",
+        points: ["Mettre à jour selon le calendrier vaccinal en vigueur", "Rattrapages ; vaccins du voyageur et selon le terrain (immunodépression, grossesse)", "Tracer dans le carnet / dossier ; contre-indications et différés"] },
+      { id: "depistage_hta", titre: "Dépistage de l'HTA",
+        points: ["Mesure standardisée au repos ; confirmer (automesure / MAPA) avant diagnostic", "Évaluer le risque CV global et le retentissement", "Ne pas étiqueter sur une seule mesure"] },
+      { id: "frottis_hpv", titre: "Dépistage du cancer du col (frottis / test HPV)",
+        points: ["Selon l'organisation nationale : cytologie puis test HPV selon l'âge", "Suivre l'intervalle recommandé ; relancer les non-participantes", "Vaccination HPV en prévention primaire"] },
+      { id: "conseil_nutritionnel", titre: "Conseil nutritionnel",
+        points: ["Évaluer habitudes, IMC, tour de taille, activité physique", "Objectifs réalistes et progressifs ; éducation thérapeutique", "Orientation diététique si besoin (obésité, diabète, dénutrition)"] }
+    ]
+  },
+  {
+    cat: "Pédiatrie : développement & croissance", icone: "🧒",
+    items: [
+      { id: "suivi_croissance", titre: "Suivi de croissance / examens obligatoires",
+        points: ["Reporter poids/taille/PC sur les courbes ; rechercher une cassure", "Examens de santé obligatoires aux âges clés (carnet de santé)", "Développement psychomoteur, vue, audition, vaccinations"],
+        alerte: ["Cassure de la courbe, retard psychomoteur → bilan / avis spécialisé"] },
+      { id: "retard_langage", titre: "Retard de langage",
+        points: ["Vérifier l'audition en premier (otite séreuse, surdité)", "Repères du langage par âge ; contexte (bilinguisme, environnement)", "Orientation ORL / orthophonie / CAMSP selon l'évaluation"],
+        alerte: ["Régression des acquis, absence de communication → avis spécialisé"] },
+      { id: "troubles_comportement_enfant", titre: "Troubles du comportement / difficultés scolaires",
+        points: ["Évaluer contexte familial, scolaire, sommeil, écrans", "Dépister TDAH, troubles « dys », troubles du spectre autistique, anxiété/dépression", "Coordination école – médecin scolaire – professionnels (psychologue, CMP)"],
+        alerte: ["Idées suicidaires, mise en danger, signes de maltraitance → prise en charge urgente"] }
+    ]
+  },
+  {
+    cat: "Vigilance & signalement", icone: "⚠️",
+    items: [
+      { id: "maltraitance", titre: "Maltraitance suspectée (enfant, personne vulnérable)",
+        points: ["Repérer : incohérence du récit, lésions d'âges différents, retard de recours, comportement", "Protéger l'enfant/la personne d'abord ; tracer factuellement", "Information préoccupante (CRIP) ou signalement (procureur) selon la gravité"],
+        alerte: ["Danger immédiat → signalement sans délai (le secret médical ne s'oppose pas à la protection)"] },
+      { id: "effet_indesirable", titre: "Effet indésirable médicamenteux (pharmacovigilance)",
+        points: ["Évaluer l'imputabilité (chronologie, sémiologie) ; arrêter/adapter si besoin", "Déclarer à la pharmacovigilance (effets graves ou inattendus)", "Vigilance accrue : anticoagulants, psychotropes, AINS, antibiotiques"],
+        alerte: ["Toxidermie grave, anaphylaxie, atteinte d'organe → urgence + déclaration"] }
+    ]
+  },
+  {
+    cat: "Petite chirurgie / dermatologie courante", icone: "🩹",
+    items: [
+      { id: "ongle_incarne", titre: "Ongle incarné",
+        points: ["Soins locaux (bains, désinfection, méchage) aux stades débutants", "Antibiotiques rarement nécessaires (sauf cellulite associée)", "Avis chirurgical si récidive / granulome (résection partielle de matrice)"],
+        alerte: ["Diabétique / artériopathe : risque de surinfection → vigilance, avis"] },
+      { id: "verrue", titre: "Verrue",
+        points: ["Souvent régression spontanée ; traitements kératolytiques / cryothérapie", "Information : contagiosité, récidives possibles", "Ne pas traiter agressivement chez l'immunodéprimé sans avis"] },
+      { id: "kyste_cutane", titre: "Kyste cutané (kyste épidermoïde)",
+        points: ["Abstention si asymptomatique ; exérèse à froid si gênant/récidivant", "Si inflammé/abcédé : incision-drainage, exérèse différée à distance"],
+        alerte: ["Doute sur la nature de la lésion → avis / histologie"] },
+      { id: "corps_etranger_orl", titre: "Corps étranger ORL (nez / oreille)",
+        points: ["Nasal unilatéral fétide de l'enfant = corps étranger jusqu'à preuve du contraire", "Extraction prudente si accessible et matériel adapté, sinon avis ORL", "Pile bouton (nez/oreille) = urgence (lésion caustique)"],
+        alerte: ["Corps étranger inhalé/laryngé, pile bouton, échec d'extraction → ORL urgent"] }
+    ]
+  }
+];
+
+</script>
+  <script>
+/* Procédures & prévention — aide-mémoire médecin (lecture seule, NON diagnostique). */
+(function () {
+  "use strict";
+  var CATS = (window.PROCEDURES || []).slice();
+  var el = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  };
+  var norm = function (s) {
+    return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  };
+  var state = { q: "", current: null };
+
+  // index plat des items + recherche
+  var ITEMS = [];
+  CATS.forEach(function (c) {
+    (c.items || []).forEach(function (it) {
+      it._cat = c.cat; it._ico = c.icone;
+      it._search = norm([it.titre, c.cat, (it.points || []).join(" "),
+        (it.alerte || []).join(" ")].join(" "));
+      ITEMS.push(it);
+    });
+  });
+
+  function matches(it) {
+    var nq = norm(state.q.trim());
+    if (!nq) return true;
+    if (it._search.indexOf(nq) !== -1) return true;
+    return nq.split(/\s+/).every(function (t) { return it._search.indexOf(t) !== -1; });
+  }
+
+  function renderList() {
+    var shown = 0, html = "";
+    CATS.forEach(function (c) {
+      var its = (c.items || []).filter(matches);
+      if (!its.length) return;
+      shown += its.length;
+      html += "<li class='cat-head'><span class='cat-ico'>" + esc(c.icone || "•") +
+        "</span>" + esc(c.cat) + "</li>";
+      html += its.map(function (it) {
+        var active = state.current === it.id ? " active" : "";
+        var alert = it.alerte && it.alerte.length ? "<span class='proc-flag' title='Comporte un signal de vigilance'>⚠</span>" : "";
+        return "<li class='proc-item" + active + "' data-id='" + it.id + "'>" +
+          "<span class='proc-title'>" + esc(it.titre) + "</span>" + alert + "</li>";
+      }).join("");
+    });
+    el("procList").innerHTML = html;
+    el("noResult").hidden = shown !== 0;
+    el("countBadge").textContent = shown + " / " + ITEMS.length;
+  }
+
+  function ul(cls, arr) {
+    return "<ul class='" + cls + "'>" + arr.map(function (x) {
+      return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+  }
+
+  function block(cls, title, html) {
+    return "<section class='blk " + cls + "'><h3>" + esc(title) + "</h3>" + html + "</section>";
+  }
+
+  function renderDetail(id) {
+    var it = ITEMS.find(function (x) { return x.id === id; });
+    if (!it) return;
+    state.current = id;
+    el("placeholder").hidden = true;
+    var d = el("detail"); d.hidden = false;
+    var html =
+      "<header class='detail-head'>" +
+        "<div class='detail-eyebrow'><span class='detail-ico'>" + esc(it._ico || "•") + "</span>" +
+        "<span class='detail-cat'>" + esc(it._cat) + "</span></div>" +
+        "<h2>" + esc(it.titre) + "</h2>" +
+      "</header>" +
+      block("sec-pts", "Points clés / check-list", ul("pts", it.points || []));
+    if (it.alerte && it.alerte.length) {
+      html += block("sec-rf", "⚠ Vigilance / escalade", ul("rf", it.alerte));
+    }
+    d.innerHTML = html;
+    renderList();
+    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    d.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function init() {
+    if (!ITEMS.length) { el("procList").innerHTML = "<li style='padding:14px;color:#888'>Données indisponibles.</li>"; return; }
+    el("search").addEventListener("input", function (e) { state.q = e.target.value; renderList(); });
+    el("procList").addEventListener("click", function (e) {
+      var li = e.target.closest(".proc-item");
+      if (li) renderDetail(li.getAttribute("data-id"));
+    });
+    renderList();
+    var m = /#([a-z_]+)/.exec(location.hash);
+    if (m && ITEMS.find(function (it) { return it.id === m[1]; })) renderDetail(m[1]);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

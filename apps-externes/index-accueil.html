@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GynoAide — Accueil</title>
+<style>
+:root{--bg:#0f1419;--txt:#e6edf3;--muted:#9aa7b4;--line:#2e3a47}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 30% 20%,#15212e,#0f1419);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+h1{font-size:30px;margin:0 0 4px;font-weight:800}
+.sub{color:var(--muted);margin-bottom:34px;text-align:center;max-width:520px;line-height:1.5}
+.cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.card{width:300px;border-radius:18px;padding:30px 26px;text-decoration:none;color:#fff;border:1px solid var(--line);transition:transform .15s,box-shadow .15s;display:block}
+.card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.card.contra{background:linear-gradient(160deg,#14532d,#0d2818)}
+.card.meno{background:linear-gradient(160deg,#581c87,#2a1245)}
+.emoji{font-size:48px;display:block;margin-bottom:14px}
+.card h2{margin:0 0 8px;font-size:21px}
+.card p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.85)}
+.tags{margin-top:16px;font-size:11px;color:rgba(255,255,255,.7);line-height:1.7}
+.foot{margin-top:36px;font-size:11.5px;color:var(--muted);font-style:italic;text-align:center;max-width:600px;line-height:1.6}
+</style>
+</head>
+<body>
+<h1>🩺 GynoAide</h1>
+<p class="sub">Aide à la décision clinique en médecine générale. Choisissez l'outil adapté à la situation de la patiente.</p>
+<div class="cards">
+  <a class="card contra" href="contraception.html">
+    <span class="emoji">🤰</span>
+    <h2>Femme en âge de procréer</h2>
+    <p>Contraception : choix et renouvellement de pilule, oubli, contraception d'urgence, relais, situations particulières, IVG, grossesse & allaitement.</p>
+    <div class="tags">Choix pilule · Oubli · Urgence · Relais · Saignements · Nutrition grossesse · IVG</div>
+  </a>
+  <a class="card meno" href="menopause.html">
+    <span class="emoji">🌸</span>
+    <h2>Femme ménopausée</h2>
+    <p>Péri/ménopause : diagnostic, score de symptômes, décision « THM ou pas THM », choix du traitement, alternatives, syndrome génito-urinaire, os & cœur.</p>
+    <div class="tags">Périménopause · THM · Alternatives · SGUM · Sein/ACR · Os · Cardio</div>
+  </a>
+</div>
+<p class="foot">⚠ Outils d'aide à la décision — ils ne remplacent pas le jugement médical. Décision finale sous responsabilité du médecin après interrogatoire, examen clinique et vérification des recommandations actualisées (HAS, CNGOF, GEMVi, ANSM, CRAT).</p>
+</body>
+</html>

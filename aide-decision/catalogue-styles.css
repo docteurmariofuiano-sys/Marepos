@@ -1,0 +1,56 @@
+:root{
+  --bg:#eef2f6;--surface:#fff;--ink:#1b2733;--soft:#5b6b7b;--line:#e1e8ef;
+  --brand:#0e7c86;--brand-d:#0a5a62;
+  --clin:#2563eb;--bio:#6b3fa0;--proc:#0f7a52;--ref:#94a3b8;--urg:#d92d20;
+  --radius:13px;--shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.brand-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.links{display:flex;gap:8px}
+.links a{color:#fff;background:rgba(255,255,255,.16);text-decoration:none;font-size:.8rem;font-weight:600;padding:6px 11px;border-radius:8px}
+.links a:hover{background:rgba(255,255,255,.3)}
+.badge-count{font-size:.76rem;opacity:.9}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.toolbar-inner{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1 1 320px;min-width:220px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.55}
+#search{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;background:#fbfcfe}
+#search:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(14,124,134,.15)}
+.toggle{display:flex;gap:6px;align-items:center;font-size:.85rem;font-weight:600;color:var(--soft);cursor:pointer;white-space:nowrap}
+.toggle input{width:16px;height:16px}
+.legend{max-width:1180px;margin:12px auto 0;padding:0 20px;display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--soft)}
+.lg{display:flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot-clin{background:var(--clin)}.dot-bio{background:var(--bio)}.dot-proc{background:var(--proc)}.dot-ref{background:var(--ref)}
+.urgchip{background:var(--urg);color:#fff;border-radius:4px;font-size:.62rem;font-weight:800;padding:1px 5px;letter-spacing:.03em}
+.cats{max-width:1180px;margin:16px auto;padding:0 20px}
+.cat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.cat h2{display:flex;align-items:center;gap:10px;margin:0;padding:14px 20px;font-size:1.05rem;border-bottom:1px solid var(--line);background:#f8fafc}
+.cat-ico{font-size:1.2rem}
+.cat-n{font-size:.72rem;font-weight:700;color:#fff;background:var(--brand);border-radius:6px;padding:2px 8px}
+.cat-count{margin-left:auto;font-size:.74rem;color:var(--soft);font-weight:600;background:#eef3f6;border-radius:999px;padding:2px 10px}
+.grp{padding:12px 20px}
+.grp h3{margin:0 0 9px;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--soft)}
+.grp.urg h3{color:var(--urg)}
+.grp.urg{background:#fef6f5;border-top:1px dashed #f3cdc8}
+.motifs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.motif{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;font-size:.88rem;background:#fff;text-decoration:none;color:var(--ink)}
+a.motif{cursor:pointer;transition:.12s}
+a.motif:hover{border-color:var(--brand);background:#f1f8f9;transform:translateY(-1px)}
+a.motif.bio:hover{border-color:var(--bio);background:#f6f1fb}
+a.motif.proc:hover{border-color:var(--proc);background:#eef7f2}
+.motif.ref{color:var(--soft);background:#fbfcfd}
+.m-label{flex:1;min-width:0}
+.go{color:var(--brand);font-weight:700;opacity:.6}
+a.motif.bio .go{color:var(--bio)}
+a.motif.proc .go{color:var(--proc)}
+.motif .urgchip{font-size:.6rem}
+.empty{max-width:1180px;margin:30px auto;padding:0 20px;color:var(--soft);text-align:center}
+.foot{max-width:1180px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
+@media(max-width:560px){.motifs{grid-template-columns:1fr}}

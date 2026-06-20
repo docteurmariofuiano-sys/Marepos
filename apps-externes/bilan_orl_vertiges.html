@@ -1,0 +1,1479 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bilan ORL des vertiges - médecin généraliste</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef3f6;
+      --panel: #ffffff;
+      --panel-2: #f7fafb;
+      --text: #172329;
+      --muted: #5b6b73;
+      --line: #d9e2e7;
+      --primary: #006c67;
+      --primary-2: #dff3ef;
+      --accent: #b85d1e;
+      --green: #137548;
+      --green-bg: #e5f5ed;
+      --orange: #b86b00;
+      --orange-bg: #fff1da;
+      --red: #b4232a;
+      --red-bg: #fde8e8;
+      --shadow: 0 14px 40px rgba(23, 35, 41, .08);
+      --radius: 8px;
+      --focus: 0 0 0 3px rgba(0, 108, 103, .18);
+    }
+
+    body.dark {
+      color-scheme: dark;
+      --bg: #101719;
+      --panel: #172124;
+      --panel-2: #1e2a2e;
+      --text: #edf6f6;
+      --muted: #a7b7bd;
+      --line: #314147;
+      --primary: #54d3c8;
+      --primary-2: #193a39;
+      --accent: #f0a35f;
+      --green: #6ee2a7;
+      --green-bg: #183329;
+      --orange: #ffc36b;
+      --orange-bg: #3a2b18;
+      --red: #ff8f91;
+      --red-bg: #3b1f22;
+      --shadow: 0 14px 40px rgba(0, 0, 0, .22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", "Aptos", system-ui, sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 7px;
+      padding: .62rem .8rem;
+      cursor: pointer;
+      min-height: 38px;
+    }
+
+    button:hover { border-color: var(--primary); }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) 1fr;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 22px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 22px 26px 34px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-2);
+      border: 1px solid var(--line);
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: 1.16rem;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .86rem;
+      margin-top: 4px;
+    }
+
+    .status-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-2);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .score-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      margin-bottom: 10px;
+    }
+
+    .score-badge.vert { color: var(--green); background: var(--green-bg); border-color: color-mix(in srgb, var(--green), transparent 70%); }
+    .score-badge.orange { color: var(--orange); background: var(--orange-bg); border-color: color-mix(in srgb, var(--orange), transparent 70%); }
+    .score-badge.rouge { color: var(--red); background: var(--red-bg); border-color: color-mix(in srgb, var(--red), transparent 70%); }
+
+    .score-details {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .progress {
+      height: 9px;
+      background: var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 6px;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--primary);
+      transition: width .2s ease;
+    }
+
+    .nav-tabs {
+      display: grid;
+      gap: 6px;
+      margin: 16px 0;
+    }
+
+    .nav-tab {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 9px;
+      align-items: center;
+      text-align: left;
+      padding: 9px 10px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .nav-tab .num {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .nav-tab.active {
+      color: var(--text);
+      background: var(--primary-2);
+      border-color: var(--line);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .actions .wide { grid-column: 1 / -1; }
+    .primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+
+    body.dark .primary { color: #092123; }
+
+    .danger-action {
+      color: var(--red);
+      border-color: color-mix(in srgb, var(--red), transparent 60%);
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .quick-switch {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .step.active { display: block; }
+    .step h2 {
+      margin: 0 0 4px;
+      font-size: 1.32rem;
+      letter-spacing: 0;
+    }
+
+    .step-intro {
+      margin: 0 0 20px;
+      color: var(--muted);
+      max-width: 80ch;
+    }
+
+    .section-title {
+      margin: 24px 0 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 13px;
+    }
+
+    .field {
+      grid-column: span 4;
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .field.wide { grid-column: span 8; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 7px;
+      padding: .7rem .75rem;
+      min-height: 40px;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .check-grid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px;
+    }
+
+    .check {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-2);
+      min-height: 42px;
+    }
+
+    .check input { width: auto; min-height: 0; margin-top: 3px; }
+    .radio-list {
+      display: grid;
+      gap: 8px;
+      grid-column: 1 / -1;
+    }
+
+    .radio-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-2);
+    }
+
+    .radio-card input { width: auto; min-height: 0; margin-top: 4px; }
+    .hint {
+      display: block;
+      color: var(--muted);
+      font-size: .86rem;
+      margin-top: 3px;
+    }
+
+    .alert {
+      border: 1px solid var(--line);
+      border-left-width: 5px;
+      border-radius: 7px;
+      padding: 13px 14px;
+      margin: 12px 0;
+      background: var(--panel-2);
+    }
+
+    .alert.red { border-left-color: var(--red); background: var(--red-bg); }
+    .alert.orange { border-left-color: var(--orange); background: var(--orange-bg); }
+    .alert.green { border-left-color: var(--green); background: var(--green-bg); }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .diagnostic-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-2);
+      padding: 15px;
+    }
+
+    .diagnostic-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .diagnostic-head h3 {
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: .78rem;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .pill.vert { color: var(--green); background: var(--green-bg); }
+    .pill.orange { color: var(--orange); background: var(--orange-bg); }
+    .pill.rouge { color: var(--red); background: var(--red-bg); }
+    .pill.neutral { color: var(--muted); background: var(--panel); }
+
+    .mini-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .mini-list li { margin: 3px 0; }
+
+    .summary-box {
+      width: 100%;
+      min-height: 520px;
+      white-space: pre-wrap;
+      font-family: "Consolas", "Cascadia Mono", monospace;
+      font-size: .9rem;
+    }
+
+    .legal {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: .87rem;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .sources {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 10px;
+    }
+
+    .step-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .compact-only { display: none; }
+    body.quick .optional { display: none !important; }
+    body.quick .compact-only { display: block; }
+    body.quick .step { padding: 18px; }
+
+    @media (max-width: 980px) {
+      .app-shell { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+        padding: 16px;
+      }
+      main { padding: 16px; }
+      .nav-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .results-layout { grid-template-columns: 1fr; }
+      .field, .field.wide { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar, .diagnostic-head, .step-controls { flex-direction: column; align-items: stretch; }
+      .nav-tabs { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+      .step { padding: 16px; }
+    }
+
+    @media print {
+      aside, .topbar, .step:not(#step-results), .step-controls, .quick-switch { display: none !important; }
+      .app-shell { display: block; }
+      main { padding: 0; }
+      .step { display: block !important; box-shadow: none; border: 0; padding: 0; }
+      .results-layout { display: block; }
+      .summary-box { border: 0; min-height: auto; }
+      body { background: #fff; color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">ORL</div>
+        <div>
+          <h1>Bilan ORL des vertiges</h1>
+          <div class="subtitle">Aide clinique pour médecin généraliste</div>
+        </div>
+      </div>
+
+      <div class="status-panel">
+        <div id="scoreBadge" class="score-badge vert">
+          <span>Score d'urgence</span>
+          <span id="scoreLabel">VERT</span>
+        </div>
+        <div id="scoreDetails" class="score-details">Aucun drapeau rouge renseigné pour le moment.</div>
+        <div class="progress" aria-label="Progression"><span id="progressBar"></span></div>
+        <div class="score-details"><span id="progressText">Étape 1 / 8</span></div>
+      </div>
+
+      <nav class="nav-tabs" id="tabs" aria-label="Étapes du bilan"></nav>
+
+      <div class="actions">
+        <button id="copyBtn" class="primary wide" type="button">Copier la synthèse</button>
+        <button id="printBtn" type="button">Imprimer</button>
+        <button id="pdfBtn" type="button">Export PDF</button>
+        <button id="quickBtn" type="button">Mode rapide</button>
+        <button id="themeBtn" type="button">Clair / sombre</button>
+        <button id="resetBtn" class="danger-action wide" type="button">Réinitialiser</button>
+      </div>
+
+      <div class="sources">
+        Logique construite pour intégrer les notions des ouvrages fournis : vertiges ORL 2020, guide de rééducation vestibulaire, audiologie pratique et audiométrie.
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div>
+          <strong id="currentTitle">Identité et contexte</strong>
+          <div class="subtitle" id="currentSubtitle">Renseigner les éléments utiles avant l'analyse.</div>
+        </div>
+        <div class="quick-switch">
+          <button type="button" data-jump="redflags">Drapeaux rouges</button>
+          <button type="button" data-jump="results">Synthèse</button>
+        </div>
+      </div>
+
+      <section class="step active" id="step-identity" data-title="Identité et contexte" data-subtitle="Terrain, traitements et facteurs de risque.">
+        <h2>Identité et contexte patient</h2>
+        <p class="step-intro">Le terrain vasculaire, otologique, neurologique et médicamenteux modifie fortement le niveau d'urgence.</p>
+        <div class="grid">
+          <div class="field"><label for="nom">Nom</label><input id="nom" data-field="nom" autocomplete="off"></div>
+          <div class="field"><label for="prenom">Prénom</label><input id="prenom" data-field="prenom" autocomplete="off"></div>
+          <div class="field"><label for="age">Âge</label><input id="age" data-field="age" type="number" min="0" max="120"></div>
+          <div class="field"><label for="sexe">Sexe</label><select id="sexe" data-field="sexe"><option></option><option>Femme</option><option>Homme</option><option>Autre / non précisé</option></select></div>
+          <div class="field"><label for="dateConsultation">Date</label><input id="dateConsultation" data-field="dateConsultation" type="date"></div>
+          <div class="field"><label for="lateralite">Latéralité utile</label><select id="lateralite" data-field="lateralite"><option></option><option>Droite</option><option>Gauche</option><option>Bilatérale</option><option>Non latéralisée</option></select></div>
+          <div class="field"><label for="premiereConsultation">Première consultation</label><select id="premiereConsultation" data-field="premiereConsultation"><option></option><option>Oui</option><option>Non</option></select></div>
+          <div class="field"><label for="recidive">Récidive</label><select id="recidive" data-field="recidive"><option></option><option>Oui</option><option>Non</option></select></div>
+          <div class="field full"><label for="motif">Motif / verbatim patient</label><textarea id="motif" data-field="motif" placeholder="Ex. vertige rotatoire au lever, nausées, peur de tomber..."></textarea></div>
+        </div>
+
+        <h3 class="section-title">Antécédents et terrain</h3>
+        <div class="check-grid" id="contextChecks"></div>
+      </section>
+
+      <section class="step" id="step-complaint" data-title="Qualifier la plainte" data-subtitle="Distinguer vertige, instabilité, malaise, trouble neurologique ou anxieux.">
+        <h2>Qualifier la plainte</h2>
+        <p class="step-intro">La description spontanée oriente l'arbre décisionnel, sans conclure à elle seule.</p>
+        <div class="radio-list" id="complaintChoices"></div>
+        <div class="alert orange">
+          Un vertige décrit comme périphérique ne suffit jamais à exclure une atteinte centrale, surtout en cas de syndrome vestibulaire aigu, âge élevé ou facteurs vasculaires.
+        </div>
+      </section>
+
+      <section class="step" id="step-time" data-title="Temporalité" data-subtitle="Durée, mode évolutif, récidives et récupération.">
+        <h2>Temporalité des vertiges</h2>
+        <p class="step-intro">La durée des crises est l'une des meilleures clés pratiques : secondes positionnelles, minutes-heures cochléaires, continu plusieurs jours, chronique.</p>
+        <div class="grid">
+          <div class="field"><label for="debut">Début</label><select id="debut" data-field="debut"><option></option><option>Brutal</option><option>Progressif</option><option>Imprécis</option></select></div>
+          <div class="field"><label for="dateDebut">Date / heure début</label><input id="dateDebut" data-field="dateDebut"></div>
+          <div class="field"><label for="duree">Durée de chaque crise</label><select id="duree" data-field="duree"><option></option><option>Secondes</option><option>Moins d'une minute</option><option>Minutes</option><option>20 minutes à quelques heures</option><option>Plusieurs heures</option><option>Continu plusieurs jours</option><option>Chronique semaines/mois</option><option>Permanent fluctuant</option></select></div>
+          <div class="field"><label for="modeEvolutif">Mode évolutif</label><select id="modeEvolutif" data-field="modeEvolutif"><option></option><option>Crise unique</option><option>Crises récidivantes</option><option>Vertige continu</option><option>Instabilité chronique</option><option>Aggravation progressive</option><option>Paroxystique</option><option>Positionnel</option><option>Mouvements rapides de tête</option></select></div>
+          <div class="field"><label for="nombreCrises">Nombre de crises</label><input id="nombreCrises" data-field="nombreCrises"></div>
+          <div class="field"><label for="intervalleCrises">Intervalle</label><input id="intervalleCrises" data-field="intervalleCrises"></div>
+          <div class="field"><label for="recuperation">Récupération complète entre crises</label><select id="recuperation" data-field="recuperation"><option></option><option>Oui</option><option>Non</option><option>Partielle</option></select></div>
+          <div class="field"><label for="postTrauma">Terrain post-traumatique</label><select id="postTrauma" data-field="postTrauma"><option></option><option>Oui</option><option>Non</option></select></div>
+        </div>
+        <div class="alert green" id="timeHint">Renseigner la durée pour afficher l'aide contextuelle.</div>
+      </section>
+
+      <section class="step" id="step-triggers" data-title="Déclencheurs" data-subtitle="Position, lever, pression, bruit, traumatisme, toxiques.">
+        <h2>Facteurs déclenchants</h2>
+        <p class="step-intro">Les déclencheurs positionnels, pressionnels, sonores ou orthostatiques orientent vers des mécanismes très différents.</p>
+        <div class="check-grid" id="triggerChecks"></div>
+        <div class="alert orange">
+          Bruit, pression tragienne, Valsalva ou effort avec symptômes auditifs : évoquer fistule périlymphatique, déhiscence du canal semi-circulaire supérieur ou pathologie otologique.
+        </div>
+      </section>
+
+      <section class="step" id="step-orl" data-title="Signes ORL" data-subtitle="Cochlée, otoscopie, acoumétrie et contexte otologique.">
+        <h2>Signes associés ORL et audiologie</h2>
+        <p class="step-intro">Les signes cochléaires guident vers Ménière, labyrinthite, surdité brusque, schwannome vestibulaire ou cause otologique compliquée.</p>
+        <div class="check-grid" id="orlChecks"></div>
+        <h3 class="section-title">Acoumétrie et otoscopie</h3>
+        <div class="grid">
+          <div class="field"><label for="otoscopie">Otoscopie</label><select id="otoscopie" data-field="otoscopie"><option></option><option>Normale</option><option>Bouchon</option><option>Otite externe</option><option>Otite moyenne</option><option>Perforation</option><option>Otorrhée</option><option>Cholestéatome suspect</option><option>Cicatrice tympanique</option></select></div>
+          <div class="field"><label for="weber">Weber</label><select id="weber" data-field="weber"><option></option><option>Non réalisé</option><option>Médian</option><option>Latéralisé droite</option><option>Latéralisé gauche</option></select></div>
+          <div class="field"><label for="rinne">Rinne</label><select id="rinne" data-field="rinne"><option></option><option>Non réalisé</option><option>Positif bilatéral</option><option>Négatif droit</option><option>Négatif gauche</option><option>Asymétrique</option></select></div>
+          <div class="field wide"><label for="acoumetrieNote">Note acoumétrie / voix chuchotée</label><input id="acoumetrieNote" data-field="acoumetrieNote"></div>
+        </div>
+        <div class="alert red">
+          Vertige avec hypoacousie brusque : urgence ORL. L'acoumétrie au diapason oriente mais ne remplace pas l'audiométrie tonale et vocale.
+        </div>
+      </section>
+
+      <section class="step" id="step-redflags" data-title="Drapeaux rouges" data-subtitle="Module prioritaire neurovasculaire, ORL, cardiologique et infectieux.">
+        <h2>Signes neurologiques et red flags</h2>
+        <p class="step-intro">À remplir avant de conclure à un vertige périphérique. Toute réponse positive peut modifier l'orientation.</p>
+        <div class="check-grid" id="redFlagChecks"></div>
+        <div class="alert red">
+          Orientation urgente recommandée si red flag : éliminer AVC cérébelleux/tronc cérébral, hémorragie, dissection, cause neurologique, ORL ou cardiovasculaire grave.
+        </div>
+      </section>
+
+      <section class="step" id="step-exam" data-title="Examen clinique" data-subtitle="Constantes, otoscopie, neurologie, oculomotricité, manœuvres.">
+        <h2>Examen clinique guidé</h2>
+        <p class="step-intro">Le module propose les éléments simples réalisables au cabinet et les limites de sécurité des manœuvres.</p>
+        <div class="grid">
+          <div class="field"><label for="taOrthostatique">TA couchée/debout</label><select id="taOrthostatique" data-field="taOrthostatique"><option></option><option>Non réalisée</option><option>Normale</option><option>Hypotension orthostatique</option><option>À compléter</option></select></div>
+          <div class="field"><label for="fc">Fréquence cardiaque</label><input id="fc" data-field="fc"></div>
+          <div class="field"><label for="temperature">Température</label><input id="temperature" data-field="temperature"></div>
+          <div class="field"><label for="glycemie">Glycémie capillaire</label><input id="glycemie" data-field="glycemie"></div>
+          <div class="field"><label for="ecg">ECG</label><select id="ecg" data-field="ecg"><option></option><option>Non réalisé</option><option>Normal</option><option>Anormal</option><option>Indiqué</option></select></div>
+          <div class="field"><label for="marche">Marche</label><select id="marche" data-field="marche"><option></option><option>Possible sans aide</option><option>Instable mais possible</option><option>Impossible sans aide</option><option>Non testée</option></select></div>
+          <div class="field"><label for="nystagmus">Nystagmus</label><select id="nystagmus" data-field="nystagmus"><option></option><option>Aucun</option><option>Horizontal rotatoire unidirectionnel</option><option>Vertical</option><option>Multidirectionnel</option><option>Positionnel typique</option><option>Non fatigable / atypique</option></select></div>
+          <div class="field"><label for="hit">Head impulse test</label><select id="hit" data-field="hit"><option></option><option>Non réalisé / non formé</option><option>Positif côté droit</option><option>Positif côté gauche</option><option>Normal</option><option>Douteux</option></select></div>
+          <div class="field"><label for="dixHallpike">Dix-Hallpike</label><select id="dixHallpike" data-field="dixHallpike"><option></option><option>Non réalisé</option><option>Positif droit typique</option><option>Positif gauche typique</option><option>Négatif</option><option>Atypique</option><option>Contre-indiqué</option></select></div>
+          <div class="field"><label for="rollTest">Roll test</label><select id="rollTest" data-field="rollTest"><option></option><option>Non réalisé</option><option>Géotropique droit</option><option>Géotropique gauche</option><option>Apogéotropique droit</option><option>Apogéotropique gauche</option><option>Négatif</option><option>Atypique</option></select></div>
+          <div class="field wide"><label for="examenNeuro">Examen neurologique</label><input id="examenNeuro" data-field="examenNeuro" placeholder="Paires crâniennes, motricité, sensibilité, coordination, Romberg, marche..."></div>
+          <div class="field full"><label for="notesExamen">Notes d'examen</label><textarea id="notesExamen" data-field="notesExamen"></textarea></div>
+        </div>
+        <div class="alert orange">
+          Ne pas faire de manœuvre positionnelle si suspicion neurologique aiguë instable, traumatisme cervical, instabilité rachidienne, dissection suspectée ou état général incompatible.
+        </div>
+      </section>
+
+      <section class="step" id="step-results" data-title="Synthèse et conduite" data-subtitle="Diagnostics hiérarchisés, score, examens, rééducation, synthèse copiable.">
+        <h2>Classification, score et synthèse</h2>
+        <p class="step-intro">Les hypothèses sont pondérées. Elles ne constituent pas un diagnostic définitif et doivent être confrontées à l'examen clinique.</p>
+        <div class="results-layout">
+          <div>
+            <div id="urgentMessage"></div>
+            <h3 class="section-title">Diagnostics probables</h3>
+            <div class="cards" id="diagnosticCards"></div>
+            <h3 class="section-title">Examens et orientation</h3>
+            <div class="cards" id="examCards"></div>
+          </div>
+          <div>
+            <h3 class="section-title" style="margin-top:0">Synthèse médicale</h3>
+            <textarea id="summary" class="summary-box" readonly></textarea>
+          </div>
+        </div>
+      </section>
+
+      <div class="step-controls">
+        <button id="prevBtn" type="button">Étape précédente</button>
+        <button id="nextBtn" class="primary" type="button">Étape suivante</button>
+      </div>
+
+      <div class="legal">
+        Cet outil est une aide à la décision pour médecin. Il ne remplace pas l'examen clinique, l'expérience du praticien, ni l'avis ORL/neurologique. Tout syndrome vestibulaire aigu, tout signe neurologique, toute surdité brusque, toute incapacité à marcher ou tout doute diagnostique doit conduire à une orientation spécialisée ou urgente.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const appState = {};
+
+    const questionBank = {
+      contexte: [
+        ["atcd_otite_chronique", "Otite chronique"], ["atcd_chirurgie_otologique", "Chirurgie otologique"],
+        ["atcd_trauma_cranien", "Traumatisme crânien"], ["atcd_fracture_rocher", "Fracture du rocher"],
+        ["atcd_cholesteatome", "Cholestéatome"], ["atcd_surdite", "Surdité connue"],
+        ["atcd_acouphenes", "Acouphènes"], ["atcd_meniere", "Maladie de Ménière"],
+        ["atcd_vppb", "VPPB connu"], ["atcd_nevrite", "Névrite vestibulaire antérieure"],
+        ["atcd_avc", "AVC / AIT"], ["atcd_migraine", "Migraine"], ["atcd_sep", "SEP"],
+        ["atcd_epilepsie", "Épilepsie"], ["atcd_neuropathie", "Neuropathie"], ["atcd_parkinson", "Parkinson"],
+        ["hta", "HTA"], ["diabete", "Diabète"], ["dyslipidemie", "Dyslipidémie"], ["fa", "Fibrillation atriale"],
+        ["coronaropathie", "Coronaropathie"], ["hypotension_ortho_atcd", "Hypotension orthostatique"],
+        ["tabac", "Tabac"], ["obesite", "Obésité"], ["saos", "SAOS"], ["familial_vasc", "Antécédents familiaux vasculaires"],
+        ["benzodiazepines", "Benzodiazépines"], ["hypnotiques", "Hypnotiques"], ["antidepresseurs", "Antidépresseurs"],
+        ["antiepileptiques", "Antiépileptiques"], ["aminosides", "Aminosides"], ["chimiotherapie", "Chimiothérapie ototoxique"],
+        ["diuretiques", "Diurétiques"], ["betabloquants", "Bêtabloquants"], ["anticoagulants", "Anticoagulants"],
+        ["antiagregants", "Antiagrégants"], ["alcool", "Alcool"], ["cannabis", "Cannabis / drogues"], ["solvants", "Solvants"],
+        ["grossesse", "Grossesse possible ou en cours"], ["immunodepression", "Immunodépression"],
+        ["personne_agee", "Personne âgée"], ["risque_chute", "Risque de chute"], ["isolement", "Isolement"]
+      ],
+      plainte: [
+        ["rotatoire_externe", "Tout tourne autour de moi", "Orientation vestibulaire, à préciser par temporalité et examen."],
+        ["rotatoire_interne", "Je tourne moi-même", "Vertige rotatoire possible, rechercher déclencheurs et signes associés."],
+        ["instabilite", "Instabilité / déséquilibre à la marche", "Penser vestibulopathie bilatérale, neurologique, proprioceptive, iatrogène."],
+        ["lipothymie", "Tête vide / malaise / lipothymie", "Penser hypotension, trouble du rythme, vagal, métabolique."],
+        ["oscillopsie", "Flou visuel / oscillopsie", "Évoquer déficit vestibulaire bilatéral ou trouble oculomoteur."],
+        ["chute", "Chute sans vertige", "Chez sujet âgé : presbyvestibulie, neurologique, iatrogénie, cardiovasculaire."],
+        ["ebriete", "Sensation d'ébriété", "Tableau non spécifique : médicaments, vestibulaire chronique, neurologique ou anxieux."],
+        ["palpitations", "Malaise avec palpitations", "Priorité cardiovasculaire : ECG et urgence selon contexte."],
+        ["anxieux", "Crise anxieuse / hyperventilation", "Diagnostic d'exclusion après causes ORL, neuro et cardio."],
+        ["autre_plainte", "Autre", "Décrire précisément dans le motif et rester prudent."]
+      ],
+      declencheurs: [
+        ["retournement_lit", "Retournement au lit"], ["couche_assis", "Passage couché-assis"],
+        ["extension_cervicale", "Extension cervicale"], ["flexion_avant", "Flexion en avant"],
+        ["rotation_rapide", "Rotation rapide de la tête"], ["lever_brutal", "Lever brutal"],
+        ["effort", "Effort"], ["toux_valsalva", "Toux / Valsalva"], ["bruit_fort", "Bruit fort"],
+        ["pression_tragus", "Pression sur le tragus"], ["traumatisme_recent", "Traumatisme récent"],
+        ["infection_virale", "Infection virale récente"], ["stress_fatigue", "Stress / fatigue"],
+        ["manque_sommeil", "Manque de sommeil"], ["cycle_hormonal", "Règles / cycle hormonal"],
+        ["aliments_migraineux", "Aliments migraineux"], ["alcool_declencheur", "Alcool"],
+        ["medicament_recent", "Médicament récent"], ["changement_traitement", "Changement de traitement"],
+        ["voyage", "Voyage / bateau / voiture"], ["exposition_toxique", "Exposition toxique"], ["aucun_declencheur", "Aucun déclencheur"]
+      ],
+      orl: [
+        ["hypoacousie", "Hypoacousie"], ["hypoacousie_droite", "Hypoacousie droite"], ["hypoacousie_gauche", "Hypoacousie gauche"],
+        ["hypoacousie_bilaterale", "Hypoacousie bilatérale"], ["hypoacousie_brusque", "Hypoacousie brusque"],
+        ["acouphenes", "Acouphènes"], ["acouphenes_pulsatiles", "Acouphènes pulsatiles"],
+        ["plenitude", "Plénitude auriculaire"], ["otalgie", "Otalgie"], ["otorrhee", "Otorrhée"],
+        ["otite_chronique_actuelle", "Otite chronique / cholestéatome connu"], ["hyperacousie", "Hyperacousie"],
+        ["autophonie", "Autophonie"], ["vertige_bruit", "Vertige déclenché par bruit"],
+        ["vertige_pression", "Vertige déclenché par pression tragienne"], ["traumatisme_sonore", "Traumatisme sonore"],
+        ["exposition_aminosides", "Exposition aminosides"], ["appareil_auditif", "Appareillage auditif"]
+      ],
+      redFlags: [
+        ["cephalee_brutale", "Céphalée brutale inhabituelle"], ["cervicalgie_brutale", "Cervicalgie brutale"],
+        ["diplopie", "Diplopie"], ["dysarthrie", "Dysarthrie"], ["dysphagie", "Dysphagie"],
+        ["deficit_moteur", "Déficit moteur"], ["trouble_sensitif", "Trouble sensitif"],
+        ["ataxie_majeure", "Ataxie majeure"], ["impossibilite_marcher", "Impossibilité de marcher sans aide"],
+        ["chute_lateralisee", "Chute latéralisée sévère"], ["trouble_conscience", "Trouble de conscience"],
+        ["confusion", "Confusion"], ["nystagmus_vertical_rf", "Nystagmus vertical spontané"],
+        ["nystagmus_multidirectionnel_rf", "Nystagmus multidirectionnel"], ["skew", "Skew deviation"],
+        ["trouble_oculomoteur", "Trouble oculomoteur"], ["syndrome_cerebelleux", "Syndrome cérébelleux"],
+        ["claude_bernard_horner", "Claude Bernard-Horner"], ["douleur_thoracique", "Douleur thoracique"],
+        ["palpitations_rf", "Palpitations"], ["syncope", "Syncope vraie"],
+        ["fievre_meningee", "Fièvre + raideur méningée"], ["terrain_vasculaire_majeur", "Terrain vasculaire majeur"],
+        ["anticoagulation_rf", "Anticoagulation"], ["traumatisme_cranien_rf", "Traumatisme crânien"]
+      ]
+    };
+
+    const diagnostics = [
+      {
+        id: "vppb_post", diagnostic: "VPPB du canal postérieur", categorie: "périphérique",
+        duree_typique: ["Secondes", "Moins d'une minute"], declencheurs: ["retournement_lit", "couche_assis", "extension_cervicale", "flexion_avant"],
+        signes_orl: [], signes_neuro: [], examen_typique: ["Dix-Hallpike typique", "latence", "fatigabilité", "nystagmus torsionnel vertical"],
+        arguments_pour: ["Vertige bref positionnel", "Retournement au lit", "Dix-Hallpike positif typique", "Latence et fatigabilité"],
+        arguments_contre: ["Nystagmus vertical pur", "Absence de latence", "Déficit neurologique", "Crise continue plusieurs jours"],
+        red_flags: [], examens: ["Dix-Hallpike si absence de contre-indication", "Otoscopie", "Examen neurologique minimal"],
+        prise_en_charge: ["Manœuvre libératoire si praticien formé", "Kinésithérapie vestibulaire / ORL", "Prévention des chutes", "Réévaluation si persistance ou récidive"],
+        orientation: "Ambulatoire si tableau strictement typique et aucun drapeau rouge.", urgence: "vert",
+        weights: { duree: 4, trigger: 4, dix: 8, noRed: 2 }
+      },
+      {
+        id: "vppb_horizontal", diagnostic: "VPPB du canal horizontal", categorie: "périphérique",
+        duree_typique: ["Secondes", "Moins d'une minute"], declencheurs: ["retournement_lit"],
+        signes_orl: [], signes_neuro: [], examen_typique: ["Roll test positif", "nystagmus horizontal géotropique ou apogéotropique"],
+        arguments_pour: ["Crise positionnelle au retournement", "Roll test positif", "Nystagmus horizontal géotropique ou apogéotropique"],
+        arguments_contre: ["Signes neurologiques", "Nystagmus vertical", "Absence de déclencheur positionnel"],
+        red_flags: [], examens: ["Roll test si absence de contre-indication", "Examen neurologique"],
+        prise_en_charge: ["Manœuvre adaptée par praticien formé", "Kinésithérapie vestibulaire / ORL"],
+        orientation: "Kinésithérapeute vestibulaire ou ORL.", urgence: "vert",
+        weights: { duree: 3, trigger: 4, roll: 8 }
+      },
+      {
+        id: "vppb_atypique", diagnostic: "VPPB atypique / central à éliminer", categorie: "central",
+        duree_typique: ["Secondes", "Moins d'une minute"], declencheurs: ["retournement_lit", "extension_cervicale"],
+        signes_orl: [], signes_neuro: ["nystagmus vertical", "neurologique"],
+        examen_typique: ["Nystagmus vertical pur", "non fatigable", "absence de latence", "signes neurologiques"],
+        arguments_pour: ["Manœuvre positionnelle atypique", "Nystagmus vertical ou non fatigable", "Céphalée ou facteurs vasculaires"],
+        arguments_contre: ["Dix-Hallpike strictement typique avec fatigabilité et sans red flag"],
+        red_flags: ["nystagmus vertical", "signes neurologiques"], examens: ["Avis urgent selon contexte", "Imagerie si suspicion centrale"],
+        prise_en_charge: ["Ne pas traiter comme VPPB simple", "Avis neurologique/ORL urgent si doute"],
+        orientation: "Urgences ou avis spécialisé rapide.", urgence: "rouge",
+        weights: { atypical: 9, red: 7, position: 2 }
+      },
+      {
+        id: "nevrite", diagnostic: "Névrite vestibulaire", categorie: "périphérique",
+        duree_typique: ["Continu plusieurs jours"], declencheurs: ["infection_virale", "rotation_rapide"],
+        signes_orl: [], signes_neuro: [], examen_typique: ["Syndrome vestibulaire aigu", "nystagmus horizontal-rotatoire unidirectionnel", "HIT positif si praticien formé"],
+        arguments_pour: ["Grand vertige rotatoire aigu continu", "Nausées/vomissements", "Pas de signe auditif", "Nystagmus unidirectionnel", "HIT positif si fiable"],
+        arguments_contre: ["Signes neurologiques", "HIT normal en syndrome vestibulaire aigu", "Surdité brusque", "Terrain vasculaire majeur"],
+        red_flags: ["syndrome vestibulaire aigu à risque"], examens: ["Examen neurologique strict", "HINTS uniquement si praticien formé", "Avis spécialisé si doute"],
+        prise_en_charge: ["Éliminer cause centrale", "Antiémétique court si besoin", "Éviter vestibuloplégiques prolongés", "Mobilisation précoce", "Rééducation vestibulaire"],
+        orientation: "Avis spécialisé si atypie ou terrain à risque.", urgence: "orange",
+        weights: { continuous: 6, noAudio: 2, hitPositive: 3, infection: 2 }
+      },
+      {
+        id: "sva_central", diagnostic: "Syndrome vestibulaire aigu central", categorie: "central",
+        duree_typique: ["Continu plusieurs jours"], declencheurs: [],
+        signes_orl: [], signes_neuro: ["déficit neurologique", "ataxie", "nystagmus vertical", "skew"],
+        examen_typique: ["HIT normal dans un SVA", "nystagmus vertical ou multidirectionnel", "skew deviation", "ataxie"],
+        arguments_pour: ["Syndrome vestibulaire aigu avec terrain vasculaire", "Marche impossible", "Nystagmus vertical/multidirectionnel", "Skew", "Céphalée/cervicalgie brutale"],
+        arguments_contre: ["Tableau positionnel bref typique sans red flag"],
+        red_flags: ["neurologiques", "incapacité marche"], examens: ["Urgence neurovasculaire", "Imagerie selon protocole local"],
+        prise_en_charge: ["Ne pas conclure à périphérique", "Orientation urgente"],
+        orientation: "Urgences neurovasculaires.", urgence: "rouge",
+        weights: { red: 12, continuous: 5, vascular: 4, hitNormal: 4 }
+      },
+      {
+        id: "avc_cerebelleux", diagnostic: "AVC cérébelleux / tronc cérébral", categorie: "central",
+        duree_typique: ["Continu plusieurs jours", "Plusieurs heures"], declencheurs: [],
+        signes_orl: [], signes_neuro: ["diplopie", "dysarthrie", "ataxie", "trouble sensitif", "déficit moteur"],
+        examen_typique: ["Syndrome cérébelleux", "trouble oculomoteur", "incapacité de marche"],
+        arguments_pour: ["Déficit focal", "Ataxie majeure", "Terrain vasculaire", "Céphalée brutale", "Nystagmus central"],
+        arguments_contre: ["VPPB typique confirmé"],
+        red_flags: ["déficit focal", "ataxie", "terrain vasculaire"], examens: ["Urgence", "IRM/angio selon protocole", "ECG et bilan vasculaire"],
+        prise_en_charge: ["Urgence neurovasculaire"],
+        orientation: "SAMU / urgences selon gravité.", urgence: "rouge",
+        weights: { red: 14, vascular: 5 }
+      },
+      {
+        id: "ait_vb", diagnostic: "AIT vertébro-basilaire", categorie: "central",
+        duree_typique: ["Minutes", "20 minutes à quelques heures"], declencheurs: [],
+        signes_orl: [], signes_neuro: ["diplopie", "dysarthrie", "ataxie", "troubles visuels"],
+        examen_typique: ["Examen parfois normal entre crises"],
+        arguments_pour: ["Crises brèves avec symptômes du tronc cérébral", "Facteurs vasculaires", "Récidives"],
+        arguments_contre: ["Déclenchement positionnel stéréotypé typique"],
+        red_flags: ["symptômes neurologiques transitoires"], examens: ["Avis neurovasculaire", "Imagerie vasculaire"],
+        prise_en_charge: ["Orientation urgente selon protocole AIT"],
+        orientation: "Urgences neurovasculaires.", urgence: "rouge",
+        weights: { red: 10, vascular: 4, recurrent: 2 }
+      },
+      {
+        id: "meniere", diagnostic: "Maladie de Ménière", categorie: "périphérique",
+        duree_typique: ["20 minutes à quelques heures", "Plusieurs heures"], declencheurs: [],
+        signes_orl: ["hypoacousie", "acouphènes", "plénitude"], signes_neuro: [],
+        examen_typique: ["Audiométrie fluctuante possible"],
+        arguments_pour: ["Crises rotatoires 20 min à heures", "Hypoacousie fluctuante", "Acouphènes", "Plénitude auriculaire", "Récidives"],
+        arguments_contre: ["Signes neurologiques", "Crises de quelques secondes strictement positionnelles"],
+        red_flags: [], examens: ["Audiométrie tonale et vocale", "Avis ORL", "Tympanométrie selon contexte"],
+        prise_en_charge: ["Conseils sécurité pendant crise", "Suivi ORL spécialisé"],
+        orientation: "ORL non différé si invalidant ou doute.", urgence: "orange",
+        weights: { durationHours: 5, audio: 5, recurrent: 2 }
+      },
+      {
+        id: "migraine_vestibulaire", diagnostic: "Migraine vestibulaire", categorie: "fonctionnel / neurologique",
+        duree_typique: ["Minutes", "20 minutes à quelques heures", "Plusieurs heures"], declencheurs: ["stress_fatigue", "manque_sommeil", "cycle_hormonal", "aliments_migraineux"],
+        signes_orl: [], signes_neuro: ["photophobie", "phonophobie", "aura"],
+        examen_typique: ["Examen ORL parfois normal"],
+        arguments_pour: ["Crises récurrentes", "Antécédent migraine", "Photophobie/phonophobie/aura", "Cinétose", "Déclencheurs migraineux"],
+        arguments_contre: ["Red flags", "Surdité brusque", "Otite compliquée"],
+        red_flags: [], examens: ["Diagnostic d'exclusion", "Avis neurologique/ORL si doute"],
+        prise_en_charge: ["Hygiène de vie migraine", "Éliminer causes ORL/neuro", "Suivi spécialisé si récurrent invalidant"],
+        orientation: "Neurologue ou ORL selon contexte.", urgence: "orange",
+        weights: { migraine: 6, triggersMigraine: 3, recurrent: 2 }
+      },
+      {
+        id: "labyrinthite", diagnostic: "Labyrinthite", categorie: "périphérique",
+        duree_typique: ["Continu plusieurs jours", "Plusieurs heures"], declencheurs: ["infection_virale"],
+        signes_orl: ["hypoacousie", "otalgie", "otorrhée"], signes_neuro: [],
+        examen_typique: ["Contexte infectieux ORL"],
+        arguments_pour: ["Vertige aigu", "Hypoacousie", "Otalgie/otorrhée", "Contexte infectieux ORL"],
+        arguments_contre: ["Absence de signe ORL", "Signes neurologiques centraux"],
+        red_flags: ["infection compliquée"], examens: ["Otoscopie", "Audiométrie", "Avis ORL rapide"],
+        prise_en_charge: ["Avis ORL rapide", "Traitement étiologique spécialisé"],
+        orientation: "ORL rapide.", urgence: "orange",
+        weights: { audio: 4, infectionEar: 5, continuous: 2 }
+      },
+      {
+        id: "surdite_brusque", diagnostic: "Surdité brusque avec vertige", categorie: "périphérique / urgence ORL",
+        duree_typique: ["Minutes", "Plusieurs heures", "Continu plusieurs jours"], declencheurs: [],
+        signes_orl: ["hypoacousie brusque", "acouphènes"], signes_neuro: [],
+        examen_typique: ["Surdité neurosensorielle suspectée"],
+        arguments_pour: ["Hypoacousie brutale", "Acouphène", "Vertige associé"],
+        arguments_contre: [],
+        red_flags: ["surdité brusque"], examens: ["Audiométrie urgente", "Avis ORL urgent"],
+        prise_en_charge: ["Urgence ORL", "Ne pas différer l'avis spécialisé"],
+        orientation: "Urgence ORL.", urgence: "rouge",
+        weights: { suddenHearing: 15 }
+      },
+      {
+        id: "fistule", diagnostic: "Fistule périlymphatique", categorie: "périphérique",
+        duree_typique: ["Secondes", "Minutes", "Permanent fluctuant"], declencheurs: ["traumatisme_recent", "effort", "toux_valsalva", "pression_tragus"],
+        signes_orl: ["hypoacousie", "acouphènes"], signes_neuro: [],
+        examen_typique: ["Signe pressionnel possible"],
+        arguments_pour: ["Traumatisme ou chirurgie otologique", "Effort/Valsalva", "Vertige à la pression", "Signes auditifs"],
+        arguments_contre: ["VPPB typique sans signe auditif ni traumatisme"],
+        red_flags: [], examens: ["Avis ORL rapide", "TDM rochers selon contexte"],
+        prise_en_charge: ["Éviter efforts/Valsalva", "Avis ORL rapide"],
+        orientation: "ORL rapide.", urgence: "orange",
+        weights: { pressure: 5, trauma: 4, audio: 2 }
+      },
+      {
+        id: "dehiscence_css", diagnostic: "Déhiscence du canal semi-circulaire supérieur", categorie: "périphérique",
+        duree_typique: ["Secondes", "Minutes"], declencheurs: ["bruit_fort", "pression_tragus", "toux_valsalva"],
+        signes_orl: ["autophonie", "hyperacousie"], signes_neuro: [],
+        examen_typique: ["Vertige induit par bruit ou pression"],
+        arguments_pour: ["Vertige au bruit", "Vertige à la pression", "Autophonie", "Hyperacousie"],
+        arguments_contre: ["Crises longues avec plénitude et hypoacousie fluctuante isolée"],
+        red_flags: [], examens: ["ORL spécialisé", "TDM rochers", "VEMP selon contexte"],
+        prise_en_charge: ["Avis ORL spécialisé", "Éviter déclencheurs dangereux"],
+        orientation: "ORL spécialisé.", urgence: "orange",
+        weights: { soundPressure: 8, autophony: 4 }
+      },
+      {
+        id: "neurinome", diagnostic: "Neurinome du VIII / schwannome vestibulaire", categorie: "périphérique / rétrocochléaire",
+        duree_typique: ["Chronique semaines/mois", "Permanent fluctuant"], declencheurs: [],
+        signes_orl: ["hypoacousie unilatérale progressive", "acouphène unilatéral"], signes_neuro: [],
+        examen_typique: ["Instabilité plus que grand vertige"],
+        arguments_pour: ["Hypoacousie unilatérale progressive", "Acouphène unilatéral", "Instabilité chronique"],
+        arguments_contre: ["Début brutal positionnel typique"],
+        red_flags: [], examens: ["Audiométrie", "IRM CAI / angle ponto-cérébelleux", "Avis ORL"],
+        prise_en_charge: ["Orientation ORL", "Imagerie ciblée si suspicion"],
+        orientation: "ORL.", urgence: "orange",
+        weights: { unilateralAudio: 5, chronic: 4 }
+      },
+      {
+        id: "otite_cholesteatome", diagnostic: "Otite chronique / cholestéatome compliqué", categorie: "périphérique / infectieux",
+        duree_typique: ["Plusieurs heures", "Continu plusieurs jours", "Chronique semaines/mois"], declencheurs: [],
+        signes_orl: ["otorrhée", "otite chronique", "otalgie"], signes_neuro: [],
+        examen_typique: ["Otoscopie anormale", "otorrhée", "cholestéatome suspect"],
+        arguments_pour: ["Otorrhée", "Otite chronique", "Cholestéatome suspect", "Vertige associé"],
+        arguments_contre: ["Otoscopie normale sans antécédent otologique"],
+        red_flags: ["infection ORL compliquée"], examens: ["Avis ORL rapide", "TDM rochers selon contexte"],
+        prise_en_charge: ["Ne pas banaliser", "Avis ORL rapide"],
+        orientation: "ORL rapide / urgences selon gravité.", urgence: "rouge",
+        weights: { chol: 12 }
+      },
+      {
+        id: "vestibulopathie_bilat", diagnostic: "Vestibulopathie bilatérale", categorie: "périphérique",
+        duree_typique: ["Chronique semaines/mois", "Permanent fluctuant"], declencheurs: ["rotation_rapide"],
+        signes_orl: ["exposition aminosides"], signes_neuro: [],
+        examen_typique: ["Oscillopsie", "aggravation dans le noir ou terrain irrégulier", "HIT bilatéral possible"],
+        arguments_pour: ["Instabilité chronique", "Oscillopsie", "Aggravation dans le noir", "Chutes", "Aminosides"],
+        arguments_contre: ["Crises isolées de secondes positionnelles typiques"],
+        red_flags: [], examens: ["Bilan vestibulaire", "VHIT", "Épreuves caloriques", "Acuité visuelle dynamique"],
+        prise_en_charge: ["Kinésithérapie vestibulaire", "Prévention chute", "Revue médicaments"],
+        orientation: "ORL / kinésithérapeute vestibulaire.", urgence: "orange",
+        weights: { oscillopsia: 7, chronic: 4, aminosides: 4 }
+      },
+      {
+        id: "presbyvestibulie", diagnostic: "Presbyvestibulie", categorie: "périphérique / gériatrique",
+        duree_typique: ["Chronique semaines/mois", "Permanent fluctuant"], declencheurs: [],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["Troubles d'équilibre du sujet âgé", "chutes", "dépendance visuelle/proprioceptive"],
+        arguments_pour: ["Sujet âgé", "Instabilité chronique", "Chutes", "Aggravation dans le noir ou terrain irrégulier"],
+        arguments_contre: ["Grand vertige rotatoire brutal isolé"],
+        red_flags: [], examens: ["Bilan vestibulaire si retentissement", "Évaluation chute", "Revue iatrogénie"],
+        prise_en_charge: ["Rééducation vestibulaire", "Prévention des chutes", "Adaptation environnement"],
+        orientation: "Kinésithérapie vestibulaire / gériatrie selon contexte.", urgence: "orange",
+        weights: { elderly: 4, chronic: 3, falls: 4 }
+      },
+      {
+        id: "hypotension", diagnostic: "Hypotension orthostatique", categorie: "cardiovasculaire",
+        duree_typique: ["Secondes", "Minutes"], declencheurs: ["lever_brutal"],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["TA couchée/debout positive", "lipothymie", "voile noir"],
+        arguments_pour: ["Malaise au lever", "Lipothymie", "Traitements hypotenseurs", "TA orthostatique positive"],
+        arguments_contre: ["Nystagmus positionnel typique avec vrai vertige rotatoire"],
+        red_flags: ["syncope selon contexte"], examens: ["TA couchée/debout", "ECG", "Bilan cardiovasculaire si nécessaire"],
+        prise_en_charge: ["Revue thérapeutique", "Hydratation/mesures selon contexte", "Avis cardio si syncope ou anomalie"],
+        orientation: "Ambulatoire ou urgence selon syncope/anomalie ECG.", urgence: "orange",
+        weights: { lipothymia: 6, standing: 5, hypotensionExam: 8, meds: 2 }
+      },
+      {
+        id: "trouble_rythme", diagnostic: "Trouble du rythme / syncope", categorie: "cardiovasculaire",
+        duree_typique: ["Secondes", "Minutes"], declencheurs: [],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["Palpitations", "syncope", "ECG anormal possible"],
+        arguments_pour: ["Palpitations", "Syncope vraie", "Douleur thoracique", "ECG anormal", "Terrain cardio"],
+        arguments_contre: ["Crise déclenchée uniquement par Dix-Hallpike typique"],
+        red_flags: ["syncope", "douleur thoracique", "palpitations"], examens: ["ECG", "Urgences si syncope/douleur thoracique/trouble rythme"],
+        prise_en_charge: ["Bilan cardiovasculaire urgent selon contexte"],
+        orientation: "Urgences si red flag cardio.", urgence: "rouge",
+        weights: { cardioRed: 14, palpitations: 7 }
+      },
+      {
+        id: "iatrogene", diagnostic: "Vertige médicamenteux / toxique", categorie: "iatrogène",
+        duree_typique: ["Chronique semaines/mois", "Permanent fluctuant", "Minutes"], declencheurs: ["medicament_recent", "changement_traitement", "alcool_declencheur", "exposition_toxique"],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["Polymédication", "sédatifs", "hypotenseurs", "alcool/toxiques"],
+        arguments_pour: ["Début après traitement", "Benzodiazépines/hypnotiques/antiépileptiques", "Alcool ou toxique", "Polymédication"],
+        arguments_contre: ["Red flags neurologiques", "Surdité brusque"],
+        red_flags: [], examens: ["Revue ordonnance", "TA orthostatique", "Glycémie/ionogramme selon contexte"],
+        prise_en_charge: ["Réduction prudente ou adaptation par prescripteur", "Prévention chute"],
+        orientation: "Médecin traitant / spécialiste prescripteur.", urgence: "orange",
+        weights: { meds: 6, toxic: 5, chronic: 2 }
+      },
+      {
+        id: "anxieux", diagnostic: "Trouble anxieux / hyperventilation", categorie: "fonctionnel",
+        duree_typique: ["Minutes", "20 minutes à quelques heures"], declencheurs: ["stress_fatigue"],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["Examen vestibulaire normal", "crises stéréotypées", "paresthésies péribuccales"],
+        arguments_pour: ["Contexte anxieux", "Hyperventilation", "Crises stéréotypées", "Examen normal"],
+        arguments_contre: ["Red flags", "Signes ORL objectifs", "Anomalie neurologique ou cardio"],
+        red_flags: [], examens: ["Diagnostic d'exclusion", "ECG/glycémie si malaise"],
+        prise_en_charge: ["Ne pas méconnaître cause organique", "Prise en charge anxiété si diagnostic retenu"],
+        orientation: "Suivi ambulatoire si exclusion raisonnable.", urgence: "vert",
+        weights: { anxiety: 5, noRed: 1 }
+      },
+      {
+        id: "cinetose", diagnostic: "Cinétose / mal des transports", categorie: "fonctionnel / vestibulaire",
+        duree_typique: ["Minutes", "Plusieurs heures"], declencheurs: ["voyage"],
+        signes_orl: [], signes_neuro: [],
+        examen_typique: ["Déclenchement voyage/bateau/voiture", "examen normal hors exposition"],
+        arguments_pour: ["Déclencheur voyage", "Nausées avec mouvement passif", "Récidives similaires"],
+        arguments_contre: ["Déficit neurologique", "Surdité brusque", "Otoscopie pathologique"],
+        red_flags: [], examens: ["Aucun systématique si typique", "Examen clinique si atypie"],
+        prise_en_charge: ["Conseils de prévention", "Évaluer migraine vestibulaire si récurrent atypique"],
+        orientation: "Ambulatoire.", urgence: "vert",
+        weights: { travel: 8 }
+      },
+      {
+        id: "post_trauma", diagnostic: "Syndrome vestibulaire post-traumatique", categorie: "périphérique / central",
+        duree_typique: ["Secondes", "Minutes", "Chronique semaines/mois"], declencheurs: ["traumatisme_recent"],
+        signes_orl: ["hypoacousie", "acouphènes"], signes_neuro: ["céphalée", "confusion"],
+        examen_typique: ["VPPB post-traumatique possible", "fistule ou fracture du rocher à évoquer"],
+        arguments_pour: ["Traumatisme récent", "Vertige positionnel secondaire", "Signes auditifs", "Céphalée/confusion"],
+        arguments_contre: ["Aucun traumatisme"],
+        red_flags: ["traumatisme crânien"], examens: ["Examen neuro", "Otoscopie", "TDM/avis urgent selon gravité"],
+        prise_en_charge: ["Éliminer complication", "Kinésithérapie vestibulaire si séquelles ou VPPB"],
+        orientation: "Urgences si trauma sévère ou signe neuro; ORL si signe auditif.", urgence: "orange",
+        weights: { trauma: 8, audio: 2, red: 4 }
+      }
+    ];
+
+    const stepIds = ["identity", "complaint", "time", "triggers", "orl", "redflags", "exam", "results"];
+    let activeStep = 0;
+
+    function byId(id) { return document.getElementById(id); }
+    function val(id) { return (byId(id)?.value || "").trim(); }
+    function checked(id) { return Boolean(byId(id)?.checked); }
+    function setField(key, value) { appState[key] = value; }
+
+    function buildChecks(containerId, items) {
+      const container = byId(containerId);
+      container.innerHTML = items.map(([id, label]) => `
+        <label class="check" for="${id}">
+          <input type="checkbox" id="${id}" data-field="${id}">
+          <span>${label}</span>
+        </label>
+      `).join("");
+    }
+
+    function buildComplaintChoices() {
+      const container = byId("complaintChoices");
+      container.innerHTML = questionBank.plainte.map(([id, label, hint]) => `
+        <label class="radio-card" for="${id}">
+          <input type="radio" name="plainte" id="${id}" value="${id}" data-field="plainte">
+          <span><strong>${label}</strong><span class="hint">${hint}</span></span>
+        </label>
+      `).join("");
+    }
+
+    function selectedComplaint() {
+      return document.querySelector('input[name="plainte"]:checked')?.value || "";
+    }
+
+    function collectState() {
+      document.querySelectorAll("[data-field]").forEach(el => {
+        if (el.type === "checkbox") appState[el.dataset.field] = el.checked;
+        else if (el.type === "radio") {
+          if (el.checked) appState[el.dataset.field] = el.value;
+        } else appState[el.dataset.field] = el.value;
+      });
+      appState.plainte = selectedComplaint();
+      return appState;
+    }
+
+    function redFlagList() {
+      const state = collectState();
+      const flags = [];
+      questionBank.redFlags.forEach(([id, label]) => { if (state[id]) flags.push(label); });
+      if (state.hypoacousie_brusque) flags.push("Hypoacousie brusque avec vertige");
+      if (state.marche === "Impossible sans aide") flags.push("Impossibilité de marcher sans aide");
+      if (state.nystagmus === "Vertical") flags.push("Nystagmus vertical");
+      if (state.nystagmus === "Multidirectionnel") flags.push("Nystagmus multidirectionnel");
+      if (state.otoscopie === "Cholestéatome suspect" || state.otoscopie === "Otorrhée") flags.push("Otite/cholestéatome compliqué possible");
+      if (state.ecg === "Anormal") flags.push("ECG anormal");
+      return [...new Set(flags)];
+    }
+
+    function vascularRiskCount() {
+      return ["hta", "diabete", "dyslipidemie", "fa", "coronaropathie", "tabac", "obesite", "saos", "familial_vasc", "personne_agee"].filter(checked).length;
+    }
+
+    function medicationRisk() {
+      return ["benzodiazepines", "hypnotiques", "antidepresseurs", "antiepileptiques", "diuretiques", "betabloquants", "alcool", "cannabis", "medicament_recent", "changement_traitement"].some(checked);
+    }
+
+    function hasAuditorySign() {
+      return ["hypoacousie", "hypoacousie_droite", "hypoacousie_gauche", "hypoacousie_bilaterale", "acouphenes", "plenitude", "otalgie", "otorrhee"].some(checked);
+    }
+
+    function calculateUrgency() {
+      const flags = redFlagList();
+      const state = collectState();
+      const acuteVestibular = state.duree === "Continu plusieurs jours";
+      const redReasons = [...flags];
+      // Règle HINTS / « INFARCT » : un Head Impulse Test NORMAL dans un syndrome
+      // vestibulaire aigu (vertige continu) oriente vers une cause CENTRALE (AVC)
+      // jusqu'à preuve du contraire — c'est un drapeau rouge contre-intuitif.
+      if (acuteVestibular && state.hit === "Normal")
+        redReasons.push("HIT NORMAL dans un syndrome vestibulaire aigu = AVC à éliminer (règle HINTS/INFARCT)");
+      if (state.hypoacousie_brusque) redReasons.push("Hypoacousie brusque avec vertige (urgence ORL)");
+      if (state.syncope) redReasons.push("Syncope");
+      if (state.douleur_thoracique) redReasons.push("Douleur thoracique");
+      if (state.palpitations_rf) redReasons.push("Malaise avec palpitations");
+      if (acuteVestibular && vascularRiskCount() >= 2) redReasons.push("Syndrome vestibulaire aigu + terrain vasculaire");
+      if (state.dixHallpike === "Atypique" || state.rollTest === "Atypique") redReasons.push("Manœuvre positionnelle atypique");
+      if (redReasons.length) return { level: "rouge", label: "ROUGE", reasons: [...new Set(redReasons)] };
+
+      const orangeReasons = [];
+      if (hasAuditorySign()) orangeReasons.push("Symptômes auditifs associés");
+      if (checked("personne_agee") || checked("risque_chute")) orangeReasons.push("Terrain fragile / risque de chute");
+      if (state.modeEvolutif === "Instabilité chronique") orangeReasons.push("Instabilité chronique");
+      if (state.recidive === "Oui") orangeReasons.push("Vertiges récidivants");
+      if (acuteVestibular) orangeReasons.push("Vertige continu = syndrome vestibulaire aigu : réaliser un HINTS complet (ou avis spécialisé) — ne JAMAIS conclure « périphérique » sans HINTS rassurant (HIT positif côté lésion)");
+      if (state.dixHallpike === "Négatif" && state.modeEvolutif === "Positionnel") orangeReasons.push("Positionnel non confirmé");
+      if (vascularRiskCount() >= 2) orangeReasons.push("Facteurs vasculaires");
+      if (orangeReasons.length) return { level: "orange", label: "ORANGE", reasons: orangeReasons };
+
+      return { level: "vert", label: "VERT", reasons: ["Pas de drapeau rouge renseigné. Compatible avec prise en charge ambulatoire si examen concordant."] };
+    }
+
+    // Urgence affichée = la plus élevée entre le score de drapeaux rouges et
+    // une hypothèse CENTRALE placée au premier plan (cohérence badge / cartes).
+    function effectiveUrgency() {
+      const u = calculateUrgency();
+      if (u.level === "rouge") return u;
+      const top = (rankedDiagnostics() || [])[0];
+      if (top && top.urgence === "rouge" && /central/i.test(top.categorie || "") && top.score >= 8) {
+        return { level: "rouge", label: "ROUGE", reasons: [...new Set([...(u.reasons || []), "Hypothèse centrale au premier plan : " + top.diagnostic])] };
+      }
+      return u;
+    }
+
+    function scoreDiagnostic(d) {
+      const s = collectState();
+      let score = 0;
+      const matchedFor = [];
+      const matchedAgainst = [];
+      const add = (pts, txt) => { score += pts; if (txt) matchedFor.push(txt); };
+      const sub = (pts, txt) => { score -= pts; if (txt) matchedAgainst.push(txt); };
+      const flags = redFlagList();
+      const redPresent = flags.length > 0;
+      const audio = hasAuditorySign();
+
+      if (d.duree_typique.includes(s.duree)) add(3, `Durée compatible : ${s.duree}`);
+      if (d.declencheurs.some(id => checked(id))) add(3, "Déclencheur compatible");
+      if (d.id.includes("vppb") && ["Secondes", "Moins d'une minute"].includes(s.duree)) add(3, "Crises brèves");
+      if (d.id.includes("vppb") && (checked("retournement_lit") || s.modeEvolutif === "Positionnel")) add(4, "Déclenchement positionnel");
+      if (d.id === "vppb_post" && s.dixHallpike.includes("typique")) add(8, "Dix-Hallpike typique");
+      if (d.id === "vppb_horizontal" && /Géotropique|Apogéotropique/.test(s.rollTest || "")) add(8, "Roll test compatible");
+      if (d.id === "vppb_atypique" && (s.dixHallpike === "Atypique" || s.rollTest === "Atypique" || s.nystagmus === "Vertical" || s.nystagmus === "Non fatigable / atypique")) add(10, "Manœuvre ou nystagmus atypique");
+
+      if (d.id === "nevrite") {
+        if (s.duree === "Continu plusieurs jours") add(6, "Vertige continu plusieurs jours");
+        if (!audio) add(2, "Pas de signe auditif renseigné");
+        if ((s.hit || "").startsWith("Positif")) add(3, "HIT positif renseigné");
+        if (checked("infection_virale")) add(2, "Contexte viral");
+        if (redPresent || vascularRiskCount() >= 2) sub(5, "Cause centrale à éliminer en priorité");
+      }
+
+      if (["sva_central", "avc_cerebelleux", "ait_vb"].includes(d.id)) {
+        if (redPresent) add(12, "Drapeau rouge neurologique/vasculaire");
+        if (vascularRiskCount() >= 2) add(4, "Terrain vasculaire");
+        if (s.duree === "Continu plusieurs jours") add(3, "Syndrome vestibulaire aigu");
+        if (s.hit === "Normal" && s.duree === "Continu plusieurs jours") add(4, "HIT normal dans syndrome vestibulaire aigu");
+      }
+
+      if (d.id === "meniere") {
+        if (["20 minutes à quelques heures", "Plusieurs heures"].includes(s.duree)) add(5, "Durée typique Ménière");
+        if (checked("hypoacousie") || checked("acouphenes") || checked("plenitude")) add(6, "Triade cochléaire partielle");
+        if (s.recidive === "Oui" || s.modeEvolutif === "Crises récidivantes") add(2, "Récidives");
+      }
+
+      if (d.id === "migraine_vestibulaire") {
+        if (checked("atcd_migraine")) add(5, "Antécédent migraine");
+        if (["stress_fatigue", "manque_sommeil", "cycle_hormonal", "aliments_migraineux"].some(checked)) add(3, "Déclencheurs migraineux");
+        if (s.recidive === "Oui" || s.modeEvolutif === "Crises récidivantes") add(2, "Crises récidivantes");
+      }
+
+      if (d.id === "labyrinthite" && audio && (checked("otalgie") || checked("otorrhee") || s.otoscopie.includes("Otite"))) add(8, "Vertige avec contexte infectieux ORL");
+      if (d.id === "surdite_brusque" && checked("hypoacousie_brusque")) add(15, "Surdité brusque");
+      if (d.id === "fistule" && (checked("toux_valsalva") || checked("pression_tragus") || checked("traumatisme_recent") || checked("atcd_chirurgie_otologique"))) add(7, "Déclencheur pressionnel/traumatique");
+      if (d.id === "dehiscence_css" && (checked("bruit_fort") || checked("vertige_bruit") || checked("autophonie") || checked("hyperacousie") || checked("vertige_pression"))) add(9, "Symptômes bruit/pression/autophonie");
+      if (d.id === "neurinome" && (s.duree === "Chronique semaines/mois" || s.modeEvolutif === "Aggravation progressive") && (checked("hypoacousie_droite") || checked("hypoacousie_gauche") || checked("acouphenes"))) add(7, "Atteinte cochléovestibulaire chronique unilatérale possible");
+      if (d.id === "otite_cholesteatome" && (checked("otorrhee") || checked("otite_chronique_actuelle") || checked("atcd_cholesteatome") || s.otoscopie === "Cholestéatome suspect")) add(12, "Otite chronique/cholestéatome possible");
+      if (d.id === "vestibulopathie_bilat" && (s.plainte === "oscillopsie" || checked("aminosides") || checked("exposition_aminosides")) && (s.duree === "Chronique semaines/mois" || s.modeEvolutif === "Instabilité chronique")) add(10, "Oscillopsie/aminosides et instabilité chronique");
+      if (d.id === "presbyvestibulie" && (checked("personne_agee") || Number(s.age) >= 75) && (s.modeEvolutif === "Instabilité chronique" || checked("risque_chute"))) add(9, "Sujet âgé avec instabilité/chutes");
+      if (d.id === "hypotension" && (s.plainte === "lipothymie" || checked("lever_brutal") || s.taOrthostatique === "Hypotension orthostatique")) add(10, "Lipothymie/lever/TA orthostatique");
+      if (d.id === "trouble_rythme" && (s.plainte === "palpitations" || checked("palpitations_rf") || checked("syncope") || checked("douleur_thoracique") || s.ecg === "Anormal")) add(14, "Symptômes cardiovasculaires");
+      if (d.id === "iatrogene" && (medicationRisk() || checked("exposition_toxique") || checked("alcool_declencheur"))) add(8, "Médicament/toxique compatible");
+      if (d.id === "anxieux" && s.plainte === "anxieux" && !redPresent) add(6, "Plainte anxieuse sans red flag renseigné");
+      if (d.id === "cinetose" && checked("voyage")) add(8, "Déclencheur transport");
+      if (d.id === "post_trauma" && (checked("traumatisme_recent") || checked("atcd_trauma_cranien") || checked("traumatisme_cranien_rf") || s.postTrauma === "Oui")) add(9, "Contexte post-traumatique");
+
+      if (redPresent && ["vppb_post", "vppb_horizontal", "anxieux", "cinetose"].includes(d.id)) sub(7, "Drapeau rouge limitant cette hypothèse simple");
+      if (audio && d.id === "nevrite") sub(3, "Signes auditifs associés");
+      if (s.duree === "Continu plusieurs jours" && d.id.includes("vppb")) sub(4, "Durée continue peu compatible avec VPPB typique");
+
+      const confidence = score >= 13 ? "élevé" : score >= 7 ? "modéré" : "faible";
+      return { ...d, score, matchedFor, matchedAgainst, confidence };
+    }
+
+    function rankedDiagnostics() {
+      return diagnostics
+        .map(scoreDiagnostic)
+        .filter(d => d.score > 0 || d.urgence === "rouge")
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 6);
+    }
+
+    function unique(items) { return [...new Set(items.filter(Boolean))]; }
+
+    function renderResults() {
+      const urgency = effectiveUrgency();
+      const ranked = rankedDiagnostics();
+      const urgentBox = byId("urgentMessage");
+      urgentBox.innerHTML = urgency.level === "rouge" ? `
+        <div class="alert red"><strong>Orientation urgente recommandée.</strong><br>${urgency.reasons.join(" ; ")}.<br>Éliminer AVC cérébelleux/tronc cérébral, hémorragie, dissection, cause ORL ou cardiovasculaire grave selon le contexte.</div>
+      ` : urgency.level === "orange" ? `
+        <div class="alert orange"><strong>Avis ou bilan complémentaire recommandé.</strong><br>${urgency.reasons.join(" ; ")}.</div>
+      ` : `
+        <div class="alert green"><strong>Pas de critère rouge renseigné.</strong><br>Prise en charge ambulatoire possible si examen clinique concordant et doute faible.</div>
+      `;
+
+      byId("diagnosticCards").innerHTML = ranked.map(d => `
+        <article class="diagnostic-card">
+          <div class="diagnostic-head">
+            <h3>${d.diagnostic}</h3>
+            <span class="pill ${d.urgence}">${d.urgence.toUpperCase()} - ${d.confidence}</span>
+          </div>
+          <span class="pill neutral">${d.categorie}</span>
+          <p><strong>Score pondéré :</strong> ${Math.max(0, d.score)}</p>
+          <p><strong>Arguments pour :</strong></p>
+          <ul class="mini-list">${unique([...d.matchedFor, ...d.arguments_pour.slice(0, 3)]).slice(0, 6).map(x => `<li>${x}</li>`).join("")}</ul>
+          <p><strong>Arguments contre / vigilance :</strong></p>
+          <ul class="mini-list">${unique([...d.matchedAgainst, ...d.arguments_contre.slice(0, 3)]).slice(0, 5).map(x => `<li>${x}</li>`).join("") || "<li>Aucun argument contre spécifique renseigné.</li>"}</ul>
+          <p><strong>Conduite :</strong> ${d.prise_en_charge.slice(0, 4).join(" ; ")}.</p>
+          <p><strong>Orientation :</strong> ${d.orientation}</p>
+        </article>
+      `).join("") || `<div class="alert orange">Renseigner au moins la plainte, la durée, les déclencheurs et l'examen pour générer une hiérarchie utile.</div>`;
+
+      const exams = unique(ranked.flatMap(d => d.examens).concat(generalExams()));
+      const rehab = rehabAdvice();
+      byId("examCards").innerHTML = `
+        <article class="diagnostic-card">
+          <h3>Examens pertinents</h3>
+          <ul class="mini-list">${exams.slice(0, 14).map(x => `<li>${x}</li>`).join("")}</ul>
+        </article>
+        <article class="diagnostic-card">
+          <h3>Rééducation vestibulaire</h3>
+          <p>${rehab.indication}</p>
+          <ul class="mini-list">${rehab.items.map(x => `<li>${x}</li>`).join("")}</ul>
+        </article>
+      `;
+      byId("summary").value = generateSummary(ranked, urgency, exams, rehab);
+    }
+
+    function generalExams() {
+      const s = collectState();
+      const exams = ["Otoscopie", "Examen neurologique complet si vertige aigu ou atypique"];
+      if (s.plainte === "lipothymie" || checked("lever_brutal")) exams.push("TA couchée/debout", "Glycémie capillaire selon contexte");
+      if (s.plainte === "palpitations" || checked("syncope") || checked("douleur_thoracique") || checked("palpitations_rf")) exams.push("ECG", "Bilan cardiovasculaire urgent selon contexte");
+      if (hasAuditorySign()) exams.push("Audiométrie tonale et vocale", "Tympanométrie selon contexte", "Réflexes stapédiens selon avis ORL");
+      if (checked("acouphenes_pulsatiles")) exams.push("Imagerie vasculaire selon avis spécialisé");
+      if (checked("vertige_bruit") || checked("vertige_pression") || checked("autophonie")) exams.push("TDM rochers", "VEMP selon avis spécialisé");
+      if (redFlagList().length) exams.push("Imagerie cérébrale/fosse postérieure selon protocole urgent");
+      if (collectState().modeEvolutif === "Instabilité chronique") exams.push("Bilan vestibulaire spécialisé : VNG/VNS, VHIT, épreuves caloriques selon contexte");
+      return exams;
+    }
+
+    function rehabAdvice() {
+      const s = collectState();
+      const indications = [];
+      if ((s.dixHallpike || "").includes("typique") || /Géotropique|Apogéotropique/.test(s.rollTest || "")) indications.push("VPPB");
+      if (s.duree === "Continu plusieurs jours") indications.push("séquelles possibles de névrite ou déficit unilatéral après exclusion centrale");
+      if (s.modeEvolutif === "Instabilité chronique" || s.plainte === "oscillopsie") indications.push("instabilité chronique / oscillopsie");
+      if (checked("personne_agee") || checked("risque_chute")) indications.push("prévention des chutes");
+      return {
+        indication: indications.length ? `Indication à discuter : ${indications.join(", ")}.` : "À discuter si VPPB, déficit vestibulaire, instabilité chronique, oscillopsie ou compensation insuffisante.",
+        items: [
+          "Kinésithérapeute formé en vestibulaire.",
+          "Objectifs : compensation, stabilité du regard, équilibre, marche et réduction du risque de chute.",
+          "Exercices possibles : habituation, adaptation du réflexe vestibulo-oculaire, acuité visuelle dynamique, équilibre statique/dynamique.",
+          "Prudence si cervicalgie, fragilité, signes centraux ou tableau instable."
+        ]
+      };
+    }
+
+    function line(label, value) {
+      const out = Array.isArray(value) ? value.filter(Boolean).join(", ") : value;
+      return `${label} ${out || "Non renseigné"}`;
+    }
+
+    function checkedLabels(items) {
+      return items.filter(([id]) => checked(id)).map(([, label]) => label);
+    }
+
+    function generateSummary(ranked = rankedDiagnostics(), urgency = effectiveUrgency(), exams = generalExams(), rehab = rehabAdvice()) {
+      const s = collectState();
+      const orlSigns = checkedLabels(questionBank.orl);
+      const neuroFlags = redFlagList();
+      const triggers = checkedLabels(questionBank.declencheurs);
+      const context = checkedLabels(questionBank.contexte);
+      const top = ranked.slice(0, 3);
+      return [
+        "BILAN VERTIGES ORL - SYNTHÈSE",
+        "",
+        line("Patient :", [s.prenom, s.nom].filter(Boolean).join(" ")),
+        line("Âge :", s.age),
+        line("Motif :", s.motif),
+        line("Type de plainte :", questionBank.plainte.find(p => p[0] === s.plainte)?.[1]),
+        line("Début :", [s.debut, s.dateDebut].filter(Boolean).join(" - ")),
+        line("Durée des crises :", s.duree),
+        line("Mode évolutif :", s.modeEvolutif),
+        line("Déclencheurs :", triggers),
+        line("Signes ORL associés :", orlSigns),
+        line("Signes neurologiques / red flags :", neuroFlags),
+        line("Facteurs de risque / terrain :", context),
+        "",
+        line("Examen otoscopique :", s.otoscopie),
+        line("Acoumétrie :", [`Weber ${s.weber || "NR"}`, `Rinne ${s.rinne || "NR"}`, s.acoumetrieNote].filter(Boolean).join(" ; ")),
+        line("Nystagmus :", s.nystagmus),
+        line("Manœuvres positionnelles :", [`Dix-Hallpike ${s.dixHallpike || "NR"}`, `Roll test ${s.rollTest || "NR"}`].join(" ; ")),
+        line("Examen neurologique :", s.examenNeuro),
+        line("TA orthostatique :", s.taOrthostatique),
+        line("ECG :", s.ecg),
+        "",
+        "Hypothèses diagnostiques :",
+        ...top.map((d, i) => `${i + 1}. ${d.diagnostic} - confiance ${d.confidence} - urgence ${d.urgence}`),
+        "",
+        "Arguments principaux :",
+        ...top.flatMap(d => [`- ${d.diagnostic} : ${unique([...d.matchedFor, ...d.arguments_pour]).slice(0, 4).join(" ; ") || "arguments insuffisants"}`]),
+        "",
+        line("Signes de gravité :", neuroFlags),
+        `Score d'urgence : ${urgency.label}. ${urgency.reasons.join(" ; ")}`,
+        "",
+        "Conduite proposée :",
+        ...unique(top.flatMap(d => d.prise_en_charge)).slice(0, 8).map(x => `- ${x}`),
+        "",
+        "Examens à demander / réaliser :",
+        ...unique(exams).slice(0, 12).map(x => `- ${x}`),
+        "",
+        line("Orientation :", top.map(d => d.orientation).slice(0, 3).join(" | ")),
+        "",
+        "Conseils patient :",
+        "- Éviter conduite, hauteur, machines ou situations à risque tant que les vertiges sont imprévisibles.",
+        "- Consignes de reconsultation urgente si signe neurologique, céphalée brutale, surdité brusque, malaise/syncope, douleur thoracique, fièvre ou aggravation.",
+        "",
+        "Rééducation vestibulaire :",
+        `- ${rehab.indication}`,
+        "- Kinésithérapeute formé vestibulaire si indication retenue.",
+        "",
+        "Limites / points de vigilance :",
+        "- Outil d'aide à la décision, ne remplace pas le jugement médical.",
+        "- Ne pas utiliser HINTS comme outil de dédouanement d'AVC si le praticien n'est pas formé.",
+        "- Tout syndrome vestibulaire aigu ou doute diagnostique doit faire discuter une orientation spécialisée ou urgente."
+      ].join("\n");
+    }
+
+    function updateScoreBadge() {
+      const urgency = effectiveUrgency();
+      const badge = byId("scoreBadge");
+      badge.className = `score-badge ${urgency.level}`;
+      byId("scoreLabel").textContent = urgency.label;
+      byId("scoreDetails").textContent = urgency.reasons.join(" ; ");
+    }
+
+    function updateTimeHint() {
+      const d = val("duree");
+      const hints = {
+        "Secondes": "Secondes, positionnel, retournement au lit : VPPB probable si manœuvre typique et aucun red flag.",
+        "Moins d'une minute": "Moins d'une minute : penser VPPB, mais atypie ou signes centraux changent l'orientation.",
+        "Minutes": "Minutes : migraine vestibulaire, AIT, cause cardio ou cinétose selon contexte.",
+        "20 minutes à quelques heures": "20 minutes à heures avec signes cochléaires : Ménière possible ; avec signes neuro : urgence.",
+        "Plusieurs heures": "Plusieurs heures : Ménière, migraine vestibulaire, labyrinthite ou cause centrale selon signes associés.",
+        "Continu plusieurs jours": "Continu plusieurs jours : syndrome vestibulaire aigu. Névrite possible, mais AVC à éliminer selon clinique et terrain.",
+        "Chronique semaines/mois": "Chronique : vestibulopathie bilatérale, presbyvestibulie, schwannome, iatrogénie ou neurologique.",
+        "Permanent fluctuant": "Permanent fluctuant : rechercher iatrogénie, vestibulopathie bilatérale, anxiété, atteinte neuro ou ORL chronique."
+      };
+      byId("timeHint").textContent = hints[d] || "Renseigner la durée pour afficher l'aide contextuelle.";
+    }
+
+    function setActiveStep(index) {
+      activeStep = Math.max(0, Math.min(stepIds.length - 1, index));
+      document.querySelectorAll(".step").forEach((el, i) => el.classList.toggle("active", i === activeStep));
+      document.querySelectorAll(".nav-tab").forEach((el, i) => el.classList.toggle("active", i === activeStep));
+      const step = byId(`step-${stepIds[activeStep]}`);
+      byId("currentTitle").textContent = step.dataset.title;
+      byId("currentSubtitle").textContent = step.dataset.subtitle;
+      byId("progressBar").style.width = `${((activeStep + 1) / stepIds.length) * 100}%`;
+      byId("progressText").textContent = `Étape ${activeStep + 1} / ${stepIds.length}`;
+      byId("prevBtn").disabled = activeStep === 0;
+      byId("nextBtn").textContent = activeStep === stepIds.length - 1 ? "Actualiser la synthèse" : "Étape suivante";
+      if (stepIds[activeStep] === "results") renderResults();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function buildTabs() {
+      const labels = [
+        "Identité", "Plainte", "Temporalité", "Déclencheurs", "ORL", "Red flags", "Examen", "Synthèse"
+      ];
+      byId("tabs").innerHTML = labels.map((label, i) => `
+        <button class="nav-tab ${i === 0 ? "active" : ""}" type="button" data-step="${i}">
+          <span class="num">${i + 1}</span><span>${label}</span>
+        </button>
+      `).join("");
+    }
+
+    async function copySummary() {
+      renderResults();
+      const text = byId("summary").value;
+      try {
+        await navigator.clipboard.writeText(text);
+        byId("copyBtn").textContent = "Synthèse copiée";
+        setTimeout(() => byId("copyBtn").textContent = "Copier la synthèse", 1400);
+      } catch {
+        byId("summary").select();
+        document.execCommand("copy");
+      }
+    }
+
+    function resetAll() {
+      if (!confirm("Réinitialiser le bilan en cours ?")) return;
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        if (el.type === "checkbox" || el.type === "radio") el.checked = false;
+        else el.value = "";
+      });
+      byId("dateConsultation").valueAsDate = new Date();
+      collectState();
+      updateAll();
+      setActiveStep(0);
+    }
+
+    function updateAll() {
+      collectState();
+      updateTimeHint();
+      updateScoreBadge();
+      if (stepIds[activeStep] === "results") renderResults();
+    }
+
+    function init() {
+      buildChecks("contextChecks", questionBank.contexte);
+      buildChecks("triggerChecks", questionBank.declencheurs);
+      buildChecks("orlChecks", questionBank.orl);
+      buildChecks("redFlagChecks", questionBank.redFlags);
+      buildComplaintChoices();
+      buildTabs();
+      byId("dateConsultation").valueAsDate = new Date();
+      document.addEventListener("input", updateAll);
+      document.addEventListener("change", updateAll);
+      byId("tabs").addEventListener("click", e => {
+        const btn = e.target.closest("[data-step]");
+        if (btn) setActiveStep(Number(btn.dataset.step));
+      });
+      document.querySelectorAll("[data-jump]").forEach(btn => btn.addEventListener("click", () => {
+        const target = btn.dataset.jump === "redflags" ? "redflags" : "results";
+        setActiveStep(stepIds.indexOf(target));
+      }));
+      byId("prevBtn").addEventListener("click", () => setActiveStep(activeStep - 1));
+      byId("nextBtn").addEventListener("click", () => {
+        if (activeStep === stepIds.length - 1) renderResults();
+        else setActiveStep(activeStep + 1);
+      });
+      byId("copyBtn").addEventListener("click", copySummary);
+      byId("printBtn").addEventListener("click", () => { renderResults(); window.print(); });
+      byId("pdfBtn").addEventListener("click", () => { renderResults(); window.print(); });
+      byId("themeBtn").addEventListener("click", () => document.body.classList.toggle("dark"));
+      byId("quickBtn").addEventListener("click", () => {
+        document.body.classList.toggle("quick");
+        byId("quickBtn").textContent = document.body.classList.contains("quick") ? "Mode complet" : "Mode rapide";
+      });
+      byId("resetBtn").addEventListener("click", resetAll);
+      setActiveStep(0);
+      updateAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
