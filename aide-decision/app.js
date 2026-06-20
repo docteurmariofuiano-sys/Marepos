@@ -83,6 +83,12 @@
     ictere_nourrisson: { population: "enfant" }, souffle_cardiaque_enfant: { population: "enfant" },
     adenopathie_enfant: { population: "enfant" }, cephalee_enfant: { population: "enfant" },
     douleur_abdo_recurrente_enfant: { population: "enfant" },
+    polyuro_polydipsie_enfant: { population: "enfant" }, paleur_enfant: { population: "enfant" },
+    eruption_febrile_enfant: { population: "enfant" }, rectorragie_enfant: { population: "enfant" },
+    hematurie_enfant: { population: "enfant" }, oedemes_enfant: { population: "enfant" },
+    oeil_rouge_enfant: { population: "enfant" }, enuresie: { population: "enfant" },
+    gingivostomatite_enfant: { population: "enfant" },
+    genital_garcon: { sexe: "M", population: "enfant" }, vulvovaginite_fillette: { sexe: "F", population: "enfant" },
     // Adulte (peu pertinents chez le jeune enfant)
     difficultes_sexuelles: { population: "adulte" }, bouffees_chaleur: { population: "adulte" },
     osteoporose: { population: "adulte" }, sevrage_alcool: { population: "adulte" },

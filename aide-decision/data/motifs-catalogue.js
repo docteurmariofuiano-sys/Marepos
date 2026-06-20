@@ -193,7 +193,12 @@ window.MOTIFS = [
       { l: "Régurgitations / reflux du nourrisson", f: "rgo_nourrisson" }, { l: "Difficultés alimentaires / refus de manger", f: "difficultes_alimentaires_enfant" },
       { l: "Jaunisse du nourrisson", f: "ictere_nourrisson" }, { l: "Souffle cardiaque", f: "souffle_cardiaque_enfant" },
       { l: "Ganglion / adénopathie", f: "adenopathie_enfant" }, { l: "Maux de tête de l'enfant", f: "cephalee_enfant" },
-      { l: "Douleurs abdominales récurrentes", f: "douleur_abdo_recurrente_enfant" }
+      { l: "Douleurs abdominales récurrentes", f: "douleur_abdo_recurrente_enfant" },
+      { l: "Pâleur / suspicion d'anémie", f: "paleur_enfant" }, { l: "Éruption avec fièvre", f: "eruption_febrile_enfant" },
+      { l: "Sang dans les selles", f: "rectorragie_enfant" }, { l: "Urines rouges / sang dans les urines", f: "hematurie_enfant" },
+      { l: "Gonflement / œdèmes", f: "oedemes_enfant" }, { l: "Œil rouge / qui coule", f: "oeil_rouge_enfant" },
+      { l: "Énurésie (pipi au lit)", f: "enuresie" }, { l: "Bouche douloureuse / aphtes", f: "gingivostomatite_enfant" },
+      { l: "Anomalie génitale (garçon)", f: "genital_garcon" }, { l: "Irritation génitale (petite fille)", f: "vulvovaginite_fillette" }
     ],
     urgences: [
       { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
@@ -202,6 +207,7 @@ window.MOTIFS = [
       { l: "Enfant difficile à réveiller / somnolence anormale", f: "trouble_conscience_enfant" }, { l: "Faiblesse / paralysie récente", f: "deficit_moteur_enfant" },
       { l: "Trouble de l'équilibre / marche instable", f: "ataxie_enfant" }, { l: "Réaction allergique / anaphylaxie", f: "anaphylaxie_enfant" },
       { l: "Grosse bourse / douleur d'un testicule", f: "grosse_bourse_enfant" }, { l: "Purpura (taches qui ne s'effacent pas)", f: "purpura_enfant" },
+      { l: "Boit et urine beaucoup (diabète ?)", f: "polyuro_polydipsie_enfant" },
       { l: "Traumatisme crânien", f: "traumatisme_cranien" },
       { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
       { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée", p: "maltraitance" }

@@ -30,7 +30,7 @@ Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
    flags, hypothèses classées, examen clinique à vérifier, examens à discuter,
    orientation, **notes éditables**, export **PDF (impression)**.
 
-## Symptômes couverts (142 fiches cliniques)
+## Symptômes couverts (162 fiches cliniques)
 
 > Le catalogue patient **filtre les motifs selon l'âge et le sexe** saisis (un
 > homme ne voit pas les motifs féminins, un adulte ne voit pas les motifs du

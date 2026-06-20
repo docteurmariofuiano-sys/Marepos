@@ -6759,6 +6759,302 @@ window.KB = {
         examens_a_discuter: ["Bandelette urinaire/ECBU ; sérologie cœliaque, NFS-CRP selon le contexte ; avis si MICI suspectée"] }
     ],
     examens_clinique: ["Courbe de croissance (élément clé)", "Palpation abdominale, recherche d'un fécalome", "Bandelette urinaire", "Rechercher des signes d'alarme orientant vers l'organique"]
+  },
+
+  // =========================================================================
+  // PÉDIATRIE — LOT B (2/2) : motifs fréquents (fiches dédiées enfant)
+  // =========================================================================
+  polyuro_polydipsie_enfant: {
+    id: "polyuro_polydipsie_enfant", symptome: "Boit et urine beaucoup (enfant)", specialite: ["Pédiatrie", "Endocrinologie"], urgence: true,
+    questions: [
+      { id: "pp_soif", label: "Polyuro-polydipsie", type: "boolean", question: "L'enfant boit-il beaucoup plus que d'habitude et urine-t-il en grande quantité, depuis peu ?" },
+      { id: "pp_amaigr", label: "Amaigrissement", type: "boolean", question: "A-t-il maigri récemment, ou semble-t-il fatigué malgré un bon appétit ?" },
+      { id: "pp_acidocetose", label: "Acidocétose", type: "boolean", question: "A-t-il des douleurs au ventre, des vomissements, une respiration rapide, une haleine particulière, ou une somnolence ?" },
+      { id: "pp_enuresie", label: "Reprise d'énurésie", type: "boolean", question: "A-t-il recommencé à faire pipi au lit alors qu'il était propre ?" }
+    ],
+    red_flags: [
+      { id: "pp_rf_acidocetose", niveau: 3, when: { q: "pp_acidocetose", eq: true },
+        message_medecin: "Polyuro-polydipsie + signes d'acidocétose (douleurs abdominales, polypnée, somnolence, haleine cétonique) : acidocétose diabétique → glycémie/cétonémie capillaires, 15.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate (15)." },
+      { id: "pp_rf_diabete", niveau: 3, when: { all: [{ q: "pp_soif", eq: true }, { q: "pp_amaigr", eq: true }] },
+        message_medecin: "Soif et urines abondantes + amaigrissement chez l'enfant : diabète de type 1 inaugural jusqu'à preuve du contraire → glycémie capillaire IMMÉDIATE et bandelette urinaire (glycosurie/cétonurie) ; avis pédiatrique en urgence (ne pas différer).",
+        message_patient: "Ces signes nécessitent une glycémie et un avis médical sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pp_diabete", diagnostic: "Diabète de type 1", arguments: [{ label: "polyuro-polydipsie + amaigrissement", w: 3, when: { q: "pp_soif", eq: true } }, { label: "amaigrissement", w: 1, when: { q: "pp_amaigr", eq: true } }, { label: "reprise d'énurésie", w: 1, when: { q: "pp_enuresie", eq: true } }],
+        examens_a_discuter: ["Glycémie capillaire et veineuse, bandelette urinaire, cétonémie ; prise en charge diabétologique urgente"] },
+      { id: "pp_autre", diagnostic: "Autre cause (diabète insipide, potomanie)", arguments: [{ label: "polyuro-polydipsie sans glycosurie", w: 1, when: { q: "pp_soif", eq: true } }],
+        examens_a_discuter: ["Si glycémie normale : explorer un diabète insipide vs potomanie (ionogramme, osmolalités, avis)"] }
+    ],
+    examens_clinique: ["Glycémie capillaire immédiate", "Bandelette urinaire (glycosurie, cétonurie)", "Poids (amaigrissement), état d'hydratation, fréquence respiratoire", "Avis pédiatrique sans délai si diabète probable"]
+  },
+
+  paleur_enfant: {
+    id: "paleur_enfant", symptome: "Pâleur / suspicion d'anémie (enfant)", specialite: ["Pédiatrie", "Hématologie"], urgence: true,
+    questions: [
+      { id: "pae_tolerance", label: "Mauvaise tolérance", type: "boolean", question: "La pâleur s'accompagne-t-elle de fatigue importante, d'essoufflement, d'un cœur qui bat vite, ou de malaises ?" },
+      { id: "pae_aigu", label: "Hémolyse", type: "boolean", question: "Est-elle apparue rapidement, avec une coloration jaune (ictère) ou des urines foncées ?" },
+      { id: "pae_hemato", label: "Signe d'hémopathie", type: "boolean", question: "Y a-t-il de la fièvre, des saignements/bleus qui apparaissent facilement, des ganglions, ou des douleurs osseuses ?" },
+      { id: "pae_carence", label: "Carence martiale", type: "boolean", question: "L'enfant a-t-il une alimentation peu variée (peu de fer), ou est-il un grand buveur de lait de vache ?" }
+    ],
+    red_flags: [
+      { id: "pae_rf_tolerance", niveau: 3, when: { all: [{ q: "pae_tolerance", eq: true }, { q: "pae_aigu", eq: true }] },
+        message_medecin: "Pâleur d'installation rapide et mal tolérée (± ictère/urines foncées) : anémie aiguë (hémolyse, saignement) → NFS en urgence, 15.",
+        message_patient: "Une pâleur rapide avec malaise/essoufflement nécessite une évaluation en urgence (15)." },
+      { id: "pae_rf_hemato", niveau: 2, when: { q: "pae_hemato", eq: true },
+        message_medecin: "Pâleur + fièvre / saignements / adénopathies / douleurs osseuses : éliminer une hémopathie (leucémie) → NFS-plaquettes-frottis en urgence, avis.",
+        message_patient: "Ces signes nécessitent un bilan sanguin rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "pae_ferriprive", diagnostic: "Anémie ferriprive (carence en fer)", arguments: [{ label: "alimentation pauvre en fer / lait de vache", w: 3, when: { q: "pae_carence", eq: true } }],
+        examens_a_discuter: ["NFS (microcytaire), ferritine ; supplémentation en fer et conseils alimentaires"] },
+      { id: "pae_hemolyse", diagnostic: "Anémie hémolytique (drépanocytose…)", arguments: [{ label: "installation rapide + ictère/urines foncées", w: 3, when: { q: "pae_aigu", eq: true } }],
+        examens_a_discuter: ["NFS-réticulocytes, haptoglobine, bilirubine, frottis ; électrophorèse de l'hémoglobine"] },
+      { id: "pae_hemopathie", diagnostic: "Hémopathie (leucémie, aplasie)", arguments: [{ label: "fièvre / saignements / adénopathies / douleurs osseuses", w: 3, when: { q: "pae_hemato", eq: true } }],
+        examens_a_discuter: ["NFS-plaquettes, frottis, LDH ; avis hématopédiatrique"] }
+    ],
+    examens_clinique: ["Coloration des conjonctives et des paumes", "Tolérance : fréquence cardiaque, souffle, essoufflement", "Palpation foie/rate/ganglions, recherche de purpura", "NFS-réticulocytes"]
+  },
+
+  eruption_febrile_enfant: {
+    id: "eruption_febrile_enfant", symptome: "Éruption avec fièvre / maladie éruptive (enfant)", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "ef_purpura", label: "Purpura", type: "boolean", question: "Y a-t-il des taches rouges ou violacées qui NE s'effacent PAS quand on appuie dessus ?" },
+      { id: "ef_etat", label: "Mauvais état général", type: "boolean", question: "L'enfant est-il très abattu, geignard, refuse-t-il de boire, ou est-il marbré ?" },
+      { id: "ef_kawasaki", label: "Kawasaki", type: "boolean", question: "La fièvre dure-t-elle depuis 5 jours ou plus, avec des yeux rouges, des lèvres rouges/craquelées, une langue framboise, et une éruption + mains/pieds gonflés ?" },
+      { id: "ef_muqueuses", label: "Atteinte muqueuse / décollement", type: "boolean", question: "Y a-t-il une atteinte sévère de la bouche/des yeux, ou la peau se décolle-t-elle (comme une brûlure) ?" },
+      { id: "ef_aspect", label: "Aspect", type: "single_choice", question: "À quoi ressemble l'éruption ?", options: ["Vésicules (petites cloques)", "Plaques/macules rouges", "Peau rugueuse comme du papier de verre", "Je ne sais pas"] }
+    ],
+    red_flags: [
+      { id: "ef_rf_purpura", niveau: 3, when: { any: [{ q: "ef_purpura", eq: true }, { q: "ef_etat", eq: true }] },
+        message_medecin: "Éruption fébrile avec purpura ne s'effaçant pas et/ou altération de l'état général : purpura fulminans (méningocoque) → antibiotique en urgence + 15 (voir fiche purpura).",
+        message_patient: "Des taches qui ne s'effacent pas avec de la fièvre sont une urgence vitale : appelez le 15." },
+      { id: "ef_rf_muqueuse", niveau: 3, when: { q: "ef_muqueuses", eq: true },
+        message_medecin: "Atteinte muqueuse sévère / décollement cutané : syndrome de Stevens-Johnson / Lyell (souvent médicamenteux) → urgence, arrêt du médicament suspect, avis.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate." },
+      { id: "ef_rf_kawasaki", niveau: 2, when: { q: "ef_kawasaki", eq: true },
+        message_medecin: "Fièvre ≥ 5 jours + conjonctivite + atteinte bucco-labiale + exanthème + atteinte des extrémités : maladie de Kawasaki → avis hospitalier (risque d'anévrismes coronaires ; immunoglobulines).",
+        message_patient: "Une fièvre qui dure avec ces signes nécessite un avis médical rapide." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ef_virale", diagnostic: "Maladie éruptive virale bénigne (roséole, mégalérythème, pieds-mains-bouche, varicelle)", arguments: [{ label: "vésicules / éruption maculeuse, bon état général", w: 2, when: { q: "ef_aspect", eq: "Vésicules (petites cloques)" } }, { label: "plaques/macules rouges", w: 1, when: { q: "ef_aspect", eq: "Plaques/macules rouges" } }],
+        examens_a_discuter: ["Diagnostic clinique ; traitement symptomatique ; éviction selon la maladie"] },
+      { id: "ef_scarlatine", diagnostic: "Scarlatine (streptocoque)", arguments: [{ label: "peau rugueuse (papier de verre) + angine/fièvre", w: 3, when: { q: "ef_aspect", eq: "Peau rugueuse comme du papier de verre" } }],
+        examens_a_discuter: ["TDR streptocoque ; antibiothérapie (amoxicilline)"] },
+      { id: "ef_kawasaki_dd", diagnostic: "Maladie de Kawasaki", arguments: [{ label: "fièvre ≥ 5 j + signes muco-cutanés", w: 3, when: { q: "ef_kawasaki", eq: true } }],
+        examens_a_discuter: ["Avis hospitalier ; échocardiographie ; immunoglobulines IV + aspirine"] },
+      { id: "ef_urgence", diagnostic: "Urgence (purpura fulminans, Stevens-Johnson)", arguments: [{ label: "purpura / altération de l'état général", w: 3, when: { q: "ef_purpura", eq: true } }, { label: "atteinte muqueuse/décollement", w: 2, when: { q: "ef_muqueuses", eq: true } }],
+        examens_a_discuter: ["Prise en charge urgente (voir red flags)"] }
+    ],
+    examens_clinique: ["Vitropression systématique (purpura)", "Examen des muqueuses (bouche, yeux) et de l'état général", "Durée de la fièvre, aspect et topographie de l'éruption", "Contexte (contage, vaccination, prise médicamenteuse)"]
+  },
+
+  rectorragie_enfant: {
+    id: "rectorragie_enfant", symptome: "Sang dans les selles (enfant)", specialite: ["Pédiatrie"], urgence: true,
+    questions: [
+      { id: "re_invag", label: "Invagination", type: "boolean", question: "Chez un nourrisson : crises de pleurs intermittentes avec pâleur, refus de manger, vomissements, et parfois du sang « comme de la gelée de groseille » ?" },
+      { id: "re_abondant", label: "Saignement abondant", type: "boolean", question: "Le saignement est-il abondant, ou l'enfant est-il pâle, fatigué ou a-t-il fait un malaise ?" },
+      { id: "re_glaire", label: "Selles glairo-sanglantes fébriles", type: "boolean", question: "Les selles sont-elles glairo-sanglantes avec des douleurs et de la fièvre ?" },
+      { id: "re_fissure", label: "Sang rouge / constipation", type: "boolean", question: "S'agit-il de quelques traces de sang rouge sur les selles dures ou le papier, avec une douleur à la défécation (constipation) ?" },
+      { id: "re_aplv", label: "Nourrisson / APLV", type: "boolean", question: "Chez un nourrisson : filets de sang dans les selles avec eczéma, régurgitations ou diarrhée ?" }
+    ],
+    red_flags: [
+      { id: "re_rf_invag", niveau: 3, when: { q: "re_invag", eq: true },
+        message_medecin: "Nourrisson : crises douloureuses intermittentes + sang « gelée de groseille » : invagination intestinale aiguë → URGENCE (échographie, lavement/réduction) ; ne pas retarder.",
+        message_patient: "Ces signes chez un bébé sont une urgence : appelez le 15 / allez aux urgences." },
+      { id: "re_rf_abondant", niveau: 3, when: { q: "re_abondant", eq: true },
+        message_medecin: "Hémorragie digestive abondante ou mal tolérée (pâleur, malaise) : urgence → évaluer le retentissement, NFS, avis.",
+        message_patient: "Un saignement abondant nécessite une évaluation en urgence (15)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "re_fissure_dd", diagnostic: "Fissure anale / constipation", arguments: [{ label: "sang rouge sur selles dures, douleur à la défécation", w: 3, when: { q: "re_fissure", eq: true } }],
+        examens_a_discuter: ["Examen de la marge anale ; traitement de la constipation (cause la plus fréquente)"] },
+      { id: "re_invag_dd", diagnostic: "Invagination intestinale aiguë", arguments: [{ label: "nourrisson, crises douloureuses + sang", w: 3, when: { q: "re_invag", eq: true } }],
+        examens_a_discuter: ["Échographie abdominale ; lavement thérapeutique"] },
+      { id: "re_colite", diagnostic: "Colite infectieuse / APLV / autre", arguments: [{ label: "selles glairo-sanglantes fébriles", w: 2, when: { q: "re_glaire", eq: true } }, { label: "nourrisson + eczéma (APLV)", w: 2, when: { q: "re_aplv", eq: true } }],
+        examens_a_discuter: ["Coproculture ; test d'éviction des protéines de lait de vache ; évoquer un diverticule de Meckel ou un purpura rhumatoïde digestif"] }
+    ],
+    examens_clinique: ["Examen de la marge anale (fissure)", "Palpation abdominale (boudin d'invagination), recherche d'un météorisme", "Évaluer le retentissement (pâleur, FC)", "Aspect des selles ; bandelette si doute hématurie"]
+  },
+
+  hematurie_enfant: {
+    id: "hematurie_enfant", symptome: "Urines rouges / sang dans les urines (enfant)", specialite: ["Pédiatrie", "Néphrologie"], urgence: true,
+    questions: [
+      { id: "he_confirme", label: "Hématurie", type: "boolean", question: "Les urines sont-elles rouges/foncées (couleur thé/coca), ou une bandelette a-t-elle montré du sang ?" },
+      { id: "he_nephritique", label: "Syndrome néphritique", type: "boolean", question: "Y a-t-il un gonflement des paupières le matin, une tension élevée, ou des urines peu abondantes ?" },
+      { id: "he_shu", label: "SHU", type: "boolean", question: "Y a-t-il eu une diarrhée (parfois sanglante) récente, suivie d'une pâleur et d'urines rares ?" },
+      { id: "he_infection", label: "Infection / lithiase", type: "boolean", question: "Y a-t-il des brûlures pour uriner, de la fièvre, ou une douleur du dos/du ventre ?" },
+      { id: "he_angine", label: "Post-infectieux", type: "boolean", question: "L'enfant a-t-il eu une angine ou une infection de la peau il y a 1 à 3 semaines ?" }
+    ],
+    red_flags: [
+      { id: "he_rf_shu", niveau: 3, when: { q: "he_shu", eq: true },
+        message_medecin: "Hématurie + diarrhée récente + pâleur + oligurie : syndrome hémolytique et urémique (SHU) → URGENCE (NFS-schizocytes, créatinine, plaquettes), avis néphropédiatrique.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate." },
+      { id: "he_rf_nephritique", niveau: 2, when: { q: "he_nephritique", eq: true },
+        message_medecin: "Hématurie + œdèmes + HTA (± oligurie) = syndrome néphritique (glomérulonéphrite aiguë, souvent post-streptococcique) → TA, créatinine, protéinurie, complément, avis.",
+        message_patient: "Ces signes nécessitent un avis médical rapide (tension, bilan rénal)." }
+    ],
+    diagnostics_differentiels: [
+      { id: "he_gna", diagnostic: "Glomérulonéphrite aiguë post-infectieuse", arguments: [{ label: "œdèmes + HTA", w: 3, when: { q: "he_nephritique", eq: true } }, { label: "angine/infection cutanée récente", w: 1, when: { q: "he_angine", eq: true } }],
+        examens_a_discuter: ["TA, créatinine, protéinurie, complément (C3), ASLO ; avis"] },
+      { id: "he_infection_dd", diagnostic: "Infection urinaire / lithiase", arguments: [{ label: "brûlures, fièvre, douleur", w: 3, when: { q: "he_infection", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire/ECBU ; échographie si lithiase suspectée"] },
+      { id: "he_shu_dd", diagnostic: "Syndrome hémolytique et urémique", arguments: [{ label: "diarrhée + pâleur + oligurie", w: 3, when: { q: "he_shu", eq: true } }],
+        examens_a_discuter: ["NFS (schizocytes), plaquettes, créatinine ; avis néphropédiatrique urgent"] }
+    ],
+    examens_clinique: ["Bandelette urinaire (confirme l'hématurie, protéinurie associée)", "Mesure de la pression artérielle", "Recherche d'œdèmes, palpation abdominale", "Créatinine et avis si syndrome néphritique ou SHU"]
+  },
+
+  oedemes_enfant: {
+    id: "oedemes_enfant", symptome: "Gonflement / œdèmes (enfant)", specialite: ["Pédiatrie", "Néphrologie"], urgence: true,
+    questions: [
+      { id: "oe_gorge", label: "Angio-œdème", type: "boolean", question: "Y a-t-il un gonflement des lèvres, de la langue ou de la gorge avec une gêne pour respirer/avaler ?" },
+      { id: "oe_nephrotique", label: "Syndrome néphrotique", type: "boolean", question: "Y a-t-il une bouffissure des paupières le matin, une prise de poids, un ventre gonflé, et des urines mousseuses/peu abondantes ?" },
+      { id: "oe_localise", label: "Œdème localisé", type: "boolean", question: "Le gonflement est-il localisé, apparu après une piqûre, un contact ou un médicament ?" },
+      { id: "oe_infection", label: "Cellulite", type: "boolean", question: "La zone gonflée est-elle rouge, chaude et douloureuse, avec de la fièvre ?" }
+    ],
+    red_flags: [
+      { id: "oe_rf_gorge", niveau: 3, when: { q: "oe_gorge", eq: true },
+        message_medecin: "Angio-œdème de la face/gorge avec gêne respiratoire : réaction allergique grave → adrénaline IM si anaphylaxie, 15 (voir fiche anaphylaxie).",
+        message_patient: "Un gonflement de la gorge avec gêne respiratoire est une urgence : appelez le 15." },
+      { id: "oe_rf_nephrotique", niveau: 2, when: { q: "oe_nephrotique", eq: true },
+        message_medecin: "Œdèmes généralisés + urines mousseuses : syndrome néphrotique → bandelette urinaire (protéinurie +++), avis néphropédiatrique (risques infectieux et thrombotique).",
+        message_patient: "Ces signes nécessitent un avis médical et un examen des urines." }
+    ],
+    diagnostics_differentiels: [
+      { id: "oe_nephrotique_dd", diagnostic: "Syndrome néphrotique", arguments: [{ label: "œdèmes + urines mousseuses", w: 3, when: { q: "oe_nephrotique", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire (protéinurie), protéinurie/créatininurie, albuminémie ; avis"] },
+      { id: "oe_allergie", diagnostic: "Allergie / angio-œdème", arguments: [{ label: "œdème localisé après allergène / gonflement de la face", w: 2, when: { q: "oe_localise", eq: true } }, { label: "atteinte lèvres/gorge", w: 2, when: { q: "oe_gorge", eq: true } }],
+        examens_a_discuter: ["Antihistaminique ; adrénaline si anaphylaxie ; éviction de l'allergène"] },
+      { id: "oe_cellulite", diagnostic: "Cellulite / cause locale infectieuse", arguments: [{ label: "rouge, chaud, douloureux, fébrile", w: 3, when: { q: "oe_infection", eq: true } }],
+        examens_a_discuter: ["Antibiothérapie ; avis selon la localisation (péri-orbitaire +++)"] }
+    ],
+    examens_clinique: ["Bandelette urinaire (protéinurie)", "Pression artérielle, poids", "Localisation (généralisé vs localisé), recherche d'une porte d'entrée infectieuse", "Rechercher une gêne respiratoire (angio-œdème)"]
+  },
+
+  oeil_rouge_enfant: {
+    id: "oeil_rouge_enfant", symptome: "Œil rouge / qui coule chez l'enfant", specialite: ["Pédiatrie", "Ophtalmologie"], urgence: true,
+    questions: [
+      { id: "ore_nouveaune", label: "Nouveau-né", type: "boolean", question: "S'agit-il d'un nouveau-né (moins de 28 jours) ?" },
+      { id: "ore_orbitaire", label: "Cellulite orbitaire", type: "boolean", question: "La paupière est-elle très gonflée et rouge, avec de la fièvre, une douleur quand l'œil bouge, ou un œil qui semble poussé en avant ?" },
+      { id: "ore_grave", label: "Signes de gravité", type: "boolean", question: "Y a-t-il une douleur importante, une baisse de la vision, ou une forte gêne à la lumière ?" },
+      { id: "ore_secretions", label: "Conjonctivite", type: "boolean", question: "Y a-t-il des sécrétions (yeux collés le matin) ou des démangeaisons, sans baisse de vision ?" },
+      { id: "ore_larmoiement", label: "Larmoiement chronique", type: "boolean", question: "Y a-t-il un larmoiement permanent d'un œil depuis les premières semaines de vie, sans rougeur importante ?" }
+    ],
+    red_flags: [
+      { id: "ore_rf_neonat", niveau: 3, when: { q: "ore_nouveaune", eq: true },
+        message_medecin: "Œil rouge/purulent du nouveau-né (ophtalmie néonatale) : urgence (gonocoque, Chlamydia) → prélèvements et traitement spécifique, avis.",
+        message_patient: "Un œil rouge/qui coule chez un nouveau-né nécessite une consultation en urgence." },
+      { id: "ore_rf_orbitaire", niveau: 3, when: { q: "ore_orbitaire", eq: true },
+        message_medecin: "Cellulite orbitaire (paupière inflammatoire, fièvre, douleur à la mobilisation oculaire, exophtalmie) : urgence → imagerie, antibiothérapie IV.",
+        message_patient: "Ces signes nécessitent une évaluation médicale immédiate." },
+      { id: "ore_rf_grave", niveau: 2, when: { q: "ore_grave", eq: true },
+        message_medecin: "Douleur / baisse de vision / photophobie : ce n'est pas une simple conjonctivite (kératite, uvéite) → avis ophtalmologique.",
+        message_patient: "Ces signes nécessitent un avis ophtalmologique." }
+    ],
+    diagnostics_differentiels: [
+      { id: "ore_conjonctivite", diagnostic: "Conjonctivite (virale, bactérienne, allergique)", arguments: [{ label: "sécrétions/démangeaisons sans baisse de vision", w: 3, when: { q: "ore_secretions", eq: true } }],
+        examens_a_discuter: ["Hygiène, lavage au sérum physiologique ; collyre selon le type ; contagiosité (virale)"] },
+      { id: "ore_lacrymal", diagnostic: "Obstruction du canal lacrymal (nourrisson)", arguments: [{ label: "larmoiement chronique sans rougeur", w: 3, when: { q: "ore_larmoiement", eq: true } }],
+        examens_a_discuter: ["Massage du sac lacrymal ; évolution souvent favorable ; avis si persistance/surinfection"] },
+      { id: "ore_cellulite", diagnostic: "Cellulite péri-orbitaire / orbitaire", arguments: [{ label: "paupière inflammatoire fébrile", w: 3, when: { q: "ore_orbitaire", eq: true } }],
+        examens_a_discuter: ["Distinguer préseptale (plus bénigne) et orbitaire (urgence) ; imagerie, antibiothérapie"] }
+    ],
+    examens_clinique: ["Âge (nouveau-né = urgence)", "Acuité visuelle, sécrétions, photophobie", "Examen des paupières et de la mobilité oculaire (cellulite orbitaire)", "Larmoiement chronique isolé (canal lacrymal)"]
+  },
+
+  enuresie: {
+    id: "enuresie", symptome: "Énurésie (pipi au lit)", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "en_age", label: "Énurésie nocturne", type: "boolean", question: "L'enfant a-t-il plus de 5 ans et mouille-t-il son lit la nuit ?" },
+      { id: "en_secondaire", label: "Secondaire", type: "boolean", question: "Avait-il été propre la nuit pendant une longue période (plus de 6 mois) avant de recommencer ?" },
+      { id: "en_diurne", label: "Signes associés", type: "boolean", question: "Y a-t-il aussi des fuites le jour, des brûlures pour uriner, ou une soif/des urines très abondantes ?" },
+      { id: "en_constipation", label: "Constipation", type: "boolean", question: "L'enfant est-il constipé ?" }
+    ],
+    red_flags: [
+      { id: "en_rf_organique", niveau: 1, when: { any: [{ q: "en_diurne", eq: true }, { q: "en_secondaire", eq: true }] },
+        message_medecin: "Énurésie secondaire ou avec symptômes diurnes/soif : éliminer une cause organique (infection urinaire, diabète, constipation, parfois apnées du sommeil) → bandelette urinaire ± glycémie, traiter une constipation.",
+        message_patient: "Ces éléments nécessitent un avis médical et un examen des urines." }
+    ],
+    diagnostics_differentiels: [
+      { id: "en_primaire", diagnostic: "Énurésie nocturne primaire isolée (bénigne)", arguments: [{ label: "nocturne isolée, > 5 ans", w: 3, when: { q: "en_age", eq: true } }],
+        examens_a_discuter: ["Réassurance, calendrier mictionnel, mesures (boissons le soir, réveils, système d'alarme) ; desmopressine selon les cas"] },
+      { id: "en_organique", diagnostic: "Cause organique / associée", arguments: [{ label: "symptômes diurnes/soif", w: 2, when: { q: "en_diurne", eq: true } }, { label: "énurésie secondaire", w: 1, when: { q: "en_secondaire", eq: true } }, { label: "constipation", w: 1, when: { q: "en_constipation", eq: true } }],
+        examens_a_discuter: ["Bandelette urinaire, glycémie si soif ; traiter la constipation ; avis si fuites diurnes"] }
+    ],
+    examens_clinique: ["Bandelette urinaire", "Recherche d'une constipation, d'une cause diurne", "Calendrier mictionnel ; retentissement", "Réassurance et mesures éducatives (énurésie primaire)"]
+  },
+
+  gingivostomatite_enfant: {
+    id: "gingivostomatite_enfant", symptome: "Bouche douloureuse / aphtes (enfant)", specialite: ["Pédiatrie"],
+    questions: [
+      { id: "gi_hsv", label: "Gingivostomatite herpétique", type: "boolean", question: "Y a-t-il de nombreuses petites ulcérations dans la bouche, des gencives rouges et gonflées, avec de la fièvre (souvent chez le jeune enfant) ?" },
+      { id: "gi_refus", label: "Refus de boire", type: "boolean", question: "L'enfant refuse-t-il de boire au point de risquer une déshydratation ?" },
+      { id: "gi_pmb", label: "Pieds-mains-bouche", type: "boolean", question: "Y a-t-il aussi des petites cloques sur les mains et les pieds ?" },
+      { id: "gi_aphte", label: "Aphtes isolés", type: "boolean", question: "S'agit-il d'un ou quelques aphtes isolés, parfois récidivants, sans fièvre ?" }
+    ],
+    red_flags: [
+      { id: "gi_rf_refus", niveau: 2, when: { q: "gi_refus", eq: true },
+        message_medecin: "Refus de boire / déshydratation lié à une stomatite douloureuse : assurer une antalgie efficace et une hydratation (parfois hospitalisation) ; surveiller l'hydratation.",
+        message_patient: "Si l'enfant ne boit plus, consultez : il faut soulager la douleur et assurer l'hydratation." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gi_hsv_dd", diagnostic: "Gingivostomatite herpétique (HSV1)", arguments: [{ label: "ulcérations diffuses + gingivite + fièvre", w: 3, when: { q: "gi_hsv", eq: true } }],
+        examens_a_discuter: ["Diagnostic clinique ; antalgie, hydratation ; aciclovir si forme précoce/sévère ou terrain à risque"] },
+      { id: "gi_pmb_dd", diagnostic: "Syndrome pieds-mains-bouche (coxsackie)", arguments: [{ label: "vésicules mains/pieds + bouche", w: 3, when: { q: "gi_pmb", eq: true } }],
+        examens_a_discuter: ["Viral bénin ; antalgie, hydratation ; éviction non obligatoire"] },
+      { id: "gi_aphte_dd", diagnostic: "Aphtose banale", arguments: [{ label: "aphtes isolés récidivants", w: 3, when: { q: "gi_aphte", eq: true } }],
+        examens_a_discuter: ["Traitement local ; rechercher des aphtoses récidivantes (carences, maladie générale) si fréquent"] }
+    ],
+    examens_clinique: ["État d'hydratation (élément clé)", "Examen des lésions buccales (gencives, palais), mains et pieds", "Température", "Antalgie adaptée"]
+  },
+
+  genital_garcon: {
+    id: "genital_garcon", symptome: "Anomalie des organes génitaux du garçon", specialite: ["Pédiatrie", "Chirurgie", "Urologie"],
+    questions: [
+      { id: "gg_douleur", label: "Douleur aiguë (testicule)", type: "boolean", question: "Y a-t-il une douleur brutale d'une bourse/d'un testicule ?" },
+      { id: "gg_vide", label: "Testicule non descendu", type: "boolean", question: "Un testicule n'est-il pas senti dans la bourse (bourse vide) ?" },
+      { id: "gg_phimosis", label: "Phimosis", type: "boolean", question: "Le prépuce ne se décalotte pas, ou gonfle « en ballon » quand l'enfant urine ?" },
+      { id: "gg_balanite", label: "Balanite", type: "boolean", question: "Le gland/le prépuce est-il rouge, gonflé, douloureux, avec un écoulement ?" }
+    ],
+    red_flags: [
+      { id: "gg_rf_torsion", niveau: 3, when: { q: "gg_douleur", eq: true },
+        message_medecin: "Douleur aiguë d'une bourse : torsion du testicule à éliminer en URGENCE (voir fiche « Grosse bourse de l'enfant ») → avis chirurgical immédiat.",
+        message_patient: "Une douleur brutale d'un testicule est une urgence : allez aux urgences sans attendre." }
+    ],
+    diagnostics_differentiels: [
+      { id: "gg_crypto", diagnostic: "Cryptorchidie (testicule non descendu)", arguments: [{ label: "bourse vide", w: 3, when: { q: "gg_vide", eq: true } }],
+        examens_a_discuter: ["Avis chirurgical (abaissement idéalement avant 1-2 ans) ; distinguer testicule oscillant (bénin)"] },
+      { id: "gg_phimosis_dd", diagnostic: "Phimosis", arguments: [{ label: "prépuce non rétractable / ballonnement", w: 3, when: { q: "gg_phimosis", eq: true } }],
+        examens_a_discuter: ["Souvent physiologique avant 3-5 ans ; dermocorticoïde local ; éviter les décalottages forcés ; avis si serré/symptomatique"] },
+      { id: "gg_balanite_dd", diagnostic: "Balanite", arguments: [{ label: "gland rouge, gonflé, écoulement", w: 3, when: { q: "gg_balanite", eq: true } }],
+        examens_a_discuter: ["Soins locaux, antiseptiques ; antibiotiques si nécessaire"] }
+    ],
+    examens_clinique: ["Devant une douleur aiguë : avis chirurgical urgent (torsion)", "Palpation des bourses (testicule présent/abaissable ?)", "Examen du prépuce et du gland", "Recherche d'une hernie associée"]
+  },
+
+  vulvovaginite_fillette: {
+    id: "vulvovaginite_fillette", symptome: "Irritation / pertes génitales de la petite fille", specialite: ["Pédiatrie", "Gynécologie"],
+    questions: [
+      { id: "vf_saignement", label: "Saignement génital", type: "boolean", question: "Y a-t-il un saignement génital (en dehors de toute puberté) ?" },
+      { id: "vf_irritation", label: "Irritation vulvaire", type: "boolean", question: "Y a-t-il une rougeur, des démangeaisons ou des brûlures de la vulve ?" },
+      { id: "vf_pertes", label: "Pertes / odeur", type: "boolean", question: "Y a-t-il des pertes ou une mauvaise odeur (parfois un corps étranger oublié) ?" },
+      { id: "vf_oxyures", label: "Oxyures", type: "boolean", question: "Les démangeaisons sont-elles surtout la nuit, aussi autour de l'anus ?" }
+    ],
+    red_flags: [
+      { id: "vf_rf_saignement", niveau: 2, when: { q: "vf_saignement", eq: true },
+        message_medecin: "Saignement génital de la petite fille (hors puberté) : éliminer un corps étranger vaginal, une puberté précoce, une lésion, et toujours évoquer la possibilité de sévices → examen prudent, avis.",
+        message_patient: "Un saignement génital chez une petite fille nécessite un avis médical." }
+    ],
+    diagnostics_differentiels: [
+      { id: "vf_nonspe", diagnostic: "Vulvovaginite non spécifique (irritation/hygiène)", arguments: [{ label: "rougeur/démangeaison/brûlure", w: 3, when: { q: "vf_irritation", eq: true } }],
+        examens_a_discuter: ["Cause la plus fréquente ; conseils d'hygiène (essuyage, vêtements, savon doux) ; soins locaux apaisants"] },
+      { id: "vf_oxyures_dd", diagnostic: "Oxyurose", arguments: [{ label: "prurit nocturne anal et vulvaire", w: 3, when: { q: "vf_oxyures", eq: true } }],
+        examens_a_discuter: ["Traitement antiparasitaire (toute la famille) ; mesures d'hygiène"] },
+      { id: "vf_pertes_dd", diagnostic: "Pertes / corps étranger / infection", arguments: [{ label: "pertes ou mauvaise odeur", w: 2, when: { q: "vf_pertes", eq: true } }],
+        examens_a_discuter: ["Rechercher un corps étranger vaginal ; prélèvement si pertes purulentes ; avis si récidive"] }
+    ],
+    examens_clinique: ["Inspection vulvaire (rougeur, lésions, pertes)", "Conseils d'hygiène locale", "Scotch-test si suspicion d'oxyures ; bandelette urinaire", "Devant un saignement : examen prudent et avis (corps étranger, puberté précoce, sévices)"]
   }
 };
 
@@ -6959,7 +7255,12 @@ window.MOTIFS = [
       { l: "Régurgitations / reflux du nourrisson", f: "rgo_nourrisson" }, { l: "Difficultés alimentaires / refus de manger", f: "difficultes_alimentaires_enfant" },
       { l: "Jaunisse du nourrisson", f: "ictere_nourrisson" }, { l: "Souffle cardiaque", f: "souffle_cardiaque_enfant" },
       { l: "Ganglion / adénopathie", f: "adenopathie_enfant" }, { l: "Maux de tête de l'enfant", f: "cephalee_enfant" },
-      { l: "Douleurs abdominales récurrentes", f: "douleur_abdo_recurrente_enfant" }
+      { l: "Douleurs abdominales récurrentes", f: "douleur_abdo_recurrente_enfant" },
+      { l: "Pâleur / suspicion d'anémie", f: "paleur_enfant" }, { l: "Éruption avec fièvre", f: "eruption_febrile_enfant" },
+      { l: "Sang dans les selles", f: "rectorragie_enfant" }, { l: "Urines rouges / sang dans les urines", f: "hematurie_enfant" },
+      { l: "Gonflement / œdèmes", f: "oedemes_enfant" }, { l: "Œil rouge / qui coule", f: "oeil_rouge_enfant" },
+      { l: "Énurésie (pipi au lit)", f: "enuresie" }, { l: "Bouche douloureuse / aphtes", f: "gingivostomatite_enfant" },
+      { l: "Anomalie génitale (garçon)", f: "genital_garcon" }, { l: "Irritation génitale (petite fille)", f: "vulvovaginite_fillette" }
     ],
     urgences: [
       { l: "Fièvre du nourrisson < 3 mois", f: "fievre_enfant" }, { l: "Détresse respiratoire", f: "dyspnee_aigue" }, { l: "Bronchiolite sévère", f: "bronchiolite" },
@@ -6968,6 +7269,7 @@ window.MOTIFS = [
       { l: "Enfant difficile à réveiller / somnolence anormale", f: "trouble_conscience_enfant" }, { l: "Faiblesse / paralysie récente", f: "deficit_moteur_enfant" },
       { l: "Trouble de l'équilibre / marche instable", f: "ataxie_enfant" }, { l: "Réaction allergique / anaphylaxie", f: "anaphylaxie_enfant" },
       { l: "Grosse bourse / douleur d'un testicule", f: "grosse_bourse_enfant" }, { l: "Purpura (taches qui ne s'effacent pas)", f: "purpura_enfant" },
+      { l: "Boit et urine beaucoup (diabète ?)", f: "polyuro_polydipsie_enfant" },
       { l: "Traumatisme crânien", f: "traumatisme_cranien" },
       { l: "Douleur abdominale aiguë", f: "douleur_abdominale" }, { l: "Boiterie fébrile", f: "boiterie_enfant" }, { l: "Ingestion toxique", f: "ingestion_toxique" },
       { l: "Corps étranger inhalé ou ingéré", f: "ingestion_toxique" }, { l: "Maltraitance suspectée", p: "maltraitance" }
@@ -7717,6 +8019,12 @@ window.ANTECEDENTS = {
     ictere_nourrisson: { population: "enfant" }, souffle_cardiaque_enfant: { population: "enfant" },
     adenopathie_enfant: { population: "enfant" }, cephalee_enfant: { population: "enfant" },
     douleur_abdo_recurrente_enfant: { population: "enfant" },
+    polyuro_polydipsie_enfant: { population: "enfant" }, paleur_enfant: { population: "enfant" },
+    eruption_febrile_enfant: { population: "enfant" }, rectorragie_enfant: { population: "enfant" },
+    hematurie_enfant: { population: "enfant" }, oedemes_enfant: { population: "enfant" },
+    oeil_rouge_enfant: { population: "enfant" }, enuresie: { population: "enfant" },
+    gingivostomatite_enfant: { population: "enfant" },
+    genital_garcon: { sexe: "M", population: "enfant" }, vulvovaginite_fillette: { sexe: "F", population: "enfant" },
     // Adulte (peu pertinents chez le jeune enfant)
     difficultes_sexuelles: { population: "adulte" }, bouffees_chaleur: { population: "adulte" },
     osteoporose: { population: "adulte" }, sevrage_alcool: { population: "adulte" },
