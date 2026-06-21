@@ -1,0 +1,126 @@
+/* ============================================================
+   SCRIPTS DE VIDÉOS PÉDAGOGIQUES ORIGINALES (10)
+   Contenu créé de zéro (pas de copie CEN/livres).
+   anim : identifiant d'animation SVG rendue par app.js
+   segments : sous-titres synchronisés (t = seconde de début)
+   ============================================================ */
+
+window.VIDEOS = [
+ {id:"babinski", titre:"Le signe de Babinski", duree:"60 s", theme:"Réflexes", anim:"babinski",
+  script:"Le réflexe cutané plantaire explore le faisceau pyramidal. À l'aide d'une pointe mousse, on stimule le bord externe de la plante du pied, du talon vers les orteils. Chez le sujet normal, les orteils se fléchissent. En cas d'atteinte pyramidale, le gros orteil s'étend lentement, parfois avec un écartement en éventail des autres orteils : c'est le signe de Babinski.",
+  pointsCles:["Stimuler le BORD EXTERNE de la plante, talon → orteils","Réponse normale = flexion des orteils","Babinski = extension lente du gros orteil ± éventail","Signe d'atteinte du faisceau pyramidal"],
+  erreur:"Stimuler trop près de la voûte interne déclenche un réflexe de retrait (faux positif). Aller doucement et sur le bord externe.",
+  segments:[{t:0,txt:"Le réflexe cutané plantaire explore le faisceau pyramidal."},{t:3,txt:"On stimule le bord externe de la plante, du talon vers les orteils."},{t:6,txt:"Réponse normale : flexion des orteils."},{t:8,txt:"Babinski : extension lente du gros orteil ± éventail."}],
+  quiz:{q:"Une extension lente du gros orteil à la stimulation plantaire signe…",opt:["Une atteinte périphérique","Une atteinte du faisceau pyramidal","Un réflexe normal"],bon:1}},
+
+ {id:"barre", titre:"La manœuvre de Barré", duree:"45 s", theme:"Motricité", anim:"barre",
+  script:"La manœuvre de Barré dépiste un déficit moteur discret des membres supérieurs. Le patient tend les bras devant lui, paumes vers le haut, puis ferme les yeux. On observe pendant 20 à 30 secondes. Du côté déficitaire, le bras se creuse, tourne en pronation et descend lentement. C'est un signe sensible d'atteinte pyramidale.",
+  pointsCles:["Bras tendus, paumes vers le haut, yeux fermés","Observer 20–30 secondes","Chute lente + pronation = déficit","Très sensible pour un déficit discret"],
+  erreur:"Conclure trop vite : une douleur d'épaule peut faire « tomber » le bras. Toujours corréler au reste de l'examen.",
+  segments:[{t:0,txt:"La manœuvre de Barré dépiste un déficit des membres supérieurs."},{t:3,txt:"Bras tendus, paumes vers le haut, yeux fermés."},{t:6,txt:"Du côté atteint : pronation et chute lente du bras."}],
+  quiz:{q:"Quel mouvement signe un Barré positif ?",opt:["Tremblement des doigts","Pronation et chute lente d'un bras","Élévation d'un bras"],bon:1}},
+
+ {id:"facial", titre:"Paralysie faciale : centrale ou périphérique ?", duree:"75 s", theme:"Paires crâniennes", anim:"facial",
+  script:"Devant une asymétrie du visage, la question essentielle est : l'atteinte est-elle centrale ou périphérique ? On demande au patient de lever les sourcils, fermer fort les yeux, puis montrer les dents. Dans la paralysie périphérique, tout l'hémiface est touché, y compris le front, qui ne se plisse plus. Dans la paralysie centrale, le front est relativement épargné car il a une innervation bilatérale. Une paralysie faciale centrale associée à un déficit ou un trouble du langage doit faire évoquer un AVC et appeler le 15.",
+  pointsCles:["Tester le front (lever les sourcils) +++","Périphérique = tout l'hémiface, front compris","Centrale = épargne du front","Centrale + déficit/aphasie = AVC → 15"],
+  erreur:"Oublier de tester le front : c'est la clé qui distingue central et périphérique.",
+  segments:[{t:0,txt:"Centrale ou périphérique ? La clé est le front."},{t:4,txt:"Périphérique : le front est atteint (ne se plisse plus)."},{t:8,txt:"Centrale : le front est épargné."},{t:11,txt:"Centrale + déficit = AVC → appeler le 15."}],
+  quiz:{q:"Le front est ÉPARGNÉ. L'atteinte est…",opt:["Périphérique","Centrale","Indéterminée"],bon:1}},
+
+ {id:"pupilles", titre:"Examen des pupilles", duree:"60 s", theme:"Paires crâniennes", anim:"pupilles",
+  script:"L'examen des pupilles renseigne sur les voies optiques et oculomotrices. En lumière tamisée, on observe la taille et la symétrie des pupilles. Puis on éclaire chaque œil : la pupille éclairée se contracte (réflexe direct) et la pupille opposée aussi (réflexe consensuel). Une mydriase unilatérale aréactive, surtout si douloureuse, évoque une compression du nerf III par un anévrisme : c'est une urgence.",
+  pointsCles:["Observer taille et symétrie en lumière tamisée","Réflexe direct et consensuel","Mydriase aréactive douloureuse = urgence (III compressif)","Déficit pupillaire afférent = neuropathie optique"],
+  erreur:"Négliger une anisocorie : vérifier l'absence de collyre et tester en lumière variable.",
+  segments:[{t:0,txt:"Observer taille et symétrie des pupilles."},{t:3,txt:"Éclairer : réflexe direct et consensuel."},{t:7,txt:"Mydriase aréactive douloureuse = urgence."}],
+  quiz:{q:"Une mydriase unilatérale aréactive douloureuse évoque…",opt:["Une migraine","Une compression du III (urgence)","Une fatigue oculaire"],bon:1}},
+
+ {id:"romberg", titre:"Le signe de Romberg", duree:"50 s", theme:"Coordination", anim:"romberg",
+  script:"Le signe de Romberg distingue les ataxies. Le patient se tient debout, pieds joints, d'abord les yeux ouverts, puis les yeux fermés ; on se tient prêt à le rattraper. S'il est stable les yeux ouverts mais chute à la fermeture des yeux, le Romberg est positif : cela traduit une atteinte de la sensibilité profonde. En cas d'atteinte cérébelleuse, l'instabilité existe déjà les yeux ouverts : le Romberg n'est pas interprétable.",
+  pointsCles:["Pieds joints, yeux ouverts puis fermés","Sécuriser le patient","Romberg + = atteinte proprioceptive","Instable dès les yeux ouverts = cérébelleux"],
+  erreur:"Parler de « Romberg positif » alors que le patient est déjà instable yeux ouverts (c'est cérébelleux).",
+  segments:[{t:0,txt:"Pieds joints, yeux ouverts puis fermés."},{t:4,txt:"Chute à la fermeture = Romberg positif (proprioceptif)."},{t:8,txt:"Instable dès les yeux ouverts = cérébelleux."}],
+  quiz:{q:"Une chute uniquement à la fermeture des yeux signe…",opt:["Une atteinte cérébelleuse","Une atteinte proprioceptive","Une atteinte vestibulaire pure"],bon:1}},
+
+ {id:"marche_park", titre:"La marche parkinsonienne", duree:"60 s", theme:"Marche", anim:"marche_park",
+  script:"La marche parkinsonienne est caractéristique. Le démarrage est hésitant, les pas sont petits et traînants, le tronc est penché en avant, et le ballant des bras est réduit, souvent de façon asymétrique. Le demi-tour se fait en plusieurs temps, décomposé. On peut observer un freezing : les pieds semblent collés au sol. Cette marche s'inscrit dans un syndrome akinéto-rigide.",
+  pointsCles:["Petits pas, traînants, tronc penché","Perte du ballant des bras (asymétrique)","Demi-tour décomposé","Freezing possible au démarrage/passage de porte"],
+  erreur:"Confondre avec la marche à petits pas frontale (vasculaire) : la base est plus large et la cognition souvent altérée.",
+  segments:[{t:0,txt:"Démarrage hésitant, petits pas traînants."},{t:4,txt:"Perte du ballant des bras, tronc penché."},{t:8,txt:"Demi-tour décomposé, freezing possible."}],
+  quiz:{q:"Quel signe accompagne typiquement la marche parkinsonienne ?",opt:["Steppage","Perte du ballant des bras","Fauchage"],bon:1}},
+
+ {id:"steppage", titre:"Le steppage", duree:"45 s", theme:"Marche", anim:"steppage",
+  script:"Le steppage traduit un déficit des muscles releveurs du pied. Le pied tombe, l'avant-pied accroche le sol ; pour compenser, le patient lève haut le genou et la cuisse, puis le pied retombe en claquant. On le confirme en demandant la marche sur les talons, impossible du côté atteint. Il oriente vers une atteinte du nerf fibulaire ou de la racine L5.",
+  pointsCles:["Pied tombant, genou levé haut","Marche sur les talons impossible","Atteinte nerf fibulaire ou racine L5","Comparer les deux côtés"],
+  erreur:"Ne pas tester la marche sur les talons et sur les pointes, qui localise L5 vs S1.",
+  segments:[{t:0,txt:"Déficit des releveurs : le pied tombe."},{t:3,txt:"Le genou se lève haut pour compenser."},{t:6,txt:"Atteinte du nerf fibulaire ou de la racine L5."}],
+  quiz:{q:"Le steppage est lié à un déficit…",opt:["Des releveurs du pied (L5/fibulaire)","Des fléchisseurs plantaires (S1)","Du quadriceps (L4)"],bon:0}},
+
+ {id:"vppb", titre:"Manœuvre de Dix-Hallpike (VPPB)", duree:"75 s", theme:"Vertiges", anim:"vppb",
+  script:"La manœuvre de Dix-Hallpike recherche un vertige positionnel paroxystique bénin. Le patient est assis, la tête tournée à 45 degrés d'un côté. On l'allonge rapidement en arrière, tête en légère extension au bord de la table. En cas de VPPB du canal postérieur, après une brève latence, apparaît un vertige avec un nystagmus rotatoire qui s'épuise en quelques secondes. Le diagnostic posé, on traite par la manœuvre libératrice d'Epley.",
+  pointsCles:["Tête tournée à 45°, passage rapide en décubitus","Latence brève puis nystagmus rotatoire épuisable","Confirme un VPPB du canal postérieur","Traitement : manœuvre d'Epley"],
+  erreur:"Réaliser la manœuvre sans précaution chez un sujet à risque cervical/vasculaire, ou conclure devant des signes centraux (nystagmus non épuisable, vertical).",
+  segments:[{t:0,txt:"Patient assis, tête tournée à 45°."},{t:4,txt:"Passage rapide en décubitus, tête en extension."},{t:8,txt:"Latence puis nystagmus rotatoire épuisable = VPPB."}],
+  quiz:{q:"Un nystagmus rotatoire bref et épuisable au Dix-Hallpike évoque…",opt:["Un AVC cérébelleux","Un VPPB du canal postérieur","Une névrite vestibulaire"],bon:1}},
+
+ {id:"aphasies", titre:"Reconnaître une aphasie (Broca / Wernicke)", duree:"80 s", theme:"Langage", anim:"aphasies",
+  script:"On distingue deux grands types d'aphasie. Dans l'aphasie de Broca, le discours est réduit, laborieux, non fluent, mais la compréhension est globalement préservée ; le patient est conscient de son trouble. Dans l'aphasie de Wernicke, le discours est fluent mais incompréhensible, avec des paraphasies et un jargon, et surtout une compréhension altérée ; le patient n'a pas toujours conscience du trouble. Pour les distinguer, on évalue la fluence, la compréhension, la répétition et la dénomination.",
+  pointsCles:["Broca : non fluent, compréhension préservée","Wernicke : fluent, jargon, compréhension altérée","Tester : fluence, compréhension, répétition, dénomination","Aphasie brutale = AVC → 15"],
+  erreur:"Confondre aphasie (langage) et dysarthrie (articulation) : dans la dysarthrie, le langage est normal.",
+  segments:[{t:0,txt:"Broca : discours réduit, non fluent, compréhension préservée."},{t:5,txt:"Wernicke : fluent mais jargon, compréhension altérée."},{t:10,txt:"Aphasie brutale = AVC → 15."}],
+  quiz:{q:"Discours fluent en jargon avec compréhension altérée :",opt:["Aphasie de Broca","Aphasie de Wernicke","Dysarthrie"],bon:1}},
+
+ {id:"crise_tcg", titre:"Crise tonico-clonique généralisée (cas fictif)", duree:"80 s", theme:"Épilepsie", anim:"crise",
+  script:"Voici la séquence d'une crise tonico-clonique généralisée, reconstituée de façon fictive. Il peut exister un cri initial, puis une phase tonique avec raidissement et chute, suivie d'une phase clonique avec secousses rythmiques des quatre membres. On peut observer une morsure latérale de la langue et une perte d'urines. La crise cède en une à deux minutes, laissant une phase post-critique avec confusion. La conduite : protéger le patient, ne rien mettre en bouche, chronométrer, et appeler le 15 si la crise dépasse 5 minutes ou se répète.",
+  pointsCles:["Phase tonique (chute) puis clonique (secousses)","Morsure latérale de langue, perte d'urines","Phase post-critique : confusion","> 5 min ou répétée = état de mal → 15"],
+  erreur:"Mettre un objet dans la bouche ou tenter d'immobiliser de force : dangereux et inutile.",
+  segments:[{t:0,txt:"Phase tonique : raidissement et chute."},{t:4,txt:"Phase clonique : secousses rythmiques."},{t:8,txt:"Phase post-critique : confusion."},{t:11,txt:"Protéger, ne rien mettre en bouche, chronométrer."}],
+  quiz:{q:"Devant une crise > 5 minutes, il faut…",opt:["Attendre la fin","Mettre un objet en bouche","Considérer un état de mal et appeler le 15"],bon:2}}
+ ];
+
+const CEN_VIDEO_REFS = {
+  babinski:{label:"CEN - Réflexe cutané plantaire / Babinski",url:"https://www.cen-neurologie.fr/videotheque/signe-babinski"},
+  barre:{label:"CEN - Épreuve de Barré",url:"https://www.cen-neurologie.fr/videotheque/epreuve-barre"},
+  facial:{label:"CEN - Paralysie faciale périphérique",url:"https://www.cen-neurologie.fr/videotheque/paralysie-faciale-peripherique"},
+  romberg:{label:"CEN - Romberg proprioceptif",url:"https://www.cen-neurologie.fr/videotheque/romberg-proprioceptif"},
+  marche_park:{label:"CEN - Syndrome parkinsonien",url:"https://www.cen-neurologie.fr/premier-cycle/semiologie-analytique/syndrome-parkisonien"},
+  steppage:{label:"CEN - Steppage",url:"https://www.cen-neurologie.fr/videotheque/steppage"},
+  vppb:{label:"CEN - Syndrome vestibulaire",url:"https://www.cen-neurologie.fr/premier-cycle/semiologie-analytique/syndrome-vestibulaire"},
+  aphasies:{label:"CEN - Fonctions cognitives",url:"https://www.cen-neurologie.fr/premier-cycle/semiologie-analytique/semiologie-des-fonctions-cognitives"},
+  crise_tcg:{label:"CEN - Sémiologie des crises",url:"https://www.cen-neurologie.fr/premier-cycle/semiologie-analytique/semiologie-des-crises-epileptiques"},
+  pupilles:{label:"CEN - Nerfs crâniens et vision",url:"https://www.cen-neurologie.fr/premier-cycle/semiologie-analytique/semiologie-des-nerfs-craniens"}
+};
+
+window.VIDEOS.forEach(v=>{
+  v.cenRef=CEN_VIDEO_REFS[v.id]||null;
+  v.fidelite="Scène originale recalée sur la sémiologie CEN, sans copie de support protégé.";
+});
+
+const TRAINING_3D_IMAGES = {
+  babinski:"assets/training-3d/babinski.png",
+  barre:"assets/training-3d/barre.png",
+  facial:"assets/training-3d/facial.png",
+  pupilles:"assets/training-3d/pupilles.png",
+  romberg:"assets/training-3d/romberg.png",
+  marche_park:"assets/training-3d/marche-park.png",
+  steppage:"assets/training-3d/steppage.png",
+  vppb:"assets/training-3d/vppb.png",
+  aphasies:"assets/training-3d/aphasies.png",
+  crise_tcg:"assets/training-3d/crise-tcg.png"
+};
+
+const TRAINING_3D_STEP_IMAGES = Object.fromEntries(Object.keys(TRAINING_3D_IMAGES).map(id=>[id,[
+  `assets/training-3d/steps/${id}-1-vue.png`,
+  `assets/training-3d/steps/${id}-2-geste.png`,
+  `assets/training-3d/steps/${id}-3-difference.png`
+]]));
+
+window.VIDEOS.forEach(v=>{
+  v.image3d=TRAINING_3D_IMAGES[v.id]||null;
+  const stepImages=TRAINING_3D_STEP_IMAGES[v.id]||[];
+  v.mediaStyle="Trois images médicales explicatives";
+  v.imageSteps=[
+    {titre:"Vue clinique",texte:(v.pointsCles&&v.pointsCles[0])||v.theme,src:stepImages[0]||v.image3d},
+    {titre:"Geste d'examen",texte:(v.pointsCles&&v.pointsCles[1])||"Repérer le signe utile au lit du patient.",src:stepImages[1]||v.image3d},
+    {titre:"Interprétation",texte:(v.pointsCles&&v.pointsCles[2])||"Relier l'observation à l'orientation neurologique.",src:stepImages[2]||v.image3d}
+  ];
+});

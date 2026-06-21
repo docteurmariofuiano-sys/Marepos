@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURO-GP ASSIST — Aide clinique neurologique pour médecin généraliste</title>
+<meta name="description" content="Outil d'aide au raisonnement neurologique de premier recours : triage, examen guidé, courriers, formation. Ne remplace pas le jugement clinique.">
+<link rel="stylesheet" href="css/styles.css?v=animated-signs-20260621">
+<link rel="stylesheet" href="css/animations.css?v=animated-signs-20260621">
+</head>
+<body>
+
+<!-- ===== EN-TÊTE ===== -->
+<header class="app-header">
+  <div class="header-top">
+    <div class="logo" data-vue="accueil">
+      <div class="logo-mark">🧠</div>
+      <div class="logo-txt">
+        <h1>NEURO-GP ASSIST</h1>
+        <p>Aide clinique neurologique pour médecin généraliste</p>
+      </div>
+    </div>
+    <div class="header-spacer"></div>
+    <div class="mode-toggle">
+      <button data-mode="rapide">⚡ Consultation rapide</button>
+      <button data-mode="pedago" class="actif">📚 Mode pédagogique</button>
+    </div>
+  </div>
+
+  <div class="bandeau-securite">
+    Cet outil aide à <strong>structurer le raisonnement médical</strong>. Il ne remplace pas le jugement clinique.
+    Déficit aigu, trouble de conscience, crise prolongée, céphalée brutale, suspicion d'AVC →
+    <span class="num">15 / SAMU</span>
+  </div>
+
+  <nav class="nav-onglets">
+    <button data-vue="accueil" class="actif">🏠 Accueil</button>
+    <button data-vue="aide">🩺 Aide clinique rapide</button>
+    <button data-vue="cephalees">🤕 Céphalées</button>
+    <button data-vue="exam">🔎 Examen guidé</button>
+    <button data-vue="courrier">📄 Courrier</button>
+    <button data-vue="cr">📝 Compte rendu</button>
+    <button data-vue="formation">🎓 Formation</button>
+    <button data-vue="secu">🛡️ Sécurité</button>
+  </nav>
+</header>
+
+<main class="contenu">
+
+  <!-- ============ ACCUEIL ============ -->
+  <section id="vue-accueil" class="vue active">
+    <div class="accueil-banniere">
+      <h2>Bienvenue dans NEURO-GP ASSIST</h2>
+      <p>Quatre modules pour orienter une plainte neurologique, conduire l'examen clinique, repérer les urgences et générer vos courriers. Conçu pour le cabinet, la visite, la téléconsultation et la garde. Aucune donnée patient n'est stockée par défaut.</p>
+    </div>
+
+    <div class="grille-modules">
+      <div class="carte-module m1" data-vue="aide">
+        <span class="ico">🩺</span><h3>1 · Aide clinique rapide</h3>
+        <p>20 motifs neurologiques. Triage des urgences, interrogatoire, drapeaux rouges, examens, orientation et courrier.</p>
+      </div>
+      <div class="carte-module m2" data-vue="exam">
+        <span class="ico">🔎</span><h3>2 · Examen neurologique guidé</h3>
+        <p>Assistant pas-à-pas : consigne, geste, résultat normal/anormal, pièges. Génère le compte rendu.</p>
+      </div>
+      <div class="carte-module m3" data-vue="courrier">
+        <span class="ico">📄</span><h3>3 · Générateur de courrier</h3>
+        <p>16 modèles (neurologue, urgences, imagerie, EEG, sommeil, ORL…). Copier, imprimer, exporter.</p>
+      </div>
+      <div class="carte-module m4" data-vue="formation">
+        <span class="ico">🎓</span><h3>4 · Formation neurologique</h3>
+        <p>Images pédagogiques en 3 étapes, 36 flashcards, quiz et cas cliniques interactifs.</p>
+      </div>
+    </div>
+
+    <div class="accueil-raccourcis">
+      <button class="raccourci" onclick="ouvrirFiche('avc')">⚡ Suspicion AVC / AIT</button>
+      <button class="raccourci" onclick="ouvrirFiche('cephalee')">🤕 Céphalée brutale</button>
+      <button class="raccourci" onclick="ouvrirFiche('epilepsie')">⚡ Première crise</button>
+      <button class="raccourci" onclick="ouvrirFiche('lombosciatique')">🔻 Queue de cheval</button>
+      <button class="raccourci" onclick="ouvrirFiche('myasthenie')">💪 Faiblesse bulbaire</button>
+    </div>
+
+    <div class="alerte rouge" style="margin-top:26px">
+      <span class="ai">📞</span>
+      <div><strong>Réflexe sécurité.</strong> En cas de déficit neurologique aigu, trouble de conscience, crise prolongée, céphalée en coup de tonnerre ou suspicion d'AVC : appeler le <strong>15 (SAMU)</strong> / 112 sans délai.</div>
+    </div>
+  </section>
+
+  <!-- ============ AIDE CLINIQUE ============ -->
+  <section id="vue-aide" class="vue">
+    <div id="aide-liste">
+      <h2 class="titre-section">Aide clinique rapide</h2>
+      <p class="sous-titre">Choisissez un motif de consultation. Un triage des urgences précède chaque fiche.</p>
+      <div class="barre-recherche">
+        <input type="text" id="recherche-symptome" placeholder="Rechercher un symptôme (céphalée, vertige, AVC, sommeil…)">
+      </div>
+      <div class="grille-symptomes" id="grille-symptomes"></div>
+    </div>
+    <div id="aide-detail"></div>
+  </section>
+
+  <!-- ============ CÉPHALÉES ============ -->
+  <section id="vue-cephalees" class="vue">
+    <div id="ceph-intro">
+      <h2 class="titre-section">Module Céphalées — arbre décisionnel</h2>
+      <p class="sous-titre">16 situations, les urgences d'abord. Suivez le parcours guidé, ou ouvrez directement une situation.</p>
+      <div class="alerte rouge"><span class="ai">⚠️</span><div><strong>Toujours commencer par les urgences.</strong> Coup de tonnerre, fièvre + raideur de nuque, déficit focal, post-traumatique sous anticoagulant, grossesse/post-partum, > 50 ans, cancer/immunodépression : céphalée secondaire jusqu'à preuve du contraire.</div></div>
+      <div style="margin:16px 0">
+        <button class="btn" id="ceph-arbre-start">▶ Lancer le parcours guidé</button>
+      </div>
+      <h3 style="color:var(--bleu-nuit);font-size:16px;margin:22px 0 10px">Accès direct aux 16 situations</h3>
+      <div class="grille-cas" id="ceph-cartes"></div>
+    </div>
+    <div id="ceph-arbre" style="display:none"></div>
+    <div id="ceph-detail"></div>
+  </section>
+
+  <!-- ============ EXAMEN GUIDÉ ============ -->
+  <section id="vue-exam" class="vue">
+    <div id="exam-choix">
+      <h2 class="titre-section">Examen neurologique guidé</h2>
+      <p class="sous-titre">Sélectionnez un examen. Chaque test détaille la consigne, le geste, les résultats et les pièges, et alimente le compte rendu.</p>
+      <div class="choix-exam" id="choix-exam"></div>
+    </div>
+    <div id="exam-deroule" style="display:none"></div>
+  </section>
+
+  <!-- ============ COURRIER ============ -->
+  <section id="vue-courrier" class="vue">
+    <h2 class="titre-section">Générateur de courrier</h2>
+    <p class="sous-titre">Remplissez les champs utiles : le courrier se construit automatiquement. Aucune donnée n'est enregistrée.</p>
+    <div class="courrier-layout">
+      <div class="courrier-form">
+        <h4>Modèle</h4>
+        <div class="champ"><label>Type de courrier</label><select id="c-modele"></select></div>
+        <div class="champ"><label>Motif de consultation</label><input id="c-motif" placeholder="ex. Céphalée brutale, suspicion d'AVC…"></div>
+
+        <h4>Patient</h4>
+        <div class="champ"><label>Initiales / Nom Prénom</label><input id="c-nom" placeholder="ex. M. D. ou Dupont Jean"></div>
+        <div class="champ"><label>Âge</label><input id="c-age" type="number" placeholder="ex. 68"></div>
+        <div class="champ"><label>Sexe</label><input id="c-sexe" placeholder="ex. homme / femme"></div>
+        <div class="champ"><label>Antécédents importants</label><textarea id="c-atcd" placeholder="HTA, FA, diabète…"></textarea></div>
+        <div class="champ"><label>Traitements (anticoagulants, antiagrégants, neuroleptiques, psychotropes…)</label><textarea id="c-traitements"></textarea></div>
+        <div class="champ"><label>Allergies</label><input id="c-allergies"></div>
+
+        <h4>Histoire & examen</h4>
+        <div class="champ"><label>Date / mode de début</label><input id="c-debut" placeholder="ex. brutal, ce matin 8h"></div>
+        <div class="champ"><label>Chronologie</label><textarea id="c-chronologie"></textarea></div>
+        <div class="champ"><label>Signes positifs</label><textarea id="c-signesPos"></textarea></div>
+        <div class="champ"><label>Signes négatifs importants</label><textarea id="c-signesNeg"></textarea></div>
+        <div class="champ"><label>Constantes</label><input id="c-constantes" placeholder="TA, FC, T°, SpO2, glycémie"></div>
+        <div class="champ"><label>Examen neurologique réalisé</label><textarea id="c-examenNeuro" placeholder="Collez le compte rendu ou résumez"></textarea></div>
+
+        <h4>Conclusion</h4>
+        <div class="champ"><label>Hypothèses diagnostiques</label><textarea id="c-hypotheses"></textarea></div>
+        <div class="champ"><label>Examens déjà réalisés</label><textarea id="c-examensFaits"></textarea></div>
+
+        <h4>Examens demandés (cocher)</h4>
+        <div class="check-list" id="c-examens-demandes"></div>
+
+        <h4>Avis & signature</h4>
+        <div class="champ"><label>Motif précis de l'avis</label><textarea id="c-motifPrecis"></textarea></div>
+        <div class="champ"><label>Signature</label><input id="c-signature" placeholder="Dr … — RPPS — coordonnées"></div>
+      </div>
+
+      <div class="courrier-apercu">
+        <div class="courrier-apercu-head">
+          <span class="urg-pill u-prog" id="c-urg-pill">Programmé</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn sm" id="c-copier">📋 Copier</button>
+            <button class="btn sm sec" id="c-txt">⬇ TXT</button>
+            <button class="btn sm sec" id="c-pdf">⬇ PDF</button>
+            <button class="btn sm gris" id="c-imprimer">🖨 Imprimer</button>
+          </div>
+        </div>
+        <div class="courrier-papier" id="courrier-papier"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPTE RENDU ============ -->
+  <section id="vue-cr" class="vue">
+    <h2 class="titre-section">Compte rendu d'examen neurologique</h2>
+    <p class="sous-titre">Construit automatiquement depuis l'examen guidé, ou rédigé ici. Cliquez sur un item pour l'insérer.</p>
+    <div class="cr-zone">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn sm vert" id="cr-normal">Examen normal type</button>
+        <button class="btn sm gris" id="cr-vider">Vider</button>
+        <button class="btn sm" id="cr-copier">📋 Copier</button>
+        <button class="btn sm sec" id="cr-vers-courrier">→ Insérer dans le courrier</button>
+      </div>
+      <div class="fc-filtres" id="cr-insertions" style="margin-bottom:10px"></div>
+      <textarea class="cr-texte" id="cr-texte"></textarea>
+      <p style="font-size:12px;color:var(--gris-doux);margin-top:8px">Chaque élément peut être qualifié : normal / anormal / non testé / impossible. Modifiez librement le texte.</p>
+    </div>
+  </section>
+
+  <!-- ============ FORMATION ============ -->
+  <section id="vue-formation" class="vue">
+    <h2 class="titre-section">NEURO TRAINING — Formation neurologique</h2>
+    <p class="sous-titre">Images médicales explicatives, flashcards, quiz et cas cliniques. Contenus pédagogiques créés de zéro (aucune vidéo utilisée).</p>
+    <div class="form-tabs">
+      <button data-pane="videos" class="actif">🖼️ Images</button>
+      <button data-pane="flashcards">🃏 Flashcards</button>
+      <button data-pane="quiz">❓ Quiz</button>
+      <button data-pane="cas">🧩 Cas cliniques</button>
+    </div>
+
+    <div class="form-pane" id="form-videos">
+      <div class="grille-videos" id="grille-videos"></div>
+    </div>
+
+    <div class="form-pane" id="form-flashcards" style="display:none">
+      <div class="fc-filtres" id="fc-filtres"></div>
+      <div class="flashcard" id="flashcard"></div>
+      <p class="fc-hint">Cliquez sur la carte pour révéler la réponse.</p>
+      <div class="fc-nav">
+        <button class="btn sec" id="fc-prev">← Précédente</button>
+        <span class="fc-compteur" id="fc-compteur"></span>
+        <button class="btn sec" id="fc-next">Suivante →</button>
+      </div>
+    </div>
+
+    <div class="form-pane" id="form-quiz" style="display:none"></div>
+
+    <div class="form-pane" id="form-cas" style="display:none">
+      <div class="grille-cas" id="grille-cas"></div>
+    </div>
+  </section>
+
+  <!-- ============ SÉCURITÉ ============ -->
+  <section id="vue-secu" class="vue">
+    <h2 class="titre-section">Sécurité médicale</h2>
+    <p class="sous-titre">Situations imposant une alerte rouge et une orientation urgente.</p>
+    <div class="alerte urgence-max"><span class="ai">🚨</span><div><strong>Appel 15 / SAMU immédiat</strong> devant toute urgence vitale ou fonctionnelle neurologique.</div></div>
+    <div class="fiche-corps" style="border-radius:14px;border:1px solid var(--gris-bord);margin-top:14px">
+      <div class="bloc"><div class="bloc-titre"><span class="nb">!</span>Alertes rouges</div>
+        <ul class="liste rf">
+          <li>Déficit neurologique aigu (hémicorps, face, membre)</li>
+          <li>Aphasie / dysarthrie aiguë</li>
+          <li>Trouble visuel brutal</li>
+          <li>Céphalée en coup de tonnerre</li>
+          <li>Syndrome méningé (± fièvre, ± purpura)</li>
+          <li>Crise > 5 minutes ou crises répétées</li>
+          <li>Confusion fébrile</li>
+          <li>Trouble de conscience</li>
+          <li>Suspicion de syndrome de la queue de cheval</li>
+          <li>Syndrome médullaire (niveau sensitif, troubles sphinctériens)</li>
+          <li>Guillain-Barré avec extension rapide</li>
+          <li>Dyspnée / dysphagie / faiblesse bulbaire</li>
+          <li>Anisocorie douloureuse ou Claude-Bernard-Horner douloureux</li>
+          <li>Vertige + signe neurologique central</li>
+          <li>Syncope d'effort ou ECG anormal</li>
+        </ul>
+      </div>
+      <div class="bloc"><div class="bloc-titre"><span class="nb">✓</span>Hiérarchie de l'orientation</div>
+        <div class="orientation">
+          <span class="orient-tag samu">Urgence vitale / fonctionnelle → 15</span>
+          <span class="orient-tag urg">Urgence différée → urgences / avis rapide</span>
+          <span class="orient-tag specialiste">Avis spécialisé programmé</span>
+          <span class="orient-tag domicile">Surveillance MG</span>
+        </div>
+      </div>
+      <div class="bloc"><div class="bloc-titre"><span class="nb">⚠</span>Ne jamais rassurer abusivement devant</div>
+        <ul class="liste rf">
+          <li>Un déficit neurologique récent</li><li>Une céphalée brutale</li><li>Un trouble de conscience</li>
+          <li>Une fièvre neurologique</li><li>Une crise persistante</li><li>Un syndrome de la queue de cheval</li>
+          <li>Un syndrome médullaire</li><li>Une dyspnée neuromusculaire</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== MODALE ===== -->
+<div class="modale-fond" id="modale">
+  <div class="modale">
+    <div class="modale-head">
+      <h3 id="modale-titre">—</h3>
+      <button class="modale-fermer" id="modale-fermer">×</button>
+    </div>
+    <div class="modale-corps" id="modale-corps"></div>
+  </div>
+</div>
+
+<!-- ===== PIED ===== -->
+<footer class="app-footer">
+  <strong>NEURO-GP ASSIST</strong> — outil d'aide au raisonnement, sans valeur de prescription automatique.<br>
+  Contenus pédagogiques originaux inspirés des recommandations HAS, CEN, SFN, SFMU, ESC, ICHD-3 et des référentiels sommeil. Aucune vidéo protégée n'est reproduite.<br>
+  Données traitées <strong>localement</strong> dans le navigateur — aucun stockage ni transmission par défaut. En cas d'urgence : <strong>15 / 112</strong>.
+</footer>
+
+<!-- ===== SCRIPTS (données puis moteur) ===== -->
+<script src="js/data-triage.js"></script>
+<script src="js/data-fiches.js"></script>
+<script src="js/data-cephalees.js"></script>
+<script src="js/data-exam.js"></script>
+<script src="js/data-courriers.js"></script>
+<script src="js/data-flashcards.js"></script>
+<script src="js/data-videos.js?v=animated-signs-20260621"></script>
+<script src="js/data-cas.js"></script>
+<script src="js/app.js?v=animated-signs-20260621"></script>
+</body>
+</html>

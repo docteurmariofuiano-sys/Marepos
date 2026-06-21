@@ -1,0 +1,192 @@
+/* ============================================================
+   Animations pédagogiques (vidéos) — SVG + keyframes
+   ============================================================ */
+.scene-svg{width:100%;height:100%;display:block}
+
+@keyframes bab-toe{0%,40%{transform:rotate(0deg)}70%,100%{transform:rotate(-32deg)}}
+@keyframes bab-stim{0%{cx:150px}100%{cx:250px}}
+@keyframes arm-drop{0%,30%{transform:rotate(0deg)}100%{transform:rotate(14deg)}}
+@keyframes arm-stay{0%,100%{transform:rotate(0deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes pupil{0%,100%{r:14px}50%{r:6px}}
+@keyframes sway{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+@keyframes step-leg{0%,100%{transform:rotate(0)}30%{transform:rotate(-40deg)}60%{transform:rotate(8deg)}}
+@keyframes shuffle{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,-2px)}}
+@keyframes nyst{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+@keyframes mouthmove{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+@keyframes tonic{0%,40%{transform:scaleY(1)}50%,100%{transform:scaleY(.96) translateY(4px)}}
+@keyframes pulse-fade{0%,100%{opacity:.25}50%{opacity:1}}
+
+/* ============================================================
+   Nouveau lecteur NEURO TRAINING
+   ============================================================ */
+.neuromotion *{transform-box:fill-box;transform-origin:center}
+.neuromotion .scene-backdrop{fill:url(#sceneGlow)}
+.neuromotion .scene-grid{stroke:rgba(207,224,255,.08);stroke-width:1}
+.neuromotion .ambient{fill:#3a86ff;opacity:.12;filter:url(#softGlow);animation:ambient-float 8s ease-in-out infinite}
+.neuromotion .ambient-b{fill:#1b9e5a;animation-delay:-3.5s}
+.neuromotion .scanline rect{fill:rgba(255,255,255,.05);animation:scan-sweep 5.5s ease-in-out infinite}
+.neuromotion .scene-title{fill:rgba(207,224,255,.5);font:800 12px Segoe UI,system-ui;letter-spacing:1.4px}
+.neuromotion .scene-label{fill:#e7eefc;font:800 17px Segoe UI,system-ui}
+.neuromotion .scene-callout{font:800 15px Segoe UI,system-ui}
+.neuromotion .scene-callout.danger{fill:#ff6b6b}
+.neuromotion .scene-callout.warning{fill:#ffd166}
+.neuromotion .scene-callout.success{fill:#73e2a7}
+.neuromotion .skin{fill:#f0c9a8}
+.neuromotion .body,.neuromotion .coat{fill:url(#bodyGrad)}
+.neuromotion .limb{stroke:#3a86ff;stroke-width:16;stroke-linecap:round;fill:none}
+.neuromotion .eye,.neuromotion .pupil{fill:#06111e}
+.neuromotion .iris{fill:#7ed3b2}
+.neuromotion .eye-white{fill:#fff}
+.neuromotion .trace,.neuromotion .nerve,.neuromotion .rotation-ring,.neuromotion .language-path,.neuromotion .ghost-path,.neuromotion .knee-lift,.neuromotion .balance-line,.neuromotion .foot-arc{
+  fill:none;
+  stroke:#79b7ff;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-dasharray:12 12;
+  animation:trace-flow 2.8s linear infinite;
+}
+.neuromotion .trace-slow{animation-duration:4.2s}
+
+.neuromotion .foot-sole{fill:#f0c9a8;stroke:rgba(255,255,255,.2);stroke-width:2}
+.neuromotion .toe{fill:#f0c9a8}
+.neuromotion .toe-main{animation:toe-up 4.5s ease-in-out infinite}
+.neuromotion .fan-1{animation:fan-one 4.5s ease-in-out infinite}
+.neuromotion .fan-2{animation:fan-two 4.5s ease-in-out infinite}
+.neuromotion .motion-dot{fill:#ff4d4d;filter:url(#softGlow);animation:stim-travel 4.5s ease-in-out infinite}
+
+.neuromotion .neutral-arm{animation:steady-arm 4.8s ease-in-out infinite}
+.neuromotion .weak-arm{transform-origin:left center;animation:weak-arm-drop 4.8s ease-in-out infinite}
+.neuromotion .breath{animation:body-breath 3s ease-in-out infinite}
+
+.neuromotion .face{stroke:rgba(255,255,255,.18);stroke-width:2}
+.neuromotion .midline{stroke:rgba(255,255,255,.22);stroke-width:2;stroke-dasharray:5 7}
+.neuromotion .brow{stroke:#06111e;stroke-width:6;stroke-linecap:round;fill:none}
+.neuromotion .weak-brow{animation:weak-brow 4s ease-in-out infinite}
+.neuromotion .blink-eye{animation:blink-modern 3s ease-in-out infinite}
+.neuromotion .mouth-asym,.neuromotion .mouth{stroke:#7d1414;stroke-width:7;stroke-linecap:round;fill:none}
+
+.neuromotion .light-beam{fill:#ffd166;opacity:.55;filter:url(#softGlow);animation:light-pulse 2.6s ease-in-out infinite}
+.neuromotion .pupil-direct{animation:pupil-contract 2.6s ease-in-out infinite}
+.neuromotion .pupil-consensual{animation:pupil-contract 2.6s ease-in-out infinite .18s}
+
+.neuromotion .patient-sway{transform-origin:center bottom;animation:patient-sway 4.2s ease-in-out infinite}
+.neuromotion .park-walker{animation:park-shuffle 1.8s ease-in-out infinite}
+.neuromotion .trunk-forward{transform:rotate(7deg)}
+.neuromotion .short-step{animation:short-step 1.8s ease-in-out infinite}
+.neuromotion .step-b{animation-delay:.9s}
+.neuromotion .arm-reduced{stroke:#3a86ff;stroke-width:9;stroke-linecap:round;fill:none;opacity:.78}
+.neuromotion .floor-dash{stroke:rgba(255,255,255,.28);stroke-width:5;stroke-linecap:round;stroke-dasharray:18 14;animation:floor-scroll 1.8s linear infinite}
+
+.neuromotion .stepping-leg{transform-origin:top center;animation:step-swing 2.2s ease-in-out infinite}
+.neuromotion .foot-drop{animation:foot-drop 2.2s ease-in-out infinite}
+
+.neuromotion .head-tilt{transform-origin:center;animation:head-tilt 5s ease-in-out infinite}
+.neuromotion .nystagmus{animation:nystagmus-modern .65s ease-in-out infinite}
+
+.neuromotion .speaking{fill:#7d1414;animation:speaking 1s ease-in-out infinite}
+.neuromotion .bubble{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.26);stroke-width:2;animation:bubble-pop 4.6s ease-in-out infinite}
+.neuromotion .wernicke{animation-delay:1.5s}
+.neuromotion .bubble-text{fill:#e7eefc;font:800 14px Segoe UI,system-ui}
+
+.neuromotion .mat{fill:#274690}
+.neuromotion .seizure-body{animation:seizure-shake .22s linear infinite}
+.neuromotion .jitter{animation:limb-jitter .42s linear infinite}
+.neuromotion .jitter2{animation:limb-jitter .36s linear infinite reverse}
+.neuromotion .pulse-ring{fill:none;stroke:#ff6b6b;stroke-width:7;stroke-linecap:round;stroke-dasharray:16 14;animation:ring-pulse 1.2s ease-in-out infinite}
+
+.neuromotion .realistic-scene .exam-table{fill:#263b54;stroke:rgba(255,255,255,.16);stroke-width:2}
+.neuromotion .realistic-scene .exam-floor{fill:#294562;opacity:.9}
+.neuromotion .leg-shin{fill:none;stroke:#f0c9a8;stroke-width:28;stroke-linecap:round}
+.neuromotion .real-foot .foot-sole{fill:#f0c9a8;stroke:rgba(30,18,10,.2);stroke-width:2}
+.neuromotion .plantar-border{stroke:#79b7ff}
+.neuromotion .examiner-hand .hand{stroke:rgba(30,18,10,.12);stroke-width:2}
+.neuromotion .probe{stroke:#d7e4ef;stroke-width:6;stroke-linecap:round}
+.neuromotion .stim-hand{animation:stim-hand-glide 4.5s ease-in-out infinite}
+.neuromotion .neck{fill:#e7b991}
+.neuromotion .palm{fill:#f0c9a8}
+.neuromotion .eye-mask{fill:none;stroke:#071320;stroke-width:7;stroke-linecap:round}
+.neuromotion .panel-card{fill:rgba(255,255,255,.1);stroke:rgba(255,255,255,.18);stroke-width:2}
+.neuromotion .danger-card{stroke:rgba(255,107,107,.42)}
+.neuromotion .panel-label{fill:#e7eefc;font:900 16px Segoe UI,system-ui}
+.neuromotion .panel-label.danger{fill:#ff9b9b}
+.neuromotion .panel-small{fill:#b7c7dd;font:700 11px Segoe UI,system-ui}
+.neuromotion .mouth-smile{fill:none;stroke:#7d1414;stroke-width:6;stroke-linecap:round}
+.neuromotion .scene-micro{fill:#c8d7ec;font:800 12px Segoe UI,system-ui}
+.neuromotion .torch{fill:#263b54;stroke:#d7e4ef;stroke-width:2}
+.neuromotion .torch-lens{fill:#ffd166;filter:url(#softGlow)}
+.neuromotion .torch-hand{animation:torch-approach 2.6s ease-in-out infinite}
+.neuromotion .catch-arm,.neuromotion .examiner-arm{fill:none;stroke:#3a86ff;stroke-width:11;stroke-linecap:round}
+.neuromotion .examiner-catcher{opacity:.85}
+.neuromotion .door-frame rect{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.22);stroke-width:2}
+.neuromotion .door-frame path{stroke:rgba(255,255,255,.2);stroke-width:2}
+.neuromotion .weak-swing{opacity:.38}
+.neuromotion .freeze-bars{fill:none;stroke:#ffd166;stroke-width:6;stroke-linecap:round;stroke-dasharray:10 10;animation:freeze-blink 1.8s ease-in-out infinite}
+.neuromotion .walker-prop{animation:walker-progress 2.2s ease-in-out infinite}
+.neuromotion .stance-leg{opacity:.85}
+.neuromotion .toe-catch{fill:none;stroke:#ff6b6b;stroke-width:5;stroke-linecap:round;animation:toe-catch 2.2s ease-in-out infinite}
+.neuromotion .dix-body{animation:dix-drop 5s ease-in-out infinite}
+.neuromotion .clinician{animation:body-breath 3s ease-in-out infinite}
+.neuromotion .bubble-sub{fill:#b7c7dd;font:700 12px Segoe UI,system-ui}
+.neuromotion .safe-actions{animation:body-breath 2.4s ease-in-out infinite}
+
+@keyframes ambient-float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(12px,-10px) scale(1.08)}}
+@keyframes scan-sweep{0%{transform:translateY(-40px);opacity:0}18%,65%{opacity:.55}100%{transform:translateY(360px);opacity:0}}
+@keyframes trace-flow{0%{stroke-dashoffset:60;opacity:.45}50%{opacity:1}100%{stroke-dashoffset:0;opacity:.45}}
+@keyframes toe-up{0%,40%{transform:rotate(0deg) translateY(0)}64%,100%{transform:rotate(-31deg) translateY(-4px)}}
+@keyframes fan-one{0%,50%{transform:rotate(0deg)}75%,100%{transform:rotate(14deg) translateY(2px)}}
+@keyframes fan-two{0%,50%{transform:rotate(0deg)}75%,100%{transform:rotate(24deg) translate(0,4px)}}
+@keyframes stim-travel{0%,12%{transform:translate(0,0);opacity:.15}18%{opacity:1}58%,100%{transform:translate(168px,-16px);opacity:1}}
+@keyframes steady-arm{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes weak-arm-drop{0%,34%{transform:rotate(0deg)}74%,100%{transform:rotate(18deg) translateY(12px)}}
+@keyframes body-breath{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+@keyframes weak-brow{0%,45%{opacity:1;transform:translateY(0)}70%,100%{opacity:.28;transform:translateY(7px)}}
+@keyframes blink-modern{0%,86%,100%{transform:scaleY(1)}91%{transform:scaleY(.1)}}
+@keyframes light-pulse{0%,100%{opacity:.18;transform:scaleX(.82)}45%{opacity:.72;transform:scaleX(1.04)}}
+@keyframes pupil-contract{0%,28%,100%{r:14px}52%,74%{r:6px}}
+@keyframes patient-sway{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-5deg)}62%{transform:rotate(7deg)}}
+@keyframes park-shuffle{0%,100%{transform:translateX(-4px)}50%{transform:translateX(7px)}}
+@keyframes short-step{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
+@keyframes floor-scroll{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-32}}
+@keyframes step-swing{0%,100%{transform:rotate(0deg)}34%{transform:rotate(-35deg) translateY(-10px)}62%{transform:rotate(9deg)}}
+@keyframes foot-drop{0%,48%{transform:rotate(18deg)}70%,100%{transform:rotate(0deg)}}
+@keyframes head-tilt{0%,100%{transform:rotate(0deg)}45%{transform:rotate(-38deg)}70%{transform:rotate(-38deg)}}
+@keyframes nystagmus-modern{0%,100%{transform:translateX(-8px) rotate(-4deg)}50%{transform:translateX(8px) rotate(4deg)}}
+@keyframes speaking{0%,100%{transform:scaleY(.65)}50%{transform:scaleY(1.25)}}
+@keyframes bubble-pop{0%,100%{opacity:.35;transform:translateY(0)}38%,70%{opacity:1;transform:translateY(-3px)}}
+@keyframes seizure-shake{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-4px,2px) rotate(-1deg)}50%{transform:translate(4px,-2px) rotate(1deg)}75%{transform:translate(-2px,-3px) rotate(-1deg)}}
+@keyframes limb-jitter{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,-5px)}}
+@keyframes ring-pulse{0%,100%{opacity:.35;stroke-dashoffset:0}50%{opacity:1;stroke-dashoffset:30}}
+@keyframes stim-hand-glide{0%,15%{transform:translate(0,0);opacity:.85}55%,100%{transform:translate(130px,-20px);opacity:1}}
+@keyframes torch-approach{0%,100%{transform:translateX(0)}45%,72%{transform:translateX(20px)}}
+@keyframes freeze-blink{0%,100%{opacity:.22}45%,70%{opacity:1}}
+@keyframes walker-progress{0%,100%{transform:translateX(-8px)}50%{transform:translateX(12px)}}
+@keyframes toe-catch{0%,50%{opacity:.15}72%,100%{opacity:1}}
+@keyframes dix-drop{0%,22%{transform:translate(0,-18px) rotate(0deg)}52%,100%{transform:translate(-8px,4px) rotate(-12deg)}}
+@keyframes cinema-camera{0%{transform:scale(1.035) translate3d(0,0,0)}28%{transform:scale(1.058) translate3d(-.75%,.35%,0)}58%{transform:scale(1.072) translate3d(.65%,-.42%,0)}82%{transform:scale(1.052) translate3d(-.25%,-.2%,0)}100%{transform:scale(1.035) translate3d(0,0,0)}}
+@keyframes cinema-focus{0%,100%{opacity:.64;filter:blur(0)}45%{opacity:.78;filter:blur(.45px)}70%{opacity:.7;filter:blur(.2px)}}
+@keyframes cinema-grain{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(9px,7px,0)}}
+@keyframes clinical-kenburns{0%,100%{transform:scale(1.03) translate(0,0)}25%{transform:scale(1.075) translate(-1.5%,.9%)}55%{transform:scale(1.095) translate(1.2%,-.8%)}78%{transform:scale(1.06) translate(-.7%,-.5%)}}
+@keyframes motion-dash{0%{stroke-dashoffset:160;opacity:.55}42%{opacity:1}100%{stroke-dashoffset:0;opacity:.7}}
+@keyframes motion-pulse{0%,100%{opacity:.55;transform:scale(.98)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes motion-blink{0%,100%{opacity:.18}50%{opacity:1}}
+@keyframes ghost-drift{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(18px);opacity:.8}}
+@keyframes ring-grow{0%{r:10;opacity:.95}100%{r:62;opacity:0}}
+@keyframes pupil-ring{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(.55);opacity:1}}
+@keyframes light-sweep{0%,100%{opacity:.12;transform:translateX(-18px)}50%{opacity:.38;transform:translateX(24px)}}
+@keyframes step-blink{0%,100%{opacity:.18;transform:translateY(0)}45%,65%{opacity:1;transform:translateY(-6px)}}
+@keyframes nystagmus-stroke{0%,100%{transform:translateX(-18px);opacity:.35}50%{transform:translateX(18px);opacity:1}}
+
+/* Fondu enchaîné des 3 vues d'un signe (vignette Formation) */
+@keyframes cineloop-fade{
+  0%{opacity:1}
+  28%{opacity:1}
+  35%{opacity:0}
+  93%{opacity:0}
+  100%{opacity:1}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .neuromotion *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
+}

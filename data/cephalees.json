@@ -1,0 +1,358 @@
+{
+  "arbre": [
+    {
+      "q": "La céphalée est-elle BRUTALE, maximale en moins d'une minute (coup de tonnerre) ?",
+      "sit": "coup_tonnerre",
+      "crit": true
+    },
+    {
+      "q": "Y a-t-il de la FIÈVRE avec raideur de nuque / syndrome méningé (± purpura) ?",
+      "sit": "febrile",
+      "crit": true
+    },
+    {
+      "q": "Existe-t-il un DÉFICIT NEUROLOGIQUE focal, une crise ou un trouble de conscience ?",
+      "sit": "deficit",
+      "crit": true
+    },
+    {
+      "q": "Fait-elle suite à un TRAUMATISME crânien récent (surtout si anticoagulant/âgé) ?",
+      "sit": "post_trauma",
+      "crit": true
+    },
+    {
+      "q": "Est-elle DÉCLENCHÉE par l'effort, le coït ou une manœuvre de Valsalva (toux) ?",
+      "sit": "effort",
+      "crit": false
+    },
+    {
+      "q": "Est-elle ORTHOSTATIQUE (apparaît/aggravée debout, soulagée allongée) ?",
+      "sit": "orthostatique",
+      "crit": false
+    },
+    {
+      "q": "Y a-t-il un CANCER évolutif ou une IMMUNODÉPRESSION ?",
+      "sit": "cancer_immuno",
+      "crit": true
+    },
+    {
+      "q": "S'agit-il d'une femme ENCEINTE ou en POST-PARTUM ?",
+      "sit": "grossesse",
+      "crit": true
+    },
+    {
+      "q": "S'agit-il d'une céphalée NOUVELLE chez un patient de PLUS DE 50 ANS ?",
+      "sit": "apres50",
+      "crit": true
+    },
+    {
+      "q": "Est-elle NOUVELLE ou INHABITUELLE par rapport au profil connu du patient ?",
+      "sit": "nouvelle",
+      "crit": false
+    },
+    {
+      "q": "Survient-elle ≥ 15 jours/mois (céphalée chronique quotidienne) ?",
+      "sit": "chronique",
+      "crit": false
+    }
+  ],
+  "primaires": [
+    "avf",
+    "migraine_aura",
+    "migraine",
+    "tension",
+    "abus"
+  ],
+  "situations": {
+    "coup_tonnerre": {
+      "titre": "Céphalée brutale en coup de tonnerre",
+      "cat": "urgence",
+      "drapeau": "rouge",
+      "reconnaitre": "Douleur explosive, maximale d'emblée (< 1 min), « la pire de ma vie ». Penser hémorragie méningée d'abord.",
+      "examenNeuro": "Conscience (Glasgow), syndrome méningé, déficit focal, pupilles, fond d'œil.",
+      "examenGeneral": "TA, FC, température ; recherche d'un purpura ; auscultation.",
+      "fondOeil": "Recherche d'hémorragies/œdème papillaire si réalisable — ne pas retarder l'imagerie.",
+      "imagerie": [
+        "TDM cérébrale sans injection EN URGENCE",
+        "Si TDM normale : ponction lombaire (sang/xanthochromie)",
+        "Angio-TDM/angio-IRM (anévrisme, dissection, thrombose veineuse, SVCR)"
+      ],
+      "biologie": "Selon contexte (hémostase si anticoagulant).",
+      "conduite": "Hospitalisation immédiate. Une TDM normale n'élimine pas une hémorragie méningée → PL.",
+      "courrier": "neuro_urgent",
+      "urgenceCourrier": "samu",
+      "ddx": "Hémorragie méningée, dissection artérielle, thrombose veineuse cérébrale, syndrome de vasoconstriction cérébrale réversible (SVCR), apoplexie hypophysaire."
+    },
+    "febrile": {
+      "titre": "Céphalée fébrile",
+      "cat": "urgence",
+      "drapeau": "rouge",
+      "reconnaitre": "Céphalée + fièvre, a fortiori raideur de nuque, photophobie, troubles de conscience, purpura.",
+      "examenNeuro": "Syndrome méningé (raideur, Kernig/Brudzinski), vigilance, déficit focal, crise.",
+      "examenGeneral": "Température, TA, FC ; RECHERCHE DE PURPURA (urgence absolue), porte d'entrée ORL/dentaire.",
+      "fondOeil": "Œdème papillaire (HTIC) avant PL si signes de focalisation/HTIC.",
+      "imagerie": [
+        "Imagerie cérébrale AVANT PL si signes focaux, trouble de conscience ou HTIC",
+        "Sinon PL en urgence (méningite/méningo-encéphalite)"
+      ],
+      "biologie": "NFS, CRP, hémocultures, PL (cytologie, biochimie, PCR) en milieu hospitalier.",
+      "conduite": "Urgence. Purpura fébrile = antibiothérapie IMMÉDIATE (céphalosporine 3e G) puis 15. Hospitalisation.",
+      "courrier": "neuro_urgent",
+      "urgenceCourrier": "samu",
+      "ddx": "Méningite bactérienne/virale, méningo-encéphalite (HSV), abcès, thrombophlébite septique."
+    },
+    "deficit": {
+      "titre": "Céphalée avec déficit neurologique",
+      "cat": "urgence",
+      "drapeau": "rouge",
+      "reconnaitre": "Céphalée associée à un déficit focal, une aphasie, une crise ou un trouble de conscience.",
+      "examenNeuro": "Examen neurologique complet : déficit moteur/sensitif, langage, champ visuel, cervelet, pupilles.",
+      "examenGeneral": "TA, FC, glycémie capillaire, température.",
+      "fondOeil": "Œdème papillaire (processus expansif, HTIC).",
+      "imagerie": [
+        "Imagerie cérébrale en urgence (TDM puis IRM selon contexte)",
+        "Angio si suspicion vasculaire"
+      ],
+      "biologie": "Selon contexte.",
+      "conduite": "Urgence : éliminer AVC, hémorragie, processus expansif, thrombose veineuse. Appel 15 / urgences.",
+      "courrier": "urgences_avc",
+      "urgenceCourrier": "samu",
+      "ddx": "AVC, hématome, tumeur, thrombose veineuse cérébrale, abcès, encéphalite."
+    },
+    "post_trauma": {
+      "titre": "Céphalée post-traumatique",
+      "cat": "urgence",
+      "drapeau": "orange",
+      "reconnaitre": "Céphalée après TC. Gravité +++ si anticoagulant, âge élevé, trouble de conscience, vomissements, aggravation.",
+      "examenNeuro": "Glasgow, déficit focal, pupilles (anisocorie), signes d'HTIC.",
+      "examenGeneral": "Recherche de plaie/embarrure, otorragie/rhinorrhée (fracture base), constantes.",
+      "fondOeil": "Œdème papillaire si suspicion d'HTIC.",
+      "imagerie": [
+        "TDM cérébrale (critères : trouble conscience, vomissements répétés, signe focal, anticoagulation, âge, intoxication, mécanisme à haute énergie)"
+      ],
+      "biologie": "Hémostase si anticoagulant/antiagrégant.",
+      "conduite": "Hématome possible (extra/sous-dural) parfois retardé sous anticoagulant. Surveillance ou TDM selon critères ; urgences si red flag.",
+      "courrier": "imagerie",
+      "urgenceCourrier": "urg",
+      "ddx": "Hématome extradural, sous-dural (aigu/chronique), hémorragie, contusion."
+    },
+    "cancer_immuno": {
+      "titre": "Céphalée chez patient cancéreux / immunodéprimé",
+      "cat": "urgence",
+      "drapeau": "rouge",
+      "reconnaitre": "Toute céphalée nouvelle/inhabituelle sur ce terrain doit faire évoquer une cause secondaire.",
+      "examenNeuro": "Complet : déficit focal, syndrome méningé, signes d'HTIC, crise.",
+      "examenGeneral": "Température, état général, foyers infectieux.",
+      "fondOeil": "Œdème papillaire (HTIC, métastases).",
+      "imagerie": [
+        "IRM cérébrale avec injection (métastases, lymphome, abcès, méningite carcinomateuse)",
+        "TDM si IRM non disponible en urgence"
+      ],
+      "biologie": "NFS, CRP ; PL en milieu spécialisé selon contexte (méningite, localisation méningée).",
+      "conduite": "Seuil d'alerte abaissé : avis et imagerie rapides. Hospitalisation si signes de gravité.",
+      "courrier": "neuro_urgent",
+      "urgenceCourrier": "urg",
+      "ddx": "Métastases, méningite carcinomateuse, abcès/toxoplasmose, lymphome, thrombose veineuse."
+    },
+    "grossesse": {
+      "titre": "Céphalée chez femme enceinte / post-partum",
+      "cat": "urgence",
+      "drapeau": "rouge",
+      "reconnaitre": "Terrain à risque vasculaire. Toute céphalée inhabituelle, surtout au 3e trimestre/post-partum, est suspecte.",
+      "examenNeuro": "Conscience, déficit focal, réflexes (hyperréflexie), troubles visuels.",
+      "examenGeneral": "TA +++ (pré-éclampsie), protéinurie, œdèmes, ROT vifs, douleur épigastrique.",
+      "fondOeil": "Recherche de rétinopathie hypertensive / œdème papillaire.",
+      "imagerie": [
+        "IRM/angio-IRM (préférée, sans irradiation) : thrombose veineuse, SVCR, PRES",
+        "TDM si urgence vitale"
+      ],
+      "biologie": "TA, bandelette urinaire/protéinurie, NFS-plaquettes, bilan hépatique, hémostase (HELLP).",
+      "conduite": "Urgence obstétricale + neuro : éliminer pré-éclampsie/éclampsie, thrombose veineuse cérébrale, SVCR, PRES. Avis en urgence.",
+      "courrier": "neuro_urgent",
+      "urgenceCourrier": "samu",
+      "ddx": "Pré-éclampsie/éclampsie, thrombose veineuse cérébrale, SVCR, PRES, hémorragie."
+    },
+    "apres50": {
+      "titre": "Céphalée nouvelle après 50 ans",
+      "cat": "urgence",
+      "drapeau": "orange",
+      "reconnaitre": "Toute céphalée récente après 50 ans impose d'éliminer une artérite à cellules géantes (Horton) et une lésion expansive.",
+      "examenNeuro": "Examen complet ; acuité visuelle (risque de cécité), oculomotricité.",
+      "examenGeneral": "PALPATION des artères temporales (indurées, douloureuses, pouls aboli), claudication de la mâchoire, AEG, fébricule, pseudo-polyarthrite rhizomélique.",
+      "fondOeil": "NOIA (œdème papillaire pâle) — urgence ophtalmologique.",
+      "imagerie": [
+        "IRM cérébrale (lésion expansive) selon contexte",
+        "Écho-doppler/IRM des temporales, biopsie d'artère temporale (sans retarder le traitement)"
+      ],
+      "biologie": "VS + CRP EN URGENCE (syndrome inflammatoire) si suspicion de Horton.",
+      "conduite": "Suspicion de Horton avec signe visuel = corticothérapie SANS DÉLAI après VS/CRP (avis), pour éviter la cécité. Sinon bilan rapide.",
+      "courrier": "neuro_urgent",
+      "urgenceCourrier": "urg",
+      "ddx": "Artérite à cellules géantes (Horton), tumeur, hématome sous-dural chronique."
+    },
+    "effort": {
+      "titre": "Céphalée d'effort / toux / coït (Valsalva)",
+      "cat": "secondaire",
+      "drapeau": "orange",
+      "reconnaitre": "Céphalée déclenchée par l'effort physique, la toux, le coït ou le Valsalva.",
+      "examenNeuro": "Complet ; signes d'HTIC, syndrome cérébelleux (malformation de Chiari).",
+      "examenGeneral": "TA, constantes.",
+      "fondOeil": "Œdème papillaire (HTIC).",
+      "imagerie": [
+        "IRM cérébrale (± angio) : éliminer une cause (Chiari, lésion de fosse postérieure, anévrisme, SVCR)",
+        "En cas de 1er épisode brutal au coït : explorer comme un coup de tonnerre"
+      ],
+      "biologie": "Selon contexte.",
+      "conduite": "Éliminer une cause secondaire avant de retenir une céphalée primaire d'effort. Avis si imagerie anormale ou atypie.",
+      "courrier": "neuro_standard",
+      "urgenceCourrier": "urg",
+      "ddx": "Cause secondaire (Chiari, lésion fosse postérieure, anévrisme, SVCR) puis céphalée primaire d'effort."
+    },
+    "orthostatique": {
+      "titre": "Céphalée orthostatique",
+      "cat": "secondaire",
+      "drapeau": "orange",
+      "reconnaitre": "Céphalée apparaissant/aggravée en position debout, soulagée en décubitus (souvent occipitale).",
+      "examenNeuro": "Complet ; rechercher des signes d'hypotension du LCR.",
+      "examenGeneral": "TA couché/debout, notion de PL récente, de brèche durale.",
+      "fondOeil": "Habituellement normal.",
+      "imagerie": [
+        "IRM cérébrale avec injection (rehaussement pachyméningé, signes d'hypotension du LCR)",
+        "Recherche de la brèche (IRM médullaire/myéloscanner) en milieu spécialisé"
+      ],
+      "biologie": "Non spécifique.",
+      "conduite": "Évoquer une hypotension intracrânienne (brèche durale spontanée ou post-PL). Repos, hydratation, caféine ; blood-patch si confirmé (spécialisé).",
+      "courrier": "neuro_standard",
+      "urgenceCourrier": "prog",
+      "ddx": "Hypotension intracrânienne spontanée, syndrome post-PL."
+    },
+    "nouvelle": {
+      "titre": "Céphalée nouvelle ou inhabituelle",
+      "cat": "secondaire",
+      "drapeau": "orange",
+      "reconnaitre": "Modification récente du profil habituel, ou première céphalée inhabituelle sans urgence d'emblée.",
+      "examenNeuro": "Complet ; tout signe focal réoriente vers l'urgence.",
+      "examenGeneral": "TA, température, palpation temporale si > 50 ans.",
+      "fondOeil": "Recherche d'œdème papillaire.",
+      "imagerie": [
+        "IRM cérébrale (non urgente) si persistance/atypie sans red flag",
+        "Imagerie urgente si apparition d'un drapeau rouge"
+      ],
+      "biologie": "Selon contexte (VS/CRP si > 50 ans).",
+      "conduite": "Réévaluer le profil ; tout drapeau rouge fait basculer vers l'urgence. Sinon bilan programmé et suivi.",
+      "courrier": "neuro_standard",
+      "urgenceCourrier": "prog",
+      "ddx": "Cause secondaire débutante à éliminer, puis céphalée primaire de novo."
+    },
+    "chronique": {
+      "titre": "Céphalée chronique quotidienne",
+      "cat": "chronique",
+      "drapeau": "vert",
+      "reconnaitre": "Céphalée ≥ 15 jours/mois depuis > 3 mois. Rechercher systématiquement un abus médicamenteux.",
+      "examenNeuro": "Complet (doit être normal) ; tout signe anormal impose l'imagerie.",
+      "examenGeneral": "TA ; évaluer consommation d'antalgiques, comorbidités anxio-dépressives.",
+      "fondOeil": "Œdème papillaire (HTIC idiopathique chez femme jeune en surpoids).",
+      "imagerie": [
+        "IRM si examen anormal, atypie, ou suspicion d'HTIC idiopathique",
+        "Pas d'imagerie systématique si examen normal et profil typique"
+      ],
+      "biologie": "Selon contexte.",
+      "conduite": "Agenda des céphalées, sevrage d'un abus éventuel, traitement de fond adapté, prise en charge globale. Avis si réfractaire.",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "ddx": "Migraine chronique, céphalée de tension chronique, abus médicamenteux, HTIC idiopathique."
+    },
+    "migraine": {
+      "titre": "Migraine sans aura",
+      "cat": "primaire",
+      "drapeau": "vert",
+      "reconnaitre": "ICHD-3 : ≥ 5 crises ; 4–72 h ; ≥ 2 critères (unilatérale, pulsatile, modérée/sévère, aggravée à l'effort) ; ≥ 1 (nausées/vomissements OU photo + phonophobie).",
+      "examenNeuro": "Normal entre/pendant les crises (sinon réévaluer).",
+      "examenGeneral": "TA, facteurs déclenchants (sommeil, règles, alcool, stress).",
+      "fondOeil": "Normal.",
+      "imagerie": [
+        "Aucune si critères remplis et examen normal",
+        "IRM seulement si atypie/red flag"
+      ],
+      "biologie": "Aucune en routine.",
+      "conduite": "Traitement de crise précoce ; traitement de fond si crises fréquentes/invalidantes ; éducation, agenda, éviter l'abus médicamenteux.",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "traitement": "Crise : AINS (si pas de CI) ± triptan, + antiémétique. Fond (si ≥ 3-4 crises/mois invalidantes) : bêtabloquant, etc. (selon terrain).",
+      "ddx": "Céphalée de tension, céphalée secondaire si atypie."
+    },
+    "migraine_aura": {
+      "titre": "Migraine avec aura",
+      "cat": "primaire",
+      "drapeau": "vert",
+      "reconnaitre": "Aura entièrement réversible (visuelle : scotome scintillant ; sensitive ; aphasique) s'installant en > 5 min, durant 5–60 min, suivie de la céphalée. « Marche migraineuse ».",
+      "examenNeuro": "Normal en dehors de l'aura.",
+      "examenGeneral": "Facteurs vasculaires (l'aura majore le risque vasculaire ; CI des œstroprogestatifs).",
+      "fondOeil": "Normal.",
+      "imagerie": [
+        "Aucune si aura typique et examen normal",
+        "IRM si aura atypique, prolongée, toujours du même côté, ou 1re aura après 40 ans (DDX AIT)"
+      ],
+      "biologie": "Aucune en routine.",
+      "conduite": "Distinguer de l'AIT (l'aura est progressive et « marche », l'AIT est brutal et déficitaire). Éviter œstroprogestatifs si aura. Traitement comme la migraine.",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "traitement": "Traiter la céphalée (pas l'aura) : AINS/triptan dès la phase céphalalgique.",
+      "ddx": "AIT (surtout 1re aura tardive), crise épileptique occipitale."
+    },
+    "avf": {
+      "titre": "Algie vasculaire de la face",
+      "cat": "primaire",
+      "drapeau": "orange",
+      "reconnaitre": "Douleur strictement unilatérale, péri-orbitaire, très intense, par salves de 15–180 min, avec signes dysautonomiques homolatéraux (larmoiement, rhinorrhée, ptosis/myosis, agitation).",
+      "examenNeuro": "Normal ; rechercher un Horner homolatéral.",
+      "examenGeneral": "Rythmicité des crises (souvent nocturnes), facteurs (alcool).",
+      "fondOeil": "Normal.",
+      "imagerie": [
+        "IRM cérébrale recommandée au moins une fois (éliminer une cause symptomatique de la région hypothalamo-hypophysaire)"
+      ],
+      "biologie": "Aucune en routine.",
+      "conduite": "Traitement de crise rapide ; traitement de transition/fond (avis neurologique).",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "traitement": "Crise : OXYGÈNE normobare 12–15 L/min au masque + sumatriptan SC. Fond : vérapamil (avis, ECG préalable). Antalgiques oraux inefficaces.",
+      "ddx": "Autres céphalées trigémino-autonomiques, névralgie du trijumeau, cause symptomatique."
+    },
+    "tension": {
+      "titre": "Céphalée de tension",
+      "cat": "primaire",
+      "drapeau": "vert",
+      "reconnaitre": "Douleur bilatérale, en étau/pression, d'intensité légère à modérée, non aggravée par l'effort, sans nausées (au plus une photo- OU phonophobie).",
+      "examenNeuro": "Normal.",
+      "examenGeneral": "TA ; contractures cervicales, contexte de stress, sommeil.",
+      "fondOeil": "Normal.",
+      "imagerie": [
+        "Aucune si typique et examen normal"
+      ],
+      "biologie": "Aucune.",
+      "conduite": "Antalgiques simples ponctuels (éviter l'abus) ; mesures non médicamenteuses (gestion du stress, sommeil, activité physique) ; traitement de fond si chronique (avis).",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "traitement": "Crise : paracétamol/AINS en usage limité. Chronique : amitriptyline à faible dose (avis), relaxation/TCC.",
+      "ddx": "Migraine (chevauchement), céphalée par abus médicamenteux."
+    },
+    "abus": {
+      "titre": "Céphalée par abus médicamenteux",
+      "cat": "primaire",
+      "drapeau": "orange",
+      "reconnaitre": "Céphalée ≥ 15 j/mois chez un patient surconsommant : antalgiques simples ≥ 15 j/mois, ou triptans/opioïdes/associations ≥ 10 j/mois, depuis > 3 mois.",
+      "examenNeuro": "Normal.",
+      "examenGeneral": "Quantifier précisément la consommation (agenda), comorbidités anxio-dépressives.",
+      "fondOeil": "Normal.",
+      "imagerie": [
+        "Aucune si examen normal ; IRM si atypie"
+      ],
+      "biologie": "Selon contexte (toxicité des antalgiques).",
+      "conduite": "Information, SEVRAGE de la classe surconsommée, optimisation du traitement de fond de la céphalée primaire sous-jacente, suivi rapproché. Avis si échec.",
+      "courrier": "cephalees",
+      "urgenceCourrier": "prog",
+      "traitement": "Sevrage (ambulatoire ou hospitalier selon le produit/terrain) + traitement de fond + accompagnement.",
+      "ddx": "Migraine chronique, céphalée de tension chronique."
+    }
+  }
+}
