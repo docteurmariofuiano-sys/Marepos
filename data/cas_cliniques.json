@@ -1,0 +1,674 @@
+[
+  {
+    "id": "c1",
+    "titre": "Céphalée en coup de tonnerre",
+    "theme": "Céphalées",
+    "urgence": true,
+    "motif": "Femme de 45 ans, céphalée brutale « comme un coup de massue » survenue il y a 1 h, maximale d'emblée, avec nausées.",
+    "etapes": [
+      {
+        "q": "Quel est votre premier réflexe ?",
+        "opt": [
+          {
+            "t": "Rassurer et prescrire un antalgique",
+            "bon": false,
+            "fb": "Dangereux : une céphalée maximale d'emblée évoque une hémorragie méningée."
+          },
+          {
+            "t": "Évaluer les red flags et orienter en urgence",
+            "bon": true,
+            "fb": "Exact : céphalée en coup de tonnerre = urgence jusqu'à preuve du contraire."
+          }
+        ]
+      },
+      {
+        "q": "Quel examen complémentaire en première intention ?",
+        "opt": [
+          {
+            "t": "TDM cérébrale sans injection en urgence",
+            "bon": true,
+            "fb": "Oui : TDM sans injection, d'autant plus sensible qu'elle est précoce."
+          },
+          {
+            "t": "IRM programmée dans le mois",
+            "bon": false,
+            "fb": "Trop tardif : l'urgence est immédiate."
+          }
+        ]
+      },
+      {
+        "q": "La TDM est normale. Que proposez-vous ?",
+        "opt": [
+          {
+            "t": "Retour à domicile, c'est rassurant",
+            "bon": false,
+            "fb": "Non : une TDM normale n'élimine pas une hémorragie méningée, surtout à distance."
+          },
+          {
+            "t": "Ponction lombaire en milieu hospitalier",
+            "bon": true,
+            "fb": "Exact : PL à la recherche de sang/xanthochromie."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Céphalée en coup de tonnerre = urgence. TDM en urgence puis PL si TDM normale. Orientation hospitalière immédiate.",
+    "courrier": "neuro_urgent"
+  },
+  {
+    "id": "c2",
+    "titre": "Suspicion d'AVC sylvien",
+    "theme": "AVC/AIT",
+    "urgence": true,
+    "motif": "Homme de 68 ans, hypertendu, brutalement : bouche déviée, bras droit faible, parle difficilement depuis 40 min.",
+    "etapes": [
+      {
+        "q": "Quel outil utilisez-vous immédiatement ?",
+        "opt": [
+          {
+            "t": "FAST + heure de début",
+            "bon": true,
+            "fb": "Oui : Face-Arm-Speech-Time, et noter l'heure de début (fenêtre thérapeutique)."
+          },
+          {
+            "t": "Bilan biologique complet au cabinet",
+            "bon": false,
+            "fb": "Non : ne pas perdre de temps, l'urgence est le transfert."
+          }
+        ]
+      },
+      {
+        "q": "Quel examen faites-vous avant tout au cabinet ?",
+        "opt": [
+          {
+            "t": "Glycémie capillaire",
+            "bon": true,
+            "fb": "Exact : éliminer une hypoglycémie qui simule un AVC."
+          },
+          {
+            "t": "ECG d'effort",
+            "bon": false,
+            "fb": "Inadapté et dangereux dans ce contexte."
+          }
+        ]
+      },
+      {
+        "q": "Conduite immédiate ?",
+        "opt": [
+          {
+            "t": "Donner de l'aspirine puis adresser",
+            "bon": false,
+            "fb": "Non : pas d'antithrombotique avant l'imagerie (risque hémorragique)."
+          },
+          {
+            "t": "Appel 15 pour transfert UNV",
+            "bon": true,
+            "fb": "Exact : appel 15, transfert en unité neurovasculaire."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Déficit focal brutal = AVC. FAST + glycémie, appel 15, pas d'antithrombotique avant imagerie.",
+    "courrier": "urgences_avc"
+  },
+  {
+    "id": "c3",
+    "titre": "Paralysie faciale périphérique",
+    "theme": "Paires crâniennes",
+    "urgence": false,
+    "motif": "Femme de 35 ans : depuis ce matin, impossible de fermer l'œil gauche et de plisser le front gauche, sans autre déficit.",
+    "etapes": [
+      {
+        "q": "L'atteinte du front oriente vers…",
+        "opt": [
+          {
+            "t": "Une atteinte périphérique",
+            "bon": true,
+            "fb": "Oui : le front est atteint → périphérique (paralysie de Bell probable)."
+          },
+          {
+            "t": "Une atteinte centrale",
+            "bon": false,
+            "fb": "Non : une atteinte centrale épargne le front."
+          }
+        ]
+      },
+      {
+        "q": "Quelle mesure est PRIORITAIRE ?",
+        "opt": [
+          {
+            "t": "Protection oculaire (larmes, occlusion nocturne)",
+            "bon": true,
+            "fb": "Exact : prévenir la kératite par défaut d'occlusion."
+          },
+          {
+            "t": "IRM cérébrale en urgence",
+            "bon": false,
+            "fb": "Non nécessaire si forme typique isolée."
+          }
+        ]
+      },
+      {
+        "q": "Traitement médicamenteux de la paralysie de Bell ?",
+        "opt": [
+          {
+            "t": "Corticothérapie orale précoce (< 72 h)",
+            "bon": true,
+            "fb": "Oui : améliore la récupération si débutée tôt."
+          },
+          {
+            "t": "Antibiothérapie systématique",
+            "bon": false,
+            "fb": "Non, sauf cause spécifique (Lyme)."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Paralysie faciale périphérique isolée = paralysie de Bell. Protection oculaire + corticoïdes précoces.",
+    "courrier": "neuro_urgent"
+  },
+  {
+    "id": "c4",
+    "titre": "Syncope vagale vs cardiaque",
+    "theme": "Syncope",
+    "urgence": true,
+    "motif": "Homme de 55 ans : malaise avec perte de connaissance brève, survenu pendant un effort sportif.",
+    "etapes": [
+      {
+        "q": "Quel élément vous alarme ?",
+        "opt": [
+          {
+            "t": "La survenue À L'EFFORT",
+            "bon": true,
+            "fb": "Oui : syncope d'effort = drapeau rouge cardiaque."
+          },
+          {
+            "t": "La brièveté de la perte de connaissance",
+            "bon": false,
+            "fb": "Peu spécifique à elle seule."
+          }
+        ]
+      },
+      {
+        "q": "Examen indispensable ?",
+        "opt": [
+          {
+            "t": "ECG 12 dérivations",
+            "bon": true,
+            "fb": "Exact : ECG systématique devant toute syncope."
+          },
+          {
+            "t": "EEG",
+            "bon": false,
+            "fb": "Non, sauf arguments pour une crise."
+          }
+        ]
+      },
+      {
+        "q": "Orientation ?",
+        "opt": [
+          {
+            "t": "Réassurance et retour à domicile",
+            "bon": false,
+            "fb": "Non : la syncope d'effort impose un bilan cardiologique urgent."
+          },
+          {
+            "t": "Avis cardiologique urgent / urgences",
+            "bon": true,
+            "fb": "Exact : risque de cause rythmique/structurale grave."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Syncope d'effort = drapeau rouge cardiaque. ECG, avis cardiologique urgent (reco ESC).",
+    "courrier": "cardio_syncope"
+  },
+  {
+    "id": "c5",
+    "titre": "Première crise convulsive",
+    "theme": "Épilepsie",
+    "urgence": true,
+    "motif": "Homme de 28 ans : premier épisode de convulsions généralisées avec morsure de langue et confusion au réveil.",
+    "etapes": [
+      {
+        "q": "Quel argument plaide pour une crise (vs syncope) ?",
+        "opt": [
+          {
+            "t": "La confusion post-critique et la morsure latérale",
+            "bon": true,
+            "fb": "Oui : phase post-critique + morsure latérale = crise."
+          },
+          {
+            "t": "La récupération immédiate sans confusion",
+            "bon": false,
+            "fb": "Cela orienterait plutôt vers une syncope."
+          }
+        ]
+      },
+      {
+        "q": "Quel examen au cabinet ?",
+        "opt": [
+          {
+            "t": "Glycémie capillaire et constantes",
+            "bon": true,
+            "fb": "Exact : éliminer une cause métabolique."
+          },
+          {
+            "t": "EEG immédiat au cabinet",
+            "bon": false,
+            "fb": "L'EEG n'est pas un examen d'urgence ici, il se programme."
+          }
+        ]
+      },
+      {
+        "q": "À propos de l'EEG, qu'est-ce qui est vrai ?",
+        "opt": [
+          {
+            "t": "Un EEG normal élimine l'épilepsie",
+            "bon": false,
+            "fb": "Faux : un EEG intercritique normal n'élimine pas une épilepsie."
+          },
+          {
+            "t": "Un EEG normal n'élimine pas une épilepsie",
+            "bon": true,
+            "fb": "Exact : sensibilité limitée en intercritique."
+          }
+        ]
+      }
+    ],
+    "conclusion": "1ère crise : éliminer une cause aiguë, bilan, EEG programmé (pas en urgence sauf état de mal non convulsif). Pas de conduite automobile.",
+    "courrier": "eeg"
+  },
+  {
+    "id": "c6",
+    "titre": "Vertige : périphérique ou central ?",
+    "theme": "Vertiges",
+    "urgence": true,
+    "motif": "Femme de 60 ans, diabétique : grand vertige rotatoire continu depuis 3 h avec vomissements.",
+    "etapes": [
+      {
+        "q": "Quel signe vous ferait craindre une cause centrale ?",
+        "opt": [
+          {
+            "t": "Diplopie, dysarthrie ou ataxie sévère associée",
+            "bon": true,
+            "fb": "Oui : signes neurologiques = central jusqu'à preuve du contraire."
+          },
+          {
+            "t": "Un vertige aggravé aux changements de position",
+            "bon": false,
+            "fb": "Cela évoque plutôt un VPPB (périphérique)."
+          }
+        ]
+      },
+      {
+        "q": "Quel test, si vous êtes formé, dans ce syndrome vestibulaire aigu continu ?",
+        "opt": [
+          {
+            "t": "HINTS (Head Impulse, Nystagmus, Skew)",
+            "bon": true,
+            "fb": "Oui : HINTS bien réalisé est très sensible pour l'AVC."
+          },
+          {
+            "t": "Dix-Hallpike",
+            "bon": false,
+            "fb": "Le Dix-Hallpike sert au VPPB positionnel, pas ici."
+          }
+        ]
+      },
+      {
+        "q": "HINTS « central ». Orientation ?",
+        "opt": [
+          {
+            "t": "Rééducation vestibulaire à domicile",
+            "bon": false,
+            "fb": "Non : un profil central impose l'urgence."
+          },
+          {
+            "t": "Urgences neurovasculaires (IRM)",
+            "bon": true,
+            "fb": "Exact : suspicion d'AVC de fosse postérieure."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Syndrome vestibulaire aigu continu : rechercher des signes centraux, HINTS si formé. Profil central → urgences (IRM, pas TDM).",
+    "courrier": "neuro_urgent"
+  },
+  {
+    "id": "c7",
+    "titre": "Syndrome de la queue de cheval",
+    "theme": "Urgences",
+    "urgence": true,
+    "motif": "Homme de 50 ans : lombosciatique bilatérale, depuis ce matin difficultés à uriner et fourmillements autour de l'anus.",
+    "etapes": [
+      {
+        "q": "Quels signes évoquez-vous ?",
+        "opt": [
+          {
+            "t": "Syndrome de la queue de cheval",
+            "bon": true,
+            "fb": "Oui : troubles sphinctériens + anesthésie en selle = urgence."
+          },
+          {
+            "t": "Lombalgie commune",
+            "bon": false,
+            "fb": "Non : les signes sphinctériens et périnéaux sont des red flags."
+          }
+        ]
+      },
+      {
+        "q": "Quel examen clinique est indispensable ?",
+        "opt": [
+          {
+            "t": "Examen périnéal (sensibilité en selle, tonus anal)",
+            "bon": true,
+            "fb": "Exact : recherche d'anesthésie en selle et d'hypotonie anale."
+          },
+          {
+            "t": "Recherche d'un souffle cardiaque",
+            "bon": false,
+            "fb": "Hors sujet ici."
+          }
+        ]
+      },
+      {
+        "q": "Conduite ?",
+        "opt": [
+          {
+            "t": "IRM lombaire à programmer dans le mois",
+            "bon": false,
+            "fb": "Non : c'est une urgence chirurgicale (décompression rapide)."
+          },
+          {
+            "t": "Transfert urgent (IRM + neurochirurgie)",
+            "bon": true,
+            "fb": "Exact : décompression sans délai pour éviter les séquelles."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Queue de cheval = urgence neurochirurgicale. IRM en urgence et avis chirurgical immédiat.",
+    "courrier": "queue_cheval"
+  },
+  {
+    "id": "c8",
+    "titre": "Maladie de Parkinson débutante",
+    "theme": "Parkinson",
+    "urgence": false,
+    "motif": "Homme de 64 ans : tremblement de la main droite au repos, lenteur, écriture plus petite depuis 6 mois.",
+    "etapes": [
+      {
+        "q": "Quelle triade recherchez-vous ?",
+        "opt": [
+          {
+            "t": "Bradykinésie, rigidité, tremblement de repos",
+            "bon": true,
+            "fb": "Oui : triade akinéto-rigide, ici asymétrique."
+          },
+          {
+            "t": "Spasticité, Babinski, ROT vifs",
+            "bon": false,
+            "fb": "Cela définirait un syndrome pyramidal."
+          }
+        ]
+      },
+      {
+        "q": "Quel élément renforce la maladie de Parkinson idiopathique ?",
+        "opt": [
+          {
+            "t": "L'asymétrie des symptômes",
+            "bon": true,
+            "fb": "Oui : début asymétrique typique."
+          },
+          {
+            "t": "Des chutes très précoces",
+            "bon": false,
+            "fb": "Les chutes précoces évoquent un syndrome atypique (PSP)."
+          }
+        ]
+      },
+      {
+        "q": "Conduite thérapeutique en MG ?",
+        "opt": [
+          {
+            "t": "Initier la L-Dopa immédiatement",
+            "bon": false,
+            "fb": "Non : ne pas initier sans avis neurologique."
+          },
+          {
+            "t": "Adresser au neurologue, vérifier l'ordonnance",
+            "bon": true,
+            "fb": "Exact : avis spécialisé + éliminer une cause iatrogène."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Syndrome parkinsonien asymétrique = maladie de Parkinson probable. Avis neurologique, éliminer une cause iatrogène.",
+    "courrier": "parkinson"
+  },
+  {
+    "id": "c9",
+    "titre": "Syndrome de Guillain-Barré",
+    "theme": "Urgences",
+    "urgence": true,
+    "motif": "Femme de 40 ans : faiblesse des jambes puis des mains depuis 3 jours, après une gastro-entérite ; marche difficile.",
+    "etapes": [
+      {
+        "q": "Quel examen clé recherchez-vous ?",
+        "opt": [
+          {
+            "t": "Les réflexes ostéo-tendineux (abolis ?)",
+            "bon": true,
+            "fb": "Oui : aréflexie + déficit ascendant = GBS."
+          },
+          {
+            "t": "Le réflexe photomoteur",
+            "bon": false,
+            "fb": "Non spécifique ici."
+          }
+        ]
+      },
+      {
+        "q": "Quel signe de gravité surveillez-vous ?",
+        "opt": [
+          {
+            "t": "L'atteinte respiratoire et la déglutition",
+            "bon": true,
+            "fb": "Exact : risque de détresse respiratoire et de fausses routes."
+          },
+          {
+            "t": "La température cutanée des pieds",
+            "bon": false,
+            "fb": "Non pertinent pour la gravité immédiate."
+          }
+        ]
+      },
+      {
+        "q": "Orientation ?",
+        "opt": [
+          {
+            "t": "Surveillance à domicile",
+            "bon": false,
+            "fb": "Dangereux : évolution potentiellement rapide."
+          },
+          {
+            "t": "Hospitalisation urgente",
+            "bon": true,
+            "fb": "Exact : surveillance, PL, immunothérapie."
+          }
+        ]
+      }
+    ],
+    "conclusion": "GBS : déficit ascendant + aréflexie. Surveiller respiration/déglutition, hospitalisation urgente.",
+    "courrier": "neuro_urgent"
+  },
+  {
+    "id": "c10",
+    "titre": "Suspicion de SEP (névrite optique)",
+    "theme": "SEP",
+    "urgence": true,
+    "motif": "Femme de 30 ans : baisse de la vision d'un œil avec douleur à la mobilisation oculaire depuis 2 jours.",
+    "etapes": [
+      {
+        "q": "Quel diagnostic évoquez-vous en priorité ?",
+        "opt": [
+          {
+            "t": "Névrite optique rétrobulbaire (poussée de SEP ?)",
+            "bon": true,
+            "fb": "Oui : baisse d'acuité douloureuse unilatérale chez une femme jeune."
+          },
+          {
+            "t": "Conjonctivite",
+            "bon": false,
+            "fb": "Non : pas d'œil rouge ni sécrétions, et baisse d'acuité avec douleur à la mobilisation."
+          }
+        ]
+      },
+      {
+        "q": "Quel signe rechercher à l'examen ?",
+        "opt": [
+          {
+            "t": "Déficit pupillaire afférent (Marcus Gunn)",
+            "bon": true,
+            "fb": "Exact : signe d'atteinte du nerf optique."
+          },
+          {
+            "t": "Un nystagmus positionnel",
+            "bon": false,
+            "fb": "Non spécifique de la névrite optique."
+          }
+        ]
+      },
+      {
+        "q": "Conduite ?",
+        "opt": [
+          {
+            "t": "Collyre antibiotique et réévaluation à 1 mois",
+            "bon": false,
+            "fb": "Non : il faut un avis spécialisé rapide et une IRM."
+          },
+          {
+            "t": "Avis neuro/ophtalmo rapide + IRM",
+            "bon": true,
+            "fb": "Exact : bilan de SEP, corticoïdes en bolus en milieu spécialisé si confirmé."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Névrite optique chez une femme jeune : suspicion de SEP. IRM cérébrale/médullaire + avis spécialisé.",
+    "courrier": "sep"
+  },
+  {
+    "id": "c11",
+    "titre": "Confusion fébrile (encéphalite)",
+    "theme": "Urgences",
+    "urgence": true,
+    "motif": "Homme de 58 ans : confusion d'installation rapide depuis 24 h, fièvre à 38,8 °C, propos incohérents.",
+    "etapes": [
+      {
+        "q": "Quelle est votre crainte principale ?",
+        "opt": [
+          {
+            "t": "Méningo-encéphalite",
+            "bon": true,
+            "fb": "Oui : confusion fébrile aiguë = urgence infectieuse neurologique."
+          },
+          {
+            "t": "Un trouble anxieux",
+            "bon": false,
+            "fb": "Non : le contexte fébrile et l'installation rapide imposent d'éliminer une cause organique."
+          }
+        ]
+      },
+      {
+        "q": "Que recherchez-vous à l'examen ?",
+        "opt": [
+          {
+            "t": "Syndrome méningé, déficit focal, purpura",
+            "bon": true,
+            "fb": "Exact : raideur de nuque, signes focaux, purpura."
+          },
+          {
+            "t": "Un signe de Lasègue",
+            "bon": false,
+            "fb": "Hors contexte."
+          }
+        ]
+      },
+      {
+        "q": "Conduite ?",
+        "opt": [
+          {
+            "t": "Bilan ambulatoire dans la semaine",
+            "bon": false,
+            "fb": "Non : urgence (PL, imagerie, traitement probabiliste)."
+          },
+          {
+            "t": "Hospitalisation urgente",
+            "bon": true,
+            "fb": "Exact : prise en charge hospitalière immédiate."
+          }
+        ]
+      }
+    ],
+    "conclusion": "Confusion fébrile = urgence (méningo-encéphalite). Hospitalisation, ne pas rassurer abusivement.",
+    "courrier": "neuro_urgent"
+  },
+  {
+    "id": "c12",
+    "titre": "SAHOS (somnolence diurne)",
+    "theme": "Sommeil",
+    "urgence": false,
+    "motif": "Homme de 52 ans, en surpoids : ronflements, fatigue, endormissements au volant ; sa conjointe rapporte des pauses respiratoires.",
+    "etapes": [
+      {
+        "q": "Quel(s) outil(s) utilisez-vous ?",
+        "opt": [
+          {
+            "t": "Épworth + STOP-Bang",
+            "bon": true,
+            "fb": "Oui : évaluer la somnolence (Epworth) et le risque (STOP-Bang)."
+          },
+          {
+            "t": "Le score de Glasgow",
+            "bon": false,
+            "fb": "Non adapté à ce contexte."
+          }
+        ]
+      },
+      {
+        "q": "Quel examen en première intention ?",
+        "opt": [
+          {
+            "t": "Polygraphie ventilatoire",
+            "bon": true,
+            "fb": "Exact : 1ère intention si SAHOS probable."
+          },
+          {
+            "t": "EEG standard",
+            "bon": false,
+            "fb": "Non, sauf suspicion d'épilepsie nocturne."
+          }
+        ]
+      },
+      {
+        "q": "Message de sécurité immédiat ?",
+        "opt": [
+          {
+            "t": "Prudence/abstention de conduite tant que non traité",
+            "bon": true,
+            "fb": "Exact : risque accidentogène majeur."
+          },
+          {
+            "t": "Aucun message particulier",
+            "bon": false,
+            "fb": "Non : la somnolence au volant est un danger."
+          }
+        ]
+      }
+    ],
+    "conclusion": "SAHOS probable : Epworth/STOP-Bang, polygraphie ventilatoire, message de sécurité (conduite). PPC selon sévérité.",
+    "courrier": "sommeil"
+  }
+]

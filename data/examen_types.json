@@ -1,0 +1,149 @@
+{
+  "complet": {
+    "nom": "Examen neurologique complet",
+    "ico": "🧠",
+    "steps": [
+      "vigilance",
+      "langage",
+      "champ_visuel",
+      "pupilles",
+      "oculomotricite",
+      "face_sens",
+      "facial",
+      "deglutition",
+      "tonus",
+      "force",
+      "barre",
+      "mingazzini",
+      "rot",
+      "babinski",
+      "sensibilite",
+      "doigt_nez",
+      "talon_genou",
+      "romberg",
+      "marche",
+      "meninge",
+      "lasegue"
+    ]
+  },
+  "urgence": {
+    "nom": "Examen rapide d'urgence",
+    "ico": "🚨",
+    "steps": [
+      "vigilance",
+      "glasgow",
+      "langage",
+      "facial",
+      "force",
+      "barre",
+      "mingazzini",
+      "babinski",
+      "sensibilite",
+      "meninge"
+    ]
+  },
+  "cephalee": {
+    "nom": "Orienté céphalée",
+    "ico": "🤕",
+    "steps": [
+      "vigilance",
+      "champ_visuel",
+      "pupilles",
+      "oculomotricite",
+      "facial",
+      "force",
+      "barre",
+      "meninge"
+    ]
+  },
+  "avc": {
+    "nom": "Orienté AVC / AIT",
+    "ico": "⚡",
+    "steps": [
+      "vigilance",
+      "langage",
+      "champ_visuel",
+      "facial",
+      "force",
+      "barre",
+      "mingazzini",
+      "sensibilite",
+      "babinski"
+    ]
+  },
+  "vertige": {
+    "nom": "Orienté vertige",
+    "ico": "🌀",
+    "steps": [
+      "oculomotricite",
+      "pupilles",
+      "deglutition",
+      "doigt_nez",
+      "romberg",
+      "marche"
+    ]
+  },
+  "neuropathie": {
+    "nom": "Orienté neuropathie",
+    "ico": "🦵",
+    "steps": [
+      "force",
+      "rot",
+      "sensibilite",
+      "romberg",
+      "marche"
+    ]
+  },
+  "parkinson": {
+    "nom": "Orienté syndrome parkinsonien",
+    "ico": "🧍",
+    "steps": [
+      "tonus",
+      "force",
+      "marche",
+      "pull_test"
+    ]
+  },
+  "cervelet": {
+    "nom": "Orienté syndrome cérébelleux",
+    "ico": "🎯",
+    "steps": [
+      "oculomotricite",
+      "doigt_nez",
+      "talon_genou",
+      "romberg",
+      "marche"
+    ]
+  },
+  "myasthenie": {
+    "nom": "Orienté myasthénie",
+    "ico": "💪",
+    "steps": [
+      "oculomotricite",
+      "pupilles",
+      "deglutition",
+      "force",
+      "barre"
+    ]
+  },
+  "cognitif": {
+    "nom": "Orienté troubles cognitifs",
+    "ico": "💭",
+    "steps": [
+      "vigilance",
+      "langage",
+      "mmse"
+    ]
+  },
+  "lombo": {
+    "nom": "Orienté lombosciatique / queue de cheval",
+    "ico": "🔻",
+    "steps": [
+      "force",
+      "rot",
+      "sensibilite",
+      "lasegue",
+      "perineal"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+/* ============================================================
+   MOTEUR DE TRIAGE NEUROLOGIQUE INITIAL — données
+   Sources de référence : HAS, CEN, SFMU, SFN, ICHD-3.
+   Contenu pédagogique original, non copié.
+   ============================================================ */
+
+window.TRIAGE = [
+  { id:"brutal", q:"Début brutal / en coup de tonnerre (max d'intensité < 1 min) ?", critique:true,
+    aide:"Une céphalée explosive ou un déficit d'installation soudaine évoque hémorragie méningée, dissection, AVC." },
+  { id:"focal", q:"Déficit focal ACTUEL : asymétrie du visage, faiblesse d'un bras/jambe, trouble du langage, trouble visuel ?", critique:true,
+    aide:"Tout déficit focal d'apparition récente = suspicion AVC jusqu'à preuve du contraire." },
+  { id:"conscience", q:"Trouble de la conscience / vigilance abaissée / confusion aiguë ?", critique:true,
+    aide:"Glasgow abaissé, désorientation aiguë : urgence d'évaluation." },
+  { id:"crise", q:"Crise convulsive en cours, répétée, ou > 5 minutes ?", critique:true,
+    aide:"Crise > 5 min ou crises répétées sans reprise de conscience = état de mal → 15." },
+  { id:"meninge", q:"Fièvre + raideur de nuque / syndrome méningé (± purpura) ?", critique:true,
+    aide:"Suspicion de méningite/méningo-encéphalite : urgence absolue, purpura fulminans = antibiothérapie immédiate." },
+  { id:"trauma", q:"Traumatisme crânien récent (notamment sous anticoagulant) ?", critique:false,
+    aide:"Risque d'hématome intracrânien, surtout si anticoagulé, âgé, ou trouble de conscience." },
+  { id:"terrain", q:"Anticoagulant / immunodépression / cancer évolutif / grossesse ou post-partum ?", critique:false,
+    aide:"Terrains à risque : abaissent le seuil de gravité et modifient les hypothèses (TVC, métastases, abcès…)." },
+  { id:"horner", q:"Douleur cervicale/faciale avec Claude-Bernard-Horner (ptosis + myosis) ?", critique:true,
+    aide:"Évoque une dissection carotidienne ou vertébrale : urgence neurovasculaire." },
+  { id:"selle", q:"Trouble sphinctérien récent / anesthésie en selle / déficit bilatéral des membres inférieurs ?", critique:true,
+    aide:"Syndrome de la queue de cheval ou compression médullaire : urgence neurochirurgicale (IRM en urgence)." },
+  { id:"bulbaire", q:"Dans un contexte neuromusculaire : dyspnée, dysphagie, faiblesse ascendante rapide ?", critique:true,
+    aide:"Atteinte bulbaire/respiratoire (Guillain-Barré, myasthénie, crise myasthénique) = urgence vitale." }
+];
