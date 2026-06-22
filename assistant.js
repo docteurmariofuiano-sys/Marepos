@@ -62,7 +62,7 @@ const APPS = [
    d:"Suivi préventif au cabinet selon les référentiels CNAM.",
    href:"suite-clinique/apps-externes/suivi_preventif.html"},
   {t:"PAI ASSIST", e:"🏫", dom:"Prévention",
-   d:"Projet d'Accueil Individualisé : conduite à tenir d'urgence, trousse d'urgence et aménagements générés automatiquement. ~25 pathologies (allergie, asthme, diabète, épilepsie, drépanocytose, dys, TDAH…).",
+   d:"Projet d'Accueil Individualisé au format officiel Éducation nationale (3 parties) : conduite à tenir d'urgence et trousse générées selon les médicaments. ~25 pathologies (allergie, asthme, diabète, épilepsie, dys, TDAH…).",
    href:"pai/index.html"},
   {t:"Échelles & évaluations", e:"📊", dom:"Transversal",
    d:"MoCA, CHA₂DS₂-VASc, AUDIT, RMQD, iatrogénie… échelles cliniques.",
