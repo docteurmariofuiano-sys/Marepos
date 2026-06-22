@@ -1,0 +1,7 @@
+# Artefact généré « tout-en-un » (≈15 Mo) — reconstructible depuis
+# pai/index.html + pai/templates/*.pdf + pai/vendor/pdf-lib.min.js
+pai/pai-autonome.html
+
+# Dépendances / divers
+node_modules/
+.DS_Store
