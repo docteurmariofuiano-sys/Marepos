@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAI ASSIST — Projet d'Accueil Individualisé (remplissage automatique)</title>
+<meta name="description" content="Génère automatiquement le Projet d'Accueil Individualisé (PAI) : conduite à tenir d'urgence et trousse d'urgence déduites des médicaments prescrits. Allergie alimentaire, asthme, diabète, épilepsie. 100% local, hors-ligne, sans stockage.">
+<style>
+/* =====================================================================
+   PAI ASSIST — feuille de style autonome (reprend la charte du portail)
+   ===================================================================== */
+:root{
+  --bg:#f5f7fb; --bg-soft:#eef2f9; --card:#ffffff;
+  --ink:#0f1c2e; --ink-soft:#5b6b82; --line:#e2e8f2;
+  --brand:#1f6feb; --brand-deep:#0b3a82; --teal:#0fb5a6;
+  --prev:#16a34a; --prev-soft:#e8f9ee;
+  --warn:#d97706; --warn-soft:#fff7ed;
+  --danger:#dc2626; --danger-soft:#fef2f2;
+  --ombre:0 1px 3px rgba(15,28,46,.06), 0 8px 24px rgba(15,28,46,.06);
+  --ombre-fort:0 12px 40px rgba(15,28,46,.16);
+  --rayon:18px; --rayon-s:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.5;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+a{color:var(--brand);text-decoration:none}
+
+/* ---------- En-tête ---------- */
+.hero{
+  position:relative; overflow:hidden; color:#fff; padding:34px 20px 56px;
+  background:
+    radial-gradient(1200px 400px at 12% -20%, rgba(255,255,255,.18), transparent 60%),
+    linear-gradient(120deg,#0b3a82 0%,#1f6feb 55%,#16a3a3 115%);
+}
+.hero-inner{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.back{font-size:13px;font-weight:700;opacity:.92;display:inline-flex;gap:6px;align-items:center;color:#fff;margin-bottom:16px}
+.back:hover{opacity:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-logo{
+  width:62px;height:62px;border-radius:18px;flex-shrink:0;display:grid;place-items:center;font-size:32px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.brand h1{font-size:28px;font-weight:800;letter-spacing:.3px;line-height:1.05}
+.brand .tagline{font-size:14px;opacity:.9;font-weight:500;margin-top:3px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.26);padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+}
+
+/* ---------- Disposition ---------- */
+.wrap{max-width:1180px;margin:-30px auto 0;padding:0 20px 60px;position:relative;z-index:2}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  box-shadow:var(--ombre);padding:20px;
+}
+.panel + .panel{margin-top:18px}
+.panel h2{
+  font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.panel h2 .n{
+  width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-size:12px;font-weight:800;
+}
+
+/* ---------- Formulaire ---------- */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fields .full{grid-column:1/-1}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+label.field{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+input[type=text],input[type=date],textarea,select{
+  font-family:inherit;font-size:14px;color:var(--ink);background:var(--bg-soft);
+  border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;transition:.15s;width:100%;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(31,111,235,.14)}
+textarea{resize:vertical;min-height:64px}
+
+/* ---------- Pathologies ---------- */
+.patho-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.patho-grid{grid-template-columns:1fr}}
+.patho{
+  display:flex;gap:10px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);
+  border-radius:12px;cursor:pointer;background:#fff;transition:.15s;
+}
+.patho:hover{border-color:var(--brand)}
+.patho.on{border-color:var(--brand);background:#f3f8ff;box-shadow:0 0 0 3px rgba(31,111,235,.1)}
+.patho input{margin-top:3px}
+.patho .ico{font-size:22px;line-height:1}
+.patho .t{font-weight:800;font-size:14px;color:var(--ink)}
+.patho .s{font-size:11.5px;color:var(--ink-soft)}
+
+/* ---------- Médicaments ---------- */
+.med-group{margin-bottom:16px}
+.med-group .gtitle{font-size:12px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.med{
+  border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:#fff;transition:.15s;
+}
+.med.on{border-color:var(--prev);background:var(--prev-soft)}
+.med-head{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.med-head input{margin-top:3px}
+.med-name{font-weight:800;font-size:14px;color:var(--ink)}
+.med-dci{font-size:11.5px;color:var(--ink-soft);font-weight:600}
+.med-tag{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;
+  padding:2px 7px;border-radius:999px;margin-left:auto;white-space:nowrap;
+}
+.med-tag.urgent{background:var(--danger-soft);color:var(--danger)}
+.med-tag.std{background:var(--bg-soft);color:var(--ink-soft)}
+.med-detail{margin-top:10px;display:none;gap:10px;grid-template-columns:1fr 1fr}
+.med.on .med-detail{display:grid}
+.med-detail .full{grid-column:1/-1}
+.med-detail label{font-size:11.5px;font-weight:700;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px}
+.hint{font-size:11.5px;color:var(--ink-soft);background:var(--bg-soft);border-radius:8px;padding:6px 9px;margin-top:6px}
+
+.addfree{display:flex;gap:8px;margin-top:6px}
+.addfree input{flex:1}
+
+/* ---------- Boutons ---------- */
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:800;border:none;border-radius:10px;padding:11px 16px;
+  cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-deep)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+.btn.green{background:var(--prev);color:#fff}
+.btn.green:hover{filter:brightness(.93)}
+
+/* ---------- Aperçu / document ---------- */
+.doc{
+  background:#fff;border:1px solid var(--line);border-radius:var(--rayon);box-shadow:var(--ombre);
+  padding:28px 30px;font-size:13.5px;color:var(--ink);
+}
+.doc .doc-head{display:flex;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:16px}
+.doc .doc-head h3{font-size:19px;font-weight:800;letter-spacing:.3px}
+.doc .doc-head .sub{font-size:12px;color:var(--ink-soft)}
+.doc h4{
+  font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--brand-deep);
+  border-bottom:1px solid var(--line);padding-bottom:5px;margin:18px 0 9px;
+}
+.doc .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.doc .kv dt{font-weight:700;color:var(--ink-soft)}
+.doc .kv dd{color:var(--ink)}
+.doc ul{margin:6px 0 6px 20px}
+.doc li{margin:3px 0}
+.doc .placeholder{color:#b6c0d0;font-style:italic}
+
+.alert-box{border:1.5px solid var(--danger);border-radius:12px;padding:0;overflow:hidden;margin:8px 0}
+.alert-box .ab-head{background:var(--danger);color:#fff;font-weight:800;padding:8px 12px;font-size:13px;display:flex;align-items:center;gap:8px}
+.alert-box .ab-body{padding:12px 14px}
+.step{display:flex;gap:10px;margin:8px 0;align-items:flex-start}
+.step .num{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--danger);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:13px;
+}
+.step .stext{font-size:13px}
+.step .stext b{color:var(--danger)}
+.callout{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:8px;padding:9px 12px;font-size:12.5px;margin:8px 0}
+.callout.info{background:#eff6ff;border-left-color:var(--brand)}
+.kit li{margin:2px 0}
+.sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:24px}
+.sig .box{border:1px solid var(--line);border-radius:10px;padding:10px;min-height:78px}
+.sig .box .lbl{font-size:11px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px}
+@media (max-width:520px){.sig{grid-template-columns:1fr}}
+
+.empty-doc{text-align:center;color:var(--ink-soft);padding:30px 10px}
+.empty-doc .big{font-size:40px;margin-bottom:8px}
+
+/* ---------- Avertissement ---------- */
+.disclaimer{
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--prev);
+  border-radius:var(--rayon-s);padding:14px 16px;font-size:12.5px;color:var(--ink-soft);margin-top:18px;
+}
+.disclaimer strong{color:var(--ink)}
+
+/* ---------- Impression ---------- */
+@media print{
+  body{background:#fff}
+  .hero,.col-form,.btnrow,.disclaimer,.no-print{display:none!important}
+  .wrap{margin:0;padding:0;max-width:none}
+  .layout{display:block}
+  .doc{border:none;box-shadow:none;border-radius:0;padding:0;font-size:12px}
+  .alert-box{break-inside:avoid}
+  @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="back" href="../index.html">← Retour au portail</a>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🏫</div>
+      <div>
+        <h1>PAI ASSIST</h1>
+        <div class="tagline">Projet d'Accueil Individualisé — remplissage automatique selon les médicaments prescrits</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="pill">⚡ Conduite à tenir générée automatiquement</span>
+      <span class="pill">📴 Fonctionne hors-ligne</span>
+      <span class="pill">🔒 Aucune donnée enregistrée</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<div class="layout">
+
+  <!-- ============== COLONNE FORMULAIRE ============== -->
+  <div class="col-form">
+
+    <div class="panel">
+      <h2><span class="n">1</span> Identité &amp; établissement</h2>
+      <div class="fields">
+        <label class="field">Nom de l'enfant
+          <input type="text" id="f_nom" placeholder="Nom"></label>
+        <label class="field">Prénom
+          <input type="text" id="f_prenom" placeholder="Prénom"></label>
+        <label class="field">Date de naissance
+          <input type="date" id="f_ddn"></label>
+        <label class="field">Sexe
+          <select id="f_sexe"><option value="">—</option><option>Fille</option><option>Garçon</option></select></label>
+        <label class="field">Poids (kg) <span style="font-weight:500">— utile pour les doses</span>
+          <input type="text" id="f_poids" placeholder="ex. 22" inputmode="decimal"></label>
+        <label class="field">Année scolaire
+          <input type="text" id="f_annee" placeholder="2025–2026"></label>
+        <label class="field full">Établissement (crèche / école / collège…)
+          <input type="text" id="f_etab" placeholder="Nom de l'établissement"></label>
+        <label class="field">Classe / niveau
+          <input type="text" id="f_classe" placeholder="ex. CE2"></label>
+        <label class="field">Restauration / périscolaire
+          <select id="f_resto"><option value="">—</option><option>Demi-pensionnaire</option><option>Externe</option><option>Avec périscolaire</option></select></label>
+        <label class="field">Médecin prescripteur
+          <input type="text" id="f_medecin" placeholder="Dr …"></label>
+        <label class="field">Date de rédaction
+          <input type="date" id="f_date"></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">2</span> Pathologie(s) concernée(s)</h2>
+      <div class="patho-grid" id="pathoGrid"></div>
+      <label class="field full" style="margin-top:12px">Précisions / allergènes / facteurs déclenchants
+        <textarea id="f_precisions" placeholder="ex. allergie à l'arachide et aux fruits à coque ; asthme d'effort…"></textarea>
+      </label>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">3</span> Médicaments prescrits</h2>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px">
+        Cochez les médicaments. La <strong>conduite à tenir d'urgence</strong> et la
+        <strong>trousse d'urgence</strong> se construisent automatiquement à droite.</p>
+      <div id="medList"></div>
+      <div class="med-group" style="margin-top:6px">
+        <div class="gtitle">Ajouter un médicament libre</div>
+        <div class="addfree">
+          <input type="text" id="freeMed" placeholder="Nom + posologie (ex. Doliprane 250 mg si fièvre)">
+          <button class="btn ghost" id="addFreeBtn" type="button">+ Ajouter</button>
+        </div>
+        <div id="freeList" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">4</span> Aménagements (facultatif)</h2>
+      <label class="field full">Aménagements pédagogiques / régime / activités physiques
+        <textarea id="f_amenag" placeholder="ex. accès à l'eau et aux toilettes libre ; collation autorisée ; dispense partielle d'EPS en cas de crise…"></textarea>
+      </label>
+    </div>
+
+    <div class="btnrow no-print">
+      <button class="btn primary" id="printBtn" type="button">🖨️ Imprimer / Enregistrer en PDF</button>
+      <button class="btn green" id="copyBtn" type="button">📋 Copier le texte</button>
+      <button class="btn ghost" id="resetBtn" type="button">↺ Réinitialiser</button>
+    </div>
+  </div>
+
+  <!-- ============== COLONNE APERÇU ============== -->
+  <div class="col-doc">
+    <div class="doc" id="doc"></div>
+    <div class="disclaimer no-print">
+      <strong>Avertissement.</strong> Outil d'<strong>aide à la rédaction</strong> du PAI. Les protocoles
+      générés sont des trames à <strong>valider, dater et signer</strong> par le médecin prescripteur, et à
+      adapter à chaque enfant (doses au poids, allergènes, comorbidités). Ils ne remplacent ni la prescription
+      individuelle ni les recommandations en vigueur. <strong>Urgence vitale : 15 / 112.</strong>
+      Traitement 100 % local : aucune donnée n'est transmise ni enregistrée.
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script>
+'use strict';
+/* =====================================================================
+   PAI ASSIST — moteur (données embarquées, hors-ligne)
+   ===================================================================== */
+
+/* ---------- Pathologies ---------- */
+const PATHOS = [
+  {id:"allergie", ico:"🥜", t:"Allergie alimentaire / anaphylaxie", s:"Éviction + protocole anaphylaxie"},
+  {id:"asthme",   ico:"🫁", t:"Asthme",                              s:"Crise & traitement de secours"},
+  {id:"diabete",  ico:"🩸", t:"Diabète de type 1",                  s:"Hypo / hyperglycémie, insuline"},
+  {id:"epilepsie",ico:"⚡", t:"Épilepsie",                          s:"Crise convulsive prolongée"},
+];
+
+/* ---------- Base médicaments ----------
+   urgent:true => entre dans la "conduite à tenir d'urgence"
+   trousse:true => figure dans la trousse d'urgence
+   give = quand l'administrer / geste associé
+*/
+const MEDS = [
+  /* --- Anaphylaxie / allergie --- */
+  {id:"adrenaline", patho:"allergie", urgent:true, trousse:true, gravite:3,
+   nom:"Adrénaline auto-injecteur", dci:"adrénaline IM (Anapen® / Epipen® / Jext® / Emerade®)",
+   poso:"Stylo 150 µg (<25 kg) ou 300 µg (≥25 kg)", voie:"IM, face antéro-externe de la cuisse",
+   alerte:"Signes de gravité : gêne respiratoire / sifflement, gonflement de la gorge ou voix modifiée, malaise / pâleur, douleurs abdominales violentes, perte de connaissance, urticaire généralisée d'aggravation rapide.",
+   give:"Injecter SANS DÉLAI dans la face externe de la cuisse (à travers le vêtement si besoin), maintenir quelques secondes. Allonger l'enfant, jambes surélevées (ou assis si gêne respiratoire). Appeler le 15. 2ᵉ stylo possible après 5 min si pas d'amélioration."},
+  {id:"antihistaminique", patho:"allergie", urgent:true, trousse:true, gravite:1,
+   nom:"Antihistaminique", dci:"cétirizine / desloratadine / dexchlorphéniramine",
+   poso:"Dose adaptée à l'âge/poids (voir prescription)", voie:"Orale",
+   alerte:"Réaction légère, isolée et SANS signe de gravité : démangeaisons, plaques d'urticaire, rougeur, picotements de la bouche.",
+   give:"Donner l'antihistaminique. Surveiller étroitement : si apparition d'un signe de gravité → adrénaline + 15."},
+  {id:"cortico_oral_aller", patho:"allergie", urgent:true, trousse:true, gravite:2,
+   nom:"Corticoïde oral", dci:"prednisolone / bétaméthasone",
+   poso:"Dose selon prescription (≈ 1–2 mg/kg équiv. prednisolone)", voie:"Orale",
+   alerte:"Réaction allergique modérée (en complément), sur prescription.",
+   give:"Donner en complément après l'antihistaminique / l'adrénaline, selon la prescription. Ne retarde JAMAIS l'adrénaline si signes de gravité."},
+  {id:"salbu_aller", patho:"allergie", urgent:true, trousse:true, gravite:2,
+   nom:"Bronchodilatateur (Ventoline®)", dci:"salbutamol",
+   poso:"2 à 10 bouffées selon prescription, chambre d'inhalation", voie:"Inhalée",
+   alerte:"Gêne respiratoire / sifflement au cours de la réaction allergique.",
+   give:"Administrer les bouffées avec la chambre d'inhalation. Si gêne respiratoire dans un contexte d'allergie sévère : l'adrénaline reste prioritaire + 15."},
+
+  /* --- Asthme --- */
+  {id:"salbu_asthme", patho:"asthme", urgent:true, trousse:true, gravite:2,
+   nom:"Bronchodilatateur de secours (Ventoline®)", dci:"salbutamol",
+   poso:"2 bouffées, à renouveler jusqu'à 10 selon prescription", voie:"Inhalée + chambre d'inhalation",
+   alerte:"Crise d'asthme : toux, sifflement, gêne respiratoire, oppression.",
+   give:"Asseoir l'enfant, le rassurer. 2 bouffées avec chambre d'inhalation, à renouveler toutes les minutes (jusqu'à 10) si besoin. Appeler le 15 si pas d'amélioration, difficulté à parler, lèvres bleutées ou épuisement."},
+  {id:"cortico_asthme", patho:"asthme", urgent:true, trousse:true, gravite:2,
+   nom:"Corticoïde oral de crise", dci:"prednisolone / prednisone",
+   poso:"≈ 1–2 mg/kg en une prise, selon prescription", voie:"Orale",
+   alerte:"Crise d'asthme ne cédant pas suffisamment au bronchodilatateur (sur prescription).",
+   give:"Donner la dose prescrite après les premières bouffées de bronchodilatateur. Poursuivre la surveillance + 15 si signes de gravité."},
+  {id:"cortico_fond", patho:"asthme", urgent:false, trousse:false, gravite:0,
+   nom:"Corticoïde inhalé de fond", dci:"béclométasone / budésonide / fluticasone",
+   poso:"Traitement de fond quotidien, selon prescription", voie:"Inhalée",
+   alerte:"", give:"Traitement de fond (hors urgence) — à mentionner pour information."},
+
+  /* --- Diabète type 1 --- */
+  {id:"resucrage", patho:"diabete", urgent:true, trousse:true, gravite:1,
+   nom:"Resucrage (sucre rapide)", dci:"sucre / jus de fruit / pâte de fruits",
+   poso:"≈ 1 sucre / 5 kg de poids (ex. 15 g de glucides)", voie:"Orale",
+   alerte:"Hypoglycémie, enfant CONSCIENT : tremblements, sueurs, pâleur, faim, troubles de l'attention, irritabilité.",
+   give:"Si conscient : faire absorber le sucre rapide, puis une collation lente (pain, biscuits). Recontrôler la glycémie ~15 min après. NE RIEN donner par la bouche si trouble de conscience."},
+  {id:"glucagon", patho:"diabete", urgent:true, trousse:true, gravite:3,
+   nom:"Glucagon (GlucaGen®)", dci:"glucagon (injection / spray nasal Baqsimi®)",
+   poso:"Selon âge/présentation (voir prescription)", voie:"IM / SC ou intranasale",
+   alerte:"Hypoglycémie SÉVÈRE : perte de connaissance, convulsions, impossibilité d'avaler.",
+   give:"Administrer le glucagon (injection IM/SC ou spray nasal). Mettre en position latérale de sécurité. Appeler le 15. Ne RIEN donner par la bouche tant que l'enfant n'est pas pleinement conscient."},
+  {id:"insuline", patho:"diabete", urgent:false, trousse:true, gravite:0,
+   nom:"Insuline", dci:"insuline (stylo / pompe)",
+   poso:"Schéma et doses selon prescription / protocole personnalisé", voie:"Sous-cutanée / pompe",
+   alerte:"Hyperglycémie : soif intense, envies fréquentes d'uriner, fatigue.",
+   give:"Suivre le protocole individuel de l'enfant (glycémie capillaire, doses). Prévenir la famille. Appeler le 15 en cas de cétose, vomissements ou somnolence."},
+
+  /* --- Épilepsie --- */
+  {id:"midazolam", patho:"epilepsie", urgent:true, trousse:true, gravite:3,
+   nom:"Midazolam buccal (Buccolam®)", dci:"midazolam (voie buccale)",
+   poso:"Seringue préremplie selon l'âge (voir prescription)", voie:"Buccale (entre joue et gencive)",
+   alerte:"Crise convulsive se prolongeant au-delà de 5 minutes (ou selon le seuil prescrit).",
+   give:"Protéger l'enfant (écarter les objets, rien dans la bouche). Noter l'heure de début. Administrer le midazolam entre la joue et la gencive si la crise dure > 5 min. Position latérale de sécurité dès que possible. Appeler le 15."},
+  {id:"diazepam", patho:"epilepsie", urgent:true, trousse:true, gravite:3,
+   nom:"Diazépam intrarectal (Valium®)", dci:"diazépam (voie intrarectale)",
+   poso:"≈ 0,5 mg/kg selon prescription", voie:"Intrarectale (canule)",
+   alerte:"Crise convulsive se prolongeant au-delà de 5 minutes (alternative au midazolam).",
+   give:"Protéger l'enfant, noter l'heure. Administrer le diazépam intrarectal si la crise dure > 5 min. Position latérale de sécurité. Appeler le 15."},
+];
+
+/* ---------- État ---------- */
+const state = {pathos:new Set(), meds:new Set(), free:[]};
+const $ = (s,c=document)=>c.querySelector(s);
+const esc = s => String(s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- Pathologies UI ---------- */
+function buildPathos(){
+  $("#pathoGrid").innerHTML = PATHOS.map(p=>`
+    <label class="patho" data-id="${p.id}">
+      <input type="checkbox" value="${p.id}">
+      <span class="ico">${p.ico}</span>
+      <span><span class="t">${p.t}</span><br><span class="s">${p.s}</span></span>
+    </label>`).join("");
+  $("#pathoGrid").querySelectorAll("input").forEach(cb=>{
+    cb.addEventListener("change",()=>{
+      const lab = cb.closest(".patho");
+      if(cb.checked){ state.pathos.add(cb.value); lab.classList.add("on"); }
+      else{ state.pathos.delete(cb.value); lab.classList.remove("on"); }
+      buildMeds(); render();
+    });
+  });
+}
+
+/* ---------- Médicaments UI (filtrés par pathologie) ---------- */
+function buildMeds(){
+  const list = $("#medList");
+  const actives = state.pathos.size ? MEDS.filter(m=>state.pathos.has(m.patho)) : [];
+  if(!actives.length){
+    list.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft)">Sélectionnez d'abord une pathologie pour voir les médicaments proposés.</p>`;
+    return;
+  }
+  let html = "";
+  for(const p of PATHOS){
+    if(!state.pathos.has(p.id)) continue;
+    const meds = MEDS.filter(m=>m.patho===p.id);
+    html += `<div class="med-group"><div class="gtitle">${p.ico} ${esc(p.t)}</div>`;
+    html += meds.map(m=>{
+      const on = state.meds.has(m.id);
+      return `<div class="med ${on?"on":""}" data-id="${m.id}">
+        <label class="med-head">
+          <input type="checkbox" value="${m.id}" ${on?"checked":""}>
+          <span><span class="med-name">${esc(m.nom)}</span>
+            <span class="med-tag ${m.urgent?"urgent":"std"}">${m.urgent?"Urgence":"Traitement"}</span><br>
+            <span class="med-dci">${esc(m.dci)}</span></span>
+        </label>
+        <div class="med-detail">
+          <label class="full">Posologie / dose
+            <input type="text" data-f="poso" placeholder="${esc(m.poso)}"></label>
+          <label>Voie
+            <input type="text" data-f="voie" placeholder="${esc(m.voie)}"></label>
+          <label>Quand / situation
+            <input type="text" data-f="moment" placeholder="ex. en cas de crise"></label>
+        </div>
+      </div>`;
+    }).join("");
+    html += `</div>`;
+  }
+  list.innerHTML = html;
+
+  list.querySelectorAll(".med-head input").forEach(cb=>{
+    cb.addEventListener("change",()=>{
+      const card = cb.closest(".med");
+      if(cb.checked){ state.meds.add(cb.value); card.classList.add("on"); }
+      else{ state.meds.delete(cb.value); card.classList.remove("on"); }
+      render();
+    });
+  });
+  list.querySelectorAll(".med-detail input").forEach(inp=>inp.addEventListener("input",render));
+}
+
+/* récupère les valeurs saisies (ou placeholders) pour un médicament */
+function medValues(id){
+  const card = $(`.med[data-id="${id}"]`);
+  const m = MEDS.find(x=>x.id===id);
+  const get = f=>{
+    const el = card && card.querySelector(`[data-f="${f}"]`);
+    return el && el.value.trim() ? el.value.trim() : "";
+  };
+  return {
+    poso: get("poso") || m.poso,
+    voie: get("voie") || m.voie,
+    moment: get("moment"),
+  };
+}
+
+/* ---------- Médicaments libres ---------- */
+function renderFree(){
+  $("#freeList").innerHTML = state.free.map((t,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;background:var(--bg-soft);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:13px">
+      <span style="flex:1">💊 ${esc(t)}</span>
+      <button class="btn ghost" style="padding:4px 9px;font-size:12px" data-i="${i}" type="button">✕</button>
+    </div>`).join("");
+  $("#freeList").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    state.free.splice(+b.dataset.i,1); renderFree(); render();
+  }));
+}
+
+/* ---------- Génération du document ---------- */
+function val(id){return $("#"+id).value.trim();}
+function frDate(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; }
+
+function render(){
+  const doc = $("#doc");
+  const nom = [val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
+  const hasContent = state.pathos.size || nom;
+
+  if(!hasContent){
+    doc.innerHTML = `<div class="empty-doc"><div class="big">🏫</div>
+      <strong>Le PAI s'affiche ici</strong><br>
+      <span style="font-size:13px">Renseignez l'identité et cochez les pathologies + médicaments :
+      la conduite à tenir d'urgence se rédige automatiquement.</span></div>`;
+    return;
+  }
+
+  const ph = t => t ? esc(t) : `<span class="placeholder">…</span>`;
+  let h = "";
+
+  /* En-tête */
+  h += `<div class="doc-head">
+    <div><h3>PROJET D'ACCUEIL INDIVIDUALISÉ</h3>
+      <div class="sub">PAI — accueil de l'enfant en collectivité</div></div>
+    <div class="sub" style="text-align:right">Année scolaire : ${ph(val("f_annee"))}<br>
+      Établi le : ${ph(frDate(val("f_date")))}</div>
+  </div>`;
+
+  /* Identité */
+  h += `<h4>1 · Identification</h4><dl class="kv">
+    <dt>Enfant</dt><dd>${ph(nom)}</dd>
+    <dt>Né(e) le</dt><dd>${ph(frDate(val("f_ddn")))} ${val("f_sexe")?("· "+esc(val("f_sexe"))):""} ${val("f_poids")?("· "+esc(val("f_poids"))+" kg"):""}</dd>
+    <dt>Établissement</dt><dd>${ph(val("f_etab"))} ${val("f_classe")?("· classe : "+esc(val("f_classe"))):""}</dd>
+    ${val("f_resto")?`<dt>Restauration</dt><dd>${esc(val("f_resto"))}</dd>`:""}
+    <dt>Médecin prescripteur</dt><dd>${ph(val("f_medecin"))}</dd>
+  </dl>`;
+
+  /* Pathologies */
+  const pathoLabels = PATHOS.filter(p=>state.pathos.has(p.id)).map(p=>`${p.ico} ${p.t}`);
+  h += `<h4>2 · Pathologie(s) et besoins</h4>`;
+  h += `<p>${pathoLabels.length?pathoLabels.map(esc).join(" · "):'<span class="placeholder">à préciser</span>'}</p>`;
+  if(val("f_precisions")) h += `<p style="margin-top:6px">${esc(val("f_precisions"))}</p>`;
+  if(state.pathos.has("allergie"))
+    h += `<div class="callout">⚠️ <b>Éviction stricte</b> de l'allergène. Vérifier la composition des repas, collations et activités (ateliers cuisine, travaux manuels). Pas d'échange de nourriture entre enfants.</div>`;
+
+  /* Traitements prescrits */
+  const selMeds = MEDS.filter(m=>state.meds.has(m.id));
+  if(selMeds.length || state.free.length){
+    h += `<h4>3 · Traitements prescrits</h4><ul>`;
+    for(const m of selMeds){
+      const v = medValues(m.id);
+      h += `<li><b>${esc(m.nom)}</b> — ${esc(v.poso)} (${esc(v.voie)})${v.moment?` · ${esc(v.moment)}`:""}</li>`;
+    }
+    for(const t of state.free) h += `<li>${esc(t)}</li>`;
+    h += `</ul>`;
+  }
+
+  /* Conduite à tenir d'urgence — auto */
+  const urgent = selMeds.filter(m=>m.urgent).sort((a,b)=>a.gravite-b.gravite);
+  if(urgent.length){
+    h += `<h4>4 · Conduite à tenir en cas d'urgence</h4>`;
+    // Regroupe par pathologie pour la lisibilité
+    const byPatho = {};
+    urgent.forEach(m=>{(byPatho[m.patho]=byPatho[m.patho]||[]).push(m);});
+    for(const p of PATHOS){
+      if(!byPatho[p.id]) continue;
+      h += `<div class="alert-box"><div class="ab-head">${p.ico} ${esc(p.t)} — protocole d'urgence</div><div class="ab-body">`;
+      let n=1;
+      for(const m of byPatho[p.id]){
+        const v = medValues(m.id);
+        h += `<div class="step"><div class="num">${n++}</div><div class="stext">`;
+        if(m.alerte) h += `<b>${esc(m.alerte)}</b><br>`;
+        h += `→ <b>${esc(m.nom)}</b> (${esc(v.poso)}, ${esc(v.voie)}). ${esc(m.give)}`;
+        h += `</div></div>`;
+      }
+      h += `</div></div>`;
+    }
+    h += `<div class="callout">📞 <b>Appeler le 15 (SAMU)</b> devant tout signe de gravité, prévenir la famille, ne jamais laisser l'enfant seul, et rester avec lui jusqu'à l'arrivée des secours.</div>`;
+  }
+
+  /* Trousse d'urgence — auto */
+  const kit = selMeds.filter(m=>m.trousse);
+  if(kit.length){
+    h += `<h4>5 · Trousse d'urgence</h4><ul class="kit">`;
+    for(const m of kit){
+      const v = medValues(m.id);
+      h += `<li>☐ <b>${esc(m.nom)}</b> — ${esc(v.poso)}</li>`;
+    }
+    h += `<li>☐ Copie du présent PAI + fiche de liaison / coordonnées d'urgence</li>`;
+    h += `</ul><div class="callout info">ℹ️ Trousse nominative, à portée de main, vérifier régulièrement les <b>dates de péremption</b> et le bon fonctionnement des dispositifs. Doit accompagner l'enfant lors des sorties.</div>`;
+  }
+
+  /* Aménagements */
+  if(val("f_amenag")){
+    h += `<h4>6 · Aménagements</h4><p>${esc(val("f_amenag"))}</p>`;
+  }
+
+  /* Signatures */
+  h += `<h4>Signatures</h4><div class="sig">
+    <div class="box"><div class="lbl">Médecin</div></div>
+    <div class="box"><div class="lbl">Famille / représentant légal</div></div>
+    <div class="box"><div class="lbl">Établissement</div></div>
+  </div>`;
+
+  doc.innerHTML = h;
+}
+
+/* ---------- Actions ---------- */
+function init(){
+  buildPathos();
+  buildMeds();
+  // date du jour par défaut
+  $("#f_date").value = new Date().toISOString().slice(0,10);
+  ["f_nom","f_prenom","f_ddn","f_sexe","f_poids","f_annee","f_etab","f_classe","f_resto","f_medecin","f_date","f_precisions","f_amenag"]
+    .forEach(id=>$("#"+id).addEventListener("input",render));
+
+  $("#addFreeBtn").addEventListener("click",()=>{
+    const v = $("#freeMed").value.trim();
+    if(v){ state.free.push(v); $("#freeMed").value=""; renderFree(); render(); }
+  });
+  $("#freeMed").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#addFreeBtn").click(); }});
+
+  $("#printBtn").addEventListener("click",()=>window.print());
+  $("#resetBtn").addEventListener("click",()=>{ if(confirm("Réinitialiser tout le formulaire ?")) location.reload(); });
+  $("#copyBtn").addEventListener("click",copyText);
+
+  render();
+}
+
+function copyText(){
+  const doc = $("#doc");
+  const txt = doc.innerText.replace(/\n{3,}/g,"\n\n").trim();
+  navigator.clipboard?.writeText(txt).then(
+    ()=>{ const b=$("#copyBtn"); const o=b.textContent; b.textContent="✓ Copié"; setTimeout(()=>b.textContent=o,1500); },
+    ()=>alert("Copie impossible dans ce navigateur.")
+  );
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>
