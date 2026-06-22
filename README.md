@@ -27,9 +27,11 @@ assistant.js          Catalogue des apps + recherche/filtres
 
 neuro-gp/             NEURO-GP ASSIST (neurologie)
 mdph/                 MDPH Assist — certificat médical (Cerfa 15695*01)
-  index.html            App (remplissage assisté + aperçu Cerfa téléchargeable)
+  index.html            App (remplissage assisté + aperçu Cerfa)
   kb.js                 Base pathologies (signes, traitement, pronostic, besoins)
   meds.js               Base médicaments locale (effet secondaire principal)
+  cerfa_15692.pdf       Formulaire officiel 15692*01 (à champs) rempli par l'app
+  vendor/pdf-lib.min.js Librairie locale de remplissage PDF (hors-ligne)
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :
   index.html            Fiches d'interrogatoire par symptôme (64 fiches)

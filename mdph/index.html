@@ -185,7 +185,8 @@
     <div class="top-actions">
       <a class="btn ghost" href="../index.html" title="Retour au portail">← Portail</a>
       <button class="btn" id="btn-reset" type="button">↺ Réinitialiser</button>
-      <button class="btn primary" id="btn-dl" type="button" title="Ouvre l'impression : choisir « Enregistrer en PDF »">⬇️ Télécharger le Cerfa (PDF)</button>
+      <button class="btn" id="btn-dl" type="button" title="Aperçu du certificat 15695 (impression PDF)">🖨️ Certificat (aperçu)</button>
+      <button class="btn primary" id="btn-15692" type="button" title="Remplit et télécharge le formulaire officiel 15692*01">⬇️ Demande 15692 officielle remplie</button>
     </div>
   </div>
 </header>
@@ -197,6 +198,8 @@
     contenu <strong>indicatif à relire, corriger et compléter</strong> sous votre responsabilité médicale. L'aperçu de droite
     reproduit le <strong>Cerfa 15695*01</strong> (validité 12 mois) et se télécharge en PDF. <strong>100 % local</strong> :
     aucune donnée patient enregistrée ni transmise. La <strong>signature reste vierge</strong> (à dater et signer à la main).
+    Le bouton <strong>« Demande 15692 officielle remplie »</strong> génère le <strong>vrai formulaire Cerfa 15692*01</strong>
+    (à champs) pré-rempli à partir de la section « Demande » ci-dessous — à servir en http(s) (pas en double-clic local).
   </div>
 
   <div class="col-form" id="form"></div>
@@ -216,6 +219,7 @@
   <div class="footer">MDPH Assist — suite <strong>ASSISTANT MÉDICAL</strong>. Hors-ligne, sans stockage. Bases médicaments/pathologies indicatives à vérifier.</div>
 </main>
 
+<script src="vendor/pdf-lib.min.js"></script>
 <script src="meds.js"></script>
 <script src="kb.js"></script>
 <script>
@@ -336,6 +340,27 @@ const FORM=[
  desc:'Bloc signature laissé VIERGE — à dater et signer manuellement.',blocks:[
   {type:'check',id:'g_mt',label:'Médecin traitant',cols:2,options:['Oui','Non']},
   {type:'check',id:'g_remis',label:'Document',cols:1,options:['Rédigé à la demande du patient et remis en main propre']},
+ ]},
+{sec:'9',icon:'📄',title:'Demande MDPH 15692*01 — identité & droits',
+ desc:'Renseigne ces champs pour remplir et télécharger le VRAI formulaire officiel 15692*01.',blocks:[
+  {type:'group',label:'Identité du demandeur'},
+  {type:'text',id:'id_nom',label:'Nom de naissance'},
+  {type:'text',id:'id_usage',label:'Nom d\'usage (facultatif)'},
+  {type:'text',id:'id_prenom',label:'Prénom(s)'},
+  {type:'radio',id:'id_sexe',label:'Sexe',options:['Masculin','Féminin']},
+  {type:'text',id:'id_naiss',label:'Date de naissance (JJ/MM/AAAA)'},
+  {type:'text',id:'id_ss',label:'N° de sécurité sociale (15 chiffres)'},
+  {type:'text',id:'id_commune_naiss',label:'Commune de naissance'},
+  {type:'text',id:'id_adresse',label:'Adresse (n° et rue)'},
+  {type:'text',id:'id_cp',label:'Code postal'},
+  {type:'text',id:'id_commune',label:'Commune'},
+  {type:'text',id:'id_tel',label:'Téléphone'},
+  {type:'text',id:'id_email',label:'E-mail'},
+  {type:'group',label:'Demande'},
+  {type:'radio',id:'id_demande_type',label:'Type de demande',options:['Première demande','Renouvellement (droits identiques)','Situation a changé','Réévaluation']},
+  {type:'radio',id:'id_age',label:'Âge du demandeur',options:['20 ans et plus','Moins de 20 ans']},
+  {type:'check',id:'id_droits',label:'Droits / prestations demandés',cols:2,
+   options:['AAH','PCH','RQTH','Orientation professionnelle','CMI invalidité','CMI stationnement','Orientation médico-sociale','AEEH (enfant)']},
  ]},
 ];
 
@@ -643,14 +668,94 @@ function radioPair(label,id){ return `${label} : <span class="chk">${C[id]&&C[id
 function refresh(){ counts(); renderCerfa(); }
 
 /* ===== actions ===== */
-function toast(m){const t=$('#toast');t.textContent=m;setTimeout(()=>{if(t.textContent===m)t.textContent='';},2200);}
+function toast(m){const t=$('#toast');t.textContent=m;setTimeout(()=>{if(t.textContent===m)t.textContent='';},2600);}
 function dl(){ toast('Choisissez « Enregistrer en PDF »'); setTimeout(()=>window.print(),120); }
 function reset(){ if(confirm('Effacer toutes les saisies ?')) location.reload(); }
+
+/* ===== remplissage du VRAI formulaire officiel 15692*01 (pdf-lib) ===== */
+const DROITS_FIELD=(d,enfant)=>({
+  'AAH':'Vous avez plus de 20 ans Allocations aux adultes handicapés',
+  'RQTH':'RQTH',
+  'Orientation professionnelle':'Orientation professionnelle',
+  'Orientation médico-sociale':'Vous avez plus de 20 ans Orientation vers un établissement ou service médico-social pour adultes',
+  'PCH':enfant?'Vous avez moins de 20 ans Prestation de compensation du handicap':'Prestation de compensation du handicap',
+  'CMI invalidité':enfant?'Vous avez moins de 20 ans Carte mobilité inclusion Mention invalidité':'Vous avez plus de 20 ans Carte mobilité inclusion Mention invalidité',
+  'CMI stationnement':enfant?'Vous avez moins de 20 ans Carte mobilité inclusion Mention stationnement':'Vous avez plus de 20 ans Carte mobilité inclusion Mention stationnement',
+  'AEEH (enfant)':'Vous avez moins de 20 ans Allocation d\'éducation de l\'enfant handicapé'
+}[d]);
+const DEMANDE_FIELD={'Première demande':'Première demande à la MDPH','Renouvellement (droits identiques)':'Renouvellement droits identiques','Situation a changé':'Ma situation a changé','Réévaluation':'Réévaluation de ma situation'};
+
+async function fillDemande(){
+  if(!window.PDFLib){ alert('pdf-lib non chargé (vendor/pdf-lib.min.js).'); return; }
+  let bytes;
+  try{ const r=await fetch('cerfa_15692.pdf'); if(!r.ok) throw 0; bytes=await r.arrayBuffer(); }
+  catch(e){ toast('PDF officiel introuvable'); alert("Impossible de charger « cerfa_15692.pdf ».\n\nOuvre l'application via un serveur (http://localhost ou GitHub Pages). En double-clic local (file://), le navigateur bloque le chargement du PDF."); return; }
+  toast('Génération du PDF…');
+  const {PDFDocument}=window.PDFLib;
+  const doc=await PDFDocument.load(bytes);
+  const form=doc.getForm();
+  const T=(n,v)=>{ if(v==null||String(v).trim()==='')return; try{form.getTextField(n).setText(String(v));}catch(e){} };
+  const X=n=>{ if(!n)return; try{form.getCheckBox(n).check();}catch(e){} };
+  const today=new Date();
+
+  // identité
+  T('Nom de naissance p2',V.id_nom); T('Nom d\'usage p2',V.id_usage); T('Prénoms p2',V.id_prenom);
+  T('NOM BAS DE PAGE',V.id_nom); T('PRENOM BAS DE PAGE',V.id_prenom);
+  if(V.id_sexe==='Masculin') X('Sexe H p2'); if(V.id_sexe==='Féminin') X('Sexe F p2');
+  const dn=String(V.id_naiss||'').split(/[\/\-.]/); if(dn.length===3){ T('DN J p2',dn[0]); T('DN M p2',dn[1]); T('DN A p2',dn[2]); }
+  { const s=String(V.id_ss||'').replace(/\s/g,''); for(let i=0;i<15;i++) if(s[i]) T('Numero SS '+(i+1),s[i]); }
+  T('Commune de naissance p2',V.id_commune_naiss); if((V.id_commune_naiss||'').trim()) X('Pays de naissance France p2');
+  T('Adresse p2',V.id_adresse);
+  { const s=String(V.id_cp||'').replace(/\s/g,''); for(let i=0;i<5;i++) if(s[i]) T('Code postal '+(i+1)+' p2',s[i]); }
+  T('Commune p2',V.id_commune); T('Numéro de téléphone p2',V.id_tel);
+  T('Adresse e-mail p2',V.id_email); if((V.id_email||'').trim()) X('E-mail p2');
+
+  // type de demande + date
+  X(DEMANDE_FIELD[V.id_demande_type]);
+  T('Date de rédaction formulaire Jour',String(today.getDate()).padStart(2,'0'));
+  T('Date de rédaction formulaire Mois',String(today.getMonth()+1).padStart(2,'0'));
+  T('Date de rédaction formulaire Année',String(today.getFullYear()));
+
+  // droits
+  const enfant=V.id_age==='Moins de 20 ans';
+  (C.id_droits||new Set()).forEach(d=>X(DROITS_FIELD(d,enfant)));
+
+  // besoins vie quotidienne déduits du retentissement (note C/D = aide humaine)
+  const need=v=>v==='C'||v==='D'; const mp=M.m_perso||{}, md=M.m_dom||{};
+  if(need(mp['Faire sa toilette'])) X("Besoin pour l'hygiène corporelle");
+  if(need(mp['S\'habiller / se déshabiller'])) X("Besoin pour s'habiller");
+  if(need(mp['Manger et boire des aliments préparés'])) X('Besoin pour prendre les repas');
+  if(need(md['Préparer le repas'])) X('Besoin pour préparer les repas');
+  if(need(md['Faire les courses'])) X('Besoin pour faire les courses');
+  if(need(md['Entretien courant du logement'])) X('Besoin pour faire le ménage');
+  if(need(md['Gérer son budget'])) X('Besoin pour gérer son budget');
+  if(need(md['Démarches administratives'])) X('Besoin pour régler les dépenses courantes');
+  if(need(md['Prendre son traitement'])) X('Besoin pour prendre soin de sa santé');
+
+  // synthèse médicale → renseignements vie quotidienne / pro / scolaire
+  const synth=[];
+  if((V.p_motiv||'').trim()) synth.push('Pathologie principale : '+V.p_motiv.trim()+'.');
+  if((V.p_autres||'').trim()) synth.push('Autres pathologies : '+V.p_autres.trim()+'.');
+  const sg=(MROWS.c_signes||[]).filter(r=>r.label.trim()).map(r=>r.label.trim());
+  if(sg.length) synth.push('Retentissement : '+sg.join(' '));
+  T('Autres renseignements concernant votre vie quotidienne', synth.join(' '));
+  T('Autres renseignements', V.o_remarques);
+  T('Autres renseignements importants sur votre situation professionnelle', V.r_emploi);
+  if((V.r_scol||'').trim()){ T('Demandes relatives à la vie scolaire Préciser', V.r_scol); X('Demandes relatives à la vie scolaire'); }
+
+  const out=await doc.save();
+  const blob=new Blob([out],{type:'application/pdf'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='demande_MDPH_15692_rempli.pdf'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{a.remove(); URL.revokeObjectURL(a.href);},1000);
+  toast('✓ Demande 15692 officielle téléchargée');
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
   build(); recomputeAuto(); refresh();
   $('#btn-dl').addEventListener('click',dl);
   $('#btn-dl2').addEventListener('click',dl);
+  $('#btn-15692').addEventListener('click',fillDemande);
   $('#btn-print').addEventListener('click',()=>window.print());
   $('#btn-reset').addEventListener('click',reset);
 });
