@@ -52,10 +52,15 @@ Une vingtaine de pathologies, regroupées par catégorie :
 
 Pour les pathologies **avec traitement / protocole**, les médicaments cochés
 alimentent le tableau des soins, la trousse d'urgence et la conduite à tenir.
-Une **fiche « conduite à tenir » à deux niveaux** (au format officiel) est fournie
-pour : asthme, allergie alimentaire / anaphylaxie, allergie aux venins, diabète de
-type 1, épilepsie, insuffisance surrénale, drépanocytose, hémophilie, cancer /
-chimiothérapie, migraine.
+Une **fiche « conduite à tenir » à deux niveaux** (au format officiel des fiches
+spécifiques Eduscol) est fournie pour : asthme (fiche 01), allergie alimentaire /
+anaphylaxie (fiche 02), allergie aux venins, diabète de type 1 (fiche 03a),
+épilepsie (fiche 04, avec « à ne pas faire » et massage cardiaque),
+drépanocytose (fiche 06, paracétamol 1 dose/6 h, fièvre ≥ 38,5 °C, taux
+d'hémoglobine de base), insuffisance surrénale, hémophilie, cancer /
+chimiothérapie, migraine. Pour une pathologie sans fiche dédiée mais avec un
+traitement d'urgence coché, une **fiche standard** (gabarit générique, fiche 07)
+est générée à compléter.
 
 Pour les **troubles des apprentissages / neurodéveloppementaux**, l'app génère
 des **aménagements** suggérés et rappelle qu'ils relèvent le plus souvent d'un

@@ -301,6 +301,8 @@ textarea{resize:vertical;min-height:64px}
       <div class="fields" style="margin-top:12px">
         <label class="field full">Surveillances particulières (qui, horaires, recueil…)
           <input type="text" id="f_surveillance" placeholder="ex. glycémie capillaire avant le repas"></label>
+        <label class="field">Taux d'hémoglobine de base (g/dL) — drépanocytose
+          <input type="text" id="f_hb" placeholder="ex. 8" inputmode="decimal"></label>
         <label class="field">Lieu de stockage de la trousse d'urgence
           <input type="text" id="f_trousse_lieu" placeholder="ex. bureau de la vie scolaire"></label>
         <label class="check" style="align-self:end"><input type="checkbox" id="f_porter"> Élève autorisé à garder son traitement d'urgence sur lui</label>
@@ -544,14 +546,15 @@ const FICHES = {
   },
   epilepsie:{
     titre:"Épilepsie (crise convulsive)",
-    n1:{label:"Crise convulsive (début)",
-      signes:["Convulsions, perte de contact","Mouvements anormaux, chute"],
-      mesures:["Protéger l'enfant (écarter les objets), ne rien mettre dans la bouche","Noter l'heure de début de la crise","Mettre en PLS dès que possible"],
-      traite:"Surveiller. La plupart des crises cèdent spontanément en quelques minutes."},
-    n2:{label:"Crise > 5 minutes (ou seuil prescrit) → TRAITEMENT + 15",
-      signes:["Crise se prolongeant au-delà de 5 minutes","Crises rapprochées sans reprise de conscience","Difficulté respiratoire, cyanose"],
-      mesures:["Administrer le traitement de crise prescrit","Appeler le 15 (ou 112)","Maintenir en PLS, surveiller la respiration"],
-      traite:"Midazolam buccal (entre joue et gencive) ou diazépam intrarectal selon la prescription, si la crise dépasse 5 min."}
+    n1:{label:"Les signes",
+      signes:["Perte de connaissance","Secousses musculaires involontaires","Raideur généralisée du corps","Contraction de la mâchoire"],
+      mesures:["Rester calme et faire évacuer les autres élèves au calme","Noter l'heure de début de la crise","Laisser l'élève allongé par terre, éloigner tout objet dangereux","Sécuriser son périmètre","Alerter le SAMU 15 et suivre les consignes ; surveiller jusqu'à la fin de la crise"],
+      traite:"Administrer le traitement de crise prescrit (midazolam buccal entre joue et gencive, ou diazépam intrarectal) si la crise dépasse le seuil prescrit."},
+    n2:{label:"Signes de gravité → APPELER / RAPPELER LE 15",
+      signes:["Durée de perte de connaissance longue (> 5 minutes)","Répétition des crises","Arrêt de la respiration"],
+      mesures:["Contacter à nouveau le SAMU 15 et suivre les consignes du médecin","Si l'enfant ne respire pas, pratiquer un massage cardiaque"],
+      traite:"Poursuivre / renouveler le traitement de crise selon la prescription et les consignes du SAMU."},
+    aNePasFaire:["Ne pas chercher à maîtriser l'enfant","Ne pas essayer de placer un objet entre ses dents"]
   },
   surrenale:{
     titre:"Insuffisance surrénale",
@@ -566,14 +569,14 @@ const FICHES = {
   },
   drepano:{
     titre:"Drépanocytose",
-    n1:{label:"Crise douloureuse (vaso-occlusive)",
-      signes:["Douleurs (membres, ventre, dos)","Contexte : froid, effort, déshydratation"],
-      mesures:["Faire boire abondamment, mettre au chaud et au repos","Rassurer, accès aux toilettes"],
-      traite:"Donner l'antalgique prescrit. Surveiller l'évolution de la douleur."},
-    n2:{label:"Signes de gravité → APPELER LE 15",
-      signes:["Douleur intense résistante à l'antalgique","Fièvre","Pâleur extrême, gêne respiratoire","Gonflement abdominal"],
-      mesures:["Appeler le 15 / 112","Prévenir la famille et le centre traitant"],
-      traite:"Poursuivre l'hydratation et la surveillance jusqu'aux secours."}
+    n1:{label:"Douleur isolée non thoracique (sans fièvre ni pâleur ni fatigue)",
+      signes:["Douleur isolée (membres, dos, ventre)","Sans fièvre, sans pâleur, sans fatigue"],
+      mesures:["Appeler les parents, mettre l'enfant au repos, le réchauffer, le faire boire","Si la douleur persiste après 30 min : consultation urgente — rappeler les parents et, s'ils ne sont pas joignables rapidement, appeler le 15 / 112"],
+      traite:"Paracétamol : 1 dose toutes les 6 h si douleur (maximum 4 doses par jour), selon la prescription."},
+    n2:{label:"Signes de gravité → consultation hospitalière urgente + 15",
+      signes:["Fièvre ≥ 38,5 °C","ET/OU pâleur avec fatigue intense d'apparition rapide","Douleur au niveau du thorax, même isolée"],
+      mesures:["Appeler les parents et le 15 / 112 pour transport vers le centre hospitalier référent","En attendant les secours : mise au repos + boisson + éviter tout refroidissement"],
+      traite:"En cas de fièvre, paracétamol en attendant les secours (selon la prescription)."}
   },
   hemophilie:{
     titre:"Hémophilie / troubles de la coagulation",
@@ -856,11 +859,33 @@ function render(){
       h += `<h4>${p.ico} ${esc(f.titre)}</h4>`;
       h += ctBlock(f.n1,"n1");
       h += ctBlock(f.n2,"n2");
+      if(f.aNePasFaire)
+        h += `<div class="callout danger"><b>À NE PAS FAIRE :</b><ul style="margin:4px 0 0 18px">${li(f.aNePasFaire)}</ul></div>`;
+      if(p.id==="drepano" && val("f_hb"))
+        h += `<div style="font-size:12px;margin:4px 0"><b>Taux d'hémoglobine de base :</b> ${esc(val("f_hb"))} g/dL</div>`;
       const fm = MEDS.filter(m=>m.patho===p.id && state.meds.has(m.id));
       if(fm.length){
         h += `<div style="font-size:12px;margin:4px 0 10px"><b>Médicaments prescrits :</b> `+
           fm.map(m=>{const v=medValues(m.id);return `${esc(m.nom)} (${esc(v.poso)}, ${esc(v.voie)})`;}).join(" · ")+`</div>`;
       }
+    }
+    /* Fiche standard (gabarit générique) pour une pathologie sans fiche dédiée mais avec traitement coché */
+    const stdPathos = PATHOS.filter(p=>state.pathos.has(p.id) && !FICHES[p.id] && !p.pap &&
+      MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id)));
+    for(const p of stdPathos){
+      const fm = MEDS.filter(m=>m.patho===p.id && m.urgent && state.meds.has(m.id));
+      const fiche = {
+        n1:{label:"Signes d'appel — "+p.t,
+          signes:["À préciser par le médecin"],
+          mesures:["Mettre l'enfant au repos, le rassurer, noter l'heure","Prévenir la famille"],
+          traite:fm.map(m=>{const v=medValues(m.id);return `${m.nom} (${v.poso}, ${v.voie})`;}).join(" · ")},
+        n2:{label:"Signes de gravité → APPELER LE 15",
+          signes:["À préciser par le médecin"],
+          mesures:["Appeler le 15 / 112 et suivre les consignes","Ne pas quitter l'enfant, prévenir la famille"],
+          traite:"Selon la prescription / les consignes du SAMU."}
+      };
+      h += `<h4>${p.ico} ${esc(p.t)} (fiche standard à compléter)</h4>`;
+      h += ctBlock(fiche.n1,"n1") + ctBlock(fiche.n2,"n2");
     }
     h += `<div class="callout danger">📞 <b>En cas de signe de gravité : appeler le 15 (SAMU) ou le 112.</b> Prévenir la famille, ne jamais laisser l'enfant seul, rester auprès de lui jusqu'à l'arrivée des secours.</div>`;
     h += `<p style="font-size:12px;color:var(--ink-soft)">Un courrier confidentiel sous pli cacheté à l'attention des secours peut être joint. Fiche à dater, cacheter et signer par le médecin.</p>`;
@@ -880,7 +905,7 @@ function render(){
 const FIELD_IDS = ["f_nom","f_prenom","f_ddn","f_sexe","f_poids","f_adresse","f_type",
   "r1_lien","r1_nom","r1_tel","r2_lien","r2_nom","r2_tel",
   "f_etab","f_classe","f_annee","f_medtraitant","f_medtel","f_numurg","f_periode","f_date",
-  "f_consequences","f_precisions","f_surveillance","f_trousse_lieu","f_resto","f_amenag"];
+  "f_consequences","f_precisions","f_surveillance","f_hb","f_trousse_lieu","f_resto","f_amenag"];
 
 function init(){
   buildPathos();
