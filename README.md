@@ -26,7 +26,10 @@ assistant.js          Catalogue des apps + recherche/filtres
 .nojekyll             Sert le site statique tel quel (pas de Jekyll)
 
 neuro-gp/             NEURO-GP ASSIST (neurologie)
-mdph/                 MDPH Assist — aide au certificat médical (Cerfa 15695*01)
+mdph/                 MDPH Assist — certificat médical (Cerfa 15695*01)
+  index.html            App (remplissage assisté + aperçu Cerfa téléchargeable)
+  kb.js                 Base pathologies (signes, traitement, pronostic, besoins)
+  meds.js               Base médicaments locale (effet secondaire principal)
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :
   index.html            Fiches d'interrogatoire par symptôme (64 fiches)
