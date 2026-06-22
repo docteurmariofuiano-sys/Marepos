@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fiches d'interrogatoire par symptôme — Aide à la consultation</title>
+  <meta name="description" content="Application de consultation : 64 fiches d'interrogatoire ciblé, diagnostics différentiels, signes d'orientation et red flags. D'après le Manuel du Généraliste — Dr Mario Fuiano." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🩺</span>
+        <div>
+          <h1>Fiches d'interrogatoire par symptôme</h1>
+          <p class="subtitle">Du symptôme au diagnostic · outil de raisonnement pour la consultation</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <span class="badge-count" id="countBadge">64 fiches</span>
+        <span class="author">Dr Mario Fuiano</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher un symptôme, une spécialité, un mot-clé…" autocomplete="off" />
+        <button id="clearSearch" class="clear-btn" title="Effacer" aria-label="Effacer la recherche">×</button>
+      </div>
+      <select id="specialtyFilter" class="select" aria-label="Filtrer par spécialité">
+        <option value="">Toutes les spécialités</option>
+      </select>
+      <label class="urg-toggle">
+        <input type="checkbox" id="urgOnly" />
+        <span>⚠ Urgences seulement</span>
+      </label>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="sidebar" id="sidebar">
+      <ul class="fiche-list" id="ficheList"></ul>
+      <p class="no-result" id="noResult" hidden>Aucune fiche ne correspond à votre recherche.</p>
+    </aside>
+
+    <section class="content" id="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <h2>Bienvenue 👋</h2>
+          <p>Sélectionnez un symptôme dans la liste de gauche, ou utilisez la recherche pour démarrer une consultation.</p>
+          <p class="hint">Chaque fiche suit la logique : <strong>interrogatoire ciblé</strong> → <strong>diagnostics différentiels</strong> → <strong>signe pathognomonique / d'orientation</strong> → <strong>red flags</strong>.</p>
+        </div>
+      </div>
+      <article class="fiche-detail" id="ficheDetail" hidden></article>
+    </section>
+  </main>
+
+  <footer class="disclaimer">
+    <p>
+      <strong>Avertissement.</strong> Ces fiches sont un support de raisonnement, <em>pas un protocole</em>.
+      Elles ne dispensent ni de l'examen clinique complet ni des recommandations en vigueur (HAS, sociétés savantes).
+      Les vrais signes pathognomoniques sont rares : la plupart des cases « pathognomonique » donnent en réalité un signe d'orientation forte.
+      Contenu de niveau interne, à confronter au manuel source et à la clinique du patient.
+    </p>
+    <p class="src">Source : <em>Fiches_Interrogatoire_par_Symptome.pdf</em> — Manuel du Généraliste · Dr Mario Fuiano.
+      <a href="assets/Fiches_Interrogatoire_par_Symptome.pdf" target="_blank" rel="noopener">Ouvrir le PDF original</a>
+    </p>
+  </footer>
+
+  <script src="data/fiches-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

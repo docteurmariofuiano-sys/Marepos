@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aide au raisonnement clinique — Préparation de consultation</title>
+  <meta name="description" content="Outil d'aide au raisonnement clinique (médecine générale) : le patient saisit ses symptômes, l'application détecte les red flags et génère une synthèse structurée pour le médecin. Ne pose pas de diagnostic." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🧭</span>
+        <div>
+          <h1>Aide au raisonnement clinique</h1>
+          <p class="subtitle">Préparation de consultation — médecine générale</p>
+        </div>
+      </div>
+      <nav class="mode-switch" id="modeSwitch">
+        <button data-mode="patient" class="active">Espace patient</button>
+        <button data-mode="medecin">Espace médecin</button>
+      </nav>
+      <a class="bio-link" href="catalogue.html">📚 Catalogue des motifs</a>
+      <a class="bio-link" href="biologie.html">🧪 Interprétation biologique</a>
+      <a class="bio-link" href="procedures.html">📋 Procédures & prévention</a>
+    </div>
+  </header>
+
+  <!-- Bandeau médico-légal permanent -->
+  <div class="legal-banner" role="alert">
+    <strong>⚠ Cette application ne pose pas de diagnostic.</strong>
+    Elle aide à structurer les symptômes et à préparer la consultation.
+    En cas de douleur thoracique, gêne respiratoire importante, malaise, déficit
+    neurologique, confusion, fièvre avec taches violacées (purpura), douleur intense
+    brutale, ou grossesse avec douleur/saignement&nbsp;:
+    <strong>appelez le 15 (SAMU) ou le 112.</strong>
+  </div>
+
+  <main class="wrap">
+    <!-- ================= ESPACE PATIENT ================= -->
+    <section id="view-patient">
+
+      <!-- Étape 0 : consentement + contexte -->
+      <div class="card step" id="step-intro">
+        <h2>Avant de commencer</h2>
+        <p class="lead">Quelques questions simples vont vous être posées sur ce qui vous amène.
+          Vos réponses aideront le médecin à préparer la consultation. <strong>Elles ne
+          remplacent pas son avis.</strong></p>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Nom <em class="req">obligatoire</em></span>
+            <input type="text" id="ctx-nom" placeholder="Nom du patient" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Prénom <em class="req">obligatoire</em></span>
+            <input type="text" id="ctx-prenom" placeholder="Prénom du patient" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Âge</span>
+            <input type="number" id="ctx-age" min="0" max="120" placeholder="ex. 45" />
+          </label>
+          <label class="field">
+            <span>Sexe</span>
+            <select id="ctx-sexe">
+              <option value="">—</option>
+              <option>Femme</option>
+              <option>Homme</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Température (°C) <em class="req">obligatoire</em></span>
+            <input type="number" id="ctx-temp" min="33" max="44" step="0.1" inputmode="decimal" placeholder="ex. 38,2" />
+          </label>
+          <label class="field check temp-nm">
+            <input type="checkbox" id="ctx-temp-nonmesuree" />
+            <span>Température non prise</span>
+          </label>
+        </div>
+        <p class="hint" id="ctx-temp-hint">La <strong>fièvre (≥ 38,5 °C)</strong> aide à orienter, quel que soit le motif.
+          Indiquez la température mesurée, ou cochez « non prise ».</p>
+
+        <label class="field check" id="ctx-grossesse-wrap" hidden>
+          <input type="checkbox" id="ctx-grossesse" />
+          <span>Une grossesse est possible (rapports sans contraception fiable)</span>
+        </label>
+
+        <label class="field consent">
+          <input type="checkbox" id="ctx-consent" />
+          <span>J'ai compris que cet outil ne pose pas de diagnostic et j'accepte de répondre
+            pour préparer ma consultation.</span>
+        </label>
+
+        <button class="btn primary" id="toSymptom" disabled>Continuer</button>
+      </div>
+
+      <!-- Étape 0 bis : informations patient et antécédents -->
+      <div class="card step" id="step-antecedents" hidden>
+        <h2>Informations patient et antécédents</h2>
+        <div id="antecedents-root"></div>
+      </div>
+
+      <!-- Étape 1 : choix des motifs dans le catalogue (sélection multiple) -->
+      <div class="card step" id="step-symptom" hidden>
+        <h2>Qu'est-ce qui vous amène ?</h2>
+        <p class="lead">Parcourez les motifs par thème et <strong>cochez ceux qui vous concernent
+          (idéalement 3 à 5)</strong>. Inutile de choisir « le bon » : sélectionnez tout ce qui vous
+          gêne, l'outil regroupera les questions utiles pour le médecin.</p>
+        <input type="search" id="symptomSearch" class="search" placeholder="Rechercher un motif (ex. fatigue, ganglion, fièvre, toux…)" />
+        <div class="catalog" id="symptomGrid"></div>
+        <div class="select-bar" id="selectBar">
+          <span class="select-count" id="selectCount">0 sélectionné</span>
+          <button class="btn primary" id="toQuiz" disabled>Continuer</button>
+        </div>
+      </div>
+
+      <!-- Étape 2 : questionnaire (regroupé par motif) -->
+      <div class="card step" id="step-quiz" hidden>
+        <div class="quiz-head">
+          <button class="btn ghost" id="backToSymptom">← Modifier mes motifs</button>
+          <h2 id="quizTitle">Quelques questions</h2>
+        </div>
+        <form id="quizForm" class="quiz"></form>
+        <div class="quiz-actions">
+          <span class="progress" id="quizProgress"></span>
+          <button class="btn primary" id="submitQuiz">Voir le résultat</button>
+        </div>
+      </div>
+
+      <!-- Étape 3 : retour patient (prudent, non anxiogène) -->
+      <div class="card step" id="step-patient-result" hidden>
+        <h2>Merci, c'est noté ✅</h2>
+        <div id="patientMessage"></div>
+        <div class="cta-row">
+          <button class="btn primary" id="goMedecin">Afficher la synthèse pour le médecin</button>
+          <button class="btn ghost" id="restart">Recommencer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ESPACE MÉDECIN ================= -->
+    <section id="view-medecin" hidden>
+      <div class="card" id="medecinEmpty">
+        <h2>Espace médecin</h2>
+        <p class="lead">Aucune consultation en cours. Demandez au patient de remplir le
+          questionnaire dans l'espace patient, ou chargez un exemple.</p>
+        <button class="btn ghost" id="loadDemo">Charger un exemple (acouphène)</button>
+      </div>
+
+      <div id="medecinSynthese" hidden></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Outil d'aide au raisonnement — <strong>ne remplace pas le médecin</strong>.
+      Red flags codés en règles explicites · raisonnement différentiel · validation médicale obligatoire.
+      Source clinique : Manuel du Généraliste, Dr Mario Fuiano. Prototype — mode local, aucune donnée transmise.</p>
+  </footer>
+
+  <script src="data/knowledge-base.js"></script>
+  <script src="data/motifs-catalogue.js"></script>
+  <script src="data/antecedents.js"></script>
+  <script src="engine.js"></script>
+  <script src="antecedents.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

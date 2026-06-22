@@ -1,0 +1,2607 @@
+﻿<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ECG Cabinet - assistant local de lecture ECG</title>
+    <style>
+:root {
+  --paper: #f7f8f5;
+  --ink: #1f2421;
+  --muted: #66706a;
+  --line: #cdd5ce;
+  --soft: #ffffff;
+  --graph: rgba(205, 64, 91, 0.12);
+  --teal: #0b7f78;
+  --teal-dark: #075b56;
+  --green: #157a42;
+  --orange: #b85c00;
+  --red: #ba2635;
+  --blue: #255f99;
+  --grey: #71767c;
+  --shadow: 0 16px 40px rgba(31, 36, 33, 0.1);
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Segoe UI", "Aptos", "Helvetica Neue", sans-serif;
+  background:
+    linear-gradient(var(--graph) 1px, transparent 1px),
+    linear-gradient(90deg, var(--graph) 1px, transparent 1px),
+    var(--paper);
+  background-size: 28px 28px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px clamp(18px, 4vw, 56px);
+  background: #ffffff;
+  border-bottom: 1px solid var(--line);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+h3 {
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.eyebrow {
+  color: var(--teal-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.safety-pill,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--teal);
+}
+
+.safety-strip {
+  padding: 10px clamp(18px, 4vw, 56px);
+  background: #173f3a;
+  color: #fff;
+  font-size: 14px;
+}
+
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px clamp(18px, 4vw, 56px);
+  background: rgba(247, 248, 245, 0.96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.tab {
+  flex: 0 0 auto;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tab.active {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+}
+
+main {
+  padding: 24px clamp(18px, 4vw, 56px) 34px;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+.screen-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.two-column,
+.three-column,
+.case-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.two-column {
+  grid-template-columns: minmax(340px, 0.92fr) minmax(360px, 1.08fr);
+}
+
+.two-column.narrow-right {
+  grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 0.8fr);
+}
+
+.three-column {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.case-layout {
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid,
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 9px 10px;
+  background: #fff;
+  color: var(--ink);
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.35;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 3px solid rgba(11, 127, 120, 0.28);
+  outline-offset: 2px;
+}
+
+.fieldset {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.fieldset legend {
+  padding: 0 6px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.toggle-grid.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.toggle-grid label,
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfa;
+  font-weight: 700;
+}
+
+.primary,
+.secondary,
+.danger,
+.ghost {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 9px 13px;
+  font-weight: 900;
+}
+
+.primary {
+  background: var(--teal);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--teal-dark);
+}
+
+.secondary {
+  background: #fff;
+  border-color: var(--teal);
+  color: var(--teal-dark);
+}
+
+.danger {
+  background: var(--red);
+  color: #fff;
+}
+
+.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.preview img,
+.preview object,
+.preview iframe {
+  width: 100%;
+  height: min(68vh, 720px);
+  border: 0;
+  object-fit: contain;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(205, 64, 91, 0.18);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summary-card {
+  min-height: 92px;
+  padding: 12px;
+  border-left: 5px solid var(--teal);
+  border-radius: 6px;
+  background: #f9fbfa;
+}
+
+.summary-card strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.summary-card span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.green,
+.badge.green {
+  background: var(--green);
+}
+
+.orange,
+.badge.orange {
+  background: var(--orange);
+}
+
+.red,
+.badge.red {
+  background: var(--red);
+}
+
+.blue,
+.badge.blue {
+  background: var(--blue);
+}
+
+.grey,
+.badge.grey {
+  background: var(--grey);
+}
+
+.timeline {
+  display: grid;
+  gap: 10px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.step-num {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7f3f1;
+  color: var(--teal-dark);
+  font-weight: 900;
+}
+
+.step p {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.decision-list,
+.anomaly-list,
+.observation-grid,
+.checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.decision-list label,
+.anomaly-list label,
+.observation-card,
+.check-row {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfa;
+}
+
+.anomaly-list label {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.observation-grid {
+  grid-template-columns: 1fr;
+}
+
+.observation-card {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+}
+
+.observation-card span,
+.check-row div {
+  display: grid;
+  gap: 4px;
+}
+
+.observation-card em,
+.check-row p,
+.helper-text,
+.suggestion-box p,
+.quiz-card em {
+  color: var(--muted);
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.helper-text {
+  margin-top: -4px;
+}
+
+.suggestion-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #b8d9d5;
+  border-radius: 6px;
+  background: #eef8f6;
+}
+
+.chip-row,
+.quiz-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.suggestion-chip {
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.check-row {
+  grid-template-columns: 42px minmax(0, 1fr) 170px 112px;
+  align-items: center;
+}
+
+.status-dot {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 900;
+}
+
+.checklist-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.checklist-score strong {
+  font-size: 38px;
+  line-height: 1;
+}
+
+.emergency-banner {
+  display: grid;
+  gap: 4px;
+  min-height: 120px;
+  padding: 18px;
+  border-radius: var(--radius);
+  color: #fff;
+}
+
+.emergency-banner strong {
+  font-size: clamp(26px, 4vw, 44px);
+  line-height: 1;
+}
+
+.emergency-reasons {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.reason-chip {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fff6f1;
+  border: 1px solid #f0c7ad;
+  font-weight: 800;
+}
+
+.action-list {
+  display: grid;
+  gap: 8px;
+  padding-left: 18px;
+  margin: 0;
+}
+
+.report-box pre {
+  min-height: 330px;
+  overflow: auto;
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: #f5f6f4;
+  border: 1px solid var(--line);
+  font-family: "Consolas", "Courier New", monospace;
+  line-height: 1.45;
+}
+
+.wide-select {
+  width: min(420px, 100%);
+}
+
+.lesson-content,
+.quiz,
+.case-details {
+  display: grid;
+  gap: 12px;
+}
+
+.lesson-content article,
+.quiz button,
+.case-details article {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  background: #fbfcfa;
+}
+
+.quiz button {
+  text-align: left;
+  font-weight: 800;
+}
+
+.quiz.bank {
+  max-height: 660px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.quiz-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  background: #fbfcfa;
+}
+
+.quiz-card p {
+  display: grid;
+  gap: 4px;
+}
+
+.quiz-card span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.quiz button.correct {
+  border-color: var(--green);
+  background: #edf8f1;
+}
+
+.quiz button.wrong {
+  border-color: var(--red);
+  background: #fff1f2;
+}
+
+.case-list {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.case-button {
+  width: 100%;
+  min-height: 64px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-weight: 900;
+}
+
+.case-button.active {
+  border-color: var(--teal);
+  background: #e9f6f4;
+}
+
+.flashcard-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 56vh;
+}
+
+.flashcard {
+  width: min(780px, 100%);
+  min-height: 360px;
+  display: grid;
+  align-content: center;
+  gap: 20px;
+  padding: clamp(22px, 5vw, 56px);
+  border: 2px solid var(--teal);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.flashcard span {
+  color: var(--teal-dark);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flashcard strong {
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.flashcard em {
+  display: none;
+  color: var(--muted);
+  font-size: clamp(18px, 2vw, 26px);
+  font-style: normal;
+}
+
+.flashcard.revealed em {
+  display: block;
+}
+
+.fineprint,
+.source-list {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.source-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.source-list a {
+  color: var(--teal-dark);
+  font-weight: 900;
+}
+
+.footer-note {
+  padding: 20px clamp(18px, 4vw, 56px);
+  color: #fff;
+  background: #1f2421;
+  line-height: 1.45;
+}
+
+@media (max-width: 1100px) {
+  .two-column,
+  .two-column.narrow-right,
+  .three-column,
+  .case-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .topbar,
+  .screen-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .form-grid,
+  .metric-grid,
+  .toggle-grid,
+  .toggle-grid.compact,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .check-row {
+    grid-template-columns: 36px 1fr;
+  }
+
+  .check-row select,
+  .check-row button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .topbar,
+  .safety-strip,
+  .tabs,
+  .screen:not(#rapport),
+  #rapport .screen-head,
+  .footer-note {
+    display: none !important;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  #rapport,
+  #rapport.screen {
+    display: block !important;
+  }
+
+  .three-column {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    box-shadow: none;
+    border-color: #222;
+    break-inside: avoid;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Assistant local de lecture ECG 12 dérivations</p>
+        <h1>ECG Cabinet</h1>
+      </div>
+      <div class="safety-pill">Aide à la décision médicale</div>
+    </header>
+
+    <aside class="safety-strip">
+      Analyse d'aide à la décision. À confronter au contexte clinique, aux symptômes et à un avis cardiologique/urgentiste si doute ou signe de gravité.
+    </aside>
+
+    <nav class="tabs" aria-label="Modules ECG">
+      <button class="tab active" data-tab="import">Importer ECG</button>
+      <button class="tab" data-tab="lecture">Lecture automatique</button>
+      <button class="tab" data-tab="checklist">Checklist normalité</button>
+      <button class="tab" data-tab="urgences">Urgences ECG</button>
+      <button class="tab" data-tab="rapport">Compte rendu</button>
+      <button class="tab" data-tab="learn">Apprendre l'ECG</button>
+      <button class="tab" data-tab="cases">Cas cliniques</button>
+      <button class="tab" data-tab="flashcards">Flashcards</button>
+      <button class="tab" data-tab="settings">Paramètres</button>
+    </nav>
+
+    <main>
+      <section id="import" class="screen active" aria-labelledby="import-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Dossier local</p>
+            <h2 id="import-title">Importer un ECG</h2>
+          </div>
+          <button class="primary" id="runAnalysis">Analyser</button>
+        </div>
+
+        <div class="two-column">
+          <form class="panel stack" id="ecgForm">
+            <div class="field full">
+              <label for="ecgFile">Fichier ECG</label>
+              <input id="ecgFile" type="file" accept="application/pdf,image/png,image/jpeg">
+            </div>
+
+            <div class="form-grid">
+              <label class="field">
+                <span>Nom / identifiant</span>
+                <input id="patientName" type="text" autocomplete="off" placeholder="Optionnel">
+              </label>
+              <label class="field">
+                <span>Date ECG</span>
+                <input id="ecgDate" type="datetime-local">
+              </label>
+              <label class="field">
+                <span>Âge</span>
+                <input id="age" type="number" min="0" max="120" placeholder="ans">
+              </label>
+              <label class="field">
+                <span>Sexe</span>
+                <select id="sex">
+                  <option value="">Non renseigné</option>
+                  <option value="homme">Homme</option>
+                  <option value="femme">Femme</option>
+                  <option value="autre">Autre / non binaire</option>
+                </select>
+              </label>
+              <label class="field full">
+                <span>Motif</span>
+                <select id="reason">
+                  <option>Douleur thoracique</option>
+                  <option>Palpitations</option>
+                  <option>Malaise / syncope</option>
+                  <option>Dyspnée</option>
+                  <option>Bilan préopératoire</option>
+                  <option>Surveillance traitement</option>
+                  <option>HTA</option>
+                  <option>Diabète</option>
+                  <option>Autre</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="toggle-grid">
+              <label><input id="currentSymptoms" type="checkbox"> Symptômes actuels</label>
+              <label><input id="chestPain" type="checkbox"> Douleur thoracique actuelle</label>
+              <label><input id="syncope" type="checkbox"> Malaise ou syncope</label>
+              <label><input id="dyspnea" type="checkbox"> Dyspnée aiguë</label>
+              <label><input id="priorEcg" type="checkbox"> ECG antérieur disponible</label>
+            </div>
+
+            <fieldset class="fieldset">
+              <legend>Données imprimées / corrections manuelles</legend>
+              <div class="metric-grid">
+                <label class="field"><span>Vitesse</span><input id="speed" type="text" value="25 mm/s"></label>
+                <label class="field"><span>Calibration</span><input id="calibration" type="text" value="10 mm/mV"></label>
+                <label class="field"><span>FC /min</span><input id="heartRate" type="number" min="0" max="320" value="66"></label>
+                <label class="field"><span>PR/PQ ms</span><input id="pr" type="number" min="0" max="600" value="160"></label>
+                <label class="field"><span>QRS ms</span><input id="qrs" type="number" min="0" max="300" value="90"></label>
+                <label class="field"><span>QTc ms</span><input id="qtc" type="number" min="0" max="800" value="410"></label>
+                <label class="field"><span>Axe QRS</span><input id="axis" type="number" min="-180" max="180" value="60"></label>
+                <label class="field"><span>QT ms</span><input id="qt" type="number" min="0" max="800"></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>Traitements et ionogramme</legend>
+              <div class="toggle-grid compact">
+                <label><input class="risk-med" value="bêtabloquant" type="checkbox"> Bêtabloquant</label>
+                <label><input class="risk-med" value="digitalique" type="checkbox"> Digitalique</label>
+                <label><input class="risk-med" value="antiarythmique" type="checkbox"> Antiarythmique</label>
+                <label><input class="risk-med" value="neuroleptique" type="checkbox"> Neuroleptique</label>
+                <label><input class="risk-med" value="antidépresseur" type="checkbox"> Antidépresseur</label>
+                <label><input class="risk-med" value="macrolide" type="checkbox"> Macrolide</label>
+                <label><input class="risk-med" value="fluoroquinolone" type="checkbox"> Fluoroquinolone</label>
+                <label><input class="risk-med" value="méthadone" type="checkbox"> Méthadone</label>
+                <label><input class="risk-med" value="hydroxychloroquine" type="checkbox"> Hydroxychloroquine</label>
+              </div>
+              <div class="metric-grid">
+                <label class="field"><span>K+ mmol/L</span><input id="potassium" type="number" step="0.1" min="0" max="10"></label>
+                <label class="field"><span>Ca2+ mmol/L</span><input id="calcium" type="number" step="0.01" min="0" max="5"></label>
+                <label class="field"><span>Mg2+ mmol/L</span><input id="magnesium" type="number" step="0.01" min="0" max="5"></label>
+                <label class="field"><span>Créatinine µmol/L</span><input id="creatinine" type="number" min="0" max="2000"></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>Qualité technique</legend>
+              <div class="toggle-grid compact">
+                <label><input id="complete12" type="checkbox" checked> 12 dérivations complètes</label>
+                <label><input id="longLead" type="checkbox" checked> Bande longue DII</label>
+                <label><input id="baselineNoise" type="checkbox"> Ligne de base instable</label>
+                <label><input id="muscleNoise" type="checkbox"> Parasites musculaires</label>
+                <label><input id="leadReversal" type="checkbox"> Inversion électrodes suspectée</label>
+                <label><input id="missingLeads" type="checkbox"> Dérivations manquantes</label>
+                <label><input id="blurred" type="checkbox"> Tracé flou / illisible</label>
+              </div>
+            </fieldset>
+
+            <label class="field full">
+              <span>Texte OCR / interprétation machine à parser</span>
+              <textarea id="machineText" rows="5" placeholder="Coller ici les mesures imprimées par la machine si disponibles."></textarea>
+            </label>
+            <button type="button" class="secondary" id="parseText">Extraire les mesures du texte</button>
+          </form>
+
+          <div class="stack">
+            <section class="panel preview-panel">
+              <div class="panel-head">
+                <h3>Tracé original</h3>
+                <span id="fileStatus" class="muted">Aucun fichier importé</span>
+              </div>
+              <div id="preview" class="preview">
+                <canvas id="demoTrace" width="900" height="360" aria-label="Tracé ECG synthétique de démonstration"></canvas>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Synthèse instantanée</h3>
+                <span id="urgencyBadge" class="badge green">Rassurant</span>
+              </div>
+              <div id="summaryCards" class="summary-grid"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="lecture" class="screen" aria-labelledby="lecture-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">PQRST sécurisé</p>
+            <h2 id="lecture-title">Lecture clinique systématique</h2>
+          </div>
+          <button class="secondary" data-jump="rapport">Voir le compte rendu</button>
+        </div>
+        <div class="two-column narrow-right">
+          <div class="panel">
+            <div id="readingSteps" class="timeline"></div>
+          </div>
+          <div class="panel stack">
+            <h3>Questions contextuelles</h3>
+            <div id="contextQuestions" class="decision-list"></div>
+            <h3>Si doute : observations simples</h3>
+            <p class="helper-text">Cochez ce que vous pensez voir. L'application propose ensuite des pistes ECG à confirmer, sans exiger un diagnostic immédiat.</p>
+            <div id="observationGuide" class="observation-grid"></div>
+            <div id="observationSuggestions" class="suggestion-box"></div>
+            <h3>Anomalies proposées / confirmées</h3>
+            <div id="anomalyControls" class="anomaly-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="checklist" class="screen" aria-labelledby="checklist-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">12 critères adulte</p>
+            <h2 id="checklist-title">ECG strictement normal</h2>
+          </div>
+          <button class="secondary" id="autoChecklist">Remplir depuis les mesures</button>
+        </div>
+        <div class="panel">
+          <div class="checklist-score">
+            <strong id="normalScore">0/12</strong>
+            <span id="normalConclusion">Critères à vérifier.</span>
+          </div>
+          <p class="helper-text">Chaque ligne donne une suggestion de lecture. Si vous n'êtes pas sûr, gardez "À vérifier" plutôt que de forcer normal/anormal.</p>
+          <div id="normalChecklist" class="checklist"></div>
+        </div>
+      </section>
+
+      <section id="urgences" class="screen" aria-labelledby="urgences-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Drapeaux rouges</p>
+            <h2 id="urgences-title">Urgences ECG</h2>
+          </div>
+          <button class="danger" id="markUnstable">Patient instable</button>
+        </div>
+        <div class="two-column">
+          <section class="panel emergency-panel">
+            <div id="emergencyBanner" class="emergency-banner green">
+              <span>Niveau actuel</span>
+              <strong>Vert - rassurant</strong>
+            </div>
+            <div id="emergencyReasons" class="emergency-reasons"></div>
+          </section>
+          <section class="panel stack">
+            <h3>Conduite proposée</h3>
+            <ul id="actionPlan" class="action-list"></ul>
+          </section>
+        </div>
+      </section>
+
+      <section id="rapport" class="screen" aria-labelledby="rapport-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Export consultation</p>
+            <h2 id="rapport-title">Compte rendu automatique</h2>
+          </div>
+          <div class="button-row">
+            <button class="secondary" id="copyReport">Copier</button>
+            <button class="primary" id="printReport">Exporter PDF</button>
+          </div>
+        </div>
+        <div class="three-column">
+          <section class="panel report-box">
+            <div class="panel-head">
+              <h3>Ultra-court</h3>
+              <button class="ghost copy-format" data-copy="shortReport">Copier</button>
+            </div>
+            <pre id="shortReport"></pre>
+          </section>
+          <section class="panel report-box">
+            <div class="panel-head">
+              <h3>Structuré</h3>
+              <button class="ghost copy-format" data-copy="structuredReport">Copier</button>
+            </div>
+            <pre id="structuredReport"></pre>
+          </section>
+          <section class="panel report-box">
+            <div class="panel-head">
+              <h3>Logiciel médical</h3>
+              <button class="ghost copy-format" data-copy="pasteReport">Copier</button>
+            </div>
+            <pre id="pasteReport"></pre>
+          </section>
+        </div>
+      </section>
+
+      <section id="learn" class="screen" aria-labelledby="learn-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">15 minutes par jour</p>
+            <h2 id="learn-title">ECG Training - apprendre par cas</h2>
+          </div>
+          <select id="lessonSelect" class="wide-select" aria-label="Choisir une leçon"></select>
+        </div>
+        <div class="two-column">
+          <section class="panel stack">
+            <canvas id="lessonTrace" width="1200" height="760"></canvas>
+            <div id="lessonContent" class="lesson-content"></div>
+          </section>
+          <section class="panel stack">
+            <h3>Mini quiz</h3>
+            <div class="quiz-toolbar">
+              <span id="quizCount" class="badge blue">0 questions</span>
+              <button class="secondary" id="nextQuizBatch">Nouvelles questions</button>
+            </div>
+            <div id="lessonQuiz" class="quiz"></div>
+            <h3>Banque d'entraînement</h3>
+            <div id="quizBank" class="quiz bank"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="cases" class="screen" aria-labelledby="cases-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Tracés synthétiques</p>
+            <h2 id="cases-title">Cas cliniques ECG</h2>
+          </div>
+          <select id="caseLevel" class="wide-select">
+            <option value="all">Tous les niveaux</option>
+            <option value="1">Niveau 1 - normal et variantes</option>
+            <option value="2">Niveau 2 - fréquent en médecine générale</option>
+            <option value="3">Niveau 3 - urgences</option>
+          </select>
+        </div>
+        <div class="case-layout">
+          <aside class="panel case-list" id="caseList"></aside>
+          <section class="panel stack">
+            <div class="panel-head">
+              <h3 id="caseTitle">Cas</h3>
+              <span id="caseLevelBadge" class="badge blue">Niveau</span>
+            </div>
+            <p class="helper-text">Chaque cas utilise un tracé synthétique 12 dérivations, non copié d'un livre, avec bandes DI, DII, DIII, aVR, aVL, aVF et V1-V6.</p>
+            <canvas id="caseTrace" width="1200" height="860"></canvas>
+            <div id="caseDetails" class="case-details"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="flashcards" class="screen" aria-labelledby="flashcards-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Révision rapide</p>
+            <h2 id="flashcards-title">Flashcards</h2>
+          </div>
+          <div class="button-row">
+            <button class="secondary" id="prevCard">Précédente</button>
+            <button class="primary" id="nextCard">Suivante</button>
+          </div>
+        </div>
+        <div class="flashcard-wrap">
+          <button id="flashcard" class="flashcard" aria-live="polite">
+            <span id="cardTag">Rythme</span>
+            <strong id="cardQuestion">Question</strong>
+            <em id="cardAnswer">Réponse</em>
+          </button>
+        </div>
+      </section>
+
+      <section id="settings" class="screen" aria-labelledby="settings-title">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Confidentialité et seuils</p>
+            <h2 id="settings-title">Paramètres</h2>
+          </div>
+        </div>
+        <div class="two-column">
+          <section class="panel stack">
+            <h3>Données patient</h3>
+            <label class="switch"><input id="anonymousExport" type="checkbox" checked> Exports anonymisés</label>
+            <label class="switch"><input id="storeLocal" type="checkbox"> Mémoriser le dernier formulaire dans ce navigateur</label>
+            <p class="fineprint">Aucun envoi réseau n'est réalisé par cette application statique. Les fichiers importés restent dans le navigateur.</p>
+          </section>
+          <section class="panel stack">
+            <h3>Références intégrées</h3>
+            <ul class="source-list">
+              <li><a href="https://academic.oup.com/eurheartj/article/44/38/3720/7243210" target="_blank" rel="noreferrer">ESC 2023, syndromes coronariens aigus</a> : ECG 12 dérivations rapide, ST+ contigu, dérivations droites/postérieures, ST- diffus + aVR.</li>
+              <li><a href="https://www.ncbi.nlm.nih.gov/books/NBK459388/" target="_blank" rel="noreferrer">NCBI Bookshelf, Torsade de Pointes</a> : QTc long homme &gt; 450 ms, femme &gt; 460 ms, risque accru si QTc &gt; 500 ms.</li>
+              <li>Règles de lecture structurée : fréquence, rythme, P, PR, axe, QRS, progression R, Q, ST, T, QTc.</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      Cette interprétation est une aide à la lecture ECG. Elle ne remplace pas l'expertise médicale. En cas de symptôme aigu, douleur thoracique, dyspnée, syncope, trouble hémodynamique, anomalie ST-T significative, tachycardie à QRS large, trouble conductif sévère ou doute clinique, demander un avis cardiologique ou une prise en charge urgente.
+    </footer>
+
+    <script>
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+const statusLabels = {
+  ok: "Conforme",
+  warn: "À vérifier",
+  no: "Non conforme",
+  unknown: "Non analysable"
+};
+
+const statusClass = {
+  ok: "green",
+  warn: "orange",
+  no: "red",
+  unknown: "grey"
+};
+
+const anomalyCatalog = [
+  { id: "stemi", label: "Sus-décalage ST compatible STEMI", severity: "red", report: "sus-décalage ST compatible avec un SCA ST+" },
+  { id: "diffuseStAvr", label: "ST- diffus avec ST+ aVR/V1", severity: "red", report: "ST- diffus avec ST+ aVR/V1" },
+  { id: "posterior", label: "Infarctus postérieur suspect", severity: "red", report: "sous-décalage V1-V3 évocateur d'atteinte postérieure" },
+  { id: "wellens", label: "Ondes T de Wellens", severity: "orange", report: "ondes T évocatrices de Wellens" },
+  { id: "wideTachy", label: "Tachycardie régulière à QRS larges", severity: "red", report: "tachycardie à QRS larges, TV jusqu'à preuve du contraire" },
+  { id: "vtTorsade", label: "TV / torsades", severity: "red", report: "tachycardie ventriculaire ou torsades" },
+  { id: "fastAf", label: "Fibrillation atriale rapide", severity: "orange", report: "fibrillation atriale rapide" },
+  { id: "flutter", label: "Flutter atrial", severity: "orange", report: "flutter atrial possible" },
+  { id: "highBav", label: "BAV complet ou haut degré", severity: "red", report: "bloc AV complet ou haut degré" },
+  { id: "bav1", label: "BAV 1", severity: "orange", report: "BAV du premier degré" },
+  { id: "bbb", label: "Bloc de branche", severity: "orange", report: "bloc de branche" },
+  { id: "wpw", label: "Préexcitation / WPW", severity: "orange", report: "préexcitation ventriculaire possible" },
+  { id: "hyperk", label: "Hyperkaliémie ECG probable", severity: "red", report: "aspect évocateur d'hyperkaliémie" },
+  { id: "hypok", label: "Hypokaliémie ECG probable", severity: "orange", report: "aspect évocateur d'hypokaliémie" },
+  { id: "brugada", label: "Brugada type 1 suspect", severity: "red", report: "aspect Brugada type 1 suspect" },
+  { id: "pacerFail", label: "Pacemaker : défaut de capture", severity: "red", report: "défaut de capture de pacemaker possible" },
+  { id: "pericarditis", label: "Péricardite possible", severity: "orange", report: "péricardite possible" },
+  { id: "earlyRepol", label: "Repolarisation précoce", severity: "green", report: "repolarisation précoce possible" },
+  { id: "lvh", label: "HVG électrique", severity: "orange", report: "hypertrophie ventriculaire gauche électrique" },
+  { id: "lowVoltage", label: "Bas voltage", severity: "orange", report: "bas voltage" }
+];
+
+const normalCriteria = [
+  "Onde P sinusale positive en DI-DII, maximale en DII, < 120 ms, ≤ 2,5 mm.",
+  "Une onde P sinusale unique précède chaque QRS.",
+  "Fréquence sinusale normale : 60-100/min.",
+  "Intervalle PR/PQ constant : 120-200 ms.",
+  "QRS positifs en DI-DII, axe QRS environ -30° à +90°.",
+  "QRS fins ≤ 110 ms, peu amples, non fragmentés.",
+  "Aspect rS en V1, qR en V6, progression harmonieuse de R de V1 à V4/V5.",
+  "Ondes q fines physiologiques possibles en latéral, sans critère pathologique.",
+  "Segment ST isoélectrique au segment PQ, variantes prises en compte.",
+  "Onde T positive et asymétrique sauf aVR, V1, parfois DIII/aVL selon axe.",
+  "Amplitude T proportionnelle au QRS : < 2/3 du QRS et > 10 % de R.",
+  "QTc normal : homme < 450 ms, femme < 460 ms."
+];
+
+const observationGuides = [
+  { id: "obs-irregular", label: "RR très irrégulier", hint: "Pensez FA si aucune P sinusale nette.", suggests: ["fastAf"] },
+  { id: "obs-regular150", label: "Tachycardie régulière vers 150/min", hint: "Évoquer flutter 2/1 si activité atriale en dents de scie.", suggests: ["flutter"] },
+  { id: "obs-wide-fast", label: "Tachycardie + QRS larges", hint: "Sécurité : TV jusqu'à preuve du contraire.", suggests: ["wideTachy"] },
+  { id: "obs-wide-slow", label: "QRS larges sans tachycardie", hint: "Bloc de branche, hyperkaliémie, pacemaker ou rythme ventriculaire.", suggests: ["bbb", "hyperk"] },
+  { id: "obs-st-up", label: "ST+ dans dérivations voisines", hint: "Regarder territoire, miroir et douleur thoracique.", suggests: ["stemi"] },
+  { id: "obs-st-v1v3", label: "ST- V1-V3 avec R hautes", hint: "Possible infarctus postérieur : demander V7-V9.", suggests: ["posterior"] },
+  { id: "obs-st-diffuse-avr", label: "ST- diffus + aVR positif", hint: "Atteinte sévère possible, surtout si patient instable.", suggests: ["diffuseStAvr"] },
+  { id: "obs-t-sharp", label: "T très pointues diffuses", hint: "Chercher hyperkaliémie, insuffisance rénale, QRS qui s'élargit.", suggests: ["hyperk"] },
+  { id: "obs-t-flat-u", label: "T plates / onde U", hint: "Hypokaliémie ou effet médicamenteux possible.", suggests: ["hypok"] },
+  { id: "obs-v2v3-t", label: "T biphasiques ou négatives V2-V3", hint: "Wellens si douleur thoracique récente même résolue.", suggests: ["wellens"] },
+  { id: "obs-pr-long", label: "PR très long ou P bloquées", hint: "Vérifier BAV 1, Mobitz, haut degré ou complet.", suggests: ["bav1", "highBav"] },
+  { id: "obs-delta", label: "PR court + onde delta", hint: "Préexcitation/WPW possible.", suggests: ["wpw"] },
+  { id: "obs-coved-v1", label: "ST en dôme V1-V3", hint: "Brugada type 1 si aspect typique.", suggests: ["brugada"] },
+  { id: "obs-pacer", label: "Spikes pacemaker sans QRS", hint: "Défaut de capture possible.", suggests: ["pacerFail"] },
+  { id: "obs-low", label: "QRS globalement peu voltés", hint: "Bas voltage : péricarde, emphysème, obésité, infiltratif.", suggests: ["lowVoltage"] },
+  { id: "obs-st-diffuse-concave", label: "ST diffus concave", hint: "Péricardite ou repolarisation précoce selon contexte.", suggests: ["pericarditis", "earlyRepol"] }
+];
+
+const normalGuidance = [
+  "Chercher P en DII : petite onde régulière avant chaque QRS, positive en DI/DII et négative en aVR. Si flou ou tachycardie, laisser à vérifier.",
+  "Balayer une bande longue : une seule P avant chaque QRS et pas de QRS sans P. Si extrasystoles ou pauses, non strictement normal.",
+  "Utiliser la FC imprimée ou compter QRS sur 10 s x 6. La normalité stricte adulte vise 60-100/min.",
+  "Mesurer du début de P au début QRS. Suggestion automatique fiable si PR renseigné entre 120 et 200 ms.",
+  "Méthode simple : DI et aVF positifs suggèrent axe normal. Si axe imprimé -30 à +90°, conforme.",
+  "Mesure imprimée QRS ≤ 110 ms : conforme. Si 110-119 ms, limite; ≥ 120 ms, non strictement normal.",
+  "Regarder V1 à V6 : R doit globalement grandir, transition vers V3-V4. Si placement douteux, à vérifier.",
+  "Petites q latérales fines possibles. Q larges/profondes dans dérivations contiguës : non conforme.",
+  "Comparer ST au segment PQ/TP. ST+ ou ST- net dans dérivations contiguës : non conforme.",
+  "T attendue positive/asymétrique sauf aVR, V1 et parfois DIII/aVL. T symétrique inversée : à caractériser.",
+  "Comparer T au QRS : trop ample, pointue, plate ou disproportionnée = à vérifier/non conforme.",
+  "Utiliser sexe et QTc imprimé : homme < 450 ms, femme < 460 ms. ≥ 500 ms = alerte forte."
+];
+
+const lessons = [
+  {
+    title: "Bases du papier ECG",
+    pattern: "normal",
+    key: "25 mm/s : un grand carreau vaut 200 ms. 10 mm/mV : 10 mm valent 1 mV.",
+    trap: "Interpréter un QT ou un PR sans vérifier vitesse et calibration.",
+    case: "ECG préopératoire, 25 mm/s, 10 mm/mV, FC 70/min.",
+    quiz: {
+      q: "À 25 mm/s, 5 grands carreaux correspondent à combien de secondes ?",
+      choices: ["1 seconde", "0,5 seconde", "2 secondes"],
+      answer: 0
+    }
+  },
+  {
+    title: "Méthode PQRST",
+    pattern: "normal",
+    key: "Toujours garder le même ordre : fréquence, régularité, P, PR, axe, QRS, R/Q, ST, T, QTc.",
+    trap: "Chercher le diagnostic avant d'avoir validé la qualité et le rythme.",
+    case: "Patient asymptomatique, lecture de contrôle.",
+    quiz: {
+      q: "Quelle étape vient avant la conclusion ST-T ?",
+      choices: ["Contrôle qualité", "Prescription", "Score CHADS-VASc"],
+      answer: 0
+    }
+  },
+  {
+    title: "Fibrillation atriale",
+    pattern: "fa",
+    key: "Absence de P sinusales et RR irrégulièrement irrégulier.",
+    trap: "Rassurer sur une FA rapide symptomatique sans évaluer tolérance et contexte.",
+    case: "Palpitations depuis 8 h, FC 135/min, QRS fins.",
+    quiz: {
+      q: "Quel signe rythmique est le plus évocateur de FA ?",
+      choices: ["RR irrégulièrement irrégulier", "PR constant long", "Onde delta"],
+      answer: 0
+    }
+  },
+  {
+    title: "BAV",
+    pattern: "brady",
+    key: "BAV 1 : PR > 200 ms constant. Mobitz II : PR constant puis QRS bloqué. BAV complet : dissociation AV.",
+    trap: "Sous-estimer une syncope avec trouble conductif.",
+    case: "Malaise, FC 38/min, QRS larges.",
+    quiz: {
+      q: "Quel contexte rend un BAV plus urgent ?",
+      choices: ["Syncope", "Bilan sportif asymptomatique", "ECG normal antérieur absent"],
+      answer: 0
+    }
+  },
+  {
+    title: "Tachycardies à QRS larges",
+    pattern: "tv",
+    key: "Tachycardie régulière à QRS larges : TV jusqu'à preuve du contraire.",
+    trap: "Traiter comme TSV banale sans avis spécialisé.",
+    case: "Palpitations, malaise, FC 170/min, QRS 160 ms.",
+    quiz: {
+      q: "Devant QRS larges réguliers rapides, l'étiquette de sécurité est :",
+      choices: ["TV jusqu'à preuve du contraire", "Anxiété", "Flutter toujours bénin"],
+      answer: 0
+    }
+  },
+  {
+    title: "Ischémie et infarctus",
+    pattern: "stemi",
+    key: "ST+ en dérivations contiguës avec clinique compatible : urgence. ST- diffus + aVR évoque atteinte sévère.",
+    trap: "Un ECG non typique n'exclut pas un SCA.",
+    case: "Douleur thoracique actuelle, ST+ DII-DIII-aVF.",
+    quiz: {
+      q: "Quel ECG peut justifier des dérivations postérieures ?",
+      choices: ["ST- V1-V3 avec symptômes", "QTc 410 ms", "BAV 1 isolé"],
+      answer: 0
+    }
+  },
+  {
+    title: "QT long et troubles ioniques",
+    pattern: "longqt",
+    key: "QTc ≥ 500 ms augmente nettement le risque de torsades. Vérifier K, Mg, Ca et traitements.",
+    trap: "Ne regarder que la fréquence et ignorer les médicaments allongeant QT.",
+    case: "Traitement macrolide + neuroleptique, malaise, QTc 520 ms.",
+    quiz: {
+      q: "Quel seuil déclenche une alerte forte ?",
+      choices: ["QTc ≥ 500 ms", "QTc 420 ms", "PR 160 ms"],
+      answer: 0
+    }
+  },
+  {
+    title: "Pièges fréquents",
+    pattern: "pericarditis",
+    key: "Comparer ECG antérieur, symptômes, qualité, électrodes et discordance machine/analyse.",
+    trap: "Conclure normal sur un tracé flou ou incomplet.",
+    case: "ST diffus concave, douleur augmentée à l'inspiration.",
+    quiz: {
+      q: "Que faire si le tracé est illisible ?",
+      choices: ["Refaire ECG 12 dérivations de bonne qualité", "Conclure normal", "Masquer le tracé"],
+      answer: 0
+    }
+  }
+];
+
+const quizBank = [
+  { topic: "Papier", q: "À 25 mm/s, un petit carreau vaut :", choices: ["40 ms", "20 ms", "200 ms"], answer: 0, why: "25 mm/s : 1 mm = 40 ms." },
+  { topic: "Papier", q: "À 25 mm/s, un grand carreau vaut :", choices: ["200 ms", "120 ms", "1 seconde"], answer: 0, why: "5 petits carreaux x 40 ms = 200 ms." },
+  { topic: "Papier", q: "À 10 mm/mV, 10 mm correspondent à :", choices: ["1 mV", "0,1 mV", "10 mV"], answer: 0, why: "Calibration standard : 10 mm pour 1 mV." },
+  { topic: "Qualité", q: "Avant de conclure normal, il faut d'abord vérifier :", choices: ["Qualité, vitesse, calibration", "Troponine uniquement", "Couleur du papier"], answer: 0, why: "Un tracé flou/incomplet ne permet pas de conclure normal." },
+  { topic: "Qualité", q: "Une ligne de base très instable doit faire proposer :", choices: ["Refaire l'ECG", "Conclure FA", "Ignorer V1-V6"], answer: 0, why: "La qualité conditionne la sécurité de lecture." },
+  { topic: "Fréquence", q: "Un rythme à 45/min est classé :", choices: ["Bradycardie", "Tachycardie", "QT long"], answer: 0, why: "FC < 50/min : bradycardie dans cette app." },
+  { topic: "Fréquence", q: "Un rythme à 120/min est classé :", choices: ["Tachycardie", "Bradycardie", "Normal strict"], answer: 0, why: "FC > 100/min : tachycardie." },
+  { topic: "Fréquence", q: "Si le rythme est irrégulier, la FC se calcule de préférence :", choices: ["QRS sur 10 s x 6", "Un seul RR", "Axe QRS"], answer: 0, why: "La bande longue donne une moyenne plus fiable." },
+  { topic: "Sinusal", q: "Une P sinusale est attendue positive en :", choices: ["DI et DII", "aVR uniquement", "V1 uniquement"], answer: 0, why: "P sinusale positive en DI/DII et négative en aVR." },
+  { topic: "Sinusal", q: "Pour dire rythme sinusal, il faut surtout :", choices: ["Une P avant chaque QRS", "QRS toujours large", "ST toujours élevé"], answer: 0, why: "La relation P-QRS est centrale." },
+  { topic: "FA", q: "Le signe clé de FA est :", choices: ["RR irrégulièrement irrégulier", "PR fixe à 160 ms", "ST+ isolé aVR"], answer: 0, why: "FA : pas de P sinusale et RR chaotique." },
+  { topic: "FA", q: "Une FA rapide est souvent définie par :", choices: ["FC ventriculaire élevée", "QRS obligatoire large", "PR mesurable"], answer: 0, why: "Le PR n'est pas mesurable en FA." },
+  { topic: "FA", q: "En FA, l'anticoagulation est :", choices: ["À évaluer selon risque", "À prescrire automatiquement par l'app", "Jamais utile"], answer: 0, why: "L'app signale l'évaluation, sans prescrire." },
+  { topic: "Flutter", q: "Flutter 2/1 typique : FC ventriculaire souvent autour de :", choices: ["150/min", "40/min", "300/min"], answer: 0, why: "Conduction 2/1 sur atrium 300/min donne environ 150/min." },
+  { topic: "Flutter", q: "Les ondes de flutter sont classiquement :", choices: ["En dents de scie", "Ondes delta", "Ondes U isolées"], answer: 0, why: "Aspect F en dents de scie, surtout inférieur." },
+  { topic: "Extrasystoles", q: "Une ESV typique a :", choices: ["QRS large prématuré sans P", "PR court constant", "ST+ diffus"], answer: 0, why: "ESV : battement ventriculaire prématuré." },
+  { topic: "Extrasystoles", q: "Une ESA a plutôt :", choices: ["P prématurée différente et QRS fin", "QRS toujours très large", "Dissociation AV complète"], answer: 0, why: "Origine atriale : QRS souvent fin." },
+  { topic: "PR", q: "PR normal adulte :", choices: ["120-200 ms", "40-80 ms", "300-500 ms"], answer: 0, why: "Seuil standard du PR normal." },
+  { topic: "BAV", q: "BAV 1 :", choices: ["PR > 200 ms constant", "PR qui raccourcit puis bloque", "Aucune onde P"], answer: 0, why: "BAV 1 = ralentissement AV constant." },
+  { topic: "BAV", q: "Mobitz I :", choices: ["PR s'allonge puis QRS bloqué", "PR constant puis QRS bloqué", "QRS larges rapides"], answer: 0, why: "Phénomène de Wenckebach." },
+  { topic: "BAV", q: "Mobitz II :", choices: ["PR constant puis QRS bloqué", "PR toujours court", "RR totalement irrégulier"], answer: 0, why: "Mobitz II est plus préoccupant." },
+  { topic: "BAV", q: "BAV complet :", choices: ["Dissociation P/QRS", "P avant chaque QRS", "QTc court"], answer: 0, why: "Oreillettes et ventricules indépendants." },
+  { topic: "BAV", q: "Syncope + BAV haut degré implique :", choices: ["Urgence / avis immédiat", "Simple réassurance", "Pas besoin de constantes"], answer: 0, why: "Risque d'asystolie ou échappement lent." },
+  { topic: "Axe", q: "DI positif et aVF positif suggèrent :", choices: ["Axe normal", "Axe extrême", "WPW"], answer: 0, why: "Méthode rapide de l'axe." },
+  { topic: "Axe", q: "Axe < -30° :", choices: ["Déviation gauche", "Déviation droite", "Axe normal strict"], answer: 0, why: "Déviation axiale gauche." },
+  { topic: "Axe", q: "Axe > +90° :", choices: ["Déviation droite", "Déviation gauche", "BAV 1"], answer: 0, why: "Déviation axiale droite." },
+  { topic: "QRS", q: "QRS fin :", choices: ["< 110 ms", "> 160 ms", "Toujours pathologique"], answer: 0, why: "Dans cette app, QRS < 110 ms = fin." },
+  { topic: "QRS", q: "QRS limite :", choices: ["110-119 ms", "20-40 ms", "300 ms"], answer: 0, why: "Zone intermédiaire à vérifier." },
+  { topic: "QRS", q: "QRS large :", choices: ["≥ 120 ms", "≤ 80 ms", "Toujours normal"], answer: 0, why: "Bloc, rythme ventriculaire, hyperkaliémie, pacemaker..." },
+  { topic: "BBD", q: "BBD typique :", choices: ["rSR' en V1 et S large en DI/V6", "Onde delta partout", "ST+ inférieur"], answer: 0, why: "Morphologie classique du bloc droit." },
+  { topic: "BBG", q: "BBG typique :", choices: ["QRS large avec R larges latérales", "QRS fin à 70 ms", "PR court isolé"], answer: 0, why: "BBG : QRS large et repolarisation secondaire." },
+  { topic: "WPW", q: "WPW évoqué par :", choices: ["PR court + onde delta", "PR long seul", "QTc 410 ms"], answer: 0, why: "Préexcitation ventriculaire." },
+  { topic: "Tachy large", q: "Tachycardie régulière à QRS larges :", choices: ["TV jusqu'à preuve du contraire", "Toujours anxiété", "Toujours flutter bénin"], answer: 0, why: "Règle de sécurité médico-légale." },
+  { topic: "STEMI", q: "ST+ en dérivations contiguës + douleur :", choices: ["Urgence", "ECG normal", "BAV 1"], answer: 0, why: "Suspicion SCA ST+." },
+  { topic: "STEMI", q: "Territoire inférieur :", choices: ["DII, DIII, aVF", "V1 seul", "aVR seul"], answer: 0, why: "Dérivations inférieures." },
+  { topic: "STEMI", q: "Territoire antéro-septal :", choices: ["V1-V4", "DII-DIII-aVF", "aVR seul"], answer: 0, why: "Précordiales droites/antérieures." },
+  { topic: "STEMI", q: "ST+ inférieur doit faire penser à enregistrer :", choices: ["V3R/V4R", "Seulement DI", "Aucune autre dérivation"], answer: 0, why: "Atteinte VD possible." },
+  { topic: "Postérieur", q: "Infarctus postérieur suspect :", choices: ["ST- V1-V3 avec R hautes", "PR 160 ms", "Axe 60°"], answer: 0, why: "Image miroir postérieure." },
+  { topic: "Postérieur", q: "Pour confirmer un postérieur, demander :", choices: ["V7-V9", "V3R seul", "DII long uniquement"], answer: 0, why: "Dérivations postérieures." },
+  { topic: "aVR", q: "ST- diffus + ST+ aVR évoque :", choices: ["Ischémie sévère possible", "Normal strict", "Arythmie sinusale"], answer: 0, why: "Tronc commun/pluritronculaire à discuter selon contexte." },
+  { topic: "Wellens", q: "Wellens typique :", choices: ["T biphasiques/négatives V2-V3 après douleur", "ST+ DIII seul", "PR court"], answer: 0, why: "Sténose LAD proximale possible." },
+  { topic: "De Winter", q: "De Winter évoque :", choices: ["Occlusion LAD possible", "ECG normal", "Hypocalcémie isolée"], answer: 0, why: "Équivalent STEMI à reconnaître." },
+  { topic: "Péricardite", q: "Péricardite aiguë typique :", choices: ["ST diffus concave ± PR abaissé", "ST+ dans un seul territoire avec miroir", "QRS large rapide"], answer: 0, why: "Toujours confronter au contexte." },
+  { topic: "Repolarisation", q: "Repolarisation précoce :", choices: ["ST concave stable, point J", "Dissociation AV", "QRS > 200 ms obligatoire"], answer: 0, why: "Variante à distinguer d'un SCA." },
+  { topic: "Onde T", q: "T pointues diffuses :", choices: ["Hyperkaliémie possible", "BAV 1", "Axe gauche"], answer: 0, why: "À corréler au potassium et au QRS." },
+  { topic: "Onde T", q: "T plates + onde U :", choices: ["Hypokaliémie possible", "STEMI certain", "FA certaine"], answer: 0, why: "Trouble ionique ou médicament." },
+  { topic: "Onde T", q: "T inversées symétriques profondes :", choices: ["Ischémie possible", "Toujours normal", "Seulement artefact"], answer: 0, why: "Interpréter territoire et clinique." },
+  { topic: "QTc", q: "QTc long homme :", choices: ["> 450 ms", "> 300 ms", "> 700 ms uniquement"], answer: 0, why: "Seuil usuel adulte masculin." },
+  { topic: "QTc", q: "QTc long femme :", choices: ["> 460 ms", "> 300 ms", "> 700 ms uniquement"], answer: 0, why: "Seuil usuel adulte féminin." },
+  { topic: "QTc", q: "QTc ≥ 500 ms :", choices: ["Risque torsades accru", "Normal strict", "Annule l'analyse ST"], answer: 0, why: "Alerte forte." },
+  { topic: "QTc", q: "QT long : vérifier surtout :", choices: ["K, Mg, Ca et traitements", "Uniquement hémoglobine", "Glycémie capillaire seule"], answer: 0, why: "Causes acquises fréquentes." },
+  { topic: "Ionique", q: "Hyperkaliémie sévère peut élargir :", choices: ["QRS", "Onde P uniquement", "Segment PR uniquement"], answer: 0, why: "Risque de conduction sévère." },
+  { topic: "Ionique", q: "Hypocalcémie tend à :", choices: ["Allonger QT", "Raccourcir QT", "Créer flutter 2/1"], answer: 0, why: "Le calcium influence le QT." },
+  { topic: "Hypertrophie", q: "HVG électrique peut donner :", choices: ["Troubles secondaires ST-T", "BAV complet obligatoire", "FA obligatoire"], answer: 0, why: "Repolarisation secondaire possible." },
+  { topic: "Voltage", q: "Bas voltage diffus évoque entre autres :", choices: ["Épanchement péricardique possible", "STEMI inférieur certain", "WPW certain"], answer: 0, why: "Contexte clinique et alternance électrique." },
+  { topic: "Brugada", q: "Brugada type 1 suspect :", choices: ["ST en dôme V1-V3", "PR 160 ms", "T positive DII"], answer: 0, why: "Avis spécialisé si aspect typique." },
+  { topic: "Pacemaker", q: "Spike sans QRS derrière :", choices: ["Défaut de capture possible", "Capture normale", "FA certaine"], answer: 0, why: "Urgence si symptomatique." },
+  { topic: "Artéfacts", q: "Tremblements musculaires peuvent mimer :", choices: ["Flutter/FA ou ligne instable", "QTc court fiable", "Axe normal fiable"], answer: 0, why: "Recontrôler qualité avant diagnostic." },
+  { topic: "Électrodes", q: "Inversion électrodes suspectée :", choices: ["Vérifier placement et refaire ECG", "Conclure infarctus certain", "Masquer aVR"], answer: 0, why: "Erreur technique fréquente." },
+  { topic: "Normalité", q: "ECG strictement normal exige :", choices: ["12 critères + bonne qualité", "Seulement FC normale", "Seulement QRS fin"], answer: 0, why: "La normalité stricte est exigeante." },
+  { topic: "Normalité", q: "Un ECG normal n'exclut pas :", choices: ["SCA/EP/trouble paroxystique", "Toute maladie", "Toute douleur thoracique"], answer: 0, why: "Toujours contexte clinique." },
+  { topic: "Urgence", q: "Douleur thoracique actuelle + ST+ contigu :", choices: ["Avis urgent", "Surveillance simple", "Flashcard uniquement"], answer: 0, why: "Drapeau rouge." },
+  { topic: "Urgence", q: "Syncope + trouble conductif :", choices: ["Avis urgent", "Rassurant par principe", "Ne pas répéter ECG"], answer: 0, why: "Conduction sévère possible." },
+  { topic: "Urgence", q: "TV/torsades :", choices: ["Urgence", "Normal si jeune", "Bilan annuel"], answer: 0, why: "Trouble du rythme grave." },
+  { topic: "Urgence", q: "ECG illisible :", choices: ["Ne pas conclure, refaire ECG", "Écrire normal", "Utiliser seulement l'axe"], answer: 0, why: "Sécurité d'abord." },
+  { topic: "Compte rendu", q: "Un bon compte rendu ECG doit distinguer :", choices: ["Données extraites et interprétation", "Nom complet partout", "Images copiées de livres"], answer: 0, why: "Traçabilité et anonymisation." },
+  { topic: "Compte rendu", q: "L'interprétation machine doit être considérée :", choices: ["Non confirmée", "Toujours vraie", "À masquer"], answer: 0, why: "Elle aide mais ne remplace pas la lecture." },
+  { topic: "Consultation", q: "Si symptômes persistent avec ECG non typique :", choices: ["Répéter ECG / avis selon contexte", "Rassurer définitivement", "Ignorer douleur"], answer: 0, why: "L'ECG peut évoluer." },
+  { topic: "Consultation", q: "Comparer à un ECG antérieur sert à :", choices: ["Repérer une modification récente", "Remplacer l'examen clinique", "Annuler la qualité"], answer: 0, why: "Les changements récents sont importants." }
+];
+
+const cases = [
+  { level: 1, title: "ECG normal adulte", pattern: "normal", age: "42 ans", sex: "Femme", reason: "Bilan", diagnosis: "ECG strictement normal", urgency: "Vert", trap: "Ne pas oublier contexte clinique.", correction: "Rythme sinusal régulier, FC 68/min, PR normal, QRS fins, axe normal, ST-T sans anomalie, QTc normal." },
+  { level: 1, title: "Arythmie sinusale", pattern: "sinusArr", age: "23 ans", sex: "Homme", reason: "Bilan sportif", diagnosis: "Arythmie sinusale respiratoire", urgency: "Vert", trap: "Ne pas confondre avec FA si ondes P sinusales constantes.", correction: "RR variable mais P sinusale avant chaque QRS, PR constant, QRS fins." },
+  { level: 1, title: "Bradycardie sinusale sportive", pattern: "brady", age: "31 ans", sex: "Homme", reason: "Certificat sport", diagnosis: "Bradycardie sinusale", urgency: "Vert si asymptomatique", trap: "Devient urgent si malaise/syncope.", correction: "P sinusales, FC 45/min, PR normal, QRS fins." },
+  { level: 1, title: "Repolarisation précoce", pattern: "early", age: "28 ans", sex: "Homme", reason: "Douleur atypique", diagnosis: "Repolarisation précoce possible", urgency: "Orange si douleur", trap: "Différencier STEMI et péricardite selon contexte.", correction: "ST concave modéré, point J, pas de miroir net, stabilité à comparer." },
+  { level: 2, title: "FA rapide", pattern: "fa", age: "76 ans", sex: "Femme", reason: "Palpitations", diagnosis: "Fibrillation atriale rapide", urgency: "Orange / rouge si mal tolérée", trap: "Évaluer tolérance et anticoagulation sans prescrire automatiquement.", correction: "Absence de P sinusale, RR irrégulièrement irrégulier, QRS fins, FC élevée." },
+  { level: 2, title: "Flutter 2/1", pattern: "flutter", age: "68 ans", sex: "Homme", reason: "Palpitations", diagnosis: "Flutter atrial 2/1 probable", urgency: "Orange", trap: "Tachycardie régulière autour de 150/min très évocatrice.", correction: "Ondes F régulières, fréquence ventriculaire proche 150/min, QRS fins." },
+  { level: 2, title: "ESV isolées", pattern: "pvc", age: "54 ans", sex: "Femme", reason: "Extrasystoles", diagnosis: "Extrasystoles ventriculaires isolées", urgency: "Vert / orange selon contexte", trap: "Chercher cardiopathie, malaise, salves ou polymorphisme.", correction: "Battements prématurés à QRS larges sans P préalable, pause compensatrice." },
+  { level: 2, title: "BAV 1", pattern: "bav1", age: "72 ans", sex: "Homme", reason: "Surveillance bêtabloquant", diagnosis: "BAV du premier degré", urgency: "Orange si symptômes", trap: "Revoir traitements ralentisseurs si bradycardie.", correction: "PR constant > 200 ms, chaque P suivie d'un QRS." },
+  { level: 2, title: "BBD complet", pattern: "bbb", age: "63 ans", sex: "Homme", reason: "Dyspnée", diagnosis: "Bloc de branche droit complet", urgency: "Orange", trap: "Nouveau BBD + douleur thoracique : contexte ischémique à considérer.", correction: "QRS ≥ 120 ms, rSR' en V1, S large en DI/V6." },
+  { level: 2, title: "QT long médicamenteux", pattern: "longqt", age: "58 ans", sex: "Femme", reason: "Malaise", diagnosis: "QT long acquis possible", urgency: "Rouge si QTc ≥ 500 ms ou syncope", trap: "Chercher K, Mg, Ca et médicaments.", correction: "QTc prolongé, T tardives, facteurs médicamenteux à corriger." },
+  { level: 3, title: "STEMI inférieur", pattern: "stemiInf", age: "61 ans", sex: "Homme", reason: "Douleur thoracique", diagnosis: "SCA ST+ inférieur", urgency: "Rouge", trap: "Penser V3R/V4R si inférieur.", correction: "ST+ DII-DIII-aVF, miroir latéral possible, douleur compatible." },
+  { level: 3, title: "STEMI antérieur", pattern: "stemi", age: "57 ans", sex: "Femme", reason: "Douleur thoracique", diagnosis: "SCA ST+ antérieur", urgency: "Rouge", trap: "Ne pas attendre la troponine si ECG et clinique compatibles.", correction: "ST+ V2-V5 contigu, urgence cardiologique." },
+  { level: 3, title: "Infarctus postérieur", pattern: "posterior", age: "70 ans", sex: "Homme", reason: "Douleur persistante", diagnosis: "Occlusion postérieure suspecte", urgency: "Rouge", trap: "ST- V1-V3 peut être un miroir postérieur.", correction: "ST- V1-V3 avec R hautes, demander V7-V9." },
+  { level: 3, title: "Wellens", pattern: "wellens", age: "49 ans", sex: "Femme", reason: "Douleur récente résolue", diagnosis: "Wellens possible", urgency: "Orange / rouge", trap: "Douleur passée, ECG actuel très significatif.", correction: "T biphasiques ou négatives V2-V3, LAD proximale possible." },
+  { level: 3, title: "TV monomorphe", pattern: "tv", age: "66 ans", sex: "Homme", reason: "Malaise", diagnosis: "TV monomorphe probable", urgency: "Rouge", trap: "QRS larges réguliers = TV jusqu'à preuve du contraire.", correction: "Tachycardie régulière, QRS très larges, dissociation possible." },
+  { level: 3, title: "Torsades", pattern: "torsades", age: "74 ans", sex: "Femme", reason: "Syncope", diagnosis: "Torsades de pointes", urgency: "Rouge", trap: "QT long, hypokaliémie, médicaments.", correction: "TV polymorphe avec amplitude tournante autour de la ligne isoélectrique." },
+  { level: 3, title: "BAV complet", pattern: "completeBav", age: "82 ans", sex: "Homme", reason: "Syncope", diagnosis: "BAV complet", urgency: "Rouge", trap: "Risque majeur si échappement lent ou QRS large.", correction: "Dissociation P/QRS, rythme d'échappement lent." },
+  { level: 3, title: "Hyperkaliémie", pattern: "hyperk", age: "69 ans", sex: "Femme", reason: "Insuffisance rénale", diagnosis: "Hyperkaliémie ECG probable", urgency: "Rouge", trap: "ECG peut évoluer rapidement.", correction: "T pointues diffuses, PR allongé, QRS qui s'élargit si sévère." },
+  { level: 3, title: "Péricardite aiguë", pattern: "pericarditis", age: "36 ans", sex: "Homme", reason: "Douleur pleurétique", diagnosis: "Péricardite possible", urgency: "Orange", trap: "Différencier STEMI selon territoire, miroir et clinique.", correction: "ST diffus concave, PR parfois abaissé, contexte inflammatoire." }
+];
+
+cases.push(
+  { level: 1, title: "ECG normal femme jeune", pattern: "normal", age: "29 ans", sex: "Femme", reason: "Bilan contraception", diagnosis: "ECG normal", urgency: "Vert", trap: "Ne pas surinterpréter V1 isolée.", correction: "Sinusal, PR/QRS/QTc normaux, axe normal, ST-T sans alerte." },
+  { level: 1, title: "Tachycardie sinusale anxiété/douleur", pattern: "tachy", age: "34 ans", sex: "Femme", reason: "Palpitations", diagnosis: "Tachycardie sinusale", urgency: "Vert / orange selon cause", trap: "Chercher fièvre, douleur, EP, anémie, hyperthyroïdie.", correction: "P sinusales avant chaque QRS, QRS fins, FC > 100/min." },
+  { level: 1, title: "Rythme auriculaire ectopique", pattern: "normal", age: "46 ans", sex: "Homme", reason: "Bilan", diagnosis: "Rythme atrial ectopique possible", urgency: "Vert", trap: "P non sinusale mais QRS fins et rythme stable.", correction: "P de morphologie atypique, PR stable, QRS fins, pas d'urgence si asymptomatique." },
+  { level: 1, title: "Ondes T juvéniles", pattern: "wellens", age: "19 ans", sex: "Femme", reason: "Bilan sportif", diagnosis: "Variante de repolarisation à discuter", urgency: "Vert / orange", trap: "Ne pas conclure Wellens sans contexte thoracique compatible.", correction: "T négatives antérieures limitées, contexte jeune, comparaison utile." },
+  { level: 1, title: "Erreur de placement V1-V2", pattern: "bbb", age: "51 ans", sex: "Femme", reason: "Bilan", diagnosis: "Mauvaise progression R / placement à vérifier", urgency: "Orange", trap: "Refaire ECG avant de parler de séquelle antérieure.", correction: "Progression R atypique, contexte pauvre, vérifier placement précordial." },
+  { level: 2, title: "FA lente sous bêtabloquant", pattern: "fa", age: "84 ans", sex: "Homme", reason: "Fatigue", diagnosis: "FA lente", urgency: "Orange si symptomatique", trap: "Vérifier traitements ralentisseurs et tolérance.", correction: "RR irrégulier, absence P sinusale, FC lente, QRS fins." },
+  { level: 2, title: "FA contrôlée", pattern: "fa", age: "73 ans", sex: "Femme", reason: "Suivi", diagnosis: "FA à réponse ventriculaire contrôlée", urgency: "Vert / orange", trap: "Le rythme reste non sinusal malgré FC correcte.", correction: "RR irrégulier irrégulier, FC 70-90/min, QRS fins." },
+  { level: 2, title: "Flutter 3/1", pattern: "flutter", age: "71 ans", sex: "Homme", reason: "Palpitations", diagnosis: "Flutter atrial 3/1 possible", urgency: "Orange", trap: "FC pas toujours 150/min.", correction: "Ondes F régulières, conduction ventriculaire plus lente." },
+  { level: 2, title: "TSV régulière QRS fins", pattern: "tachy", age: "41 ans", sex: "Femme", reason: "Palpitations brutales", diagnosis: "Tachycardie supraventriculaire possible", urgency: "Orange", trap: "Évaluer tolérance, ne pas confondre avec flutter 2/1.", correction: "Tachycardie régulière, QRS fins, P peu visibles." },
+  { level: 2, title: "Tachycardie atriale", pattern: "tachy", age: "62 ans", sex: "Homme", reason: "Palpitations", diagnosis: "Tachycardie atriale possible", urgency: "Orange", trap: "P atypiques avant QRS, pas toujours sinusale.", correction: "Rythme régulier QRS fins, P de morphologie non sinusale." },
+  { level: 2, title: "Rythme jonctionnel", pattern: "brady", age: "78 ans", sex: "Femme", reason: "Malaise", diagnosis: "Rythme jonctionnel possible", urgency: "Orange", trap: "P absentes/rétrogrades, chercher médicament ou ischémie.", correction: "QRS fins, FC basse, P sinusales absentes ou rétrogrades." },
+  { level: 2, title: "BBD incomplet", pattern: "bbb", age: "37 ans", sex: "Homme", reason: "Bilan", diagnosis: "BBD incomplet", urgency: "Vert / orange", trap: "QRS < 120 ms, souvent bénin si isolé.", correction: "Aspect rSr' en V1 avec QRS limite, S terminale latérale modérée." },
+  { level: 2, title: "BBG ancien", pattern: "lbbb", age: "79 ans", sex: "Homme", reason: "Suivi cardiopathie", diagnosis: "Bloc de branche gauche", urgency: "Orange", trap: "ST-T difficiles à interpréter; comparer ancien ECG.", correction: "QRS larges, R latérales larges, repolarisation discordante." },
+  { level: 2, title: "Hémibloc antérieur gauche", pattern: "normal", age: "67 ans", sex: "Femme", reason: "HTA", diagnosis: "Hémibloc antérieur gauche possible", urgency: "Orange", trap: "Axe gauche marqué avec QRS pas forcément large.", correction: "Déviation axiale gauche, qR latéral haut, rS inférieur à confirmer." },
+  { level: 2, title: "Hémibloc postérieur gauche", pattern: "normal", age: "64 ans", sex: "Homme", reason: "Bilan", diagnosis: "Hémibloc postérieur gauche possible", urgency: "Orange", trap: "Diagnostic d'exclusion : chercher HVD/EP/infarctus latéral.", correction: "Axe droit inhabituel sans autre cause évidente." },
+  { level: 2, title: "Bloc bifasciculaire", pattern: "bbb", age: "82 ans", sex: "Homme", reason: "Malaise", diagnosis: "BBD + hémibloc antérieur gauche", urgency: "Orange / rouge si syncope", trap: "Syncope = avis spécialisé rapide.", correction: "QRS large type BBD avec axe gauche marqué." },
+  { level: 2, title: "Préexcitation WPW", pattern: "wpw", age: "25 ans", sex: "Homme", reason: "Palpitations", diagnosis: "Préexcitation ventriculaire", urgency: "Orange", trap: "FA préexcitée = danger; avis spécialisé.", correction: "PR court, onde delta, QRS empâté." },
+  { level: 2, title: "HVG avec surcharge", pattern: "lvh", age: "69 ans", sex: "Femme", reason: "HTA", diagnosis: "HVG électrique", urgency: "Orange", trap: "ST-T secondaires peuvent mimer ischémie.", correction: "Voltages élevés, ST-T discordants latéraux, contexte HTA." },
+  { level: 2, title: "HVD / surcharge droite", pattern: "rvh", age: "58 ans", sex: "Homme", reason: "Dyspnée", diagnosis: "Surcharge droite possible", urgency: "Orange", trap: "Penser EP si dyspnée aiguë, tachycardie, douleur.", correction: "Axe droit, anomalies droites, S1Q3T3 possible selon contexte." },
+  { level: 2, title: "Bas voltage diffus", pattern: "lowVoltage", age: "74 ans", sex: "Femme", reason: "Dyspnée", diagnosis: "Bas voltage", urgency: "Orange", trap: "Épanchement péricardique si alternance électrique/dyspnée.", correction: "QRS peu amples dans membres et précordiales." },
+  { level: 2, title: "Effet digitalique", pattern: "hypok", age: "80 ans", sex: "Homme", reason: "Surveillance traitement", diagnosis: "Effet digitalique possible", urgency: "Orange", trap: "Distinguer effet attendu et intoxication.", correction: "Sous-décalage ST cupuliforme, QT parfois court, contexte digitalique." },
+  { level: 2, title: "Hypocalcémie", pattern: "longqt", age: "52 ans", sex: "Femme", reason: "Fourmillements", diagnosis: "QT long par hypocalcémie possible", urgency: "Orange", trap: "QT long ionique : vérifier calcium.", correction: "QTc prolongé principalement par ST long." },
+  { level: 2, title: "Hypercalcémie", pattern: "normal", age: "63 ans", sex: "Homme", reason: "Asthénie", diagnosis: "QT court possible", urgency: "Orange", trap: "QT court discret, contexte biologique essentiel.", correction: "QT raccourci à confirmer avec calcémie." },
+  { level: 3, title: "IDM inférieur avec VD", pattern: "stemiInf", age: "66 ans", sex: "Homme", reason: "Douleur + hypotension", diagnosis: "STEMI inférieur avec atteinte VD possible", urgency: "Rouge", trap: "Demander V3R/V4R, prudence si hypotension.", correction: "ST+ inférieur, DIII > DII possible, rechercher VD." },
+  { level: 3, title: "IDM latéral haut", pattern: "stemiLat", age: "59 ans", sex: "Femme", reason: "Douleur thoracique", diagnosis: "STEMI latéral haut", urgency: "Rouge", trap: "DI/aVL peuvent être discrets.", correction: "ST+ DI-aVL avec miroir inférieur possible." },
+  { level: 3, title: "IDM latéral bas", pattern: "stemiLat", age: "71 ans", sex: "Homme", reason: "Douleur thoracique", diagnosis: "STEMI latéral bas", urgency: "Rouge", trap: "Regarder V5-V6 et DI/aVL.", correction: "ST+ V5-V6, territoire circonflexe possible." },
+  { level: 3, title: "IDM septal", pattern: "stemiSeptal", age: "55 ans", sex: "Homme", reason: "Douleur constrictive", diagnosis: "STEMI septal", urgency: "Rouge", trap: "V1-V2 peuvent être subtils.", correction: "ST+ V1-V2 contigu avec clinique compatible." },
+  { level: 3, title: "IDM antérieur étendu", pattern: "stemi", age: "62 ans", sex: "Femme", reason: "Douleur + sueurs", diagnosis: "STEMI antérieur étendu", urgency: "Rouge", trap: "Ne pas attendre troponine si évident.", correction: "ST+ V1-V6 ± DI/aVL, territoire LAD." },
+  { level: 3, title: "IDM circonflexe discret", pattern: "posterior", age: "68 ans", sex: "Homme", reason: "Douleur persistante", diagnosis: "Occlusion circonflexe possible", urgency: "Rouge", trap: "ECG 12 dérivations standard peut être peu expressif.", correction: "ST- V1-V3, anomalies latérales discrètes, V7-V9 utiles." },
+  { level: 3, title: "De Winter", pattern: "deWinter", age: "53 ans", sex: "Homme", reason: "Douleur thoracique", diagnosis: "Équivalent STEMI LAD", urgency: "Rouge", trap: "Pas forcément ST+ classique.", correction: "ST ascendant V2-V6 avec T hautes symétriques, aVR parfois ST+." },
+  { level: 3, title: "ST+ aVR + ST- diffus", pattern: "diffuseStAvr", age: "76 ans", sex: "Femme", reason: "Douleur + malaise", diagnosis: "Ischémie sévère pluritronculaire/tronc commun possible", urgency: "Rouge", trap: "Surtout inquiétant si instabilité.", correction: "ST- diffus dans multiples dérivations avec ST+ aVR/V1." },
+  { level: 3, title: "NSTEMI probable ST- latéral", pattern: "nstemi", age: "72 ans", sex: "Homme", reason: "Douleur prolongée", diagnosis: "Ischémie sous-endocardique probable", urgency: "Orange / rouge", trap: "ECG sans ST+ n'exclut pas SCA.", correction: "ST- horizontal/descendant latéral, T négatives, troponines/contexte." },
+  { level: 3, title: "Wellens type A", pattern: "wellens", age: "48 ans", sex: "Homme", reason: "Douleur résolue", diagnosis: "Wellens type A possible", urgency: "Rouge", trap: "Risque de LAD critique même sans douleur actuelle.", correction: "T biphasiques V2-V3, enzymes parfois peu élevées." },
+  { level: 3, title: "Wellens type B", pattern: "wellensDeep", age: "61 ans", sex: "Femme", reason: "Douleur récente", diagnosis: "Wellens type B possible", urgency: "Rouge", trap: "Éviter test d'effort sans avis cardio.", correction: "T profondément négatives V2-V4 après douleur." },
+  { level: 3, title: "BAV Mobitz I", pattern: "mobitz1", age: "77 ans", sex: "Homme", reason: "Fatigue", diagnosis: "BAV 2 Mobitz I", urgency: "Orange", trap: "Peut être vagal/médicamenteux mais symptomatique = prudence.", correction: "PR s'allonge progressivement puis onde P non conduite." },
+  { level: 3, title: "BAV Mobitz II", pattern: "mobitz2", age: "81 ans", sex: "Femme", reason: "Malaise", diagnosis: "BAV 2 Mobitz II", urgency: "Rouge", trap: "Plus grave, risque de BAV complet.", correction: "PR constant puis QRS bloqué sans allongement préalable." },
+  { level: 3, title: "BAV 2/1", pattern: "bav2to1", age: "79 ans", sex: "Homme", reason: "Lipothymie", diagnosis: "BAV 2/1", urgency: "Rouge si symptomatique", trap: "Impossible de classer Mobitz I/II avec certitude.", correction: "Une onde P sur deux conduite, FC lente." },
+  { level: 3, title: "BAV haut degré", pattern: "highBav", age: "86 ans", sex: "Femme", reason: "Syncope", diagnosis: "BAV haut degré", urgency: "Rouge", trap: "Plusieurs P bloquées successives.", correction: "Conduction AV très intermittente, échappement lent." },
+  { level: 3, title: "BAV complet échappement fin", pattern: "completeBav", age: "83 ans", sex: "Homme", reason: "Malaise", diagnosis: "BAV complet à échappement jonctionnel", urgency: "Rouge", trap: "Même QRS fins, la syncope est un drapeau rouge.", correction: "Dissociation AV, QRS relativement fins, FC lente." },
+  { level: 3, title: "BAV complet échappement large", pattern: "completeBavWide", age: "88 ans", sex: "Femme", reason: "Syncope", diagnosis: "BAV complet à échappement ventriculaire", urgency: "Rouge", trap: "Échappement large/lent = instable potentiellement.", correction: "P et QRS indépendants, QRS larges, FC très lente." },
+  { level: 3, title: "Bloc trifasciculaire probable", pattern: "bbb", age: "84 ans", sex: "Homme", reason: "Syncope", diagnosis: "Bloc trifasciculaire probable", urgency: "Rouge", trap: "Syncope + bifasciculaire + PR long.", correction: "BBD + hémibloc + PR prolongé; avis spécialisé." },
+  { level: 3, title: "TV lente sur cardiopathie", pattern: "tv", age: "74 ans", sex: "Homme", reason: "Malaise", diagnosis: "TV monomorphe possible", urgency: "Rouge", trap: "Toute tachycardie QRS large régulière est TV jusqu'à preuve.", correction: "QRS larges réguliers, concordance/morphologie atypique." },
+  { level: 3, title: "FA préexcitée", pattern: "faWpw", age: "32 ans", sex: "Homme", reason: "Palpitations mal tolérées", diagnosis: "FA préexcitée possible", urgency: "Rouge", trap: "RR irrégulier + QRS larges variables = danger.", correction: "Irrégularité extrême, QRS larges variables, contexte WPW." },
+  { level: 3, title: "Torsades sur QT long", pattern: "torsades", age: "67 ans", sex: "Femme", reason: "Syncope sous macrolide", diagnosis: "Torsades de pointes", urgency: "Rouge", trap: "Chercher hypokaliémie/hypomagnésémie et médicaments.", correction: "TV polymorphe avec rotation d'axe, QT long sous-jacent." },
+  { level: 3, title: "Hyperkaliémie sévère", pattern: "hyperkWide", age: "73 ans", sex: "Homme", reason: "IRA + faiblesse", diagnosis: "Hyperkaliémie sévère probable", urgency: "Rouge", trap: "QRS s'élargit, P s'effacent; urgence biologique/clinique.", correction: "T pointues, PR long, QRS larges, sinusoïde si extrême." },
+  { level: 3, title: "Embolie pulmonaire suspecte", pattern: "rvh", age: "45 ans", sex: "Femme", reason: "Dyspnée aiguë", diagnosis: "Surcharge droite / EP possible", urgency: "Orange / rouge", trap: "ECG peut être peu spécifique.", correction: "Tachycardie sinusale, axe droit/S1Q3T3 ou T négatives droites possibles." },
+  { level: 3, title: "Brugada type 1", pattern: "brugada", age: "39 ans", sex: "Homme", reason: "Syncope nocturne", diagnosis: "Brugada type 1 suspect", urgency: "Rouge", trap: "Fièvre peut majorer l'aspect.", correction: "ST en dôme V1-V3 avec T négative, contexte syncope." },
+  { level: 3, title: "Pacemaker défaut capture", pattern: "pacerFail", age: "90 ans", sex: "Femme", reason: "Malaise", diagnosis: "Défaut de capture possible", urgency: "Rouge", trap: "Spike sans QRS conduit.", correction: "Spikes visibles non suivis de QRS, bradycardie symptomatique." },
+  { level: 3, title: "Myocardite possible", pattern: "pericarditis", age: "27 ans", sex: "Homme", reason: "Douleur + fièvre", diagnosis: "Myopéricardite possible", urgency: "Orange / rouge", trap: "Troponine, contexte viral, echo selon gravité.", correction: "ST-T diffus ou focal, douleurs, signes inflammatoires." },
+  { level: 3, title: "Alternance électrique", pattern: "lowVoltage", age: "69 ans", sex: "Femme", reason: "Dyspnée + hypotension", diagnosis: "Épanchement péricardique/tamponnade possible", urgency: "Rouge", trap: "Bas voltage + alternance + instabilité.", correction: "QRS alternants et bas voltage, contexte clinique majeur." },
+  { level: 3, title: "Artefact simulant TV", pattern: "artifact", age: "58 ans", sex: "Homme", reason: "Tremblement", diagnosis: "Artefact musculaire probable", urgency: "Orange", trap: "Vérifier pouls et dérivations propres avant choc diagnostique.", correction: "Activité chaotique mais QRS sous-jacents réguliers visibles dans certaines dérivations." }
+);
+
+const flashcards = [
+  { tag: "Rythme", q: "Quels critères rendent un rythme sinusal probable ?", a: "P positive en DI/DII, négative en aVR, une P avant chaque QRS, PR constant." },
+  { tag: "FA", q: "Quel duo ECG évoque le plus une fibrillation atriale ?", a: "Absence de P sinusales et RR irrégulièrement irrégulier." },
+  { tag: "Flutter", q: "Quelle fréquence ventriculaire régulière évoque souvent un flutter 2/1 ?", a: "Environ 150/min." },
+  { tag: "Conduction", q: "Quel PR définit un BAV 1 ?", a: "PR > 200 ms, constant." },
+  { tag: "QRS", q: "À partir de quelle durée parle-t-on de QRS large ?", a: "QRS ≥ 120 ms. Entre 110 et 119 ms : limite." },
+  { tag: "Urgence", q: "Quelle règle de sécurité pour tachycardie régulière à QRS larges ?", a: "TV jusqu'à preuve du contraire." },
+  { tag: "Axe", q: "DI positif et aVF positif : quel axe ?", a: "Axe QRS probablement normal." },
+  { tag: "ST", q: "ST- diffus avec ST+ aVR évoque quoi ?", a: "Ischémie sévère possible, tronc commun ou atteinte pluritronculaire, surtout si instabilité." },
+  { tag: "QTc", q: "Quel QTc est franchement préoccupant ?", a: "QTc ≥ 500 ms ou augmentation nette versus ECG antérieur." },
+  { tag: "Qualité", q: "Que conclure si l'ECG est flou ou incomplet ?", a: "ECG non interprétable avec sécurité suffisante : refaire un 12 dérivations de bonne qualité." }
+];
+
+let selectedCaseIndex = 0;
+let selectedLessonIndex = 0;
+let selectedCardIndex = 0;
+let quizBatch = 0;
+let cardRevealed = false;
+let lastAnalysis = {};
+
+function inputValue(id) {
+  const el = document.getElementById(id);
+  if (!el) return "";
+  if (el.type === "checkbox") return el.checked;
+  return el.value;
+}
+
+function numberValue(id) {
+  const value = Number(inputValue(id));
+  return Number.isFinite(value) ? value : 0;
+}
+
+function selectedAnomalies() {
+  return anomalyCatalog.filter((item) => document.getElementById(`anom-${item.id}`)?.checked);
+}
+
+function selectedRiskMeds() {
+  return $$(".risk-med:checked").map((item) => item.value);
+}
+
+function severityRank(level) {
+  return { green: 1, orange: 2, red: 3, grey: 0 }[level] || 0;
+}
+
+function getQuality() {
+  const hardStop = inputValue("blurred") || inputValue("missingLeads") || !inputValue("complete12");
+  const partial = inputValue("baselineNoise") || inputValue("muscleNoise") || inputValue("leadReversal") || !inputValue("longLead");
+  if (hardStop) return { level: "grey", label: "Non interprétable avec sécurité suffisante" };
+  if (partial) return { level: "orange", label: "Partiellement interprétable" };
+  return { level: "green", label: "Interprétable" };
+}
+
+function interpretAxis(axis) {
+  if (!Number.isFinite(axis)) return "non renseigné";
+  if (axis < -90 || axis > 180) return "extrême";
+  if (axis < -30) return "déviation gauche";
+  if (axis > 90) return "déviation droite";
+  return "normal";
+}
+
+function buildAnalysis() {
+  const fc = numberValue("heartRate");
+  const pr = numberValue("pr");
+  const qrs = numberValue("qrs");
+  const qtc = numberValue("qtc");
+  const axis = numberValue("axis");
+  const sex = inputValue("sex");
+  const quality = getQuality();
+  const anomalies = selectedAnomalies();
+  const has = (id) => anomalies.some((a) => a.id === id);
+  const qtcLimit = sex === "femme" ? 460 : 450;
+  const qtcLong = qtc > qtcLimit;
+  const riskMeds = selectedRiskMeds();
+  const potassium = numberValue("potassium");
+  const calcium = numberValue("calcium");
+  const magnesium = numberValue("magnesium");
+  const urgentReasons = [];
+  const orangeReasons = [];
+
+  if (quality.level === "grey") {
+    urgentReasons.push("ECG non interprétable avec sécurité suffisante");
+  }
+  if (inputValue("chestPain") && has("stemi")) {
+    urgentReasons.push("Douleur thoracique actuelle + ST+ compatible");
+  } else if (has("stemi")) {
+    urgentReasons.push("Suspicion STEMI");
+  }
+  if (has("diffuseStAvr")) urgentReasons.push("ST- diffus avec ST+ aVR/V1");
+  if (has("posterior")) urgentReasons.push("Infarctus postérieur suspect");
+  if (has("wideTachy")) urgentReasons.push("Tachycardie à QRS larges : TV jusqu'à preuve du contraire");
+  if (has("vtTorsade")) urgentReasons.push("TV ou torsades");
+  if (has("highBav")) urgentReasons.push("BAV complet ou BAV haut degré");
+  if (inputValue("syncope") && (has("highBav") || has("bbb") || pr > 240 || qrs >= 120)) {
+    urgentReasons.push("Syncope + anomalie conductrice");
+  }
+  if (qtc >= 500) urgentReasons.push("QTc ≥ 500 ms");
+  if (qtcLong && riskMeds.length) orangeReasons.push("QTc long ou limite avec traitement à risque");
+  if (qtcLong && potassium > 0 && potassium < 3.5) orangeReasons.push("QTc long avec hypokaliémie renseignée");
+  if (qtcLong && magnesium > 0 && magnesium < 0.7) orangeReasons.push("QTc long avec magnésium bas renseigné");
+  if (qtcLong && calcium > 0 && calcium < 2.2) orangeReasons.push("QTc long avec calcium bas renseigné");
+  if (has("hyperk")) urgentReasons.push("Hyperkaliémie ECG probable");
+  if (has("brugada")) urgentReasons.push("Brugada type 1 suspect");
+  if (has("pacerFail")) urgentReasons.push("Pacemaker avec défaut de capture possible");
+  if (inputValue("currentSymptoms") && (has("fastAf") || has("flutter") || fc > 150)) {
+    urgentReasons.push("Trouble du rythme rapide symptomatique");
+  }
+
+  if (quality.level === "orange") orangeReasons.push("Qualité partielle : prudence d'interprétation");
+  if (qtcLong && qtc < 500) orangeReasons.push("QTc long à surveiller");
+  if (pr > 200) orangeReasons.push("PR allongé");
+  if (qrs >= 120) orangeReasons.push("QRS larges");
+  anomalies.filter((a) => a.severity === "orange").forEach((a) => orangeReasons.push(a.label));
+
+  let urgency = "green";
+  if (urgentReasons.length) urgency = quality.level === "grey" && urgentReasons.length === 1 ? "grey" : "red";
+  else if (orangeReasons.length) urgency = "orange";
+
+  const fcText = fc < 50 ? "bradycardie" : fc > 100 ? "tachycardie" : "fréquence normale ou acceptable";
+  const prText = pr < 120 ? "PR court" : pr > 200 ? "PR allongé" : "PR normal";
+  const qrsText = qrs >= 120 ? "QRS large" : qrs >= 110 ? "QRS limite" : "QRS fin";
+  const qtcText = qtc >= 500 ? "QTc très prolongé" : qtcLong ? "QTc long" : "QTc normal";
+  const axisText = interpretAxis(axis);
+
+  const diagnosis = deriveDiagnosis(anomalies, urgency, quality, { fc, pr, qrs, qtc, axisText, qtcLong });
+
+  return {
+    fc,
+    pr,
+    qrs,
+    qtc,
+    axis,
+    sex,
+    quality,
+    anomalies,
+    urgentReasons,
+    orangeReasons,
+    urgency,
+    fcText,
+    prText,
+    qrsText,
+    qtcText,
+    axisText,
+    diagnosis,
+    riskMeds,
+    potassium,
+    calcium,
+    magnesium
+  };
+}
+
+function deriveDiagnosis(anomalies, urgency, quality, stats) {
+  if (quality.level === "grey") return "ECG non interprétable avec sécurité suffisante";
+  if (anomalies.length) {
+    return anomalies
+      .map((a) => a.report)
+      .slice(0, 4)
+      .join("; ");
+  }
+  if (stats.fc >= 50 && stats.fc <= 100 && stats.pr >= 120 && stats.pr <= 200 && stats.qrs <= 110 && !stats.qtcLong && stats.axisText === "normal") {
+    return "ECG dans les limites de la normale, sous réserve du contexte clinique";
+  }
+  if (urgency === "orange") return "ECG non strictement normal : anomalies à caractériser";
+  return "Lecture ECG à compléter manuellement";
+}
+
+function renderSummary() {
+  lastAnalysis = buildAnalysis();
+  const a = lastAnalysis;
+  const cards = [
+    ["Qualité", a.quality.label, a.quality.level],
+    ["Fréquence", `${a.fc || "-"} /min`, a.fc < 50 || a.fc > 100 ? "orange" : "green"],
+    ["Rythme", rhythmLabel(a), a.anomalies.some((x) => ["fastAf", "flutter", "wideTachy", "vtTorsade"].includes(x.id)) ? "orange" : "green"],
+    ["PR", `${a.pr || "-"} ms`, a.prText === "PR normal" ? "green" : "orange"],
+    ["QRS", `${a.qrs || "-"} ms`, a.qrs >= 120 ? "red" : a.qrs >= 110 ? "orange" : "green"],
+    ["QTc", `${a.qtc || "-"} ms`, a.qtc >= 500 ? "red" : a.qtcText === "QTc long" ? "orange" : "green"],
+    ["Axe", a.axisText, a.axisText === "normal" ? "green" : "orange"],
+    ["Conclusion", a.diagnosis, a.urgency],
+    ["Niveau", urgencyLabel(a.urgency), a.urgency]
+  ];
+  $("#summaryCards").innerHTML = cards.map(([label, value, level]) => `
+    <article class="summary-card" style="border-left-color: var(--${level === "grey" ? "grey" : level});">
+      <span>${label}</span>
+      <strong>${value}</strong>
+    </article>
+  `).join("");
+  $("#urgencyBadge").textContent = urgencyLabel(a.urgency);
+  $("#urgencyBadge").className = `badge ${a.urgency}`;
+  renderReadingSteps();
+  renderEmergency();
+  renderReports();
+  updateChecklistScore();
+  saveLocalForm();
+}
+
+function rhythmLabel(a) {
+  if (a.anomalies.some((x) => x.id === "fastAf")) return "FA probable";
+  if (a.anomalies.some((x) => x.id === "flutter")) return "Flutter possible";
+  if (a.anomalies.some((x) => x.id === "wideTachy")) return "QRS larges rapide";
+  if (a.fc < 50) return "Bradycardie";
+  if (a.fc > 100) return "Tachycardie";
+  return "Sinusal probable";
+}
+
+function urgencyLabel(level) {
+  if (level === "red") return "Rouge - urgence";
+  if (level === "orange") return "Orange - avis / bilan";
+  if (level === "grey") return "Gris - non analysable";
+  return "Vert - rassurant";
+}
+
+function renderReadingSteps() {
+  const a = lastAnalysis;
+  const steps = [
+    ["Fréquence cardiaque", `${a.fc || "-"} /min : ${a.fcText}. Méthode : mesure imprimée ou correction manuelle.`],
+    ["Régularité du rythme", rhythmLabel(a) === "FA probable" ? "RR irrégulièrement irrégulier évoquant FA." : "Régularité à confirmer sur bande longue DII."],
+    ["Ondes P", rhythmLabel(a) === "FA probable" ? "P sinusales non identifiées : FA/flutter/rythme jonctionnel à discuter." : "P sinusale attendue : vérifier DI, DII et aVR."],
+    ["Relation P-QRS", `${a.prText}. Rechercher PR constant, QRS manquants ou dissociation AV.`],
+    ["Axe électrique QRS", `Axe ${a.axis || "-"}° : ${a.axisText}.`],
+    ["Durée et morphologie QRS", `${a.qrsText} (${a.qrs || "-"} ms). Toute tachycardie régulière à QRS large est une TV jusqu'à preuve du contraire.`],
+    ["Progression R et ondes Q", "Vérifier rS en V1, qR en V6, transition V3-V4, Q pathologiques dans dérivations contiguës."],
+    ["Segment ST", stSummary(a)],
+    ["Onde T", tSummary(a)],
+    ["QT / QTc", `${a.qtcText} (${a.qtc || "-"} ms). ${a.qtc >= 500 ? "Vérifier K, Mg, Ca et traitements allongeant QT." : ""}`]
+  ];
+
+  $("#readingSteps").innerHTML = steps.map((step, index) => `
+    <article class="step">
+      <div class="step-num">${index + 1}</div>
+      <div>
+        <h3>${step[0]}</h3>
+        <p>${step[1]}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+function stSummary(a) {
+  const ids = a.anomalies.map((x) => x.id);
+  if (ids.includes("stemi")) return "Sus-décalage ST compatible STEMI : confronter au territoire et à la clinique.";
+  if (ids.includes("diffuseStAvr")) return "ST- diffus avec ST+ aVR/V1 : atteinte sévère possible.";
+  if (ids.includes("posterior")) return "ST- V1-V3/R hautes : demander V7-V9 si suspicion postérieure.";
+  if (ids.includes("pericarditis")) return "ST diffus concave / PR abaissé possible : péricardite à discuter.";
+  return "Pas d'anomalie ST renseignée. Vérifier segment PQ/TP et dérivations contiguës.";
+}
+
+function tSummary(a) {
+  const ids = a.anomalies.map((x) => x.id);
+  if (ids.includes("hyperk")) return "T pointues diffuses : hyperkaliémie probable.";
+  if (ids.includes("wellens")) return "T biphasiques ou négatives V2-V3 : Wellens possible.";
+  if (ids.includes("hypok")) return "T plates / onde U : hypokaliémie possible.";
+  return "Ondes T à vérifier : polarité, symétrie, proportionnalité au QRS.";
+}
+
+function renderEmergency() {
+  const a = lastAnalysis;
+  const banner = $("#emergencyBanner");
+  banner.className = `emergency-banner ${a.urgency}`;
+  banner.innerHTML = `<span>Niveau actuel</span><strong>${urgencyLabel(a.urgency)}</strong>`;
+
+  const reasons = a.urgency === "red" || a.urgency === "grey" ? a.urgentReasons : a.orangeReasons;
+  $("#emergencyReasons").innerHTML = reasons.length
+    ? reasons.map((reason) => `<div class="reason-chip">${reason}</div>`).join("")
+    : `<div class="reason-chip">Aucun drapeau rouge renseigné.</div>`;
+
+  const plan = [];
+  if (a.urgency === "red") {
+    plan.push("Évaluer constantes : TA, SpO2, conscience, douleur.");
+    plan.push("Répéter ECG 12 dérivations et surveiller le rythme.");
+    plan.push("Comparer à un ECG antérieur si disponible sans retarder la prise en charge.");
+    plan.push("Appeler cardiologue / SAMU selon gravité et organisation locale.");
+    plan.push("Biologie urgente selon contexte : troponine, ionogramme, créatinine, Mg, Ca.");
+  } else if (a.urgency === "grey") {
+    plan.push("ECG non interprétable avec sécurité suffisante.");
+    plan.push("Refaire un ECG 12 dérivations de bonne qualité.");
+    plan.push("Ne pas conclure normal tant que le tracé est incomplet ou flou.");
+  } else if (a.urgency === "orange") {
+    plan.push("Comparer à un ECG antérieur.");
+    plan.push("Adapter bilan biologique, Holter, échocardiographie ou avis cardio selon contexte.");
+    plan.push("Répéter ECG si symptômes persistants ou évolutifs.");
+  } else {
+    plan.push("Pas d'argument ECG saisi pour urgence cardiologique.");
+    plan.push("Confronter au contexte clinique : un ECG normal n'exclut pas un SCA, une EP ou un trouble paroxystique.");
+    plan.push("Comparer à un ECG antérieur si symptômes ou terrain à risque.");
+  }
+  $("#actionPlan").innerHTML = plan.map((item) => `<li>${item}</li>`).join("");
+}
+
+function renderReports() {
+  const a = lastAnalysis;
+  const date = inputValue("ecgDate") || "[date]";
+  const reason = inputValue("reason") || "[motif]";
+  const identity = inputValue("anonymousExport") ? "Patient anonymisé" : inputValue("patientName") || "Patient";
+  const quality = a.quality.label;
+  const rhythm = rhythmLabel(a);
+  const st = stSummary(a);
+  const t = tSummary(a);
+  const conclusion = a.diagnosis;
+  const conduct = $("#actionPlan").innerText.replace(/\n/g, " ");
+  const meds = a.riskMeds.length ? a.riskMeds.join(", ") : "non renseigné";
+  const ions = [
+    a.potassium ? `K+ ${a.potassium} mmol/L` : "",
+    a.calcium ? `Ca2+ ${a.calcium} mmol/L` : "",
+    a.magnesium ? `Mg2+ ${a.magnesium} mmol/L` : ""
+  ].filter(Boolean).join(", ") || "non renseigné";
+
+  $("#shortReport").textContent =
+    `ECG 12 dérivations ${quality.toLowerCase()}. ${rhythm} à ${a.fc || "[FC]"}/min. PR ${a.pr || "[PR]"} ms. ${a.qrsText} ${a.qrs || "[QRS]"} ms. Axe ${a.axisText}. QTc ${a.qtc || "[QTc]"} ms, ${a.qtcText.toLowerCase()}. ${st} Conclusion : ${conclusion}. À confronter au contexte clinique.`;
+
+  $("#structuredReport").textContent = [
+    `Identité : ${identity}`,
+    `Qualité : ${quality}`,
+    `Fréquence : ${a.fc || "[FC]"} /min (${a.fcText})`,
+    `Rythme : ${rhythm}`,
+    `Axe : ${a.axisText} (${a.axis || "[axe]"}°)`,
+    `PR : ${a.pr || "[PR]"} ms (${a.prText})`,
+    `QRS : ${a.qrs || "[QRS]"} ms (${a.qrsText})`,
+    `QTc : ${a.qtc || "[QTc]"} ms (${a.qtcText})`,
+    `Traitements à risque : ${meds}`,
+    `Ionogramme connu : ${ions}`,
+    `ST : ${st}`,
+    `T : ${t}`,
+    `Hypertrophie : ${a.anomalies.some((x) => x.id === "lvh") ? "HVG électrique possible" : "non renseignée"}`,
+    `Troubles de conduction : ${conductionSummary(a)}`,
+    `Conclusion : ${conclusion}`,
+    `Niveau d'urgence : ${urgencyLabel(a.urgency)}`,
+    `Conduite à tenir : ${conduct}`,
+    "",
+    "Un ECG normal n'exclut pas un syndrome coronarien aigu, une embolie pulmonaire, un trouble du rythme paroxystique ou une pathologie cardiaque intermittente."
+  ].join("\n");
+
+  $("#pasteReport").textContent =
+    `ECG réalisé le ${date} pour ${reason}. Tracé ${quality.toLowerCase()}. Rythme ${rhythm.toLowerCase()} à ${a.fc || "[FC]"}/min. Axe ${a.axisText}. PR ${a.pr || "[PR]"} ms. QRS ${a.qrsText.toLowerCase()} à ${a.qrs || "[QRS]"} ms. QTc ${a.qtc || "[QTc]"} ms (${a.qtcText.toLowerCase()}). Traitements à risque : ${meds}. Ionogramme : ${ions}. Segment ST : ${st}. Ondes T : ${t}. Conclusion : ${conclusion}. Conduite : ${conduct}`;
+}
+
+function conductionSummary(a) {
+  const parts = [];
+  if (a.pr > 200) parts.push("PR allongé/BAV 1 possible");
+  if (a.pr < 120 && a.pr > 0) parts.push("PR court/préexcitation à discuter");
+  if (a.qrs >= 120) parts.push("QRS large/bloc de branche ou rythme ventriculaire à discuter");
+  a.anomalies.filter((x) => ["highBav", "bbb", "wpw", "pacerFail"].includes(x.id)).forEach((x) => parts.push(x.report));
+  return parts.length ? parts.join("; ") : "pas de trouble significatif renseigné";
+}
+
+function renderAnomalyControls() {
+  $("#anomalyControls").innerHTML = anomalyCatalog.map((item) => `
+    <label>
+      <input id="anom-${item.id}" type="checkbox">
+      <span>${item.label}</span>
+    </label>
+  `).join("");
+}
+
+function renderObservationGuide() {
+  $("#observationGuide").innerHTML = observationGuides.map((item) => `
+    <label class="observation-card">
+      <input id="${item.id}" class="observation-input" type="checkbox">
+      <span>
+        <strong>${item.label}</strong>
+        <em>${item.hint}</em>
+      </span>
+    </label>
+  `).join("");
+  renderObservationSuggestions();
+}
+
+function renderObservationSuggestions() {
+  const chosen = observationGuides.filter((item) => document.getElementById(item.id)?.checked);
+  const suggestedIds = [...new Set(chosen.flatMap((item) => item.suggests))];
+  if (!suggestedIds.length) {
+    $("#observationSuggestions").innerHTML = `
+      <strong>Suggestions</strong>
+      <p>Cochez une observation simple pour afficher des pistes. Gardez ensuite seulement ce que vous confirmez.</p>
+    `;
+    return;
+  }
+  const chips = suggestedIds.map((id) => {
+    const anomaly = anomalyCatalog.find((item) => item.id === id);
+    if (!anomaly) return "";
+    return `<button type="button" class="suggestion-chip ${anomaly.severity}" data-suggest="${id}">${anomaly.label}</button>`;
+  }).join("");
+  $("#observationSuggestions").innerHTML = `
+    <strong>Pistes à confirmer</strong>
+    <p>Ces propositions ne sont pas des diagnostics automatiques. Cliquez une piste pour la reporter dans les anomalies confirmées.</p>
+    <div class="chip-row">${chips}</div>
+  `;
+}
+
+function applySuggestedAnomaly(id) {
+  const checkbox = document.getElementById(`anom-${id}`);
+  if (!checkbox) return;
+  checkbox.checked = true;
+  renderSummary();
+}
+
+function renderContextQuestions() {
+  const questions = [
+    ["chestPain", "Douleur thoracique actuelle ?"],
+    ["syncope", "Malaise ou syncope ?"],
+    ["dyspnea", "Dyspnée aiguë, SpO2 basse ou signes d'insuffisance cardiaque ?"],
+    ["priorEcg", "ECG antérieur disponible / différent ?"],
+    ["qtMeds", "Médicament allongeant QT ou ralentissant conduction ?"]
+  ];
+  $("#contextQuestions").innerHTML = questions.map(([id, label]) => `
+    <label>
+      <span>${label}</span>
+      <select id="${id === "qtMeds" ? "qtMeds" : `context-${id}`}">
+        <option value="unknown">Non renseigné</option>
+        <option value="yes">Oui</option>
+        <option value="no">Non</option>
+      </select>
+    </label>
+  `).join("");
+}
+
+function renderChecklist() {
+  $("#normalChecklist").innerHTML = normalCriteria.map((label, index) => `
+    <div class="check-row">
+      <div class="status-dot grey" id="dot-${index}">?</div>
+      <div>
+        <strong>${label}</strong>
+        <p>${normalGuidance[index]}</p>
+      </div>
+      <select class="criterion" data-index="${index}">
+        <option value="unknown">Non analysable</option>
+        <option value="ok">Conforme</option>
+        <option value="warn">À vérifier</option>
+        <option value="no">Non conforme</option>
+      </select>
+      <button type="button" class="ghost apply-suggestion" data-criterion="${index}">Suggestion</button>
+    </div>
+  `).join("");
+}
+
+function getChecklistSuggestions() {
+  const a = buildAnalysis();
+  const hasAnomaly = (ids) => a.anomalies.some((x) => ids.includes(x.id));
+  return [
+    hasAnomaly(["fastAf", "flutter"]) ? "no" : "warn",
+    hasAnomaly(["fastAf", "flutter", "highBav"]) ? "no" : "warn",
+    a.fc >= 60 && a.fc <= 100 ? "ok" : "no",
+    a.pr >= 120 && a.pr <= 200 ? "ok" : "no",
+    a.axis >= -30 && a.axis <= 90 ? "ok" : "no",
+    a.qrs <= 110 ? "ok" : "no",
+    hasAnomaly(["bbb", "posterior", "lvh"]) ? "warn" : "warn",
+    hasAnomaly(["stemi", "posterior"]) ? "no" : "warn",
+    hasAnomaly(["stemi", "diffuseStAvr", "posterior", "pericarditis"]) ? "no" : "ok",
+    hasAnomaly(["wellens", "hyperk", "hypok"]) ? "no" : "warn",
+    hasAnomaly(["hyperk", "hypok"]) ? "no" : "warn",
+    a.qtcText === "QTc normal" ? "ok" : "no"
+  ];
+}
+
+function fillChecklistFromAnalysis() {
+  const values = getChecklistSuggestions();
+  $$(".criterion").forEach((select, index) => {
+    select.value = values[index];
+  });
+  updateChecklistScore();
+}
+
+function applyChecklistSuggestion(index) {
+  const values = getChecklistSuggestions();
+  const select = document.querySelector(`.criterion[data-index="${index}"]`);
+  if (!select) return;
+  select.value = values[index] || "warn";
+  updateChecklistScore();
+}
+
+function updateChecklistScore() {
+  const criteria = $$(".criterion");
+  let ok = 0;
+  criteria.forEach((select) => {
+    const index = select.dataset.index;
+    const dot = $(`#dot-${index}`);
+    if (!dot) return;
+    dot.className = `status-dot ${statusClass[select.value]}`;
+    dot.textContent = select.value === "ok" ? "✓" : select.value === "no" ? "!" : select.value === "warn" ? "?" : "-";
+    if (select.value === "ok") ok += 1;
+  });
+  $("#normalScore").textContent = `${ok}/12`;
+  if (ok === 12 && getQuality().level === "green") {
+    $("#normalConclusion").textContent = "ECG strictement normal chez l'adulte, sous réserve du contexte clinique.";
+  } else if (ok === 12) {
+    $("#normalConclusion").textContent = "Critères remplis mais qualité à confirmer.";
+  } else {
+    $("#normalConclusion").textContent = "ECG non strictement normal : anomalies à caractériser.";
+  }
+}
+
+function parseMachineText() {
+  const text = inputValue("machineText");
+  const setters = [
+    ["heartRate", /(?:FC|Fr[ée]quence|HR)[^\d]{0,12}(\d{2,3})/i],
+    ["pr", /(?:PR|PQ)[^\d]{0,12}(\d{2,3})\s*(?:ms)?/i],
+    ["qrs", /QRS[^\d]{0,12}(\d{2,3})\s*(?:ms)?/i],
+    ["qtc", /QTc[^\d]{0,12}(\d{2,3})\s*(?:ms)?/i],
+    ["qt", /(?:QT\b)[^\d]{0,12}(\d{2,3})\s*(?:ms)?/i],
+    ["axis", /(?:Axe|Axis)[^\-\d]{0,12}(-?\d{1,3})/i]
+  ];
+  setters.forEach(([id, regex]) => {
+    const match = text.match(regex);
+    if (match) document.getElementById(id).value = match[1];
+  });
+  const speed = text.match(/(25|50)\s*mm\s*\/\s*s/i);
+  if (speed) $("#speed").value = `${speed[1]} mm/s`;
+  const calib = text.match(/(5|10|20)\s*mm\s*\/\s*mV/i);
+  if (calib) $("#calibration").value = `${calib[1]} mm/mV`;
+  renderSummary();
+}
+
+function renderLesson() {
+  const lesson = lessons[selectedLessonIndex];
+  $("#lessonSelect").value = String(selectedLessonIndex);
+  drawECG($("#lessonTrace"), lesson.pattern, { mode: "12lead" });
+  $("#lessonContent").innerHTML = `
+    <article><h3>${lesson.title}</h3><p>${lesson.key}</p></article>
+    <article><h3>Piège à éviter</h3><p>${lesson.trap}</p></article>
+    <article><h3>Cas clinique</h3><p>${lesson.case}</p></article>
+    <article><h3>Correction détaillée</h3><p>${lesson.key} ${lesson.trap}</p></article>
+  `;
+  $("#lessonQuiz").innerHTML = `<p><strong>${lesson.quiz.q}</strong></p>` + lesson.quiz.choices.map((choice, index) =>
+    `<button data-answer="${index}">${choice}</button>`
+  ).join("");
+  renderQuizBank();
+}
+
+function renderQuizBank() {
+  const batchSize = 10;
+  const start = (quizBatch * batchSize) % quizBank.length;
+  const picked = Array.from({ length: batchSize }, (_, offset) => quizBank[(start + offset) % quizBank.length]);
+  $("#quizCount").textContent = `${quizBank.length} questions`;
+  $("#quizBank").innerHTML = picked.map((item, index) => `
+    <article class="quiz-card" data-quiz="${start + index}">
+      <p><span>${item.topic}</span><strong>${item.q}</strong></p>
+      ${item.choices.map((choice, choiceIndex) => `<button data-bank-answer="${choiceIndex}" data-correct="${item.answer}" data-why="${item.why}">${choice}</button>`).join("")}
+      <em></em>
+    </article>
+  `).join("");
+}
+
+function renderCaseList() {
+  const level = $("#caseLevel").value;
+  const filtered = cases
+    .map((item, index) => ({ ...item, index }))
+    .filter((item) => level === "all" || String(item.level) === level);
+  $("#caseList").innerHTML = filtered.map((item) => `
+    <button class="case-button ${item.index === selectedCaseIndex ? "active" : ""}" data-case="${item.index}">
+      ${item.title}<br><span class="muted">Niveau ${item.level} - ${item.reason}</span>
+    </button>
+  `).join("");
+  if (!filtered.some((item) => item.index === selectedCaseIndex) && filtered[0]) selectedCaseIndex = filtered[0].index;
+  renderCase();
+}
+
+function renderCase() {
+  const item = cases[selectedCaseIndex];
+  if (!item) return;
+  $("#caseTitle").textContent = item.title;
+  $("#caseLevelBadge").textContent = `Niveau ${item.level}`;
+  $("#caseLevelBadge").className = `badge ${item.level === 3 ? "red" : item.level === 2 ? "orange" : "blue"}`;
+  drawECG($("#caseTrace"), item.pattern, { mode: "12lead" });
+  $("#caseDetails").innerHTML = `
+    <article><strong>Patient</strong><p>${item.age}, ${item.sex}. Motif : ${item.reason}.</p></article>
+    <article><strong>Questions</strong><p>Quel rythme ? Quelle fréquence ? QRS fin ou large ? ST normal ou anormal ? Diagnostic ECG probable ? Conduite à tenir ?</p></article>
+    <article><strong>Territoire / miroir</strong><p>${mirrorTeaching(item.pattern)}</p></article>
+    <article><strong>Correction</strong><p>${item.correction}</p></article>
+    <article><strong>Diagnostic</strong><p>${item.diagnosis}. Niveau d'urgence : ${item.urgency}. Piège : ${item.trap}</p></article>
+  `;
+  $$(".case-button").forEach((button) => button.classList.toggle("active", Number(button.dataset.case) === selectedCaseIndex));
+}
+
+function mirrorTeaching(pattern) {
+  const notes = {
+    stemiInf: "ST+ attendu en DII-DIII-aVF, avec miroir surtout en DI/aVL. Penser dérivations droites V3R/V4R si hypotension ou suspicion VD.",
+    stemi: "ST+ antérieur V2-V5/V6, parfois DI-aVL; miroir inférieur possible en DII-DIII-aVF.",
+    stemiSeptal: "ST+ septal V1-V2; miroir discret possible dans les dérivations opposées selon extension.",
+    stemiLat: "ST+ latéral DI-aVL et/ou V5-V6; miroir inférieur DII-DIII-aVF à rechercher.",
+    posterior: "Image miroir postérieure : ST- V1-V3 avec R relativement hautes; demander V7-V9 si douleur compatible.",
+    deWinter: "Équivalent LAD : ST ascendant V2-V6 avec T hautes, aVR parfois sus-décalé; pas toujours de ST+ classique.",
+    diffuseStAvr: "ST- diffus avec ST+ aVR/V1 : évoque ischémie sévère globale, tronc commun ou pluritronculaire selon contexte.",
+    nstemi: "ST- horizontal/descendant dans un territoire, sans ST+ persistant; répéter ECG et confronter à troponine/contexte.",
+    wellens: "T biphasiques ou négatives en V2-V3 après douleur thoracique : LAD proximale possible.",
+    wellensDeep: "T profondément négatives V2-V4 après douleur : variante de Wellens à risque.",
+    pericarditis: "ST diffus concave, plutôt sans miroir territorial franc; aVR/V1 peuvent être en miroir opposé.",
+    early: "ST concave avec point J, souvent antéro-latéral, sans vrai miroir territorial."
+  };
+  return notes[pattern] || "Pas de territoire miroir spécifique pour ce cas; comparez surtout morphologie, qualité et contexte clinique.";
+}
+
+function renderFlashcard() {
+  const card = flashcards[selectedCardIndex];
+  $("#cardTag").textContent = card.tag;
+  $("#cardQuestion").textContent = card.q;
+  $("#cardAnswer").textContent = card.a;
+  $("#flashcard").classList.toggle("revealed", cardRevealed);
+}
+
+function drawGrid(ctx, w, h) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(205,64,91,0.18)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= w; x += 14) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += 14) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = "rgba(205,64,91,0.34)";
+  for (let x = 0; x <= w; x += 70) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += 70) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+}
+
+function drawECG(canvas, pattern = "normal", options = {}) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  drawGrid(ctx, w, h);
+  ctx.strokeStyle = "#1f2421";
+  ctx.lineWidth = 2.4;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  const leadNames = ["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"];
+  const rows = options.mode === "12lead" || pattern === "demo12" ? 12 : 3;
+  const rowHeight = h / rows;
+  for (let row = 0; row < rows; row += 1) {
+    const lead = leadNames[row] || `V${row}`;
+    const baseline = rowHeight * row + rowHeight * 0.55;
+    drawLead(ctx, w, baseline, rowHeight * 0.34, pattern, row, lead);
+    ctx.fillStyle = "#66706a";
+    ctx.font = rows === 12 ? "700 15px Segoe UI" : "700 18px Segoe UI";
+    ctx.fillText(lead, 12, baseline - rowHeight * 0.24);
+  }
+}
+
+function drawLead(ctx, w, baseline, amp, pattern, row, lead) {
+  ctx.beginPath();
+  const beats = beatPositions(pattern, w);
+  const scale = leadScale(lead, pattern);
+  const polarity = leadPolarity(lead);
+  for (let x = 0; x < w; x += 2) {
+    let y = baseline + noise(x, row);
+    if (["tv", "torsades"].includes(pattern)) {
+      const freq = pattern === "tv" ? 0.055 : 0.052;
+      const mod = pattern === "torsades" ? 0.45 + 0.55 * Math.sin(x * 0.014) : 1;
+      y -= Math.sin(x * freq + row * 0.18) * amp * 0.7 * mod * polarity;
+    } else if (pattern === "artifact") {
+      y -= Math.sin(x * 0.75 + row) * amp * 0.22 + Math.sin(x * 0.037) * amp * 0.18;
+      beats.forEach((b) => {
+        const t = (x - b) / 68;
+        y -= waveValue(t, "normal", row, lead) * amp * 0.45;
+      });
+    } else {
+      beats.forEach((b) => {
+        const t = (x - b) / 68;
+        y -= waveValue(t, pattern, row, lead) * amp * scale;
+      });
+      if (pattern === "flutter") y -= saw(x * 0.055) * amp * 0.16;
+      if (pattern === "fa") y -= Math.sin(x * 0.21 + row) * amp * 0.025 + Math.sin(x * 0.073) * amp * 0.035;
+      if (pattern === "faWpw") y -= Math.sin(x * 0.19 + row) * amp * 0.04 + Math.sin(x * 0.079) * amp * 0.05;
+    }
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+function beatPositions(pattern, w) {
+  const positions = [];
+  let x = 90;
+  while (x < w + 90) {
+    positions.push(x);
+    if (["brady", "completeBav", "completeBavWide", "highBav"].includes(pattern)) x += 210;
+    else if (pattern === "tachy" || pattern === "flutter") x += 105;
+    else if (["fa", "faWpw"].includes(pattern)) x += 95 + Math.sin(x * 0.07) * 42 + Math.cos(x * 0.031) * 26;
+    else if (pattern === "sinusArr") x += 145 + Math.sin(x * 0.025) * 38;
+    else if (["mobitz1", "mobitz2", "bav2to1"].includes(pattern)) x += 175;
+    else x += 145;
+  }
+  return positions;
+}
+
+function leadScale(lead, pattern) {
+  const base = {
+    DI: 0.96, DII: 1, DIII: 0.9, aVR: 0.82, aVL: 0.8, aVF: 0.95,
+    V1: 0.9, V2: 0.95, V3: 1, V4: 1.05, V5: 1.06, V6: 0.98
+  }[lead] || 1;
+  if (pattern === "lowVoltage") return base * 0.35;
+  if (pattern === "lvh" && ["V4", "V5", "V6", "DI", "aVL"].includes(lead)) return base * 1.45;
+  if (pattern === "rvh" && ["V1", "V2", "V3"].includes(lead)) return base * 1.25;
+  return base;
+}
+
+function leadPolarity(lead) {
+  return lead === "aVR" ? -1 : 1;
+}
+
+function leadProfile(lead, pattern) {
+  const profiles = {
+    DI: { p: 0.1, q: -0.08, r: 0.9, s: -0.2, t: 0.24 },
+    DII: { p: 0.14, q: -0.06, r: 1.15, s: -0.28, t: 0.34 },
+    DIII: { p: 0.08, q: -0.03, r: 0.72, s: -0.24, t: 0.2 },
+    aVR: { p: -0.1, q: 0.08, r: -0.82, s: 0.2, t: -0.24 },
+    aVL: { p: 0.06, q: -0.08, r: 0.52, s: -0.12, t: 0.12 },
+    aVF: { p: 0.1, q: -0.04, r: 0.88, s: -0.24, t: 0.26 },
+    V1: { p: 0.04, q: -0.01, r: 0.22, s: -1.05, t: -0.04 },
+    V2: { p: 0.05, q: -0.02, r: 0.42, s: -0.9, t: 0.08 },
+    V3: { p: 0.06, q: -0.03, r: 0.78, s: -0.58, t: 0.22 },
+    V4: { p: 0.07, q: -0.04, r: 1.18, s: -0.26, t: 0.34 },
+    V5: { p: 0.07, q: -0.05, r: 1.28, s: -0.16, t: 0.32 },
+    V6: { p: 0.06, q: -0.05, r: 1.05, s: -0.1, t: 0.25 }
+  };
+  const profile = { ...(profiles[lead] || profiles.DII) };
+
+  if (pattern === "posterior" && ["V1", "V2", "V3"].includes(lead)) {
+    profile.r += 0.55;
+    profile.s *= 0.35;
+    profile.t = 0.42;
+  }
+  if (pattern === "stemiInf" && ["DII", "DIII", "aVF"].includes(lead)) {
+    profile.q -= 0.14;
+    profile.r *= lead === "DIII" ? 0.8 : 0.9;
+  }
+  if (["stemi", "stemiSeptal"].includes(pattern) && ["V1", "V2", "V3", "V4"].includes(lead)) {
+    profile.q -= 0.08;
+    profile.r *= lead === "V1" ? 0.65 : 0.85;
+  }
+  if (pattern === "stemiLat" && ["DI", "aVL", "V5", "V6"].includes(lead)) {
+    profile.q -= 0.12;
+    profile.r *= 0.9;
+  }
+  if (pattern === "lbbb") {
+    if (["DI", "aVL", "V5", "V6"].includes(lead)) {
+      profile.q = 0;
+      profile.r *= 1.25;
+      profile.s *= 0.2;
+      profile.t *= -0.8;
+    }
+    if (["V1", "V2"].includes(lead)) {
+      profile.r *= 0.25;
+      profile.s *= 1.35;
+      profile.t = 0.26;
+    }
+  }
+  if (pattern === "bbb") {
+    if (["V1", "V2"].includes(lead)) {
+      profile.r = 0.55;
+      profile.s = -0.35;
+    }
+    if (["DI", "V5", "V6"].includes(lead)) profile.s -= 0.35;
+  }
+  return profile;
+}
+
+function leadST(pattern, lead) {
+  const inferior = ["DII", "DIII", "aVF"].includes(lead);
+  const anterior = ["V2", "V3", "V4"].includes(lead);
+  const septal = ["V1", "V2"].includes(lead);
+  const lateral = ["DI", "aVL", "V5", "V6"].includes(lead);
+  const posteriorMirror = ["V1", "V2", "V3"].includes(lead);
+  if (pattern === "stemiInf") return inferior ? 0.36 : ["DI", "aVL"].includes(lead) ? -0.18 : posteriorMirror ? -0.04 : 0.02;
+  if (pattern === "stemi") return anterior || ["V5", "V6", "DI", "aVL"].includes(lead) ? 0.34 : inferior ? -0.14 : 0.02;
+  if (pattern === "stemiSeptal") return septal ? 0.32 : lateral || inferior ? -0.08 : 0.02;
+  if (pattern === "stemiLat") return lateral ? 0.3 : inferior ? -0.18 : posteriorMirror ? -0.06 : 0.02;
+  if (pattern === "posterior") return posteriorMirror ? -0.32 : lateral ? 0.08 : inferior ? 0.04 : 0.01;
+  if (pattern === "diffuseStAvr") return lead === "aVR" || lead === "V1" ? 0.24 : -0.2;
+  if (pattern === "nstemi") return lateral || anterior ? -0.16 : 0;
+  if (pattern === "deWinter") return anterior || ["V5", "V6"].includes(lead) ? -0.18 : lead === "aVR" ? 0.16 : 0;
+  if (pattern === "pericarditis") return lead === "aVR" || lead === "V1" ? -0.1 : 0.14;
+  if (pattern === "early") return anterior || lateral ? 0.12 : 0.04;
+  if (pattern === "lvh") return lateral ? -0.14 : 0.04;
+  return 0;
+}
+
+function waveValue(t, pattern, row, lead = "DII") {
+  const g = (center, width, height) => Math.exp(-Math.pow((t - center) / width, 2)) * height;
+  const profile = leadProfile(lead, pattern);
+  let v = 0;
+  if (!["fa", "faWpw", "flutter"].includes(pattern)) v += g(-0.34, 0.055, profile.p);
+  const wide = ["bbb", "lbbb", "bav1", "completeBav", "completeBavWide", "wideTachy", "hyperkWide", "faWpw"].includes(pattern) ? 1.45 : 1;
+  const delta = ["wpw", "faWpw"].includes(pattern) ? g(-0.08, 0.045, 0.26 * leadPolarity(lead)) : 0;
+  v += delta;
+  v += g(-0.045, 0.014 * wide, profile.q);
+  v += g(0, 0.011 * wide, pattern === "lowVoltage" ? profile.r * 0.65 : profile.r);
+  v += g(0.04, 0.018 * wide, profile.s);
+
+  let st = leadST(pattern, lead);
+  if (pattern === "wellens") st = -0.02;
+  if (t > 0.08 && t < 0.34) v += st;
+
+  let tHeight = profile.t;
+  let tCenter = 0.55;
+  if (["hyperk", "hyperkWide"].includes(pattern)) tHeight = 0.85;
+  if (pattern === "hypok") tHeight = 0.12;
+  if (pattern === "longqt") tCenter = 0.82;
+  if (pattern === "wellens") tHeight = ["V2", "V3"].includes(lead) ? -0.42 : 0.22;
+  if (pattern === "wellensDeep") tHeight = ["V2", "V3", "V4"].includes(lead) ? -0.7 : 0.2;
+  if (pattern === "deWinter" && ["V2", "V3", "V4", "V5"].includes(lead)) tHeight = 0.82;
+  if (pattern === "stemiInf" && ["DII", "DIII", "aVF"].includes(lead)) tHeight = 0.52;
+  if (pattern === "lvh" && ["V5", "V6", "DI", "aVL"].includes(lead)) tHeight = -0.25;
+  if (pattern === "rvh" && ["V1", "V2", "V3"].includes(lead)) tHeight = -0.34;
+  if (pattern === "brugada" && ["V1", "V2", "V3"].includes(lead)) {
+    v += g(0.16, 0.08, 0.36);
+    tHeight = -0.36;
+  }
+  v += g(tCenter, ["hyperk", "hyperkWide"].includes(pattern) ? 0.08 : 0.14, tHeight);
+
+  if (pattern === "pvc" && Math.abs(t) < 0.17) v += Math.sin((t + 0.17) * 18) * 0.6;
+  if (["bav1", "mobitz1", "mobitz2", "bav2to1", "highBav"].includes(pattern)) v += g(-0.52, 0.052, 0.12);
+  if (pattern === "pacerFail") v += g(-0.12, 0.006, 1.8) - g(-0.1, 0.006, 1.1);
+  return v;
+}
+
+function saw(value) {
+  return 2 * (value / (2 * Math.PI) - Math.floor(0.5 + value / (2 * Math.PI)));
+}
+
+function noise(x, row) {
+  return Math.sin(x * 0.012 + row) * 0.7 + Math.sin(x * 0.051 + row * 3) * 0.35;
+}
+
+function handleFile(event) {
+  const file = event.target.files?.[0];
+  const preview = $("#preview");
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  $("#fileStatus").textContent = `${file.name} - ${Math.round(file.size / 1024)} ko`;
+  if (file.type.startsWith("image/")) {
+    preview.innerHTML = `<img alt="ECG importé" src="${url}">`;
+  } else if (file.type === "application/pdf") {
+    preview.innerHTML = `<object data="${url}" type="application/pdf"><iframe src="${url}" title="ECG PDF importé"></iframe></object>`;
+  } else {
+    preview.innerHTML = `<p>Format non pris en charge.</p>`;
+  }
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+  }
+}
+
+function init() {
+  renderAnomalyControls();
+  renderObservationGuide();
+  renderContextQuestions();
+  renderChecklist();
+
+  $("#lessonSelect").innerHTML = lessons.map((lesson, index) => `<option value="${index}">${lesson.title}</option>`).join("");
+  renderLesson();
+  renderCaseList();
+  renderFlashcard();
+  drawECG($("#demoTrace"), "demo12");
+  fillChecklistFromAnalysis();
+  renderSummary();
+
+  $$(".tab").forEach((button) => {
+    button.addEventListener("click", () => switchTab(button.dataset.tab));
+  });
+  $$("[data-jump]").forEach((button) => {
+    button.addEventListener("click", () => switchTab(button.dataset.jump));
+  });
+  $("#ecgFile").addEventListener("change", handleFile);
+  $("#runAnalysis").addEventListener("click", () => {
+    fillChecklistFromAnalysis();
+    renderSummary();
+    switchTab("lecture");
+  });
+  $("#parseText").addEventListener("click", parseMachineText);
+  $("#autoChecklist").addEventListener("click", fillChecklistFromAnalysis);
+  $("#observationGuide").addEventListener("change", () => {
+    renderObservationSuggestions();
+  });
+  $("#observationSuggestions").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-suggest]");
+    if (!button) return;
+    applySuggestedAnomaly(button.dataset.suggest);
+  });
+  $("#markUnstable").addEventListener("click", () => {
+    $("#currentSymptoms").checked = true;
+    $("#syncope").checked = true;
+    const wide = $("#anom-wideTachy");
+    if (wide) wide.checked = true;
+    renderSummary();
+  });
+  $("#copyReport").addEventListener("click", () => copyText("pasteReport"));
+  $("#printReport").addEventListener("click", () => window.print());
+  $$(".copy-format").forEach((button) => button.addEventListener("click", () => copyText(button.dataset.copy)));
+  $$("#ecgForm input, #ecgForm select, #ecgForm textarea").forEach((el) => {
+    el.addEventListener("change", renderSummary);
+    el.addEventListener("input", debounce(renderSummary, 160));
+  });
+  $("#anomalyControls").addEventListener("change", renderSummary);
+  $("#contextQuestions").addEventListener("change", syncContextToForm);
+  $("#normalChecklist").addEventListener("change", updateChecklistScore);
+  $("#normalChecklist").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-criterion]");
+    if (!button) return;
+    applyChecklistSuggestion(Number(button.dataset.criterion));
+  });
+  $("#lessonSelect").addEventListener("change", (event) => {
+    selectedLessonIndex = Number(event.target.value);
+    renderLesson();
+  });
+  $("#lessonQuiz").addEventListener("click", (event) => {
+    if (event.target.tagName !== "BUTTON") return;
+    const answer = lessons[selectedLessonIndex].quiz.answer;
+    const picked = Number(event.target.dataset.answer);
+    $$("#lessonQuiz button").forEach((button) => button.classList.remove("correct", "wrong"));
+    event.target.classList.add(picked === answer ? "correct" : "wrong");
+  });
+  $("#nextQuizBatch").addEventListener("click", () => {
+    quizBatch += 1;
+    renderQuizBank();
+  });
+  $("#quizBank").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-bank-answer]");
+    if (!button) return;
+    const card = button.closest(".quiz-card");
+    const picked = Number(button.dataset.bankAnswer);
+    const answer = Number(button.dataset.correct);
+    card.querySelectorAll("button").forEach((item) => item.classList.remove("correct", "wrong"));
+    button.classList.add(picked === answer ? "correct" : "wrong");
+    card.querySelector("em").textContent = picked === answer ? `Correct. ${button.dataset.why}` : `À revoir. ${button.dataset.why}`;
+  });
+  $("#caseLevel").addEventListener("change", renderCaseList);
+  $("#caseList").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-case]");
+    if (!button) return;
+    selectedCaseIndex = Number(button.dataset.case);
+    renderCase();
+  });
+  $("#flashcard").addEventListener("click", () => {
+    cardRevealed = !cardRevealed;
+    renderFlashcard();
+  });
+  $("#nextCard").addEventListener("click", () => {
+    selectedCardIndex = (selectedCardIndex + 1) % flashcards.length;
+    cardRevealed = false;
+    renderFlashcard();
+  });
+  $("#prevCard").addEventListener("click", () => {
+    selectedCardIndex = (selectedCardIndex - 1 + flashcards.length) % flashcards.length;
+    cardRevealed = false;
+    renderFlashcard();
+  });
+  $("#storeLocal").addEventListener("change", () => {
+    if (!$("#storeLocal").checked) {
+      try {
+        localStorage.removeItem("ecg-cabinet-form");
+      } catch {
+        return;
+      }
+    }
+    else saveLocalForm();
+  });
+  restoreLocalForm();
+  renderSummary();
+}
+
+function switchTab(id) {
+  $$(".tab").forEach((button) => button.classList.toggle("active", button.dataset.tab === id));
+  $$(".screen").forEach((screen) => screen.classList.toggle("active", screen.id === id));
+  if (id === "cases") renderCase();
+  if (id === "learn") renderLesson();
+}
+
+function syncContextToForm() {
+  const map = {
+    "context-chestPain": "chestPain",
+    "context-syncope": "syncope",
+    "context-dyspnea": "dyspnea"
+  };
+  Object.entries(map).forEach(([contextId, formId]) => {
+    const value = document.getElementById(contextId)?.value;
+    if (value === "yes") document.getElementById(formId).checked = true;
+    if (value === "no") document.getElementById(formId).checked = false;
+  });
+  renderSummary();
+}
+
+function debounce(fn, delay) {
+  let timer;
+  return (...args) => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => fn(...args), delay);
+  };
+}
+
+function formSnapshot() {
+  const ids = [
+    "patientName", "ecgDate", "age", "sex", "reason", "currentSymptoms", "chestPain", "syncope",
+    "dyspnea", "priorEcg", "speed", "calibration", "heartRate", "pr", "qrs", "qtc", "axis", "qt",
+    "potassium", "calcium", "magnesium", "creatinine", "complete12", "longLead", "baselineNoise",
+    "muscleNoise", "leadReversal", "missingLeads", "blurred", "machineText", "anonymousExport", "storeLocal"
+  ];
+  const data = {};
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    data[id] = el.type === "checkbox" ? el.checked : el.value;
+  });
+  data.riskMeds = selectedRiskMeds();
+  data.anomalies = selectedAnomalies().map((item) => item.id);
+  return data;
+}
+
+function saveLocalForm() {
+  if (!$("#storeLocal")?.checked) return;
+  try {
+    localStorage.setItem("ecg-cabinet-form", JSON.stringify(formSnapshot()));
+  } catch {
+    return;
+  }
+}
+
+function restoreLocalForm() {
+  let raw = null;
+  try {
+    raw = localStorage.getItem("ecg-cabinet-form");
+  } catch {
+    return;
+  }
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    Object.entries(data).forEach(([id, value]) => {
+      if (["riskMeds", "anomalies"].includes(id)) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === "checkbox") el.checked = Boolean(value);
+      else el.value = value;
+    });
+    $$(".risk-med").forEach((item) => {
+      item.checked = Array.isArray(data.riskMeds) && data.riskMeds.includes(item.value);
+    });
+    anomalyCatalog.forEach((item) => {
+      const el = document.getElementById(`anom-${item.id}`);
+      if (el) el.checked = Array.isArray(data.anomalies) && data.anomalies.includes(item.id);
+    });
+  } catch {
+    localStorage.removeItem("ecg-cabinet-form");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+    </script>
+  </body>
+</html>

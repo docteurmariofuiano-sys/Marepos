@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue des motifs de consultation — Aide au raisonnement</title>
+  <meta name="description" content="Catalogue des motifs de consultation en médecine générale (16 spécialités, motifs fréquents et urgences), relié aux fiches décisionnelles. D'après les ouvrages de référence du Dr Mario Fuiano." />
+  <link rel="stylesheet" href="catalogue-styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">📚</span>
+        <div>
+          <h1>Catalogue des motifs de consultation</h1>
+          <p class="subtitle">16 spécialités · motifs fréquents & urgences · relié aux fiches décisionnelles</p>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <nav class="links">
+          <a href="index.html">🧭 Raisonnement clinique</a>
+          <a href="biologie.html">🧪 Biologie</a>
+          <a href="procedures.html">📋 Procédures</a>
+        </nav>
+        <span class="badge-count" id="countBadge"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Rechercher un motif (ex. céphalée, fièvre, douleur testiculaire, hyperkaliémie…)" autocomplete="off" />
+      </div>
+      <label class="toggle"><input type="checkbox" id="urgOnly" /> <span>⚠ Urgences seulement</span></label>
+      <label class="toggle"><input type="checkbox" id="ficheOnly" /> <span>✓ Fiche décisionnelle dispo.</span></label>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="lg"><span class="dot dot-clin"></span> fiche décisionnelle (clinique)</span>
+    <span class="lg"><span class="dot dot-bio"></span> interprétation biologique</span>
+    <span class="lg"><span class="dot dot-proc"></span> procédure / prévention</span>
+    <span class="lg"><span class="dot dot-ref"></span> référence (à approfondir)</span>
+    <span class="lg"><span class="urgchip">⚠ URGENCE</span></span>
+  </div>
+
+  <main class="cats" id="cats"></main>
+
+  <footer class="foot">
+    <p>Catalogue de navigation. Les motifs reliés ouvrent une fiche décisionnelle (parcours patient→médecin)
+      ou une fiche d'interprétation biologique. Les autres sont des entrées de référence à approfondir
+      à partir des ouvrages (Manuel du Généraliste, Médecine Générale pour le Praticien, fiches dermato CESU).
+      Aide au raisonnement — validation médicale obligatoire.</p>
+  </footer>
+
+  <script src="data/motifs-catalogue.js"></script>
+  <script src="catalogue.js"></script>
+</body>
+</html>
