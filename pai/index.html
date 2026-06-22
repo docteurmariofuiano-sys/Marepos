@@ -84,8 +84,11 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);b
 textarea{resize:vertical;min-height:64px}
 
 /* ---------- Pathologies ---------- */
-.patho-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:520px){.patho-grid{grid-template-columns:1fr}}
+.patho-grid{display:flex;flex-direction:column;gap:14px;max-height:560px;overflow:auto;padding-right:4px}
+.cat-title{font-size:11px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pap-mini{font-size:9px;font-weight:800;background:#ede9fe;color:#6d28d9;padding:1px 5px;border-radius:999px;vertical-align:middle;letter-spacing:.3px}
+@media (max-width:520px){.cat-grid{grid-template-columns:1fr}}
 .patho{
   display:flex;gap:10px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);
   border-radius:12px;cursor:pointer;background:#fff;transition:.15s;
@@ -275,7 +278,10 @@ textarea{resize:vertical;min-height:64px}
 
     <div class="panel">
       <h2><span class="n">4</span> Aménagements (facultatif)</h2>
-      <label class="field full">Aménagements pédagogiques / régime / activités physiques
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px">
+        Des aménagements sont <strong>suggérés automatiquement</strong> selon les pathologies cochées.
+        Ajoutez ici vos précisions propres à l'enfant.</p>
+      <label class="field full">Précisions / aménagements spécifiques
         <textarea id="f_amenag" placeholder="ex. accès à l'eau et aux toilettes libre ; collation autorisée ; dispense partielle d'EPS en cas de crise…"></textarea>
       </label>
     </div>
@@ -308,12 +314,53 @@ textarea{resize:vertical;min-height:64px}
    PAI ASSIST — moteur (données embarquées, hors-ligne)
    ===================================================================== */
 
-/* ---------- Pathologies ---------- */
+/* ---------- Pathologies (regroupées par catégorie) ----------
+   pap:true => relève le plus souvent d'un PAP/PPS (affiche un repère)
+*/
 const PATHOS = [
-  {id:"allergie", ico:"🥜", t:"Allergie alimentaire / anaphylaxie", s:"Éviction + protocole anaphylaxie"},
-  {id:"asthme",   ico:"🫁", t:"Asthme",                              s:"Crise & traitement de secours"},
-  {id:"diabete",  ico:"🩸", t:"Diabète de type 1",                  s:"Hypo / hyperglycémie, insuline"},
-  {id:"epilepsie",ico:"⚡", t:"Épilepsie",                          s:"Crise convulsive prolongée"},
+  /* Allergies & immunité */
+  {id:"allergie", cat:"Allergies & immunité", ico:"🥜", t:"Allergie alimentaire / anaphylaxie", s:"Éviction + protocole anaphylaxie"},
+  {id:"venin",    cat:"Allergies & immunité", ico:"🐝", t:"Allergie aux venins (guêpe, abeille)", s:"Protocole piqûre"},
+  {id:"allergie_div", cat:"Allergies & immunité", ico:"💉", t:"Allergie médicamenteuse / latex", s:"Éviction stricte"},
+
+  /* Respiratoire */
+  {id:"asthme", cat:"Respiratoire", ico:"🫁", t:"Asthme", s:"Crise & traitement de secours"},
+  {id:"muco",   cat:"Respiratoire", ico:"🌬️", t:"Mucoviscidose", s:"Enzymes, kiné, hygiène"},
+
+  /* Endocrino-métabolique */
+  {id:"diabete",    cat:"Endocrino-métabolique", ico:"🩸", t:"Diabète de type 1", s:"Hypo / hyperglycémie, insuline"},
+  {id:"surrenale",  cat:"Endocrino-métabolique", ico:"🧂", t:"Insuffisance surrénale", s:"Hydrocortisone, doses de stress"},
+  {id:"metabolique",cat:"Endocrino-métabolique", ico:"🧬", t:"Maladie métabolique héréditaire (PCU…)", s:"Régime strict"},
+
+  /* Digestif & nutrition */
+  {id:"celiaque",    cat:"Digestif & nutrition", ico:"🌾", t:"Maladie cœliaque", s:"Régime sans gluten"},
+  {id:"intolerance", cat:"Digestif & nutrition", ico:"🥛", t:"Intolérance alimentaire", s:"Éviction adaptée"},
+  {id:"mici",        cat:"Digestif & nutrition", ico:"🍽️", t:"MICI (Crohn / RCH)", s:"Accès toilettes, traitement"},
+
+  /* Hématologie & oncologie */
+  {id:"drepano",   cat:"Hématologie & oncologie", ico:"🔴", t:"Drépanocytose", s:"Hydratation, douleur, froid"},
+  {id:"hemophilie",cat:"Hématologie & oncologie", ico:"🩹", t:"Hémophilie / troubles de la coagulation", s:"Conduite si saignement"},
+  {id:"cancer",    cat:"Hématologie & oncologie", ico:"🎗️", t:"Cancer / chimiothérapie en cours", s:"Immunodépression, fièvre = urgence"},
+
+  /* Cardio-rénal */
+  {id:"cardio", cat:"Cardio-rénal", ico:"🫀", t:"Cardiopathie", s:"Effort, traitement"},
+  {id:"renal",  cat:"Cardio-rénal", ico:"🫘", t:"Insuffisance rénale chronique", s:"Hydratation, régime"},
+
+  /* Neurologie */
+  {id:"epilepsie", cat:"Neurologie", ico:"⚡", t:"Épilepsie", s:"Crise convulsive prolongée"},
+  {id:"migraine",  cat:"Neurologie", ico:"🤕", t:"Migraine", s:"Repos, antalgique"},
+
+  /* Neurodéveloppement & apprentissages (le plus souvent PAP/PPS) */
+  {id:"tdah",      cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🌀", t:"TDAH", s:"Méthylphénidate + aménagements"},
+  {id:"dyslexie",  cat:"Neurodéveloppement & apprentissages", pap:true, ico:"📖", t:"Dyslexie / dysorthographie", s:"Aménagements lecture & écrit"},
+  {id:"dysgraphie",cat:"Neurodéveloppement & apprentissages", pap:true, ico:"✍️", t:"Dysgraphie", s:"Outils d'écriture"},
+  {id:"dyscalculie",cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🔢", t:"Dyscalculie", s:"Aménagements en maths"},
+  {id:"dyspraxie", cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🧩", t:"Dyspraxie (TDC)", s:"Geste, organisation"},
+  {id:"dysphasie", cat:"Neurodéveloppement & apprentissages", pap:true, ico:"💬", t:"Dysphasie / trouble du langage", s:"Communication"},
+  {id:"tsa",       cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🧠", t:"Trouble du spectre autistique", s:"Cadre & sensoriel"},
+
+  /* Santé mentale */
+  {id:"anxiete", cat:"Santé mentale", pap:true, ico:"😰", t:"Trouble anxieux / refus scolaire", s:"Soutien & aménagements"},
 ];
 
 /* ---------- Base médicaments ----------
@@ -388,21 +435,143 @@ const MEDS = [
    poso:"≈ 0,5 mg/kg selon prescription", voie:"Intrarectale (canule)",
    alerte:"Crise convulsive se prolongeant au-delà de 5 minutes (alternative au midazolam).",
    give:"Protéger l'enfant, noter l'heure. Administrer le diazépam intrarectal si la crise dure > 5 min. Position latérale de sécurité. Appeler le 15."},
+
+  /* --- Allergie aux venins --- */
+  {id:"adrenaline_venin", patho:"venin", urgent:true, trousse:true, gravite:3,
+   nom:"Adrénaline auto-injecteur", dci:"adrénaline IM (Anapen® / Epipen® / Jext® / Emerade®)",
+   poso:"Stylo 150 µg (<25 kg) ou 300 µg (≥25 kg)", voie:"IM, face antéro-externe de la cuisse",
+   alerte:"Après piqûre, signes de gravité : gêne respiratoire, gonflement de la gorge / visage, malaise, urticaire généralisée, perte de connaissance.",
+   give:"Retirer le dard si visible (gratter, ne pas pincer). Injecter l'adrénaline SANS DÉLAI dans la cuisse, allonger l'enfant, appeler le 15. 2ᵉ stylo possible après 5 min."},
+  {id:"antihist_venin", patho:"venin", urgent:true, trousse:true, gravite:1,
+   nom:"Antihistaminique", dci:"cétirizine / desloratadine",
+   poso:"Dose adaptée à l'âge/poids (voir prescription)", voie:"Orale",
+   alerte:"Réaction locale ou cutanée isolée, SANS signe de gravité.",
+   give:"Appliquer du froid sur la piqûre, donner l'antihistaminique, surveiller. Si signe de gravité → adrénaline + 15."},
+
+  /* --- Mucoviscidose --- */
+  {id:"enzymes", patho:"muco", urgent:false, trousse:true, gravite:0,
+   nom:"Enzymes pancréatiques (Créon®)", dci:"pancréatine",
+   poso:"Gélules à chaque repas / collation, selon prescription", voie:"Orale, avant de manger",
+   alerte:"", give:"À prendre au début de chaque repas et collation contenant des graisses. Laisser un accès libre à l'eau et aux toilettes."},
+  {id:"bronchodil_muco", patho:"muco", urgent:false, trousse:true, gravite:0,
+   nom:"Bronchodilatateur / aérosol", dci:"salbutamol / sérum salé hypertonique",
+   poso:"Selon protocole individuel", voie:"Inhalée",
+   alerte:"Gêne respiratoire, encombrement.", give:"Administrer selon le protocole. Éviter le contact avec des personnes enrhumées ; renforcer l'hygiène des mains."},
+
+  /* --- Insuffisance surrénale --- */
+  {id:"hydrocort_orale", patho:"surrenale", urgent:true, trousse:true, gravite:2,
+   nom:"Hydrocortisone orale — dose de stress", dci:"hydrocortisone",
+   poso:"Dose habituelle ×2 à ×3 en cas de stress (fièvre, vomissements, traumatisme), selon prescription", voie:"Orale",
+   alerte:"Situation de stress : fièvre, infection, vomissements, accident, effort intense, fatigue inhabituelle.",
+   give:"Administrer la dose de stress prescrite sans attendre. Prévenir la famille. Surveiller (pâleur, malaise, somnolence)."},
+  {id:"hydrocort_inj", patho:"surrenale", urgent:true, trousse:true, gravite:3,
+   nom:"Hydrocortisone injectable (urgence)", dci:"hydrocortisone IM/SC",
+   poso:"Dose selon prescription (kit d'urgence personnalisé)", voie:"IM ou SC",
+   alerte:"Insuffisance surrénale aiguë : malaise, vomissements répétés, troubles de la conscience, impossibilité d'avaler le traitement oral.",
+   give:"Injecter l'hydrocortisone du kit d'urgence SANS DÉLAI, allonger l'enfant, appeler le 15."},
+
+  /* --- Drépanocytose --- */
+  {id:"antalgique_drepano", patho:"drepano", urgent:true, trousse:true, gravite:2,
+   nom:"Antalgique (crise douloureuse)", dci:"paracétamol ± ibuprofène, selon prescription",
+   poso:"Dose adaptée au poids", voie:"Orale",
+   alerte:"Crise vaso-occlusive : douleurs (membres, ventre, dos). Facteurs : froid, effort, déshydratation.",
+   give:"Faire boire abondamment, mettre au chaud et au repos, donner l'antalgique prescrit. Appeler le 15 si douleur intense résistante, fièvre, pâleur, gêne respiratoire ou gonflement."},
+  {id:"hydratation_drepano", patho:"drepano", urgent:true, trousse:false, gravite:1,
+   nom:"Hydratation renforcée", dci:"eau",
+   poso:"Faire boire régulièrement", voie:"Orale",
+   alerte:"Chaleur, effort, début de douleur.",
+   give:"Laisser un accès libre à l'eau et aux toilettes, éviter le froid et les efforts intenses, faire boire abondamment."},
+
+  /* --- Hémophilie / coagulation --- */
+  {id:"facteur", patho:"hemophilie", urgent:true, trousse:true, gravite:3,
+   nom:"Conduite en cas de saignement / traumatisme", dci:"facteur de coagulation (à l'hôpital) selon protocole",
+   poso:"Selon protocole individuel du centre traitant", voie:"—",
+   alerte:"Saignement, choc à la tête, articulation gonflée/douloureuse, plaie qui ne s'arrête pas.",
+   give:"Comprimer le saignement, immobiliser, glace sur l'articulation. Prévenir la famille et le centre traitant. Appeler le 15 en cas de traumatisme crânien, du cou, de l'abdomen ou de saignement non maîtrisé. Éviter les injections IM et l'aspirine."},
+
+  /* --- Cancer / chimiothérapie --- */
+  {id:"neutropenie", patho:"cancer", urgent:true, trousse:false, gravite:2,
+   nom:"Conduite en cas de fièvre (neutropénie)", dci:"—",
+   poso:"—", voie:"—",
+   alerte:"Fièvre ≥ 38 °C, frissons, altération de l'état général chez un enfant immunodéprimé.",
+   give:"Prévenir IMMÉDIATEMENT la famille et le centre traitant : la fièvre est une urgence. Isoler des enfants malades, renforcer l'hygiène. NE PAS donner d'antipyrétique sans avis du centre. Appeler le 15 si malaise."},
+
+  /* --- Migraine --- */
+  {id:"antalgique_migraine", patho:"migraine", urgent:false, trousse:true, gravite:0,
+   nom:"Antalgique de crise", dci:"paracétamol / ibuprofène (± triptan si prescrit)",
+   poso:"Dose adaptée au poids, le plus tôt possible", voie:"Orale",
+   alerte:"Début de crise : mal de tête, photophobie, nausées.",
+   give:"Installer l'enfant au calme, dans la pénombre, donner l'antalgique prescrit dès le début de la crise. Prévenir la famille si la crise se prolonge."},
+
+  /* --- Cardiopathie --- */
+  {id:"traitement_cardio", patho:"cardio", urgent:false, trousse:false, gravite:0,
+   nom:"Traitement de fond", dci:"selon prescription",
+   poso:"Selon prescription", voie:"Orale",
+   alerte:"Malaise, douleur thoracique, palpitations, essoufflement anormal.",
+   give:"Adapter l'effort physique selon l'avis du cardiologue. En cas de malaise / douleur thoracique : mettre au repos et appeler le 15."},
+
+  /* --- Insuffisance rénale --- */
+  {id:"traitement_renal", patho:"renal", urgent:false, trousse:false, gravite:0,
+   nom:"Traitement de fond", dci:"selon prescription",
+   poso:"Selon prescription", voie:"Orale",
+   alerte:"", give:"Respecter le régime et les apports hydriques prescrits, laisser un accès libre aux toilettes."},
+
+  /* --- TDAH --- */
+  {id:"methylphenidate", patho:"tdah", urgent:false, trousse:false, gravite:0,
+   nom:"Méthylphénidate", dci:"méthylphénidate (Ritaline® / Concerta® / Quasym® / Medikinet®)",
+   poso:"Prise du midi si prescrite (formes à libération immédiate)", voie:"Orale",
+   alerte:"", give:"À administrer uniquement si une prise sur le temps scolaire est prescrite (médicament à conserver en lieu sûr). Sinon, traitement géré à domicile."},
 ];
+
+/* ---------- Aménagements suggérés par pathologie (auto) ---------- */
+const AMENAGEMENTS = {
+  allergie:["Éviction stricte de l'allergène (repas, collations, ateliers).","Vérifier la composition des aliments ; pas d'échange de nourriture.","Repas personnalisé ou panier fourni par la famille si besoin."],
+  venin:["Surveillance lors des activités extérieures (printemps/été).","Éviter boissons sucrées en extérieur, chaussures fermées."],
+  allergie_div:["Éviction du produit en cause (médicament / latex / produit identifié).","Signaler l'allergie à toute personne intervenant auprès de l'enfant."],
+  asthme:["Bronchodilatateur de secours accessible en permanence.","Échauffement avant l'EPS ; adaptation/dispense en cas de crise.","Éviter les déclencheurs connus (poussière, animaux, froid, effort)."],
+  muco:["Accès libre à l'eau et aux toilettes.","Enzymes à chaque repas/collation.","Éviter le contact avec les personnes enrhumées ; hygiène des mains.","Aménagement de la fatigue et des absences (soins)."],
+  diabete:["Autosurveillance glycémique autorisée en classe.","Accès libre à un resucrage et à l'eau ; collations autorisées.","Adaptation des repas et de l'EPS ; ne jamais laisser seul en cas d'hypo."],
+  surrenale:["Doses de stress disponibles ; protocole d'urgence affiché.","Prévenir la famille en cas de fièvre, vomissements ou accident."],
+  metabolique:["Régime alimentaire strict selon prescription.","Repas adapté / panier familial ; vigilance sur la composition."],
+  celiaque:["Régime sans gluten strict (repas, collations, ateliers).","Éviter la contamination croisée ; repas dédié ou panier familial."],
+  intolerance:["Éviction de l'aliment concerné ; alternatives proposées.","Lecture des étiquettes / menus."],
+  mici:["Accès libre et immédiat aux toilettes.","Tolérance pour les absences liées aux poussées ; collations possibles."],
+  drepano:["Hydratation renforcée et accès libre à l'eau/toilettes.","Éviter le froid, les efforts intenses et la déshydratation.","Adaptation de l'EPS ; vigilance douleur/fièvre."],
+  hemophilie:["Éviter les sports de contact ; activités adaptées.","Conduite à tenir affichée en cas de choc ou de saignement.","Éviter aspirine et injections IM."],
+  cancer:["Limiter l'exposition aux infections ; hygiène renforcée.","Aménagement de la fatigue, des absences et du rattrapage.","Fièvre = contact immédiat de la famille / du centre."],
+  cardio:["Adaptation de l'effort physique selon l'avis du cardiologue.","Repos en cas de fatigue ; conduite à tenir en cas de malaise."],
+  renal:["Accès libre aux toilettes et à l'eau ; régime respecté.","Aménagement des absences liées aux soins."],
+  epilepsie:["Protocole de crise affiché ; ne jamais laisser seul en crise.","Aménagement possible des écrans / de la fatigue selon le type."],
+  migraine:["Accès à un endroit calme et sombre en début de crise.","Antalgique disponible ; tolérance pour le repos."],
+  tdah:["Place au calme, près de l'enseignant ; consignes courtes et reformulées.","Pauses motrices autorisées ; temps majoré pour les évaluations.","Aide à l'organisation (agenda, étapes)."],
+  dyslexie:["Temps majoré ; consignes lues à voix haute.","Supports aérés, police adaptée ; ne pas pénaliser l'orthographe.","Recours aux outils numériques / lecteur."],
+  dysgraphie:["Recours à l'ordinateur / supports à compléter ; photocopies des cours.","Réduire la quantité d'écrit ; ne pas pénaliser le graphisme.","Temps majoré."],
+  dyscalculie:["Tables et formules autorisées ; calculatrice.","Énoncés simplifiés ; manipulation et supports visuels.","Temps majoré."],
+  dyspraxie:["Supports pré-tracés / à compléter ; outils numériques.","Adapter l'EPS et les travaux manuels ; aide à l'organisation spatiale."],
+  dysphasie:["Consignes simples, reformulées et illustrées.","Supports visuels ; temps de réponse allongé ; valoriser l'oral aidé."],
+  tsa:["Cadre prévisible (emploi du temps visuel) ; prévenir les changements.","Aménagement sensoriel (bruit, lumière) ; espace de retrait possible.","Consignes explicites et individualisées."],
+  anxiete:["Accueil bienveillant ; personne ou lieu repère identifié.","Aménagement progressif des évaluations / de la présence.","Conduite à tenir convenue en cas de crise d'angoisse."],
+};
 
 /* ---------- État ---------- */
 const state = {pathos:new Set(), meds:new Set(), free:[]};
 const $ = (s,c=document)=>c.querySelector(s);
 const esc = s => String(s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-/* ---------- Pathologies UI ---------- */
+/* ---------- Pathologies UI (groupées par catégorie) ---------- */
 function buildPathos(){
-  $("#pathoGrid").innerHTML = PATHOS.map(p=>`
-    <label class="patho" data-id="${p.id}">
-      <input type="checkbox" value="${p.id}">
-      <span class="ico">${p.ico}</span>
-      <span><span class="t">${p.t}</span><br><span class="s">${p.s}</span></span>
-    </label>`).join("");
+  const cats = [];
+  PATHOS.forEach(p=>{ if(!cats.includes(p.cat)) cats.push(p.cat); });
+  $("#pathoGrid").innerHTML = cats.map(cat=>{
+    const items = PATHOS.filter(p=>p.cat===cat).map(p=>`
+      <label class="patho" data-id="${p.id}">
+        <input type="checkbox" value="${p.id}">
+        <span class="ico">${p.ico}</span>
+        <span><span class="t">${p.t}${p.pap?' <span class="pap-mini">PAP/PPS</span>':''}</span><br>
+          <span class="s">${p.s}</span></span>
+      </label>`).join("");
+    return `<div class="cat-block"><div class="cat-title">${esc(cat)}</div><div class="cat-grid">${items}</div></div>`;
+  }).join("");
   $("#pathoGrid").querySelectorAll("input").forEach(cb=>{
     cb.addEventListener("change",()=>{
       const lab = cb.closest(".patho");
@@ -416,8 +585,7 @@ function buildPathos(){
 /* ---------- Médicaments UI (filtrés par pathologie) ---------- */
 function buildMeds(){
   const list = $("#medList");
-  const actives = state.pathos.size ? MEDS.filter(m=>state.pathos.has(m.patho)) : [];
-  if(!actives.length){
+  if(!state.pathos.size){
     list.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft)">Sélectionnez d'abord une pathologie pour voir les médicaments proposés.</p>`;
     return;
   }
@@ -426,6 +594,10 @@ function buildMeds(){
     if(!state.pathos.has(p.id)) continue;
     const meds = MEDS.filter(m=>m.patho===p.id);
     html += `<div class="med-group"><div class="gtitle">${p.ico} ${esc(p.t)}</div>`;
+    if(!meds.length){
+      html += `<p class="hint" style="margin-top:0">Pas de médicament d'urgence type — aménagements générés automatiquement${p.pap?" (relève généralement d'un PAP/PPS)":""}.</p></div>`;
+      continue;
+    }
     html += meds.map(m=>{
       const on = state.meds.has(m.id);
       return `<div class="med ${on?"on":""}" data-id="${m.id}">
@@ -531,6 +703,9 @@ function render(){
   if(val("f_precisions")) h += `<p style="margin-top:6px">${esc(val("f_precisions"))}</p>`;
   if(state.pathos.has("allergie"))
     h += `<div class="callout">⚠️ <b>Éviction stricte</b> de l'allergène. Vérifier la composition des repas, collations et activités (ateliers cuisine, travaux manuels). Pas d'échange de nourriture entre enfants.</div>`;
+  const hasPap = PATHOS.some(p=>p.pap && state.pathos.has(p.id));
+  if(hasPap)
+    h += `<div class="callout info">ℹ️ Les troubles des apprentissages / neurodéveloppementaux relèvent le plus souvent d'un <b>PAP</b> (Plan d'Accompagnement Personnalisé) ou d'un <b>PPS</b>. Le PAI s'applique surtout s'il y a un <b>traitement à administrer</b> ou un <b>protocole de soins</b> sur le temps scolaire.</div>`;
 
   /* Traitements prescrits */
   const selMeds = MEDS.filter(m=>state.meds.has(m.id));
@@ -579,9 +754,16 @@ function render(){
     h += `</ul><div class="callout info">ℹ️ Trousse nominative, à portée de main, vérifier régulièrement les <b>dates de péremption</b> et le bon fonctionnement des dispositifs. Doit accompagner l'enfant lors des sorties.</div>`;
   }
 
-  /* Aménagements */
-  if(val("f_amenag")){
-    h += `<h4>6 · Aménagements</h4><p>${esc(val("f_amenag"))}</p>`;
+  /* Aménagements — suggérés (auto) + saisie libre */
+  const sugg = [];
+  for(const p of PATHOS){
+    if(!state.pathos.has(p.id) || !AMENAGEMENTS[p.id]) continue;
+    AMENAGEMENTS[p.id].forEach(a=>{ if(!sugg.includes(a)) sugg.push(a); });
+  }
+  if(sugg.length || val("f_amenag")){
+    h += `<h4>6 · Aménagements</h4>`;
+    if(sugg.length) h += `<ul>${sugg.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`;
+    if(val("f_amenag")) h += `<p style="margin-top:6px"><b>Précisions :</b> ${esc(val("f_amenag"))}</p>`;
   }
 
   /* Signatures */

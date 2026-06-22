@@ -26,16 +26,32 @@ pathologie(s) et les médicaments, et le protocole d'urgence se rédige tout seu
 
 ## Pathologies & logique embarquée
 
-| Pathologie | Médicaments d'urgence reconnus |
-|---|---|
-| Allergie / anaphylaxie | adrénaline auto-injecteur, antihistaminique, corticoïde oral, salbutamol |
-| Asthme | salbutamol de secours, corticoïde oral de crise (+ fond pour info) |
-| Diabète type 1 | resucrage, glucagon (injection / spray nasal), insuline |
-| Épilepsie | midazolam buccal, diazépam intrarectal |
+Une vingtaine de pathologies, regroupées par catégorie :
 
-Les médicaments d'urgence sont triés par niveau de gravité de la situation et
-chacun produit : le **signe d'alerte** correspondant, le **geste à faire** et la
-**dose** (modifiable).
+| Catégorie | Pathologies |
+|---|---|
+| Allergies & immunité | allergie alimentaire / anaphylaxie, allergie aux venins, allergie médicamenteuse / latex |
+| Respiratoire | asthme, mucoviscidose |
+| Endocrino-métabolique | diabète type 1, insuffisance surrénale, maladie métabolique (PCU…) |
+| Digestif & nutrition | maladie cœliaque, intolérance alimentaire, MICI (Crohn / RCH) |
+| Hématologie & oncologie | drépanocytose, hémophilie, cancer / chimiothérapie |
+| Cardio-rénal | cardiopathie, insuffisance rénale chronique |
+| Neurologie | épilepsie, migraine |
+| Neurodéveloppement & apprentissages | TDAH, dyslexie / dysorthographie, dysgraphie, dyscalculie, dyspraxie, dysphasie, TSA |
+| Santé mentale | trouble anxieux / refus scolaire |
+
+Pour les pathologies **avec traitement / protocole**, les médicaments d'urgence
+sont triés par gravité et produisent : le **signe d'alerte**, le **geste à
+faire**, la **dose** (modifiable) et la **trousse d'urgence**.
+
+Pour les **troubles des apprentissages / neurodéveloppementaux**, l'app génère
+des **aménagements** suggérés et rappelle qu'ils relèvent le plus souvent d'un
+**PAP** (Plan d'Accompagnement Personnalisé) ou d'un **PPS** — le PAI ne
+s'imposant que s'il y a un traitement à administrer sur le temps scolaire.
+
+> **Repère réglementaire.** PAI = pathologie nécessitant des soins / un régime /
+> un protocole d'urgence à l'école. PAP/PPS = troubles des apprentissages et du
+> neurodéveloppement (aménagements pédagogiques).
 
 ## Confidentialité
 
