@@ -483,7 +483,7 @@ const CERTIFICATS = [
   {
     id:'arret-travail', cat:'travail', statut:'usuel',
     titre:'Arrêt de travail (avis d\'arrêt) — accompagnement',
-    resume:`L'avis d'arrêt de travail se fait sur le formulaire Cerfa officiel (téléservice ou papier sécurisé). Ce modèle est un certificat d'accompagnement ; il ne remplace pas le Cerfa.`,
+    resume:`L'avis d'arrêt de travail se rédige directement sur amelipro (téléservice) ou sur le formulaire Cerfa sécurisé. Pas de générateur ici : seules les règles et la couverture médico-légale sont fournies.`,
     bases:['r4127-76','r4127-50','cp441-7'],
     regles:[
       'Utiliser le formulaire Cerfa réglementaire (avis d\'arrêt de travail) ; ce certificat ne s\'y substitue pas.',
@@ -497,18 +497,8 @@ const CERTIFICATS = [
       'Indiquer le diagnostic à l\'employeur = violation du secret.'
     ],
     remise:'Patient (volets selon réglementation : CPAM + employeur sans diagnostic).',
-    modele:`CERTIFICAT MÉDICAL
-
-Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné ce jour {{patient}}, né(e) le {{ddn}}, et avoir constaté un état de santé nécessitant un arrêt de travail.
-
-Cet arrêt, dont la durée est précisée sur l'avis d'arrêt de travail réglementaire (Cerfa) remis ce jour, est médicalement justifié par l'état clinique constaté.
-
-Certificat établi à la demande de l'intéressé(e) et remis en main propre pour faire valoir ce que de droit.
-
-Fait à {{ville}}, le {{date}}.
-{{medecin}} — {{qualite}}
-{{adresse}}{{rppsLine}}
-(signature)`
+    noGen:true,
+    genNote:`L'avis d'arrêt de travail se rédige et se transmet directement sur <strong>amelipro</strong> (téléservice « Arrêt de travail en ligne ») ou, à défaut, sur le formulaire Cerfa sécurisé. Aucun modèle n'est généré ici : seules les règles et la couverture médico-légale ci-dessus sont fournies.`
   },
 
   {
@@ -522,18 +512,8 @@ Fait à {{ville}}, le {{date}}.
     ],
     pieges:['Statuer sur l\'« aptitude au poste » empiète sur la mission du médecin du travail.'],
     remise:'Patient.',
-    modele:`CERTIFICAT MÉDICAL DE REPRISE
-
-Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné ce jour {{patient}}, né(e) le {{ddn}}, et que son état de santé ne constitue pas, à la date de cet examen, une contre-indication médicale à la reprise de son activité.
-
-L'avis d'aptitude au poste de travail relève du médecin du travail.
-
-Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
-
-Fait à {{ville}}, le {{date}}.
-{{medecin}} — {{qualite}}
-{{adresse}}{{rppsLine}}
-(signature)`
+    noGen:true,
+    genNote:`La reprise et l'aptitude associées à l'arrêt de travail se gèrent directement sur <strong>amelipro</strong> (suivi de l'arrêt / reprise). Aucun modèle n'est généré ici : seules les règles et la couverture médico-légale ci-dessus sont fournies.`
   },
 
   /* ====================== VIOLENCES ====================== */
@@ -1248,9 +1228,10 @@ function selectionner(id){
   if(!c) return;
   const st = STATUTS[c.statut]||STATUTS['usuel'];
   const interdit = (c.statut==='interdit'||c.statut==='déconseillé');
+  const hideGen = interdit || !!c.noGen;
 
   const champs = champsDuModele(c.modele);
-  const champsForm = interdit ? '' : `
+  const champsForm = hideGen ? '' : `
     <div class="sec">
       <h4>🖊️ Générateur — champs spécifiques</h4>
       ${champs.length ? `<div class="gen-fields" id="genFields">
@@ -1258,7 +1239,12 @@ function selectionner(id){
       </div>` : `<p class="muted">Ce modèle n'utilise que l'identité praticien/patient renseignée plus haut.</p>`}
     </div>`;
 
-  const generateur = interdit ? '' : `
+  const noGenBloc = c.noGen ? `
+    <div class="callout amber">
+      <strong>🖥️ Pas de générateur pour ce document.</strong> ${c.genNote||'Ce document se réalise directement sur amelipro.'}
+    </div>` : '';
+
+  const generateur = hideGen ? '' : `
     <div class="sec">
       <h4>📄 Certificat généré <span class="muted" style="text-transform:none;letter-spacing:0">(éditable)</span></h4>
       <div class="model-wrap"><textarea class="model" id="model" spellcheck="false"></textarea></div>
@@ -1298,11 +1284,12 @@ function selectionner(id){
       ${basesHTML(c.bases)}
     </div>
 
+    ${noGenBloc}
     ${champsForm}
     ${generateur}
   `;
 
-  if(!interdit){
+  if(!hideGen){
     regenerer();
     $$('#genFields input').forEach(inp=>inp.addEventListener('input',regenerer));
     $('#btnCopy').addEventListener('click',copier);
