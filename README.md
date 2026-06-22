@@ -26,6 +26,7 @@ assistant.js          Catalogue des apps + recherche/filtres
 .nojekyll             Sert le site statique tel quel (pas de Jekyll)
 
 neuro-gp/             NEURO-GP ASSIST (neurologie)
+certificats/          CERTIMED — certificats médicaux & couverture médico-légale
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :
   index.html            Fiches d'interrogatoire par symptôme (64 fiches)
@@ -47,6 +48,7 @@ suite-clinique/       Suite clinique :
 | Biologie | Interprétation biologique, Lecture de bilan | `suite-clinique/` · `bilan-biologique/` |
 | Prévention | Procédures & prévention, Suivi préventif CNAM | `suite-clinique/` |
 | Transversal | Échelles & évaluations | `suite-clinique/apps-externes/` |
+| Médico-légal | CERTIMED — Certificats médicaux | `certificats/` |
 
 ### À venir (non fournies / volontairement exclues)
 - **Cotation NGAP/CCAM** — nécessite une base tarifaire Ameli sourcée + disclaimer.

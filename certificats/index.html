@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CERTIMED — Certificats médicaux & couverture médico-légale</title>
+<meta name="description" content="Générateur de certificats médicaux avec bases légales (Code de la santé publique, Code pénal, Code civil, Code du sport), règles de rédaction du CNOM et pièges médico-légaux. Outil d'aide à la rédaction, hors-ligne.">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="back" href="../index.html">← Retour au portail ASSISTANT MÉDICAL</a>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">⚖️</div>
+      <div>
+        <h1>CERTIMED</h1>
+        <div class="tagline">Certificats médicaux &amp; couverture médico-légale — Dr Mario Fuiano</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="pill">📑 <strong id="totalCert">0</strong>&nbsp;certificats</span>
+      <span class="pill">⚖️ Bases légales sourcées</span>
+      <span class="pill">📴 Hors-ligne</span>
+      <span class="pill">🔒 Aucune donnée patient stockée</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tabs-card" role="tablist">
+    <button class="tab active" data-tab="certificats" role="tab">📑 Certificats</button>
+    <button class="tab" data-tab="regles" role="tab">✅ Règles d'or</button>
+    <button class="tab" data-tab="textes" role="tab">⚖️ Textes de loi</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ===================== ONGLET CERTIFICATS ===================== -->
+  <section id="panel-certificats" class="panel active">
+
+    <details class="identite" open>
+      <summary>🧑‍⚕️ Identité du praticien (en-tête des certificats) <span class="chev">›</span></summary>
+      <div class="id-grid">
+        <div class="field"><label>Médecin (Dr Nom Prénom)</label><input id="f_medecin" type="text" placeholder="Dr Mario Fuiano"></div>
+        <div class="field"><label>Qualité / spécialité</label><input id="f_qualite" type="text" placeholder="Médecin généraliste"></div>
+        <div class="field"><label>N° RPPS</label><input id="f_rpps" type="text" placeholder="10xxxxxxxxx"></div>
+        <div class="field"><label>Adresse du cabinet</label><input id="f_adresse" type="text" placeholder="12 rue …, 75000 Paris"></div>
+        <div class="field"><label>Ville (lieu de signature)</label><input id="f_ville" type="text" placeholder="Paris"></div>
+      </div>
+      <div class="id-actions">
+        <button class="btn primary" id="saveId">💾 Mémoriser cette identité</button>
+        <button class="btn" id="clearId">🗑️ Effacer</button>
+        <span class="muted">Mémorisé localement dans ce navigateur (uniquement l'identité du médecin). <strong>Aucune donnée patient n'est enregistrée.</strong></span>
+      </div>
+    </details>
+
+    <div class="split">
+      <div>
+        <label class="search">
+          <span class="ic" aria-hidden="true">🔎</span>
+          <input id="search" type="search" placeholder="Rechercher un certificat (sport, décès, violences, MDPH…)" autocomplete="off" aria-label="Rechercher un certificat">
+        </label>
+        <div class="chips" id="chips"></div>
+        <div class="muted" id="count" style="margin:0 2px 8px"></div>
+        <div class="list" id="list"></div>
+      </div>
+
+      <div class="detail" id="detail">
+        <div class="placeholder">
+          <div class="big">📑</div>
+          <div><strong>Sélectionnez un certificat</strong><br>Bases légales, règles de rédaction, pièges médico-légaux et modèle prêt à générer.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout amber" style="margin-top:20px">
+      <strong>Avertissement.</strong> CERTIMED est une aide à la rédaction. Il ne dispense pas de vérifier les textes en vigueur (Légifrance, recommandations du CNOM) ni d'exercer son jugement clinique. Les certificats officiels (Cerfa : arrêt de travail, MDPH, certificat de décès / CertDC, certificats de santé de l'enfant…) doivent être établis sur leurs <strong>modèles réglementaires</strong> ; les modèles fournis ici sont des aides ou des certificats d'accompagnement.
+    </div>
+  </section>
+
+  <!-- ===================== ONGLET RÈGLES D'OR ===================== -->
+  <section id="panel-regles" class="panel">
+    <div class="section-intro">
+      <strong>Les principes de rédaction médico-légale.</strong> Respecter ces règles est la meilleure protection contre une plainte (ordinale, civile ou pénale). Source : code de déontologie médicale (art. R.4127-x CSP) et recommandations du Conseil national de l'Ordre des médecins.
+    </div>
+    <div class="cards" id="regles"></div>
+    <div class="callout red" style="margin-top:18px">
+      <strong>Mémo « faux certificat ».</strong> Un certificat faisant état de faits matériellement inexacts est un faux : 1 an d'emprisonnement et 15 000 € d'amende (art. 441-7 CP), peines aggravées lorsqu'il est sollicité contre avantage et émane d'un professionnel de santé (art. 441-8 CP). Le certificat de complaisance est interdit par l'art. R.4127-28 CSP.
+    </div>
+  </section>
+
+  <!-- ===================== ONGLET TEXTES DE LOI ===================== -->
+  <section id="panel-textes" class="panel">
+    <div class="section-intro">
+      <strong>Bibliothèque des textes.</strong> Extraits des principaux articles applicables aux certificats médicaux. Les textes sont donnés à titre indicatif : <strong>vérifier la version en vigueur sur Légifrance</strong>.
+    </div>
+    <label class="search" style="margin-bottom:16px">
+      <span class="ic" aria-hidden="true">🔎</span>
+      <input id="searchTextes" type="search" placeholder="Rechercher un texte (secret, ITT, virginité, sport, décès…)" autocomplete="off">
+    </label>
+    <div id="textes"></div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <strong>CERTIMED</strong> — aide à la rédaction de certificats médicaux. Traitement <strong>local</strong> dans le navigateur, sans transmission.<br>
+  Ne se substitue ni au jugement médical, ni aux textes en vigueur. Urgence vitale : <strong>15 / 112</strong>.
+</footer>
+
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
