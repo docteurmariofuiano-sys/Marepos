@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MDPH Assist — Aide au certificat médical (Cerfa 15695*01)</title>
+<meta name="description" content="Aide au remplissage du certificat médical MDPH (Cerfa 15695*01) : cochez les antécédents, déficiences et retentissements, l'outil génère le texte structuré à reporter. Traitement local, aucune donnée patient stockée ni transmise.">
+<style>
+  :root{
+    --ink:#182027; --muted:#64717c; --paper:#f7f6f1; --panel:#fff;
+    --line:#d9ddd8; --teal:#0a6c74; --teal-soft:#d9eef0; --teal-ink:#074a4f;
+    --green:#2f7d4a; --green-soft:#e8f9ee; --orange:#b56419; --red:#b3261e;
+    --blue:#2b5f92; --violet:#684aa3;
+    --shadow:0 12px 35px rgba(24,32,39,.10);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; color:var(--ink);
+    background:
+      linear-gradient(90deg, rgba(10,108,116,.06) 0 1px, transparent 1px 100%),
+      linear-gradient(rgba(10,108,116,.045) 0 1px, transparent 1px 100%),
+      var(--paper);
+    background-size:28px 28px;
+    font-family:"Aptos","Segoe UI",system-ui,sans-serif; line-height:1.45;
+  }
+  a{color:var(--teal)}
+
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(247,246,241,.94);
+    border-bottom:1px solid var(--line);
+    backdrop-filter:blur(14px);
+  }
+  .topbar{max-width:1480px; margin:0 auto; padding:14px 20px;
+    display:grid; grid-template-columns:minmax(240px,1fr) auto; gap:16px; align-items:center}
+  .brand{display:flex; gap:14px; align-items:center}
+  .logo{font-size:2rem; line-height:1}
+  h1{margin:0; font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(1.3rem,2.2vw,2rem)}
+  .subtitle{color:var(--muted); font-size:.9rem; margin-top:2px}
+  .top-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    padding:9px 14px; border-radius:10px; font:inherit; font-weight:600;
+    cursor:pointer; display:inline-flex; gap:7px; align-items:center; white-space:nowrap;
+  }
+  .btn:hover{border-color:var(--teal)}
+  .btn.primary{background:var(--teal); color:#fff; border-color:var(--teal)}
+  .btn.primary:hover{background:var(--teal-ink)}
+  .btn.ghost{background:transparent}
+
+  .wrap{max-width:1480px; margin:0 auto; padding:18px 20px 80px;
+    display:grid; grid-template-columns:1.15fr .85fr; gap:22px; align-items:start}
+  @media(max-width:1050px){ .wrap{grid-template-columns:1fr} }
+
+  .disclaimer{
+    grid-column:1/-1;
+    background:#fff8ec; border:1px solid #f0d9a8; color:#6a4a12;
+    padding:11px 14px; border-radius:12px; font-size:.9rem;
+  }
+  .disclaimer strong{color:#5a3c0a}
+
+  .col-form{display:flex; flex-direction:column; gap:16px}
+
+  .section{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .section>summary{
+    list-style:none; cursor:pointer; padding:14px 16px;
+    display:flex; align-items:center; gap:12px; user-select:none;
+  }
+  .section>summary::-webkit-details-marker{display:none}
+  .section>summary:hover{background:#fafbfa}
+  .sec-icon{
+    width:38px; height:38px; flex:0 0 38px; border-radius:10px;
+    display:grid; place-items:center; font-size:1.2rem;
+    background:var(--teal-soft); color:var(--teal-ink);
+  }
+  .sec-titles{flex:1; min-width:0}
+  .sec-titles h2{margin:0; font-size:1.04rem}
+  .sec-titles p{margin:2px 0 0; color:var(--muted); font-size:.84rem}
+  .sec-count{
+    font-size:.78rem; font-weight:700; color:var(--teal-ink);
+    background:var(--teal-soft); border-radius:999px; padding:3px 10px; min-width:26px; text-align:center;
+  }
+  .sec-count.empty{background:#eef1ef; color:var(--muted)}
+  .chev{color:var(--muted); transition:transform .2s}
+  details[open] .chev{transform:rotate(180deg)}
+
+  .sec-body{padding:4px 16px 16px}
+  .grp{margin-top:14px}
+  .grp:first-child{margin-top:6px}
+  .grp-title{font-size:.8rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.04em; color:var(--muted); margin:0 0 8px}
+  .items{display:grid; grid-template-columns:1fr 1fr; gap:6px 14px}
+  @media(max-width:560px){ .items{grid-template-columns:1fr} }
+  label.item{
+    display:flex; gap:9px; align-items:flex-start; padding:6px 8px; border-radius:9px;
+    cursor:pointer; font-size:.92rem;
+  }
+  label.item:hover{background:#f4f8f7}
+  label.item input{margin-top:2px; width:17px; height:17px; accent-color:var(--teal); flex:0 0 auto}
+  label.item .lab small{display:block; color:var(--muted); font-size:.78rem; font-weight:400}
+
+  .sev{display:none; gap:5px; margin:6px 0 2px 34px; flex-wrap:wrap}
+  label.item.checked + .sev{display:flex}
+  .sev button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    font:inherit; font-size:.76rem; padding:2px 10px; cursor:pointer; color:var(--muted)
+  }
+  .sev button.on{border-color:var(--teal); background:var(--teal-soft); color:var(--teal-ink); font-weight:700}
+
+  .field{margin-top:12px}
+  .field label{display:block; font-size:.82rem; font-weight:700; color:var(--muted); margin-bottom:4px}
+  textarea,input[type=text]{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 11px;
+    font:inherit; font-size:.92rem; color:var(--ink); background:#fff; resize:vertical;
+  }
+  textarea:focus,input[type=text]:focus{outline:2px solid var(--teal-soft); border-color:var(--teal)}
+
+  /* aperçu / sortie */
+  .col-out{position:sticky; top:84px}
+  .out-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .out-head{padding:13px 16px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .out-head h2{margin:0; font-size:1rem; flex:1}
+  .out-body{padding:0}
+  #output{
+    margin:0; padding:16px; max-height:62vh; overflow:auto;
+    font-family:"Cascadia Code",ui-monospace,"SFMono-Regular",Consolas,monospace;
+    font-size:.82rem; line-height:1.6; white-space:pre-wrap; color:#23323b;
+  }
+  #output .ph{color:var(--muted); font-style:italic}
+  .out-foot{padding:11px 16px; border-top:1px solid var(--line);
+    display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .toast{font-size:.82rem; color:var(--green); font-weight:600}
+
+  .legend{font-size:.8rem; color:var(--muted); margin:6px 2px 0}
+  .footer{grid-column:1/-1; color:var(--muted); font-size:.82rem; text-align:center; padding-top:8px}
+
+  @media print{
+    header,.disclaimer,.col-form,.out-head,.out-foot,.footer,.top-actions{display:none !important}
+    .wrap{display:block; padding:0}
+    .col-out{position:static}
+    .out-card{box-shadow:none; border:none}
+    #output{max-height:none; font-family:Georgia,serif; font-size:.95rem; color:#000}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">📝</div>
+      <div>
+        <h1>MDPH Assist</h1>
+        <div class="subtitle">Aide au remplissage du certificat médical — Cerfa 15695*01</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="../index.html" title="Retour au portail">← Portail</a>
+      <button class="btn" id="btn-reset" type="button">↺ Réinitialiser</button>
+      <button class="btn" id="btn-print" type="button">🖨️ Imprimer</button>
+      <button class="btn primary" id="btn-copy" type="button">📋 Copier le texte</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="disclaimer">
+    <strong>Aide au raisonnement et à la rédaction.</strong> Cet outil <strong>n'est pas</strong> le formulaire
+    officiel et ne le remplace pas : il génère un texte de travail à <strong>relire, adapter et reporter</strong>
+    dans le certificat Cerfa 15695*01 (validité 12 mois) qui accompagne la demande Cerfa 15692*01.
+    Le contenu reste votre responsabilité médicale. <strong>Traitement 100 % local</strong> dans le navigateur :
+    aucune donnée patient n'est enregistrée ni transmise (rien n'est sauvegardé après fermeture de l'onglet).
+  </div>
+
+  <!-- COLONNE FORMULAIRE -->
+  <div class="col-form" id="form"><!-- sections injectées --></div>
+
+  <!-- COLONNE SORTIE -->
+  <div class="col-out">
+    <div class="out-card">
+      <div class="out-head">
+        <h2>Certificat — texte généré</h2>
+        <span class="toast" id="toast" aria-live="polite"></span>
+      </div>
+      <div class="out-body">
+        <pre id="output"></pre>
+      </div>
+      <div class="out-foot">
+        <button class="btn primary" id="btn-copy2" type="button">📋 Copier</button>
+        <button class="btn" id="btn-print2" type="button">🖨️ Imprimer</button>
+        <span class="legend">Le texte se met à jour automatiquement.</span>
+      </div>
+    </div>
+    <p class="legend">Structure alignée sur les rubriques du Cerfa 15695*01 : pathologies, anamnèse,
+      déficiences, retentissement, traitements, besoins. Reportez chaque bloc dans la rubrique correspondante.</p>
+  </div>
+
+  <div class="footer">
+    MDPH Assist — suite <strong>ASSISTANT MÉDICAL</strong> (Dr Mario Fuiano). Outil d'aide, hors-ligne, sans stockage.
+  </div>
+</main>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   MDPH Assist — données + moteur (hors-ligne, sans stockage)
+   Chaque "item" coché alimente une rubrique du certificat généré.
+   ===================================================================== */
+
+/* helper */
+const $  = (s,c=document)=>c.querySelector(s);
+const $$ = (s,c=document)=>Array.from(c.querySelectorAll(s));
+const el = (h)=>{const t=document.createElement('template'); t.innerHTML=h.trim(); return t.content.firstElementChild;};
+
+/* Modèle : sections -> groupes -> items.
+   rubric = clé de la rubrique du certificat où l'item sera reporté.
+   sev:true => item à graduer (léger / modéré / sévère). */
+const SECTIONS = [
+  {
+    id:'patho', icon:'🩺', title:'Pathologies & antécédents',
+    desc:'Diagnostics retenus — alimente la rubrique « Pathologies » et l\'anamnèse.',
+    rubric:'patho',
+    groups:[
+      {t:'Cardio-vasculaire & métabolique', items:[
+        ['HTA','Hypertension artérielle'],['coro','Cardiopathie ischémique / coronaropathie'],
+        ['ic','Insuffisance cardiaque'],['fa','Troubles du rythme (FA…)'],
+        ['avc','AVC / AIT (séquelles)'],['aomi','Artériopathie des membres inférieurs'],
+        ['db','Diabète'],['obe','Obésité'],['dyslip','Dyslipidémie'],
+      ]},
+      {t:'Respiratoire', items:[
+        ['bpco','BPCO'],['asthme','Asthme'],['saos','SAOS'],['oxy','Insuffisance respiratoire / O₂'],
+      ]},
+      {t:'Neurologique', items:[
+        ['epil','Épilepsie'],['park','Maladie de Parkinson / syndrome parkinsonien'],
+        ['sep','Sclérose en plaques'],['neurodeg','Maladie neurodégénérative'],
+        ['tc','Traumatisme crânien (séquelles)'],['med','Lésion médullaire / paraplégie / tétraplégie'],
+        ['neuromusc','Maladie neuromusculaire (myopathie, SLA…)'],['migraine','Migraine / céphalées chroniques'],
+      ]},
+      {t:'Psychiatrique & neuro-développement', items:[
+        ['depr','Trouble dépressif'],['anx','Trouble anxieux'],['bipo','Trouble bipolaire'],
+        ['schizo','Trouble psychotique / schizophrénie'],['tspt','État de stress post-traumatique'],
+        ['addic','Trouble de l\'usage / addiction'],
+        ['tsa','Trouble du spectre de l\'autisme'],['tdah','TDAH'],
+        ['ti','Trouble du développement intellectuel'],['dys','Troubles « dys » (dyslexie, dyspraxie…)'],
+      ]},
+      {t:'Ostéo-articulaire & rhumato', items:[
+        ['arthrose','Arthrose invalidante'],['pr','Polyarthrite rhumatoïde / rhumatisme inflammatoire'],
+        ['lombo','Lombalgie / rachialgie chronique'],['osteop','Ostéoporose / fractures'],
+        ['amput','Amputation'],['proth','Prothèse articulaire / matériel'],
+      ]},
+      {t:'Sensoriel', items:[
+        ['malvoy','Déficience visuelle / malvoyance'],['cecite','Cécité'],
+        ['malent','Déficience auditive / malentendance'],['surdite','Surdité'],
+      ]},
+      {t:'Cancéro / hémato / immuno', items:[
+        ['cancer','Cancer (en cours / antécédent)'],['hemato','Hémopathie'],
+        ['immuno','Déficit immunitaire / immunosuppression'],['vih','Pathologie infectieuse chronique (VIH, hépatite…)'],
+      ]},
+      {t:'Digestif / néphro / uro / autre', items:[
+        ['mici','MICI (Crohn, RCH)'],['hepato','Hépatopathie chronique'],
+        ['irc','Insuffisance rénale chronique / dialyse'],['greffe','Transplantation d\'organe'],
+        ['incont','Troubles vésico-sphinctériens / incontinence'],
+        ['stomie','Stomie'],['rare','Maladie rare / génétique'],
+      ]},
+    ]
+  },
+
+  {
+    id:'defmot', icon:'🦽', title:'Déficiences motrices',
+    desc:'Atteinte de la motricité, de la posture, de la préhension.',
+    rubric:'def', sev:true,
+    groups:[{t:'', items:[
+      ['mot_marche','Limitation du périmètre de marche'],
+      ['mot_fauteuil','Recours au fauteuil roulant'],
+      ['mot_transfert','Difficultés aux transferts'],
+      ['mot_equil','Troubles de l\'équilibre / chutes'],
+      ['mot_prehen','Limitation de la préhension / des membres supérieurs'],
+      ['mot_paral','Paralysie / parésie'],
+      ['mot_tonus','Troubles du tonus (spasticité, dystonie)'],
+      ['mot_coord','Troubles de la coordination'],
+    ]}]
+  },
+
+  {
+    id:'defsens', icon:'👁️', title:'Déficiences sensorielles',
+    desc:'Vision, audition, parole.',
+    rubric:'def', sev:true,
+    groups:[{t:'', items:[
+      ['sen_vis','Déficience visuelle (acuité / champ)'],
+      ['sen_aud','Déficience auditive'],
+      ['sen_parole','Trouble de la parole / de la voix'],
+      ['sen_lang','Trouble du langage (aphasie…)'],
+    ]}]
+  },
+
+  {
+    id:'defpsy', icon:'🧠', title:'Déficiences psychiques, cognitives & intellectuelles',
+    desc:'Fonctions mentales, cognitives, du comportement.',
+    rubric:'def', sev:true,
+    groups:[{t:'', items:[
+      ['cog_mem','Troubles de la mémoire'],
+      ['cog_attention','Troubles de l\'attention / concentration'],
+      ['cog_exec','Troubles des fonctions exécutives / organisation'],
+      ['cog_orient','Désorientation temporo-spatiale'],
+      ['psy_humeur','Troubles de l\'humeur'],
+      ['psy_comport','Troubles du comportement / de la relation'],
+      ['psy_anx','Anxiété invalidante'],
+      ['int_apprent','Limitation des apprentissages / déficience intellectuelle'],
+    ]}]
+  },
+
+  {
+    id:'defvisc', icon:'🫁', title:'Déficiences viscérales, métaboliques & autres',
+    desc:'Fonctions cardio-respiratoires, digestives, urinaires, douleur, etc.',
+    rubric:'def', sev:true,
+    groups:[{t:'', items:[
+      ['vis_cardio','Déficience cardio-respiratoire (dyspnée d\'effort…)'],
+      ['vis_dig','Déficience digestive / nutritionnelle'],
+      ['vis_uro','Déficience urinaire / sphinctérienne'],
+      ['vis_metab','Déficience métabolique / endocrinienne'],
+      ['vis_immuno','Déficience immunitaire'],
+      ['vis_douleur','Douleur chronique'],
+      ['vis_fatig','Fatigabilité / asthénie chronique'],
+      ['vis_esth','Préjudice esthétique'],
+    ]}]
+  },
+
+  {
+    id:'reten', icon:'🏠', title:'Retentissement (limitations d\'activité & participation)',
+    desc:'Vie quotidienne, communication, vie sociale, scolaire et professionnelle.',
+    rubric:'reten',
+    groups:[
+      {t:'Vie quotidienne (autonomie)', items:[
+        ['r_toilette','Aide à la toilette'],['r_habil','Aide à l\'habillage'],
+        ['r_repas','Aide pour les repas / l\'alimentation'],['r_elim','Aide à l\'élimination'],
+        ['r_depl','Aide aux déplacements'],['r_menage','Aide aux tâches domestiques'],
+        ['r_courses','Aide aux courses / repas'],['r_trait','Aide à la gestion des traitements'],
+        ['r_admin','Aide aux démarches administratives / budget'],['r_securite','Surveillance pour la sécurité'],
+      ]},
+      {t:'Communication & vie sociale', items:[
+        ['r_comm','Limitation de la communication'],['r_relations','Limitation des relations sociales'],
+        ['r_isolement','Isolement / repli'],['r_orient','Difficultés d\'orientation / de déplacement extérieur'],
+      ]},
+      {t:'Scolarité / études', items:[
+        ['r_scol','Retentissement scolaire'],['r_amenscol','Besoin d\'aménagements scolaires (AESH, tiers-temps…)'],
+        ['r_etab','Orientation en établissement / dispositif spécialisé'],
+      ]},
+      {t:'Vie professionnelle', items:[
+        ['r_pro','Retentissement professionnel'],['r_amenpro','Besoin d\'aménagement de poste'],
+        ['r_arret','Inaptitude / arrêts répétés'],['r_reclass','Besoin de reclassement / formation'],
+      ]},
+    ]
+  },
+
+  {
+    id:'traite', icon:'💊', title:'Traitements & prises en charge',
+    desc:'Thérapeutiques, rééducation, appareillage, aides.',
+    rubric:'traite',
+    groups:[
+      {t:'Thérapeutiques', items:[
+        ['t_medic','Traitement médicamenteux au long cours'],['t_inject','Traitements injectables / perfusions'],
+        ['t_o2','Oxygénothérapie'],['t_dialyse','Dialyse'],['t_chir','Suivi chirurgical / post-opératoire'],
+        ['t_psy','Suivi psychiatrique / psychologique'],
+      ]},
+      {t:'Rééducation', items:[
+        ['t_kine','Kinésithérapie'],['t_ortho','Orthophonie'],
+        ['t_ergo','Ergothérapie'],['t_psymot','Psychomotricité'],['t_reeduc','Rééducation spécialisée'],
+      ]},
+      {t:'Appareillage & aides', items:[
+        ['t_fauteuil','Fauteuil roulant'],['t_aidemarche','Aide à la marche (canne, déambulateur)'],
+        ['t_orth','Orthèse / prothèse'],['t_aidaudio','Aides auditives'],['t_aidvis','Aides visuelles'],
+        ['t_lit','Lit médicalisé / matériel à domicile'],
+        ['t_aidhum','Aide humaine (aidant, auxiliaire de vie, IDE)'],
+        ['t_amenlog','Aménagement du logement / du véhicule'],
+      ]},
+    ]
+  },
+
+  {
+    id:'besoins', icon:'📌', title:'Besoins & demandes évoqués',
+    desc:'Orientations et prestations à signaler (la décision relève de la CDAPH).',
+    rubric:'besoins',
+    groups:[
+      {t:'Adulte', items:[
+        ['b_aah','AAH (allocation adulte handicapé)'],['b_pch','PCH (prestation de compensation)'],
+        ['b_rqth','RQTH (reconnaissance travailleur handicapé)'],['b_orientpro','Orientation professionnelle / ESAT'],
+        ['b_cmi','Carte mobilité inclusion (invalidité / priorité / stationnement)'],
+      ]},
+      {t:'Enfant', items:[
+        ['b_aeeh','AEEH (allocation d\'éducation de l\'enfant handicapé)'],
+        ['b_pchenf','PCH enfant'],['b_aesh','AESH / aide humaine scolaire'],
+        ['b_orientscol','Orientation (ULIS, IME, SESSAD…)'],['b_amenexam','Aménagement des examens'],
+      ]},
+    ]
+  },
+];
+
+/* champs libres rattachés à des rubriques */
+const FREETEXT = [
+  {id:'ft_anam', sec:'patho',  rubric:'anam',  label:'Histoire de la maladie / anamnèse (date de début, évolution)', rows:3,
+   ph:'Ex. : Pathologie évoluant depuis…, aggravation progressive, retentissement croissant sur…'},
+  {id:'ft_diag', sec:'patho',  rubric:'patho2',label:'Autres diagnostics / précisions (codes, latéralité…)', rows:2,
+   ph:'Diagnostics complémentaires non listés ci-dessus…'},
+  {id:'ft_traite',sec:'traite',rubric:'traite2',label:'Précisions traitements (molécules, posologies, suivi)', rows:2, ph:''},
+  {id:'ft_compl',sec:'besoins',rubric:'compl', label:'Éléments complémentaires / pronostic / besoins particuliers', rows:3, ph:''},
+];
+
+const RUBRIC_TITLES = {
+  patho:'1. PATHOLOGIES (diagnostics)',
+  anam:'2. HISTOIRE DE LA MALADIE / ANAMNÈSE',
+  def:'3. DÉFICIENCES',
+  reten:'4. RETENTISSEMENT — LIMITATIONS D\'ACTIVITÉ & RESTRICTIONS DE PARTICIPATION',
+  traite:'5. TRAITEMENTS ET PRISES EN CHARGE',
+  besoins:'6. BESOINS / DEMANDES À EXAMINER (décision CDAPH)',
+  compl:'7. ÉLÉMENTS COMPLÉMENTAIRES',
+};
+
+/* labels par déficience -> on les regroupe par section dans la rubrique 3 */
+const DEF_SECTIONS = ['defmot','defsens','defpsy','defvisc'];
+const DEF_SECTION_TITLE = {
+  defmot:'Motrices', defsens:'Sensorielles', defpsy:'Psychiques / cognitives / intellectuelles', defvisc:'Viscérales, métaboliques & autres'
+};
+
+/* état : id item -> {on:bool, sev:string} */
+const state = {};
+const ft = {};
+
+/* ---------- rendu du formulaire ---------- */
+function buildForm(){
+  const root = $('#form');
+  SECTIONS.forEach(sec=>{
+    const det = el(`<details class="section" id="sec-${sec.id}" ${sec.id==='patho'?'open':''}>
+      <summary>
+        <span class="sec-icon">${sec.icon}</span>
+        <span class="sec-titles"><h2>${sec.title}</h2><p>${sec.desc}</p></span>
+        <span class="sec-count empty" id="cnt-${sec.id}">0</span>
+        <span class="chev">▾</span>
+      </summary>
+      <div class="sec-body" id="body-${sec.id}"></div>
+    </details>`);
+    root.appendChild(det);
+    const body = $('#body-'+sec.id, det);
+
+    sec.groups.forEach(grp=>{
+      const g = el(`<div class="grp">${grp.t?`<p class="grp-title">${grp.t}</p>`:''}<div class="items"></div></div>`);
+      const itemsBox = $('.items', g);
+      grp.items.forEach(([id,label,hint])=>{
+        state[id] = {on:false, sev:'', label, sec:sec.id, rubric:sec.rubric};
+        const wrap = el(`<div></div>`);
+        const lab = el(`<label class="item" data-id="${id}">
+          <input type="checkbox">
+          <span class="lab">${label}${hint?`<small>${hint}</small>`:''}</span>
+        </label>`);
+        wrap.appendChild(lab);
+        if(sec.sev){
+          const sev = el(`<div class="sev" data-for="${id}">
+            <button type="button" data-sev="légère">légère</button>
+            <button type="button" data-sev="modérée">modérée</button>
+            <button type="button" data-sev="sévère">sévère</button>
+          </div>`);
+          wrap.appendChild(sev);
+          $$('button',sev).forEach(b=>b.addEventListener('click',()=>{
+            const cur = state[id].sev;
+            state[id].sev = (cur===b.dataset.sev)?'':b.dataset.sev;
+            $$('button',sev).forEach(x=>x.classList.toggle('on', x.dataset.sev===state[id].sev));
+            render();
+          }));
+        }
+        const cb = $('input',lab);
+        cb.addEventListener('change',()=>{
+          state[id].on = cb.checked;
+          lab.classList.toggle('checked', cb.checked);
+          updateCount(sec.id); render();
+        });
+        itemsBox.appendChild(wrap);
+      });
+      body.appendChild(g);
+    });
+
+    /* champs libres de la section */
+    FREETEXT.filter(f=>f.sec===sec.id).forEach(f=>{
+      ft[f.id]={value:'', rubric:f.rubric};
+      const fld = el(`<div class="field">
+        <label for="${f.id}">${f.label}</label>
+        <textarea id="${f.id}" rows="${f.rows}" placeholder="${f.ph||''}"></textarea>
+      </div>`);
+      body.appendChild(fld);
+      $('textarea',fld).addEventListener('input',e=>{ ft[f.id].value=e.target.value; render(); });
+    });
+  });
+}
+
+function updateCount(secId){
+  const n = Object.values(state).filter(s=>s.sec===secId && s.on).length;
+  const badge = $('#cnt-'+secId);
+  badge.textContent = n;
+  badge.classList.toggle('empty', n===0);
+}
+
+/* ---------- génération du certificat ---------- */
+function phrase(s){
+  let p = s.label;
+  if(s.sev) p += ` (${s.sev})`;
+  return p;
+}
+
+function buildText(){
+  const checked = Object.values(state).filter(s=>s.on);
+  const lines = [];
+  const today = new Date().toLocaleDateString('fr-FR');
+
+  lines.push('CERTIFICAT MÉDICAL MDPH — Cerfa 15695*01 (éléments de travail)');
+  lines.push('Document d\'aide à reporter dans le formulaire officiel — '+today);
+  lines.push('');
+
+  const empty = checked.length===0 &&
+    FREETEXT.every(f=>!ft[f.id].value.trim());
+  if(empty){
+    return {empty:true, text:'Cochez les éléments à gauche : le texte du certificat se construira ici, rubrique par rubrique.'};
+  }
+
+  /* 1. Pathologies */
+  const pat = Object.values(state).filter(s=>s.sec==='patho'&&s.on).map(s=>s.label);
+  if(ft.ft_diag.value.trim()) pat.push(ft.ft_diag.value.trim());
+  pushRubric(lines,'patho', pat.length? pat.map(p=>'– '+p) : null);
+
+  /* 2. Anamnèse */
+  pushRubric(lines,'anam', ft.ft_anam.value.trim()? [ft.ft_anam.value.trim()] : null);
+
+  /* 3. Déficiences (regroupées par type) */
+  const defBlocks=[];
+  DEF_SECTIONS.forEach(secId=>{
+    const items = Object.values(state).filter(s=>s.sec===secId&&s.on);
+    if(items.length){
+      defBlocks.push('• '+DEF_SECTION_TITLE[secId]+' :');
+      items.forEach(s=>defBlocks.push('   – '+phrase(s)));
+    }
+  });
+  pushRubric(lines,'def', defBlocks.length?defBlocks:null);
+
+  /* 4. Retentissement */
+  const ret = Object.values(state).filter(s=>s.sec==='reten'&&s.on).map(s=>'– '+s.label);
+  pushRubric(lines,'reten', ret.length?ret:null);
+
+  /* 5. Traitements */
+  const tr = Object.values(state).filter(s=>s.sec==='traite'&&s.on).map(s=>'– '+s.label);
+  if(ft.ft_traite.value.trim()) tr.push(ft.ft_traite.value.trim());
+  pushRubric(lines,'traite', tr.length?tr:null);
+
+  /* 6. Besoins */
+  const be = Object.values(state).filter(s=>s.sec==='besoins'&&s.on).map(s=>'– '+s.label);
+  pushRubric(lines,'besoins', be.length?be:null);
+
+  /* 7. Complémentaires */
+  pushRubric(lines,'compl', ft.ft_compl.value.trim()? [ft.ft_compl.value.trim()] : null);
+
+  lines.push('');
+  lines.push('— Certificat à dater, signer et cacheter par le médecin. Validité 12 mois.');
+  return {empty:false, text:lines.join('\n')};
+}
+
+function pushRubric(lines, key, content){
+  lines.push(RUBRIC_TITLES[key]);
+  if(content){ content.forEach(c=>lines.push(c)); }
+  else { lines.push('   (à compléter)'); }
+  lines.push('');
+}
+
+let lastText='';
+function render(){
+  SECTIONS.forEach(s=>updateCount(s.id));
+  const out = buildText();
+  lastText = out.empty? '' : out.text;
+  const o = $('#output');
+  if(out.empty){ o.innerHTML = `<span class="ph">${out.text}</span>`; }
+  else { o.textContent = out.text; }
+}
+
+/* ---------- actions ---------- */
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg;
+  setTimeout(()=>{ if(t.textContent===msg) t.textContent=''; },2200);
+}
+async function copyText(){
+  if(!lastText){ toast('Rien à copier'); return; }
+  try{ await navigator.clipboard.writeText(lastText); toast('✓ Copié'); }
+  catch(e){
+    const ta=document.createElement('textarea'); ta.value=lastText; document.body.appendChild(ta);
+    ta.select(); try{document.execCommand('copy'); toast('✓ Copié');}catch(_){toast('Copie impossible');}
+    ta.remove();
+  }
+}
+function resetAll(){
+  if(!confirm('Effacer toutes les cases cochées et les textes saisis ?')) return;
+  Object.keys(state).forEach(id=>{state[id].on=false; state[id].sev='';});
+  Object.keys(ft).forEach(id=>ft[id].value='');
+  $$('#form input[type=checkbox]').forEach(cb=>cb.checked=false);
+  $$('#form label.item').forEach(l=>l.classList.remove('checked'));
+  $$('#form .sev button').forEach(b=>b.classList.remove('on'));
+  $$('#form textarea').forEach(t=>t.value='');
+  render();
+  toast('Réinitialisé');
+}
+
+/* ---------- init ---------- */
+document.addEventListener('DOMContentLoaded',()=>{
+  buildForm();
+  render();
+  $('#btn-copy').addEventListener('click',copyText);
+  $('#btn-copy2').addEventListener('click',copyText);
+  $('#btn-print').addEventListener('click',()=>window.print());
+  $('#btn-print2').addEventListener('click',()=>window.print());
+  $('#btn-reset').addEventListener('click',resetAll);
+});
+</script>
+</body>
+</html>

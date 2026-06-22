@@ -26,6 +26,7 @@ assistant.js          Catalogue des apps + recherche/filtres
 .nojekyll             Sert le site statique tel quel (pas de Jekyll)
 
 neuro-gp/             NEURO-GP ASSIST (neurologie)
+mdph/                 MDPH Assist — aide au certificat médical (Cerfa 15695*01)
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :
   index.html            Fiches d'interrogatoire par symptôme (64 fiches)
@@ -47,6 +48,7 @@ suite-clinique/       Suite clinique :
 | Biologie | Interprétation biologique, Lecture de bilan | `suite-clinique/` · `bilan-biologique/` |
 | Prévention | Procédures & prévention, Suivi préventif CNAM | `suite-clinique/` |
 | Transversal | Échelles & évaluations | `suite-clinique/apps-externes/` |
+| Médico-social | MDPH Assist — certificat médical (Cerfa 15695*01) | `mdph/` |
 
 ### À venir (non fournies / volontairement exclues)
 - **Cotation NGAP/CCAM** — nécessite une base tarifaire Ameli sourcée + disclaimer.
