@@ -1,7 +1,7 @@
 /* ============================================================================
  * INTERPRÉTATION BIOLOGIQUE — base de connaissances (côté médecin).
  * Sources : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
- * Dr Mario Fuiano ; complément hématologie (fiches 64+) d'après MémoBio (contenu
+ * complément hématologie (fiches 64+) d'après MémoBio (contenu
  * d'accès libre). Aide à l'interprétation d'un résultat anormal — à confronter
  * à la clinique. Ne remplace pas le médecin/biologiste.
  *

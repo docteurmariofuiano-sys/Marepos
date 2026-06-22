@@ -1,5 +1,5 @@
 /* Application de consultation — Fiches d'interrogatoire par symptôme
-   Données : window.FICHES (généré depuis le PDF du Dr Mario Fuiano). */
+   Données : window.FICHES (généré depuis le PDF source). */
 (function () {
   "use strict";
 

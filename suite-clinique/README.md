@@ -2,7 +2,7 @@
 
 Application web de consultation construite à partir du document
 **`Fiches_Interrogatoire_par_Symptome.pdf`** (Manuel du Généraliste — *Du symptôme
-au diagnostic*, Dr Mario Fuiano).
+au diagnostic*).
 
 Elle rend les **64 fiches** consultables et recherchables. Chaque fiche suit la
 logique de consultation :
