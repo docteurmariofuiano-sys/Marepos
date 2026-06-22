@@ -1,0 +1,182 @@
+/* =====================================================================
+   ASSISTANT MÉDICAL — Portail (page de lancement)
+   Regroupe les applications cliniques. Design autonome, hors-ligne.
+   ===================================================================== */
+:root{
+  --bg:#f5f7fb;
+  --bg-soft:#eef2f9;
+  --card:#ffffff;
+  --ink:#0f1c2e;
+  --ink-soft:#5b6b82;
+  --line:#e2e8f2;
+  --brand:#1f6feb;
+  --brand-deep:#0b3a82;
+  --teal:#0fb5a6;
+  --ombre:0 1px 3px rgba(15,28,46,.06), 0 8px 24px rgba(15,28,46,.06);
+  --ombre-fort:0 12px 40px rgba(15,28,46,.16);
+  --rayon:18px;
+  --rayon-s:12px;
+  /* couleurs de domaine */
+  --d-neuro:#6366f1;
+  --d-derm:#f59e0b;
+  --d-cardio:#ef4444;
+  --d-orl:#14b8a6;
+  --d-gyneco:#ec4899;
+  --d-bio:#0ea5e9;
+  --d-rais:#8b5cf6;
+  --d-prev:#22c55e;
+  --d-trans:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- En-tête ---------- */
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 400px at 12% -20%, rgba(255,255,255,.18), transparent 60%),
+    linear-gradient(120deg,#0b3a82 0%,#1f6feb 55%,#16a3a3 115%);
+  color:#fff;
+  padding:46px 20px 64px;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.6) 1px,transparent 1.4px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,#000,transparent);
+}
+.hero-inner{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-logo{
+  width:62px;height:62px;border-radius:18px;flex-shrink:0;
+  display:grid;place-items:center;font-size:32px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  backdrop-filter:blur(4px);
+}
+.brand h1{font-size:30px;font-weight:800;letter-spacing:.4px;line-height:1.05}
+.brand .tagline{font-size:14.5px;opacity:.9;font-weight:500;margin-top:3px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);
+  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+}
+.pill strong{font-weight:900}
+
+/* ---------- Barre de recherche / filtres ---------- */
+.toolbar{
+  max-width:1180px;margin:-34px auto 0;position:relative;z-index:3;
+  padding:0 20px;
+}
+.toolbar-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  box-shadow:var(--ombre-fort);padding:16px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.search{position:relative;display:flex;align-items:center}
+.search .ic{position:absolute;left:14px;font-size:18px;opacity:.55}
+.search input{
+  width:100%;padding:14px 16px 14px 44px;border:1.5px solid var(--line);
+  border-radius:var(--rayon-s);font-size:15.5px;font-family:inherit;background:var(--bg-soft);
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.search input:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(31,111,235,.14)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);
+  border-radius:999px;padding:7px 13px;font-size:12.8px;font-weight:700;cursor:pointer;
+  transition:all .15s;display:inline-flex;align-items:center;gap:6px;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:var(--c,var(--d-trans))}
+.chip.active .dot{background:#fff}
+
+/* ---------- Grille d'applications ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 10px}
+.section-title{
+  display:flex;align-items:baseline;gap:10px;margin:18px 2px 14px;
+}
+.section-title h2{font-size:15px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft)}
+.section-title .count{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;
+}
+.card{
+  position:relative;display:flex;flex-direction:column;gap:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  padding:20px 18px 16px;box-shadow:var(--ombre);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  overflow:hidden;outline:none;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c,var(--brand));
+}
+.card:hover,.card:focus-visible{transform:translateY(-5px);box-shadow:var(--ombre-fort);border-color:var(--c,var(--brand))}
+.card:focus-visible{box-shadow:0 0 0 4px rgba(31,111,235,.18),var(--ombre-fort)}
+.card-top{display:flex;align-items:flex-start;gap:13px}
+.card-icon{
+  width:50px;height:50px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;
+  font-size:25px;background:var(--cb,#eef2ff);border:1px solid var(--line);
+}
+.card h3{font-size:17px;font-weight:800;line-height:1.2;color:var(--ink)}
+.card p{font-size:13.3px;color:var(--ink-soft);flex:1}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.tag{
+  font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
+  color:var(--c,var(--d-trans));background:var(--cb,#eef2ff);
+  padding:4px 9px;border-radius:999px;
+}
+.go{font-size:13px;font-weight:800;color:var(--c,var(--brand));display:inline-flex;align-items:center;gap:5px}
+.card:hover .go{gap:9px}
+
+/* à venir */
+.card.soon{opacity:.62;cursor:default;background:repeating-linear-gradient(135deg,#fff,#fff 10px,#fbfcfe 10px,#fbfcfe 20px)}
+.card.soon:hover{transform:none;box-shadow:var(--ombre);border-color:var(--line)}
+.badge-soon{
+  position:absolute;top:12px;right:12px;font-size:10.5px;font-weight:900;letter-spacing:.5px;
+  background:#fef3c7;color:#92400e;border:1px solid #fde68a;padding:3px 9px;border-radius:999px;text-transform:uppercase;
+}
+.empty{
+  grid-column:1/-1;text-align:center;color:var(--ink-soft);
+  background:#fff;border:1px dashed var(--line);border-radius:var(--rayon);padding:34px;
+}
+
+/* ---------- Avertissement / pied ---------- */
+.disclaimer{
+  max-width:1180px;margin:26px auto 0;padding:0 20px;
+}
+.disclaimer-card{
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--d-prev);
+  border-radius:var(--rayon-s);padding:16px 18px;font-size:13px;color:var(--ink-soft);
+}
+.disclaimer-card strong{color:var(--ink)}
+.footer{
+  max-width:1180px;margin:22px auto 0;padding:24px 20px 44px;
+  color:var(--ink-soft);font-size:12.5px;text-align:center;line-height:1.7;
+}
+.footer strong{color:var(--ink)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:600px){
+  .brand h1{font-size:24px}
+  .brand-logo{width:54px;height:54px;font-size:27px}
+  .hero{padding:36px 16px 56px}
+  .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+  .card:hover,.card:focus-visible{transform:none}
+}

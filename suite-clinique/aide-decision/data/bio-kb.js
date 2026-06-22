@@ -1,0 +1,2946 @@
+/* ============================================================================
+ * INTERPRÉTATION BIOLOGIQUE — base de connaissances (côté médecin).
+ * Sources : « Manuel du Généraliste — Du Symptôme au Diagnostic » (fiches 43-63),
+ * Dr Mario Fuiano ; complément hématologie (fiches 64+) d'après MémoBio (contenu
+ * d'accès libre). Aide à l'interprétation d'un résultat anormal — à confronter
+ * à la clinique. Ne remplace pas le médecin/biologiste.
+ *
+ * Format : { id, num, anomalie, specialite, definition,
+ *            premiere_intention:[...], causes:[{cause, signe, examens:[...]}],
+ *            tableaux?:[{titre, entetes:[...], lignes:[[...]]}],
+ *            red_flags:[...], conduite:[...] }
+ * ========================================================================== */
+window.BIOKB = [
+  {
+    id: "ts_hemostase_primaire", num: 43, anomalie: "Allongement du temps de saignement / hémostase primaire",
+    specialite: "Hémostase",
+    definition: "Saignement de type hémostase primaire = cutanéo-muqueux (purpura pétéchial, épistaxis, gingivorragies, ménorragies), à distinguer des hématomes/hémarthroses (coagulation).",
+    premiere_intention: ["NFS-plaquettes EN PREMIER (éliminer une thrombopénie)", "Rechercher antiagrégants (aspirine, AINS, clopidogrel)", "Puis évoquer une maladie de Willebrand (la plus fréquente des maladies hémorragiques constitutionnelles)"],
+    causes: [
+      { cause: "Thrombopénie", signe: "plaquettes basses (1re cause à éliminer)", examens: ["NFS-plaquettes"] },
+      { cause: "Maladie de Willebrand", signe: "saignements muqueux + ATCD familial, TCA parfois allongé", examens: ["Dosage facteur Willebrand / facteur VIII"] },
+      { cause: "Thrombopathie médicamenteuse", signe: "aspirine / AINS / antiagrégants", examens: ["Revue de l'ordonnance"] },
+      { cause: "Thrombopathies acquises", signe: "urémie, dysglobulinémie, syndrome myéloprolifératif", examens: ["Créatinine, électrophorèse, NFS"] }
+    ],
+    red_flags: ["Thrombopénie profonde (risque hémorragique)", "Saignement actif sous antiagrégants"],
+    conduite: ["Éliminer thrombopénie et antiagrégants avant d'évoquer une thrombopathie constitutionnelle."]
+  },
+  {
+    id: "tca", num: 44, anomalie: "Allongement du TCA (temps de céphaline activée)",
+    specialite: "Hémostase",
+    definition: "Le test de correction (mélange plasma malade + témoin) est l'orientation clé.",
+    premiere_intention: ["Éliminer une héparinothérapie (cause n°1 d'allongement isolé)", "Test de correction : CORRIGE = déficit en facteur ; NE CORRIGE PAS = anticoagulant circulant"],
+    causes: [
+      { cause: "Héparine", signe: "cause la plus fréquente d'allongement isolé", examens: ["Vérifier traitement / héparinémie"] },
+      { cause: "Hémophilie A (VIII) / B (IX)", signe: "garçon, hémarthroses/hématomes, TCA allongé + TP normal", examens: ["Dosage facteurs VIII et IX"] },
+      { cause: "Maladie de Willebrand", signe: "TCA ± allongé (baisse du VIII)", examens: ["Facteur Willebrand, VIII"] },
+      { cause: "Anticoagulant circulant (anti-VIII, lupique/SAPL)", signe: "TCA non corrigé par le témoin → thrombose, pas hémorragie", examens: ["Test de correction, anticoagulant lupique, anti-cardiolipine"] }
+    ],
+    red_flags: ["Hémophilie sévère (saignement)", "SAPL (risque thrombotique malgré TCA allongé)"],
+    conduite: ["Toujours éliminer l'héparine d'abord, puis faire le test de correction."]
+  },
+  {
+    id: "tp_bas", num: 45, anomalie: "Allongement du TP / temps de Quick (TP bas)",
+    specialite: "Hémostase",
+    definition: "Le FACTEUR V est le discriminant majeur entre insuffisance hépatocellulaire et carence en vitamine K.",
+    premiere_intention: ["Vérifier un traitement par AVK (INR)", "Doser le facteur V : V BAS = insuffisance hépatocellulaire ; V NORMAL = carence en vitamine K"],
+    causes: [
+      { cause: "AVK", signe: "allongement attendu/recherché", examens: ["INR"] },
+      { cause: "Insuffisance hépatocellulaire", signe: "TP bas + facteur V BAS", examens: ["Facteur V, bilan hépatique"] },
+      { cause: "Carence en vitamine K", signe: "TP bas + facteur V NORMAL (cholestase, malabsorption, ATB) ; corrigé par vit. K", examens: ["Facteur V, test de correction par vitamine K"] },
+      { cause: "CIVD", signe: "TP bas + plaquettes ↓ + fibrinogène ↓ + D-dimères ↑↑", examens: ["Plaquettes, fibrinogène, D-dimères"] }
+    ],
+    red_flags: ["Insuffisance hépatique aiguë (TP < 50 %, facteur V effondré)", "CIVD", "Surdosage AVK avec hémorragie"],
+    conduite: ["Toute baisse aiguë du TP impose le dosage du facteur V."]
+  },
+  {
+    id: "tt", num: 46, anomalie: "Allongement du temps de thrombine (TT)",
+    specialite: "Hémostase",
+    definition: "Le TT explore la dernière étape (fibrinogène → fibrine).",
+    premiere_intention: ["Éliminer l'héparine (neutralisée par la protamine)", "Doser le fibrinogène pour trancher"],
+    causes: [
+      { cause: "Héparine / contamination", signe: "allonge le TT, neutralisé par la protamine", examens: ["Vérifier héparine, temps de reptilase"] },
+      { cause: "Hypo/dysfibrinogénémie", signe: "constitutionnelle ou acquise (IHC, CIVD)", examens: ["Dosage du fibrinogène"] },
+      { cause: "Présence d'inhibiteurs", signe: "dysglobuline, PDF élevés", examens: ["Électrophorèse, PDF/D-dimères"] }
+    ],
+    red_flags: ["CIVD avec consommation du fibrinogène", "Hépatopathie sévère"],
+    conduite: ["Allongement isolé = héparine le plus souvent, ou anomalie du fibrinogène."]
+  },
+  {
+    id: "hemostase_hereditaire", num: 47, anomalie: "Anomalie héréditaire de l'hémostase",
+    specialite: "Hémostase",
+    definition: "L'arbre généalogique et le TYPE de saignement orientent le diagnostic.",
+    premiere_intention: ["Préciser le type de saignement : cutanéo-muqueux (Willebrand) vs hématomes/hémarthroses (hémophilie)", "Enquête familiale : transmission liée à l'X (hémophilie) vs autosomique (Willebrand)"],
+    causes: [
+      { cause: "Maladie de Willebrand", signe: "la plus fréquente, autosomique, saignements muqueux", examens: ["Facteur Willebrand, VIII"] },
+      { cause: "Hémophilie A / B", signe: "liée à l'X, garçons, hémarthroses", examens: ["Facteurs VIII / IX"] },
+      { cause: "Thrombophilies constitutionnelles", signe: "facteur V Leiden, mutation II, déficits AT/PC/PS → versant thrombotique", examens: ["Bilan de thrombophilie (ATCD thrombotiques précoces, fausses couches)"] }
+    ],
+    red_flags: ["Hémophilie sévère (hémarthroses invalidantes)", "Thrombophilie majeure (récidive thrombo-embolique)"],
+    conduite: ["Adresser à un centre spécialisé (CRC-MHC) pour confirmation et prise en charge."]
+  },
+  {
+    id: "electrophorese", num: 48, anomalie: "Anomalies de l'électrophorèse des protéines sériques",
+    specialite: "Hématologie",
+    definition: "Les techniques haute résolution séparent 7 fractions (préalbumine, albumine, α1, α2, β1, β2, γ). Un pic ÉTROIT dans les gamma = composant monoclonal (immunofixation) ; une élévation polyclonale « en dôme » = réactionnelle.",
+    premiere_intention: ["Lire chaque fraction et reconnaître les profils caractéristiques (inflammation, cirrhose, néphrotique…)", "Devant un pic étroit : immunofixation pour typer le composant monoclonal", "Rechercher des signes de myélome (CRAB)", "Pièges : fibrinogène (migre en β si anticoagulant / tube mal coagulé), pic d'hémoglobine (β ou α2 lié à l'haptoglobine) en cas d'hémolyse"],
+    causes: [
+      { cause: "Pic monoclonal étroit (gamma)", signe: "myélome, MGUS, Waldenström (IgM)", examens: ["Immunofixation, protéinurie de Bence-Jones, NFS, calcémie, créatinine"] },
+      { cause: "Hypergammaglobulinémie polyclonale", signe: "inflammation chronique, hépatopathie, infections, auto-immunité", examens: ["CRP, bilan hépatique, sérologies"] },
+      { cause: "Bloc bêta-gamma", signe: "très évocateur de cirrhose", examens: ["Bilan hépatique"] },
+      { cause: "Hypogammaglobulinémie", signe: "déficit immunitaire, fuite (néphrotique), myélome à chaînes légères", examens: ["Dosage pondéral des Ig, protéinurie"] }
+    ],
+    tableaux: [
+      { titre: "Les 7 fractions (haute résolution)",
+        entetes: ["Fraction", "Principales protéines"],
+        lignes: [
+          ["Préalbumine", "Préalbumine (transthyrétine)"],
+          ["Albumine", "Albumine"],
+          ["α1-globulines", "α1-antitrypsine, orosomucoïde (α1-glycoprotéine acide)"],
+          ["α2-globulines", "Haptoglobine, α2-macroglobuline, céruléoplasmine"],
+          ["β1-globulines", "Transferrine"],
+          ["β2-globulines", "Complément (C3)"],
+          ["γ-globulines", "Immunoglobulines (IgG, IgA, IgM)"]
+        ] },
+      { titre: "Variations par fraction",
+        entetes: ["Fraction", "Diminution", "Augmentation"],
+        lignes: [
+          ["Protéines totales", "Malnutrition, malabsorption, insuffisance hépatique, fuite (hémorragie, rénale, digestive, cutanée)", "Déshydratation, hypergammaglobulinémie (poly- ou monoclonale)"],
+          ["Albumine", "Insuffisance hépatique, inflammation, fuite, dénutrition, syndrome néphrotique", "Déshydratation, exercice, garrot prolongé, jeûne (3 jours)"],
+          ["α1-globulines", "Insuffisance hépatique, déficit en α1-antitrypsine", "Inflammation (orosomucoïde, α1-antitrypsine)"],
+          ["α2-globulines", "Insuffisance hépatique, hémolyse intravasculaire (haptoglobine)", "Inflammation (haptoglobine, céruléoplasmine), syndrome néphrotique (α2-macroglobuline)"],
+          ["β1 (transferrine)", "Insuffisance hépatique, surcharge en fer, inflammation", "Carence martiale, grossesse (3e trimestre, jusqu'à 2,5N), œstroprogestatifs"],
+          ["β2 (C3)", "Disparition du C3 si sérum prélevé > 24 h avant l'analyse", "Cholestase, inflammation, œstrogènes"],
+          ["γ-globulines", "Déficit primitif, myélome, chimio/immunosuppresseurs, syndrome néphrotique", "Polyclonale (infection, inflammation, hépatopathie, auto-immunité) ; mono-/oligoclonale (myélome)"]
+        ] },
+      { titre: "Profils électrophorétiques caractéristiques",
+        entetes: ["Profil", "Prot. tot.", "Albumine", "α1", "α2", "β", "γ"],
+        lignes: [
+          ["Inflammation aiguë", "—", "↓ ou N", "↑", "↑↑", "—", "↑ ou N"],
+          ["Inflammation chronique", "—", "—", "↑", "↑", "—", "↑"],
+          ["Hépatite grave", "↓ ou N", "↓", "↓", "↓", "↓", "↓"],
+          ["Cirrhose décompensée", "—", "↓↓", "—", "—", "Bloc β-γ", "↑↑"],
+          ["Syndrome néphrotique", "↓↓", "↓↓", "↓", "↑↑", "↓", "↓ ou N"],
+          ["Hypergammaglobulinémie", "N ou ↑", "↓ ou N", "—", "—", "—", "↑↑"],
+          ["Hypo/agammaglobulinémie", "N ou ↓", "—", "—", "—", "—", "↓↓↓"],
+          ["Déficit en α1-antitrypsine", "—", "—", "↓↓", "—", "—", "—"],
+          ["Gammapathie monoclonale", "N ou ↑", "↓ ou N", "—", "—", "—", "Pic étroit"]
+        ] }
+    ],
+    red_flags: ["Myélome (CRAB : hyperCalcémie, Rénale, Anémie, Bone/os)", "Waldenström symptomatique", "Amylose AL", "Bloc β-γ = cirrhose ; hypogammaglobulinémie profonde = déficit immunitaire / myélome à chaînes légères"],
+    conduite: ["Pic monoclonal → immunofixation + recherche des critères de malignité (CRAB).", "Lire le profil global (inflammation, cirrhose avec bloc β-γ, syndrome néphrotique) avant de conclure.", "Attention aux pièges préanalytiques : fibrinogène (β), hémoglobine (hémolyse), disparition du C3 (prélèvement ancien)."]
+  },
+  {
+    id: "hypereosinophilie", num: 49, anomalie: "Hyperéosinophilie",
+    specialite: "Hématologie",
+    definition: "Démarche « médicament, parasite, atopie » couvre l'immense majorité des cas.",
+    premiere_intention: ["Rechercher un médicament récent (1re cause en France) — penser DRESS", "Rechercher une parasitose (voyage, helminthiase)", "Évaluer un terrain atopique"],
+    causes: [
+      { cause: "Hyperéosinophilie médicamenteuse", signe: "la plus fréquente ; DRESS si fièvre + éruption + atteinte viscérale", examens: ["Revue de l'ordonnance, bilan hépatique/rénal si DRESS"] },
+      { cause: "Parasitoses helminthiques", signe: "selon voyage et cycle (phase d'invasion)", examens: ["Examen parasitologique des selles, sérologies"] },
+      { cause: "Atopie", signe: "asthme, rhinite, eczéma, urticaire", examens: ["Contexte clinique"] },
+      { cause: "Causes systémiques / malignes", signe: "vascularite à ANCA (Churg-Strauss), lymphome, SHE, néoplasie", examens: ["ANCA, imagerie, avis spécialisé"] }
+    ],
+    red_flags: ["DRESS (atteinte viscérale)", "Syndrome hyperéosinophilique (atteinte cardiaque)", "Vascularite (Churg-Strauss)", "Anguillulose maligne avant immunosuppression"],
+    conduite: ["Éosinophilie + fièvre + DRESS = urgence d'arrêt du médicament. Traiter une anguillulose avant toute corticothérapie."]
+  },
+  {
+    id: "inversion_formule", num: 50, anomalie: "Inversion de la formule sanguine (lymphocytes > neutrophiles)",
+    specialite: "Hématologie",
+    definition: "Inversion physiologique chez le jeune enfant. Chez l'adulte, une hyperlymphocytose persistante (> 1 mois) impose un immunophénotypage.",
+    premiere_intention: ["Replacer dans le contexte (âge, syndrome viral)", "Si hyperlymphocytose persistante de l'adulte : immunophénotypage (LLC)"],
+    causes: [
+      { cause: "Lymphocytose réactionnelle virale", signe: "jeune, syndrome viral, MNI (syndrome mononucléosique)", examens: ["MNI-test, sérologies EBV/CMV/toxo, VIH"] },
+      { cause: "Syndrome lymphoprolifératif", signe: "sujet âgé, hyperlymphocytose persistante", examens: ["Immunophénotypage lymphocytaire (LLC)"] },
+      { cause: "Coqueluche", signe: "hyperlymphocytose + toux quinteuse", examens: ["PCR coqueluche"] }
+    ],
+    red_flags: ["Leucémie aiguë (cytopénies + blastes)", "LLC à fort compte / syndrome de Richter", "Primo-infection VIH (à ne pas manquer)"],
+    conduite: ["Penser systématiquement à la primo-infection VIH devant un syndrome mononucléosique."]
+  },
+  {
+    id: "hyperglycemie", num: 51, anomalie: "Hyperglycémie de l'adulte",
+    specialite: "Endocrinologie",
+    definition: "Diagnostic biologique (seuils OMS). Le syndrome cardinal rapide chez un sujet jeune/maigre = type 1 (risque de cétose).",
+    premiere_intention: ["Affirmer le diabète : glycémie à jeun ≥ 1,26 g/L (×2) / HbA1c / glycémie ≥ 2 g/L + symptômes", "Rechercher des signes de cétose / déshydratation (urgence)", "Distinguer type 1 (jeune, maigre, cétose) vs type 2"],
+    causes: [
+      { cause: "Diabète de type 2", signe: "surpoids, insulinorésistance, > 40 ans, souvent asymptomatique", examens: ["HbA1c, bilan métabolique"] },
+      { cause: "Diabète de type 1", signe: "jeune, maigre, syndrome cardinal rapide, cétose", examens: ["Cétonémie, auto-anticorps (GAD, IA2)"] },
+      { cause: "Acidocétose / coma hyperosmolaire", signe: "urgences métaboliques (cétose vs déshydratation majeure)", examens: ["Gaz du sang, cétonémie, ionogramme, osmolalité"] },
+      { cause: "Diabète secondaire", signe: "corticoïdes, pancréatopathie, hémochromatose, endocrinopathie", examens: ["Selon contexte"] }
+    ],
+    red_flags: ["Acidocétose diabétique", "Coma hyperosmolaire", "Hyperglycémie + infection/sepsis"],
+    conduite: ["Haleine acétonique + dyspnée de Kussmaul = acidocétose → urgence."]
+  },
+  {
+    id: "hypercalcemie", num: 52, anomalie: "Hypercalcémie",
+    specialite: "Endocrinologie",
+    definition: "La PTH tranche : élevée/inadaptée = hyperparathyroïdie primaire ; FREINÉE = cause non parathyroïdienne (néoplasie surtout). Ces 2 causes = 90 %.",
+    premiere_intention: ["Doser la PTH (discriminant majeur)", "Interpréter sur la calcémie corrigée / calcium ionisé", "Rechercher une néoplasie si PTH freinée"],
+    causes: [
+      { cause: "Hyperparathyroïdie primaire", signe: "PTH normale-haute/élevée (inadaptée), calcémie modérée, fortuite", examens: ["PTH, calciurie, échographie/scintigraphie parathyroïdienne"] },
+      { cause: "Hypercalcémie maligne", signe: "PTH BASSE + néoplasie (métastases, myélome, PTHrp)", examens: ["Imagerie, électrophorèse, PTHrp"] },
+      { cause: "Iatrogène", signe: "vitamine D, thiazidiques, lithium, syndrome des buveurs de lait", examens: ["Revue de l'ordonnance, 25-OH vit. D"] },
+      { cause: "Granulomatose", signe: "sarcoïdose (calcitriol ↑)", examens: ["1,25-OH vit. D, imagerie thoracique"] }
+    ],
+    tableaux: [
+      { titre: "Étiologies",
+        entetes: ["Catégorie", "Causes"],
+        lignes: [
+          ["Néoplasique (60 %)", "Métastases osseuses (sein, poumon, rein, thyroïde) ; sécrétion de PTH-like / PTHrp (ORL, peau, uro-génital) ; myélome (via l'OAF, Osteoclast Activating Factor)"],
+          ["Non néoplasique (40 %)", "Adénome parathyroïdien (25 %), intoxication à la vitamine D, hyperthyroïdie, syndrome de Burnett (buveurs de lait), sarcoïdose (calcitriol ↑), immobilisation prolongée"]
+        ] },
+      { titre: "Démarche diagnostique (PTH 1-84)",
+        entetes: ["PTH", "Orientation"],
+        lignes: [
+          ["Augmentée / normale haute, calciurie ↑ ou normale", "Hyperparathyroïdie primitive (imagerie)"],
+          ["Augmentée / normale haute, calciurie diminuée", "Hypercalcémie-hypocalciurie familiale bénigne (syndrome de Marx)"],
+          ["Diminuée / normale basse", "Myélome (EPP), cancer (PTHrp), métastases, granulomatose (calcitriol ↑), hyperthyroïdie, intoxication vit. D/A, immobilisation, maladie d'Addison"]
+        ] }
+    ],
+    red_flags: ["Hypercalcémie maligne aiguë (> 3,5 mmol/L : troubles du rythme, coma)", "Néoplasie sous-jacente", "Insuffisance rénale, déshydratation"],
+    conduite: ["Hypercalcémie sévère symptomatique = urgence (hydratation, avis spécialisé).", "Vérifier sur le calcium corrigé / ionisé ; exclure les causes alimentaires et iatrogènes (Ca, vitamine D, corticoïdes, thiazidiques).", "La PTH tranche : élevée/inadaptée → hyperparathyroïdie ; freinée → cause non parathyroïdienne (néoplasie surtout)."]
+  },
+  {
+    id: "hyperkaliemie", num: 53, anomalie: "Hyperkaliémie",
+    specialite: "Néphrologie",
+    definition: "Toujours éliminer une FAUSSE hyperkaliémie (hémolyse de prélèvement). Le danger est CARDIAQUE et non corrélé aux symptômes : l'ECG guide l'urgence.",
+    premiere_intention: ["Éliminer une fausse hyperkaliémie (hémolyse, garrot prolongé, serrer le poing, délai d'acheminement, thrombocytose/hyperleucocytose)", "ECG immédiat (ondes T amples/pointues, élargissement QRS, bradycardie)", "Rechercher cause iatrogène (bloqueurs du SRAA) ± insuffisance rénale"],
+    causes: [
+      { cause: "Hyperkaliémie iatrogène", signe: "IEC/ARA2 + épargneur potassique + AINS ± IR", examens: ["Revue de l'ordonnance"] },
+      { cause: "Insuffisance rénale", signe: "défaut d'excrétion", examens: ["Créatinine, DFG"] },
+      { cause: "Transfert / lyse cellulaire", signe: "acidose, rhabdomyolyse, lyse tumorale, hémolyse", examens: ["Gaz du sang, CPK, LDH, uricémie"] },
+      { cause: "Hypoaldostéronisme", signe: "Addison, hyporéninisme du diabétique", examens: ["Cortisol, rénine/aldostérone"] }
+    ],
+    red_flags: ["Hyperkaliémie menaçante (ECG modifié) = URGENCE (gluconate de Ca, etc.)", "QRS élargis / bradycardie (risque d'arrêt)", "Insuffisance rénale aiguë"],
+    conduite: ["ECG modifié → urgence : gluconate de calcium, insuline-glucose, etc."]
+  },
+  {
+    id: "hypokaliemie", num: 54, anomalie: "Hypokaliémie",
+    specialite: "Néphrologie",
+    definition: "HTA + hypokaliémie = orientation forte vers un hyperaldostéronisme. Risque majeur : troubles du rythme (surtout sous digitaliques).",
+    premiere_intention: ["Préciser le mécanisme : pertes digestives vs rénales vs transfert", "ECG (ondes U, troubles du rythme)", "Si HTA associée : explorer un hyperaldostéronisme"],
+    causes: [
+      { cause: "Pertes digestives", signe: "diarrhée/vomissements/laxatifs", examens: ["Chlorurie, contexte"] },
+      { cause: "Pertes rénales iatrogènes", signe: "diurétiques hypokaliémiants (cause n°1)", examens: ["Kaliurèse, revue ordonnance"] },
+      { cause: "Hyperaldostéronisme", signe: "HTA + hypokaliémie + kaliurèse inadaptée", examens: ["Rénine/aldostérone (Conn)"] },
+      { cause: "Transfert", signe: "alcalose, β2-mimétiques, insuline", examens: ["Gaz du sang"] }
+    ],
+    red_flags: ["Troubles du rythme (potentialisés par digitaliques)", "Hypokaliémie profonde < 2,5 (paralysie, rhabdomyolyse)", "Torsades de pointes (si QT long associé)"],
+    conduite: ["Corriger le potassium ET le magnésium ; vigilance accrue sous digoxine."]
+  },
+  {
+    id: "hyponatremie", num: 55, anomalie: "Hyponatrémie",
+    specialite: "Néphrologie",
+    definition: "Démarche : éliminer les fausses → évaluer la VOLÉMIE + osmolalités. Le danger neurologique dépend de la RAPIDITÉ ; la correction doit être LENTE.",
+    premiere_intention: ["Éliminer une fausse hyponatrémie (hyperglycémie, hyperprotidémie/lipidémie)", "Évaluer la volémie (hypo / hyper / euvolémie)", "Osmolalités sang/urines, natriurèse"],
+    causes: [
+      { cause: "Hyponatrémie hypovolémique", signe: "pertes + déshydratation extracellulaire", examens: ["Natriurèse, clinique"] },
+      { cause: "Hyponatrémie hypervolémique", signe: "IC, cirrhose, syndrome néphrotique (œdèmes)", examens: ["BNP, bilan hépatique, protéinurie"] },
+      { cause: "SIADH (euvolémique)", signe: "natriurèse conservée, urines inadaptées concentrées ; cancers, médicaments, SNC, poumon", examens: ["Osmolalité U, TSH, cortisol"] },
+      { cause: "Endocrinien", signe: "hypothyroïdie, insuffisance surrénale", examens: ["TSH, cortisol 8h"] }
+    ],
+    tableaux: [
+      { titre: "Éliminer les fausses hyponatrémies",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Iso-osmolaire", "Hyperlipidémie (sérum lactescent), hyperprotidémie"],
+          ["Hyperosmolaire", "Hyperglycémie, hyperazotémie d'apparition brutale, mannitol"]
+        ] },
+      { titre: "Hyponatrémie hypo-osmolaire selon le secteur extracellulaire",
+        entetes: ["Secteur extracellulaire", "Mécanisme", "Étiologies"],
+        lignes: [
+          ["Augmenté (œdèmes)", "Inflation hydrosodée", "IC congestive, cirrhose décompensée, insuffisance hépatique, syndrome néphrotique, IRC terminale"],
+          ["Normal", "Dilution", "SIADH, hypothyroïdie, hypocortisolisme, potomanie / perfusion hypotonique, post-opératoire / stress"],
+          ["Diminué (déshydratation EC)", "Déplétion", "Pertes digestives/cutanées, 3e secteur, pertes rénales (thiazidiques, uropathie), déficit en minéralocorticoïde"]
+        ] },
+      { titre: "Causes de SIADH",
+        entetes: ["Catégorie", "Exemples"],
+        lignes: [
+          ["Cancers", "Bronchique, pancréas, lymphome"],
+          ["Pulmonaire", "Abcès pulmonaire, pneumonie"],
+          ["SNC", "Encéphalite, méningite, LED"],
+          ["Iatrogène", "Vincristine, cyclophosphamide, carbamazépine, antidépresseurs"]
+        ] }
+    ],
+    red_flags: ["Hyponatrémie aiguë symptomatique (convulsions, coma)", "Correction trop rapide (myélinolyse centro-pontine)", "Insuffisance surrénale aiguë méconnue"],
+    conduite: ["Corriger lentement (risque de myélinolyse) ; forme aiguë symptomatique = urgence (sérum salé hypertonique en milieu adapté).", "Toujours éliminer une fausse hyponatrémie (hyperglycémie, hyperprotidémie/lipidémie) ; calculer l'osmolalité efficace.", "Classer selon le secteur extracellulaire (œdèmes / normal / déshydratation) pour orienter l'étiologie et le traitement."]
+  },
+  {
+    id: "hyperphosphoremie", num: 56, anomalie: "Hyperphosphorémie",
+    specialite: "Néphrologie",
+    definition: "L'insuffisance rénale est de loin la cause la plus fréquente. Aiguë + hypoCa + hyperK + hyperuricémie = syndrome de lyse tumorale.",
+    premiere_intention: ["Évaluer la fonction rénale (cause n°1)", "Interpréter le couple Ca/P et la PTH", "Rechercher une lyse cellulaire si aiguë"],
+    causes: [
+      { cause: "Insuffisance rénale", signe: "défaut d'excrétion, contexte d'IRC", examens: ["Créatinine, Ca/P, PTH"] },
+      { cause: "Lyse cellulaire", signe: "lyse tumorale (+ hyperuricémie + hyperK + hypoCa), rhabdomyolyse", examens: ["Uricémie, K, Ca, LDH, CPK"] },
+      { cause: "Hypoparathyroïdie", signe: "P haut + Ca bas + PTH basse", examens: ["PTH, calcémie"] },
+      { cause: "Apports / vitamine D excessive", signe: "iatrogène (laxatifs/lavements phosphatés)", examens: ["Interrogatoire, 25-OH vit. D"] }
+    ],
+    red_flags: ["Syndrome de lyse tumorale", "Hypocalcémie symptomatique associée", "Calcifications métastatiques (produit Ca×P élevé)"],
+    conduite: ["Suspecter un syndrome de lyse tumorale en contexte oncologique (urgence)."]
+  },
+  {
+    id: "hyperprolactinemie", num: 57, anomalie: "Hyperprolactinémie",
+    specialite: "Endocrinologie",
+    definition: "Avant l'IRM, éliminer les 3 « faux coupables » : grossesse, médicaments, hypothyroïdie. PRL très élevée (> 150-200 ng/mL) → macroprolactinome.",
+    premiere_intention: ["Éliminer grossesse, stress du prélèvement", "Rechercher un médicament hyperprolactinémiant", "Doser la TSH", "Si syndrome tumoral (céphalées, hémianopsie) → IRM hypophysaire sans délai"],
+    causes: [
+      { cause: "Hyperprolactinémie médicamenteuse", signe: "psychotropes, antiémétiques dopaminergiques (très fréquent)", examens: ["Revue de l'ordonnance"] },
+      { cause: "Adénome à prolactine", signe: "micro/macroadénome ; PRL souvent très élevée si macro", examens: ["IRM hypophysaire"] },
+      { cause: "Hypothyroïdie", signe: "TRH ↑ stimule la PRL", examens: ["TSH"] },
+      { cause: "Déconnexion hypothalamo-hypophysaire", signe: "macroadénome non sécrétant comprimant la tige (PRL modérée)", examens: ["IRM hypophysaire"] }
+    ],
+    red_flags: ["Macroadénome compressif (champ visuel, apoplexie hypophysaire)", "Ne pas confondre avec hypothyroïdie (réversible)"],
+    conduite: ["Macroadénome + troubles visuels = avis neurochirurgical/endocrinologique urgent."]
+  },
+  {
+    id: "ggt", num: 58, anomalie: "Augmentation isolée des gamma-GT",
+    specialite: "Hépatologie",
+    definition: "Une élévation ISOLÉE des GGT (PAL et transaminases normales) est le plus souvent banale. C'est l'association GGT + PAL qui définit la cholestase.",
+    premiere_intention: ["Vérifier que l'élévation est isolée (PAL, transaminases normales)", "Rechercher alcool, surpoids/stéatose, inducteurs enzymatiques", "Si GGT + PAL → imagerie des voies biliaires"],
+    causes: [
+      { cause: "Alcool / stéatose métabolique", signe: "les 2 causes dominantes d'élévation isolée", examens: ["Échographie hépatique, bilan métabolique"] },
+      { cause: "Induction enzymatique médicamenteuse", signe: "GGT ↑ isolée, sans cholestase vraie", examens: ["Revue de l'ordonnance"] },
+      { cause: "Cholestase débutante", signe: "GGT + PAL élevées ensemble", examens: ["Échographie / imagerie biliaire"] },
+      { cause: "Foie cardiaque", signe: "contexte d'insuffisance cardiaque", examens: ["BNP, échocardiographie"] }
+    ],
+    red_flags: ["Cholestase (GGT + PAL) → obstacle biliaire / cancer", "Hépatopathie alcoolique avancée"],
+    conduite: ["GGT isolées ne justifient pas d'emblée un bilan lourd ; réévaluer après réduction des facteurs."]
+  },
+  {
+    id: "cytolyse", num: 59, anomalie: "Élévation des transaminases (cytolyse hépatique)",
+    specialite: "Hépatologie",
+    definition: "Le rapport ASAT/ALAT, l'ampleur (> 10N = hépatite aiguë) et la prise de médicaments guident. Toute cytolyse aiguë impose la mesure du TP (facteur V).",
+    premiere_intention: ["Quantifier (modérée < 5N vs majeure > 10N) et la cinétique", "Rechercher alcool (ASAT>ALAT), stéatose, médicaments (paracétamol)", "Sérologies virales (B, C, A, E)", "TP / facteur V si aiguë (gravité)"],
+    causes: [
+      { cause: "Stéatopathie métabolique / alcoolique", signe: "cytolyse modérée chronique, la plus fréquente", examens: ["Échographie, bilan métabolique"] },
+      { cause: "Hépatite médicamenteuse / toxique", signe: "paracétamol (massive), antituberculeux, statines, azolés", examens: ["Paracétamolémie, revue ordonnance"] },
+      { cause: "Hépatite virale", signe: "B/C chronique, A/E aiguë", examens: ["Sérologies virales"] },
+      { cause: "Cytolyse extra-hépatique", signe: "musculaire (CPK), hémolyse, hyperthyroïdie", examens: ["CPK, haptoglobine, TSH"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs de cytolyse",
+        entetes: ["Enzyme", "Spécificité"],
+        lignes: [
+          ["ALAT", "La plus spécifique du foie (cytosol des hépatocytes)"],
+          ["ASAT", "Foie et muscle (cœur) ; généralement < ALAT, SAUF origine alcoolique (déficit en pyridoxal, cofacteur de l'ALAT) → ASAT > ALAT"],
+          ["LDH", "Non spécifique : marqueur de souffrance cellulaire"]
+        ] },
+      { titre: "Profil enzymatique hépatique (cytolytique vs cholestatique)",
+        entetes: ["Profil", "ALAT / ASAT", "PAL / GGT"],
+        lignes: [
+          ["Cytolytique (hépatitique)", "↑↑", "Normales ou peu ↑"],
+          ["Cholestatique", "↑ (modéré)", "↑↑"],
+          ["Repère origine PAL", "PAL + GGT ↑ → hépatobiliaire ; PAL seule ↑ → osseuse", "—"]
+        ] }
+    ],
+    red_flags: ["Hépatite fulminante (TP ↓, facteur V ↓, encéphalopathie)", "Intoxication au paracétamol", "Hépatite ischémique (foie de choc)"],
+    conduite: ["Cytolyse majeure + TP bas/encéphalopathie = urgence (centre d'hépatologie).", "Étiologies : hépatites virales, alcooliques, médicamenteuses (paracétamol) ou toxiques (amanite phalloïde), mononucléose, cirrhose, certaines cholestases.", "Après 50 ans, environ 50 % des hépatites cytolytiques sont d'origine médicamenteuse → revue systématique de l'ordonnance."]
+  },
+  {
+    id: "dyslipidemie", num: 60, anomalie: "Élévation du cholestérol (dyslipidémie)",
+    specialite: "Métabolisme",
+    definition: "Exploration des anomalies lipidiques (EAL) à interpréter selon le risque CV global. Bilan après 12 h de jeûne : aspect du sérum, triglycérides, cholestérol total, HDL, LDL calculé (Friedewald). Avant de traiter : éliminer une cause secondaire.",
+    premiere_intention: ["EAL après 12 h de jeûne : aspect du sérum, TG, cholestérol total, HDL ; LDL par la formule de Friedewald", "Friedewald : LDL (g/L) = CT − HDL − (TG/5) — non applicable si TG ≥ 4 g/L → dosage direct du LDL", "Un rapport cholestérol total / HDL > 5 = marqueur de risque CV", "2e intention : apo AI, apo B, Lp(a) ; lipidogramme (type III : présence d'IDL)"],
+    causes: [
+      { cause: "Dyslipidémie commune / polygénique", signe: "la plus fréquente, multifactorielle", examens: ["Bilan lipidique, FdR CV"] },
+      { cause: "Hypercholestérolémie familiale", signe: "LDL très élevé + xanthomes + ATCD CV précoces", examens: ["Dépistage familial, score clinique"] },
+      { cause: "Dyslipidémie secondaire", signe: "hypothyroïdie, syndrome néphrotique, IRC, cholestase, alcool, iatrogène (corticoïdes, œstroprogestatifs, β-bloquants, diurétiques)", examens: ["TSH, glycémie, créatinine, protéinurie", "Bilan hépatique"] },
+      { cause: "Hypertriglycéridémie majeure", signe: "risque de pancréatite aiguë", examens: ["Triglycérides, lipase si douleur"] }
+    ],
+    tableaux: [
+      { titre: "Facteurs de risque CV (HAS) et facteur protecteur",
+        entetes: ["Facteur", "Score"],
+        lignes: [
+          ["Âge : > 50 ans (homme), > 60 ans (femme)", "+1"],
+          ["ATCD familial coronarien précoce (parent 1er degré : H < 55 ans, F < 65 ans)", "+1"],
+          ["Tabagisme actuel ou arrêté < 3 ans", "+1"],
+          ["HTA permanente (traitée ou non)", "+1"],
+          ["HDL cholestérol < 0,4 g/L", "+1"],
+          ["Protecteur : HDL cholestérol > 0,6 g/L", "−1"]
+        ] },
+      { titre: "Cible de LDL cholestérol selon le nombre de FdR",
+        entetes: ["Catégorie", "Cible LDL"],
+        lignes: [
+          ["Aucun facteur de risque", "< 2,2 g/L (5,7 mmol/L)"],
+          ["1 facteur de risque", "< 1,9 g/L (4,9 mmol/L)"],
+          ["2 facteurs de risque", "< 1,6 g/L (4,1 mmol/L)"],
+          ["> 2 facteurs de risque", "< 1,3 g/L (3,4 mmol/L)"],
+          ["ATCD de maladie cardio-vasculaire", "< 1 g/L (2,6 mmol/L)"]
+        ] },
+      { titre: "Cible de LDL chez le diabétique (HAS)",
+        entetes: ["Profil", "Cible LDL"],
+        lignes: [
+          ["Diabète < 5 ans, sans FdR additionnel ni microangiopathie", "< 1,9 g/L"],
+          ["Au plus 1 FdR additionnel au diabète", "< 1,6 g/L"],
+          ["≥ 2 FdR additionnels, diabète < 10 ans", "< 1,3 g/L"],
+          ["ATCD CV, ou très haut risque (atteinte rénale, diabète > 10 ans + ≥ 2 FdR, risque > 20 %/10 ans)", "< 1 g/L"]
+        ] },
+      { titre: "Mécanisme d'action des hypolipémiants",
+        entetes: ["Classe", "Mécanisme"],
+        lignes: [
+          ["Statines", "↓ synthèse hépatique du cholestérol (inhibition HMG-CoA réductase) ; ↑ catabolisme des LDL (surexpression des R-LDL)"],
+          ["Fibrates", "↓ synthèse hépatique ; ↑ catabolisme des VLDL ; ↑ lipolyse (LPL) ; agonistes PPAR"],
+          ["Résines", "↓ absorption intestinale du cholestérol et du cycle entéro-hépatique des acides biliaires ; ↑ R-LDL ; ↓ vitamines liposolubles"],
+          ["Ézétimibe", "↓ absorption du cholestérol alimentaire et biliaire (transporteur des entérocytes) sans toucher vitamines/TG/acides biliaires"],
+          ["Acide nicotinique", "Action sur la fibre lisse artériolaire ; effet hypocholestérolémiant (métabolisme des catécholamines, oxydation du cholestérol)"]
+        ] },
+      { titre: "Impact sur le bilan lipidique",
+        entetes: ["Fraction", "Statines (+ézétimibe)", "Fibrates", "Résines", "Ézétimibe", "Ac. nicotinique"],
+        lignes: [
+          ["Cholestérol total", "↓ 20-50 %", "↓ 10-30 %", "↓ 7-10 %", "↓ 13 %", "↓ 10-20 %"],
+          ["LDL cholestérol", "↓ 15-60 %", "↓ 10-30 %", "↓ 15-18 %", "↓ 19 %", "↓ 8-22 %"],
+          ["HDL cholestérol", "↑ 5-12 %", "↑ 10-15 %", "↑ 3 %", "↓ 3 %", "↑ 16-26 %"],
+          ["Triglycérides", "↓ 15-30 %", "↓ 40-50 %", "↑ 5 %", "↓ 8 %", "↓ 11-34 %"]
+        ] }
+    ],
+    red_flags: ["Hypertriglycéridémie majeure (TG > 10 g/L) → risque de pancréatite aiguë", "Hypercholestérolémie familiale (LDL très élevé, xanthomes, risque CV précoce)", "Association fibrate + statine déconseillée (risque de rhabdomyolyse) — réservée au spécialiste", "Pas de bilan lipidique justifié au-delà de 80 ans"],
+    conduite: ["Xanthomes tendineux / arc cornéen avant 45 ans → suspecter une forme familiale, dépistage familial.", "Toujours éliminer une dyslipidémie secondaire (hypothyroïdie, néphrotique, IRC, cholestase, alcool, iatrogène) avant de traiter.", "Hygiéno-diététique d'abord (AGS → AGMI/AGPI, oméga-3, fibres, poids, activité, alcool) ; médicament si objectif non atteint à 3 mois (d'emblée en prévention secondaire).", "Hypercholestérolémie (IIa/IIb/III) : statine ± résine/ézétimibe ; hypertriglycéridémie majeure : fibrate. Bilan normal → contrôle ≤ 1 fois/5 ans."]
+  },
+  {
+    id: "cpk", num: 61, anomalie: "Élévation des CPK (créatine-kinase)",
+    specialite: "Muscle",
+    definition: "Vérifier d'abord l'origine MUSCULAIRE (vs effort/IM/comitialité). CPK massives + myoglobinurie = rhabdomyolyse (surveiller kaliémie et fonction rénale).",
+    premiere_intention: ["Confirmer l'origine musculaire (myalgies, faiblesse, urines foncées)", "Rechercher une cause iatrogène (STATINE ± fibrate, neuroleptiques)", "Surveiller kaliémie et fonction rénale si rhabdomyolyse"],
+    causes: [
+      { cause: "Rhabdomyolyse", signe: "CPK très élevées + myalgies + myoglobinurie → risque IRA et hyperkaliémie", examens: ["Kaliémie, créatinine, BU (myoglobinurie)"] },
+      { cause: "Myopathie iatrogène", signe: "statines (myalgies + CPK ↑), syndrome malin des neuroleptiques (urgence)", examens: ["Revue ordonnance, température/conscience"] },
+      { cause: "Myosite inflammatoire", signe: "déficit proximal + CPK ↑ (dermato/polymyosite)", examens: ["EMG, auto-anticorps, avis spécialisé"] },
+      { cause: "Hypothyroïdie", signe: "CPK ↑ + signes d'hypothyroïdie", examens: ["TSH"] }
+    ],
+    red_flags: ["Rhabdomyolyse (IRA, hyperkaliémie)", "Syndrome malin des neuroleptiques", "Myocardite / SCA (préférer la troponine)"],
+    conduite: ["Sous statine : myalgies + CPK élevées → arrêt (risque majoré par les fibrates)."]
+  },
+  {
+    id: "ldh", num: 62, anomalie: "Lacticodéshydrogénase (LDH) élevée",
+    specialite: "Non spécifique",
+    definition: "Marqueur de lyse cellulaire NON spécifique : n'a de valeur qu'interprété dans un contexte. Éliminer une hémolyse (de prélèvement ou vraie).",
+    premiere_intention: ["Éliminer une hémolyse de prélèvement", "Rechercher une hémolyse vraie : LDH ↑ + haptoglobine ↓ + bilirubine libre ↑", "Replacer dans le contexte (néoplasie, nécrose tissulaire)"],
+    causes: [
+      { cause: "Hémolyse", signe: "vraie (anémie hémolytique) ou artefactuelle", examens: ["Haptoglobine, bilirubine libre, frottis (schizocytes)"] },
+      { cause: "Néoplasie / hémopathie", signe: "lymphome (valeur pronostique), tumeurs à fort turn-over", examens: ["Imagerie, avis hématologique"] },
+      { cause: "Nécrose tissulaire", signe: "infarctus, rhabdomyolyse, ischémie", examens: ["Troponine, CPK selon contexte"] },
+      { cause: "Autres", signe: "hépatopathie, macro-LDH, atteinte musculaire", examens: ["Bilan orienté"] }
+    ],
+    red_flags: ["Anémie hémolytique aiguë (MAT : LDH ↑ + schizocytes + thrombopénie → urgence)", "Syndrome de lyse tumorale", "Lymphome agressif"],
+    conduite: ["LDH ↑ + schizocytes + thrombopénie = microangiopathie thrombotique → urgence."]
+  },
+  {
+    id: "anemie", num: 63, anomalie: "Conduite à tenir devant une anémie",
+    specialite: "Hématologie",
+    definition: "L'algorithme repose sur le VGM + les réticulocytes. Évaluer d'abord la TOLÉRANCE.",
+    premiere_intention: ["Évaluer la tolérance (dyspnée, angor, tachycardie → transfusion)", "Orienter par le VGM (micro / macro / normocytaire)", "Réticulocytes si normocytaire (régénérative vs arégénérative)"],
+    causes: [
+      { cause: "Anémie microcytaire ferriprive", signe: "ferritine basse → CHERCHER le saignement (digestif si homme/femme ménopausée)", examens: ["Ferritine, endoscopies digestives"] },
+      { cause: "Anémie macrocytaire carentielle", signe: "B12/folates, alcool, hypothyroïdie, myélodysplasie", examens: ["B12, folates, TSH, myélogramme si besoin"] },
+      { cause: "Anémie normocytaire régénérative", signe: "hémolyse (LDH ↑, haptoglobine ↓) ou saignement aigu", examens: ["Réticulocytes, haptoglobine, LDH, bilirubine"] },
+      { cause: "Anémie normocytaire arégénérative", signe: "inflammation, IRC (EPO ↓), insuffisance médullaire", examens: ["CRP, créatinine, myélogramme si pancytopénie"] }
+    ],
+    red_flags: ["Mauvaise tolérance (angor, défaillance) → transfusion", "Saignement actif", "Pancytopénie (leucémie aiguë, aplasie)", "Anémie hémolytique avec schizocytes (MAT)"],
+    conduite: ["Microcytaire ferriprive chez homme/femme ménopausée = saignement digestif jusqu'à preuve du contraire (endoscopies)."]
+  },
+  {
+    id: "anemie_microcytaire", num: 64, anomalie: "Anémie microcytaire (démarche diagnostique)",
+    specialite: "Hématologie",
+    definition: "Anémie (Hb < 120 g/L chez l'homme, < 110 g/L chez la femme) avec VGM < 80 fL. Le bilan martial est la clé. Trois grands cadres : ferriprive, inflammatoire, β-thalassémie mineure.",
+    premiere_intention: ["Confirmer la microcytose (VGM < 80 fL) sur l'hémogramme", "Ferritine + CRP en première intention (carence martiale vs inflammation)", "Coefficient de saturation de la transferrine (CST) ; récepteurs solubles de la transferrine (RsTf) si inflammation associée", "Électrophorèse de l'hémoglobine si bilan martial normal (thalassémie)"],
+    causes: [
+      { cause: "Anémie ferriprive", signe: "ferritine basse, CST bas, RsTf augmentés ; saignements chroniques (gynéco chez la femme, digestifs chez l'homme/femme ménopausée), carence d'apport (grossesses répétées, nourrissons)", examens: ["Ferritine", "CST", "Endoscopies digestives", "Bilan gynécologique"] },
+      { cause: "Anémie inflammatoire", signe: "ferritine normale ou augmentée, CST bas, VS et CRP augmentées ; maladies de système (LED, PR), néoplasies, infections chroniques", examens: ["CRP, VS", "Ferritine", "RsTf (non modifiés par l'inflammation)"] },
+      { cause: "β-thalassémie mineure", signe: "microcytose marquée contrastant avec une anémie modérée, pseudo-polyglobulie, bilan martial normal, HbA2 > 3,5 %", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Anémie sidéroblastique / saturnisme", signe: "causes plus rares ; intoxication au plomb", examens: ["Plombémie", "Myélogramme (sidéroblastes en couronne)"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique d'une anémie microcytaire",
+        entetes: ["", "Ferriprive", "Inflammatoire", "β-thalassémie mineure"],
+        lignes: [
+          ["Numération", "Hypochrome microcytaire peu régénérative", "Hypochrome microcytaire arégénérative (après phase normochrome normocytaire), ± PNN ↑", "Microcytose, hypochromie ± anémie, pseudo-polyglobulie"],
+          ["Fer sérique", "Diminué", "Diminué", "N"],
+          ["Transferrine / CTFT", "Augmentées", "Diminuées", "N"],
+          ["Coeff. saturation transferrine (CST)", "Diminué", "Diminué", "N"],
+          ["Ferritine", "Diminuée", "Augmentée", "N"],
+          ["Récepteurs solubles transferrine (RsTf)", "Augmentés", "N", "N"],
+          ["VS", "N", "Augmentée", "N"],
+          ["Protéines de l'inflammation (CRP, Fg)", "N", "Augmentées", "N"],
+          ["Électrophorèse de l'hémoglobine", "N", "N", "HbA2 > 3,5 %"]
+        ] }
+    ],
+    red_flags: ["Anémie ferriprive chez l'homme ou la femme ménopausée → saignement digestif jusqu'à preuve du contraire (endoscopies)", "Mauvaise tolérance (angor, dyspnée, tachycardie)"],
+    conduite: ["Toute anémie ferriprive impose la recherche d'un saignement chronique.", "Sels de fer au cours des repas ; crise réticulocytaire à J7-J10 ; poursuivre jusqu'à normalisation de la ferritine (~6 mois).", "Cinétique ferriprive : ferritine / transferrine > fer sérique / RsTf > hypochromie > microcytose > anémie ; la normalisation sous traitement se fait en sens inverse.", "La ferritine peut être normale si carence martiale + inflammation chronique : les RsTf, non influencés par l'inflammation, permettent le diagnostic."]
+  },
+  {
+    id: "anemie_hemolytique", num: 65, anomalie: "Anémie hémolytique (démarche et classification)",
+    specialite: "Hématologie",
+    definition: "Anémie par destruction accrue des hématies, normochrome normocytaire régénérative (réticulocytes élevés). Classification : corpusculaire (souvent constitutionnelle) vs extracorpusculaire (souvent acquise).",
+    premiere_intention: ["Confirmer l'hémolyse : réticulocytes élevés, haptoglobine effondrée, bilirubine non conjuguée et LDH augmentées", "Frottis sanguin (schizocytes → MAT, sphérocytes, drépanocytes…)", "Test de Coombs direct : différencie hémolyse immunologique vs non immunologique", "Apprécier la tolérance et le caractère aigu ou chronique"],
+    causes: [
+      { cause: "Corpusculaire — membrane", signe: "sphérocytose (Minkowski-Chauffard), elliptocytose", examens: ["Frottis", "Ektacytométrie / résistances osmotiques"] },
+      { cause: "Corpusculaire — hémoglobine", signe: "drépanocytose, thalassémies", examens: ["Électrophorèse de l'hémoglobine"] },
+      { cause: "Corpusculaire — enzymatique", signe: "déficit en G6PD, en pyruvate-kinase", examens: ["Dosages enzymatiques érythrocytaires"] },
+      { cause: "Extracorpusculaire — mécanique (MAT)", signe: "SHU, PTT : schizocytes + thrombopénie", examens: ["Frottis (schizocytes)", "Plaquettes", "Avis hématologique urgent"] },
+      { cause: "Extracorpusculaire — infectieux / toxique", signe: "paludisme (retour de zone d'endémie), toxiques", examens: ["Frottis / goutte épaisse", "Contexte d'exposition"] },
+      { cause: "Extracorpusculaire — immunologique", signe: "AHAI : Coombs direct positif", examens: ["Test de Coombs direct"] }
+    ],
+    tableaux: [
+      { titre: "Classification des anémies hémolytiques",
+        entetes: ["Mécanisme", "Corpusculaire (souvent constitutionnelle)", "Extracorpusculaire (souvent acquise)"],
+        lignes: [
+          ["Membrane / mécanique", "Sphérocytose, elliptocytose", "Mécanique : SHU, PTT (MAT)"],
+          ["Hémoglobine / infectieux", "Drépanocytose, thalassémies", "Infectieux : paludisme…"],
+          ["Enzyme / toxique-immuno", "Déficit en G6PD, pyruvate-kinase", "Toxique ; immunologique : AHAI"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë : fièvre, frissons, nausées, malaise, douleurs lombaires/abdominales, état de choc", "Schizocytes + thrombopénie = microangiopathie thrombotique (SHU/PTT) → urgence hématologique", "Paludisme à évoquer au retour de zone d'endémie", "Mauvaise tolérance de l'anémie"],
+    conduite: ["Hémolyse aiguë = signes généraux marqués ; hémolyse chronique = ictère, urines foncées, splénomégalie.", "Coombs direct positif → AHAI ; négatif → orienter vers une cause corpusculaire ou mécanique.", "MAT (schizocytes + thrombopénie) = urgence : avis spécialisé immédiat."]
+  },
+  {
+    id: "ahai", num: 66, anomalie: "Anémie hémolytique auto-immune (AHAI)",
+    specialite: "Hématologie",
+    definition: "Anémie hémolytique liée à des auto-anticorps dirigés contre un antigène de surface de l'hématie ; cause la plus fréquente des anémies hémolytiques extracorpusculaires. Deux types : auto-Ac chauds (50-70 %) et auto-Ac froids.",
+    premiere_intention: ["Confirmer l'hémolyse : anémie normochrome normocytaire régénérative, haptoglobine ↓, bilirubine non conjuguée ↑, LDH ↑", "Test de Coombs direct (test direct à l'antiglobuline) : Ig et/ou complément fixés sur le GR", "Préciser le type : chaud (IgG ± complément, anti-Rh, optimum 37 °C) vs froid (IgM, anti-i, optimum < 22 °C)", "Rechercher systématiquement une cause secondaire"],
+    causes: [
+      { cause: "Auto-Ac chauds — idiopathique", signe: "≈ 50 % des cas, hémolyse souvent chronique", examens: ["Coombs direct (IgG ± complément)"] },
+      { cause: "Auto-Ac chauds — secondaire", signe: "LED (rechercher un lupus, surtout si thrombopénie auto-immune associée = syndrome d'Evans), hémopathie lymphoïde (LNH, LLC, dysglobulinémie), α-méthyldopa", examens: ["Anticorps antinucléaires", "NFS, électrophorèse, imagerie"] },
+      { cause: "Auto-Ac froids — hémoglobinurie a frigore", signe: "auto-anticorps biphasiques (fixation à froid, hémolyse à chaud), rare", examens: ["Test de Donath-Landsteiner"] },
+      { cause: "Auto-Ac froids — secondaire (infections)", signe: "Mycoplasma pneumoniae, EBV (anti-i), CMV, rougeole, oreillons — surtout chez l'enfant", examens: ["Sérologies", "Coombs (complément)"] },
+      { cause: "Maladie des agglutinines froides", signe: "IgM monoclonale (anti-i), crises hémolytiques au froid ; idiopathique ou hémopathie lymphoïde (lymphome lymphoplasmocytaire)", examens: ["Recherche d'agglutinines froides", "Électrophorèse / immunofixation"] }
+    ],
+    tableaux: [
+      { titre: "AHAI à auto-anticorps chauds vs froids",
+        entetes: ["", "Auto-Ac chauds (50-70 %)", "Auto-Ac froids"],
+        lignes: [
+          ["Anticorps", "IgG ± complément (souvent anti-Rh), optimum 37 °C", "IgM (anti-i), optimum < 22 °C"],
+          ["Tableau", "Hémolyse plutôt chronique", "Crises hémolytiques déclenchées par le froid"],
+          ["Étiologies", "Idiopathique (50 %) ; LED, hémopathie lymphoïde, α-méthyldopa…", "HPN a frigore ; infections (Mycoplasma, EBV, CMV…) ; agglutinines froides (hémopathie lymphoïde)"]
+        ] },
+      { titre: "Tests à l'antiglobuline (Coombs)",
+        entetes: ["Test", "Principe"],
+        lignes: [
+          ["Coombs direct (37 °C / 4 °C)", "Met en évidence les Ig et/ou le complément fixés sur les hématies du patient (antiglobulines polyspécifiques, puis monospécifiques si positif)"],
+          ["Test d'élution", "Élue les anticorps fixés sur les hématies du patient et détermine leur spécificité sur des hématies de phénotype connu"],
+          ["Coombs indirect", "Recherche les anticorps libres dans le sérum sur hématies de phénotype connu ; titrage par dilutions successives"]
+        ] }
+    ],
+    red_flags: ["Hémolyse aiguë (fièvre, frissons, état de choc)", "Syndrome d'Evans (AHAI + thrombopénie auto-immune) → rechercher un lupus", "Mauvaise tolérance → transfusion (avec précautions, sang réchauffé si Ac froids)"],
+    conduite: ["Test de Coombs direct = examen clé ; test d'élution et Coombs indirect précisent la spécificité de l'anticorps.", "Toujours rechercher une cause secondaire (LED, hémopathie lymphoïde, infection, médicament).", "Traitements selon le type : corticothérapie, immunoglobulines IV, immunosuppresseurs, anti-CD20 (rituximab), splénectomie ; pour les formes à Ac froids, protection contre le froid."]
+  },
+  {
+    id: "thrombopenie", num: 67, anomalie: "Thrombopénie (plaquettes basses)",
+    specialite: "Hématologie",
+    definition: "Plaquettes < 150 G/L. Éliminer d'abord une FAUSSE thrombopénie (agrégats à l'EDTA, satellitisme, microcaillot). Mécanismes : centrale (défaut de production), périphérique (destruction/consommation), répartition (hypersplénisme) ou hémodilution.",
+    premiere_intention: ["Éliminer une fausse thrombopénie : contrôle sur tube citraté + frottis (agrégats, satellitisme)", "Apprécier le risque hémorragique (purpura, muqueuses) et la profondeur de la thrombopénie", "NFS + frottis : autres lignées, schizocytes (→ MAT), blastes", "Bilan d'hémostase (TP, TCA, fibrinogène, D-dimères) ; myélogramme si origine centrale suspectée"],
+    causes: [
+      { cause: "Fausse thrombopénie", signe: "agrégats (EDTA), satellitisme, microcaillot — plaquettes normales sur citrate", examens: ["Contrôle sur tube citraté", "Frottis sanguin"] },
+      { cause: "Centrale (défaut de production)", signe: "carence B9/B12, alcoolisme aigu, aplasie / envahissement médullaire / myélodysplasie / myélofibrose, iatrogène, constitutionnelle", examens: ["B12/folates", "Myélogramme", "Revue des médicaments"] },
+      { cause: "Périphérique — auto-immune", signe: "PTAI ; LED, SAPL, Sjögren ; hémopathies (LLC, Hodgkin) ; immuno-allergique (héparine → TIH, quinine, sulfamides, rifampicine, pénicilline, digoxine) ; infections virales", examens: ["Coombs plaquettaire", "ACAN", "Sérologies virales", "Recherche TIH si héparine"] },
+      { cause: "Périphérique — consommation (MAT / CIVD)", signe: "PTT, SHU, CIVD : schizocytes, troubles de l'hémostase ; parasitaires (paludisme, toxoplasmose, leishmaniose)", examens: ["Frottis (schizocytes)", "TP/TCA, fibrinogène, D-dimères", "Avis urgent"] },
+      { cause: "Allo-immune", signe: "post-transfusionnelle ; allo-immunisation materno-fœtale", examens: ["Contexte", "Recherche d'allo-anticorps"] },
+      { cause: "Répartition / hémodilution", signe: "hypersplénisme (HTP, hémopathies, infections) ; transfusions / perfusions massives ; hypothermie ; thrombopénie gestationnelle", examens: ["Échographie (rate, foie)", "Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Signes hémorragiques et seuils",
+        entetes: ["Manifestation", "Fréquence / seuil"],
+        lignes: [
+          ["Purpura cutané (pétéchial)", "≈ 80 %"],
+          ["Hémorragie muqueuse", "≈ 40 % (adulte)"],
+          ["Hémorragie rétinienne", "si plaquettes < 20 G/L → fond d'œil"]
+        ] }
+    ],
+    red_flags: ["Thrombopénie profonde < 20 G/L (hémorragie spontanée possible) → fond d'œil, avis urgent", "Schizocytes + thrombopénie = microangiopathie thrombotique (PTT/SHU) → urgence", "Thrombopénie + CIVD / sepsis", "Thrombopénie sous héparine (TIH) → arrêt de l'héparine + avis", "Syndrome hémorragique actif"],
+    conduite: ["Toujours éliminer une fausse thrombopénie avant tout bilan.", "Découverte récente avec schizocytes, CIVD ou syndrome hémorragique = urgence.", "Le PTAI est un diagnostic d'élimination (voir fiche dédiée)."]
+  },
+  {
+    id: "ptai", num: 68, anomalie: "Purpura thrombopénique auto-immun (PTAI / PTI)",
+    specialite: "Hématologie",
+    definition: "Thrombopénie périphérique par auto-anticorps anti-plaquettes. Diagnostic d'ÉLIMINATION. Forme aiguë (surtout l'enfant de 2-6 ans, incidence ≈ 4/100 000/an) ou chronique (surtout l'adulte, prédominance féminine).",
+    premiere_intention: ["Thrombopénie isolée, régénérative (VPM et plaquettes réticulées augmentés, > 20-30 %)", "NFS et frottis normaux par ailleurs (pas de schizocytes, pas de blastes)", "Exclure les autres causes : médicaments, infections, MAT, hémopathie, carence", "Sérologies virales (rubéole, VZV, VIH, EBV), ACAN, bilirubine, transaminases"],
+    causes: [
+      { cause: "PTAI aigu", signe: "surtout l'enfant (2-6 ans), début brutal, plaquettes < 20 G/L, manifestations hémorragiques, parfois précédé d'une infection virale", examens: ["NFS, frottis", "Sérologies virales"] },
+      { cause: "PTAI chronique", signe: "surtout l'adulte, sex-ratio F/H ≈ 3, thrombopénie modérée (50-80 G/L), manifestations modérées, rémissions spontanées rares", examens: ["Suivi NFS", "ACAN"] },
+      { cause: "Formes secondaires à rechercher", signe: "LED / SAPL, hémopathie lymphoïde (LLC), VIH / VHC, médicaments", examens: ["ACAN", "Sérologies VIH/VHC", "Revue médicamenteuse"] }
+    ],
+    tableaux: [
+      { titre: "PTAI aigu vs chronique",
+        entetes: ["", "Aigu", "Chronique"],
+        lignes: [
+          ["Terrain", "Surtout l'enfant (2-6 ans)", "Surtout l'adulte, F/H ≈ 3"],
+          ["Début", "Brutal, parfois post-viral", "Insidieux"],
+          ["Plaquettes", "< 20 G/L", "Modérée (50-80 G/L)"],
+          ["Hémorragie", "Manifestations possibles", "Modérées ou absentes"],
+          ["Évolution", "Guérison fréquente", "Rémissions spontanées rares"]
+        ] }
+    ],
+    red_flags: ["Plaquettes < 20 G/L avec syndrome hémorragique → fond d'œil, avis hématologique urgent", "Hémorragie muqueuse abondante ou signe neurologique (hémorragie intracrânienne, rare mais grave)"],
+    conduite: ["Diagnostic d'élimination : thrombopénie isolée régénérative, autres causes exclues.", "Coombs plaquettaire positif dans ≈ 80 % (auto-Ac anti-GpIIbIIIa, anti-GpIb/IX) ; myélogramme (avant corticoïdes chez l'adulte ou si atypie) = moelle riche en mégacaryocytes.", "Plaquettes réticulées > 20-30 % (caractère périphérique).", "Traitement selon profondeur et risque : abstention/surveillance, corticoïdes, immunoglobulines IV ; 2e ligne : agonistes du TPO, rituximab, splénectomie."]
+  },
+  {
+    id: "mat", num: 69, anomalie: "Microangiopathie thrombotique (MAT) — PTT / SHU",
+    specialite: "Hématologie",
+    definition: "Occlusion de la microcirculation par des thrombi plaquettaires → triade : anémie hémolytique mécanique (schizocytes), thrombopénie périphérique de consommation, ischémie d'organe. PTT (Moschcowitz) = auto-immun (anti-ADAMTS13) → défaut de clivage du facteur von Willebrand et thrombi (rares déficits congénitaux). SHU = infectieux (ECEH O157:H7) avec vérotoxines altérant l'endothélium, surtout rénal. URGENCE diagnostique et thérapeutique.",
+    premiere_intention: ["Affirmer l'hémolyse mécanique : schizocytes au frottis, haptoglobine effondrée, LDH très élevé, bilirubine non conjuguée ↑, réticulocytes ↑, test de Coombs NÉGATIF", "Thrombopénie de consommation (périphérique), souvent < 50 G/L", "Hémostase NORMALE (TP, TCA, fibrinogène) — distingue la MAT de la CIVD", "Évaluer l'atteinte d'organe : créatinine (rein), examen neurologique, troponine ; activité ADAMTS13 (< 10 % → PTT)"],
+    causes: [
+      { cause: "PTT (Moschcowitz)", signe: "déficit sévère en ADAMTS13 (< 10 %) → défaut de clivage du facteur von Willebrand ; auto-immun (anti-ADAMTS13) ou congénital (Upshaw-Schulman) ; signes neurologiques fluctuants (confusion, céphalées, troubles visuels), fièvre, purpura, ecchymoses, ictère à urines foncées", examens: ["Activité ADAMTS13 + anticorps anti-ADAMTS13", "Frottis (schizocytes)"] },
+      { cause: "SHU typique (post-diarrhée)", signe: "surtout l'enfant ; E. coli entérohémorragique O157:H7 (vérotoxines) ; diarrhée ou colite hémorragique précédant l'atteinte rénale (au premier plan), parfois troubles neurologiques", examens: ["Coproculture (gélose sorbitol-MacConkey)", "Recherche de vérotoxines (PCR), sérodiagnostic", "Créatinine, urée"] },
+      { cause: "SHU atypique", signe: "dérégulation de la voie alterne du complément ; insuffisance rénale, formes familiales / récidivantes", examens: ["Exploration du complément (CH50, C3, facteurs H/I)"] },
+      { cause: "MAT secondaires", signe: "grossesse (HELLP, pré-éclampsie), cancer, médicaments, greffe, VIH, HTA maligne", examens: ["Contexte", "Bilan étiologique orienté"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique d'une MAT",
+        entetes: ["Paramètre", "Résultat"],
+        lignes: [
+          ["Anémie", "Hémolytique mécanique, régénérative"],
+          ["Frottis", "Schizocytes (> 1 %)"],
+          ["Haptoglobine", "Effondrée"],
+          ["LDH / bilirubine libre", "Augmentés"],
+          ["Test de Coombs", "Négatif (hémolyse non immune)"],
+          ["Plaquettes", "Thrombopénie (consommation)"],
+          ["TP / TCA / fibrinogène", "Normaux (≠ CIVD)"],
+          ["ADAMTS13", "< 10 % → PTT"]
+        ] },
+      { titre: "PTT vs SHU (orientation)",
+        entetes: ["", "PTT", "SHU"],
+        lignes: [
+          ["Mécanisme", "Déficit en ADAMTS13 (< 10 %)", "Shiga-toxine (typique) / complément (atypique)"],
+          ["Terrain", "Adulte", "Enfant surtout (forme typique)"],
+          ["Atteinte dominante", "Neurologique (fluctuante)", "Rénale (insuffisance rénale aiguë)"],
+          ["Élément clé", "ADAMTS13 effondré", "STEC / Shiga-toxine ; complément si atypique"],
+          ["Traitement", "Échanges plasmatiques en urgence", "Support ; éculizumab si atypique"]
+        ] }
+    ],
+    red_flags: ["MAT = urgence vitale : schizocytes + thrombopénie, Coombs négatif, hémostase normale → avis hématologique et échanges plasmatiques en urgence (PTT)", "NE PAS transfuser de plaquettes dans le PTT (aggrave les thromboses) sauf hémorragie vitale", "Atteinte neurologique (confusion, déficit, convulsion) ou cardiaque", "Insuffisance rénale aiguë"],
+    conduite: ["Toute association schizocytes + thrombopénie impose d'évoquer une MAT et de demander un avis spécialisé immédiat.", "Hémostase normale oriente vers MAT plutôt que CIVD ; ADAMTS13 effondré confirme le PTT.", "PTT : échanges plasmatiques en urgence, corticoïdes, rituximab, caplacizumab. SHU typique : traitement de support. SHU atypique : éculizumab."]
+  },
+  {
+    id: "tih", num: 70, anomalie: "Thrombopénie induite par l'héparine (TIH)",
+    specialite: "Hématologie",
+    definition: "Thrombopénie survenant sous héparine. Type 1 : précoce, bénigne, non immune. Type 2 : immuno-allergique (anticorps anti-PF4-héparine), PARADOXALEMENT thrombogène — urgence diagnostique et thérapeutique.",
+    premiere_intention: ["Surveiller la numération plaquettaire sous héparine (cinétique +++)", "Calculer la chute : type 2 = plaquettes < 100 G/L ou baisse > 40 % au-delà du 5e jour (plus tôt si exposition récente à l'héparine)", "Recherche d'anticorps anti-PF4-héparine (détecte IgG, A, M)", "Tests fonctionnels (activation plaquettaire héparine-dépendante, IgG) ; évaluent la réactivité croisée avec le danaparoïde"],
+    causes: [
+      { cause: "TIH de type 1", signe: "avant le 5e jour, plaquettes > 100 G/L, réversible, asymptomatique, sans anticorps anti-PF4 ; 10-20 % des traitements hépariniques", examens: ["Surveillance plaquettaire (pas d'anticorps)"] },
+      { cause: "TIH de type 2", signe: "après le 5e jour (sauf ré-exposition récente), plaquettes < 100 G/L ou chute > 40 %, thromboses veineuses voire artérielles, rarement hémorragies ; 1-5 % des HNF, 0,1-0,2 % des HBPM", examens: ["Anticorps anti-PF4-héparine", "Tests fonctionnels d'activation plaquettaire"] }
+    ],
+    tableaux: [
+      { titre: "TIH type 1 vs type 2",
+        entetes: ["", "Type 1", "Type 2"],
+        lignes: [
+          ["Mécanisme", "Non immun (effet direct)", "Immuno-allergique (anti-PF4-héparine)"],
+          ["Délai", "< 5e jour", "> 5e jour (plus tôt si ré-exposition)"],
+          ["Plaquettes", "> 100 G/L", "< 100 G/L ou chute > 40 %"],
+          ["Clinique", "Asymptomatique, réversible", "Thromboses veineuses/artérielles, rares hémorragies"],
+          ["Fréquence", "10-20 % des traitements", "1-5 % (HNF), 0,1-0,2 % (HBPM)"]
+        ] }
+    ],
+    red_flags: ["TIH de type 2 = urgence : thrombopénie + thromboses sous héparine → arrêt immédiat de toute héparine", "Ne pas attendre la confirmation biologique si forte suspicion clinique", "Rechercher une thrombose (veineuse ou artérielle) et une CIVD associée"],
+    conduite: ["Dès la suspicion clinique ou biologique : ARRÊT de l'héparinothérapie + contrôle quotidien des plaquettes.", "Anticoagulation de relais par danaparoïde (risque de réactivité croisée mais activité anti-Xa étalonnée contrôlable) ou lépirudine/argatroban (pas de réactivité croisée mais activité non dosable en routine).", "La remontée rapide des plaquettes après arrêt de l'héparine conforte le diagnostic.", "Rechercher une CIVD (PDF/D-dimères, facteur V, complexes solubles).", "Ne jamais ré-introduire d'héparine ; tracer l'allergie."]
+  },
+  {
+    id: "syndrome_mononucleosique", num: 71, anomalie: "Syndrome mononucléosique",
+    specialite: "Hématologie",
+    definition: "Présence dans le sang périphérique de grandes cellules lymphoïdes hyperbasophiles. Formule : lymphocytose > 50 % et lymphocytes activés (hyperbasophiles) > 10 %. Le plus souvent d'origine virale (EBV ++).",
+    premiere_intention: ["Hémogramme + frottis : lymphocytose > 50 %, lymphocytes activés > 10 %", "MNI test (anticorps hétérophiles) en première intention", "Sérologie EBV (cause la plus fréquente)", "Selon le tableau : sérologie CMV, toxoplasmose, VIH (± Ag p24), sérologies hépatites"],
+    causes: [
+      { cause: "Mononucléose infectieuse (EBV)", signe: "cause la plus fréquente ; angine, adénopathies, asthénie, splénomégalie ; rash si prise d'ampicilline/amoxicilline", examens: ["MNI test", "Sérologie EBV (VCA IgM/IgG, EBNA)"] },
+      { cause: "Primo-infection à CMV", signe: "souvent fièvre isolée prolongée ; MNI test négatif", examens: ["Sérologie CMV (IgM)", "PCR CMV"] },
+      { cause: "Primo-infection VIH", signe: "syndrome pseudo-grippal, angine, éruption, adénopathies ; à évoquer systématiquement", examens: ["Sérologie VIH + Ag p24 (test combiné)", "Charge virale si doute"] },
+      { cause: "Toxoplasmose", signe: "adénopathies (cervicales), fébricule, asthénie ; sujet immunocompétent", examens: ["Sérologie toxoplasmose (IgM/IgG)"] },
+      { cause: "Hépatites virales", signe: "présentation avec ictère / cytolyse", examens: ["Sérologies hépatites (A, B, C)"] },
+      { cause: "Cause médicamenteuse", signe: "éruption cutanée (ampicilline), allergie médicamenteuse / DRESS", examens: ["Imputabilité médicamenteuse"] }
+    ],
+    tableaux: [
+      { titre: "Orientation selon la présentation",
+        entetes: ["Présentation", "Évoquer", "Examens"],
+        lignes: [
+          ["Angine", "MNI (EBV), primo-infection VIH", "MNI test, sérologie EBV, sérologie VIH ± Ag p24"],
+          ["Adénopathies", "MNI, toxoplasmose, VIH", "MNI test, sérologies EBV / toxoplasmose / VIH ± Ag p24"],
+          ["Éruption cutanée", "MNI (sous ampicilline), allergie médicamenteuse", "MNI test, sérologie EBV"],
+          ["Fièvre isolée", "CMV", "Sérologie CMV"],
+          ["Ictère", "Hépatite", "Sérologies hépatites"]
+        ] }
+    ],
+    red_flags: ["Toujours évoquer une primo-infection VIH (sérologie combinée + Ag p24) — enjeu individuel et de santé publique", "Rupture de rate (rare) dans la MNI : douleur de l'hypochondre gauche → éviter les sports de contact si splénomégalie", "Complications : thrombopénie / AHAI auto-immune, hépatite sévère, angine très hypertrophique avec gêne respiratoire"],
+    conduite: ["EBV = cause la plus fréquente : MNI test + sérologie EBV en première intention.", "MNI test négatif → élargir : CMV, toxoplasmose, VIH (± Ag p24), hépatites.", "Éviter l'amoxicilline/ampicilline (rash) ; repos, abstention des sports de contact en cas de splénomégalie."]
+  },
+  {
+    id: "llc", num: 72, anomalie: "Leucémie lymphoïde chronique (LLC)",
+    specialite: "Hématologie",
+    definition: "Hémopathie lymphoïde B mature : accumulation de petits lymphocytes B monoclonaux. Souvent asymptomatique, découverte sur une hyperlymphocytose ; sinon adénopathies, complications infectieuses. Incidence 3-10/100 000/an, âge médian 64 ans, sex-ratio H/F ≈ 2.",
+    premiere_intention: ["Hémogramme : lymphocytose > 4 G/L persistante, ± anémie, ± thrombopénie", "Frottis : petits lymphocytes matures monomorphes, ombres de Gumprecht", "Immunophénotypage lymphocytaire (score de Matutes) = examen clé du diagnostic", "Évaluer le retentissement : adénopathies, splénomégalie, infections, cytopénies"],
+    causes: [
+      { cause: "Leucémie lymphoïde chronique", signe: "petits lymphocytes matures, ombres de Gumprecht, score de Matutes 4-5", examens: ["Immunophénotypage (score de Matutes)"] },
+      { cause: "Autre syndrome lymphoprolifératif B", signe: "lymphome en phase leucémique (manteau, folliculaire, splénique…) ; score de Matutes < 4", examens: ["Immunophénotypage, cytogénétique", "Biopsie ganglionnaire si besoin"] },
+      { cause: "Lymphocytose réactionnelle", signe: "infection (virale, coqueluche), transitoire, polyclonale", examens: ["Contexte clinique, contrôle de l'hémogramme"] }
+    ],
+    tableaux: [
+      { titre: "Score de Matutes (immunophénotypage) — LLC si 4-5 (3 dans 5 % des cas)",
+        entetes: ["Antigène", "1 point si", "0 point si"],
+        lignes: [
+          ["CD5", "Positif", "Négatif"],
+          ["CD23", "Positif", "Négatif"],
+          ["CD22 ou CD79b", "Faible expression", "Expression normale"],
+          ["FMC7", "Négatif", "Positif"],
+          ["Ig de surface", "Faible expression", "Normale ou forte"]
+        ] },
+      { titre: "Facteurs de mauvais pronostic",
+        entetes: ["Domaine", "Marqueurs"],
+        lignes: [
+          ["Immunophénotype", "CD38+, ZAP70+"],
+          ["Cytogénétique", "Délétion 17p (TP53), délétion 11q23"],
+          ["Moléculaire", "Chaînes lourdes d'Ig (IgVH) non mutées"],
+          ["Évolutivité", "Temps de doublement lymphocytaire < 1 an, cytologie atypique, score de Matutes faible"],
+          ["Biologie", "LDH et β2-microglobuline élevées"]
+        ] }
+    ],
+    red_flags: ["Cytopénies auto-immunes associées (AHAI, PTAI)", "Complications infectieuses récidivantes (hypogammaglobulinémie)", "Syndrome de Richter : transformation en lymphome agressif (AEG, adénopathie en croissance rapide, LDH ↑)", "Délétion 17p / TP53 muté : forme de mauvais pronostic"],
+    conduite: ["Diagnostic = hyperlymphocytose B clonale + score de Matutes 4-5 (3 dans 5 % des cas).", "Classer (stades de Binet A/B/C) ; nombreuses formes indolentes relevant d'une simple surveillance.", "Bilan pronostique : FISH (17p, 11q), statut mutationnel IgVH, β2-microglobuline.", "Traiter les formes symptomatiques / évolutives ; prévention et traitement des infections."]
+  },
+  {
+    id: "waldenstrom", num: 73, anomalie: "Maladie de Waldenström (macroglobulinémie)",
+    specialite: "Hématologie",
+    definition: "Lymphome lymphoplasmocytaire sécrétant une IgM monoclonale. Manifestations liées à l'infiltration (adénopathies, spléno/hépatomégalie, cytopénies, amaigrissement) et à l'IgM (hyperviscosité, cryoglobulinémie, neuropathie, Raynaud). Incidence ≈ 0,5/100 000/an, adulte après 60 ans, sex-ratio H/F ≈ 2-2,5.",
+    premiere_intention: ["Électrophorèse des protéines sériques : pic monoclonal IgM (souvent κ) + baisse des Ig polyclonales ; immunofixation pour typer", "Hémogramme : anémie normochrome normocytaire arégénérative, thrombopénie (~40 %), ± hyperlymphocytose (~40 %) ; frottis en rouleaux", "VS très augmentée, hyperprotidémie", "Myélogramme : infiltration lymphoplasmocytaire polymorphe > 20 %"],
+    causes: [
+      { cause: "Pic monoclonal IgM", signe: "IgM monoclonale (souvent κ), baisse des Ig polyclonales", examens: ["EPP, immunofixation", "Dosage pondéral des Ig"] },
+      { cause: "Syndrome d'hyperviscosité", signe: "troubles neurologiques et visuels, céphalées, hémorragies muqueuses", examens: ["Fond d'œil", "Viscosité sérique"] },
+      { cause: "Cryoglobulinémie (~15 %)", signe: "syndrome de Raynaud, purpura, acrosyndrome", examens: ["Recherche de cryoglobuline (prélèvement à 37 °C)"] },
+      { cause: "Atteinte rénale / chaînes légères (~50 %)", signe: "protéinurie de Bence Jones", examens: ["Protéinurie de Bence Jones", "Électrophorèse des protéines urinaires"] },
+      { cause: "Infiltration médullaire", signe: "infiltration polymorphe > 20 % (lymphocytes, lymphoplasmocytes, plasmocytes)", examens: ["Myélogramme / BOM", "Phosphatase acide tartrate-résistante (cytochimie)"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques caractéristiques",
+        entetes: ["Examen", "Anomalie"],
+        lignes: [
+          ["Électrophorèse", "Pic monoclonal IgM (souvent κ) + ↓ des Ig polyclonales"],
+          ["VS / protides", "VS ↑↑, hyperprotidémie"],
+          ["Hémogramme", "Anémie normochrome normocytaire arégénérative, thrombopénie (40 %), ± hyperlymphocytose (40 %)"],
+          ["Frottis", "Hématies en rouleaux (rouleau-formation)"],
+          ["Cytochimie", "Phosphatase acide tartrate-résistante"],
+          ["Urines", "Protéinurie de Bence Jones (50 %)"],
+          ["Autres", "Cryoglobuline (15 %)"],
+          ["Myélogramme", "Infiltration lymphoplasmocytaire polymorphe > 20 %"]
+        ] },
+      { titre: "Waldenström vs myélome multiple",
+        entetes: ["", "Waldenström", "Myélome multiple"],
+        lignes: [
+          ["Immunoglobuline", "IgM monoclonale", "IgG ou IgA (ou chaînes légères)"],
+          ["Cellule", "Lymphoplasmocyte", "Plasmocyte"],
+          ["Os", "Pas de lésion lytique typique", "Lésions lytiques, hypercalcémie"],
+          ["Particularité", "Hyperviscosité, cryoglobuline", "Insuffisance rénale, douleurs osseuses"]
+        ] }
+    ],
+    red_flags: ["Syndrome d'hyperviscosité symptomatique (troubles neuro/visuels, hémorragies) → urgence (plasmaphérèse)", "Anémie sévère ou cytopénies profondes", "Neuropathie périphérique, cryoglobulinémie symptomatique"],
+    conduite: ["Diagnostic : IgM monoclonale + infiltration médullaire lymphoplasmocytaire (> 20 %).", "Distinguer du myélome (IgG/IgA, plasmocytes, lésions osseuses) : Waldenström = IgM, lymphoplasmocyte, hyperviscosité.", "Formes asymptomatiques : surveillance ; traiter si symptômes (hyperviscosité, cytopénies, AEG).", "Hyperviscosité symptomatique : plasmaphérèse en urgence, puis traitement spécifique (rituximab ± chimiothérapie, inhibiteurs de BTK)."]
+  },
+  {
+    id: "myelome", num: 74, anomalie: "Myélome multiple (maladie de Kahler)",
+    specialite: "Hématologie",
+    definition: "Prolifération plasmocytaire monoclonale médullaire sécrétant une immunoglobuline (le plus souvent IgG) ou des chaînes légères. Manifestations : douleurs osseuses / fractures spontanées, atteinte rénale, hypercalcémie, anémie, AEG, troubles neuro/visuels. Incidence ≈ 4/100 000/an, âge médian 65-70 ans.",
+    premiere_intention: ["Électrophorèse + immunofixation des protéines sériques : pic monoclonal + baisse des Ig polyclonales", "Dosage des chaînes légères libres sériques ; protéinurie de Bence Jones (chaînes légères urinaires)", "Retentissement : calcémie, créatinine (DFG), NFS (anémie ± thrombopénie), frottis en rouleaux", "Myélogramme : plasmocytose > 10 % (morphologie ± atypique), complété par BOM ; immunophénotypage CD138+ / CD38+ / CD56+ / CD19−"],
+    causes: [
+      { cause: "Atteinte osseuse", signe: "douleurs osseuses, fractures spontanées, lésions lytiques, hypercalcémie", examens: ["TDM faible dose / IRM / TEP corps entier", "Calcémie"] },
+      { cause: "Atteinte rénale", signe: "insuffisance rénale (tubulopathie à chaînes légères, hypercalcémie)", examens: ["Créatinine, DFG", "Protéinurie de Bence Jones"] },
+      { cause: "Atteinte hématologique", signe: "anémie ± thrombopénie (infiltration médullaire) ; frottis en rouleaux ± quelques plasmocytes", examens: ["NFS, frottis", "Myélogramme / BOM"] },
+      { cause: "Composant monoclonal", signe: "gammapathie monoclonale (IgG/IgA), baisse des Ig polyclonales", examens: ["EPP, immunofixation", "Chaînes légères libres sériques"] }
+    ],
+    tableaux: [
+      { titre: "Atteintes d'organe évocatrices (CRAB)",
+        entetes: ["Critère", "Manifestation"],
+        lignes: [
+          ["C — Calcémie", "Hypercalcémie"],
+          ["R — Rein", "Insuffisance rénale (créatinine ↑)"],
+          ["A — Anémie", "Anémie (± thrombopénie)"],
+          ["B — os (Bone)", "Lésions lytiques, douleurs, fractures"]
+        ] },
+      { titre: "Type de composant monoclonal",
+        entetes: ["Isotype", "Fréquence"],
+        lignes: [
+          ["IgG", "60-65 %"],
+          ["IgA", "20 %"],
+          ["Chaînes légères seules (κ ou λ)", "15 %"]
+        ] },
+      { titre: "Facteurs pronostiques",
+        entetes: ["Domaine", "Marqueurs"],
+        lignes: [
+          ["Biologie", "β2-microglobuline, albumine (ISS), LDH, CRP"],
+          ["Cytogénétique", "t(4;14), délétion 17p, délétion 13"],
+          ["Tumeur", "Importance du pic d'Ig et de la protéinurie de Bence Jones, morphologie plasmocytaire, indice cinétique"],
+          ["Classification", "Durie et Salmon ; ISS / R-ISS"]
+        ] }
+    ],
+    red_flags: ["Hypercalcémie symptomatique (confusion, déshydratation) → urgence", "Insuffisance rénale aiguë (tubulopathie à chaînes légères, hypercalcémie)", "Compression médullaire (douleur rachidienne + déficit neurologique) → urgence", "Anémie sévère, infections récidivantes (immunodépression)"],
+    conduite: ["Diagnostic : plasmocytose médullaire monoclonale + composant monoclonal + atteinte d'organe (CRAB).", "Distinguer du MGUS (asymptomatique, pic faible, plasmocytose < 10 %) et de Waldenström (IgM).", "Bilan d'extension osseuse (TDM faible dose / IRM / TEP) ; pronostic par ISS/R-ISS et cytogénétique.", "Prise en charge spécialisée ; traiter l'hypercalcémie et la douleur, prévenir les complications osseuses (biphosphonates) et rénales."]
+  },
+  {
+    id: "tricholeucocytes", num: 75, anomalie: "Leucémie à tricholeucocytes",
+    specialite: "Hématologie",
+    definition: "Syndrome lymphoprolifératif B chronique rare (≈ 2 % des leucémies de l'adulte), à prédominance masculine. Triade : splénomégalie, cytopénies (avec MONOCYTOPÉNIE caractéristique), tricholeucocytes circulants. Mutation BRAF V600E quasi constante.",
+    premiere_intention: ["Hémogramme : pancytopénie — anémie normochrome normocytaire arégénérative, thrombopénie, leuconeutropénie et MONOCYTOPÉNIE (évocatrice)", "Frottis : tricholeucocytes (1-25 %) à contour chevelu", "Immunophénotypage : profil B (CD19/20/22), CD25+, CD103+, CD11c+, CD123+, annexine A1+, Ig de surface fortement exprimée ; CD5−/CD23−/CD10−, score de Matutes 0-1", "Cytochimie : phosphatase acide tartrate-résistante (TRAP) ; BOM (myélofibrose réticulinique, ponction médullaire souvent blanche) ; mutation BRAF V600E"],
+    causes: [
+      { cause: "Leucémie à tricholeucocytes", signe: "monocytopénie, tricholeucocytes chevelus, CD25/CD103/CD11c/CD123/annexine A1+, TRAP+, BRAF V600E", examens: ["Immunophénotypage", "BOM, TRAP", "Recherche BRAF V600E"] },
+      { cause: "Lymphome splénique de la zone marginale", signe: "splénomégalie, lymphocytes villeux ; CD103−, annexine A1−", examens: ["Immunophénotypage", "BOM"] },
+      { cause: "LLC / autre syndrome lymphoprolifératif B", signe: "CD5+, score de Matutes 4-5 (LLC)", examens: ["Immunophénotypage (score de Matutes)"] }
+    ],
+    tableaux: [
+      { titre: "Morphologie du tricholeucocyte (frottis)",
+        entetes: ["Caractère", "Description"],
+        lignes: [
+          ["Taille / proportion", "12-25 µm ; 1-25 % des éléments"],
+          ["Rapport nucléo-cytoplasmique", "0,5-0,7"],
+          ["Noyau", "Arrondi, ovalaire, encoché ou réniforme ; sans nucléole ; chromatine fine"],
+          ["Cytoplasme", "Faiblement basophile, contour irrégulier à prolongements (aspect chevelu)"],
+          ["Granulations", "Généralement absentes"]
+        ] },
+      { titre: "Immunophénotype",
+        entetes: ["Positifs", "Négatifs"],
+        lignes: [
+          ["CD19, CD20, CD22, HLA-DR", "CD5"],
+          ["CD25, CD103, CD11c, CD123", "CD23"],
+          ["Annexine A1 ; Ig de surface fortement exprimée", "CD10"]
+        ] }
+    ],
+    red_flags: ["Neutropénie et monocytopénie → infections (parfois atypiques / mycobactéries) : vigilance en cas de fièvre", "Cytopénies profondes (anémie, thrombopénie) symptomatiques", "Splénomégalie volumineuse"],
+    conduite: ["Évoquer devant splénomégalie + pancytopénie avec MONOCYTOPÉNIE et tricholeucocytes circulants.", "Confirmer : immunophénotype (CD103/CD25/CD11c/annexine A1), TRAP, BOM (myélofibrose, moelle souvent inaspirable), mutation BRAF V600E.", "Distinguer du lymphome splénique de la zone marginale (CD103−, annexine A1−).", "Prise en charge spécialisée : analogues des purines (cladribine, pentostatine) ; abstention si asymptomatique."]
+  },
+  {
+    id: "lmc", num: 76, anomalie: "Leucémie myéloïde chronique (LMC)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique lié à la fusion BCR-ABL (chromosome Philadelphie, t(9;22)). Splénomégalie + hyperleucocytose avec myélémie. Évolution possible en 3 phases (chronique → accélérée → transformation aiguë). Incidence 1-2/100 000/an, âge médian 30-50 ans, sex-ratio H/F ≈ 1,1-1,2.",
+    premiere_intention: ["Hémogramme : hyperleucocytose franche, MYÉLÉMIE marquée (toutes les formes granuleuses), basophilie ± éosinophilie, ± thrombocytose", "Myélogramme : moelle très riche, prédominance granuleuse SANS blocage de maturation, mégacaryocytes nombreux et petits", "Caryotype : chromosome Philadelphie t(9;22) ; biologie moléculaire BCR-ABL (RT-PCR)", "Biochimie : hyperuricémie, LDH ↑, vitamine B12 ↑"],
+    causes: [
+      { cause: "Leucémie myéloïde chronique", signe: "myélémie + basophilie, splénomégalie, BCR-ABL / Ph1 positif", examens: ["Caryotype (Ph1)", "BCR-ABL (RT-PCR)"] },
+      { cause: "Réaction leucémoïde", signe: "infection/inflammation, pas de basophilie, BCR-ABL négatif", examens: ["CRP, contexte", "BCR-ABL négatif"] },
+      { cause: "Autres SMP (Ph1 négatifs)", signe: "polyglobulie de Vaquez, thrombocytémie essentielle, myélofibrose primitive", examens: ["JAK2 V617F, CALR, MPL", "BOM"] }
+    ],
+    tableaux: [
+      { titre: "Hémogramme évocateur",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Leucocytes", "Hyperleucocytose franche"],
+          ["Myélémie", "+++ (myélocytes, métamyélocytes, PNN…)"],
+          ["Basophiles / éosinophiles", "Basophilie ± éosinophilie"],
+          ["Plaquettes", "± thrombocytose"],
+          ["Biochimie", "Hyperuricémie, LDH ↑, vitamine B12 ↑"]
+        ] },
+      { titre: "Phases évolutives",
+        entetes: ["Phase", "Caractéristiques"],
+        lignes: [
+          ["Chronique", "Forme habituelle au diagnostic, bonne réponse au traitement"],
+          ["Accélérée", "Blastes 10-19 %, basophilie ≥ 20 %, cytopénies/thrombocytose réfractaires"],
+          ["Transformation aiguë (blastique)", "Blastes ≥ 20 % : leucémie aiguë (myéloïde ou lymphoïde)"]
+        ] }
+    ],
+    red_flags: ["Hyperleucocytose majeure avec leucostase (troubles neuro/visuels, priapisme, détresse respiratoire) → urgence", "Phase accélérée / transformation blastique (blastes en augmentation, basophilie, cytopénies)", "Syndrome de lyse (hyperuricémie) en début de traitement"],
+    conduite: ["Diagnostic = SMP avec myélémie + chromosome Philadelphie / BCR-ABL.", "Confirmer par caryotype (Ph1) et RT-PCR BCR-ABL (référence pour le suivi de la réponse moléculaire).", "Traitement par inhibiteurs de tyrosine kinase (imatinib et suivants) — pronostic transformé.", "Surveiller la réponse moléculaire ; rechercher un passage en phase accélérée/blastique."]
+  },
+  {
+    id: "vaquez", num: 77, anomalie: "Polyglobulie de Vaquez (maladie de Vaquez)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique JAK2+ avec production excessive de globules rouges (± leucocytes / plaquettes). Risque thrombo-hémorragique. Incidence 3-5/100 000/an, âge médian ~60 ans, plus fréquente chez l'homme.",
+    premiere_intention: ["Confirmer la polyglobulie vraie : Hte/Hb élevés (H : Hte > 54 %, Hb > 18 g/dL ; F : Hte > 47 %, Hb > 17 g/dL) ± hyperleucocytose ± thrombocytose", "Mutation JAK2 (V617F) — critère majeur", "EPO sérique (typiquement basse/normale) pour éliminer une polyglobulie secondaire", "Selon les cas : volume globulaire isotopique, BOM (hyperplasie, mégacaryocytes), pousse spontanée des progéniteurs érythroïdes"],
+    causes: [
+      { cause: "Polyglobulie de Vaquez (primitive)", signe: "JAK2+, EPO basse, splénomégalie, prurit aquagénique, érythrose cutanéo-muqueuse", examens: ["JAK2 V617F", "EPO sérique (basse)"] },
+      { cause: "Polyglobulie secondaire", signe: "hypoxie chronique (BPCO, SAOS, altitude, tabac) ou tumeur sécrétant l'EPO (rein…), EPO élevée", examens: ["EPO sérique (élevée)", "Gaz du sang / SaO2, imagerie rénale"] },
+      { cause: "Fausse polyglobulie (hémoconcentration)", signe: "déshydratation, syndrome de Gaisböck ; volume globulaire normal", examens: ["Volume globulaire isotopique", "Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Seuils hématologiques (polyglobulie)",
+        entetes: ["", "Homme", "Femme"],
+        lignes: [
+          ["Hématocrite", "> 54 %", "> 47 %"],
+          ["Hémoglobine", "> 18 g/dL", "> 17 g/dL"],
+          ["Globules rouges", "> 6 T/L", "> 5,5 T/L"],
+          ["Volume globulaire total", "> 36 mL/kg", "> 32 mL/kg"]
+        ] },
+      { titre: "Arguments biologiques en faveur de Vaquez",
+        entetes: ["Examen", "Résultat"],
+        lignes: [
+          ["JAK2", "Mutation V617F (critère majeur)"],
+          ["EPO sérique", "Basse ou normale"],
+          ["Progéniteurs érythroïdes", "Pousse spontanée in vitro"],
+          ["VS", "Diminuée"],
+          ["Autres", "LDH ↑, uricémie ↑, TS ↑, PAL leucocytaires > 100"],
+          ["SaO2", "> 92 % (pas d'hypoxie)"],
+          ["Moelle (BOM)", "Hyperplasie, excès de mégacaryocytes ; myélofibrose tardive"]
+        ] }
+    ],
+    red_flags: ["Complications thrombotiques (AVC, IDM, thrombose veineuse, Budd-Chiari) ou hémorragiques", "Hématocrite très élevé → hyperviscosité (céphalées, troubles visuels, vertiges)", "Transformation : myélofibrose secondaire, leucémie aiguë"],
+    conduite: ["Affirmer la polyglobulie vraie (volume globulaire) puis primitive (JAK2+, EPO basse) vs secondaire (EPO élevée, hypoxie).", "Objectif : hématocrite < 45 % (saignées) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Contrôler les facteurs de risque vasculaire ; surveiller la transformation.", "Le prurit aquagénique et l'érythrose sont évocateurs."]
+  },
+  {
+    id: "thrombocytemie_essentielle", num: 78, anomalie: "Thrombocytémie essentielle",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique avec thrombocytose persistante d'origine clonale (souvent JAK2+, parfois CALR/MPL). Souvent asymptomatique ; risque thrombotique (artériel ++) et hémorragique, ± splénomégalie. Incidence 1-2,5/100 000/an, âge médian ~50-60 ans, sex-ratio H/F ≈ 1.",
+    premiere_intention: ["Confirmer une thrombocytose persistante : plaquettes > 600 G/L vérifiées à 2 reprises à ≥ 2 mois d'intervalle", "Éliminer une thrombocytose réactionnelle (cause la plus fréquente)", "Biologie moléculaire : JAK2 V617F (puis CALR, MPL) ; étude de la clonalité", "BOM : mégacaryocytes nombreux, de grande taille, hypersegmentés (« ramure de cerf »), sans fibrose"],
+    causes: [
+      { cause: "Thrombocytémie essentielle (clonale)", signe: "JAK2+ (ou CALR/MPL), thrombocytose persistante, mégacaryocytes en ramure de cerf", examens: ["JAK2 V617F / CALR / MPL", "BOM", "Clonalité, PRV-1, pousse spontanée des progéniteurs, TPO"] },
+      { cause: "Thrombocytose réactionnelle", signe: "carence martiale, inflammation/infection, cancer, post-splénectomie, rebond après thrombopénie, stress", examens: ["Ferritine, CRP", "Contexte clinique"] },
+      { cause: "Autre syndrome myéloprolifératif", signe: "polyglobulie de Vaquez (Hte élevé), LMC (Ph1+), myélofibrose", examens: ["Hémogramme, JAK2 / BCR-ABL", "BOM"] }
+    ],
+    tableaux: [
+      { titre: "Critères diagnostiques",
+        entetes: ["Type", "Critère"],
+        lignes: [
+          ["Base", "Plaquettes > 600 G/L > 2 mois + mutation JAK2"],
+          ["Complémentaire", "Pas de cause de thrombocytose réactionnelle"],
+          ["Complémentaire", "Hématocrite < 51 % (homme) ou < 47 % (femme)"],
+          ["Complémentaire", "Bilan martial normal"],
+          ["Complémentaire", "BOM : absence de fibrose"],
+          ["Complémentaire", "Absence de Ph1 / réarrangement BCR-ABL"],
+          ["Complémentaire", "Pas de signe cytogénétique ou morphologique de SMD"]
+        ] },
+      { titre: "Causes de thrombocytose réactionnelle",
+        entetes: ["Catégorie", "Exemples"],
+        lignes: [
+          ["Carence", "Carence en fer"],
+          ["Inflammation / infection", "Pathologies inflammatoires et infectieuses"],
+          ["Néoplasie", "État cancéreux sous-jacent"],
+          ["Hématologique", "Rebond après thrombopénie ; suite immédiate de splénectomie"],
+          ["Divers", "Stress"]
+        ] }
+    ],
+    red_flags: ["Accidents thrombotiques (artériels ++ : AVC, IDM, ischémie) ou hémorragiques", "Thrombocytose extrême → risque hémorragique paradoxal (maladie de Willebrand acquise)", "Transformation : myélofibrose, leucémie aiguë"],
+    conduite: ["Affirmer une thrombocytose clonale persistante et éliminer une cause réactionnelle (ferritine, CRP, contexte).", "Pseudo-hyperkaliémie possible (libération plaquettaire) — recontrôler la kaliémie sur plasma.", "Évaluer le risque thrombotique (âge, ATCD, JAK2) ; aspirine à faible dose ; cytoréduction (hydroxyurée) selon le risque.", "Surveiller la transformation (myélofibrose, LAM)."]
+  },
+  {
+    id: "myelofibrose", num: 79, anomalie: "Splénomégalie myéloïde chronique (myélofibrose primitive)",
+    specialite: "Hématologie",
+    definition: "Syndrome myéloprolifératif chronique (JAK2+, Ph1 négatif) avec fibrose médullaire progressive et hématopoïèse extra-médullaire (splénomégalie). Tableau d'érythromyélémie avec dacryocytes. Incidence 0,5-1,5/100 000/an, âge médian 67 ans, sex-ratio H/F ≈ 1.",
+    premiere_intention: ["Hémogramme : anémie normochrome normocytaire ; érythromyélémie (myélémie + érythroblastes + blastes) ; plaquettes variables (N, ↑ ou ↓)", "Frottis : dacryocytes (hématies en larme), anisopoïkilocytose, érythroblastes (5-20 %), macroplaquettes, noyaux de mégacaryocytes circulants, anneaux de Cabot", "BOM (indispensable) : fibrose médullaire ; moelle souvent inaspirable", "Biologie moléculaire : JAK2 V617F (ou CALR/MPL) ; chromosome Ph1 NÉGATIF"],
+    causes: [
+      { cause: "Myélofibrose primitive", signe: "dacryocytes + érythromyélémie, splénomégalie, JAK2+ / Ph1−, fibrose à la BOM", examens: ["BOM", "JAK2 / CALR / MPL"] },
+      { cause: "Myélofibrose secondaire", signe: "évolution d'une autre SMP (Vaquez, thrombocytémie essentielle), envahissement néoplasique, toxique", examens: ["Antériorité hématologique", "BOM"] },
+      { cause: "Autre splénomégalie / érythromyélémie", signe: "envahissement médullaire (métastases, lymphome), infections graves", examens: ["BOM", "Imagerie, contexte"] }
+    ],
+    tableaux: [
+      { titre: "Frottis sanguin évocateur",
+        entetes: ["Élément", "Anomalie"],
+        lignes: [
+          ["Hématies", "Anisopoïkilocytose, dacryocytes (en larme), anneaux de Cabot"],
+          ["Érythroblastes", "5-20 % (érythromyélémie)"],
+          ["Lignée granuleuse", "Myélémie, polynucléose, quelques blastes"],
+          ["Plaquettes", "Macroplaquettes, noyaux de mégacaryocytes circulants"]
+        ] },
+      { titre: "Stades histologiques (BOM)",
+        entetes: ["Stade", "Histologie"],
+        lignes: [
+          ["I", "Forme hyperplasique, réticuline augmentée"],
+          ["II", "Fibrose collagène mutilante"],
+          ["III", "Ostéomyélosclérose"]
+        ] }
+    ],
+    red_flags: ["Cytopénies sévères (anémie transfusion-dépendante, thrombopénie, neutropénie → infections/saignements)", "Splénomégalie volumineuse compliquée (infarctus splénique, hypertension portale)", "Transformation en leucémie aiguë", "Altération de l'état général marquée (fièvre, sueurs, amaigrissement)"],
+    conduite: ["Évoquer devant splénomégalie + érythromyélémie avec dacryocytes ; confirmer par BOM (fibrose) et biologie moléculaire (JAK2+, Ph1−).", "Distinguer myélofibrose primitive vs secondaire (évolution d'une Vaquez/TE) et des autres envahissements médullaires.", "Évaluer le pronostic (scores type IPSS/DIPSS) ; prise en charge spécialisée.", "Traitements : soutien (transfusions), inhibiteurs de JAK (ruxolitinib), allogreffe dans les formes à haut risque."]
+  },
+  {
+    id: "lal", num: 80, anomalie: "Leucémie aiguë lymphoïde (LAL)",
+    specialite: "Hématologie",
+    definition: "Prolifération clonale de précurseurs lymphoïdes (lymphoblastes) envahissant la moelle. URGENCE diagnostique. Deux pics : enfant (2-10 ans, 75 %) et adulte > 50 ans. Incidence 1,5/100 000/an, sex-ratio H/F ≈ 1,3.",
+    premiere_intention: ["Hémogramme : pancytopénie (anémie normochrome normocytaire arégénérative, neutropénie, thrombopénie) ; blastose circulante très variable (0 → 100 G/L)", "Myélogramme (urgent) : moelle riche, blastose médullaire > 90 % (parfois moelle hypocellulaire/fibreuse ~10 %)", "Immunophénotypage : LAL B (85 %, ≥ 2 marqueurs parmi CD19, CD22, cCD79a) ou LAL T (cCD3+)", "Cytogénétique / biologie moléculaire : Ph1 (t(9;22)), t(4;11)(11q23)… ; ponction lombaire (atteinte méningée)"],
+    causes: [
+      { cause: "LAL B (85 %)", signe: "≥ 2 marqueurs parmi CD19, CD22, cCD79a ; stades EGIL B-I à B-IV (B commune CD10+ = 60 %)", examens: ["Immunophénotypage", "Cytogénétique (Ph1, t(4;11))"] },
+      { cause: "LAL T (cCD3+)", signe: "expression du cCD3 ; stades T-I à T-IV ; souvent masse médiastinale, hyperleucocytose", examens: ["Immunophénotypage", "Imagerie thoracique"] },
+      { cause: "Diagnostic différentiel", signe: "LAM (myéloperoxydase+, corps d'Auer), syndrome mononucléosique, aplasie médullaire", examens: ["Cytochimie (MPO)", "Immunophénotypage"] }
+    ],
+    tableaux: [
+      { titre: "LAL B — classification EGIL",
+        entetes: ["Stade", "CD10", "Cµ", "sIg"],
+        lignes: [
+          ["B-I (pro-B)", "−", "−", "−"],
+          ["B-II (B commune, 60 %)", "+", "−", "−"],
+          ["B-III (pré-B)", "±", "+", "−"],
+          ["B-IV (B mature)", "±", "±", "+"]
+        ] },
+      { titre: "LAL T (cCD3+) — classification EGIL",
+        entetes: ["Stade", "CD7", "CD2/CD5/CD8", "CD1a", "sCD3"],
+        lignes: [
+          ["T-I (pro-T)", "+", "−", "−", "−"],
+          ["T-II (pré-T)", "+", "≥ 1 positif", "−", "−"],
+          ["T-III (thymocytes communs)", "±", "≥ 1 (CD4+ et CD8+)", "+", "±"],
+          ["T-IV (T mature)", "±", "≥ 1 (CD4+ ou CD8+)", "−", "+"]
+        ] },
+      { titre: "Syndrome de lyse tumorale (surtout Burkitt)",
+        entetes: ["Paramètre", "Variation"],
+        lignes: [
+          ["Potassium", "↑"],
+          ["Phosphate", "↑"],
+          ["Uricémie", "↑"],
+          ["Calcium", "↓"],
+          ["Créatininémie", "↑ (insuffisance rénale)"]
+        ] }
+    ],
+    red_flags: ["Urgence : pancytopénie fébrile (neutropénie → sepsis), syndrome hémorragique (thrombopénie / CIVD)", "Syndrome de lyse tumorale (surtout Burkitt) : K ↑, phosphate ↑, uricémie ↑, Ca ↓, IRA", "Hyperleucocytose majeure (leucostase) ; atteinte neuroméningée", "Masse médiastinale (LAL T) → compression"],
+    conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "Prévenir/traiter le syndrome de lyse (hyperhydratation, hypo-uricémiants) dans les formes prolifératives (Burkitt).", "Bilan : immunophénotype, cytogénétique (Ph1 → inhibiteur de tyrosine kinase), ponction lombaire (atteinte méningée).", "Prise en charge spécialisée (chimiothérapie, ± TKI si Ph1+, allogreffe selon le risque)."]
+  },
+  {
+    id: "lam", num: 81, anomalie: "Leucémie aiguë myéloïde (LAM)",
+    specialite: "Hématologie",
+    definition: "Prolifération clonale de blastes myéloïdes envahissant la moelle (blastose ≥ 20 %). URGENCE diagnostique. Incidence ≈ 3/100 000/an, âge médian ~60 ans.",
+    premiere_intention: ["Hémogramme : pancytopénie (anémie normochrome normocytaire arégénérative, neutropénie, thrombopénie) ; blastose circulante variable (0 → 100 G/L) ± monocytose / basophilie / éosinophilie", "Myélogramme (urgent) : moelle riche, blastose médullaire 20-100 %", "Cytochimie : myéloperoxydase (MPO+), estérases non spécifiques (composante monocytaire) ; immunophénotypage, cytogénétique / biologie moléculaire", "Rechercher une CIVD (surtout LAM 3) ; ponction lombaire si atteinte méningée"],
+    causes: [
+      { cause: "Leucémie aiguë myéloïde", signe: "blastes myéloïdes MPO+, corps d'Auer, blastose médullaire ≥ 20 %", examens: ["Myélogramme, MPO", "Immunophénotypage, cytogénétique"] },
+      { cause: "LAM 3 (promyélocytaire)", signe: "promyélocytes hypergranuleux, fagots de corps d'Auer, CIVD ; t(15;17) → urgence (ATRA)", examens: ["Recherche de CIVD", "t(15;17) / PML-RARA"] },
+      { cause: "Diagnostic différentiel", signe: "LAL (MPO−), syndrome myélodysplasique, réaction leucémoïde", examens: ["Cytochimie, immunophénotype"] }
+    ],
+    tableaux: [
+      { titre: "Classification FAB",
+        entetes: ["Type", "Description (fréquence)"],
+        lignes: [
+          ["LAM 0", "Sans différenciation (2 %)"],
+          ["LAM 1", "Peu différenciée (20 %)"],
+          ["LAM 2", "Avec différenciation (30 %) : corps d'Auer"],
+          ["LAM 3", "Promyélocytaire (10 %) : hypergranuleux, fagots de corps d'Auer → CIVD"],
+          ["LAM 3 variant", "Hyperleucocytaire, hypogranuleux, noyau bilobé"],
+          ["LAM 4", "Myélo-monocytaire (15 %) : monocytose sang > 5 G/L, moelle > 20 %"],
+          ["LAM 5", "Monoblastique (15 %) : monocytose médullaire > 15 %"],
+          ["LAM 6", "Érythroleucémie (5 %) : > 50 % d'érythroblastes"],
+          ["LAM 7", "Mégacaryocytaire (2 %)"]
+        ] },
+      { titre: "Cytochimie / orientation",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["Myéloperoxydase (MPO)", "Lignée granuleuse (LAM) ; négatif dans la LAL"],
+          ["Estérases non spécifiques", "Composante monocytaire (LAM 4 / 5)"],
+          ["Corps d'Auer", "Spécifiques de la lignée myéloïde"]
+        ] }
+    ],
+    red_flags: ["Urgence : neutropénie fébrile (sepsis), syndrome hémorragique / CIVD (surtout LAM 3)", "LAM 3 promyélocytaire = urgence (CIVD) → ATRA sans attendre", "Hyperleucocytose majeure → leucostase (détresse respiratoire, troubles neurologiques)", "Syndrome de lyse tumorale", "Hypertrophie gingivale / leucémides (formes monocytaires)"],
+    conduite: ["Suspicion de leucémie aiguë = urgence : avis hématologique immédiat et myélogramme.", "MPO+ et corps d'Auer orientent vers la LAM (vs LAL, MPO−).", "LAM 3 (t(15;17), PML-RARA) : rechercher et traiter la CIVD, débuter l'ATRA sans délai.", "Bilan : immunophénotype, cytogénétique / biologie moléculaire (pronostic) ; prévenir le syndrome de lyse ; prise en charge spécialisée."]
+  },
+  {
+    id: "smd", num: 82, anomalie: "Syndromes myélodysplasiques (SMD)",
+    specialite: "Hématologie",
+    definition: "Hémopathies clonales de la cellule souche : hématopoïèse inefficace → cytopénie(s) réfractaire(s) + dysplasie médullaire, avec blastose < 20 % (≥ 20 % = LAM). Risque de transformation en LAM. Touche surtout le sujet âgé.",
+    premiere_intention: ["Hémogramme : cytopénie(s) réfractaire(s) (anémie souvent macrocytaire arégénérative ± neutropénie ± thrombopénie)", "Frottis : signes de dysplasie ; compter les blastes ; éliminer carences (B12/folates), alcool, médicaments, causes réactionnelles", "Myélogramme : dysplasie ≥ 1 lignée, % de blastes, sidéroblastes en couronne (coloration de Perls), recherche de corps d'Auer", "Caryotype médullaire (ex. délétion 5q) ; classer (OMS) et stratifier le pronostic (IPSS-R)"],
+    causes: [
+      { cause: "SMD (clonal)", signe: "cytopénie réfractaire + dysplasie, blastes < 20 %, anomalie cytogénétique (5q−…)", examens: ["Myélogramme + coloration de Perls", "Caryotype médullaire"] },
+      { cause: "Cytopénie réactionnelle / carentielle", signe: "carence B12/folates, alcool, médicaments, infection, toxique", examens: ["B12, folates", "Bilan d'élimination"] },
+      { cause: "Excès de blastes ≥ 20 %", signe: "leucémie aiguë myéloïde (au-delà du cadre SMD)", examens: ["Myélogramme", "Immunophénotypage"] }
+    ],
+    tableaux: [
+      { titre: "Classification OMS des SMD",
+        entetes: ["Classification OMS", "Sang", "Moelle"],
+        lignes: [
+          ["Anémie réfractaire (AR)", "Blastes absents ou < 1 % ; anémie", "Blastes < 5 % ; dysérythropoïèse (< 15 % de sidéroblastes en couronne)"],
+          ["AR avec sidéroblastes en couronne (ARSI)", "Blastes absents ; anémie", "Blastes < 5 % ; dysérythropoïèse pure, > 15 % de sidéroblastes en couronne"],
+          ["Cytopénie réfractaire avec dysplasie multilignée (CRDM)", "Blastes absents ou < 1 % ; pas de corps d'Auer ; monocytes < 1 G/L ; bi- ou pancytopénie", "Blastes < 5 % ; dysplasie > 10 % des cellules d'au moins 2 lignées ; < 15 % de sidéroblastes en couronne"],
+          ["CRDM avec sidéroblastes en couronne (CRDM-SC)", "Blastes absents ou < 1 % ; pas de corps d'Auer ; monocytes < 1 G/L ; bi- ou pancytopénie", "Blastes < 5 % ; dysplasie > 10 % des cellules d'au moins 2 lignées ; ≥ 15 % de sidéroblastes en couronne"],
+          ["AR avec excès de blastes type 1 (AREB-1)", "Blastes < 5 % ; pas de corps d'Auer ; monocytes < 1 G/L ; cytopénies", "Blastes 5-10 % ; pas de corps d'Auer ; dysplasie d'une ou plusieurs lignées"],
+          ["AR avec excès de blastes type 2 (AREB-2)", "Blastes 5-19 % ; corps d'Auer possible ; monocytes < 1 G/L ; cytopénies", "Blastes 10-19 % ; corps d'Auer possible ; dysplasie d'une ou plusieurs lignées"],
+          ["SMD inclassable (SMD-U)", "Blastes absents ou < 1 % ; cytopénies", "Blastes < 5 % ; pas de corps d'Auer ; dysplasie sur une seule lignée (granulocytaire ou mégacaryocytaire)"],
+          ["SMD avec délétion 5q− isolée", "Blastes absents ou < 1 % ; anémie ; plaquettes N ou ↑", "Blastes < 5 % ; pas de corps d'Auer ; mégacaryocytes N ou ↑ (noyau non lobé) ; del 5(q21;q32)"]
+        ] }
+    ],
+    red_flags: ["Excès de blastes (AREB-2, blastes 10-19 %) : risque élevé de transformation en LAM", "Présence de corps d'Auer (forme à excès de blastes)", "Cytopénies profondes : neutropénie fébrile, syndrome hémorragique, anémie mal tolérée", "Caryotype défavorable (IPSS-R élevé)"],
+    conduite: ["Diagnostic d'élimination : exclure carences (B12/folates), alcool, médicaments, causes réactionnelles avant de retenir un SMD.", "Myélogramme avec coloration de Perls (sidéroblastes en couronne) et caryotype = indispensables.", "Classer (OMS) et stratifier le risque (IPSS-R) : conditionne la prise en charge.", "Bas risque : soutien (transfusions, EPO, chélation du fer) ; haut risque : agents hypométhylants, allogreffe ; le 5q− isolé répond au lénalidomide."]
+  },
+  {
+    id: "lmmc", num: 83, anomalie: "Leucémie myélomonocytaire chronique (LMMC)",
+    specialite: "Hématologie",
+    definition: "Hémopathie clonale à la frontière SMD / SMP, définie par une monocytose sanguine persistante (> 1 G/L > 3 mois) avec dysplasie, sans chromosome Philadelphie et blastose < 20 %. Touche surtout le sujet âgé, prédominance masculine.",
+    premiere_intention: ["Hémogramme : MONOCYTOSE > 1 G/L persistante (> 3 mois) ; forme dysplasique (pancytopénie) ou proliférative (hyperleucocytose)", "Frottis : anomalies morphologiques des monocytes (formes proliférantes), blastose sanguine souvent présente (parfois faible)", "Myélogramme : moelle hypercellulaire avec dysmyélopoïèse (dysgranulopoïèse, dysérythropoïèse, dysmégacaryocytopoïèse) ; blastose < 20 %", "Caryotype + biologie moléculaire ; éliminer Ph1 / BCR-ABL et les autres causes de monocytose"],
+    causes: [
+      { cause: "LMMC (clonale)", signe: "monocytose > 1 G/L > 3 mois + dysplasie / anomalie clonale ; Ph1 négatif ; blastes < 20 %", examens: ["Myélogramme, caryotype", "Biologie moléculaire"] },
+      { cause: "Monocytose réactionnelle", signe: "infections (tuberculose, endocardite…), inflammation, cancers, sortie d'aplasie", examens: ["Bilan infectieux / inflammatoire", "Contexte clinique"] },
+      { cause: "Autre hémopathie", signe: "LMC (Ph1+), LAM monocytaire (blastes ≥ 20 %), autre SMD/SMP", examens: ["BCR-ABL", "Myélogramme (blastes)"] }
+    ],
+    tableaux: [
+      { titre: "Critères OMS (LMMC)",
+        entetes: ["Critère", "Seuil / condition"],
+        lignes: [
+          ["Monocytose sanguine", "> 1 G/L pendant > 3 mois"],
+          ["Chromosome Ph1 / BCR-ABL", "Absent"],
+          ["Blastose médullaire", "< 20 % (myéloblastes + monoblastes + promonocytes)"],
+          ["Dysplasie", "≥ 1 lignée ; si absente : anomalie cytogénétique clonale, monocytose réellement > 3 mois, autres causes exclues"]
+        ] },
+      { titre: "Formes hématologiques",
+        entetes: ["Forme", "Hémogramme"],
+        lignes: [
+          ["Dysplasique / pancytopénique (~50 %)", "Neutropénie, anémie macrocytaire, thrombopénie, monocytose"],
+          ["Proliférative", "Hyperleucocytose, monocytose, anémie, thrombopénie"]
+        ] }
+    ],
+    red_flags: ["Excès de blastes / évolution vers une LAM", "Cytopénies profondes (infections, hémorragies, anémie mal tolérée)", "Forme proliférative avec hyperleucocytose, splénomégalie volumineuse", "Localisations extra-hématologiques (cutanées, séreuses)"],
+    conduite: ["Affirmer une monocytose clonale persistante (> 1 G/L, > 3 mois) et éliminer une monocytose réactionnelle et la LMC (Ph1−).", "Myélogramme + caryotype indispensables ; apprécier dysplasie et blastose.", "Stratifier le risque (scores spécifiques LMMC) ; prise en charge spécialisée.", "Traitements : soutien, hydroxyurée (formes prolifératives), agents hypométhylants, allogreffe selon le risque."]
+  },
+  {
+    id: "willebrand", num: 84, anomalie: "Maladie de Willebrand",
+    specialite: "Hémostase",
+    definition: "Maladie hémorragique constitutionnelle la plus fréquente (~1 % de la population, surtout formes frustes). Déficit quantitatif (types 1 et 3) ou qualitatif (type 2) du facteur Willebrand. Transmission autosomique dominante (sauf types 2N et 3, récessifs). Saignements cutanéo-muqueux ; rares hématomes profonds / hémarthroses.",
+    premiere_intention: ["Interrogatoire +++ (score hémorragique, ATCD familiaux, saignements provoqués : chirurgie, dents de sagesse)", "Formes frustes : TS et TCA peu sensibles → doser directement l'antigène du vWF (vWF:Ag)", "Bilan : vWF:Ag, activité cofacteur de la ristocétine (vWF:RCo), facteur VIII, rapport vWF:RCo/vWF:Ag", "Typage : étude des multimères et agrégation à la ristocétine ; un syndrome inflammatoire même mineur peut masquer une forme fruste"],
+    causes: [
+      { cause: "Type 1 (70-80 %)", signe: "déficit quantitatif partiel ; rapport vWF:RCo/vWF:Ag ≈ 1", examens: ["vWF:Ag, vWF:RCo, FVIII"] },
+      { cause: "Type 2 (15-25 %)", signe: "déficit qualitatif ; rapport vWF:RCo/vWF:Ag < 0,7 (sauf 2N)", examens: ["Multimères", "Agrégation à la ristocétine"] },
+      { cause: "Type 3 (< 5 %)", signe: "déficit quantitatif sévère (vWF effondré, FVIII bas) ; transmission récessive", examens: ["vWF:Ag effondré, FVIII"] }
+    ],
+    tableaux: [
+      { titre: "Sous-types de la maladie de Willebrand",
+        entetes: ["Type", "Mécanisme", "Multimères de haut poids moléculaire"],
+        lignes: [
+          ["1 (70-80 %)", "Déficit quantitatif partiel", "Présents"],
+          ["2A", "↓ affinité vWF–GPIb plaquettaire", "Absents"],
+          ["2B", "↑ affinité vWF–GPIb (thrombopénie possible)", "Diminués"],
+          ["2M", "↓ affinité vWF–GPIb plaquettaire", "Présents (tous)"],
+          ["2N", "↓ affinité vWF–facteur VIII", "Présents"],
+          ["3 (< 5 %)", "Déficit quantitatif sévère", "Absents (vWF effondré)"]
+        ] },
+      { titre: "Bilan d'hémostase",
+        entetes: ["Test", "Résultat"],
+        lignes: [
+          ["Temps de saignement (Ivy)", "Allongé (sauf formes frustes et 2N)"],
+          ["Temps d'occlusion (PFA)", "Allongé (sauf 2N)"],
+          ["TCA", "Allongé (parallèle au FVIII et au TS)"],
+          ["Plaquettes", "Diminuées dans le type 2B"],
+          ["Facteur VIII", "Diminué"],
+          ["vWF:Ag", "Diminué (sauf type 2)"],
+          ["vWF:RCo (cofacteur ristocétine)", "Diminué (sauf 2N)"],
+          ["Rapport vWF:RCo / vWF:Ag", "≈ 1 (types 1, 3, 2N) ; < 0,7 (type 2)"],
+          ["Agrégation à faible dose de ristocétine", "Augmentée dans le type 2B"]
+        ] },
+      { titre: "Facteurs modifiant le vWF",
+        entetes: ["Sens", "Facteurs"],
+        lignes: [
+          ["↑ vWF / FVIII", "Stress, exercice, inflammation, grossesse, œstroprogestatifs"],
+          ["↓ vWF", "Groupe sanguin O"]
+        ] }
+    ],
+    red_flags: ["Saignement actif ou chirurgie programmée chez un patient à risque → avis spécialisé et prévention", "Type 3 (déficit sévère) : risque d'hématomes profonds, d'hémarthroses", "Type 2B : thrombopénie (ne pas confondre avec un PTI ; desmopressine à éviter)", "Inflammation / grossesse pouvant masquer une forme fruste (faux négatif)"],
+    conduite: ["Diagnostic guidé par l'interrogatoire (score hémorragique) puis dosages (vWF:Ag, vWF:RCo, FVIII, rapport).", "Typer (multimères, ristocétine) : la prise en charge en dépend — desmopressine (DDAVP) surtout efficace dans le type 1, à éviter dans le type 2B (aggrave la thrombopénie).", "Concentrés de vWF (± FVIII) dans les formes sévères ou avant un geste à risque ; éviter aspirine / AINS.", "Recontrôler à distance d'un épisode inflammatoire pour ne pas méconnaître une forme fruste."]
+  },
+  {
+    id: "bilan_coagulation", num: 85, anomalie: "Anomalie du bilan de coagulation (démarche)",
+    specialite: "Hémostase",
+    definition: "Démarche d'interprétation d'un bilan d'hémostase anormal. Le TP explore la voie extrinsèque + commune (VII, X, V, II, fibrinogène), le TCA la voie intrinsèque + commune (système contact PK/KHPM, XII, XI, IX, VIII + commune), le TT/temps de reptilase la fibrinoformation. Facteurs vitamine K-dépendants : II, VII, IX, X (et protéines C et S).",
+    premiere_intention: ["Vérifier le préanalytique : absence de caillot, hématocrite 30-56 %, délai prélèvement-analyse < 4 h, tube correctement rempli", "Identifier le profil : TP abaissé isolé / TCA allongé isolé / TCA allongé + TP abaissé", "Devant un TCA allongé isolé : test de correction (indice de Rosner) — corrige (déficit) vs ne corrige pas (anticoagulant circulant)", "Confronter au contexte (traitement anticoagulant ++) et compléter par les dosages de facteurs"],
+    causes: [
+      { cause: "TP abaissé isolé", signe: "AVK, carence en vitamine K, cholestase, déficit en facteur VII", examens: ["INR", "Facteur VII", "Bilan hépatique"] },
+      { cause: "TCA allongé isolé", signe: "héparine ; déficit (hémophilie A/B, Willebrand, XI, XII/PK/KHPM) ou anticoagulant circulant (lupique, anti-facteur)", examens: ["TT / temps de reptilase", "Test de correction (Rosner)", "Dosages de facteurs"] },
+      { cause: "TCA allongé + TP abaissé", signe: "AVK à dose élevée, insuffisance hépatique, CIVD, déficit en facteurs V/II/X", examens: ["Facteur V, fibrinogène", "PDF / D-dimères, plaquettes"] }
+    ],
+    tableaux: [
+      { titre: "Exploration de la coagulation",
+        entetes: ["Test", "Voie explorée", "Facteurs"],
+        lignes: [
+          ["TP (temps de Quick)", "Extrinsèque + commune", "VII, X, V, II, I (fibrinogène)"],
+          ["TCA", "Intrinsèque + commune", "Système contact (PK, KHPM), XII, XI, IX, VIII + commune"],
+          ["TT / temps de reptilase", "Fibrinoformation", "Fibrinogène (I), action de la thrombine"]
+        ] },
+      { titre: "TP abaissé isolé",
+        entetes: ["Cause", "Orientation"],
+        lignes: [
+          ["AVK (INR faible)", "Contexte médicamenteux"],
+          ["Déficit en vitamine K", "Cinétique de décroissance : VII > IX > X > II"],
+          ["Syndrome cholestatique", "Bilirubine conjuguée, PAL, 5'NU"],
+          ["Déficit en facteur VII", "Dosage du facteur VII"]
+        ] },
+      { titre: "TCA allongé isolé",
+        entetes: ["Situation", "Étiologies"],
+        lignes: [
+          ["Héparine (HNF)", "TT allongé, temps de reptilase normal"],
+          ["Test de correction — Rosner < 12 (corrige)", "Déficit : hémophilie A (VIII), hémophilie B (IX), maladie de Willebrand, déficit en XI, déficit en XII / PK / KHPM"],
+          ["Rosner > 15 (ne corrige pas), TCK allongé", "Anticorps anti-facteur"],
+          ["Rosner > 15 (ne corrige pas), TCK normal", "Anticoagulant circulant de type lupique"]
+        ] },
+      { titre: "TCA allongé + TP abaissé",
+        entetes: ["Cause", "Orientation"],
+        lignes: [
+          ["AVK (INR élevé) / relais héparine-AVK", "Contexte médicamenteux"],
+          ["Insuffisance hépatique", "Protéines, albumine, facteur V abaissés"],
+          ["CIVD", "PDF / D-dimères, complexes solubles, facteur V et plaquettes abaissés"],
+          ["Déficit en facteurs V, II ou X", "Voie commune"]
+        ] }
+    ],
+    red_flags: ["Syndrome hémorragique actif avec anomalie du bilan → urgence", "CIVD (TCA ↑ + TP ↓ + thrombopénie + D-dimères ↑) : contexte grave (sepsis, obstétrique, cancer)", "Surdosage en AVK (INR élevé) avec saignement", "Anticoagulant circulant lupique : risque paradoxal THROMBOTIQUE (SAPL), pas hémorragique"],
+    conduite: ["Toujours éliminer une cause préanalytique avant d'interpréter.", "TCA allongé isolé : le test de correction (Rosner) distingue déficit (corrige) et anticoagulant circulant (ne corrige pas).", "Un allongement isolé du TCA sans saignement, ne corrigeant pas, évoque un anticoagulant lupique (risque thrombotique).", "Confronter systématiquement au traitement anticoagulant et au contexte (foie, sepsis)."]
+  },
+  {
+    id: "hemophilie_a", num: 86, anomalie: "Hémophilie A (déficit en facteur VIII)",
+    specialite: "Hémostase",
+    definition: "Déficit constitutionnel en facteur VIII, transmission récessive liée à l'X (1/5000 garçons ; 1/3 de néo-mutations, sans antécédent familial). Saignements de type hématome / hémarthrose. Sévérité selon le taux de facteur VIII.",
+    premiere_intention: ["Interrogatoire +++ : antécédents familiaux (liés à l'X), symptomatologie hémorragique (hémarthroses, hématomes)", "TS normal (différencie de la maladie de Willebrand) ; allongement ISOLÉ du TCA (et du TCK)", "Test de correction : indice de Rosner < 12 (corrige) ; dosage du facteur VIII (déficit isolé)", "Rechercher un anticorps anti-VIII (dilutions linéaires après incubation 2 h à 37 °C) ; biologie moléculaire"],
+    causes: [
+      { cause: "Hémophilie A (déficit FVIII)", signe: "TCA allongé isolé, Rosner < 12, facteur VIII bas isolé, TS normal", examens: ["Dosage du facteur VIII", "TCA, indice de Rosner"] },
+      { cause: "Diagnostic différentiel", signe: "maladie de Willebrand (TS souvent allongé, vWF bas), hémophilie B (déficit IX), anticoagulant circulant (Rosner > 15)", examens: ["vWF:Ag / vWF:RCo, facteur IX", "Test de correction"] },
+      { cause: "Femme conductrice", signe: "FVIII/vWF:Ag < 0,8 (80 %), FVIII < 50 % (30 %)", examens: ["Facteur VIII, vWF:Ag", "Biologie moléculaire (certitude)"] }
+    ],
+    tableaux: [
+      { titre: "Classification (taux de facteur VIII)",
+        entetes: ["Forme", "Facteur VIII"],
+        lignes: [
+          ["Sévère", "< 1 %"],
+          ["Modérée", "1-5 %"],
+          ["Mineure", "5-50 %"]
+        ] },
+      { titre: "Diagnostic prénatal (formes sévères)",
+        entetes: ["Étape", "Terme / prélèvement"],
+        lignes: [
+          ["Diagnostic du sexe", "10 SA (trophoblaste)"],
+          ["Analyse moléculaire", "14 SA (cellules amniotiques)"],
+          ["Dosage du facteur VIII", "18 SA (sang de cordon)"]
+        ] },
+      { titre: "Bilan d'hémostase",
+        entetes: ["Test", "Résultat"],
+        lignes: [
+          ["Temps de saignement (TS)", "Normal (≠ maladie de Willebrand)"],
+          ["TCA (et TCK)", "Allongement isolé"],
+          ["Indice de Rosner", "< 12 (corrige → déficit)"],
+          ["Facteur VIII", "Déficit isolé (augmente en cas d'inflammation)"],
+          ["Anticorps anti-VIII", "Absents (dilutions linéaires après 2 h à 37 °C)"]
+        ] }
+    ],
+    red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FVIII (inhibiteur, 15-30 %) → inefficacité du traitement substitutif", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
+    conduite: ["Diagnostic : TCA allongé isolé qui corrige (Rosner < 12) + déficit isolé en FVIII ; TS normal écarte une maladie de Willebrand.", "Le FVIII augmente avec l'inflammation (peut masquer une forme mineure) ; sensibilité du TCA faible et variable selon les réactifs.", "Traitement substitutif par facteur VIII ; recherche systématique d'anticorps anti-FVIII lors des transfusions.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
+  },
+  {
+    id: "hemophilie_b", num: 87, anomalie: "Hémophilie B (déficit en facteur IX)",
+    specialite: "Hémostase",
+    definition: "Déficit constitutionnel en facteur IX, transmission récessive liée à l'X (1/25 000 garçons ; ~20 % des hémophilies). Cliniquement indiscernable de l'hémophilie A (hématomes, hémarthroses) ; le diagnostic repose sur le dosage du facteur IX.",
+    premiere_intention: ["Interrogatoire : antécédents familiaux (liés à l'X), symptomatologie hémorragique (hémarthroses, hématomes)", "Allongement ISOLÉ du TCA (et du TCK) ; indice de Rosner < 12 (corrige)", "Dosage du facteur IX (déficit isolé) — différencie de l'hémophilie A", "Biologie moléculaire ; FIX physiologiquement bas à la naissance (15-50 %) : interpréter avec prudence chez le nouveau-né"],
+    causes: [
+      { cause: "Hémophilie B (déficit FIX)", signe: "TCA allongé isolé, Rosner < 12, facteur IX bas isolé", examens: ["Dosage du facteur IX", "TCA, indice de Rosner"] },
+      { cause: "Diagnostic différentiel", signe: "hémophilie A (déficit VIII), maladie de Willebrand (TS allongé, vWF bas), anticoagulant circulant (Rosner > 15)", examens: ["Facteur VIII, vWF", "Test de correction"] }
+    ],
+    tableaux: [
+      { titre: "Classification (taux de facteur IX)",
+        entetes: ["Forme", "Facteur IX"],
+        lignes: [
+          ["Sévère", "< 1 %"],
+          ["Modérée", "1-5 %"],
+          ["Mineure", "5-50 %"]
+        ] },
+      { titre: "Hémophilie A vs B",
+        entetes: ["", "Hémophilie A", "Hémophilie B"],
+        lignes: [
+          ["Déficit", "Facteur VIII", "Facteur IX"],
+          ["Fréquence", "~80 % (1/5000)", "~20 % (1/25 000)"],
+          ["Transmission", "Récessive liée à l'X", "Récessive liée à l'X"],
+          ["Inhibiteur (anticorps)", "15-30 %", "~2 %"],
+          ["Bilan", "TCA isolé, Rosner < 12, FVIII bas", "TCA isolé, Rosner < 12, FIX bas"]
+        ] }
+    ],
+    red_flags: ["Hémorragie grave : hémarthrose, hématome compressif, hémorragie cérébrale, saignement post-traumatique ou chirurgical", "Apparition d'un anticorps anti-FIX (inhibiteur, ~2 %)", "CONTRE-INDICATION de l'aspirine et des AINS", "Forme mineure : TCA peu sensible (faux négatif) — se fier à l'interrogatoire"],
+    conduite: ["Profil identique à l'hémophilie A (TCA allongé isolé, Rosner < 12) : c'est le DOSAGE qui distingue (FIX bas vs FVIII bas).", "Chez le nouveau-né, le FIX est physiologiquement bas (15-50 %) : interpréter avec prudence / recontrôler.", "Traitement substitutif par facteur IX ; surveiller l'apparition d'un inhibiteur.", "Éducation : carte d'hémophile, éviction aspirine/AINS, prise en charge en centre de traitement de l'hémophilie."]
+  },
+  {
+    id: "sapl", num: 88, anomalie: "Syndrome des antiphospholipides (SAPL)",
+    specialite: "Hémostase",
+    definition: "Thrombophilie auto-immune définie par l'association d'AU MOINS 1 critère clinique (thrombose ou morbidité obstétricale) ET d'AU MOINS 1 critère biologique (anticorps antiphospholipides persistants). Primitif ou associé à un lupus.",
+    premiere_intention: ["Circonstances : maladie auto-immune (lupus), thrombose veineuse/artérielle inexpliquée, pertes fœtales à répétition, thrombopénie inexpliquée, allongement isolé du TCA découvert fortuitement", "Dépistage du lupus anticoagulant : TCA (sensibilité selon l'activateur : silice ++, kaolin −), TTd (temps de Quick dilué, thromboplastine au 1/500), dRVVT (active directement le facteur X, insensible à l'héparine via polybrène)", "Principe : allongement NON corrigé par l'ajout de plasma témoin + dépendance aux phospholipides (raccourcissement par addition de PL)", "Anticorps anti-PL par ELISA : anti-cardiolipides, anti-β2-GP1 (isotypes IgG/IgM) ; autres selon contexte (anti-PE, anti-prothrombine, anti-annexine V)", "Confirmer la PERSISTANCE : 2 prélèvements à ≥ 12 semaines d'intervalle ; rechercher un lupus (ACAN, anti-ADN natif)"],
+    causes: [
+      { cause: "Critère clinique — thrombose", signe: "≥ 1 thrombose objectivée (imagerie de référence ou histopathologie)", examens: ["Imagerie (écho-Doppler, angio-TDM…)"] },
+      { cause: "Critère clinique — obstétrical", signe: "mort fœtale ≥ 10e semaine, prématurité < 34e semaine (éclampsie/insuffisance placentaire), ≥ 3 fausses couches < 10e semaine", examens: ["Bilan obstétrical"] },
+      { cause: "Critère biologique", signe: "lupus anticoagulant et/ou anti-cardiolipides et/ou anti-β2-GP1, persistants ≥ 12 semaines", examens: ["Lupus anticoagulant (ISTH)", "Anti-cardiolipides, anti-β2-GP1 (ELISA)"] }
+    ],
+    tableaux: [
+      { titre: "Critères cliniques (≥ 1 requis)",
+        entetes: ["Type", "Définition"],
+        lignes: [
+          ["Thrombose", "≥ 1 thrombose objectivée par imagerie de référence ou histopathologie"],
+          ["Obstétrical — mort fœtale", "≥ 1 mort fœtale inexpliquée ≥ 10e semaine de gestation (morphologie normale)"],
+          ["Obstétrical — prématurité", "≥ 1 naissance < 34e semaine pour éclampsie, prééclampsie grave ou insuffisance placentaire (nouveau-né normal)"],
+          ["Obstétrical — fausses couches", "≥ 3 avortements spontanés consécutifs < 10e semaine, sans cause anatomique/hormonale ni chromosomique"]
+        ] },
+      { titre: "Critères biologiques (≥ 2 reprises, ≥ 12 semaines d'intervalle)",
+        entetes: ["Anticorps", "Précisions"],
+        lignes: [
+          ["Lupus anticoagulant", "Mis en évidence selon les recommandations de l'ISTH"],
+          ["Anti-cardiolipides (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"],
+          ["Anti-β2-GP1 (IgG/IgM)", "Titre > 40 GPL ou MPL, ou > 99e percentile ; méthode ELISA standardisée"]
+        ] },
+      { titre: "Tests du lupus anticoagulant — interprétation (M = malade, T = témoin)",
+        entetes: ["Test", "Calcul", "Négatif", "Positif"],
+        lignes: [
+          ["TCA", "Indice de Rosner : (M − T) × 100 / M", "< 12", "> 15"],
+          ["TTd (temps de thromboplastine dilué)", "(M + T) / T", "< 1,15", "> 1,20"],
+          ["dRVVT", "Ratio normalisé : (M/T screen) / (M/T confirm)", "< 1,20", "> 1,20"]
+        ] },
+      { titre: "Anticorps antiphospholipides (caractéristiques)",
+        entetes: ["Anticorps", "Cible / caractéristiques"],
+        lignes: [
+          ["Anti-cardiolipides (IgG/M/A)", "Phospholipides anioniques (membranes endothéliales/plaquettaires, cascade de coagulation) ; ELISA ; sensibilité 80-90 % ; l'isotype IgG a la meilleure Se/Sp"],
+          ["Anti-β2-GP1 (IgG/M)", "β2-glycoprotéine I (inhibiteur de la coagulation) ; ELISA ; meilleure spécificité que les anti-cardiolipides"],
+          ["Lupus anticoagulant", "Test fonctionnel (voir tableau dédié) ; allongement non corrigé, dépendant des phospholipides"]
+        ] }
+    ],
+    red_flags: ["SAPL catastrophique (CAPS) : thromboses multiples avec défaillance multiviscérale → urgence vitale", "Thrombose artérielle (AVC, IDM) ou thrombose veineuse étendue", "Morbidité obstétricale (pertes fœtales répétées, prééclampsie sévère)", "Thrombopénie souvent associée (auto-immune ou de consommation ; réaliser un TS, anticoaguler avec précaution)"],
+    conduite: ["Diagnostic = 1 critère clinique + 1 critère biologique PERSISTANT (≥ 12 semaines).", "Le lupus anticoagulant allonge le TCA (ne corrige pas au mélange) mais le risque est THROMBOTIQUE, pas hémorragique.", "Rechercher un lupus associé ; éviter les œstroprogestatifs ; contrôler les facteurs de risque vasculaire.", "Traitement : anticoagulation au long cours après thrombose ; en obstétrique, aspirine + HBPM ; avis spécialisé."]
+  },
+  {
+    id: "groupage_abo", num: 89, anomalie: "Groupage sanguin ABO-RH1",
+    specialite: "Immuno-hématologie",
+    definition: "Le groupage ABO repose sur la concordance de deux épreuves : Beth-Vincent (sérums-tests = recherche des antigènes sur les hématies du patient) et Simonin (hématies-tests = recherche des anticorps naturels dans le sérum). La détermination de l'antigène RH1 (D) utilise un anti-RH1 avec un témoin. Règles de sécurité transfusionnelle strictes.",
+    premiere_intention: ["Beth-Vincent (épreuve globulaire) : hématies du patient + sérums anti-A, anti-B, anti-AB", "Simonin (épreuve sérique) : sérum du patient + hématies-tests A et B (anticorps naturels)", "Concordance OBLIGATOIRE Beth-Vincent / Simonin pour valider le groupe ABO", "Détermination RH1 (D) : anti-RH1 + témoin ; un témoin positif rend le résultat ININTERPRÉTABLE"],
+    causes: [
+      { cause: "Discordance Beth-Vincent / Simonin", signe: "sous-groupes, agglutinines irrégulières, autoanticorps ; Simonin peu fiable chez le nouveau-né (< 6 mois) et le sujet âgé", examens: ["Contrôle, avis immuno-hématologique", "RAI"] },
+      { cause: "Témoin RH1 positif", signe: "autoagglutination → détermination RH1 ininterprétable", examens: ["Reprise", "Test à l'antiglobuline"] },
+      { cause: "Contexte transfusionnel", signe: "validité du groupe selon les règles (2 prélèvements / 2 déterminations)", examens: ["RAI associée", "Contrôle ultime au lit"] }
+    ],
+    tableaux: [
+      { titre: "Épreuve de Beth-Vincent (sérums-tests sur hématies)",
+        entetes: ["Groupe", "Anti-A", "Anti-B", "Anti-AB"],
+        lignes: [
+          ["A", "+", "−", "+"],
+          ["B", "−", "+", "+"],
+          ["AB", "+", "+", "+"],
+          ["O", "−", "−", "−"]
+        ] },
+      { titre: "Épreuve de Simonin (hématies-tests sur sérum)",
+        entetes: ["Groupe", "Hématies A", "Hématies B"],
+        lignes: [
+          ["A", "−", "+"],
+          ["B", "+", "−"],
+          ["AB", "−", "−"],
+          ["O", "+", "+"]
+        ] },
+      { titre: "Détermination de l'antigène RH1 (D)",
+        entetes: ["Résultat", "Anti-RH1", "Témoin"],
+        lignes: [
+          ["RH1 positif (D+)", "+", "−"],
+          ["RH-1 négatif (D−)", "−", "−"],
+          ["Ininterprétable", "—", "+ (autoagglutination)"]
+        ] },
+      { titre: "Règles de sécurité (réalisation)",
+        entetes: ["Niveau", "Exigence"],
+        lignes: [
+          ["1 groupage sanguin", "2 prélèvements (1 détermination par prélèvement)"],
+          ["1 détermination", "1 réalisation automatisée, OU 2 réalisations manuelles par 2 techniciens différents + double saisie par 2 personnes différentes"]
+        ] }
+    ],
+    red_flags: ["Discordance Beth-Vincent / Simonin → ne pas valider le groupe, avis immuno-hématologique", "Témoin RH1 positif (autoagglutination) → RH1 ininterprétable, reprendre", "Sécurité transfusionnelle : vérifier le respect des 2 prélèvements / 2 déterminations avant toute transfusion", "Urgence vitale sans groupe disponible : culots O (RH−) selon protocole"],
+    conduite: ["Valider le groupe ABO uniquement si Beth-Vincent et Simonin CONCORDENT.", "Simonin peu fiable chez le nouveau-né (< 6 mois, anticorps naturels absents) et le sujet âgé/immunodéprimé.", "Compléter par la RAI avant transfusion ; respecter les règles des 2 prélèvements et le contrôle ultime au lit du malade.", "Toute discordance ou témoin positif → contrôle au laboratoire d'immuno-hématologie."]
+  },
+  {
+    id: "phenotypes_erythrocytaires", num: 90, anomalie: "Phénotypes érythrocytaires (systèmes de groupes sanguins)",
+    specialite: "Immuno-hématologie",
+    definition: "Principaux systèmes antigéniques érythrocytaires (ABO, Rhésus, Kell, MNSs, Kidd, Duffy, Lewis) et fréquences phénotypiques. Importants pour la transfusion (phénotypage, RAI) et la prévention de l'allo-immunisation. Fréquences indicatives (population générale).",
+    premiere_intention: ["ABO + RH1 (D) : groupage de base", "Phénotypage RH-KEL1 (Rhésus C/c/E/e + Kell) recommandé, notamment chez la femme en âge de procréer et le polytransfusé", "Phénotype étendu (Kidd, Duffy, MNSs…) si allo-immunisation ou transfusions itératives", "RAI (recherche d'agglutinines irrégulières) avant transfusion"],
+    causes: [
+      { cause: "Allo-immunisation anti-érythrocytaire", signe: "anticorps irréguliers (anti-RH, anti-KEL, anti-Kidd, anti-Duffy…) après transfusion ou grossesse", examens: ["RAI, identification", "Phénotype étendu"] },
+      { cause: "Antigènes à risque", signe: "RH et KEL très immunogènes ; anti-Kidd (Jk) responsables d'hémolyse retardée", examens: ["Phénotypage", "Test de Coombs / élution"] },
+      { cause: "Particularités de population", signe: "Fy(a−b−) fréquent chez le sujet noir (résistance à Plasmodium vivax)", examens: ["Phénotype Duffy"] }
+    ],
+    tableaux: [
+      { titre: "ABO",
+        entetes: ["Groupe", "Antigène", "Anticorps", "Fréquence"],
+        lignes: [
+          ["O", "Ni A ni B", "Anti-A + Anti-B", "45 %"],
+          ["A", "A", "Anti-B", "42 %"],
+          ["B", "B", "Anti-A", "10 %"],
+          ["AB", "A + B", "Aucun", "3 %"]
+        ] },
+      { titre: "Rhésus",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["D+ C+ E− c− e+", "35 %"],
+          ["D+ C+ E− c+ e+", "20 %"],
+          ["D+ C+ E+ c+ e+", "13 %"],
+          ["D+ C− E+ c+ e+", "12 %"],
+          ["D+ C− E− c+ e+", "2 %"],
+          ["D− C− E− c+ e+", "15 %"]
+        ] },
+      { titre: "Kell",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Kel:−1,2 (K−k+)", "91 %"],
+          ["Kel:1,2 (K+k+)", "8,8 %"],
+          ["Kel:1,−2 (K+k−)", "0,2 %"]
+        ] },
+      { titre: "MNSs",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["M+N+", "50 %"],
+          ["M+N−", "28 %"],
+          ["M−N+", "22 %"],
+          ["S−s+", "45 %"],
+          ["S+s+", "44 %"],
+          ["S+s−", "11 %"]
+        ] },
+      { titre: "Kidd",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Jk:1,2 (Jk(a+b+))", "50 %"],
+          ["Jk:−1,2 (Jk(a−b+))", "24 %"],
+          ["Jk:1,−2 (Jk(a+b−))", "26 %"]
+        ] },
+      { titre: "Duffy",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Fy:1,2 (Fy(a+b+))", "47 %"],
+          ["Fy:−1,2 (Fy(a−b+))", "33 %"],
+          ["Fy:1,−2 (Fy(a+b−))", "20 %"],
+          ["Fy:−1,−2 (Fy(a−b−))", "fréquent chez le sujet noir"]
+        ] },
+      { titre: "Lewis",
+        entetes: ["Phénotype", "Fréquence"],
+        lignes: [
+          ["Le(a−b+)", "72 %"],
+          ["Le(a+b−)", "22 %"],
+          ["Le(a−b−)", "6 %"]
+        ] }
+    ],
+    red_flags: ["RAI positive (anticorps anti-érythrocytaire) → sang phénotypé compatible, risque d'hémolyse transfusionnelle", "Femme en âge de procréer RH−1 (D−) ou exposée à KEL1 : prévenir l'allo-immunisation (maladie hémolytique du nouveau-né)", "Anticorps anti-Kidd (Jk) : hémolyse retardée, parfois indétectable (évanescence) — danger transfusionnel", "Phénotype rare → difficulté d'approvisionnement"],
+    conduite: ["Respecter le phénotypage RH-KEL1 chez la femme en âge de procréer et le polytransfusé.", "Devant une RAI positive : identifier l'anticorps et transfuser du sang phénotypé compatible.", "Tenir compte des particularités de population (Fy(a−b−) chez le sujet noir).", "Tracer le phénotype ; coordination avec le laboratoire d'immuno-hématologie / l'EFS."]
+  },
+  {
+    id: "diabete_type_1", num: 91, anomalie: "Diabète de type 1",
+    specialite: "Endocrinologie",
+    definition: "Diabète auto-immun : destruction des cellules β des îlots de Langerhans (auto-anticorps anti-GAD, anti-IA2, anti-îlots/ICA, anti-insuline). Terrain génétique (HLA DR3/DR4) + facteurs environnementaux (viraux : Coxsackie B4, rubéole congénitale). Pré-diabète asymptomatique (~5-10 ans) ; symptômes quand il reste < 10-20 % de cellules β fonctionnelles.",
+    premiere_intention: ["Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises ; glycosurie et cétonurie positives", "Profil évocateur : sujet jeune (< 20 ans), pas d'ATCD familial, début brutal, autres maladies auto-immunes possibles", "2e intention (si doute étiologique) : auto-anticorps anti-GAD, anti-IA2, anti-îlots (ICA), anti-insuline", "Bilan initial : HbA1c, bilan rénal (créatinine, clairance, microalbuminurie), bilan lipidique"],
+    causes: [
+      { cause: "Arguments pour un diabète de type 1", signe: "sujet jeune < 20 ans, début brutal, cétose, pas d'ATCD familial, auto-anticorps positifs", examens: ["Glycémie, cétonurie", "Auto-Ac anti-GAD/IA2/ICA/insuline"] },
+      { cause: "Maladies auto-immunes associées", signe: "thyroïdite auto-immune, maladie cœliaque", examens: ["TSH", "Anticorps anti-transglutaminase (IgA)"] },
+      { cause: "Acidocétose révélatrice", signe: "hyperglycémie + cétose + acidose métabolique à trou anionique augmenté, déshydratation", examens: ["Gaz du sang, ionogramme", "Cétonémie / cétonurie"] }
+    ],
+    tableaux: [
+      { titre: "Diagnostic biologique",
+        entetes: ["Intention", "Examens"],
+        lignes: [
+          ["1re intention", "Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises ; glycosurie et cétonurie +"],
+          ["2e intention (doute étiologique)", "Auto-Ac anti-GAD, anti-IA2, anti-îlots (ICA), anti-insuline"]
+        ] },
+      { titre: "Acidocétose diabétique — anomalies",
+        entetes: ["Anomalie", "Mécanisme"],
+        lignes: [
+          ["Acidose métabolique à trou anionique augmenté", "Corps cétoniques (β-hydroxybutyrate, acétoacétate) ; HCO3− ↓, compensation respiratoire (pCO2 ↓, hyperventilation)"],
+          ["Décompensée", "Baisse du pH sanguin"],
+          ["Hyperkaliémie", "Acidose → antiport K+/H+ (sortie de K+ vers le plasma)"],
+          ["Hyperglycémie", "↓ pénétration cellulaire du glucose + ↑ néoglucogenèse / glycogénolyse"],
+          ["Glycosurie, cétonurie", "Polyurie osmotique → déshydratation"],
+          ["Déshydratation globale", "Pertes rénales et pulmonaires"]
+        ] },
+      { titre: "Objectifs et suivi",
+        entetes: ["Domaine", "Cible / rythme"],
+        lignes: [
+          ["HbA1c", "< 7,5 % ; dosage 4 fois/an"],
+          ["Pression artérielle", "< 130/80 mmHg"],
+          ["Lipides", "HDL > 0,4 g/L, LDL < cible, TG < 1,5 g/L"],
+          ["IMC", "< 25 (< 95e percentile chez l'enfant)"],
+          ["Bilan annuel", "Glycémie, lipides, créatinine/clairance, microalbuminurie, TSH, auto-Ac selon clinique"]
+        ] }
+    ],
+    red_flags: ["Acidocétose diabétique : hyperglycémie + cétose + acidose, déshydratation, hyperventilation (Kussmaul), odeur acétonique → URGENCE", "Hyperkaliémie (acidose) ou kaliémie « normale » masquant une déplétion potassique globale", "Déshydratation sévère, troubles de conscience", "Syndrome cardinal de l'enfant/jeune (polyurie, polydipsie, amaigrissement) → ne pas retarder la prise en charge"],
+    conduite: ["Affirmer le diabète (glycémie > 1,26 g/L × 2) ; rechercher la cétose (urgence si acidocétose).", "Confirmer le type 1 si doute : auto-anticorps (anti-GAD…) ; rechercher les maladies auto-immunes associées (TSH, anti-transglutaminase).", "Éducation thérapeutique +++, insulinothérapie adaptée au mode de vie (schéma basal-bolus), auto-surveillance glycémique.", "Prévention CV (lipides, TA, tabac, poids), vaccinations (grippe, pneumocoque), dépistage des complications (ophtalmo, rénal, neuro, cardio, dentaire)."]
+  },
+  {
+    id: "diabete_type_2", num: 92, anomalie: "Diabète de type 2",
+    specialite: "Endocrinologie",
+    definition: "Diabète lié à une insulino-résistance des tissus périphériques (muscle ++, foie, tissu adipeux) avec hyperinsulinisme compensateur (10-20 ans), puis épuisement de l'insulino-sécrétion → hyperglycémie. Associé au surpoids / obésité abdominale et au syndrome métabolique (risque cardio-vasculaire).",
+    premiere_intention: ["Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises", "Profil étiologique : âge > 40 ans, IMC > 27, surpoids à répartition abdominale, ATCD familiaux, cétonurie nulle/faible, HTA associée", "Bilan : HbA1c, bilan rénal (créatinine, clairance, microalbuminurie), bilan lipidique", "Dépister le syndrome métabolique (tour de taille, TG, HDL, TA, glycémie)"],
+    causes: [
+      { cause: "Insulino-résistance", signe: "surcharge pondérale (graisse viscérale, AG libres en compétition avec le glucose, adipokines : leptine/résistine/adiponectine), sédentarité, terrain génétique", examens: ["Tour de taille, IMC", "Insulinémie à jeun > 15 mUI/L (si glycémie < 1,1 g/L)"] },
+      { cause: "Syndrome métabolique (IDF 2005)", signe: "obésité centrale + ≥ 2 critères (TG, HDL, TA, glycémie)", examens: ["Tour de taille", "Bilan lipidique, glycémie, TA"] },
+      { cause: "Arguments vs diabète de type 1", signe: "âge > 40 ans, IMC élevé, absence de cétose, ATCD familiaux de DT2", examens: ["Cétonurie (nulle/faible)", "Contexte"] }
+    ],
+    tableaux: [
+      { titre: "Syndrome métabolique (IDF 2005)",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Obésité centrale (OBLIGATOIRE)", "Tour de taille > 94 cm (homme), > 80 cm (femme)"],
+          ["+ au moins 2 parmi :", "—"],
+          ["Triglycérides", "> 1,5 g/L"],
+          ["HDL cholestérol", "< 0,4 g/L (homme), < 0,5 g/L (femme)"],
+          ["Pression artérielle", "≥ 130/85 mmHg"],
+          ["Glycémie à jeun", "> 1 g/L (ou diabète de type 2)"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Cible", "Critères"],
+        lignes: [
+          ["Diabète de type 2", "Glycémie à jeun > 1,26 g/L (7 mmol/L) à 2 reprises"],
+          ["Insulino-résistance", "Insulinémie à jeun > 15 mUI/L (interprétable si glycémie < 1,1 g/L)"],
+          ["Troubles associés", "TG > 1,7 g/L (1,5 femme), HDL < 0,35 g/L (0,45 femme), ↑ CRP / fibrinogène / ferritine / γGT / ALAT"]
+        ] },
+      { titre: "Profil clinique",
+        entetes: ["Élément", "Description"],
+        lignes: [
+          ["Terrain", "Surpoids (IMC > 25), graisse abdominale (TT > 94 H / > 80 F)"],
+          ["Mode de vie", "Sédentarité"],
+          ["Âge / hérédité", "> 40 ans, ATCD familiaux de DT2"],
+          ["Comorbidité", "HTA associée"]
+        ] },
+      { titre: "Objectifs et hygiène de vie",
+        entetes: ["Domaine", "Cible"],
+        lignes: [
+          ["HbA1c", "Cible individualisée (âge, ancienneté, risque d'hypoglycémie) ; dosage 4 fois/an"],
+          ["Poids / tour de taille", "IMC < 25 ; TT < 94 cm (H) / < 80 cm (F)"],
+          ["Lipides", "HDL > 0,4 g/L, LDL < cible, TG < 1,5 g/L"],
+          ["Pression artérielle", "< 130/80 mmHg"],
+          ["Hygiène", "Activité physique, sevrage tabagique, limiter l'alcool"]
+        ] }
+    ],
+    red_flags: ["Complications cardio-vasculaires (le syndrome métabolique est prothrombotique, pro-inflammatoire, dyslipidémique, hypertensif)", "Hyperglycémie majeure / coma hyperosmolaire (sujet âgé, déshydratation)", "Découverte tardive avec complications déjà présentes (rétinopathie, néphropathie, neuropathie, pied diabétique)", "Dyslipidémie de type IV/IIb et stéatose hépatique associées"],
+    conduite: ["Affirmer le DT2 (glycémie > 1,26 g/L × 2) ; profil : âge > 40 ans, surpoids abdominal, pas de cétose.", "Dépister et prendre en charge le syndrome métabolique global (TA, lipides, poids, tabac).", "Mesures hygiéno-diététiques en première ligne, puis antidiabétiques oraux et/ou insuline ; statine/fibrate, traitement de l'HTA.", "Vaccinations (grippe, pneumocoque) ; dépistage annuel des complications (ophtalmo, rénal, neuro, cardio, pied, dentaire)."]
+  },
+  {
+    id: "diabete_gestationnel", num: 93, anomalie: "Diabète gestationnel (dépistage et diagnostic)",
+    specialite: "Endocrinologie",
+    definition: "Trouble de la tolérance glucidique apparu ou diagnostiqué pendant la grossesse. Dépistage ciblé (facteurs de risque, dès le début) et entre 24 et 28 SA. Diagnostic par HGPO 75 g (stratégie en 1 temps, CNGOF) ou stratégie en 2 temps (O'Sullivan puis HGPO).",
+    premiere_intention: ["Dépistage précoce si facteurs de risque : IMC ≥ 25, âge ≥ 35 ans, ethnie à risque, ATCD personnel d'intolérance/diabète, ATCD familial au 1er degré, ATCD obstétrical (mort fœtale in utero, macrosomie)", "Dépistage de toutes les femmes entre 24 et 28 SA", "Stratégie en 1 temps (CNGOF) : HGPO 75 g (glycémie à jeun, 1 h, 2 h) après 8-14 h de jeûne", "Conditions : ≥ 150 g de glucides/j les 3 jours précédents, activité habituelle, pas de tabac pendant le test ; la glycosurie n'est PAS recommandée"],
+    causes: [
+      { cause: "Stratégie en 1 temps (CNGOF)", signe: "HGPO 75 g ; 1 valeur anormale pose le diagnostic", examens: ["Glycémie à jeun, 1 h, 2 h"] },
+      { cause: "Stratégie en 2 temps", signe: "test d'O'Sullivan (50 g, glycémie à 1 h) = dépistage (20 % des positifs sont des DG), puis HGPO de confirmation", examens: ["O'Sullivan", "HGPO 75 g ou 100 g"] },
+      { cause: "Facteurs de risque", signe: "IMC ≥ 25, âge ≥ 35, ethnie, ATCD personnels / familiaux / obstétricaux", examens: ["Dépistage précoce ciblé"] }
+    ],
+    tableaux: [
+      { titre: "HGPO 75 g — valeurs seuils selon les sociétés",
+        entetes: ["Société", "À jeun", "1 h", "2 h", "Diagnostic"],
+        lignes: [
+          ["CNGOF", "0,92 g/L (5,1 mmol/L)", "1,80 g/L (10)", "1,53 g/L (8,5)", "1 valeur anormale"],
+          ["OMS", "1,26 g/L (7)", "—", "1,40 g/L (7,8)", "1 valeur anormale"],
+          ["ADA", "0,95 g/L (5,3)", "1,80 g/L (10)", "1,55 g/L (8,6)", "2 valeurs / 3"]
+        ] },
+      { titre: "Test d'O'Sullivan (50 g, glycémie à 1 h)",
+        entetes: ["Glycémie à 1 h", "Conclusion"],
+        lignes: [
+          ["< 1,30 g/L", "Pas de groupe à risque"],
+          ["1,30-1,40 g/L", "Peu de risque ; HGPO 75/100 g si patiente à risque"],
+          ["1,40-2 g/L", "HGPO 75/100 g pour poser le diagnostic"],
+          ["> 2 g/L", "Diabète gestationnel diagnostiqué"]
+        ] },
+      { titre: "HGPO 100 g — seuils (test positif si 2 valeurs / 4)",
+        entetes: ["Société", "À jeun", "1 h", "2 h", "3 h"],
+        lignes: [
+          ["NDDG", "1,05 g/L (5,8)", "1,90 g/L (10,6)", "1,65 g/L (9,2)", "1,45 g/L (8,1)"],
+          ["Carpenter & Coustan", "0,95 g/L (5,3)", "1,80 g/L (10,0)", "1,55 g/L (8,6)", "1,40 g/L (7,8)"]
+        ] }
+    ],
+    red_flags: ["Macrosomie fœtale, hydramnios → surveillance obstétricale rapprochée", "Glycémie à jeun d'emblée élevée : évoquer un diabète préexistant (type 2) méconnu", "Mauvais équilibre glycémique : complications materno-fœtales (pré-éclampsie, dystocie, hypoglycémie néonatale)", "O'Sullivan ne POSE PAS le diagnostic (sauf > 2 g/L) : ne pas étiqueter sur ce seul test"],
+    conduite: ["Privilégier la stratégie en 1 temps (HGPO 75 g, seuils CNGOF) ; 1 valeur anormale suffit.", "Le test d'O'Sullivan dépiste mais ne diagnostique pas (confirmer par HGPO), sauf glycémie à 1 h > 2 g/L.", "Respecter les conditions du test (≥ 150 g glucides/j les 3 jours avant, jeûne 8-14 h, pas de tabac).", "En cas de diagnostic : autosurveillance, mesures diététiques ± insuline ; surveillance obstétricale et dépistage du diabète en post-partum."]
+  },
+  {
+    id: "insuffisance_renale_chronique", num: 94, anomalie: "Maladie rénale chronique / insuffisance rénale chronique",
+    specialite: "Néphrologie",
+    definition: "Maladie rénale chronique (MRC) = DFG < 60 mL/min/1,73 m² pendant ≥ 3 mois, OU atteinte rénale (histologie, imagerie, marqueurs : protéinurie, hématurie, leucocyturie, microalbuminurie chez le diabétique) > 3 mois quel que soit le DFG. Caractère chronique = irréversible et présent depuis > 3 mois.",
+    premiere_intention: ["Dépistage des sujets à risque : HTA, diabète, âge > 60 ans, histoire familiale, infections urinaires à répétition, toxiques", "Estimer le DFG (Cockcroft-Gault ou MDRD) + marqueurs : protéinurie, hématurie, leucocyturie, microalbuminurie", "Confirmer (interférences : cimétidine, triméthoprime) et éliminer une IRA (fonctionnelle, obstructive, médicamenteuse, GN rapidement progressive, vasculaire)", "Affirmer la chronicité (> 3 mois) : antériorité, anémie normochrome normocytaire arégénérative, hypocalcémie, petits reins"],
+    causes: [
+      { cause: "Néphropathie glomérulaire", signe: "protéinurie abondante, hématurie (cylindres hématiques), HTA", examens: ["Protéinurie/24 h", "PBR"] },
+      { cause: "Néphropathie tubulo-interstitielle", signe: "leucocyturie (cylindres leucocytaires), protéinurie de faible taux", examens: ["Cytologie urinaire", "Imagerie"] },
+      { cause: "Atteinte vasculaire / réno-vasculaire", signe: "HTA, athérome, sténose des artères rénales", examens: ["Écho-Doppler des artères rénales"] },
+      { cause: "Causes fréquentes", signe: "diabète, HTA, polykystose, uropathie", examens: ["Glycémie, échographie rénale"] }
+    ],
+    tableaux: [
+      { titre: "Classification (stades)",
+        entetes: ["Stade", "DFG (mL/min/1,73 m²)", "Définition"],
+        lignes: [
+          ["1", "≥ 90 + marqueurs", "MRC sans insuffisance rénale"],
+          ["2", "60-89 + marqueurs", "MRC (atteinte légère)"],
+          ["3", "30-59", "Insuffisance rénale modérée"],
+          ["4", "15-29", "Insuffisance rénale sévère"],
+          ["5", "< 15", "Insuffisance rénale terminale"]
+        ] },
+      { titre: "Marqueurs d'atteinte rénale (seuils)",
+        entetes: ["Marqueur", "Seuil"],
+        lignes: [
+          ["Protéinurie", "> 300 mg/24 h ou protéinurie/créatininurie > 200 mg/g"],
+          ["Hématurie", "> 10/mm³ (10 000/mL)"],
+          ["Leucocyturie", "> 10/mm³ (10 000/mL)"],
+          ["Microalbuminurie", "20-200 µg/min ; 30-300 mg/24 h ; albuminurie/créatininurie > 2 mg/mmol"],
+          ["Morphologie", "Asymétrie, contours bosselés, petits reins ou gros reins polykystiques, néphrocalcinose, calcul, hydronéphrose"]
+        ] },
+      { titre: "Estimation du DFG",
+        entetes: ["Méthode", "Particularités"],
+        lignes: [
+          ["Cockcroft-Gault", "(140 − âge) × poids × K / créatininémie (µmol/L) ; K = 1,24 (H) / 1,04 (F) ; limite si DFG < 30"],
+          ["MDRD", "Indépendante du poids ; préférable chez le sujet âgé ; ajuster ×0,742 (femme), ×1,21 (sujet africain)"],
+          ["Clairance mesurée (urines 24 h)", "Si > 75 ans, masse musculaire anormale, dénutrition/obésité, doute, suivi de néphrotoxiques"]
+        ] },
+      { titre: "Prise en charge par stade",
+        entetes: ["Stade", "DFG", "Actions"],
+        lignes: [
+          ["1", "≥ 90 + marqueurs", "Diagnostic étiologique ; traiter les comorbidités (diabète, HTA, dyslipidémie, tabac) ; évaluer la progression ; réduire le risque CV"],
+          ["2", "60-89 + marqueurs", "+ néphroprotection : IEC/ARA2 si HTA ou protéinurie, PA < 130/80, hygiène, éviction des néphrotoxiques"],
+          ["3", "30-59", "+ traiter les complications (anémie, phospho-calcique, acidose, nutrition) ; préserver le capital veineux ; vacciner VHB"],
+          ["4", "15-29", "+ préparer la suppléance"],
+          ["5", "< 15", "+ démarrer la suppléance si nécessaire"]
+        ] },
+      { titre: "Anomalies biologiques de l'IRC",
+        entetes: ["Domaine", "Anomalies"],
+        lignes: [
+          ["Azote / créatinine", "Hyperazotémie, hyperuricémie, hypercréatininémie"],
+          ["Phospho-calcique", "Hyperphosphatémie, hypocalcémie (ostéodystrophie rénale)"],
+          ["Hématologie", "Anémie normochrome normocytaire arégénérative (microcytaire si carence martiale)"],
+          ["Acido-basique", "Acidose métabolique à trou anionique augmenté"],
+          ["Protéines", "Hypoprotidémie (↓ β/γ-globulines, ↑ α2-globulines), hypoalbuminémie"],
+          ["Ionogramme", "Hyperkaliémie, hyponatrémie, hypermagnésémie"]
+        ] },
+      { titre: "Ostéodystrophie rénale (physiopathologie)",
+        entetes: ["Mécanisme", "Conséquence"],
+        lignes: [
+          ["Phosphates non filtrés", "Hyperphosphatémie → précipitation phosphocalcique → hypocalcémie"],
+          ["Défaut d'hydroxylation rénale (25-OH-D → calcitriol)", "↓ absorption intestinale du calcium → hypocalcémie"],
+          ["Hypocalcémie", "Hyperparathyroïdie secondaire (PTH ↑)"],
+          ["PTH élevée", "Ostéoclastes → ostéodystrophie ; ↑ réabsorption Ca, ↓ réabsorption des phosphates"]
+        ] }
+    ],
+    red_flags: ["IRA à éliminer en urgence : obstacle, néphrotoxiques (produits de contraste iodés, IEC/ARA2, AINS, aminosides), GN rapidement progressive, cause vasculaire", "Hyperkaliémie menaçante (IRC + IEC/ARA2)", "Anémie sévère (↓ EPO) avec retentissement cardiaque (hypertrophie ventriculaire gauche)", "Sous IEC/ARA2 : créatininémie ↑ > 50 % (sténose bilatérale des artères rénales ?) ou kaliémie > 5,6 mmol/L → réévaluer"],
+    conduite: ["Devant un DFG < 60 : confirmer, éliminer une IRA, affirmer la chronicité (> 3 mois ; antériorité, anémie/hypocalcémie, petits reins sauf diabète/amylose/polykystose).", "Bilan : EPP, glycémie, bandelette + protéinurie/24 h, cytologie urinaire, échographie rénale ; orienter l'étiologie (glomérulaire / tubulo-interstitielle / vasculaire).", "Néphroprotection : IEC/ARA2 (HTA/protéinurie), PA < 130/80, contrôle CV, éviction des néphrotoxiques ; surveiller créatinine et kaliémie.", "Anémie : fer IV si ferritine < 100 µg/L ou CST < 20 %, puis agents stimulant l'érythropoïèse ; préparer la suppléance aux stades avancés."]
+  },
+  {
+    id: "syndrome_nephrotique", num: 95, anomalie: "Syndrome néphrotique",
+    specialite: "Néphrologie",
+    definition: "Définition biologique : protéinurie > 3 g/24 h + hypoprotidémie < 60 g/L + hypoalbuminémie < 30 g/L. « Pur » si pas d'HTA, ni insuffisance rénale, ni hématurie microscopique, et protéinurie sélective ; « impur » dans le cas contraire.",
+    premiere_intention: ["Affirmer les 3 critères : protéinurie > 3 g/24 h, protidémie < 60 g/L, albuminémie < 30 g/L (le calcium mesuré baisse, pas le calcium corrigé)", "Caractériser la protéinurie (EPP urinaire) : sélective (> 85 % albumine, clairance IgG/transferrine < 0,1) vs non sélective (albumine + Ig)", "Classer pur / impur (HTA, insuffisance rénale, hématurie microscopique, sélectivité)", "Bilan : EPP sérique, bilan lipidique, hémostase, cytologie urinaire, ionogramme urinaire, bilan martial"],
+    causes: [
+      { cause: "Protéinurie sélective", signe: "> 85 % d'albumine, clairance IgG/transferrine < 0,1 ; perte des charges anioniques, pas de lésion en microscopie optique", examens: ["EPP urinaire"] },
+      { cause: "Protéinurie non sélective", signe: "albumine + protéines de haut poids moléculaire (immunoglobulines) ; lésions en microscopie optique", examens: ["EPP urinaire", "PBR selon contexte"] },
+      { cause: "Syndrome néphrotique impur", signe: "HTA, insuffisance rénale, hématurie microscopique ou protéinurie non sélective", examens: ["TA, créatinine, cytologie urinaire"] }
+    ],
+    tableaux: [
+      { titre: "Critères diagnostiques",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Protéinurie", "> 3 g/24 h"],
+          ["Protidémie", "< 60 g/L"],
+          ["Albuminémie", "< 30 g/L (↓ calcium mesuré, calcium corrigé normal)"]
+        ] },
+      { titre: "Syndrome néphrotique pur vs impur",
+        entetes: ["", "Pur", "Impur"],
+        lignes: [
+          ["HTA", "Absente", "Possible"],
+          ["Insuffisance rénale", "Absente", "Possible"],
+          ["Hématurie microscopique", "Absente", "Possible"],
+          ["Protéinurie", "Sélective", "Non sélective possible"]
+        ] },
+      { titre: "Conséquences biologiques et complications",
+        entetes: ["Domaine", "Anomalie / risque"],
+        lignes: [
+          ["EPP sérique", "↑ α2 et β-globulines, ↓ γ-globulines ; ↑ VS (hypoprotidémie)"],
+          ["Lipides", "Hyperlipidémie mixte type IIb (ou IV) : ↑ VLDL et LDL → statine si résistant"],
+          ["Coagulation", "Hypercoagulabilité (↑ facteurs + fuite d'antithrombine) → TVP / EP ; HBPM si albumine < 20-25 g/L puis AVK"],
+          ["Immunité", "↓ IgG / IgA → risque infectieux (pneumocoque, Haemophilus, klebsielle)"],
+          ["Médicaments", "↑ fraction libre des médicaments liés à l'albumine (AVK, AINS)"],
+          ["Fer", "Carence martiale atypique : fer, transferrine et ferritine diminués"],
+          ["Ionogramme urinaire", "Hyperaldostéronisme secondaire : ↓ natriurèse, ↑ kaliurèse"]
+        ] }
+    ],
+    red_flags: ["Complication thrombo-embolique (TVP, embolie pulmonaire, thrombose des veines rénales) par hypercoagulabilité", "Syndrome néphrotique sévère (albumine < 20-25 g/L) : anticoagulation préventive", "Infections (pneumocoque, Haemophilus) par hypogammaglobulinémie", "Syndrome néphrotique impur (HTA, IR, hématurie) → étiologie potentiellement grave, avis néphrologique"],
+    conduite: ["Affirmer les 3 critères biologiques ; distinguer pur (sélectif, sans HTA/IR/hématurie) et impur.", "Prévenir et surveiller les complications : thrombose (HBPM si albumine < 20-25 g/L), infections, dyslipidémie (statine si résistant).", "Adapter les médicaments fortement liés à l'albumine (↑ fraction libre).", "Avis néphrologique ; PBR selon l'âge et le caractère impur ; traitement étiologique."]
+  },
+  {
+    id: "cholestase", num: 96, anomalie: "Syndrome cholestatique",
+    specialite: "Hépatologie",
+    definition: "Diminution ou arrêt de l'excrétion biliaire. Marqueurs : ↑ PAL, GGT, 5'-nucléotidase, bilirubine conjuguée. Cliniquement : ictère à urines foncées, prurit, stéatorrhée et décoloration des selles (malabsorption des graisses et des vitamines liposolubles A, D, E, K).",
+    premiere_intention: ["Confirmer la cholestase : ↑ PAL, GGT, 5'-nucléotidase, bilirubine conjuguée, cholestérol, acides biliaires totaux", "Retentissement : TP ↓ (carence en vitamine K → facteurs II, VII, IX, X, protéines C et S) ; rechercher une cytolyse associée (ALAT, ASAT, LDH)", "Échographie abdominale en 1re intention : voies biliaires dilatées (obstacle = extra-hépatique) ou non (intra-hépatique)", "Rechercher médicaments, alcool, virus des hépatites"],
+    causes: [
+      { cause: "Cholestase intra-hépatique", signe: "voies biliaires non dilatées ; hépatite (médicamenteuse, virale, alcoolique), cirrhose, hépatocarcinome, septicémie, cholangite sclérosante, grossesse", examens: ["Sérologies, revue des médicaments", "Échographie, cholangio-IRM"] },
+      { cause: "Cholestase extra-hépatique", signe: "voies biliaires dilatées (obstacle) ; lithiase du cholédoque, cancer du pancréas ou du cholédoque, sténose", examens: ["Échographie", "Cholangio-IRM, écho-endoscopie"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques",
+        entetes: ["Sens", "Paramètres"],
+        lignes: [
+          ["Augmentés", "PAL, GGT, 5'-nucléotidase, bilirubine conjuguée, cholestérol, acides biliaires totaux (dosés surtout chez la femme enceinte)"],
+          ["Diminués", "TP, facteurs vitamine K-dépendants (II, VII, IX, X), protéine C, protéine S"],
+          ["Si cytolyse associée", "↑ ALAT, ASAT, LDH"]
+        ] },
+      { titre: "Étiologies",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Intra-hépatique (VB non dilatées)", "Hépatite médicamenteuse / virale / alcoolique, cirrhose, hépatocarcinome, septicémie, cholangite sclérosante, grossesse"],
+          ["Extra-hépatique (VB dilatées)", "Lithiase du cholédoque, cancer du pancréas ou du cholédoque, sténose"]
+        ] },
+      { titre: "Conséquences cliniques",
+        entetes: ["Mécanisme", "Manifestation"],
+        lignes: [
+          ["Accumulation de bilirubine conjuguée", "Ictère, urines foncées"],
+          ["Accumulation d'acides biliaires", "Prurit"],
+          ["Malabsorption des graisses", "Stéatorrhée, décoloration des selles"],
+          ["Carence en vitamine K", "↓ facteurs II/VII/IX/X, protéines C/S → TP abaissé"]
+        ] }
+    ],
+    red_flags: ["Angiocholite : fièvre + ictère + douleur de l'hypochondre droit (triade de Charcot) → urgence", "Obstacle des voies biliaires (lithiase, cancer) → avis chirurgical / endoscopique", "Trouble de la coagulation (carence en vitamine K) avant un geste invasif", "Ictère fébrile, sepsis sur obstacle"],
+    conduite: ["Échographie abdominale d'emblée : VB dilatées (extra-hépatique, obstacle) vs non dilatées (intra-hépatique).", "Rechercher une cause médicamenteuse, alcoolique ou virale ; compléter par cholangio-IRM / écho-endoscopie si besoin.", "Traitement étiologique (souvent chirurgical / endoscopique pour les obstacles).", "Symptomatique : prurit → cholestyramine (résine chélatrice des acides biliaires) ; carence en vitamine K → vitamine K parentérale."]
+  },
+  {
+    id: "insuffisance_hepatique", num: 97, anomalie: "Insuffisance hépatique",
+    specialite: "Hépatologie",
+    definition: "Défaillance des fonctions hépatiques (synthèse, détoxification, excrétion). Conséquences : hypoglycémie, hypoalbuminémie (œdème/ascite), troubles de la coagulation (hémorragies), hyperammoniémie (encéphalopathie), hypogonadisme, cholestase. Forme aiguë (hépatite fulminante) ou chronique (cirrhose décompensée).",
+    premiere_intention: ["Apprécier la gravité : TP / facteur V (synthèse des facteurs de coagulation), ammoniémie, glycémie", "Bilan : albumine, bilirubine, transaminases, ionogramme, créatinine, NFS-plaquettes", "Rechercher l'étiologie : alcool, virus, médicaments / toxiques (paracétamolémie)", "Évaluer l'encéphalopathie hépatique (astérixis, confusion)"],
+    causes: [
+      { cause: "Cirrhose décompensée", signe: "insuffisance hépatique chronique ; ascite, ictère, encéphalopathie, hémorragie", examens: ["Échographie, élastométrie", "TP / facteur V, albumine"] },
+      { cause: "Hépatite aiguë (fulminante)", signe: "virale, médicamenteuse (paracétamol), toxique (amanite phalloïde) ; TP / facteur V effondrés + encéphalopathie", examens: ["Sérologies, paracétamolémie", "TP / facteur V"] }
+    ],
+    tableaux: [
+      { titre: "Conséquences de la défaillance hépatique",
+        entetes: ["Fonction perdue", "Conséquence"],
+        lignes: [
+          ["Néoglucogenèse / glycogénolyse", "Hypoglycémie"],
+          ["Synthèse d'albumine", "Œdème, ascite"],
+          ["Synthèse des facteurs de coagulation", "Hémorragies (TP / facteur V abaissés)"],
+          ["Synthèse du cholestérol (hormones)", "Hypogonadisme"],
+          ["Uréogenèse (détoxification de l'ammoniac)", "Hyperammoniémie → encéphalopathie hépatique"],
+          ["Métabolisation des médicaments", "Adaptation thérapeutique nécessaire"],
+          ["Excrétion biliaire", "Syndrome cholestatique"]
+        ] },
+      { titre: "Signes cliniques (insuffisance hépatique chronique)",
+        entetes: ["Catégorie", "Signes"],
+        lignes: [
+          ["Cutanés / phanères", "Angiomes stellaires, érythrose palmaire, hippocratisme digital, ongles blancs"],
+          ["Hypogonadisme (homme)", "Gynécomastie, impuissance"],
+          ["Hypogonadisme (femme)", "Aménorrhée, atrophie mammaire"]
+        ] }
+    ],
+    red_flags: ["Hépatite fulminante : TP < 50 % / facteur V effondré + encéphalopathie → urgence, contact d'un centre de transplantation", "Encéphalopathie hépatique (astérixis, confusion, coma)", "Hypoglycémie, hémorragie, insuffisance rénale (syndrome hépato-rénal), infection (du liquide d'ascite)", "Intoxication au paracétamol → N-acétylcystéine sans délai"],
+    conduite: ["Évaluer la gravité par le TP / facteur V (le facteur V n'est pas vitamine K-dépendant : reflète la synthèse hépatique).", "Arrêter l'exposition au toxique ; N-acétylcystéine (NAC) pour l'intoxication au paracétamol.", "Traiter les complications : coagulation, hypoglycémie, encéphalopathie, insuffisance rénale aiguë, infections.", "Transplantation hépatique dans les formes graves ; avis spécialisé urgent."]
+  },
+  {
+    id: "cirrhose", num: 98, anomalie: "Cirrhose (décompensée)",
+    specialite: "Hépatologie",
+    definition: "Fibrose hépatique diffuse avec nodules de régénération. Compensée (asymptomatique, peu d'hypertension portale) → décompensée (insuffisance hépatocellulaire + hypertension portale) si l'agent étiologique persiste. ~15 000 décès/an ; alcool première cause.",
+    premiere_intention: ["Insuffisance hépatocellulaire : TP, facteur V, albumine, bilirubine, enzymes hépatiques", "Hypertension portale : thrombopénie (hypersplénisme), varices œsophagiennes (endoscopie)", "Marqueurs biologiques de cirrhose (surtout alcoolique) : hypergammaglobulinémie, bloc β-γ à l'EPP, ratio IgA/transferrine > 1,9", "Classer la gravité (Child-Pugh) ; dépister le carcinome hépatocellulaire (AFP, imagerie)"],
+    causes: [
+      { cause: "Cirrhose alcoolique (50-75 %)", signe: "intoxication alcoolique chronique", examens: ["Interrogatoire, GGT / VGM, EPP"] },
+      { cause: "Hépatite virale chronique", signe: "VHC (15-25 %), VHB (5 %)", examens: ["Sérologies, charge virale"] },
+      { cause: "Autres causes", signe: "hémochromatose, cirrhose biliaire primitive, hépatite auto-immune, déficit en α1-antitrypsine", examens: ["Fer / ferritine, anticorps (AMA, auto-Ac), α1-antitrypsine"] }
+    ],
+    tableaux: [
+      { titre: "Score de Child-Pugh",
+        entetes: ["Paramètre", "1 point", "2 points", "3 points"],
+        lignes: [
+          ["Bilirubine (µmol/L)", "< 35", "35-60", "> 60"],
+          ["Albumine (g/L)", "> 35", "28-35", "< 28"],
+          ["TP (%)", "> 50", "40-50", "< 40"],
+          ["Ascite", "Absente", "Modérée", "Permanente"],
+          ["Encéphalopathie", "Absente", "Modérée", "Invalidante"]
+        ] },
+      { titre: "Stades de Child-Pugh",
+        entetes: ["Stade", "Score"],
+        lignes: [
+          ["A", "5-6"],
+          ["B", "7-9"],
+          ["C", "10-15"]
+        ] },
+      { titre: "Marqueurs biologiques",
+        entetes: ["Type", "Marqueurs"],
+        lignes: [
+          ["Insuffisance hépatocellulaire", "TP, facteur V, albumine ↓ ; bilirubine ↑"],
+          ["Hypertension portale", "Thrombopénie (hypersplénisme)"],
+          ["Cirrhose (surtout alcoolique)", "Hypergammaglobulinémie, ↑ IgA + bloc β-γ (EPP), ratio IgA/transferrine > 1,9"],
+          ["Fibrose (éviter la PBH)", "Scores : α2-macroglobuline, haptoglobine, apoA1, γGT, bilirubine, ± ALAT, acide hyaluronique"],
+          ["Carcinome hépatocellulaire", "AFP, imagerie"]
+        ] }
+    ],
+    red_flags: ["Décompensation : ictère, ascite, encéphalopathie, hémorragie digestive (rupture de varices œsophagiennes)", "Hémorragie digestive sur varices → urgence", "Infection du liquide d'ascite, syndrome hépato-rénal", "Carcinome hépatocellulaire (AFP élevée, nodule à l'imagerie)"],
+    conduite: ["Classer la gravité (Child-Pugh A/B/C) ; dépister les varices (endoscopie) et le CHC (échographie + AFP / 6 mois).", "Traitement étiologique : sevrage alcoolique, antiviraux (hépatites B/C), corticoïdes (auto-immune), saignées (hémochromatose).", "Hypertension portale : β-bloquants non sélectifs ; éviter AINS / aspirine et les hépatotoxiques.", "Transplantation hépatique dans les formes avancées."]
+  },
+  {
+    id: "pancreatite_aigue", num: 99, anomalie: "Pancréatite aiguë",
+    specialite: "Gastro-entérologie",
+    definition: "Inflammation aiguë du pancréas : douleur abdominale (signe le plus constant, ~90-100 %) + lipase > 3N. Distinguer la forme œdémateuse (mortalité ~0) de la forme nécrotico-hémorragique (mortalité ~20 %). Deux causes dominent : lithiase biliaire et alcool (~40 % chacune).",
+    premiere_intention: ["Diagnostic : lipase > 3N (valeur diagnostique supérieure à l'amylase) ; l'association amylase-lipase n'apporte rien de plus", "Douleur abdominale + vomissements ; rechercher des signes de gravité (choc, oligurie, fièvre, polypnée, signes neurologiques)", "Imagerie si doute : TDM avec injection (IRM si insuffisance rénale ; écho ininterprétable dans 40 % des cas)", "Rechercher l'étiologie : lithiase (ALAT > 3N précoce, VPP 95 %), alcool ; bilan TG et calcémie"],
+    causes: [
+      { cause: "Lithiase biliaire (40 %)", signe: "âge > 50 ans, femme ; ALAT > 3N précoce (meilleur marqueur, VPP 95 %) — à rechercher en priorité (traitement spécifique)", examens: ["ALAT précoce", "Échographie / écho-endoscopie"] },
+      { cause: "Alcool (40 %)", signe: "intoxication alcoolique chronique", examens: ["Interrogatoire"] },
+      { cause: "Idiopathique (> 10 %)", signe: "bilan étiologique négatif", examens: ["Bilan complet"] },
+      { cause: "Autres causes", signe: "médicamenteuse, post-opératoire, infectieuse, hypertriglycéridémie (> 10 g/L), hypercalcémie, génétique (sujet jeune), obstructive néoplasique, maladies systémiques (Crohn, lupus, vascularite)", examens: ["TG, calcémie", "Imagerie"] }
+    ],
+    tableaux: [
+      { titre: "Score de Ranson (≥ 3 = grave)",
+        entetes: ["Moment", "Critères"],
+        lignes: [
+          ["À l'admission", "Âge > 50 ans ; leucocytes > 16 G/L ; glycémie > 11 mmol/L (sauf diabète) ; LDH > 350 U/L (1,5N) ; ASAT > 250 U/L (6N)"],
+          ["Durant les 48 h", "Hématocrite ↓ > 10 % ; urée ↑ > 1,8 mmol/L ; calcémie < 2 mmol/L ; PaO2 < 60 mmHg ; déficit en base > 4 mmol/L ; séquestration liquidienne > 6 L"]
+        ] },
+      { titre: "Score d'Imrie (≥ 3 = grave)",
+        entetes: ["Critère", "Seuil"],
+        lignes: [
+          ["Âge", "> 55 ans"],
+          ["Leucocytes", "> 15 G/L"],
+          ["Glycémie", "> 10 mmol/L (sauf diabète)"],
+          ["LDH", "> 600 U/L (3,5N)"],
+          ["Urée sanguine", "> 16 mmol/L"],
+          ["Calcémie", "< 2 mmol/L"],
+          ["PaO2", "< 60 mmHg"],
+          ["Albuminémie", "< 32 g/L"],
+          ["ASAT", "> 100 U/L (2N)"]
+        ] },
+      { titre: "Autres marqueurs de gravité",
+        entetes: ["Marqueur", "Seuil / signification"],
+        lignes: [
+          ["Terrain", "Âge > 80 ans, IMC > 30, défaillance d'organe préexistante"],
+          ["CRP", "> 150 mg/L à la 48e heure"],
+          ["TDM", "Index de sévérité (inflammation + nécrose pancréatiques)"],
+          ["Défaillance d'organe", "Hémodynamique, respiratoire, neurologique (Glasgow < 13), rénale (créat > 170 µmol/L), hématologique (plaquettes < 80 G/L)"]
+        ] }
+    ],
+    red_flags: ["Signes de gravité : état de choc, oligurie, polypnée, confusion → réanimation", "Pancréatite nécrotico-hémorragique (mortalité ~20 %) : Ranson/Imrie ≥ 3, CRP > 150 à 48 h, index TDM > 4", "Défaillance d'organe (hémodynamique, respiratoire, rénale, neurologique, hématologique)", "Origine lithiasique avec angiocholite → recherche et levée de l'obstacle (CPRE)"],
+    conduite: ["Affirmer le diagnostic : douleur + lipase > 3N ; TDM en cas de doute.", "Hospitalisation systématique ; rechercher une défaillance viscérale plusieurs fois/jour les 48 premières heures.", "Évaluer la gravité (Ranson/Imrie ≥ 3, CRP > 150, index TDM > 4, terrain) → surveillance renforcée clinico-radio-biologique.", "Antalgiques (morphiniques), réhydratation, jeûne puis réalimentation après 48 h sans douleur ; cholécystectomie si lithiase ; réanimation / drainage de nécrose / antibiothérapie si complications."]
+  },
+  {
+    id: "marqueurs_idm", num: 100, anomalie: "Marqueurs biologiques de l'infarctus du myocarde",
+    specialite: "Cardiologie",
+    definition: "Marqueurs de nécrose myocardique. La troponine (isoforme I cardiaque) est le marqueur de référence : spécifique du myocarde, base de la cinétique, confirmation a posteriori et valeur pronostique. Le diagnostic d'IDM aigu repose d'abord sur la clinique + l'ECG (revascularisation précoce).",
+    premiere_intention: ["Diagnostic de l'IDM aigu : clinique + ECG d'abord (revascularisation précoce) — ne pas attendre la troponine", "Troponine I (spécifique) : cinétique (pic ~12 h), confirmation a posteriori, pronostic", "SCA sans sus-décalage ST : troponine = diagnostic + stratification du risque ; si négative < 12 h, RÉPÉTER 6-12 h plus tard", "Myoglobine : marqueur le plus précoce (2-3 h), bonne VPN, efficacité de reperfusion et récidive"],
+    causes: [
+      { cause: "Troponine I", signe: "spécifique du myocarde ; ↑ 4-6 h, pic 12 h, normalisation 9-14 j ; la troponine T peut être faussement ↑ (IRC, poly/dermatomyosite)", examens: ["Troponine I (cinétique)"] },
+      { cause: "Myoglobine", signe: "la plus précoce (2-3 h), non spécifique (toute lyse musculaire), bonne VPN, reperfusion / récidive", examens: ["Myoglobine"] },
+      { cause: "CK-MB", signe: "isoforme cardiaque de la CK ; quasi abandonnée (peu d'apport vs troponine)", examens: ["CK-MB"] },
+      { cause: "Élévation non ischémique de la troponine", signe: "EP, insuffisance cardiaque, dissection aortique, myocardite/endocardite, choc septique, AVC, cirrhose, acidocétose, IRC, chirurgie cardiaque", examens: ["Contexte clinique"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs de nécrose myocardique",
+        entetes: ["Marqueur", "Caractéristiques"],
+        lignes: [
+          ["Troponine I", "Spécifique du myocarde ; ↑ 4-6 h, pic ~12 h, normalisation 9-14 j ; marqueur de référence (cinétique, pronostic)"],
+          ["Myoglobine", "La plus précoce (2-3 h) ; non spécifique ; bonne VPN ; reperfusion et récidive précoce"],
+          ["CK-MB", "Isoforme cardiaque de la CK ; quasi abandonnée (peu d'apport vs troponine)"],
+          ["ASAT, LDH, CK totales", "Peu spécifiques, cinétique retardée ; non utilisés pour le diagnostic d'IDM"]
+        ] },
+      { titre: "Place de la troponine dans le SCA",
+        entetes: ["Situation", "Conduite"],
+        lignes: [
+          ["SCA sans sus-décalage ST", "Troponine = diagnostic + stratification du risque"],
+          ["Troponine négative < 12 h", "N'exclut pas : 2e dosage 6-12 h plus tard"],
+          ["Angor instable + troponine élevée", "Prise en charge agressive (HBPM ou anti-GpIIbIIIa)"]
+        ] },
+      { titre: "Élévations non ischémiques de la troponine",
+        entetes: ["Type", "Exemples"],
+        lignes: [
+          ["Cardio-vasculaire", "Embolie pulmonaire, insuffisance cardiaque, dissection aortique, myocardite / endocardite, arythmie (FA rapide)"],
+          ["Systémique", "Choc septique, AVC, acidocétose diabétique, insuffisance rénale chronique"],
+          ["Autres", "Cirrhose, chirurgie cardiaque, effort intense"]
+        ] }
+    ],
+    red_flags: ["Douleur thoracique évocatrice → ECG immédiat ; sus-décalage ST = IDM → revascularisation en urgence (ne pas attendre la troponine)", "Troponine négative précoce (< 12 h) n'exclut pas un SCA → répéter", "Angor instable avec troponine élevée → prise en charge agressive (HBPM / anti-GpIIbIIIa)", "Élévation de troponine sans contexte ischémique (EP, sepsis, insuffisance cardiaque…) à interpréter"],
+    conduite: ["IDM aigu = diagnostic clinique + ECG ; la troponine confirme a posteriori et stratifie le risque.", "Interférences de la troponine : fibrine / débris (centrifugation, voire ultracentrifugation), facteur rhumatoïde, anticorps hétérophiles.", "La troponine T peut être faussement élevée (IRC, poly/dermatomyosite) → préférer la troponine I.", "La taille de l'infarctus s'évalue par imagerie, pas par les marqueurs biologiques."]
+  },
+  {
+    id: "marqueurs_insuffisance_cardiaque", num: 101, anomalie: "Marqueurs biologiques de l'insuffisance cardiaque (BNP / NT-proBNP)",
+    specialite: "Cardiologie",
+    definition: "Peptides natriurétiques sécrétés par le ventricule (étirement, pression intracardiaque). Le pré-proBNP est clivé en NT-proBNP (inactif) et BNP (actif). Le BNP augmente la natriurèse, provoque une vasodilatation et inhibe le système rénine-angiotensine-aldostérone.",
+    premiere_intention: ["Devant une dyspnée : orienter vers une origine cardiaque (BNP/NT-proBNP élevés) ou pulmonaire (peu élevés)", "Marqueur diagnostique des dysfonctions ventriculaires (notamment diastoliques)", "Suivi thérapeutique de l'insuffisance cardiaque (efficacité du traitement)", "Pronostic post-IDM : dosage entre J1 et J4 (prédictif de mortalité et d'insuffisance cardiaque)"],
+    causes: [
+      { cause: "BNP (forme active)", signe: "↑ étirement ventriculaire, ↑ pression intracardiaque, HTA ; demi-vie plus courte", examens: ["BNP"] },
+      { cause: "NT-proBNP (forme inactive)", signe: "mêmes indications que le BNP ; clairance dépendante de la fonction rénale, demi-vie plus longue", examens: ["NT-proBNP"] },
+      { cause: "Élévation à interpréter", signe: "âge, insuffisance rénale (surtout NT-proBNP), autres causes d'augmentation des pressions de remplissage", examens: ["Fonction rénale, contexte"] },
+      { cause: "Élévation non liée à l'insuffisance cardiaque", signe: "fibrillation auriculaire, insuffisance rénale chronique, insuffisance hépatique, embolie pulmonaire / HTAP, âge avancé, sepsis", examens: ["ECG", "Fonction rénale, bilan hépatique", "Contexte"] }
+    ],
+    tableaux: [
+      { titre: "BNP vs NT-proBNP",
+        entetes: ["", "BNP", "NT-proBNP"],
+        lignes: [
+          ["Activité", "Forme active", "Forme inactive"],
+          ["Demi-vie", "Plus courte", "Plus longue"],
+          ["Clairance rénale", "Moins dépendante", "Dépendante de la fonction rénale"],
+          ["Applications", "Identiques", "Identiques"]
+        ] },
+      { titre: "Indications",
+        entetes: ["Indication", "Précision"],
+        lignes: [
+          ["Dyspnée", "Orienter l'origine cardiaque vs pulmonaire (bonne VPN)"],
+          ["Dysfonction ventriculaire", "Marqueur diagnostique (notamment diastolique)"],
+          ["Pronostic post-IDM", "Dosage J1-J4 : prédictif de mortalité / insuffisance cardiaque"],
+          ["Suivi thérapeutique", "Évaluer l'efficacité du traitement de l'insuffisance cardiaque"]
+        ] },
+      { titre: "Effets physiologiques du BNP",
+        entetes: ["Action", "Conséquence"],
+        lignes: [
+          ["Natriurèse", "Augmentée"],
+          ["Vaisseaux", "Vasodilatation"],
+          ["Système rénine-angiotensine-aldostérone", "Inhibition"]
+        ] },
+      { titre: "Élévations non liées à l'insuffisance cardiaque (faux positifs)",
+        entetes: ["Cause", "Remarque"],
+        lignes: [
+          ["Fibrillation auriculaire", "Élévation fréquente, indépendante d'une dysfonction ventriculaire"],
+          ["Insuffisance rénale chronique", "Clairance diminuée (surtout NT-proBNP)"],
+          ["Insuffisance hépatique", "Élévation possible"],
+          ["Embolie pulmonaire / HTAP", "Surcharge ventriculaire droite"],
+          ["Âge avancé, sepsis", "Valeurs de base plus élevées"]
+        ] }
+    ],
+    red_flags: ["BNP / NT-proBNP très élevés avec dyspnée → insuffisance cardiaque aiguë (OAP) probable, prise en charge urgente", "Interpréter selon l'âge et la fonction rénale (NT-proBNP surestimé en insuffisance rénale)", "Un taux bas a une bonne valeur prédictive négative pour éliminer une origine cardiaque à la dyspnée", "Élévation possible dans d'autres causes d'augmentation des pressions (embolie pulmonaire, HTAP…)"],
+    conduite: ["Utiliser le BNP / NT-proBNP pour trancher l'origine d'une dyspnée (cardiaque vs pulmonaire).", "Interpréter le NT-proBNP en tenant compte de la fonction rénale (clairance rénale, demi-vie longue).", "Suivre l'efficacité thérapeutique de l'insuffisance cardiaque par la cinétique du marqueur.", "Confronter à l'échographie cardiaque et au contexte clinique."]
+  },
+  {
+    id: "hydratation_intracellulaire", num: 102, anomalie: "Troubles de l'hydratation intracellulaire (osmolalité efficace)",
+    specialite: "Néphrologie",
+    definition: "L'état d'hydratation intracellulaire est déterminé par l'osmolalité efficace (tonicité) du plasma : osmolalité efficace = Na+ × 2 + glucose. L'eau diffuse vers le compartiment le plus concentré jusqu'à l'iso-osmolalité. L'urée (diffusible) n'entre pas dans le calcul (sauf élévation brutale de l'azotémie).",
+    premiere_intention: ["Calculer l'osmolalité efficace (tonicité) : Na+ × 2 + glucose", "Hyperhydratation intracellulaire : hyponatrémie et/ou hypoglycémie (osmolalité efficace ↓ → eau vers l'intracellulaire)", "Déshydratation intracellulaire : hypernatrémie et/ou hyperglycémie (osmolalité efficace ↑ → eau vers l'extracellulaire)", "Ne pas inclure l'urée (diffusible), sauf élévation brutale de l'azotémie", "Trou osmolaire = osmolalité mesurée − osmolalité calculée [2 × (Na + K) + urée + glucose] ; > 10 = substance osmotiquement active non dosée (alcools toxiques : éthylène glycol, méthanol)"],
+    causes: [
+      { cause: "Hyperhydratation intracellulaire", signe: "hyponatrémie et/ou hypoglycémie → osmolalité efficace basse, eau vers l'intracellulaire", examens: ["Natrémie, glycémie", "Osmolalité"] },
+      { cause: "Déshydratation intracellulaire", signe: "hypernatrémie et/ou hyperglycémie → osmolalité efficace haute, eau vers l'extracellulaire", examens: ["Natrémie, glycémie"] },
+      { cause: "Hyponatrémie hypertonique (piège)", signe: "hyperglycémie sévère : hyponatrémie mais osmolalité efficace élevée (pas d'hyperhydratation intracellulaire)", examens: ["Glycémie", "Osmolalité calculée"] }
+    ],
+    tableaux: [
+      { titre: "Osmolalité efficace et hydratation intracellulaire",
+        entetes: ["Situation", "Osmolalité efficace", "Mouvement de l'eau", "État cellulaire"],
+        lignes: [
+          ["Hyponatrémie / hypoglycémie", "Diminuée", "Vers l'intracellulaire", "Hyperhydratation intracellulaire"],
+          ["Hypernatrémie / hyperglycémie", "Augmentée", "Vers l'extracellulaire", "Déshydratation intracellulaire"]
+        ] },
+      { titre: "Pièges d'interprétation",
+        entetes: ["Règle", "Explication"],
+        lignes: [
+          ["Hypernatrémie = toujours hypertonique", "Le glucose ne peut pas baisser pour compenser l'hyperosmolalité"],
+          ["Hyponatrémie ≠ toujours hyperhydratation IC", "Peut être hypertonique en cas d'hyperglycémie sévère"]
+        ] }
+    ],
+    red_flags: ["Hyponatrémie aiguë sévère / symptomatique (œdème cérébral) → urgence", "Hypernatrémie sévère (déshydratation intracellulaire, troubles neurologiques)", "Correction trop rapide d'une dysnatrémie (risque de myélinolyse centro-pontine si hyponatrémie corrigée trop vite)", "Hyperglycémie majeure avec hyponatrémie (corriger la natrémie selon la glycémie)"],
+    conduite: ["Raisonner sur la tonicité (Na+ × 2 + glucose), pas sur la seule natrémie.", "Hyponatrémie : vérifier la glycémie (hyponatrémie hypertonique possible) avant de conclure à une hyperhydratation intracellulaire.", "Corriger prudemment les dysnatrémies (vitesse de correction), surtout si chroniques.", "Confronter à l'état d'hydratation extracellulaire (volémie) pour la prise en charge."]
+  },
+  {
+    id: "hypernatremie", num: 103, anomalie: "Hypernatrémie",
+    specialite: "Néphrologie",
+    definition: "Natrémie élevée = hyperosmolalité, TOUJOURS hypertonique → déshydratation intracellulaire (soif, troubles neurologiques). Trois mécanismes : perte d'eau pure, pertes hypotoniques (eau > sodium), surcharge sodée.",
+    premiere_intention: ["Hypernatrémie = toujours hypertonique → déshydratation intracellulaire (soif intense, troubles neurologiques)", "Distinguer : perte d'eau pure, pertes hypotoniques (eau > Na) ou surcharge sodée", "Évaluer le secteur extracellulaire (volémie), la diurèse et l'osmolalité urinaire", "Rechercher un diabète insipide (central vs néphrogénique) : osmolalité urinaire, restriction hydrique, réponse à la desmopressine"],
+    causes: [
+      { cause: "Perte d'eau pure", signe: "pertes insensibles non compensées, hypodipsie primitive, diabète insipide (central ou néphrogénique)", examens: ["Osmolalité urinaire", "Test à la desmopressine"] },
+      { cause: "Pertes hypotoniques (eau > Na)", signe: "rénales (diurétiques de l'anse / osmotiques, levée d'obstacle, reprise de diurèse), digestives (vomissements, diarrhées, lactulose), cutanées (brûlures, sudation)", examens: ["Ionogramme urinaire", "Contexte"] },
+      { cause: "Surcharge sodée hypertonique", signe: "bicarbonate de sodium, alimentation parentérale hypertonique, ingestion d'eau de mer, lavements/émétiques salés", examens: ["Contexte, natriurèse"] }
+    ],
+    tableaux: [
+      { titre: "Mécanismes et étiologies",
+        entetes: ["Mécanisme", "Étiologies"],
+        lignes: [
+          ["Perte d'eau pure", "Pertes insensibles non compensées, hypodipsie primitive, diabète insipide central, diabète insipide néphrogénique"],
+          ["Pertes hypotoniques (eau > Na)", "Rénales (diurétiques de l'anse/osmotiques, levée d'obstacle, reprise de diurèse post-NTA), digestives (vomissements, aspirations, fistules, diarrhées, lactulose), cutanées (brûlures, sudation excessive)"],
+          ["Surcharge sodée hypertonique", "Bicarbonate de sodium hypertonique, alimentation parentérale, ingestion d'eau de mer, émétiques / lavements salés"]
+        ] },
+      { titre: "Diabète insipide",
+        entetes: ["Type", "Causes"],
+        lignes: [
+          ["Central", "Post-traumatique, tumeurs / granulomes, idiopathique, vasculaire / méningite / encéphalite"],
+          ["Néphrogénique héréditaire", "Lié à l'X, récessif"],
+          ["Néphrogénique acquis", "Néphropathie (NIC, drépanocytose), métabolique (hypercalcémie ++, hypokaliémie), iatrogène (lithium +++, déméclocycline, foscarnet, amphotéricine B)"]
+        ] }
+    ],
+    red_flags: ["Hypernatrémie aiguë sévère (déshydratation intracellulaire : troubles neurologiques, coma)", "Correction trop rapide → risque d'œdème cérébral (corriger lentement)", "Trouble de l'accès à l'eau (sujet âgé, nourrisson, coma) aggravant", "Diabète insipide non compensé (polyurie majeure)"],
+    conduite: ["Hypernatrémie = toujours hypertonique : raisonner sur la perte d'eau / le gain de sodium.", "Diabète insipide : restriction hydrique + desmopressine distinguent central (répond) et néphrogénique (ne répond pas).", "Corriger lentement le déficit en eau (risque d'œdème cérébral si correction rapide).", "Traiter la cause (arrêt du lithium, correction de l'hypercalcémie/hypokaliémie ; apport d'eau libre)."]
+  },
+  {
+    id: "troubles_acidobasiques", num: 104, anomalie: "Troubles acido-basiques",
+    specialite: "Métabolisme",
+    definition: "L'équilibre acido-basique s'analyse sur le pH, la pCO2 (composante respiratoire / acide) et les HCO3− (composante métabolique / réserve alcaline). Quatre troubles élémentaires (acidose/alcalose × métabolique/respiratoire), ± compensation. L'acidose métabolique se classe selon le TROU ANIONIQUE.",
+    premiere_intention: ["Gaz du sang : pH, pCO2, HCO3− ; déterminer le trouble primaire et la compensation", "pH < 7,38 = acidose décompensée ; pH > 7,42 = alcalose décompensée", "Acidose métabolique : trou anionique = (Na+ + K+) − (Cl− + HCO3−) ≈ 12-16 mmol/L", "Orienter l'étiologie selon le type de trouble et le trou anionique"],
+    causes: [
+      { cause: "Acidose métabolique à TA augmenté (normochlorémique)", signe: "anions indosés ↑ : insuffisance rénale, acidose lactique (metformine, choc), acidocétose (diabète), acide exogène (salicylés, méthanol, éthylène glycol)", examens: ["Trou anionique", "Lactates, cétonurie, créatinine"] },
+      { cause: "Acidose métabolique à TA normal (hyperchlorémique)", signe: "diarrhée aiguë, acidoses tubulaires (I distale, II proximale, IV)", examens: ["Chlore", "Ionogramme urinaire"] },
+      { cause: "Trouble respiratoire", signe: "acidose respiratoire (hypoventilation, BPCO, atteinte musculaire) ou alcalose respiratoire (hyperventilation : panique, altitude, infection, anémie)", examens: ["pCO2", "Contexte"] },
+      { cause: "Alcalose métabolique", signe: "pertes digestives (vomissements), pertes urinaires (hyperaldostéronisme, furosémide), apports alcalins", examens: ["HCO3−", "Ionogramme urinaire"] }
+    ],
+    tableaux: [
+      { titre: "Interprétation isolée",
+        entetes: ["Analyte", "Diminution", "Augmentation"],
+        lignes: [
+          ["HCO3− (réserve alcaline, métabolique)", "Acidose métabolique ou compensation d'une alcalose respiratoire", "Alcalose métabolique ou compensation d'une acidose respiratoire"],
+          ["pCO2 (acide, respiratoire)", "Alcalose respiratoire ou compensation d'une acidose métabolique", "Acidose respiratoire ou compensation d'une alcalose métabolique"],
+          ["pH", "Acidose décompensée", "Alcalose décompensée"]
+        ] },
+      { titre: "Interprétation combinée (HCO3− × pCO2)",
+        entetes: ["", "pCO2 augmentée", "pCO2 diminuée"],
+        lignes: [
+          ["HCO3− augmenté", "Alcalose métabolique + compensation, ou acidose respiratoire + compensation (selon le pH)", "Alcalose mixte"],
+          ["HCO3− diminué", "Acidose mixte", "Acidose métabolique + compensation, ou alcalose respiratoire + compensation (selon le pH)"]
+        ] },
+      { titre: "Étiologies par type de trouble",
+        entetes: ["Trouble", "Étiologies"],
+        lignes: [
+          ["Acidose métabolique", "Selon le trou anionique (voir ci-dessous)"],
+          ["Acidose respiratoire", "Hypoventilation centrale, atteinte des muscles respiratoires (myasthénie, polio, tétanos), asthme / BPCO / emphysème"],
+          ["Alcalose métabolique", "Pertes digestives (vomissements), pertes urinaires (hyperaldostéronisme, furosémide), apports alcalins / reventilation"],
+          ["Alcalose respiratoire", "Crise de panique, altitude, infections, anémie"]
+        ] },
+      { titre: "Acidose métabolique : trou anionique TA = (Na+ + K+) − (Cl− + HCO3−) ≈ 12-16",
+        entetes: ["Trou anionique", "Étiologies"],
+        lignes: [
+          ["Augmenté (chlore normal)", "Insuffisance rénale ; acidose lactique (metformine, hypoxie/choc) ; acidocétose (diabète type 1) ; acide exogène (salicylés, méthanol, éthylène glycol)"],
+          ["Normal (chlore augmenté)", "Diarrhée aiguë ; acidoses tubulaires (distale I, proximale II, type IV)"]
+        ] }
+    ],
+    red_flags: ["Acidose métabolique sévère (pH < 7,2) → urgence (choc, acidose lactique, acidocétose)", "Acidose respiratoire aiguë (hypercapnie, troubles de conscience)", "Intoxication (méthanol, éthylène glycol, salicylés, metformine) avec acidose à TA augmenté → antidote / épuration", "Trouble mixte ou décompensation profonde"],
+    conduite: ["Lire le gaz du sang : pH (sens du trouble), puis pCO2 et HCO3− (origine respiratoire / métabolique et compensation).", "Acidose métabolique : calculer le trou anionique → augmenté (anions indosés) vs normal (hyperchlorémique).", "TA augmenté : doser lactates, cétonurie, créatinine, rechercher un toxique.", "Traiter la cause ; une acidose métabolique à TA augmenté oriente vers une cause grave (lyse, choc, intoxication)."]
+  },
+  {
+    id: "metabolisme_phosphocalcique", num: 105, anomalie: "Métabolisme phospho-calcique (vitamine D, PTH, calcitonine)",
+    specialite: "Endocrinologie",
+    definition: "Trois hormones règlent la calcémie et la phosphatémie. Calcitriol (1,25-OH2-D, forme active de la vitamine D) : hypercalcémiant et hyperphosphatémiant. PTH : hypercalcémiante et HYPOphosphatémiante. Calcitonine : hypocalcémiante et hypophosphatémiante.",
+    premiere_intention: ["Vitamine D : double hydroxylation — 25 (foie, 25-hydroxylase) puis 1α (rein, 1α-hydroxylase stimulée par PTH/hypocalcémie, inhibée par la calcitonine) → calcitriol", "PTH : régulée négativement par la calcémie ; ↑ réabsorption tubulaire du Ca, ↓ réabsorption des phosphates, active la 1α-hydroxylase, ↑ résorption ostéoclastique", "Calcitonine : régulée positivement par la calcémie ; inhibe la résorption ostéoclastique, ↓ réabsorption rénale Ca/P, inhibe la 1α-hydroxylase", "Devant une anomalie : calcémie corrigée / ionisé, phosphatémie, PTH, 25-OH-D, calciurie"],
+    causes: [
+      { cause: "Calcitriol (vitamine D active)", signe: "hypercalcémiant + hyperphosphatémiant ; minéralisation osseuse, ↑ absorption intestinale Ca/P", examens: ["25-OH-D, 1,25-OH2-D"] },
+      { cause: "PTH (parathormone)", signe: "hypercalcémiante + HYPOphosphatémiante ; rein (↑ Ca, ↓ P, 1α-hydroxylase), os (résorption)", examens: ["PTH 1-84", "AMPc néphrogénique, phosphaturie"] },
+      { cause: "Calcitonine", signe: "hypocalcémiante + hypophosphatémiante ; cellules parafolliculaires de la thyroïde", examens: ["Calcitonine (marqueur du cancer médullaire de la thyroïde)"] }
+    ],
+    tableaux: [
+      { titre: "Effets des hormones phospho-calciques",
+        entetes: ["Hormone", "Calcémie", "Phosphatémie", "Actions principales"],
+        lignes: [
+          ["Calcitriol (1,25-OH2-D)", "↑", "↑", "Minéralisation osseuse ; ↑ absorption intestinale Ca/P"],
+          ["PTH", "↑", "↓", "Rein : ↑ réabsorption Ca, ↓ réabsorption P, active la 1α-hydroxylase ; os : résorption"],
+          ["Calcitonine", "↓", "↓", "Inhibe la résorption ostéoclastique ; ↓ réabsorption rénale Ca/P ; inhibe la 1α-hydroxylase"]
+        ] },
+      { titre: "Vitamine D : activation",
+        entetes: ["Étape", "Lieu / enzyme"],
+        lignes: [
+          ["Synthèse cutanée", "7-déhydrocholestérol + UV → vitamine D (+ apport alimentaire)"],
+          ["1re hydroxylation (25)", "Foie : 25-hydroxylase → 25-OH-D"],
+          ["2e hydroxylation (1α)", "Rein : 1α-hydroxylase (stimulée par PTH/hypocalcémie, inhibée par la calcitonine) → calcitriol"]
+        ] },
+      { titre: "Profils dans les maladies osseuses (Ca / phosphate / PAL / PTH)",
+        entetes: ["Maladie", "Ca corrigé", "Phosphate", "PAL", "PTH"],
+        lignes: [
+          ["Hyperparathyroïdie primaire", "↑", "↓", "↑ ou N", "↑"],
+          ["Carence sévère en vit. D (ostéomalacie)", "↓", "↓", "↑", "↑"],
+          ["Maladie de Paget", "N", "N", "↑", "N"],
+          ["Métastases osseuses", "↑", "↑ ou N", "↑ ou N", "↓"],
+          ["Hypoparathyroïdie", "↓", "↑", "N", "↓ ou N"]
+        ] }
+    ],
+    red_flags: ["Hyperparathyroïdie (hypercalcémie + PTH inadaptée)", "Carence sévère en vitamine D / insuffisance rénale (défaut de 1α-hydroxylation)", "La PTH favorise la sécrétion de gastrine (risque d'ulcère gastrique)"],
+    conduite: ["Raisonner sur le couple calcémie / phosphatémie + PTH + vitamine D.", "PTH hypercalcémiante/hypophosphatémiante ; calcitriol hyper-/hyper- ; calcitonine hypo-/hypo-.", "AMPc néphrogénique et phosphaturie évaluent la fonctionnalité de la PTH (pseudohypoparathyroïdies).", "Confronter à la clinique et à l'imagerie."]
+  },
+  {
+    id: "hypocalcemie", num: 106, anomalie: "Hypocalcémie",
+    specialite: "Endocrinologie",
+    definition: "À vérifier sur le calcium corrigé / ionisé. La démarche repose sur la créatinine (IRC ?), la PTH (hypo- vs hyperparathyroïdie), la phosphatémie et la vitamine D.",
+    premiere_intention: ["Confirmer sur le calcium corrigé / ionisé ; vérifier l'albumine et la magnésémie", "Créatinine : si augmentée → insuffisance rénale chronique", "PTH 1-84 : diminuée/normale basse = hypoparathyroïdie ; augmentée/normale haute = hyperparathyroïdie (réactionnelle)", "Selon la PTH : phosphatémie, 25-OH-D, 1,25-OH2-D"],
+    causes: [
+      { cause: "Insuffisance rénale chronique", signe: "défaut de 1α-hydroxylation + hyperphosphatémie → hyperparathyroïdie secondaire, ostéodystrophie", examens: ["Créatinine, phosphatémie, PTH"] },
+      { cause: "Hypoparathyroïdie (PTH basse)", signe: "auto-immune, syndrome de Di George, familiale, hypomagnésémie chronique, chirurgie/irradiation du cou, thalassémie", examens: ["PTH, magnésémie", "Anticorps anti-parathyroïde / anti-récepteur du calcium"] },
+      { cause: "Carence en vitamine D (PTH haute, 25-OH-D basse)", signe: "carence d'apport, malabsorption (biliaire, cœliaque), insuffisance hépatique, anticonvulsivants, insensibilité au calcitriol", examens: ["25-OH-D, 1,25-OH2-D"] },
+      { cause: "Pseudohypoparathyroïdie (PTH haute, phosphate haut)", signe: "résistance périphérique à la PTH (action absente malgré une synthèse normale)", examens: ["Test à la PTH exogène (AMPc et phosphaturie)"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique",
+        entetes: ["Étape", "Orientation"],
+        lignes: [
+          ["Créatinine augmentée", "Insuffisance rénale chronique"],
+          ["PTH basse / normale basse", "Hypoparathyroïdie (auto-immune, Di George, chirurgicale, hypomagnésémie, thalassémie…)"],
+          ["PTH haute + phosphatémie augmentée", "Pseudohypoparathyroïdie"],
+          ["PTH haute, 25-OH-D basse", "Carence en vitamine D (ostéomalacie, malabsorption, insuffisance hépatique, anticonvulsivants)"],
+          ["PTH haute, 25-OH-D normale, 1,25-OH2-D bas (défaut de 1α-hydroxylase)", "Rachitisme vitamino-dépendant type 1"],
+          ["PTH haute, 25-OH-D normale, 1,25-OH2-D élevé (résistance au calcitriol)", "Rachitisme vitamino-résistant type 2"]
+        ] },
+      { titre: "Exploration des pseudohypoparathyroïdies (après injection de PTH exogène)",
+        entetes: ["Situation", "PTH", "AMPc néphrog.", "Phosphaturie"],
+        lignes: [
+          ["Hypoparathyroïdie", "↓", "↑", "↑"],
+          ["PTH anormale", "↑", "↑", "↑"],
+          ["Défaut de sécrétion d'AMPc", "↑", "Inchangé", "Inchangé"],
+          ["Défaut de réponse périphérique", "↑", "↑", "Inchangé"]
+        ] }
+    ],
+    red_flags: ["Hypocalcémie aiguë symptomatique : paresthésies, tétanie, signes de Chvostek/Trousseau, laryngospasme, convulsions, QT long → urgence", "Hypocalcémie post-chirurgicale (thyroïdectomie) → surveillance", "Hypomagnésémie associée (à corriger pour corriger la calcémie)", "Insuffisance rénale chronique (cause fréquente)"],
+    conduite: ["Confirmer sur le calcium corrigé / ionisé ; vérifier l'albumine et la magnésémie.", "Algorithme : créatinine (IRC ?) → PTH (hypo/hyperparathyroïdie) → phosphatémie et vitamine D.", "Hypocalcémie aiguë symptomatique = urgence (calcium IV en milieu surveillé).", "Traiter la cause : vitamine D ± calcium, correction d'une hypomagnésémie, prise en charge de l'IRC."]
+  },
+  {
+    id: "marqueurs_osseux", num: 107, anomalie: "Marqueurs phospho-calciques et du remodelage osseux",
+    specialite: "Endocrinologie",
+    definition: "Marqueurs et formules d'exploration phospho-calcique (calcémie corrigée, calcium ionisé, TRP) et marqueurs du remodelage osseux (formation : PAL osseuses, ostéocalcine, P1NP ; résorption : CTX, NTX). Utiles dans l'ostéoporose (prédiction du risque de fracture, suivi thérapeutique).",
+    premiere_intention: ["Calcémie : interpréter selon l'albumine → Ca corrigé (mmol/L) = Ca mesuré + 0,02 × (40 − albumine g/L)", "Calcium ionisé : corrigé à pH 7,4 (l'acidose augmente le calcium ionisé : compétition H+/Ca2+ sur l'albumine)", "Exploration : phosphorémie, calciurie, phosphaturie, PTH, AMPc urinaire, calcitriol, 25-OH-D, TRP", "Remodelage osseux : marqueurs de formation (ostéoblastes) et de résorption (ostéoclastes)"],
+    causes: [
+      { cause: "Marqueurs de formation osseuse", signe: "ostéoblastes : phosphatases alcalines osseuses, ostéocalcine, propeptides N-terminaux du procollagène I (P1NP, reflet de la synthèse du collagène I)", examens: ["PAL osseuses, ostéocalcine, P1NP"] },
+      { cause: "Marqueurs de résorption osseuse", signe: "sérum : CTX (télopeptides C-terminaux) ; urines : pyridinolines / désoxypyridinolines, CTX / NTX", examens: ["CTX sérique", "NTX urinaire"] },
+      { cause: "Exploration phospho-calcique", signe: "Ca corrigé/ionisé, phosphorémie, calciurie, phosphaturie, PTH, AMPc urinaire, vitamine D, TRP", examens: ["Bilan phospho-calcique complet"] }
+    ],
+    tableaux: [
+      { titre: "Formules utiles",
+        entetes: ["Paramètre", "Formule / règle"],
+        lignes: [
+          ["Calcémie corrigée (albumine < 40)", "Ca corrigé = Ca mesuré + 0,02 × (40 − albumine g/L) — 1 g d'albumine fixe 0,02 mmol de Ca"],
+          ["Calcémie corrigée (albumine > 45)", "Ca corrigé = Ca mesuré − 0,02 × (albumine g/L − 45)"],
+          ["Calcium ionisé", "Corrigé à pH 7,4 ; l'acidose ↑ le calcium ionisé (compétition H+/Ca2+ sur l'albumine)"],
+          ["TRP (réabsorption des phosphates)", "TRP = [1 − (P urinaires × créat sérique) / (P sériques × créat urinaire)] × 100"]
+        ] },
+      { titre: "Marqueurs du remodelage osseux",
+        entetes: ["Type", "Marqueurs"],
+        lignes: [
+          ["Formation (ostéoblastes)", "PAL osseuses, ostéocalcine, propeptides N-terminaux du procollagène I (P1NP)"],
+          ["Résorption — sérum", "CTX (télopeptides C-terminaux du collagène I)"],
+          ["Résorption — urines", "Pyridinolines / désoxypyridinolines (peu d'intérêt), CTX et NTX"]
+        ] },
+      { titre: "Intérêt dans l'ostéoporose",
+        entetes: ["Usage", "Précision"],
+        lignes: [
+          ["Prédiction du risque fracturaire", "Les marqueurs de résorption ont une valeur prédictive ; associés à la densité minérale osseuse, ils ↑ la spécificité sans diminuer la sensibilité"],
+          ["Suivi thérapeutique", "Retour à la normale en 3-6 mois (avant la DMO, qui varie en 1-2 ans)"],
+          ["Précaution", "Interprétation faussée à proximité d'une fracture ou d'une intervention osseuse"]
+        ] }
+    ],
+    red_flags: ["Interprétation des marqueurs osseux faussée près d'une fracture / intervention osseuse", "PAL totales peu spécifiques (origine hépatique et intestinale aussi)", "Calcémie à toujours interpréter selon l'albumine (et le pH pour le calcium ionisé)"],
+    conduite: ["Toujours corriger la calcémie selon l'albumine (ou doser le calcium ionisé, corrigé à pH 7,4).", "Le TRP évalue la réabsorption tubulaire des phosphates (fonctionnalité de la PTH).", "Ostéoporose : marqueur de résorption + densitométrie ; suivi du traitement par la cinétique du marqueur.", "Ne pas doser les marqueurs osseux juste après une fracture."]
+  },
+  {
+    id: "hyperthyroidie", num: 108, anomalie: "Hyperthyroïdie",
+    specialite: "Endocrinologie",
+    definition: "Excès d'hormones thyroïdiennes (thyrotoxicose). Diagnostic biologique : TSH freinée, confirmée par la T4L (± T3L) augmentées. Étiologies : maladie de Basedow (la plus fréquente), nodules toxiques, thyroïdites, surcharge iodée, causes centrales (rares).",
+    premiere_intention: ["TSH en 1re intention : diminuée → doser la T4L (puis la T3L si T4L normale/limite)", "TSH basse + T4L ↑ = hyperthyroïdie franche ; T4L normale + T3L ↑ = hyperthyroïdie à T3 ; T3L normale + paucisymptomatique = infraclinique", "TSH normale/augmentée + T4L ↑ → cause centrale (adénome thyréotrope, résistance aux hormones thyroïdiennes)", "Étiologie : anticorps anti-récepteur de la TSH (TRAK), anti-TPO, échographie / scintigraphie"],
+    causes: [
+      { cause: "Maladie de Basedow", signe: "anticorps anti-récepteur de la TSH STIMULANTS (TRAK) ; goitre diffus pulsatile, orbitopathie, myxœdème prétibial ; femme jeune (F/H = 6, ~1 %)", examens: ["TRAK (positifs 60-80 %)", "Échographie, scintigraphie"] },
+      { cause: "Nodule(s) toxique(s)", signe: "adénome toxique ou goitre multinodulaire toxique : sécrétion autonome (TSH freinée)", examens: ["Scintigraphie (nodule chaud)"] },
+      { cause: "Thyrotoxicose par destruction (thyroïdites)", signe: "De Quervain (virale, douloureuse, syndrome inflammatoire), post-partum (anti-TPO élevés), iatrogène (interféron α, amiodarone), phase initiale d'Hashimoto", examens: ["CRP/VS, anti-TPO", "Scintigraphie blanche"] },
+      { cause: "Surcharge iodée", signe: "amiodarone, produits de contraste, apport alimentaire (sur thyroïde déjà pathologique)", examens: ["Iodurie, contexte"] },
+      { cause: "Causes centrales (rares)", signe: "adénome hypophysaire thyréotrope, résistance hypophysaire aux hormones thyroïdiennes", examens: ["TSH inadaptée, IRM hypophysaire"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique (TSH)",
+        entetes: ["TSH", "T4L / T3L", "Orientation"],
+        lignes: [
+          ["Diminuée", "T4L augmentée", "Hyperthyroïdie franche"],
+          ["Diminuée", "T4L normale/limite, T3L augmentée", "Hyperthyroïdie à T3"],
+          ["Diminuée", "T4L et T3L normales, paucisymptomatique", "Hyperthyroïdie infraclinique (recontrôler)"],
+          ["Normale ou augmentée", "T4L augmentée", "Cause centrale (adénome thyréotrope, résistance aux hormones thyroïdiennes)"]
+        ] },
+      { titre: "Signes biologiques de thyrotoxicose",
+        entetes: ["Paramètre", "Variation"],
+        lignes: [
+          ["TSH", "↓"],
+          ["T4L, T3L", "↑"],
+          ["Leucocytes / PNN", "↓ (neutropénie)"],
+          ["Enzymes hépatiques", "↑"],
+          ["Cholestérol, triglycérides", "↓"],
+          ["Calcémie", "↑"],
+          ["Glycémie", "Légèrement ↑"]
+        ] },
+      { titre: "Anticorps dans la maladie de Basedow",
+        entetes: ["Anticorps", "Intérêt"],
+        lignes: [
+          ["Anti-récepteur de la TSH (TRAK)", "Positifs 60-80 %, stimulants ; au diagnostic et en fin de traitement (persistance = risque de récidive)"],
+          ["Anti-TPO, anti-Tg", "Possibles à taux faible"]
+        ] }
+    ],
+    red_flags: ["Cardiothyréose : fibrillation auriculaire, insuffisance cardiaque, troubles du rythme", "Crise aiguë thyrotoxique", "Orbitopathie maligne (exophtalmie, surtout chez le fumeur)", "Antithyroïdiens de synthèse : AGRANULOCYTOSE immuno-allergique → NFS en urgence si fièvre/angine"],
+    conduite: ["Affirmer par TSH freinée + T4L (± T3L) ; étiologie par TRAK, échographie / scintigraphie.", "Basedow : antithyroïdiens de synthèse (carbimazole) → euthyroïdie en 4-6 semaines, entretien ~18 mois ; ± chirurgie / iode 131.", "Surveillance NFS sous antithyroïdiens (tous les 10 j les 2 premiers mois) — risque d'agranulocytose ; consulter en urgence si fièvre/angine.", "Grossesse : rémission possible aux 2e/3e trimestres, rebond post-partum ; risque d'hyperthyroïdie néonatale."]
+  },
+  {
+    id: "hypothyroidie", num: 109, anomalie: "Hypothyroïdie",
+    specialite: "Endocrinologie",
+    definition: "Déficit en hormones thyroïdiennes. Diagnostic biologique : TSH augmentée (forme périphérique), T4L basse (franche) ou normale (fruste / infraclinique). Cause la plus fréquente : thyroïdite d'Hashimoto (auto-immune).",
+    premiere_intention: ["TSH en 1re intention : augmentée → doser la T4L", "T4L basse = hypothyroïdie franche ; T4L normale/limite = hypothyroïdie infraclinique (fruste)", "Ne pas doser la T3L (souvent normale, dernier paramètre à se modifier)", "Anticorps anti-TPO (Hashimoto) ; si négatifs : anti-Tg, anti-récepteur de la TSH (bloquants)"],
+    causes: [
+      { cause: "Thyroïdite d'Hashimoto", signe: "destruction auto-immune ; goitre ferme pseudo-nodulaire ; anti-TPO fortement positifs ; autres maladies auto-immunes associées (DT1, vitiligo, Biermer, Addison)", examens: ["Anti-TPO (± anti-Tg, anti-R-TSH bloquants)"] },
+      { cause: "Thyroïdite du post-partum", signe: "6 % des grossesses ; hypothyroïdie au 3e-6e mois (± phase d'hyperthyroïdie transitoire) ; récidivante, parfois définitive", examens: ["Anti-TPO, TSH"] },
+      { cause: "Hypothyroïdie iatrogène", signe: "amiodarone, lithium, interféron α, IL-2, antithyroïdiens ; thyroïdectomie, iode 131, radiothérapie cervicale", examens: ["Contexte médicamenteux"] },
+      { cause: "Autres causes", signe: "thyroïdite atrophique, De Quervain, carence en iode, hypothyroïdie congénitale de l'enfant (ectopie, trouble de synthèse)", examens: ["Échographie, iodurie", "Dépistage néonatal"] },
+      { cause: "Hypothyroïdie centrale (secondaire)", signe: "T4L basse + TSH normale (parfois ↑ si hypothalamique) ; pas de goitre ni d'infiltration cutanéo-muqueuse ; tumeurs, nécrose, chirurgie, hémochromatose", examens: ["T4L, TSH inadaptée, IRM hypophysaire"] }
+    ],
+    tableaux: [
+      { titre: "Démarche diagnostique (TSH)",
+        entetes: ["TSH", "T4L", "Orientation"],
+        lignes: [
+          ["Augmentée", "Basse", "Hypothyroïdie franche (périphérique)"],
+          ["Augmentée", "Normale/limite", "Hypothyroïdie infraclinique (anti-TPO)"],
+          ["Normale", "Basse", "Hypothyroïdie centrale ou interférence (test au TRH)"],
+          ["Normale", "Normale", "Pas d'hypothyroïdie (test au TRH si forte conviction)"]
+        ] },
+      { titre: "Syndromes cliniques",
+        entetes: ["Syndrome", "Signes"],
+        lignes: [
+          ["Hypométabolisme", "Asthénie physique/psychique, somnolence, frilosité, prise de poids, dépression, confusion"],
+          ["Neuro-musculaire", "Crampes, myalgies, constipation, bradycardie, troubles du rythme"],
+          ["Cutanéo-muqueux", "Peau pâle et sèche, dépilation (queue du sourcil), voix rauque, macroglossie"],
+          ["Endocrinien", "Galactorrhée (hyperprolactinémie), troubles des règles, baisse de libido, infertilité"],
+          ["Rhumatologique", "Tendinites, arthralgies, acroparesthésies"]
+        ] },
+      { titre: "Marqueurs biologiques associés",
+        entetes: ["Domaine", "Anomalie"],
+        lignes: [
+          ["Hématologie", "Anémie souvent macrocytaire ; maladie de Willebrand acquise"],
+          ["Ionogramme", "Hyponatrémie de dilution"],
+          ["Muscle", "↑ CK"],
+          ["Lipides", "Hypercholestérolémie"],
+          ["Thyroïde", "TSH ↑, T4L basse ou normale (fruste)"]
+        ] }
+    ],
+    red_flags: ["Coma myxœdémateux (hypothermie, bradycardie, troubles de conscience) → urgence", "Hypothyroïdie + grossesse (risque pour le développement cérébral fœtal) → TSH dans la moitié inférieure de la normale", "Hypothyroïdie centrale (T4L basse, TSH non élevée) à ne pas méconnaître", "Retentissement cardiaque (bradycardie, épanchement péricardique)"],
+    conduite: ["TSH ↑ + T4L → franche (T4L basse) ou fruste (T4L normale) ; ne pas doser la T3L.", "Anti-TPO pour confirmer l'origine auto-immune (Hashimoto) ; rechercher les maladies auto-immunes associées.", "Hypothyroïdie centrale : T4L basse avec TSH inadaptée → IRM hypophysaire.", "Substitution par lévothyroxine, surveillance de la TSH ; adaptation pendant la grossesse."]
+  },
+  {
+    id: "hypercorticisme", num: 110, anomalie: "Hypercorticisme (syndrome de Cushing)",
+    specialite: "Endocrinologie",
+    definition: "Excès de glucocorticoïdes (cortisol). Diagnostic en 2 temps : affirmer l'hypercorticisme (cortisol libre urinaire, freinage à la dexaméthasone, rupture du cycle nycthéméral), puis déterminer l'étiologie (ACTH-dépendant ou non).",
+    premiere_intention: ["Affirmer : cortisol libre urinaire des 24 h ↑, cortisol salivaire/plasmatique à minuit (rupture du cycle), test de freinage minute (1 mg dexaméthasone à 23 h)", "Absence de freinage = syndrome de Cushing", "Ionogramme : hypernatrémie, hypokaliémie, alcalose métabolique, hyperglycémie", "Étiologie : ACTH plasmatique → freinage fort, imagerie (TDM surrénale, IRM hypophyse, TDM thoraco-abdo si paranéoplasique)"],
+    causes: [
+      { cause: "Maladie de Cushing (ACTH hypophysaire)", signe: "adénome hypophysaire corticotrope ; freinage fort positif (~80 %)", examens: ["ACTH, freinage fort, IRM hypophyse", "Cathétérisme des sinus pétreux"] },
+      { cause: "Sécrétion paranéoplasique d'ACTH (ou CRF)", signe: "néoplasie (poumon…) ; pas de freinage fort", examens: ["ACTH élevée, TDM thoraco-abdominale"] },
+      { cause: "Adénome / corticosurrénalome (ACTH-indépendant)", signe: "ACTH freinée ; tumeur surrénalienne", examens: ["ACTH basse, TDM surrénale"] },
+      { cause: "Cushing iatrogène", signe: "corticothérapie (à éliminer en premier)", examens: ["Interrogatoire"] }
+    ],
+    tableaux: [
+      { titre: "Retentissement de l'hypercorticisme",
+        entetes: ["Mécanisme", "Clinique", "Biologie"],
+        lignes: [
+          ["Catabolisme protéique", "Ostéoporose, vergetures pourpres, amyotrophie, ecchymoses", "—"],
+          ["Néoglucogenèse", "Intolérance au glucose, diabète", "Hyperglycémie"],
+          ["Lipolyse", "Obésité facio-tronculaire", "Hypertriglycéridémie, hypercholestérolémie"],
+          ["Effet minéralocorticoïde", "HTA", "Hypernatrémie, hypokaliémie, alcalose métabolique"],
+          ["Immunosuppression", "Infections, thromboses veineuses", "—"],
+          ["SNC", "Troubles du sommeil, anxiété, dépression", "—"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Étape", "Examens"],
+        lignes: [
+          ["Affirmer l'hypercorticisme", "Cortisol libre urinaire 24 h ↑, cortisol à minuit (plasma/salive), 17-OH et 17-cétostéroïdes urinaires ↑"],
+          ["Rupture du rétrocontrôle", "Freinage minute (1 mg dexaméthasone à 23 h) : pas de freinage"],
+          ["Étiologie", "ACTH plasmatique ; freinage fort (8 mg) ; tests CRF / métopirone ; imagerie"]
+        ] }
+    ],
+    red_flags: ["Complications : diabète, HTA, infections, thromboses veineuses, ostéoporose / fractures", "Hypokaliémie profonde (effet minéralocorticoïde)", "Cushing paranéoplasique (cancer sous-jacent)", "Hypercortisolisme sévère"],
+    conduite: ["Diagnostic en 2 temps : affirmer l'hypercorticisme, puis l'étiologie (ACTH-dépendant vs indépendant).", "Éliminer un Cushing iatrogène (corticothérapie) en premier.", "Freinage fort + cathétérisme des sinus pétreux pour différencier hypophysaire et paranéoplasique.", "Traitement étiologique (chirurgie) ; avis endocrinologique spécialisé."]
+  },
+  {
+    id: "hyperaldosteronisme", num: 111, anomalie: "Hyperaldostéronisme",
+    specialite: "Endocrinologie",
+    definition: "Excès d'aldostérone : HTA + hypokaliémie. L'hyperaldostéronisme PRIMAIRE (adénome de Conn, hyperplasie bilatérale) freine la rénine (activité rénine basse). À distinguer du secondaire (rénine élevée).",
+    premiere_intention: ["Évoquer devant HTA + hypokaliémie ; bilan en conditions standardisées (hors antihypertenseurs sauf inhibiteurs calciques / centraux, apports Na/K normaux)", "Ionogramme : hypokaliémie + hyperkaliurèse, alcalose métabolique, natrémie normale/haute, rapport UNa/UK < 1", "Diagnostic : aldostérone élevée + activité rénine plasmatique BASSE (peu stimulable) ; rapport aldostérone/rénine > 30", "Imagerie (TDM surrénale) ; tests dynamiques (captopril, surcharge sodée, orthostatisme)"],
+    causes: [
+      { cause: "Adénome de Conn", signe: "adénome surrénalien sécrétant ; exérèse chirurgicale", examens: ["TDM surrénale", "Aldostérone / rénine"] },
+      { cause: "Hyperplasie bilatérale des surrénales", signe: "traitement par spironolactone", examens: ["TDM, test au captopril"] },
+      { cause: "Hyperaldostéronisme secondaire (différentiel)", signe: "rénine ÉLEVÉE ; hypovolémie, tumeur à rénine, syndrome de Bartter, insuffisance hépatique/cardiaque, cirrhose", examens: ["Activité rénine élevée"] }
+    ],
+    tableaux: [
+      { titre: "Anomalies biologiques",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Kaliémie", "Hypokaliémie + hyperkaliurèse (fuite urinaire)"],
+          ["Natrémie", "Normale ou haute (rétention sodée, compensée par le FAN)"],
+          ["Équilibre acido-basique", "Alcalose métabolique (fuite urinaire des H+)"],
+          ["Urines", "Acidification (NH4+), rapport UNa/UK < 1"],
+          ["Hormones", "Aldostérone ↑ ; activité rénine BASSE ; aldostérone/rénine > 30"]
+        ] },
+      { titre: "Primaire vs secondaire",
+        entetes: ["", "Primaire", "Secondaire"],
+        lignes: [
+          ["Aldostérone", "Élevée", "Élevée"],
+          ["Rénine", "Basse", "Élevée"],
+          ["Causes", "Adénome de Conn, hyperplasie bilatérale", "Hypovolémie, tumeur à rénine, Bartter, insuffisance hépatique/cardiaque, cirrhose"]
+        ] }
+    ],
+    red_flags: ["HTA sévère / résistante avec hypokaliémie", "Hypokaliémie profonde (troubles du rythme, tétanie, signes ECG)", "Diabète par freinage de l'insuline (hypokaliémie)", "Bilan faussé par les antihypertenseurs (sauf inhibiteurs calciques / centraux)"],
+    conduite: ["Évoquer devant HTA + hypokaliémie ; bilan en conditions standardisées.", "Affirmer : aldostérone ↑ + rénine basse + rapport aldo/rénine > 30 ; distinguer du secondaire (rénine élevée).", "TDM surrénale + tests dynamiques pour distinguer adénome (Conn) et hyperplasie.", "Traitement : chirurgie si adénome, spironolactone si hyperplasie."]
+  },
+  {
+    id: "insuffisance_surrenalienne", num: 112, anomalie: "Insuffisance surrénalienne",
+    specialite: "Endocrinologie",
+    definition: "Déficit en hormones corticosurrénaliennes. Primaire (maladie d'Addison) : lésion des 2 surrénales — auto-immune (70 %), tuberculose (20 %), VIH, tumeur… ; ACTH élevée, mélanodermie. Secondaire : déficit en ACTH (pas de mélanodermie, minéralocorticoïdes conservés).",
+    premiere_intention: ["Évoquer devant : asthénie, hypotension, troubles digestifs, mélanodermie (plis, paumes, muqueuses), goût pour le sel", "Orientation : hyponatrémie/hypochlorémie, HYPERKALIÉMIE, acidose métabolique, hypoglycémie, hémoconcentration, hyperazotémie", "Certitude : cortisolémie basse, ACTH élevée (primaire), cortisol libre urinaire ↓ ; test au Synacthène (ACTH)", "Auto-anticorps anti-21-hydroxylase (formes auto-immunes) ; imagerie surrénalienne"],
+    causes: [
+      { cause: "Insuffisance surrénalienne primaire (Addison)", signe: "auto-immune (70 %), tuberculose (20 %), VIH, tumorale, congénitale ; ACTH ↑, mélanodermie", examens: ["Cortisol, ACTH", "Anti-21-hydroxylase, TDM surrénale"] },
+      { cause: "Insuffisance surrénalienne secondaire", signe: "déficit hypophysaire en ACTH ; pas de mélanodermie, minéralocorticoïdes conservés", examens: ["ACTH basse/normale", "Test au Synacthène, IRM hypophyse"] }
+    ],
+    tableaux: [
+      { titre: "Signes d'orientation biologiques",
+        entetes: ["Paramètre", "Anomalie"],
+        lignes: [
+          ["Natrémie / chlore", "Hyponatrémie, hypochlorémie"],
+          ["Kaliémie", "Hyperkaliémie"],
+          ["Équilibre acido-basique", "Acidose métabolique"],
+          ["Glycémie", "Hypoglycémie (↑ sensibilité à l'insuline)"],
+          ["Hématocrite", "Élevé (hémoconcentration)"],
+          ["Azote", "Hyperazotémie"]
+        ] },
+      { titre: "Diagnostic de certitude",
+        entetes: ["Examen", "Résultat"],
+        lignes: [
+          ["Cortisolémie", "Diminuée"],
+          ["ACTH", "Augmentée (primaire) ; basse/normale (secondaire)"],
+          ["Cortisol libre / 17-OH urinaires", "Diminués"],
+          ["Test au Synacthène (ACTH)", "Pas de réponse (primaire) ; réponse possible (secondaire)"],
+          ["Anticorps", "Anti-21-hydroxylase (formes auto-immunes)"]
+        ] }
+    ],
+    red_flags: ["Insuffisance surrénale AIGUË : déshydratation, choc, hyperkaliémie, hypoglycémie → URGENCE vitale (hydrocortisone IV)", "Facteur de stress (infection, chirurgie) chez un insuffisant surrénalien → augmenter les doses", "Hyperkaliémie menaçante", "Mélanodermie + asthénie + hypotension = évoquer une maladie d'Addison"],
+    conduite: ["Orientation : hyponatrémie + hyperkaliémie + hypoglycémie ; certitude : cortisol bas + ACTH (élevée si primaire).", "Test au Synacthène ; anti-21-hydroxylase ; imagerie surrénalienne.", "Traitement : hydrocortisone (doses ↑ en cas de stress) ; fludrocortisone dans la maladie d'Addison ; régime normosodé.", "Explorer les autres axes endocriniens (polyendocrinopathie auto-immune)."]
+  },
+  {
+    id: "marqueurs_tumoraux", num: 113, anomalie: "Marqueurs tumoraux",
+    specialite: "Oncologie",
+    definition: "Les marqueurs tumoraux servent surtout au SUIVI et au pronostic, rarement au diagnostic (faible spécificité, faux positifs fréquents). À interpréter en cinétique et avec la clinique, l'imagerie et l'histologie.",
+    premiere_intention: ["Indication principale : suivi thérapeutique et détection de récidive (cinétique +++), pas le dépistage de masse", "Connaître les faux positifs (pathologies bénignes, tabac, grossesse, insuffisance rénale…)", "Interpréter la VARIATION plus que la valeur isolée", "Confronter à la clinique, à l'imagerie et à l'histologie"],
+    causes: [
+      { cause: "Usage approprié", signe: "suivi / pronostic / récidive (cinétique) ; rarement diagnostique", examens: ["Dosages répétés"] },
+      { cause: "Limites", signe: "faux positifs (pathologies bénignes, tabac, grossesse, insuffisance rénale), manque de spécificité", examens: ["Interprétation prudente"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs tumoraux par pathologie",
+        entetes: ["Cancer", "Marqueur(s)", "Faux positifs", "Utilité"],
+        lignes: [
+          ["Côlon-rectum", "ACE", "Tabac, pathologies digestives/pulmonaires bénignes, insuffisance rénale", "50 % (75 % si métastases)"],
+          ["Côlon-rectum", "CA 19-9", "Pancréatite, cholécystite, cirrhose", "48 %"],
+          ["Estomac / pancréas", "CA 19-9", "Pancréatite, cholécystite, cirrhose", "65 % estomac, 80 % pancréas"],
+          ["Estomac / pancréas", "ACE", "—", "10-60 %"],
+          ["Sein", "CA 15-3", "Hépatopathies bénignes, cirrhose, hépatite", "85 % polymétastatique, 10-30 % non métastatique"],
+          ["Sein", "ACE", "—", "12 % non métastatique, 35-40 % métastatique"],
+          ["Prostate", "PSA", "Prostatite, toucher rectal", "10 % stade A, 25 % B, 50 % C"],
+          ["Prostate", "PAP", "—", "10-15 % stade C"],
+          ["Ovaire (épithélial)", "CA 125", "Cirrhose, hépatopathie, pancréatite, endométriose, fin de grossesse, inflammation des séreuses", "80-85 %"],
+          ["Ovaire (mucineux)", "ACE", "—", "40 %"],
+          ["Testicule / tumeurs germinales", "AFP, β-hCG", "AFP : hépatopathies bénignes ; β-hCG : grossesse", "91 %"],
+          ["Tumeurs placentaires", "β-hCG", "Grossesse", "100 %"],
+          ["Poumon — adénocarcinome", "ACE", "—", "30 %"],
+          ["Poumon — petites cellules", "NSE", "Pathologies pulmonaires bénignes", "70 % (anaplasique à petites cellules)"],
+          ["Poumon — épidermoïde", "Cyfra 21-1, SCC", "—", "Diagnostic histologique / surveillance"],
+          ["Foie (CHC)", "AFP", "Cirrhose (50 %), hépatite B (50 %)", "40-90 %"],
+          ["Cancer médullaire de la thyroïde", "Calcitonine (TCT), ACE", "Hyperparathyroïdie, insuffisance rénale", "100 %"],
+          ["Cancer thyroïdien différencié", "Thyroglobuline", "Thyroïdite, Basedow, nodules froids bénins", "Surveillance ++"],
+          ["Myélome multiple", "Ig monoclonale, β2-microglobuline", "MGUS", "90 % (10 % non sécrétants) ; β2-m pronostique"],
+          ["ORL", "SCC", "—", "Surveillance ++"],
+          ["Vessie (infiltrante)", "TPA", "—", "Pronostic / suivi ++"],
+          ["Tumeurs neuroendocrines (toutes)", "Chromogranine A", "IPP (inhibiteurs de la pompe à protons), insuffisance rénale, gastrite atrophique", "Marqueur général des TNE"],
+          ["Tumeur carcinoïde", "5-HIAA urinaire (24 h)", "Aliments riches en sérotonine (banane, avocat, noix, ananas), certains médicaments", "Sérotonine → 5-HIAA"],
+          ["Phéochromocytome / paragangliome", "Métanéphrines libres (plasma/urines)", "Stress, médicaments (IMAO, tricycliques), café", "Catécholamines / métanéphrines"]
+        ] },
+      { titre: "Marqueurs des tumeurs neuroendocrines (Blood Tests Made Easy, P. Hamilton)",
+        entetes: ["Marqueur", "Indication", "Pièges"],
+        lignes: [
+          ["Chromogranine A", "Marqueur commun à toutes les tumeurs neuroendocrines (TNE) ; suivi", "Faux positifs : IPP, insuffisance rénale, gastrite atrophique"],
+          ["5-HIAA urinaire (24 h)", "Tumeur carcinoïde (métabolite de la sérotonine)", "Régime sans aliments riches en sérotonine avant le recueil"],
+          ["Métanéphrines libres (plasmatiques / urinaires)", "Phéochromocytome et paragangliome", "Conditions de prélèvement strictes (repos, médicaments)"]
+        ] },
+      { titre: "Principes d'interprétation",
+        entetes: ["Principe", "Détail"],
+        lignes: [
+          ["Indication", "Suivi, pronostic, récidive (cinétique) ; pas un test de dépistage de masse"],
+          ["Spécificité", "Faible : nombreux faux positifs bénins"],
+          ["Interprétation", "La variation prime sur la valeur isolée ; respecter les délais (ex. PSA après toucher rectal)"]
+        ] }
+    ],
+    red_flags: ["Ne pas poser un diagnostic de cancer sur un seul marqueur élevé (faux positifs)", "PSA : doser à distance d'un toucher rectal / d'une prostatite", "AFP élevée chez un cirrhotique / porteur du VHB → dépistage du CHC (mais faux positifs)", "Élévation d'un marqueur en cours de suivi → suspicion de progression / récidive"],
+    conduite: ["Utiliser les marqueurs surtout pour le SUIVI et le pronostic, en cinétique.", "Connaître les faux positifs propres à chaque marqueur avant d'interpréter.", "Confronter systématiquement à la clinique, l'imagerie et l'histologie.", "Calcitonine = marqueur du cancer médullaire de la thyroïde ; thyroglobuline = surveillance des cancers différenciés."]
+  },
+  {
+    id: "hyperuricemie", num: 114, anomalie: "Hyperuricémie (goutte, lithiase urique)",
+    specialite: "Métabolisme",
+    definition: "Uricémie élevée (touche 5-15 % de la population). L'acide urique provient de la dégradation des bases puriques (par la xanthine oxydase) ; il est éliminé par le rein (~80 %) et l'intestin (uricolyse en allantoïne, ~20 %). Complications : goutte et lithiase urique.",
+    premiere_intention: ["Confirmer l'hyperuricémie ; distinguer surproduction et défaut d'élimination", "Facteurs : apport alimentaire (purines), médicaments (thiazidiques, furosémide, salicylés), insuffisance rénale, hémopathie / lyse cellulaire", "Crise articulaire : ponction (cristaux d'urate de sodium), VS / NFS, uricémie, uricurie", "Lithiase : pH urinaire (acide), uricémie (↑ dans 25 % seulement), uricurie"],
+    causes: [
+      { cause: "Surproduction (apport / catabolisme)", signe: "excès alimentaire (purines) ; ↑ catabolisme des acides nucléiques (cancers, traitements cytolytiques, psoriasis)", examens: ["Interrogatoire, NFS"] },
+      { cause: "Anomalies enzymatiques", signe: "glycogénose type 1 (Von Gierke), hyperactivité de la PRPP synthétase, déficit en HGPRT (Lesch-Nyhan), hyperactivité de la xanthine oxydase", examens: ["Bilan spécialisé"] },
+      { cause: "Défaut d'élimination rénale", signe: "défaut de sécrétion tubulaire ; inhibition compétitive (corps cétoniques, lactates, thiazidiques, furosémide, salicylés) ; insuffisance rénale", examens: ["Créatinine, revue des médicaments"] }
+    ],
+    tableaux: [
+      { titre: "Étiologies des hyperuricémies",
+        entetes: ["Mécanisme", "Causes"],
+        lignes: [
+          ["Apport exogène", "Excès alimentaire (purines : abats, gibier, certains poissons)"],
+          ["Catabolisme endogène accru", "Cancers, traitements cytolytiques, psoriasis"],
+          ["Surproduction enzymatique", "Glycogénose type 1 (Von Gierke), hyperactivité PRPP synthétase, déficit en HGPRT (Lesch-Nyhan), hyperactivité xanthine oxydase"],
+          ["Défaut d'élimination rénale", "Défaut de sécrétion tubulaire ; inhibition compétitive (corps cétoniques, lactates, thiazidiques, furosémide, salicylés) ; insuffisance rénale"]
+        ] },
+      { titre: "Goutte",
+        entetes: ["Item", "Détail"],
+        lignes: [
+          ["Clinique", "Arthrite inflammatoire (métatarsophalangienne du gros orteil > 75 %), crise nocturne (œdème, chaleur, douleur, rougeur)"],
+          ["Biologie", "VS ↑, hyperleucocytose, uricémie, uraturie"],
+          ["Ponction articulaire", "Liquide inflammatoire : PNN + cristaux d'urate de sodium"],
+          ["Traitement", "Crise : colchicine (régression 5-10 j) ; fond : allopurinol (inhibiteur de la xanthine oxydase) ; rasburicase si lyse tumorale"]
+        ] },
+      { titre: "Lithiase urique",
+        entetes: ["Item", "Détail"],
+        lignes: [
+          ["Clinique", "Variable : colique néphrétique, émission de calculs / sables rougeâtres"],
+          ["pH urinaire", "Souvent acide (favorise la précipitation de l'acide urique)"],
+          ["Uricémie", "Augmentée chez seulement 25 % des patients"],
+          ["Uricurie", "Généralement abaissée"],
+          ["Traitement", "Hydratation, alcalinisation des urines, modération des purines, ± allopurinol"]
+        ] }
+    ],
+    red_flags: ["Syndrome de lyse tumorale (chimiothérapie) : hyperuricémie majeure → insuffisance rénale (prévention : hydratation, rasburicase)", "Crise de goutte : diagnostic différentiel avec une arthrite septique → ponction articulaire", "Lithiase urique récidivante / colique néphrétique", "Déficit complet en HGPRT (Lesch-Nyhan) : encéphalopathie hyperuricémique"],
+    conduite: ["Confirmer l'hyperuricémie ; chercher une surproduction (lyse, alimentation, enzymopathie) ou un défaut d'élimination (rénal, médicaments).", "Crise de goutte : ponction (cristaux d'urate) ; colchicine ; ne pas débuter l'allopurinol en pleine crise.", "Traitement de fond : allopurinol (inhibiteur de la xanthine oxydase) + mesures hygiéno-diététiques.", "Lithiase urique : hydratation, alcalinisation, modération des purines ; prévention des récidives."]
+  },
+  {
+    id: "hypersensibilite_type1", num: 115, anomalie: "Allergologie — hypersensibilité de type I (IgE)",
+    specialite: "Immunologie",
+    definition: "Hypersensibilité immédiate (type I), IgE-médiée. Phase de sensibilisation (1er contact : CPA → Th2 → IL-4/IL-13 → IgE fixées sur mastocytes/basophiles) puis phase de déclenchement (2e contact : pontage des IgE → dégranulation : histamine, tryptase, leucotriènes, PAF). Diagnostic = interrogatoire + tests in vivo + in vitro.",
+    premiere_intention: ["Terrain atopique : antécédents, éosinophilie (> 4 % ou 0,4 G/L), IgE totales (indications limitées), tests multiallergéniques de dépistage (Phadiatop)", "Identifier l'allergène : interrogatoire +++, tests cutanés (prick-test, IDR), IgE spécifiques (tests monospécifiques / multiallergéniques quantitatifs)", "Tests d'activation des basophiles (CD63 / CD203c) si pas de test cutané ni de RAST (médicaments, substances biologiques)", "Histamine / tryptase dans le cadre d'un choc anaphylactique"],
+    causes: [
+      { cause: "Tests du terrain atopique", signe: "éosinophilie, IgE totales, tests de dépistage (Phadiatop, Alatop)", examens: ["NFS", "IgE totales", "Test multiallergénique de dépistage"] },
+      { cause: "Tests d'identification de l'allergène", signe: "tests cutanés (prick, IDR, scratch ; lecture 15-20 min), IgE spécifiques (mono / multiallergéniques quantitatifs)", examens: ["Tests cutanés", "IgE spécifiques (CLA…)"] },
+      { cause: "Tests cellulaires / médiateurs", signe: "activation des basophiles (CD63, CD203c), libération d'histamine/LTC4, tryptase", examens: ["Cytométrie de flux (CD63/CD203c)", "Tryptase, histamine"] }
+    ],
+    tableaux: [
+      { titre: "Mécanisme (hypersensibilité de type I)",
+        entetes: ["Phase", "Mécanisme"],
+        lignes: [
+          ["Sensibilisation (1er contact)", "CPA → Th2 (IL-4, IL-10, IL-13) → IgE par les LB ; IgE fixées sur mastocytes/basophiles (FcεRI haute affinité), macrophages/éosinophiles/LB/plaquettes (FcεRII = CD23, basse affinité)"],
+          ["Déclenchement (2e contact)", "Pontage des IgE → dégranulation (histamine, tryptase, enzymes), médiateurs lipidiques (PG, leucotriènes, PAF), cytokines (IL-4, IL-6, TNF-α)"],
+          ["Phase semi-retardée (~6 h)", "Macrophages, éosinophiles, plaquettes"]
+        ] },
+      { titre: "Médiateurs et effets",
+        entetes: ["Médiateur", "Effet"],
+        lignes: [
+          ["Histamine", "Bronchoconstriction, vasodilatation (récepteurs H1) ; sécrétions gastriques (H2)"],
+          ["Leucotriènes C4/D4, PGD2", "Contraction des muscles lisses bronchiques, mucus, œdème muqueux"],
+          ["PAF", "Activation plaquettaire (microthromboses), contraction des muscles lisses"],
+          ["LTB4", "Chimiotactisme des polynucléaires neutrophiles"],
+          ["Enzymes protéolytiques", "Production de C3 et de kinines → vasodilatation, chimio-attraction"]
+        ] },
+      { titre: "Diagnostic biologique (in vivo / in vitro)",
+        entetes: ["Objectif", "In vivo", "In vitro"],
+        lignes: [
+          ["Terrain atopique", "ATCD (dermatite, rhinite, asthme…)", "Éosinophilie (NFS), IgE totales, tests de dépistage"],
+          ["Identifier l'allergène", "Tests cutanés (prick, IDR), provocation, éviction-réintroduction", "Tests par famille, monospécifiques, multiallergéniques quantitatifs (IgE spécifiques)"],
+          ["Cellules / médiateurs", "—", "Activation des basophiles (CD63/CD203c), histamine/LTC4, tryptase"]
+        ] },
+      { titre: "Tests d'IgE spécifiques",
+        entetes: ["Test", "Intérêt / limite"],
+        lignes: [
+          ["Dépistage (Phadiatop, Alatop)", "Qualitatif ; faible sensibilité avant 4 ans"],
+          ["Monospécifiques", "Précisent la spécificité des IgE (antigènes recombinants : latex, arachide…)"],
+          ["Multiallergéniques quantitatifs (CLA)", "Bons pour pneumallergènes, contestables pour trophallergènes ; allergénicité croisée pollens/aliments"]
+        ] },
+      { titre: "Épidémiologie et allergènes",
+        entetes: ["Aspect", "Données"],
+        lignes: [
+          ["Prévalence", "15-30 % (pays développés) ; allergies alimentaires ~3,5 % (pic à 1-3 ans)"],
+          ["Risque génétique", "0 parent allergique ≈ 15 %, 1 ≈ 30 %, 2 ≈ 60 %"],
+          ["Pneumallergènes saisonniers", "Graminées (été-automne), arbres (bouleau…), herbacées (ambroisie)"],
+          ["Pneumallergènes per-annuels", "Acariens (Dermatophagoides), chat, moisissures (Aspergillus, Cladosporium)"],
+          ["Trophallergènes fréquents", "Enfant : œuf, arachide, lait ; adulte : rosacées, latex, fruits à coque"]
+        ] }
+    ],
+    red_flags: ["Choc anaphylactique → urgence (adrénaline) ; doser tryptase / histamine a posteriori", "Œdème de Quincke avec atteinte laryngée", "Une IgE spécifique positive = SENSIBILISATION, pas forcément allergie clinique (confronter à la clinique)", "Désensibilisation uniquement avec des dérivés monoallergéniques, sous supervision"],
+    conduite: ["Le diagnostic repose sur la SOMME interrogatoire + tests in vivo + in vitro ; aucun test isolé ne suffit.", "Une sensibilisation biologique (IgE+) ne signifie pas une allergie clinique.", "Allergènes : pneumallergènes (inhalés), trophallergènes (ingérés), transcutanés, médicamenteux, professionnels, venins.", "Traitement : éviction, médicaments symptomatiques, désensibilisation monoallergénique (bascule IgE → IgG4, rééquilibrage Th1/Th2)."]
+  },
+  {
+    id: "anticorps_antinucleaires", num: 116, anomalie: "Anticorps antinucléaires (ANA) et auto-immunité",
+    specialite: "Immunologie",
+    definition: "Auto-anticorps dirigés contre des antigènes du noyau (parfois cytoplasmiques), dépistés par immunofluorescence indirecte (IFI) sur cellules HEp-2. En cas de positivité, la SPÉCIFICITÉ doit être déterminée. Prévalence 15 % en population générale (peu spécifiques).",
+    premiere_intention: ["Dépistage par IFI sur cellules HEp-2 : positivité + titre + aspect de fluorescence", "Titre : 1/80 peu significatif, ≤ 1/320 faible, 1/640 significatif, > 1/640 fort", "Si IFI positive : déterminer la spécificité (anti-ADN natif, anti-ENA)", "Confronter à la clinique : ANA aussi présents dans infections virales, néoplasies, inflammations"],
+    causes: [
+      { cause: "Anti-ADN natif (fluorescence homogène)", signe: "marqueur majeur du LES, corrélé à l'évolutivité (suivi indispensable)", examens: ["Test de FARR (spécificité > 90 %, sensibilité ~70 %)", "ELISA (plus sensible, moins spécifique)"] },
+      { cause: "Anti-ENA (antigènes solubles)", signe: "Sm, SSA/Ro, SSB/La, U1-RNP, JO1, Scl70 : ELISA screening puis identification", examens: ["ELISA ENA"] },
+      { cause: "Spécificité selon l'aspect", signe: "centromérique (CREST), nucléolaire (Scl70/sclérodermie), nuclear dots SP100 (cirrhose biliaire primitive), membranaire (hépatopathie)", examens: ["IFI HEp-2"] }
+    ],
+    tableaux: [
+      { titre: "Titre des ANA (IFI)",
+        entetes: ["Titre", "Signification"],
+        lignes: [
+          ["1/80", "Peu significatif"],
+          ["Jusqu'à 1/320", "Titre faible"],
+          ["1/640", "Titre significatif"],
+          ["> 1/640", "Titre fort"]
+        ] },
+      { titre: "Aspect de fluorescence → spécificité",
+        entetes: ["Aspect", "Spécificité / orientation"],
+        lignes: [
+          ["Homogène", "Anti-ADN, anti-histones, anti-nucléosomes"],
+          ["Moucheté fin", "Anti-SSA / anti-SSB"],
+          ["Moucheté gros grains", "Anti-Sm / anti-U1RNP"],
+          ["Nucléolaire", "Anti-Scl70 → rechercher une sclérodermie"],
+          ["Membranaire", "Souvent pathologie hépatique"],
+          ["Nuclear dots", "SP100 → cirrhose biliaire primitive"],
+          ["Cytoplasmique", "Anti-mitochondries, anti-JO1, anti-ribosomes, anti-actine"],
+          ["Centromérique", "Pathognomonique du syndrome de CREST (sclérodermie)"]
+        ] },
+      { titre: "Anticorps anti-ENA (sensibilité / spécificité / pathologie)",
+        entetes: ["Auto-Ac", "Sensibilité", "Spécificité", "Pathologie"],
+        lignes: [
+          ["Anti-Sm", "~30 %", "~100 %", "LES"],
+          ["Anti-SS-A (Ro)", "~35 %", "—", "LES (lupus congénital)"],
+          ["Anti-SS-A (Ro)", "~60 %", "~70 %", "Gougerot-Sjögren"],
+          ["Anti-SS-B (La)", "~40 %", "—", "Gougerot-Sjögren"],
+          ["Anti-SS-B (La)", "~15 %", "~70 %", "LES"],
+          ["Anti-JO1", "~30 %", "—", "Polymyosite"],
+          ["Anti-U1RNP", "~35 %", "—", "LES"],
+          ["Anti-U1RNP", "~95 %", "—", "Connectivites mixtes"],
+          ["Anti-Scl-70", "~35 %", "—", "Sclérodermie"]
+        ] },
+      { titre: "Auto-anticorps et maladies (orientation)",
+        entetes: ["Anticorps", "Pathologie"],
+        lignes: [
+          ["Anti-ADN natif, anti-Sm", "Lupus érythémateux systémique"],
+          ["Anti-SS-A/Ro, anti-SS-B/La", "Gougerot-Sjögren, LES"],
+          ["Anti-RNP", "Connectivites mixtes (LES)"],
+          ["Anti-centromères", "Syndrome de CREST"],
+          ["Anti-Scl-70", "Sclérodermie"],
+          ["Anti-ARNt synthétase (JO1, PL7, PL12…), anti-SRP, anti-Mi2", "Dermatomyosite / polymyosite"]
+        ] }
+    ],
+    red_flags: ["ANA présents dans 15 % de la population générale : peu spécifiques, à interpréter avec la clinique", "Anti-ADN natif = marqueur du LES, corrélé à l'évolutivité (suivi des poussées)", "Aspect centromérique = CREST ; nucléolaire = sclérodermie", "Nuclear dots (SP100) → cirrhose biliaire primitive"],
+    conduite: ["Dépister par IFI HEp-2 (titre + aspect) ; toute IFI positive impose de préciser la spécificité.", "Anti-ADN natif (FARR/ELISA) et anti-ENA orientent le diagnostic des connectivites.", "Suivre l'anti-ADN natif dans le LES (évolutivité, réponse au traitement).", "Toujours confronter à la clinique : un ANA isolé n'affirme pas une maladie auto-immune."]
+  },
+  {
+    id: "anca", num: 117, anomalie: "Anticorps anti-cytoplasme des polynucléaires (ANCA)",
+    specialite: "Immunologie",
+    definition: "Anticorps anti-cytoplasme des polynucléaires neutrophiles, détectés par IFI sur granulocytes fixés à l'éthanol : aspect cytoplasmique (c-ANCA) ou périnucléaire (p-ANCA). Une fluorescence nucléaire évoque des ANA. Toute IFI positive impose de préciser la cible antigénique (ELISA). Marqueurs des vascularites.",
+    premiere_intention: ["Dépistage par IFI sur granulocytes fixés à l'éthanol : c-ANCA (cytoplasmique) vs p-ANCA (périnucléaire)", "Fluorescence nucléaire → rechercher des ANA (IFI HEp-2)", "Préciser la cible par ELISA : PR3, MPO, BPI, cathepsine G, élastase, lactoferrine…", "Confronter à la clinique (vascularites des petits vaisseaux)"],
+    causes: [
+      { cause: "c-ANCA → PR3 (protéinase 3)", signe: "granulomatose avec polyangéite (maladie de Wegener)", examens: ["ELISA anti-PR3"] },
+      { cause: "c-ANCA → BPI", signe: "mucoviscidose, infection pulmonaire, bronchectasie, vascularites cutanées", examens: ["ELISA anti-BPI"] },
+      { cause: "p-ANCA → MPO (myéloperoxydase)", signe: "polyangéite microscopique (périartérite noueuse microscopique), maladie de Wegener", examens: ["ELISA anti-MPO"] },
+      { cause: "p-ANCA → autres cibles", signe: "cathepsine G (colites inflammatoires), élastase (LES, LES hydralazinique), azurocidine (vascularites), lactoferrine (vascularites secondaires, PR-LES, connectivites mixtes), lysozyme", examens: ["ELISA spécifique"] }
+    ],
+    tableaux: [
+      { titre: "Identification (IFI sur granulocytes)",
+        entetes: ["Aspect", "Type", "Suite"],
+        lignes: [
+          ["Cytoplasmique", "c-ANCA", "ELISA → PR3, BPI"],
+          ["Périnucléaire", "p-ANCA", "ELISA → MPO, cathepsine G, élastase, lactoferrine…"],
+          ["Nucléaire", "Évoque des ANA", "IFI HEp-2"]
+        ] },
+      { titre: "c-ANCA : cibles et pathologies",
+        entetes: ["Cible", "Pathologies"],
+        lignes: [
+          ["PR3 (protéinase 3)", "Granulomatose avec polyangéite (maladie de Wegener)"],
+          ["BPI", "Mucoviscidose, infection pulmonaire, bronchectasie, vascularites cutanées"]
+        ] },
+      { titre: "p-ANCA : cibles et pathologies",
+        entetes: ["Cible", "Pathologies"],
+        lignes: [
+          ["MPO (myéloperoxydase)", "Polyangéite microscopique (PAN microscopique), maladie de Wegener"],
+          ["Cathepsine G", "Colites inflammatoires (MICI)"],
+          ["Élastase", "LES, LES hydralazinique"],
+          ["Azurocidine", "Vascularites"],
+          ["Lactoferrine", "Vascularites secondaires, PR-LES, connectivites mixtes"],
+          ["Lysozyme", "—"]
+        ] }
+    ],
+    red_flags: ["c-ANCA / anti-PR3 → granulomatose avec polyangéite (Wegener) : atteinte ORL, pulmonaire, rénale → urgence diagnostique", "p-ANCA / anti-MPO → polyangéite microscopique (glomérulonéphrite rapidement progressive, hémorragie alvéolaire)", "Vascularite des petits vaisseaux : rechercher une atteinte rénale (protéinurie, hématurie) et pulmonaire", "p-ANCA non spécifiques possibles (MICI, médicaments, infections)"],
+    conduite: ["IFI sur granulocytes (éthanol) → c-ANCA vs p-ANCA ; préciser la cible par ELISA (PR3, MPO…).", "c-ANCA/PR3 et p-ANCA/MPO = marqueurs des vascularites à ANCA (Wegener, polyangéite microscopique).", "Les p-ANCA peuvent être non spécifiques (MICI, connectivites, médicaments) : confronter à la clinique.", "Rechercher une atteinte d'organe (rein, poumon, ORL) ; avis spécialisé."]
+  },
+  {
+    id: "facteur_rhumatoide_ccp", num: 118, anomalie: "Facteur rhumatoïde et anticorps anti-CCP",
+    specialite: "Immunologie",
+    definition: "Le facteur rhumatoïde (FR) est un auto-anticorps (généralement IgM) anti-IgG. Les anticorps anti-peptides cycliques citrullinés (anti-CCP) sont très spécifiques de la polyarthrite rhumatoïde (PR), précoces et de mauvais pronostic.",
+    premiere_intention: ["PR suspectée : doser le FR IgM (ELISA / néphélémétrie, pas l'agglutination) et les anti-CCP (ELISA)", "Anti-CCP : très spécifiques de la PR (90-93 %), précoces, mauvais pronostic (PR érosive)", "Le FR est peu spécifique (Sjögren, infections, hémopathies…) : interpréter avec la clinique", "Associer FR + anti-CCP augmente la valeur diagnostique"],
+    causes: [
+      { cause: "Facteur rhumatoïde (FR)", signe: "IgM anti-IgG ; sensibilité 30-80 % dans la PR, spécificité ~90 % ; nombreux faux positifs", examens: ["ELISA, néphélémétrie / turbidimétrie"] },
+      { cause: "Anticorps anti-CCP", signe: "très spécifiques de la PR (90-93 %), détectables 2-5 ans avant les symptômes, marqueur de PR érosive", examens: ["ELISA (anti-CCP2)"] },
+      { cause: "FR positif hors PR", signe: "Sjögren, lupus, sclérodermie, infections (leishmaniose, endocardite, VHC), hémopathies, silicose, cirrhose", examens: ["Confronter à la clinique"] }
+    ],
+    tableaux: [
+      { titre: "Performances diagnostiques (PR débutante)",
+        entetes: ["Test", "Sensibilité", "Spécificité", "VPP", "VPN"],
+        lignes: [
+          ["Anti-CCP", "48 %", "96 %", "84 %", "81 %"],
+          ["FR IgM", "44 %", "90 %", "64 %", "81 %"],
+          ["Anti-CCP + FR", "39 %", "98 %", "91 %", "78 %"],
+          ["Anti-CCP ou FR", "63 %", "88 %", "72 %", "83 %"]
+        ] },
+      { titre: "Prévalence du FR IgM par contexte",
+        entetes: ["Contexte", "Prévalence"],
+        lignes: [
+          ["Sujet sain < 50 ans / > 70 ans", "5 % / 15 %"],
+          ["Polyarthrite rhumatoïde", "70-90 %"],
+          ["Gougerot-Sjögren", "30-80 %"],
+          ["Lupus systémique", "20-30 %"],
+          ["Sclérodermie", "10-20 %"],
+          ["Rhumatisme psoriasique / spondylarthropathie", "10-15 % / < 10 %"],
+          ["Infections (VHC, leishmaniose, endocardite)", "VHC 10-50 %, leishmaniose 30-50 %, endocardite 30 %"],
+          ["Hémopathies lymphoïdes (Waldenström, LLC)", "10-30 %"],
+          ["Silicose / asbestose / cirrhose", "30 % / 30 % / 10-30 %"]
+        ] }
+    ],
+    red_flags: ["Anti-CCP positif = mauvais pronostic (PR érosive) → prise en charge précoce et agressive", "FR peu spécifique : ne pas porter le diagnostic de PR sur le seul FR", "FR positif chez le sujet âgé sain (15 % après 70 ans)", "FR élevé + cryoglobulinémie → évoquer une infection par le VHC ou un Waldenström"],
+    conduite: ["Devant une polyarthrite : associer FR IgM (ELISA / néphélémétrie) et anti-CCP.", "Anti-CCP = marqueur spécifique et précoce de la PR (anti-CCP2 plus sensible).", "Un FR positif isolé n'affirme pas une PR (faux positifs nombreux) : confronter à la clinique et à l'imagerie.", "AKA / anti-filaggrine abandonnés au profit des anti-CCP."]
+  },
+  {
+    id: "autoanticorps_organes", num: 119, anomalie: "Anticorps spécifiques d'organes",
+    specialite: "Immunologie",
+    definition: "Auto-anticorps spécifiques d'organe : marqueurs des maladies auto-immunes spécifiques d'organe. Pour chaque cible, un anticorps de 1re intention (± 2e intention) oriente le diagnostic. À confronter à la clinique.",
+    premiere_intention: ["Choisir l'auto-anticorps selon l'organe suspecté (1re intention), puis 2e intention si besoin", "Confronter à la clinique : un auto-anticorps positif n'affirme pas toujours la maladie", "Rechercher les polyendocrinopathies auto-immunes (associations : thyroïde, surrénale, estomac, pancréas…)", "Techniques : ELISA, IFI selon l'anticorps"],
+    causes: [
+      { cause: "Auto-immunité endocrinienne", signe: "pancréas (GAD/IA2/ICA), thyroïde (TSH-R, TPO), parathyroïde (CaSR), surrénale (21-OH), gonades", examens: ["Auto-anticorps spécifiques"] },
+      { cause: "Auto-immunité digestive", signe: "estomac (facteur intrinsèque, cellules pariétales), intestin (ASCA/Crohn, transglutaminase/cœliaque), foie (actine, LKM1, mitochondries)", examens: ["ELISA / IFI"] },
+      { cause: "Autres organes", signe: "rein/poumon (anti-MBG/Goodpasture), jonction neuromusculaire (anti-RACh/myasthénie), hématies (Coombs), plaquettes (anti-GP)", examens: ["Auto-anticorps spécifiques"] }
+    ],
+    tableaux: [
+      { titre: "Auto-anticorps spécifiques d'organe",
+        entetes: ["Organe", "Auto-anticorps (1re intention)", "2e intention", "Pathologie"],
+        lignes: [
+          ["Pancréas", "Anti-GAD 65, anti-IA2", "ICA (anti-îlots, IFI)", "Diabète type 1, diabète LADA"],
+          ["Thyroïde", "Anti-récepteur de la TSH", "—", "Maladie de Basedow"],
+          ["Thyroïde", "Anti-TPO", "Anti-Tg", "Thyroïdite d'Hashimoto, myxœdème primitif"],
+          ["Parathyroïde", "Anti-parathyroïde (IFI), anti-CaSR", "—", "Hypoparathyroïdie auto-immune"],
+          ["Surrénales", "Anti-surrénale (IFI), anti-21-hydroxylase", "—", "Maladie d'Addison"],
+          ["Gonades", "Anti-ovaire", "Anti-17α-hydroxylase, anti-20-22 desmolase", "Hypogonadisme"],
+          ["Estomac", "Anti-facteur intrinsèque", "Anti-cellules pariétales (IFI)", "Maladie de Biermer"],
+          ["Estomac", "Anti-pompe à protons", "Anti-cellules pariétales (IFI)", "Gastrite atrophique A"],
+          ["Intestin", "Anti-Saccharomyces cerevisiae (ASCA)", "Anti-pancréas exocrine", "Maladie de Crohn"],
+          ["Intestin", "Anti-transglutaminase, anti-endomysium", "—", "Maladie cœliaque"],
+          ["Foie", "Anti-actine", "—", "Hépatite auto-immune type 1"],
+          ["Foie", "Anti-réticulum (LKM1)", "—", "Hépatite auto-immune type 2"],
+          ["Foie", "Anti-mitochondries (PDH)", "—", "Cirrhose biliaire primitive"],
+          ["Rein / poumon", "Anti-membrane basale glomérulaire", "—", "Syndrome de Goodpasture"],
+          ["Jonction neuromusculaire", "Anti-récepteur de l'acétylcholine", "—", "Myasthénie"],
+          ["Hématies", "Test de Coombs", "—", "Anémie hémolytique auto-immune (AHAI)"],
+          ["Plaquettes", "Anti-GP", "—", "Thrombopénie auto-immune (PTAI)"]
+        ] }
+    ],
+    red_flags: ["Syndrome de Goodpasture (anti-MBG) : hémorragie alvéolaire + glomérulonéphrite rapidement progressive → urgence", "Myasthénie (anti-RACh) : crise myasthénique (atteinte respiratoire / déglutition)", "Polyendocrinopathie auto-immune : dépister les autres atteintes (ex. Addison + thyroïde + Biermer)", "Un auto-anticorps isolé ne suffit pas au diagnostic : confronter à la clinique"],
+    conduite: ["Choisir l'auto-anticorps en fonction de l'organe cible (1re puis 2e intention).", "Penser aux associations auto-immunes (polyendocrinopathies, Biermer + thyroïde, etc.).", "Confronter systématiquement à la clinique et aux autres examens.", "Renvois internes : diabète type 1 (anti-GAD), Basedow/Hashimoto (TSH-R/TPO), Addison (21-OH), AHAI (Coombs), PTAI."]
+  },
+  {
+    id: "syndrome_inflammatoire", num: 120, anomalie: "Syndrome inflammatoire (VS, CRP, protéines de l'inflammation)",
+    specialite: "Non spécifique",
+    definition: "Le syndrome inflammatoire biologique associe une accélération de la VS, une élévation des protéines de l'inflammation (CRP précoce, puis orosomucoïde, haptoglobine, fibrinogène…) et un profil électrophorétique évocateur. La CRP et la PCT sont les marqueurs les plus utiles.",
+    premiere_intention: ["VS (peu spécifique, nombreux facteurs d'erreur) + CRP (précoce, infection bactérienne) ± PCT (infection bactérienne/fongique)", "Profil électrophorétique : ↓ albumine, ↑ α1 (orosomucoïde, α1-antitrypsine) et α2 (haptoglobine), ± ↑ γ polyclonale", "Cinétique : CRP s'élève dès la 6e heure (demi-vie ~20 h) ; orosomucoïde / haptoglobine plus tardifs", "Compléter selon le contexte (fibrinogène, ferritine, EPP, hémogramme)"],
+    causes: [
+      { cause: "Marqueurs précoces", signe: "CRP (6e h, IL-1/IL-6, infection bactérienne, suivi de l'antibiothérapie), PCT (bactérien/fongique, pas viral)", examens: ["CRP, PCT"] },
+      { cause: "Marqueurs plus tardifs", signe: "orosomucoïde (demi-vie 3 j), haptoglobine (4e jour, HPT % ≈ ORO % × 1,3), α1-antitrypsine, fibrinogène", examens: ["Orosomucoïde, haptoglobine, fibrinogène"] },
+      { cause: "Marqueurs négatifs de l'inflammation", signe: "↓ albumine, préalbumine, transferrine", examens: ["Albumine, transferrine"] }
+    ],
+    tableaux: [
+      { titre: "Facteurs faussant la VS",
+        entetes: ["Type", "Augmentent la VS", "Diminuent la VS"],
+        lignes: [
+          ["Analytiques", "Tube mal rempli / non vertical, température > 27 °C, hémolyse", "Tube trop rempli, température < 18 °C, analyse > 2 h après le prélèvement"],
+          ["Médicaments", "Contraceptifs oraux, dextrans", "Produits de contraste iodés, corticoïdes, AINS, salicylés forte dose, acide valproïque"],
+          ["Pathologies", "Anémie sévère (Hte < 30 %), macrocytose, hypergammaglobulinémie, grossesse, hypercholestérolémie, syndrome néphrotique", "Polyglobulie, microcytose, hémoglobinopathies, hypofibrinogénémie, hyperleucocytose > 50 G/L, insuffisance hépatique, CIVD, hypogammaglobulinémie"]
+        ] },
+      { titre: "Profil inflammatoire à l'électrophorèse",
+        entetes: ["Fraction", "Variation"],
+        lignes: [
+          ["Albumine", "Diminution"],
+          ["α1-globulines", "↑ (orosomucoïde, α1-antitrypsine, α1-antichymotrypsine)"],
+          ["α2-globulines", "↑ (haptoglobine, céruléoplasmine)"],
+          ["β-globulines", "Stable (↓ transferrine, ↑ complément)"],
+          ["γ-globulines", "↑ polyclonale (infections, maladies systémiques)"]
+        ] },
+      { titre: "Protéines de l'inflammation (cinétique)",
+        entetes: ["Protéine", "Demi-vie", "Caractéristiques"],
+        lignes: [
+          ["CRP", "~20 h", "Précoce (6e h), plateau 24-36 h, normalisation 6-7 j ; IL-1/IL-6 ; infection bactérienne, suivi ATB"],
+          ["Procalcitonine (PCT)", "—", "Infection bactérienne / fongique (pas virale) ; pronostic ; normalisation plus rapide que la CRP"],
+          ["Orosomucoïde", "3 j", "Inflammation aiguë/chronique ; ↑ par corticoïdes, hyperleucocytose, obésité"],
+          ["Haptoglobine", "5,4 j", "↑ dès le 4e jour ; HPT % ≈ ORO % × 1,3 ; ↓ si hémolyse"],
+          ["α1-antitrypsine", "5 j", "Serpine ; non augmentée dans les vascularites généralisées"],
+          ["Fibrinogène", "3-6 j", "↑ inflammation ; ↓ CIVD, fibrinolyse, insuffisance hépatique"],
+          ["Ferritine", "—", "↑ inflammation, surcharge en fer, hémolyse ; ↓ carence martiale"],
+          ["Transferrine / albumine / préalbumine", "—", "Marqueurs négatifs (diminuent)"]
+        ] },
+      { titre: "Interprétation d'une VS augmentée",
+        entetes: ["Situation", "Conduite"],
+        lignes: [
+          ["VS modérément ↑ isolée, asymptomatique", "Contrôler le statut clinique et la VS à quelques semaines"],
+          ["VS très augmentée (~100 mm/h)", "Évoquer infection, tumeur maligne, myélome, néphropathie chronique, maladie systémique"],
+          ["Exploration", "CRP, fibrinogène, orosomucoïde, haptoglobine, EPP"]
+        ] }
+    ],
+    red_flags: ["VS ~100 mm/h : rechercher infection, cancer, myélome, maladie systémique (Horton)", "CRP / PCT très élevées : sepsis bactérien (PCT = gravité)", "Syndrome inflammatoire chronique → anémie inflammatoire (microcytaire), thrombocytose > 500 G/L", "Dissociation VS/CRP (VS ↑ mais CRP normale : gammapathie, anémie ; ou inverse)"],
+    conduite: ["CRP = marqueur précoce et fiable ; PCT discrimine l'infection bactérienne (pas virale).", "VS très influencée par de nombreux facteurs (anémie, Ig, fibrinogène, technique) → préférer la CRP.", "Profil électrophorétique inflammatoire : ↓ albumine, ↑ α1/α2.", "Syndrome inflammatoire prolongé : anémie inflammatoire, thrombocytose."]
+  },
+  {
+    id: "vih", num: 121, anomalie: "Infection à VIH (dépistage et diagnostic)",
+    specialite: "Infectiologie",
+    definition: "Rétrovirus (Lentivirus) à grande variabilité génétique. VIH-1 (cosmopolite : groupes M/O/N) et VIH-2 (Afrique de l'Ouest, moins contagieux). Dépistage par test combiné ELISA de 4e génération (Ac anti-VIH-1/2 + Ag p24), confirmé par Western Blot, validé sur un 2e prélèvement (arrêté du 28 mai 2010).",
+    premiere_intention: ["Dépistage : ELISA combiné 4e génération (Ac anti-VIH-1/2 + Ag p24 ; seuil p24 ≥ 2 UI/mL)", "Si positif / douteux : confirmation par Western Blot ou immunoblot (différencie VIH-1 et VIH-2)", "Si confirmation négative / douteuse : antigénémie p24 (test de neutralisation) ou ARN viral (charge virale)", "Tout résultat positif validé sur un 2e prélèvement ; attention à la fenêtre sérologique"],
+    causes: [
+      { cause: "Primo-infection (2-8 semaines)", signe: "fièvre, adénopathies, myalgies, éruption ; leucopénie puis syndrome mononucléosique, ↑ transaminases ; Ag p24 et ARN positifs avant les anticorps (fenêtre)", examens: ["ELISA 4e génération, Ag p24, charge virale"] },
+      { cause: "Western Blot positif", signe: "≥ 2 ENV + 1 GAG ou POL (ou 1 ENV + 1 GAG : gp160 + p24)", examens: ["Western Blot / immunoblot"] },
+      { cause: "Profil douteux", signe: "p24 isolée (souvent faux positif, séroconversion en cours, ou VIH-2)", examens: ["Contrôle, charge virale"] }
+    ],
+    tableaux: [
+      { titre: "Algorithme de dépistage / diagnostic (arrêté 2010)",
+        entetes: ["Étape", "Conduite"],
+        lignes: [
+          ["Dépistage", "ELISA combiné 4e génération (Ac anti-VIH-1/2 + Ag p24)"],
+          ["Si positif / douteux", "Western Blot / immunoblot (différencie VIH-1 / VIH-2)"],
+          ["WB négatif / douteux", "Ag p24 (test de neutralisation) ou ARN viral plasmatique"],
+          ["Validation", "2e prélèvement obligatoire ; annonce en entretien individuel"]
+        ] },
+      { titre: "Cinétique des marqueurs (fenêtre sérologique)",
+        entetes: ["Marqueur", "Apparition (jours)"],
+        lignes: [
+          ["ARN viral", "~11-12 j"],
+          ["Ag p24", "~14-15 j"],
+          ["Anticorps", "~20-29 j (Western Blot interprétable vers J28-29)"]
+        ] },
+      { titre: "Risque de transmission (pour 10 000 expositions)",
+        entetes: ["Mode", "Risque"],
+        lignes: [
+          ["Rapport anal (réceptif / insertif)", "~50 / ~6,5"],
+          ["Rapport vaginal (réceptif / insertif)", "~10 / ~5"],
+          ["Rapport bucco-génital", "~0,5-1"],
+          ["Partage de seringues", "~67"],
+          ["Blessure percutanée (aiguille)", "~30"],
+          ["Transfusion", "~9 (exceptionnel aujourd'hui)"],
+          ["Périnatal (sans / avec traitement)", "10-40 % / 1-2 %"]
+        ] },
+      { titre: "Stades cliniques (OMS)",
+        entetes: ["Stade", "Caractéristiques"],
+        lignes: [
+          ["A", "Primo-infection (2-8 sem) + phase asymptomatique (~10 ans) ; lymphadénopathie généralisée persistante"],
+          ["B", "Candidose oropharyngée / vaginale récidivante, zona, leucoplasie chevelue, dysplasie cervicale, PTI, neuropathie, syndrome constitutionnel"],
+          ["C", "Infections opportunistes (pneumocystose, toxoplasmose cérébrale, candidose œsophagienne, CMV, tuberculose, cryptococcose), Kaposi, lymphomes, cancer invasif du col"],
+          ["SIDA", "CD4 < 200/mm³ et/ou pathologie du stade C"]
+        ] },
+      { titre: "Interprétation du Western Blot",
+        entetes: ["Résultat", "Critères"],
+        lignes: [
+          ["Positif", "≥ 2 ENV + 1 GAG ou POL (ou 1 ENV + 1 GAG : gp160 + p24)"],
+          ["Ininterprétable", "1 ENV ± POL ; GAG + POL ; p24 isolée (faux positif, séroconversion, ou VIH-2)"],
+          ["Négatif", "Aucune bande, bandes non répertoriées, ou p17 isolée"]
+        ] },
+      { titre: "Bilan initial du sujet séropositif",
+        entetes: ["Bilan", "Examens"],
+        lignes: [
+          ["Immuno-virologique", "CD4 / CD8, charge virale, test génotypique de résistance"],
+          ["Général", "NFS, transaminases, γGT, PAL, créatinine, glycémie, bilan lipidique, 25-OH-D, protéinurie ; facteurs de risque CV"],
+          ["Infectieux", "Sérologies syphilis, VHA/VHB/VHC, toxoplasmose, CMV, IDR tuberculine, radiographie du thorax"],
+          ["Mesures", "VHB négatif → vaccination ; VHC négatif → dépistage régulier si risque ; dépistage des partenaires"]
+        ] }
+    ],
+    red_flags: ["Primo-infection : syndrome viral fébrile avec éruption/adénopathies + facteur de risque → ELISA + Ag p24/charge virale (fenêtre sérologique)", "CD4 < 200/mm³ = SIDA : risque d'infections opportunistes → prophylaxie", "Accident d'exposition (AES, rapport à risque) → traitement post-exposition en urgence (< 48 h)", "Co-infections fréquentes : VHB (5-6 %), VHC (~25 %)"],
+    conduite: ["Dépistage par ELISA 4e génération ; confirmation Western Blot + 2e prélèvement (arrêté 2010).", "Penser à la fenêtre sérologique (Ag p24 / ARN positifs avant les anticorps).", "Sujet séropositif : bilan immuno-virologique (CD4, charge virale, génotype), général, infectieux ; vacciner (VHB).", "Annonce en entretien individuel + prise en charge spécialisée rapide ; dépistage des partenaires, prévention."]
+  },
+  {
+    id: "vhc", num: 122, anomalie: "Virus de l'hépatite C (VHC)",
+    specialite: "Infectiologie",
+    definition: "Virus à ARN transmis par voie parentérale (sang). Passage à la chronicité fréquent (70-80 %), risque de cirrhose (25 %) et de carcinome hépatocellulaire (5 %). L'hépatite C chronique = persistance de l'ARN VHC > 6 mois. Prévalence en France ~0,8 % (400 000 personnes).",
+    premiere_intention: ["Dépistage : sérologie anti-VHC (2 réactifs) ; si positive, confirmer sur un 2e prélèvement", "Si séropositif : ARN VHC (charge virale) — distingue infection active (ARN+) et guérison (ARN−)", "Les Ac anti-VHC sont souvent absents en phase aiguë → si négatifs devant une hépatite aiguë, rechercher l'ARN VHC", "Génotype + charge virale avant traitement ; transaminases, évaluation de la fibrose"],
+    causes: [
+      { cause: "Hépatite C aiguë", signe: "asymptomatique dans 90 % ; 10 % asthénie ± ictère ; Ac souvent absents (rechercher l'ARN)", examens: ["ARN VHC", "Transaminases"] },
+      { cause: "Hépatite C chronique", signe: "ARN persistant > 6 mois ; asthénie ; manifestations extra-hépatiques (cryoglobulinémie mixte / vascularite, glomérulonéphrite membrano-proliférative)", examens: ["ARN VHC, génotype", "Évaluation de la fibrose"] },
+      { cause: "Complications", signe: "cirrhose (25 %), carcinome hépatocellulaire (5 %) ; pas de fulminante par le VHC seul (sauf co-infection VHB/VHA)", examens: ["Échographie, AFP", "Élastométrie"] }
+    ],
+    tableaux: [
+      { titre: "Algorithme diagnostique",
+        entetes: ["Sérologie / ARN", "Interprétation"],
+        lignes: [
+          ["Sérologie négative", "Pas d'infection (attention à la fenêtre) ; prévention primaire"],
+          ["Sérologie positive (2 réactifs) + 2e prélèvement", "Sujet séropositif → doser l'ARN VHC"],
+          ["ARN positif + transaminases élevées", "Infection active → génotype, charge virale → traitement"],
+          ["ARN positif + transaminases normales", "Surveillance (traitement si génotype 2/3, manifestations extra-hépatiques, demande du patient)"],
+          ["ARN négatif + transaminases normales", "Guérison"]
+        ] },
+      { titre: "Populations à dépister",
+        entetes: ["Niveau de risque", "Populations"],
+        lignes: [
+          ["Élevé", "Toxicomanie IV, transfusion avant 1992, enfant de mère VHC+, hémodialysé, VIH+, AES soignant"],
+          ["Faible", "Partenaires/entourage, incarcération, tatouage/piercing/mésothérapie/acupuncture sans matériel à usage unique, pays de forte prévalence"],
+          ["Signes évocateurs", "Asthénie / ictère inexpliqués, cryoglobulinémie, élévation inexpliquée des transaminases"]
+        ] },
+      { titre: "Transmission et épidémiologie",
+        entetes: ["Aspect", "Données"],
+        lignes: [
+          ["Transmission", "Sanguine parentérale (toxicomanie, transfusion avant 1992, hémodialyse) ; materno-fœtale ; sexuelle très faible"],
+          ["Chronicité", "70-80 %"],
+          ["Complications", "Cirrhose 25 %, carcinome hépatocellulaire 5 %"],
+          ["Prévalence (France)", "~0,8 % (400 000) ; incidence 5000/an (70 % toxicomanes)"]
+        ] },
+      { titre: "Efficacité du traitement",
+        entetes: ["Critère", "Objectif"],
+        lignes: [
+          ["Virologique", "Négativation de l'ARN VHC (réponse virologique soutenue = guérison)"],
+          ["Biochimique", "Normalisation des transaminases"],
+          ["Histologique", "Stabilisation / régression des lésions"]
+        ] }
+    ],
+    red_flags: ["Cirrhose (25 %) et carcinome hépatocellulaire (5 %) : dépistage (échographie + AFP / 6 mois, fibroscopie)", "Manifestations extra-hépatiques : cryoglobulinémie mixte (vascularite), glomérulonéphrite membrano-proliférative", "Co-infection VHB/VHA → risque d'hépatite fulminante (le VHC seul n'en donne pas)", "Co-infection VIH-VHC fréquente (~25 % des patients VIH)"],
+    conduite: ["Dépistage par sérologie (2 réactifs) → ARN VHC pour distinguer infection active et guérison.", "Ac souvent absents en phase aiguë : devant une hépatite aiguë, rechercher l'ARN VHC.", "Évaluer la fibrose (élastométrie / biopsie), le génotype et la charge virale avant traitement.", "Traitement actuel : antiviraux d'action directe (AAD) ; le schéma IFNα pégylé + ribavirine est l'ancienne référence. Objectif = ARN indétectable (guérison)."]
+  },
+  {
+    id: "vhb", num: 123, anomalie: "Virus de l'hépatite B (VHB) — marqueurs sérologiques",
+    specialite: "Infectiologie",
+    definition: "Virus à ADN transmis par voie sanguine, sexuelle et materno-fœtale. Hépatite aiguë souvent asymptomatique (90 %) ; chronicité (Ag HBs > 6 mois) dans ~10 % (90 % chez le nouveau-né). Risque de cirrhose et de carcinome hépatocellulaire ; rare hépatite fulminante. Bilan de base : Ag HBs, Ac anti-HBs, Ac anti-HBc.",
+    premiere_intention: ["3 marqueurs de base : Ag HBs (présence du virus), Ac anti-HBs (guérison/vaccination), Ac anti-HBc (contact)", "2e intention : Ag HBe / Ac anti-HBe, IgM anti-HBc", "3e intention : ADN VHB (charge virale, réplication)", "Transaminases (ALAT > ASAT) ; TP (> 60 % sauf forme fulminante)"],
+    causes: [
+      { cause: "Marqueurs de contact / guérison", signe: "Ac anti-HBc (contact), Ac anti-HBs (guérison chez l'immunocompétent, persistent ~10 ans) ; Ac anti-HBs isolés = vaccination", examens: ["Ag HBs, Ac anti-HBs, Ac anti-HBc"] },
+      { cause: "Marqueurs de réplication", signe: "Ag HBe (réplication active ; négatif si mutant pré-C), ADN VHB (quantification), Ag pré-S1 (très sensible)", examens: ["Ag HBe, ADN VHB"] },
+      { cause: "Primo-infection vs réactivation", signe: "IgM anti-HBc élevés = primo-infection ; faibles = réactivation / infection ancienne", examens: ["IgM anti-HBc"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs virologiques (signification)",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["Ag HBs", "Présence du VHB dans l'organisme"],
+          ["Ac anti-HBs", "Guérison (immunocompétent) ou vaccination ; persistent ~10 ans"],
+          ["Ac anti-HBc (IgM + IgG)", "Contact avec le VHB"],
+          ["IgM anti-HBc", "Primo-infection (titre élevé) ou réactivation (titre faible)"],
+          ["Ag HBe", "Réplication active (négatif si mutant pré-C)"],
+          ["Ac anti-HBe", "Arrêt de la réplication (sauf mutant pré-C)"],
+          ["Ag pré-S1", "Marqueur très sensible de réplication (même si mutation pré-C/C)"],
+          ["ADN VHB", "Quantification de la réplication virale"]
+        ] },
+      { titre: "Interprétation des profils sérologiques",
+        entetes: ["Profil", "Interprétation"],
+        lignes: [
+          ["Ag HBs isolé (rare)", "Phase précoce d'une hépatite aiguë"],
+          ["Ac anti-HBs isolés", "Sujet vacciné"],
+          ["Ac anti-HBs + Ac anti-HBc", "Sujet guéri"],
+          ["Ac anti-HBc isolés + IgM anti-HBc positif", "Primo-infection"],
+          ["Ac anti-HBc isolés + IgM négatif/faible", "Infection ancienne"],
+          ["Ag HBs + Ac anti-HBc + Ag HBe + IgM anti-HBc", "Primo-infection ou réactivation d'une hépatite chronique"],
+          ["Ag HBs + Ac anti-HBc + Ac anti-HBe + ADN VHB positif", "Phase active d'un mutant pré-C"],
+          ["Ag HBs + Ac anti-HBc + Ac anti-HBe + ADN VHB négatif", "Porteur asymptomatique ou séroconversion « e »"]
+        ] },
+      { titre: "Marqueurs selon la situation clinique",
+        entetes: ["Situation", "Marqueurs"],
+        lignes: [
+          ["Réponse vaccinale (1-2 mois après la dernière dose)", "Titrage des Ac anti-HBs"],
+          ["Dépistage (immunocompétent)", "Ac anti-HBc"],
+          ["Dépistage (immunodéprimé)", "Ag HBs, Ac anti-HBs, Ac anti-HBc"],
+          ["Dépistage (femme enceinte)", "Ag HBs"],
+          ["Hépatite aiguë", "Ag HBs, IgM anti-HBc"],
+          ["Suivi d'une hépatite chronique", "Ag HBs, Ag HBe, Ac anti-HBe"]
+        ] },
+      { titre: "Évolution de l'infection",
+        entetes: ["Forme", "Caractéristiques"],
+        lignes: [
+          ["Hépatite aiguë", "Asymptomatique (90 %) ou fièvre/asthénie/anorexie/ictère ; TP > 60 %"],
+          ["Hépatite chronique (Ag HBs > 6 mois)", "~10 % (90 % chez le nouveau-né, 50 % immunodéprimé) ; porteur asymptomatique / persistante / active ; cirrhose, CHC"],
+          ["Hépatite fulminante", "~0,01 % ; TP < 30 %, encéphalopathie, hypoglycémie, hémorragie, CIVD ; ~80 % de décès → transplantation"]
+        ] }
+    ],
+    red_flags: ["Hépatite fulminante : TP < 30 %, encéphalopathie, hypoglycémie, syndrome hémorragique → urgence (transplantation)", "Chronicité (Ag HBs > 6 mois) : risque de cirrhose et de carcinome hépatocellulaire → surveillance (ADN, échographie, AFP)", "Mutant pré-C : Ag HBe négatif malgré une réplication (ADN VHB positif) → ne pas se fier au seul Ag HBe", "Réactivation sous immunosuppression / chimiothérapie chez un porteur"],
+    conduite: ["Bilan de base : Ag HBs (présence), Ac anti-HBs (guérison/vaccin), Ac anti-HBc (contact) ; ajuster selon la situation.", "Hépatite aiguë : Ag HBs + IgM anti-HBc ; chronique : Ag HBs, Ag HBe, Ac anti-HBe, ADN VHB.", "Attention au mutant pré-C (Ag HBe négatif + ADN VHB positif).", "Prévention : vaccination (obligatoire pour les soignants), dépistage des groupes à risque et de la femme enceinte."]
+  },
+  {
+    id: "ebv", num: 124, anomalie: "Virus d'Epstein-Barr (EBV)",
+    specialite: "Infectiologie",
+    definition: "Virus du groupe herpès, transmission salivaire (« maladie du baiser »). 80-90 % des adultes sont séropositifs. Primo-infection souvent asymptomatique ; sinon mononucléose infectieuse. Rôle dans certains lymphomes et cancers.",
+    premiere_intention: ["NFS : syndrome mononucléosique (± AHAI, thrombopénie auto-immune) ; transaminases modérément ↑ (3-4N) dans 90 %", "MNI-test (agglutination d'hématies hétérologues par les IgM) — peut être négatif", "Sérologie EBV : IgM/IgG anti-VCA, IgM/IgG anti-EA, IgG anti-EBNA", "Distinguer primo-infection, infection ancienne, réactivation selon le profil sérologique"],
+    causes: [
+      { cause: "Mononucléose infectieuse", signe: "asthénie profonde, fièvre 38 °C, angine érythémato-pultacée (ou pseudo-membraneuse) bilatérale, ADP cervicales/occipitales, splénomégalie (50 %) ; guérison en 3-4 semaines", examens: ["NFS, MNI-test, sérologie EBV"] },
+      { cause: "Complications", signe: "exanthème sous aminopénicillines (amoxicilline/ampicilline), AHAI / PTI / cryoglobulinémie, atteintes neurologiques (méningite lymphocytaire, encéphalite, polyradiculonévrite)", examens: ["NFS, test de Coombs, contexte"] },
+      { cause: "Pathologies tumorales (EBV)", signe: "lymphome de Burkitt, cancer du nasopharynx, leucoplasie chevelue (immunodéprimé)", examens: ["Charge virale EBV, biopsie"] }
+    ],
+    tableaux: [
+      { titre: "Marqueurs sérologiques EBV",
+        entetes: ["Marqueur", "Signification"],
+        lignes: [
+          ["IgM anti-VCA", "Primo-infection récente"],
+          ["IgG anti-VCA", "Apparaît tôt, persiste à vie (contact)"],
+          ["IgM / IgG anti-EA (early antigen)", "Réplication active (primo-infection ou réactivation)"],
+          ["IgG anti-EBNA", "Apparaît tardivement (2-3 mois), persiste à vie = infection ancienne"]
+        ] },
+      { titre: "Interprétation des profils",
+        entetes: ["Situation", "Profil"],
+        lignes: [
+          ["Primo-infection", "IgM anti-VCA +, IgG anti-VCA +, anti-EBNA NÉGATIF"],
+          ["Infection ancienne", "IgG anti-VCA +, anti-EBNA +, IgM anti-VCA −"],
+          ["Réactivation", "IgG anti-VCA +, anti-EBNA +, ± anti-EA"],
+          ["Absence de contact", "Tous négatifs (sujet réceptif)"]
+        ] },
+      { titre: "Manifestations cliniques",
+        entetes: ["Type", "Manifestations"],
+        lignes: [
+          ["Mononucléose infectieuse", "Asthénie, fièvre, angine bilatérale, ADP, splénomégalie (50 %)"],
+          ["Médicamenteux", "Exanthème morbilliforme sous aminopénicillines (amoxicilline, ampicilline)"],
+          ["Hématologique", "AHAI, purpura thrombopénique idiopathique, cryoglobulinémie"],
+          ["Neurologique", "Méningite lymphocytaire, encéphalite, polyradiculonévrite"],
+          ["Tumoral", "Lymphome de Burkitt, cancer du nasopharynx, leucoplasie chevelue (immunodéprimé)"]
+        ] }
+    ],
+    red_flags: ["Splénomégalie (50 %) → risque de rupture splénique : éviter les sports de contact", "Angine très hypertrophique avec gêne respiratoire (obstruction)", "Complications hématologiques (AHAI, thrombopénie) ou neurologiques", "Éviter l'amoxicilline/ampicilline (exanthème) ; chez l'immunodéprimé, risque tumoral (lymphome)"],
+    conduite: ["Évoquer devant un syndrome mononucléosique : NFS, MNI-test, sérologie EBV (VCA, EA, EBNA).", "Primo-infection = IgM anti-VCA + sans anti-EBNA ; infection ancienne = anti-EBNA +.", "Le MNI-test peut être négatif (surtout chez l'enfant) → s'appuyer sur la sérologie.", "Traitement symptomatique (repos), éviction des sports de contact si splénomégalie ; voir la fiche « syndrome mononucléosique »."]
+  },
+  {
+    id: "cmv", num: 125, anomalie: "Cytomégalovirus (CMV)",
+    specialite: "Infectiologie",
+    definition: "Virus du groupe herpès. Séroprévalence ~50 % en France. Souvent asymptomatique chez l'immunocompétent ; grave chez l'immunodéprimé (transplanté, SIDA) et le fœtus (maladie des inclusions cytomégaliques). Transmission respiratoire, salive, urines, sexuelle, lait, transplantation.",
+    premiere_intention: ["NFS : syndrome mononucléosique (vers J15 de la fièvre), thrombopénie ; transaminases ↑ (surtout ALAT) ; hypergammaglobulinémie polyclonale à IgM", "Sérologie : IgM = infection récente (peuvent réaugmenter en réactivation)", "Immunodéprimé : antigénémie pp65 et/ou PCR (ADN viral plasmatique / leucocytaire / LCR / urine)", "Auto-anticorps transitoires possibles (ANA, facteur rhumatoïde) : ne pas surinterpréter"],
+    causes: [
+      { cause: "Immunocompétent", signe: "souvent asymptomatique ; fièvre prolongée (> 15 j) ± frissons, céphalée, asthénie, arthralgies, pharyngite", examens: ["NFS, sérologie (IgM)"] },
+      { cause: "Immunodéprimé — transplanté", signe: "infection opportuniste la plus fréquente (30-50 %) : pneumopathie interstitielle, fièvre + cytolyse, cytopénies, glomérulopathie, myocardite, encéphalite ; récidives", examens: ["Antigénémie pp65, PCR"] },
+      { cause: "Immunodéprimé — SIDA (CD4 < 50)", signe: "réactivation : rétinite nécrosante (uni puis bilatérale), atteintes digestives ; plus rarement pneumopathie, encéphalite", examens: ["PCR, fond d'œil"] },
+      { cause: "Fœtus / nouveau-né", signe: "maladie congénitale des inclusions cytomégaliques (1-5/10 000) ; formes inapparentes (virurie, encéphalopathie / retard psychomoteur)", examens: ["PCR (urine/salive du nouveau-né)"] }
+    ],
+    tableaux: [
+      { titre: "Signes biologiques d'orientation",
+        entetes: ["Examen", "Anomalie"],
+        lignes: [
+          ["NFS", "Syndrome mononucléosique (vers J15), thrombopénie"],
+          ["Transaminases", "Augmentées (surtout ALAT)"],
+          ["Immunoglobulines", "Hypergammaglobulinémie polyclonale à IgM"],
+          ["Auto-anticorps", "Apparition transitoire d'ANA, facteur rhumatoïde, complexes immuns circulants"]
+        ] },
+      { titre: "Diagnostic virologique",
+        entetes: ["Méthode", "Intérêt"],
+        lignes: [
+          ["Sérologie (IgM/IgG)", "IgM = infection récente (peuvent réaugmenter en réactivation)"],
+          ["Antigénémie pp65", "Surtout chez l'immunodéprimé (transplanté, SIDA)"],
+          ["PCR (ADN viral)", "Plasma, leucocytes, LCR, urine ; quantification"],
+          ["Culture (fibroblastes humains)", "Effet cytopathogène en 10-21 j ; permet l'antivirogramme"],
+          ["Histologie", "Cellules à grosses inclusions intranucléaires"]
+        ] },
+      { titre: "Manifestations selon le terrain",
+        entetes: ["Terrain", "Manifestations"],
+        lignes: [
+          ["Immunocompétent", "Souvent asymptomatique ; fièvre prolongée, asthénie, pharyngite"],
+          ["Transplanté", "Pneumopathie interstitielle, cytolyse, cytopénies, myocardite, encéphalite (30-50 %)"],
+          ["SIDA (CD4 < 50)", "Rétinite nécrosante, atteintes digestives"],
+          ["Fœtus / nouveau-né", "Maladie des inclusions cytomégaliques ; encéphalopathie, retard psychomoteur"]
+        ] }
+    ],
+    red_flags: ["Rétinite à CMV chez le sujet VIH (CD4 < 50) → risque de cécité, urgence", "CMV chez le transplanté : infection opportuniste grave (pneumopathie, atteinte multi-organe)", "CMV congénital : surdité, retard psychomoteur → dépistage et suivi", "Primo-infection à CMV chez la femme enceinte (risque fœtal)"],
+    conduite: ["Immunocompétent : syndrome mononucléosique à MNI-test négatif → évoquer le CMV (sérologie IgM).", "Immunodéprimé : antigénémie pp65 / PCR pour le diagnostic et le suivi ; traitement antiviral (ganciclovir…).", "Grossesse : risque de transmission materno-fœtale ; avis spécialisé en cas de primo-infection.", "Auto-anticorps transitoires possibles : ne pas conclure à tort à une maladie auto-immune."]
+  },
+  {
+    id: "hsv", num: 126, anomalie: "Herpès simplex virus (HSV)",
+    specialite: "Infectiologie",
+    definition: "HSV-1 (séroprévalence ~90 %, latence dans le ganglion trijumeau) et HSV-2 (15-20 %, latence dans les ganglions sacrés). Transmission par contact cutanéo-muqueux. Latence à vie avec récurrences. L'encéphalite herpétique est une urgence.",
+    premiere_intention: ["Diagnostic souvent clinique (vésicules groupées en bouquet) ; PCR HSV si besoin (surtout LCR)", "Encéphalite herpétique : PCR HSV dans le LCR (urgence) ; LCR : lymphocytose < 500/mm³, protéinorachie ↑ (< 1 g/L), glycorachie normale", "Sérologie : différencie HSV-1/HSV-2 mais PAS de marqueur de primo-infection (IgM aussi en récurrence)", "Herpès génital / néonatal : PCR, contexte"],
+    causes: [
+      { cause: "Gingivostomatite aiguë", signe: "primo-infection de l'enfant : fièvre, adénopathie, ulcérations buccales (HSV-1)", examens: ["Clinique, PCR si doute"] },
+      { cause: "Encéphalite herpétique", signe: "encéphalite aiguë nécrosante (enfant/jeune adulte) : fièvre, céphalée, troubles du caractère/mémoire ; LCR lymphocytaire", examens: ["PCR HSV dans le LCR (URGENCE)", "IRM cérébrale"] },
+      { cause: "Herpès génital", signe: "surtout HSV-2 : vésicules puis ulcérations (gland/pénis ; vulve/vagin/col) ± fièvre, ADP, dysurie ; lésions anales", examens: ["PCR, clinique"] },
+      { cause: "Manifestations ophtalmologiques", signe: "conjonctivite, kératite, ulcérations cornéennes", examens: ["Avis ophtalmologique"] },
+      { cause: "Herpès néonatal", signe: "1-5/10 000 grossesses ; risque maximal si primo-infection maternelle", examens: ["PCR, avis spécialisé"] }
+    ],
+    tableaux: [
+      { titre: "HSV-1 vs HSV-2",
+        entetes: ["", "HSV-1", "HSV-2"],
+        lignes: [
+          ["Séroprévalence (adulte)", "~90 %", "15-20 %"],
+          ["Localisation préférentielle", "Orofaciale (gingivostomatite, kératite, encéphalite)", "Génitale"],
+          ["Latence", "Ganglion trijumeau", "Ganglions sacrés"]
+        ] },
+      { titre: "Manifestations cliniques",
+        entetes: ["Forme", "Caractéristiques"],
+        lignes: [
+          ["Gingivostomatite aiguë", "Primo-infection de l'enfant : fièvre, ADP, ulcérations buccales"],
+          ["Ophtalmologique", "Conjonctivite, kératite, ulcérations (risque de cécité)"],
+          ["Encéphalite herpétique", "Aiguë nécrosante : fièvre, céphalée, troubles du caractère/mémoire — URGENCE"],
+          ["Génitale", "Vésicules puis ulcérations (HSV-2 ++) ± fièvre, ADP, dysurie ; lésions anales"],
+          ["Néonatale", "1-5/10 000 ; risque maximal si primo-infection maternelle"]
+        ] },
+      { titre: "LCR de l'encéphalite herpétique",
+        entetes: ["Paramètre", "Valeur"],
+        lignes: [
+          ["Cellules", "Lymphocytose < 500/mm³"],
+          ["Protéinorachie", "Augmentée (souvent < 1 g/L)"],
+          ["Glycorachie", "Normale"],
+          ["PCR HSV", "Positive (examen clé, en urgence)"]
+        ] },
+      { titre: "Diagnostic biologique",
+        entetes: ["Méthode", "Intérêt"],
+        lignes: [
+          ["PCR (ADN viral)", "Examen de référence, surtout dans le LCR (encéphalite)"],
+          ["Sérologie (HSV-1/HSV-2)", "Différencie les types ; PAS de marqueur de primo-infection (IgM aussi en récurrence)"],
+          ["Culture / antigènes viraux", "Laboratoires spécialisés (cellules HeLa)"]
+        ] }
+    ],
+    red_flags: ["Encéphalite herpétique : fièvre + signes neurologiques → PCR LCR + aciclovir IV EN URGENCE (ne pas attendre la confirmation)", "Kératite herpétique : risque de cécité → avis ophtalmologique (CONTRE-INDICATION des corticoïdes locaux)", "Herpès néonatal (primo-infection maternelle en fin de grossesse) → césarienne / aciclovir", "Herpès étendu ou chronique chez l'immunodéprimé"],
+    conduite: ["Diagnostic souvent clinique (vésicules en bouquet) ; PCR pour confirmer (LCR pour l'encéphalite).", "Toute suspicion d'encéphalite herpétique = aciclovir IV en urgence (avant la confirmation).", "Sérologie : utile pour le typage HSV-1/2, pas pour dater l'infection.", "Herpès génital / grossesse : avis spécialisé ; prévention de la transmission néonatale."]
+  },
+  {
+    id: "pieges_preanalytiques", num: 127, anomalie: "Pièges préanalytiques et interférences",
+    specialite: "Non spécifique",
+    definition: "De nombreux résultats anormaux sont en réalité des artefacts préanalytiques (prélèvement, tube, transport). Toujours évoquer un piège devant un résultat inattendu ou discordant et RECONTRÔLER avant d'agir. (D'après « Blood Tests Made Easy », P. Hamilton, 2022.)",
+    premiere_intention: ["Devant un résultat inattendu / discordant : évoquer un artefact et recontrôler", "Hémolyse : fausse ↑ du potassium (+ LDH, ASAT, bilirubine, phosphate…) — non détectée par les automates de biologie délocalisée (POCT)", "Tube inadapté / contamination (EDTA, citrate, héparine-lithium, perfusion) : interférences spécifiques", "Pseudohyponatrémie (hyperprotidémie / hypertriglycéridémie) : Na faussement bas au laboratoire, vrai en POCT (osmolalité normale)"],
+    causes: [
+      { cause: "Hémolyse du prélèvement", signe: "libération du contenu cellulaire ; sérum rouge", examens: ["Recontrôler ; le labo signale « hémolyse, pas de résultat »"] },
+      { cause: "Contamination par le tube", signe: "EDTA, citrate, héparine-lithium ; respecter l'ordre de prélèvement", examens: ["Recontrôler sur le bon tube"] },
+      { cause: "Contamination par une perfusion (même bras)", signe: "dilution (résultats bas) ou électrolytes perfusés (résultats hauts) ; dopamine → créatinine faussement basse", examens: ["Prélever sur le bras opposé"] },
+      { cause: "Pseudohyponatrémie", signe: "hyperprotidémie (myélome), hypertriglycéridémie ; osmolalité normale", examens: ["Osmolalité, Na sur POCT"] }
+    ],
+    tableaux: [
+      { titre: "Hémolyse : tests faussement modifiés",
+        entetes: ["Catégorie", "Tests faussés (↑)"],
+        lignes: [
+          ["Électrolytes", "Potassium, phosphate, magnésium"],
+          ["Enzymes", "LDH, ASAT, ALAT, GGT"],
+          ["Autres", "Bilirubine, ammoniaque"]
+        ] },
+      { titre: "Interférences par le tube / contamination",
+        entetes: ["Source", "Effet"],
+        lignes: [
+          ["EDTA (tube violet)", "↑ potassium ; ↓ calcium, magnésium, PAL"],
+          ["Citrate (tube bleu)", "↑ sodium (indice : chlore bas associé) ; ↓ calcium"],
+          ["Héparine-lithium (tube vert)", "↑ lithium"],
+          ["Perfusion (même bras)", "Dilution (résultats bas) ou électrolytes perfusés (résultats hauts)"],
+          ["Dopamine (perfusion)", "Créatinine faussement basse"]
+        ] },
+      { titre: "Pièges fréquents",
+        entetes: ["Piège", "Mécanisme"],
+        lignes: [
+          ["Pseudohyperkaliémie", "Hémolyse, garrot prolongé, serrer le poing, délai d'acheminement, thrombocytose, hyperleucocytose"],
+          ["Pseudohyponatrémie", "Hyperprotidémie / hypertriglycéridémie (Na bas au labo, normal en POCT) ; osmolalité normale"],
+          ["Pseudohypocalcémie", "Contamination par l'EDTA"],
+          ["Identité erronée", "Résultats totalement incohérents avec le patient → recontrôler"]
+        ] }
+    ],
+    red_flags: ["Ne jamais traiter une hyperkaliémie « POCT » sans confirmation (pas de détection d'hémolyse en délocalisé)", "Résultat totalement inattendu → erreur d'identité possible : recontrôler avant d'agir", "Interpréter selon le bon intervalle de référence (âge, sexe, grossesse) et la cinétique"],
+    conduite: ["Devant un résultat aberrant ou discordant : recontrôler avant toute décision.", "Connaître les tests sensibles à l'hémolyse (K, LDH, ASAT, phosphate…) et aux tubes (EDTA, citrate).", "Privilégier la tendance (cinétique) à une valeur isolée.", "Source : Blood Tests Made Easy (P. Hamilton, 2022)."]
+  }
+];

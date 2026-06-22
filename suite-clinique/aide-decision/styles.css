@@ -1,0 +1,212 @@
+:root {
+  --bg:#eef2f6; --surface:#fff; --ink:#1b2733; --soft:#5b6b7b; --line:#e1e8ef;
+  --brand:#0e7c86; --brand-d:#0a5a62;
+  --u1:#0d8a4f; --u1-bg:#e9f8ef;
+  --u2:#c97a00; --u2-bg:#fff6e6;
+  --u3:#d92d20; --u3-bg:#fdf0ef;
+  --radius:14px; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* top bar */
+.topbar{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff}
+.topbar-inner{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}
+.logo{font-size:28px}
+.topbar h1{font-size:1.15rem;margin:0}
+.subtitle{margin:2px 0 0;font-size:.8rem;opacity:.9}
+.mode-switch{display:flex;background:rgba(255,255,255,.15);border-radius:10px;padding:3px}
+.mode-switch button{border:0;background:transparent;color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.mode-switch button.active{background:#fff;color:var(--brand-d)}
+.bio-link{display:inline-block;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;padding:8px 13px;border-radius:9px;font-size:.82rem;font-weight:600}
+.bio-link:hover{background:rgba(255,255,255,.28)}
+
+/* legal banner */
+.legal-banner{background:#fff7ed;border-bottom:1px solid #fde4c8;color:#7c4a03;
+  font-size:.82rem;padding:10px 20px;max-width:none;text-align:center}
+.legal-banner strong{color:#9a3412}
+
+.wrap{max-width:1000px;margin:20px auto;padding:0 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 26px;margin-bottom:18px}
+h2{margin:0 0 12px;font-size:1.3rem}
+.lead{color:var(--soft)}
+.muted{color:var(--soft);font-size:.9rem}
+
+/* form fields */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:block;margin:14px 0}
+.field>span,legend{font-weight:600;font-size:.9rem;display:block;margin-bottom:5px}
+.field input[type=number],.field input[type=text],.field select{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;background:#fbfdff}
+.field.check,.field.consent{display:flex;gap:9px;align-items:flex-start}
+.field.check input,.field.consent input{margin-top:3px}
+.consent span{font-size:.9rem;color:var(--soft)}
+fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:flex;gap:6px;align-items:center;background:#f4f8fb;border:1px solid var(--line);
+  padding:6px 11px;border-radius:999px;font-size:.85rem;cursor:pointer}
+.req{font-style:normal;font-size:.7rem;font-weight:700;color:var(--u3);background:var(--u3-bg);border-radius:5px;padding:1px 6px;margin-left:4px}
+.field.check.temp-nm{align-self:end;padding-bottom:11px}
+.hint{margin:-4px 0 8px;font-size:.82rem;color:var(--soft)}
+
+/* buttons */
+.btn{border:0;border-radius:10px;padding:11px 18px;font-size:.95rem;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:disabled{background:#9fc4c8;cursor:not-allowed}
+.btn.ghost{background:#eef3f6;color:var(--brand-d)}
+.search{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:.95rem;margin-bottom:14px}
+
+/* symptom grid */
+.symptom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.symptom-card{text-align:left;background:#fbfdff;border:1px solid var(--line);border-radius:12px;padding:15px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:.12s}
+.symptom-card:hover{border-color:var(--brand);background:#f1f8f9;transform:translateY(-1px)}
+.sc-title{font-weight:700}
+.sc-spec{font-size:.78rem;color:var(--soft)}
+.symptom-card.is-urg{border-color:#f3c0bb}
+.symptom-card.is-urg:hover{border-color:var(--u3)}
+.sc-urg{display:inline-block;font-size:.6rem;font-weight:800;color:#fff;background:var(--u3);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;letter-spacing:.03em}
+/* multi-select des motifs */
+.symptom-card{position:relative;padding-left:40px}
+.sc-check{position:absolute;left:13px;top:14px;width:19px;height:19px;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;background:#fff}
+.symptom-card.sel{border-color:var(--brand);background:#eaf6f7;box-shadow:inset 0 0 0 1px var(--brand)}
+.symptom-card.sel .sc-check{background:var(--brand);border-color:var(--brand)}
+.symptom-card.disabled{opacity:.45;filter:grayscale(.3)}
+.symptom-card.disabled:hover{border-color:var(--line);background:#fbfdff;transform:none;cursor:not-allowed}
+.select-bar{position:sticky;bottom:0;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+  background:linear-gradient(to top,var(--surface) 70%,transparent);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.select-count{font-size:.9rem;color:var(--soft);font-weight:600}
+.select-count.limit{color:var(--u2)}
+
+/* catalogue patient : motifs groupés par spécialité, cases à cocher */
+.catalog{max-height:60vh;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:6px 14px;background:#fbfdff}
+.cat-group{padding:10px 0;border-bottom:1px solid var(--line)}
+.cat-group:last-child{border-bottom:0}
+.cat-group-title{margin:6px 0 10px;font-size:.9rem;color:var(--brand-d);display:flex;align-items:center;gap:7px}
+.cat-ico{font-size:1.1rem}
+.motif-chips{display:flex;flex-wrap:wrap;gap:8px}
+.motif-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:7px 13px 7px 9px;font-size:.86rem;cursor:pointer;text-align:left;transition:.12s}
+.motif-chip:hover{border-color:var(--brand);background:#f1f8f9}
+.mc-check{width:17px;height:17px;flex:none;border:1.5px solid #cdd8e1;border-radius:5px;display:flex;
+  align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#fff;background:#fff}
+.motif-chip.sel{border-color:var(--brand);background:#eaf6f7;box-shadow:inset 0 0 0 1px var(--brand)}
+.motif-chip.sel .mc-check{background:var(--brand);border-color:var(--brand)}
+.motif-chip.is-urg{border-color:#f3c0bb}
+.motif-chip.is-urg.sel{border-color:var(--u3);box-shadow:inset 0 0 0 1px var(--u3)}
+.motif-chip.disabled{opacity:.4;cursor:not-allowed}
+.motif-chip.disabled:hover{border-color:var(--line);background:#fff}
+
+/* ===== Informations patient et antécédents ===== */
+.hide{display:none!important}
+.atcd-intro{margin:0 0 14px}
+.atcd-sec{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px}
+.atcd-sec legend{font-weight:700;font-size:.95rem;color:var(--brand-d);padding:0 8px}
+.atcd-sec .req{margin-left:6px}
+.none-box{background:#f4f8fb;border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin:0 0 12px}
+.atcd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 14px}
+.atcd-chk{display:flex;gap:8px;align-items:flex-start;font-size:.88rem;padding:5px 4px;cursor:pointer;border-radius:6px}
+.atcd-chk:hover{background:#f1f8f9}
+.atcd-chk input{margin-top:3px;flex:none}
+.atcd-group{border:1px solid var(--line);border-radius:10px;margin:0 0 8px;background:#fbfdff;overflow:hidden}
+.atcd-group>summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;list-style:none}
+.atcd-group>summary::-webkit-details-marker{display:none}
+.atcd-group>summary::before{content:"▸";color:var(--brand);font-size:.8rem;margin-right:6px;transition:.15s}
+.atcd-group[open]>summary::before{transform:rotate(90deg)}
+.ag-title{flex:1}
+.ag-count{min-width:20px;text-align:center;font-size:.72rem;font-weight:800;color:transparent}
+.ag-count.on{color:#fff;background:var(--brand);border-radius:999px;padding:1px 7px}
+.atcd-group .atcd-grid{padding:6px 14px 12px}
+.atcd-group.is-disabled,.is-disabled{opacity:.5}
+.atcd-searchwrap{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;
+  padding:0 12px;margin:0 0 14px;background:#fff}
+.atcd-searchwrap input{border:0;outline:0;padding:11px 4px;width:100%;font-size:.95rem;background:transparent}
+.atcd-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.atcd-actions .btn{flex:1 1 auto;min-width:140px}
+.atcd-actions .btn.primary{flex:2 1 220px}
+.atcd-msg{margin:10px 0 0;font-size:.88rem;min-height:1.1em}
+.atcd-msg.ok{color:var(--u1)}
+.atcd-msg.err{color:var(--u3);font-weight:600}
+.atcd-sec textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:.92rem;margin-top:6px}
+/* bloc patient dans la synthèse */
+.pat-name{font-weight:700;font-size:1.05rem;margin:0 0 8px}
+.allerg-warn{background:var(--u3-bg);border:1px solid #f5c2bd;color:#9a2b21;font-weight:600;padding:9px 12px;border-radius:8px;margin:0 0 6px}
+
+/* quiz groupé par motif */
+.quiz-section{margin:0 0 8px}
+.quiz-sec-title{margin:18px 0 2px;font-size:.92rem;color:var(--brand-d);border-bottom:2px solid #e6eef0;padding-bottom:6px}
+.quiz-section:first-child .quiz-sec-title{margin-top:4px}
+
+/* synthèse : blocs par motif + tags */
+.syn-motif{padding:10px 0;border-bottom:1px dashed var(--line)}
+.syn-motif:last-child{border-bottom:0}
+.syn-motif h4{margin:0 0 6px;font-size:.95rem}
+.syn-motif h4 small{font-weight:500;color:var(--soft);font-size:.78rem}
+.rf-tag{display:inline-block;background:#eef3f6;color:var(--brand-d);border-radius:5px;padding:1px 7px;font-size:.72rem;font-weight:700;margin-right:4px}
+
+/* quiz */
+.quiz-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.quiz-head h2{margin:0}
+.q{padding:14px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q-text{font-weight:600;margin:0 0 10px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{background:#f4f8fb;border:1px solid var(--line);border-radius:9px;padding:9px 15px;cursor:pointer;font-size:.9rem}
+.choice:hover{border-color:var(--brand)}
+.choice.sel{background:var(--brand);color:#fff;border-color:var(--brand)}
+.scale-out{margin-left:10px;font-weight:700;color:var(--brand-d)}
+.quiz-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap}
+.progress{color:var(--soft);font-size:.85rem}
+
+/* patient result */
+.alert{padding:14px 16px;border-radius:10px;font-size:.95rem}
+.alert.u1{background:var(--u1-bg);border:1px solid #bde8cd}
+.alert.u2{background:var(--u2-bg);border:1px solid #f6dcab}
+.alert.u3{background:var(--u3-bg);border:1px solid #f5c2bd}
+.cta-row{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+
+/* synthese medecin */
+.synthese{padding:0;overflow:hidden}
+.syn-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;color:#fff}
+.syn-head.u1{background:var(--u1)}.syn-head.u2{background:var(--u2)}.syn-head.u3{background:var(--u3)}
+.syn-head h2{margin:0;font-size:1.2rem;color:#fff}
+.syn-sub{margin:3px 0 0;font-size:.82rem;opacity:.92}
+.urg-badge{text-align:center;background:rgba(255,255,255,.2);border-radius:10px;padding:8px 14px;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.urg-badge small{display:block;font-size:.66rem;font-weight:600;opacity:.95}
+.syn-block{padding:16px 24px;border-bottom:1px solid var(--line)}
+.syn-block h3{margin:0 0 8px;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-d)}
+.recap{columns:2;column-gap:24px;margin:0;padding-left:18px;font-size:.92rem}
+.rf{margin:0;padding-left:18px}
+.rf li{margin:6px 0}
+.u-tag{display:inline-block;color:#fff;border-radius:5px;padding:1px 7px;font-size:.72rem;font-weight:700;margin-right:4px}
+.u-tag.u1{background:var(--u1)}.u-tag.u2{background:var(--u2)}.u-tag.u3{background:var(--u3)}
+.ok{background:var(--u1-bg);border:1px solid #bde8cd;padding:10px 12px;border-radius:8px;margin:0}
+.hyp{margin:0;padding-left:20px}
+.hyp li{margin:6px 0}
+.args{color:var(--soft);font-size:.85rem}
+.score{font-size:.74rem;color:#fff;background:var(--brand);border-radius:5px;padding:1px 6px;margin-left:4px}
+.verif,.exam{margin:0;padding-left:18px;font-size:.92rem}
+.verif li,.exam li{margin:3px 0}
+.orient{font-weight:600;padding:10px 12px;border-radius:8px;margin:0}
+.orient.u1{background:var(--u1-bg)}.orient.u2{background:var(--u2-bg)}.orient.u3{background:var(--u3-bg)}
+.doctor-notes{padding:16px 24px}
+.doctor-notes label span{font-weight:600;font-size:.9rem;display:block;margin-bottom:6px}
+.doctor-notes textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:.92rem}
+.syn-actions{padding:16px 24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.disclaimer{font-size:.78rem;color:var(--soft);flex:1;min-width:200px}
+
+.foot{max-width:1000px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--soft)}
+
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.recap{columns:1}}
+
+/* print : ne montrer que la synthèse médecin */
+@media print{
+  .topbar,.legal-banner,.mode-switch,.foot,#view-patient,.syn-actions,.doctor-notes textarea{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none;border:none}
+  .syn-head{color:#000!important;background:#fff!important;border-bottom:2px solid #000}
+  .syn-head h2{color:#000}
+  .urg-badge{background:#eee;color:#000}
+}

@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Évaluations Médicales — V10.1 + Iatrogénie V11.2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0f1e2e;--navy2:#1a3348;
+  --teal:#1a7a6e;--teal2:#22a090;
+  --cream:#f7f3ee;--warm:#e8dfd4;
+  --accent:#c9705a;
+  --text:#1c2b3a;--muted:#6b7f8e;
+  --border:#d4cdc5;--card:#fff;
+  --ok:#2d7a5f;--warn:#c08030;--danger:#b84040;
+  --cat-psy:#5c6bc0;--cat-sleep:#1a7a6e;
+  --cat-mem:#7b5ea7;--cat-cardio:#c0544c;
+  --cat-add:#c07830;--cat-pain:#8b5e52;
+  --cat-prev:#3a7d44;--cat-iatro:#b23a48;--cat-imagerie:#4a6fa5;--cat-gyne:#b85c8a;--cat-pneumo:#4b8aa8;--cat-nutri:#6b8f3a;--cat-orl:#8a6fba;--cat-urgent:#b84040;--cat-uro:#3f7cac;--cat-auto:#6f6a4f;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* ─── WELCOME ─── */
+#screen-welcome{
+  background:linear-gradient(145deg,var(--navy) 0%,var(--navy2) 60%,#0d2236 100%);
+  align-items:center;justify-content:center;padding:40px 24px;position:relative;overflow:hidden
+}
+#screen-welcome::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(26,122,110,.25) 0%,transparent 70%)}
+.wlc-logo{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:var(--teal2);margin-bottom:40px}
+.wlc-title{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:clamp(34px,7vw,52px);font-weight:300;color:#f0ece6;text-align:center;line-height:1.15;margin-bottom:10px}
+.wlc-title em{font-style:italic;color:var(--teal2)}
+.wlc-sub{font-size:13px;font-weight:300;color:rgba(240,236,230,.5);text-align:center;margin-bottom:48px}
+.patient-form{width:100%;max-width:420px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(240,236,230,.45);margin-bottom:7px}
+.fg input,.fg select{width:100%;padding:13px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#f0ece6;font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none}
+.fg input::placeholder{color:rgba(240,236,230,.3)}
+.fg input:focus,.fg select:focus{border-color:var(--teal2);background:rgba(255,255,255,.12)}
+.fg select option{background:var(--navy);color:#f0ece6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-start{width:100%;margin-top:8px;padding:17px;background:var(--teal);border:none;border-radius:12px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;letter-spacing:.5px;cursor:pointer;transition:background .2s,transform .1s}
+.btn-start:active{transform:scale(.98);background:var(--teal2)}
+
+/* ─── MENU ─── */
+#screen-menu{background:var(--cream)}
+.menu-header{background:var(--navy);padding:26px 22px 20px}
+.mh-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.mh-name{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:21px;font-weight:300;color:#f0ece6}
+.mh-name span{font-style:italic;color:var(--teal2)}
+.mh-meta{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px}
+.mh-age{font-size:12px;color:rgba(255,255,255,.45);text-align:right}
+.prog-bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--teal2);border-radius:2px;transition:width .5s ease;width:0}
+.prog-label{font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;letter-spacing:1px}
+.cat-title{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:18px 20px 8px;display:flex;align-items:center;gap:8px}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.menu-cards{padding:0 14px 4px;display:flex;flex-direction:column;gap:9px}
+.menu-card{background:var(--card);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1.5px solid transparent;transition:border-color .2s,box-shadow .2s,transform .1s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.menu-card:active{transform:scale(.98)}
+.menu-card.done{border-color:var(--ok)}
+.menu-card.done .ci{background:var(--ok)}
+.ci{width:42px;height:42px;border-radius:11px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;transition:background .2s}
+.cb{flex:1;min-width:0}
+.ct{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
+.cd{font-size:11px;color:var(--muted);margin-top:2px}
+.cs{font-size:10px;font-weight:500;padding:4px 9px;border-radius:20px;background:var(--warm);color:var(--muted);white-space:nowrap;flex-shrink:0}
+.menu-card.done .cs{background:rgba(45,122,95,.12);color:var(--ok)}
+.btn-finalize{margin:12px 14px 32px;padding:17px;background:var(--accent);border:none;border-radius:12px;color:white;width:calc(100% - 28px);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .2s,transform .1s;display:none}
+.btn-finalize.on{display:block}
+.btn-finalize:active{transform:scale(.98)}
+
+/* ─── TEST ─── */
+#screen-test{background:var(--cream)}
+.test-hdr{background:var(--navy);padding:18px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+.btn-back{width:36px;height:36px;background:rgba(255,255,255,.1);border:none;border-radius:8px;color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.th-info{flex:1}
+.th-title{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:19px;font-weight:400;color:#f0ece6;line-height:1.2}
+.th-sub{font-size:11px;color:rgba(255,255,255,.4)}
+.tprog{padding:14px 20px 0;display:flex;align-items:center;gap:10px}
+.tpb{flex:1;height:4px;background:var(--warm);border-radius:2px;overflow:hidden}
+.tpf{height:100%;background:var(--teal);border-radius:2px;transition:width .3s}
+.tpl{font-size:11px;color:var(--muted);white-space:nowrap}
+.test-content{padding:16px 18px 100px}
+.qcard{background:var(--card);border-radius:15px;padding:20px;margin-bottom:12px;box-shadow:0 1px 5px rgba(0,0,0,.05);animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.qnum{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:7px}
+.qtext{font-size:15px;line-height:1.55;color:var(--text);margin-bottom:14px}
+.qsub{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:12px;margin-top:-8px}
+.section-banner{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:13px;padding:16px 18px;margin-bottom:12px;color:white}
+.section-banner h3{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:19px;font-weight:400;margin-bottom:4px}
+.section-banner p{font-size:12px;opacity:.55}
+.options{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;background:transparent;text-align:left;width:100%}
+.opt:active{transform:scale(.99)}
+.opt.sel{border-color:var(--teal);background:rgba(26,122,110,.07)}
+.ora{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.opt.sel .ora{border-color:var(--teal);background:var(--teal)}
+.opt.sel .ora::after{content:'';width:8px;height:8px;background:white;border-radius:50%}
+.otx{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.osc{font-size:11px;color:var(--muted);background:var(--warm);padding:2px 8px;border-radius:10px;white-space:nowrap}
+.test-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(247,243,238,.96);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:14px 18px}
+.btn-submit{width:100%;padding:15px;background:var(--teal);border:none;border-radius:12px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.btn-submit:disabled{opacity:.35}
+
+/* ─── RESULT ─── */
+#screen-result{background:var(--cream)}
+.res-hdr{background:var(--navy);padding:26px 20px}
+.res-badge{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--teal2);margin-bottom:7px}
+.res-name{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:24px;font-weight:300;color:#f0ece6}
+.res-dt{font-size:12px;color:rgba(255,255,255,.35);margin-top:4px}
+.res-content{padding:16px 16px 130px}
+.res-section-title{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:14px 4px 8px}
+.rcard{background:var(--card);border-radius:14px;padding:18px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.05);border-left:4px solid var(--teal)}
+.rcard.warn{border-left-color:var(--warn)}
+.rcard.danger{border-left-color:var(--danger)}
+.rcard.ok{border-left-color:var(--ok)}
+.rc-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.rc-score{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:38px;font-weight:300;color:var(--text);line-height:1}
+.rc-score span{font-size:16px;color:var(--muted)}
+.rc-interp{font-size:13px;color:var(--text);margin-top:5px;font-weight:500}
+.rc-detail{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5}
+.res-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(247,243,238,.96);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:14px 16px;display:flex;gap:9px}
+.btn-pdf{flex:1;padding:14px;background:var(--navy);border:none;border-radius:11px;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
+.btn-mail{flex:1;padding:14px;background:var(--teal);border:none;border-radius:11px;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
+.btn-new{padding:14px 16px;background:transparent;border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer}
+
+/* ─── MODAL ─── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(15,30,46,.72);z-index:100;align-items:center;justify-content:center;padding:24px}
+.modal-ov.on{display:flex}
+.modal{background:white;border-radius:18px;padding:26px;width:100%;max-width:380px;animation:su .3s ease}
+@keyframes su{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h3{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:21px;font-weight:400;margin-bottom:5px}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.modal input{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:16px;outline:none;margin-bottom:11px}
+.modal input:focus{border-color:var(--teal)}
+.modal-btns{display:flex;gap:9px}
+.m-cancel{flex:1;padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px}
+.m-send{flex:2;padding:13px;background:var(--teal);border:none;border-radius:10px;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:11px 18px;border-radius:10px;font-size:13px;z-index:999;opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap}
+.toast.on{opacity:1}
+.info-box{background:rgba(26,122,110,.08);border:1px solid rgba(26,122,110,.2);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:var(--teal);line-height:1.5}
+/* Lisibilite des formulaires cliniques dans les cartes blanches */
+.test-content .qcard .fg label{color:#111827!important;}
+.test-content .qcard .fg input,
+.test-content .qcard .fg select,
+.test-content .qcard .fg textarea{background:#ffffff!important;color:#111827!important;border-color:#b8b0a8!important;}
+.test-content .qcard .fg input::placeholder,
+.test-content .qcard .fg textarea::placeholder{color:#6b7280!important;}
+.test-content .qcard .fg input:focus,
+.test-content .qcard .fg select:focus,
+.test-content .qcard .fg textarea:focus{border-color:var(--teal)!important;background:#ffffff!important;}
+
+
+/* Calculated fields */
+#screen-test input[readonly]{background:#f4f4f4;color:#000;font-weight:600;opacity:1}
+
+/* Lisibilité renforcée du module échographie */
+#test-content .qcard .fg label,
+#test-content .qcard .fg input,
+#test-content .qcard .qtext,
+#test-content .qcard .qnum{
+  color:#000 !important;
+}
+#test-content .qcard .fg input[readonly]{
+  background:#f3f3f3 !important;
+  color:#000 !important;
+  font-weight:600;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ BANDEAU MÉDICO-LÉGAL (persistant) ══════════ -->
+<div id="legal-disclaimer" role="note" style="position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#fff7ed;color:#7c4a03;border-top:1px solid #fde4c8;font-size:11.5px;line-height:1.35;padding:7px 38px 7px 14px;text-align:center;box-shadow:0 -1px 4px rgba(0,0,0,.08);">
+  <strong>⚠ Aide à la décision — ne remplace pas l'examen ni le jugement du médecin.</strong>
+  Scores et seuils <strong>indicatifs</strong>, à confronter à la clinique et aux recommandations en vigueur (HAS, sociétés savantes). Données traitées localement, non transmises.
+  <span id="legal-close" title="Masquer" style="position:absolute;right:12px;top:6px;cursor:pointer;font-weight:700;">✕</span>
+</div>
+<script>document.addEventListener('click',function(e){if(e.target&&e.target.id==='legal-close'){var d=document.getElementById('legal-disclaimer');if(d)d.style.display='none';}});</script>
+
+<!-- ══════════ WELCOME ══════════ -->
+<div id="screen-welcome" class="screen active">
+  <div class="wlc-logo">Cabinet Médical · V10.1</div>
+  <h1 class="wlc-title">Évaluations<br><em>Médicales</em></h1>
+  <p class="wlc-sub">Renseignez vos informations pour commencer</p>
+  <div class="patient-form">
+    <div class="form-row">
+      <div class="fg"><label>Prénom</label><input id="i-prenom" type="text" placeholder="Marie" autocomplete="off"></div>
+      <div class="fg"><label>Nom</label><input id="i-nom" type="text" placeholder="Dupont" autocomplete="off"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Date de naissance</label><input id="i-dob" type="date"></div>
+      <div class="fg"><label>Sexe</label>
+        <select id="i-sexe"><option value="">—</option><option>Femme</option><option>Homme</option><option>Autre</option></select>
+      </div>
+    </div>
+    <div class="fg"><label>Médecin référent</label><input id="i-med" type="text" placeholder="Dr. Martin" autocomplete="off"></div>
+    <button class="btn-start" onclick="startSession()">Commencer les évaluations →</button>
+  </div>
+</div>
+
+<!-- ══════════ MENU ══════════ -->
+<div id="screen-menu" class="screen">
+  <div class="menu-header">
+    <div class="mh-top">
+      <div><div class="mh-name">Bonjour, <span id="mn-name">—</span></div><div class="mh-meta" id="mn-date">—</div></div>
+      <div class="mh-age" id="mn-age">—</div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-label" id="prog-label">0 test complété</div>
+  </div>
+  <div id="menu-body"></div>
+  <button class="btn-finalize" id="btn-finalize" onclick="showResults()">📋 Voir les résultats &amp; générer PDF</button>
+</div>
+
+<!-- ══════════ TEST ══════════ -->
+<div id="screen-test" class="screen">
+  <div class="test-hdr">
+    <button class="btn-back" onclick="goMenu()">←</button>
+    <div class="th-info">
+      <div class="th-title" id="t-title">—</div>
+      <div class="th-sub" id="t-sub">—</div>
+    </div>
+  </div>
+  <div class="tprog">
+    <div class="tpb"><div class="tpf" id="tpf"></div></div>
+    <div class="tpl" id="tpl">0%</div>
+  </div>
+  <div class="test-content" id="test-content"></div>
+  <div class="test-footer"><button class="btn-submit" id="btn-submit" onclick="submitTest()">Valider et enregistrer</button></div>
+</div>
+
+<!-- ══════════ RESULT ══════════ -->
+<div id="screen-result" class="screen">
+  <div class="res-hdr">
+    <div class="res-badge">Rapport de synthèse</div>
+    <div class="res-name" id="r-name">—</div>
+    <div class="res-dt" id="r-date">—</div>
+  </div>
+  <div class="res-content" id="res-content"></div>
+  <div class="res-footer">
+    <button class="btn-pdf" onclick="generatePDF()">⬇ PDF</button>
+    <button class="btn-mail" onclick="openMail()">✉ Email</button>
+    <button class="btn-new" onclick="newSession()">Nouveau</button>
+  </div>
+</div>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="modal-ov" id="mail-modal">
+  <div class="modal">
+    <h3>Envoyer par email</h3>
+    <p>Le rapport de synthèse sera envoyé à l'adresse indiquée</p>
+    <input type="email" id="mail-input" placeholder="medecin@cabinet.fr">
+    <div class="modal-btns">
+      <button class="m-cancel" onclick="closeMail()">Annuler</button>
+      <button class="m-send" onclick="sendMail()">Envoyer</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+//  TEST DATA
+// ════════════════════════════════════════════════
+const CATS = [
+  { id:'psy',    label:'Psychiatrie',              color:'var(--cat-psy)',    icon:'🧠' },
+  { id:'sleep',  label:'Sommeil & Apnée',          color:'var(--cat-sleep)',  icon:'😴' },
+  { id:'mem',    label:'Mémoire, cognition & autonomie fonctionnelle', color:'var(--cat-mem)',    icon:'🔬' },
+  { id:'cardio', label:'Cardiologie / Neurologie',  color:'var(--cat-cardio)', icon:'❤️' },
+  { id:'add',    label:'Addictions & Tabac',        color:'var(--cat-add)',    icon:'🚭' },
+  { id:'pain',   label:'Douleur / Rhumatologie',    color:'var(--cat-pain)',   icon:'⚡' },
+  { id:'pneumo', label:'Pneumologie',                color:'var(--cat-pneumo)', icon:'🫁' },
+  { id:'nutri',  label:'Nutrition / Gériatrie',      color:'var(--cat-nutri)',  icon:'🥗' },
+  { id:'orl',    label:'ORL / Sensoriel',            color:'var(--cat-orl)',    icon:'👂' },
+  { id:'urgent', label:'Urgences / Scores décisionnels', color:'var(--cat-urgent)', icon:'🚑' },
+  { id:'uro',    label:'Urologie',                  color:'var(--cat-uro)',    icon:'🚻' },
+  { id:'iatro', label:'Iatrogénie / Médicaments', color:'var(--cat-iatro)', icon:'💊' },
+  { id:'imagerie', label:'Imagerie / Échographie',   color:'var(--cat-imagerie)', icon:'🖥️' },
+  { id:'gyne',   label:'Gynécologie / Obstétrique',  color:'var(--cat-gyne)',   icon:'🤰' },
+  { id:'prev',   label:'Bilan de Prévention',       color:'var(--cat-prev)',   icon:'🛡️' },
+];
+
+const TESTS = {
+
+// ─── PSYCHIATRIE ───
+phq9:{
+  cat:'psy', icon:'😔',
+  title:'PHQ-9 — Dépression',
+  subtitle:'Au cours des 2 dernières semaines, selon quelle fréquence avez-vous été gêné(e) par…',
+  maxScore:27,
+  questions:[
+    {id:'p1',text:'Peu d\'intérêt ou de plaisir à faire les choses',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p2',text:'Être triste, déprimé(e) ou désespéré(e)',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p3',text:'Difficultés à s\'endormir ou à rester endormi(e), ou dormir trop',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p4',text:'Se sentir fatigué(e) ou manquer d\'énergie',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p5',text:'Avoir peu d\'appétit ou manger trop',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p6',text:'Avoir une mauvaise opinion de vous-même, ou le sentiment d\'être nul(le), ou d\'avoir déçu votre famille ou vous-même',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p7',text:'Avoir du mal à vous concentrer (lecture, télévision…)',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p8',text:'Vous déplacer ou parler si lentement que les autres l\'auraient remarqué — ou au contraire, être si agité(e) que vous n\'arriviez pas à tenir en place',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+    {id:'p9',text:'Penser qu\'il vaudrait mieux mourir ou envisager de vous faire du mal',options:[['Jamais',0],['Plusieurs jours',1],['Plus de la moitié des jours',2],['Presque tous les jours',3]]},
+  ],
+  interpret(s){
+    if(s<=4)return{label:'Absence de dépression (0-4)',cls:'ok'};
+    if(s<=9)return{label:'Symptômes légers (5-9)',cls:''};
+    if(s<=14)return{label:'Dépression modérée (10-14)',cls:'warn'};
+    if(s<=19)return{label:'Dépression modérément sévère (15-19)',cls:'warn'};
+    return{label:'Dépression sévère (20-27)',cls:'danger'};
+  }
+},
+
+hama:{
+  cat:'psy', icon:'😰',
+  title:'HAM-A — Échelle de Hamilton (Anxiété)',
+  subtitle:'Évaluez l\'intensité de chaque symptôme au cours de l\'entretien (0 = absent, 4 = très sévère)',
+  maxScore:56,
+  note:'Version Lundbeck (domaine public). Items 1-6 et 14 = anxiété psychique. Items 7-13 = anxiété somatique.',
+  questions:[
+    {id:'ha1',text:'1. HUMEUR ANXIEUSE',sub:'Inquiétude, anticipation du pire, appréhension, irritabilité',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha2',text:'2. TENSION',sub:'Sentiment de tension, fatigabilité, réactions de sursaut, facilement ému aux larmes, tremblements, sentiment d\'agitation, incapacité à se détendre',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha3',text:'3. CRAINTES',sub:'De l\'obscurité, des inconnus, de l\'abandon, des animaux, de la circulation, de la foule',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha4',text:'4. INSOMNIE',sub:'Difficulté d\'endormissement, sommeil fragmenté, sommeil non réparateur et fatigue au réveil, rêves, cauchemars, terreurs nocturnes',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha5',text:'5. DYSFONCTION INTELLECTUELLE',sub:'Difficultés de concentration, problèmes de mémoire',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha6',text:'6. HUMEUR DÉPRESSIVE',sub:'Manque d\'intérêt, absence de plaisir associé aux loisirs, dépression, réveil précoce, fluctuations diurnes de l\'humeur',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha7',text:'7. SYMPTÔMES SOMATIQUES (musculaires)',sub:'Douleurs et courbatures, contractions, raideurs, secousses myocloniques, grincement de dents, dysphonie, hypertonie',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha8',text:'8. SYMPTÔMES SOMATIQUES (sensoriels)',sub:'Acouphènes, vision floue, sueurs froides et bouffées de chaleur, sensation de faiblesse, sensation de fourmillements',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha9',text:'9. SYMPTÔMES CARDIOVASCULAIRES',sub:'Tachycardie, palpitations, oppression thoracique, pulsations vasculaires, sensation d\'évanouissement, extrasystoles',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha10',text:'10. SYMPTÔMES RESPIRATOIRES',sub:'Oppression ou constriction thoracique, sensation d\'étouffement, soupirs, dyspnée',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha11',text:'11. SYMPTÔMES GASTRO-INTESTINAUX',sub:'Dysphagie, flatulences, douleurs abdominales, sensations de brûlure, ballonnements, nausées, vomissements, borborygmes, selles liquides, perte de poids, constipation',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha12',text:'12. SYMPTÔMES GÉNITO-URINAIRES',sub:'Mictions fréquentes, mictions impérieuses, aménorrhée, ménorrhagie, début de frigidité, éjaculation précoce, perte de libido, impuissance',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha13',text:'13. SYMPTÔMES DU SYSTÈME NERVEUX AUTONOME',sub:'Xérostomie (bouche sèche), bouffées vasomotrices, pâleur, tendance à transpirer, vertiges, céphalées de tension, chair de poule',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+    {id:'ha14',text:'14. COMPORTEMENT DURANT L\'ENTRETIEN',sub:'Signes d\'impatience, agité(e) ou fait les cent pas, mains tremblantes, sourcils froncés, visage crispé, soupir ou respiration rapide, pâleur du visage, déglutition, etc.',options:[['0 — Pas du tout',0],['1 — Un peu',1],['2 — Modérément',2],['3 — Beaucoup',3],['4 — Énormément',4]]},
+  ],
+  interpret(s){
+    if(s<18)return{label:`Score ${s}/56 — Anxiété légère (< 18)`,cls:'ok'};
+    if(s<=24)return{label:`Score ${s}/56 — Anxiété légère à modérée (18-24)`,cls:'warn'};
+    if(s<=30)return{label:`Score ${s}/56 — Anxiété modérée à sévère (25-30)`,cls:'warn'};
+    return{label:`Score ${s}/56 — Anxiété sévère à très sévère (31-56)`,cls:'danger'};
+  }
+},
+
+hdrs:{
+  cat:'psy', icon:'☁️',
+  title:'HDRS-17 — Échelle de Hamilton (Dépression)',
+  subtitle:'Évaluation de la sévérité dépressive — administrée par le médecin lors de l\'entretien',
+  maxScore:52,
+  note:'17 items — la cotation varie selon les items (0-2 ou 0-4). Cocher la description la plus proche de l\'état du patient.',
+  questions:[
+    {id:'hd1',text:'1. HUMEUR DÉPRESSIVE',sub:'La personne est-elle dans un état de tristesse, d\'impuissance, d\'auto-dépréciation ?',options:[['Non',0],['États affectifs signalés uniquement si on l\'interroge (pessimisme, sans espoir)',1],['États signalés spontanément, verbalement ou par sons (sanglots occasionnels)',2],['États communiqués de manière non verbale (expression faciale, attitude, voix, sanglots)',3],['Ne communique pratiquement que ces états, verbalement et non verbalement',4]]},
+    {id:'hd2',text:'2. SENTIMENTS DE CULPABILITÉ',options:[['N\'a pas de sentiments de culpabilité',0],['S\'adresse des reproches, impression d\'avoir porté préjudice à des gens',1],['Idées de culpabilité, rumination sur erreurs passées ou actions condamnables',2],['La maladie actuelle est une punition. Idées délirantes de culpabilité',3],['Entend des voix qui l\'accusent / hallucinations visuelles menaçantes',4]]},
+    {id:'hd3',text:'3. SUICIDE',options:[['N\'a pas d\'idée suicidaire',0],['A l\'impression que la vie ne vaut pas la peine d\'être vécue',1],['Souhaite être mort / pensées de mort dirigées contre lui-même',2],['Idées ou geste de suicide',3],['Tentatives de suicide (coter toute tentative sérieuse)',4]]},
+    {id:'hd4',text:'4. INSOMNIE DE DÉBUT DE NUIT',options:[['Pas de difficulté à s\'endormir',0],['Se plaint de difficultés éventuelles à s\'endormir',1],['Se plaint d\'avoir chaque soir des difficultés à s\'endormir',2]]},
+    {id:'hd5',text:'5. INSOMNIE EN MILIEU DE NUIT',options:[['Pas de difficulté',0],['Se plaint d\'être agité ou troublé pendant la nuit',1],['Se réveille pendant la nuit (sauf pour aller aux toilettes)',2]]},
+    {id:'hd6',text:'6. INSOMNIE DU MATIN',options:[['Pas de difficulté',0],['Se réveille de très bonne heure mais se rendort',1],['Incapable de se rendormir s\'il se lève',2]]},
+    {id:'hd7',text:'7. TRAVAIL ET ACTIVITÉS',options:[['Pas de difficulté',0],['Pensées et sentiments d\'incapacité, fatigue ou faiblesse liés au travail / aux loisirs',1],['Perte d\'intérêt pour activités professionnelles ou de détente (apathie, indécision, hésitations — impression de devoir se forcer)',2],['Diminution du temps d\'activité ou de la productivité',3],['A arrêté son travail en raison de sa maladie actuelle',4]]},
+    {id:'hd8',text:'8. RALENTISSEMENT',sub:'Lenteur de la pensée et du langage, baisse de la concentration et de l\'activité motrice',options:[['Pensée et langage normaux',0],['Léger ralentissement à l\'entretien',1],['Ralentissement manifeste lors de l\'entretien',2],['Entretien difficile',3],['Entretien impossible (état de stupeur)',4]]},
+    {id:'hd9',text:'9. AGITATION',options:[['Aucune',0],['Crispations, secousses musculaires',1],['Joue avec ses mains, ses cheveux…',2],['Bouge, ne peut rester assis tranquille',3],['Se tord les mains, se ronge les ongles, s\'arrache les cheveux, se mord les lèvres',4]]},
+    {id:'hd10',text:'10. ANXIÉTÉ PSYCHIQUE',options:[['Aucune',0],['Symptômes légers — tension subjective et irritabilité',1],['Symptômes modérés — se fait du souci à propos de problèmes mineurs',2],['Symptômes sévères — attitude inquiète, apparente dans l\'expression faciale et le langage',3],['Symptômes très invalidants — peurs exprimées sans qu\'on pose de questions',4]]},
+    {id:'hd11',text:'11. ANXIÉTÉ SOMATIQUE',sub:'Bouche sèche, troubles digestifs, palpitations, céphalées, pollakiurie, hyperventilation…',options:[['Aucun de ces symptômes',0],['Symptômes légers',1],['Symptômes modérés',2],['Symptômes sévères',3],['Symptômes très invalidants frappant le sujet d\'incapacité fonctionnelle',4]]},
+    {id:'hd12',text:'12. SYMPTÔMES SOMATIQUES GASTRO-INTESTINAUX',options:[['Aucun symptôme',0],['Manque d\'appétit, mais mange sans y être poussé',1],['Difficultés à manger sans incitations. Demande/besoin de laxatifs ou médicaments intestinaux',2]]},
+    {id:'hd13',text:'13. SYMPTÔMES SOMATIQUES GÉNÉRAUX',options:[['Aucun',0],['Lourdeur dans les membres/dos/tête. Maux de dos, de tête, douleurs musculaires, perte d\'énergie, fatigabilité',1],['Un des symptômes apparaît clairement',2]]},
+    {id:'hd14',text:'14. SYMPTÔMES GÉNITAUX',sub:'Perte de libido, troubles menstruels',options:[['Absents',0],['Légers',1],['Sévères',2]]},
+    {id:'hd15',text:'15. HYPOCONDRIE',options:[['Absente',0],['Attention concentrée sur son propre corps',1],['Préoccupations sur sa santé',2],['Convaincu d\'être malade. Plaintes fréquentes et demandes d\'aide',3],['Idées délirantes hypocondriaques',4]]},
+    {id:'hd16',text:'16. PERTE DE POIDS',options:[['Pas de perte de poids',0],['Perte de poids probable',1],['Perte de poids certaine (> 500g/semaine ou > 1 kg/semaine)',2]]},
+    {id:'hd17',text:'17. PRISE DE CONSCIENCE',options:[['Reconnaît être déprimée et malade',0],['Reconnaît être malade mais l\'attribue à la nourriture, au climat, au surmenage, à un virus, au besoin de repos',1],['Nie être malade',2]]},
+  ],
+  interpret(s){
+    if(s<=7)return{label:`Score ${s}/52 — Pas de dépression (0-7)`,cls:'ok'};
+    if(s<=13)return{label:`Score ${s}/52 — Dépression légère (8-13)`,cls:'warn'};
+    if(s<=18)return{label:`Score ${s}/52 — Dépression modérée (14-18)`,cls:'warn'};
+    if(s<=22)return{label:`Score ${s}/52 — Dépression sévère (19-22)`,cls:'danger'};
+    return{label:`Score ${s}/52 — Dépression très sévère (≥ 23)`,cls:'danger'};
+  }
+},
+
+epds:{
+  cat:'psy', icon:'🤱',
+  title:'EPDS — Dépression Post-partum',
+  subtitle:'Comment vous êtes-vous sentie au cours des 7 derniers jours ?',
+  maxScore:30,
+  note:'Questions 3, 5, 6, 7, 8, 9, 10 : cotation inversée (réponse du haut = 3 pts)',
+  questions:[
+    {id:'e1',text:'J\'ai pu rire et prendre les choses du bon côté',options:[['Aussi souvent que d\'habitude',0],['Pas tout à fait autant',1],['Vraiment beaucoup moins souvent ces jours-ci',2],['Absolument pas',3]]},
+    {id:'e2',text:'Je me suis sentie pleine d\'entrain et j\'ai envisagé l\'avenir avec plaisir',options:[['Autant que d\'habitude',0],['Plutôt moins qu\'à l\'habitude',1],['Vraiment moins qu\'à l\'habitude',2],['Pratiquement pas',3]]},
+    {id:'e3',text:'Je me suis reproché, sans raison, d\'être responsable quand les choses allaient mal',options:[['Oui, la plupart du temps',3],['Oui, parfois',2],['Pas très souvent',1],['Non, jamais',0]]},
+    {id:'e4',text:'Je me suis sentie inquiète ou soucieuse sans motif valable',options:[['Non, pas du tout',0],['Presque jamais',1],['Oui, parfois',2],['Oui, très souvent',3]]},
+    {id:'e5',text:'Je me suis sentie effrayée ou paniquée sans vraiment de raison',options:[['Oui, vraiment souvent',3],['Oui, parfois',2],['Non, pas très souvent',1],['Non, pas du tout',0]]},
+    {id:'e6',text:'Les événements m\'ont dépassée',options:[['Oui, la plupart du temps je me suis sentie incapable de faire face',3],['Oui, parfois je ne me suis pas sentie aussi capable de faire face qu\'à l\'habitude',2],['Non, j\'ai pu faire face la plupart du temps',1],['Non, je me suis sentie aussi efficace que d\'habitude',0]]},
+    {id:'e7',text:'Je me suis sentie si malheureuse que j\'ai eu du mal à dormir',options:[['Oui, la plupart du temps',3],['Oui, parfois',2],['Pas très souvent',1],['Non, pas du tout',0]]},
+    {id:'e8',text:'Je me suis sentie triste ou peu heureuse',options:[['Oui, la plupart du temps',3],['Oui, très souvent',2],['Pas très souvent',1],['Non, pas du tout',0]]},
+    {id:'e9',text:'Je me suis sentie si malheureuse que j\'en ai pleuré',options:[['Oui, la plupart du temps',3],['Oui, très souvent',2],['Seulement de temps en temps',1],['Non, jamais',0]]},
+    {id:'e10',text:'Il m\'est arrivé de penser à me faire du mal',options:[['Oui, assez souvent',3],['Parfois',2],['Presque jamais',1],['Jamais',0]]},
+  ],
+  interpret(s){
+    if(s<10)return{label:'Dépression peu probable (<10)',cls:'ok'};
+    if(s<13)return{label:'Dépression possible — suivi recommandé (10-12)',cls:'warn'};
+    return{label:'Dépression probable — évaluation urgente (≥13)',cls:'danger'};
+  }
+},
+
+// ─── SOMMEIL & APNÉE ───
+berlin:{
+  cat:'sleep', icon:'😴',
+  title:'Questionnaire de Berlin',
+  subtitle:'Dépistage du syndrome d\'apnée obstructive du sommeil',
+  maxScore:null,
+  questions:[
+    {id:'b1',text:'Ronflez-vous ?',options:[['Non',0],['Oui',1]],cat:1},
+    {id:'b2',text:'Vos ronflements sont-ils :',options:[['Légèrement plus forts que votre respiration',0],['Aussi forts que votre respiration',0],['Plus forts que votre respiration',1],['Très forts — entendus dans les pièces voisines',1]],cat:1},
+    {id:'b3',text:'À quelle fréquence ronfleur-vous ?',options:[['Presque jamais',0],['1-2 fois par semaine',1],['3-4 fois par semaine',1],['Presque tous les jours',1]],cat:1},
+    {id:'b4',text:'Vos ronflements dérangent-ils les autres personnes ?',options:[['Non',0],['Oui',1]],cat:1},
+    {id:'b5',text:'Quelqu\'un a-t-il remarqué que vous cessiez de respirer pendant votre sommeil ?',options:[['Jamais / Presque jamais',0],['Parfois (1-2 fois / semaine)',2],['Souvent (3-4 fois / semaine)',2],['Presque tous les jours',2]],cat:1},
+    {id:'b6',text:'Vous réveillez-vous fatigué(e) après une nuit complète de sommeil ?',options:[['Presque jamais',0],['Parfois (1-2 fois / semaine)',1],['Souvent (3-4 fois / semaine)',1],['Presque tous les jours',1]],cat:2},
+    {id:'b7',text:'Vous sentez-vous fatigué(e) ou pas en forme pendant la journée ?',options:[['Presque jamais',0],['Parfois (1-2 fois / semaine)',1],['Souvent (3-4 fois / semaine)',1],['Presque tous les jours',1]],cat:2},
+    {id:'b8',text:'Vous êtes-vous déjà assoupi(e) au volant ou avez-vous dû vous arrêter pour vous reposer en conduisant ?',options:[['Non',0],['Oui',1]],cat:2},
+    {id:'b9',text:'Avez-vous de l\'hypertension artérielle (traitée ou non) ?',options:[['Non / Je ne sais pas',0],['Oui',1]],cat:3},
+    {id:'b10',text:'Votre IMC est-il supérieur à 30 kg/m² (surpoids important) ?',options:[['Non',0],['Oui',1]],cat:3},
+    {id:'b11',text:'Avez-vous plus de 50 ans ?',options:[['Non',0],['Oui',1]],cat:3},
+  ],
+  interpret(ans){
+    const c1=[ans.b1,ans.b2,ans.b3,ans.b4,ans.b5].reduce((a,b)=>a+(b||0),0);
+    const c2=[ans.b6,ans.b7,ans.b8].reduce((a,b)=>a+(b||0),0);
+    const c3=[ans.b9,ans.b10,ans.b11].reduce((a,b)=>a+(b||0),0);
+    const pos=(c1>=2?1:0)+(c2>=2?1:0)+(c3>=2?1:0);
+    const hr=pos>=2;
+    return{label:hr?'Risque ÉLEVÉ d\'apnée du sommeil':'Risque FAIBLE d\'apnée du sommeil',cls:hr?'danger':'ok',detail:`Cat. 1 (ronflements): ${c1>=2?'⚠ positive':'✓ négative'} · Cat. 2 (fatigue): ${c2>=2?'⚠ positive':'✓ négative'} · Cat. 3 (facteurs): ${c3>=2?'⚠ positive':'✓ négative'}`,score:pos,maxScore:3};
+  }
+},
+
+epworth:{
+  cat:'sleep', icon:'💤',
+  title:'Échelle d\'Epworth',
+  subtitle:'Estimez votre risque de vous endormir dans les situations suivantes',
+  maxScore:24,
+  questions:[
+    {id:'ep1',text:'Assis en train de lire',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep2',text:'En regardant la télévision',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep3',text:'Assis, inactif, dans un lieu public (théâtre, réunion…)',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep4',text:'Comme passager dans une voiture pendant 1 heure sans arrêt',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep5',text:'Allongé pour vous reposer l\'après-midi',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep6',text:'Assis en parlant avec quelqu\'un',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep7',text:'Assis calmement après un repas sans alcool',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+    {id:'ep8',text:'Dans une voiture à l\'arrêt quelques minutes dans un embouteillage',options:[['Jamais endormi',0],['Faible risque',1],['Risque modéré',2],['Risque élevé',3]]},
+  ],
+  interpret(s){
+    if(s<=10)return{label:'Somnolence normale (0-10)',cls:'ok'};
+    if(s<=15)return{label:'Somnolence excessive légère (11-15)',cls:'warn'};
+    if(s<=20)return{label:'Somnolence excessive modérée (16-20)',cls:'warn'};
+    return{label:'Somnolence excessive sévère (21-24)',cls:'danger'};
+  }
+},
+
+isi:{
+  cat:'sleep', icon:'🌙',
+  title:'ISI — Index de Sévérité de l\'Insomnie',
+  subtitle:'Veuillez estimer la sévérité actuelle (dernier mois) de vos difficultés de sommeil',
+  maxScore:28,
+  questions:[
+    {id:'i1',text:'Difficulté à s\'endormir',options:[['Aucune (0)',0],['Légère (1)',1],['Moyenne (2)',2],['Très sévère (3)',3],['Extrêmement sévère (4)',4]]},
+    {id:'i2',text:'Réveils nocturnes fréquents et/ou prolongés',options:[['Aucune (0)',0],['Légère (1)',1],['Moyenne (2)',2],['Très sévère (3)',3],['Extrêmement sévère (4)',4]]},
+    {id:'i3',text:'Problèmes de réveils trop tôt le matin',options:[['Aucune (0)',0],['Légère (1)',1],['Moyenne (2)',2],['Très sévère (3)',3],['Extrêmement sévère (4)',4]]},
+    {id:'i4',text:'Dans quelle mesure êtes-vous SATISFAIT(E) de votre sommeil actuel ?',options:[['Très satisfait(e) (0)',0],['Satisfait(e) (1)',1],['Moyennement satisfait(e) (2)',2],['Insatisfait(e) (3)',3],['Très insatisfait(e) (4)',4]]},
+    {id:'i5',text:'Dans quelle mesure vos difficultés de sommeil PERTURBENT-elles votre fonctionnement quotidien (fatigue, concentration, mémoire, humeur…) ?',options:[['Aucunement (0)',0],['Légèrement (1)',1],['Moyennement (2)',2],['Beaucoup (3)',3],['Extrêmement (4)',4]]},
+    {id:'i6',text:'À quel point vos difficultés de sommeil sont-elles REMARQUÉES par les autres en termes de détérioration de votre qualité de vie ?',options:[['Aucunement (0)',0],['À peine (1)',1],['Quelque peu (2)',2],['Beaucoup (3)',3],['Énormément (4)',4]]},
+    {id:'i7',text:'Dans quelle mesure êtes-vous INQUIET(E) à propos de vos difficultés de sommeil ?',options:[['Aucunement (0)',0],['Un peu (1)',1],['Moyennement (2)',2],['Beaucoup (3)',3],['Extrêmement (4)',4]]},
+  ],
+  interpret(s){
+    if(s<=7)return{label:'Pas d\'insomnie cliniquement significative (0-7)',cls:'ok'};
+    if(s<=14)return{label:'Insomnie subclinique légère (8-14)',cls:'warn'};
+    if(s<=21)return{label:'Insomnie modérée (15-21)',cls:'warn'};
+    return{label:'Insomnie sévère (22-28)',cls:'danger'};
+  }
+},
+
+
+irls:{
+  cat:'sleep', icon:'🦵',
+  title:'IRLS — Syndrome des jambes sans repos',
+  subtitle:'International Restless Legs Scale — sévérité du SJSR/RLS',
+  maxScore:40,
+  questions:[
+    {id:'ir1',text:'1. Intensité du besoin de bouger les jambes',options:[['Aucune',0],['Légère',1],['Modérée',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir2',text:'2. Intensité des sensations désagréables dans les jambes ou les bras',options:[['Aucune',0],['Légère',1],['Modérée',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir3',text:'3. Soulagement des symptômes par le mouvement',options:[['Complet ou presque complet',0],['Important',1],['Modéré',2],['Faible',3],['Aucun soulagement',4]]},
+    {id:'ir4',text:'4. Perturbation du sommeil liée aux symptômes',options:[['Aucune',0],['Légère',1],['Modérée',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir5',text:'5. Fatigue ou somnolence diurne liée aux symptômes',options:[['Aucune',0],['Légère',1],['Modérée',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir6',text:'6. Sévérité globale du syndrome des jambes sans repos',options:[['Aucune',0],['Légère',1],['Modérée',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir7',text:'7. Fréquence des symptômes',options:[['Jamais',0],['1 jour/semaine ou moins',1],['2-3 jours/semaine',2],['4-5 jours/semaine',3],['6-7 jours/semaine',4]]},
+    {id:'ir8',text:'8. Durée quotidienne moyenne des symptômes',options:[['Aucune',0],['< 1 heure',1],['1 à 3 heures',2],['3 à 8 heures',3],['≥ 8 heures',4]]},
+    {id:'ir9',text:'9. Impact sur les activités quotidiennes',options:[['Aucun',0],['Léger',1],['Modéré',2],['Sévère',3],['Très sévère',4]]},
+    {id:'ir10',text:'10. Impact sur l’humeur',options:[['Aucun',0],['Léger',1],['Modéré',2],['Sévère',3],['Très sévère',4]]},
+  ],
+  interpret(s){
+    if(s<=10)return{label:`Score ${s}/40 — Forme légère`,cls:'ok'};
+    if(s<=20)return{label:`Score ${s}/40 — Forme modérée`,cls:'warn'};
+    if(s<=30)return{label:`Score ${s}/40 — Forme sévère`,cls:'warn'};
+    return{label:`Score ${s}/40 — Forme très sévère`,cls:'danger',detail:'Rechercher carence martiale, médicaments aggravants, insuffisance rénale, grossesse, neuropathie ; à confirmer cliniquement.'};
+  }
+},
+
+// ─── BILAN MÉMOIRE ───
+mmse:{
+  cat:'mem', icon:'🧩',
+  title:'MMSE-GRECO — Mini-Mental State Examination',
+  subtitle:'Version française consensuelle établie par le GRECO — 30 items, 1 point par bonne réponse',
+  maxScore:30,
+  note:'Mini-Mental State Examination dans sa version consensuelle établie par le Groupe de Recherche et d’Évaluation des Outils Cognitifs (GRECO). Lire au patient : « Je vais vous poser quelques questions pour apprécier comment fonctionne votre mémoire. Les unes sont très simples, les autres un peu moins. Vous devez répondre du mieux que vous pouvez. » Score global /30. Les seuils pathologiques dépendent du niveau socioculturel.',
+  questions:[
+    // ─── ORIENTATION TEMPORELLE (5 pts) ───
+    {id:'m_o1',text:'ORIENTATION — 1. « En quelle année sommes-nous ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_o2',text:'2. « En quelle saison ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_o3',text:'3. « En quel mois ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_o4',text:'4. « Quel jour du mois ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_o5',text:'5. « Quel jour de la semaine ? »',options:[['Incorrect',0],['Correct',1]]},
+
+    // ─── ORIENTATION SPATIALE (5 pts) ───
+    {id:'m_s1',text:'Je vais vous poser maintenant quelques questions sur l’endroit où nous nous trouvons. 6. « Quel est le nom de l’hôpital où nous sommes ? »',sub:'Si l’examen est réalisé en cabinet : demander le nom du cabinet médical ou de la rue où il se trouve.',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_s2',text:'7. « Dans quelle ville se trouve-t-il ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_s3',text:'8. « Quel est le nom du département dans lequel est située cette ville ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_s4',text:'9. « Dans quelle région est situé ce département ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_s5',text:'10. « À quel étage sommes-nous ici ? »',options:[['Incorrect',0],['Correct',1]]},
+
+    // ─── APPRENTISSAGE (3 pts) ───
+    {id:'m_a1',text:'APPRENTISSAGE — Dire : « Je vais vous dire 3 mots. Je voudrais que vous me les répétiez et que vous essayiez de les retenir car je vous les redemanderai tout à l’heure. » 11. Cigare',sub:'Répéter les 3 mots. Compter 1 point par mot correctement répété.',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_a2',text:'12. Fleur',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_a3',text:'13. Porte',options:[['Incorrect',0],['Correct',1]]},
+
+    // ─── ATTENTION ET CALCUL (5 pts) ───
+    {id:'m_c1',text:'ATTENTION ET CALCUL — « Voulez-vous compter à partir de 100 en retirant 7 à chaque fois ? » 14. Réponse attendue : 93',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_c2',text:'15. Réponse attendue : 86',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_c3',text:'16. Réponse attendue : 79',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_c4',text:'17. Réponse attendue : 72',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_c5',text:'18. Réponse attendue : 65',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_monde',excludeFromScore:true,text:'Contrôle complémentaire hors score global — « Voulez-vous épeler le mot MONDE à l’envers ? »',sub:'EDNOM. Le score correspond au nombre de lettres dans la bonne position. Ce chiffre ne doit pas figurer dans le score global MMSE.',options:[['0 lettre bien placée',0],['1 lettre bien placée',1],['2 lettres bien placées',2],['3 lettres bien placées',3],['4 lettres bien placées',4],['5 lettres bien placées',5]]},
+
+    // ─── RAPPEL (3 pts) ───
+    {id:'m_r1',text:'RAPPEL — « Pouvez-vous me dire quels étaient les 3 mots que je vous ai demandé de répéter et de retenir tout à l’heure ? » 19. Cigare',options:[['Non rappelé',0],['Rappelé',1]]},
+    {id:'m_r2',text:'20. Fleur',options:[['Non rappelé',0],['Rappelé',1]]},
+    {id:'m_r3',text:'21. Porte',options:[['Non rappelé',0],['Rappelé',1]]},
+
+    // ─── LANGAGE (8 pts) ───
+    {id:'m_l1',text:'LANGAGE — 22. Montrer un crayon. « Quel est le nom de cet objet ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_l2',text:'23. Montrer votre montre. « Quel est le nom de cet objet ? »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_l3',text:'24. « Écoutez bien et répétez après moi : Pas de mais, de si, ni de et. »',options:[['Incorrect',0],['Correct',1]]},
+    {id:'m_l4',text:'25. Poser une feuille de papier sur le bureau, la montrer au sujet en disant : « Écoutez bien et faites ce que je vais vous dire : prenez cette feuille de papier avec la main droite. »',options:[['Non réussi',0],['Réussi',1]]},
+    {id:'m_l5',text:'26. « Pliez-la en deux. »',options:[['Non réussi',0],['Réussi',1]]},
+    {id:'m_l6',text:'27. « Et jetez-la par terre. »',options:[['Non réussi',0],['Réussi',1]]},
+    {id:'m_l7',text:'28. Tendre une feuille sur laquelle est écrit en gros caractères : « FERMEZ LES YEUX » puis dire : « Faites ce qui est écrit. »',options:[['Non réussi',0],['Réussi',1]]},
+    {id:'m_l8',text:'29. Tendre une feuille et un stylo : « Voulez-vous m’écrire une phrase, ce que vous voulez, mais une phrase entière. »',sub:'La phrase doit être écrite spontanément. Elle doit contenir un sujet, un verbe et avoir un sens.',options:[['Non réussi',0],['Réussi',1]]},
+
+    // ─── PRAXIES CONSTRUCTIVES (1 pt) ───
+    {id:'m_p1',text:'PRAXIES CONSTRUCTIVES — 30. Tendre une feuille et demander : « Voulez-vous recopier ce dessin ? »',sub:'Deux pentagones qui se croisent. Compter 1 point si la copie est correcte.',options:[['Non réussi',0],['Réussi',1]]},
+  ],
+  references:[
+    'Derouesné C, Poitreneau J, Hugonot L, Kalafat M, Dubois B, Laurent B. Au nom du GRECO. Le Mental-State Examination (MMSE) : un outil pratique pour l’évaluation de l’état cognitif des patients par le clinicien. Version française consensuelle. Presse Méd. 1999;28:1141-8.',
+    'Kalafat M, Hugonot-Diener L, Poitrenaud J. Standardisation et étalonnage français du Mini Mental State (MMS) version GRECO. Rev Neuropsychol. 2003;13(2):209-36.'
+  ],
+  interpret(s){
+    if(s>=27)return{label:`Score global ${s}/30 — Interprétation habituellement normale, à confronter au niveau socioculturel`,cls:'ok',detail:'Les seuils pathologiques du MMSE-GRECO dépendent de l’âge, du niveau d’études, de la langue et du contexte clinique.'};
+    if(s>=21)return{label:`Score global ${s}/30 — Trouble cognitif possible / léger`,cls:'warn',detail:'Interprétation à nuancer selon le niveau socioculturel. En cas de plainte cognitive ou retentissement, compléter par MoCA, BREF, 5 mots de Dubois et bilan étiologique.'};
+    if(s>=10)return{label:`Score global ${s}/30 — Trouble cognitif significatif`,cls:'danger',detail:'Avis mémoire/neurologique ou gériatrique recommandé selon contexte, avec bilan biologique, iatrogénie et imagerie si indiqué.'};
+    return{label:`Score global ${s}/30 — Trouble cognitif sévère`,cls:'danger',detail:'Évaluation spécialisée recommandée. Rechercher confusion, dépression, iatrogénie, trouble sensoriel ou cause organique réversible.'};
+  }
+},
+
+moca:{
+  cat:'mem', icon:'🎯',
+  title:'MoCA — Montréal Cognitive Assessment',
+  subtitle:'Évaluation rapide des fonctions cognitives (30 points) — administré par le médecin',
+  maxScore:30,
+  questions:[
+    {id:'mc_edu',text:'Correction « niveau d\'études » (règle MoCA)',sub:'+1 point si ≤ 12 ans de scolarité — total plafonné à 30',options:[['> 12 ans de scolarité',0],['≤ 12 ans de scolarité (+1)',1]]},
+    {id:'mc1',text:'Alternance (Tracé) — Relier alternativement chiffres et lettres : 1-A-2-B-3-C-4-D-5-E',options:[['Échoué',0],['Réussi',1]]},
+    {id:'mc2',text:'Visuospatial — Copier le cube',options:[['Échoué',0],['Réussi',1]]},
+    {id:'mc3',text:'Horloge — Dessiner une horloge (contour, chiffres, aiguilles) sur 3 points',options:[['0/3',0],['1/3',1],['2/3',2],['3/3',3]]},
+    {id:'mc4',text:'Dénomination — Nommer 3 animaux : lion, rhinocéros, chameau',options:[['0 nommé',0],['1 nommé',1],['2 nommés',2],['3 nommés',3]]},
+    {id:'mc5',text:'Mémoire — Lecture de 5 mots (2 essais) : VISAGE, VELOURS, ÉGLISE, MARGUERITE, ROUGE',sub:'Pas de points ici — rappel différé en fin de test',options:[['Lu une fois',0],['Lu deux fois si nécessaire',0]]},
+    {id:'mc6',text:'Empan chiffres — Série endroit (2-1-8-5-4) et envers (7-4-2)',options:[['0/2 réussi',0],['1/2 réussi',1],['2/2 réussi',2]]},
+    {id:'mc7',text:'Vigilance — Taper sur la table à chaque lettre A dans une liste lue',options:[['≥ 2 erreurs',0],['< 2 erreurs',1]]},
+    {id:'mc8',text:'Calcul — Soustraire 7 de 100 (cinq fois : 93, 86, 79, 72, 65)',options:[['0 correct',0],['1 correct',1],['2-3 corrects',2],['4-5 corrects',3]]},
+    {id:'mc9',text:'Répétition — Deux phrases complexes (une seule erreur autorisée par phrase)',options:[['0/2 réussi',0],['1/2 réussi',1],['2/2 réussi',2]]},
+    {id:'mc10',text:'Fluence verbale — Nommer le maximum de mots commençant par F en 1 minute (≥ 11 = 1 pt)',options:[['< 11 mots',0],['≥ 11 mots',1]]},
+    {id:'mc11',text:'Abstraction — Similitudes : banane-orange / train-bicyclette',options:[['0/2 correct',0],['1/2 correct',1],['2/2 correct',2]]},
+    {id:'mc12',text:'Rappel différé — Rappeler les 5 mots sans indice (1 pt par mot)',options:[['0 mot',0],['1 mot',1],['2 mots',2],['3 mots',3],['4 mots',4],['5 mots',5]]},
+    {id:'mc13',text:'Orientation — Date, mois, année, jour, lieu, ville',options:[['0-1 correct',0],['2-3 corrects',2],['4-5 corrects',4],['6 corrects',6]]},
+  ],
+  interpret(s){
+    const t=Math.min(30,s); // +1 si ≤ 12 ans de scolarité (item dédié) déjà inclus ; plafond 30
+    if(t>=26)return{label:`Score ${t}/30 — Normal (≥ 26)`,cls:'ok',detail:'Correction « scolarité » (+1 si ≤ 12 ans) incluse et plafonnée à 30. Seuil indicatif, à confronter au niveau socioculturel, à l\'âge et à la langue.'};
+    if(t>=18)return{label:`Score ${t}/30 — Déclin cognitif léger (18-25)`,cls:'warn'};
+    return{label:`Score ${t}/30 — Déclin cognitif significatif (< 18)`,cls:'danger'};
+  }
+},
+
+bref:{
+  cat:'mem', icon:'🔦',
+  title:'BREF — Batterie Rapide d\'Évaluation Frontale',
+  subtitle:'Évaluation des fonctions exécutives — administré par le médecin',
+  maxScore:18,
+  questions:[
+    {id:'br1',text:'Similitudes (abstraction) — En quoi se ressemblent : une orange et une banane, une chaise et une table, une tulipe/rose/marguerite ?',options:[['3 réponses conceptuelles correctes',3],['2 réponses correctes',2],['1 réponse correcte',1],['Aucune réponse correcte',0]]},
+    {id:'br2',text:'Fluence lexicale — Nommer le maximum de mots commençant par S en 1 minute (sauf prénoms)',options:[['> 10 mots',3],['6-10 mots',2],['3-5 mots',1],['< 3 mots',0]]},
+    {id:'br3',text:'Séquences motrices de Luria — Tranche-Poing-Paume (6 séquences consécutives)',options:[['6 séquences seul',3],['≥ 3 séquences seul',2],['Réussit avec vous, pas seul',1],['Incapable même avec vous',0]]},
+    {id:'br4',text:'Consignes conflictuelles — Taper 2 si je tape 1, taper 1 si je tape 2',options:[['Aucune erreur',3],['1-2 erreurs',2],['>2 erreurs',1],['Suit votre rythme',0]]},
+    {id:'br5',text:'Go-No Go — Taper 1 si je tape 1, ne pas taper si je tape 2',options:[['Aucune erreur',3],['1-2 erreurs',2],['>2 erreurs',1],['Perdu ou suit le rythme',0]]},
+    {id:'br6',text:'Comportement de préhension — Approcher vos mains sans demander',options:[['Ne saisit pas',3],['Hésite, demande',2],['Saisit sans hésitation',1],['Saisit malgré consigne contraire',0]]},
+  ],
+  interpret(s){
+    if(s>=16)return{label:'Fonctions exécutives normales (≥16)',cls:'ok'};
+    if(s>=12)return{label:'Atteinte légère (12-15)',cls:'warn'};
+    return{label:'Atteinte sévère (< 12)',cls:'danger'};
+  }
+},
+
+cinq_mots:{
+  cat:'mem', icon:'📝',
+  title:'5 Mots de Dubois',
+  subtitle:'Test de mémoire épisodique — administré par le médecin avec liste imprimée',
+  maxScore:10,
+  note:'Mots : Musée, Limonade, Sauterelle, Passoire, Camion',
+  questions:[
+    {id:'cm1',text:'Rappel immédiat libre — Combien de mots le patient rappelle immédiatement ?',options:[['0 mot',0],['1 mot',1],['2 mots',2],['3 mots',3],['4 mots',4],['5 mots',5]]},
+    {id:'cm2',text:'Rappel immédiat indicé — Pour les mots non rappelés, indice de catégorie. Combien rappelés au total (libre + indicé) ?',sub:'Score intermédiaire — doit atteindre 5/5 pour continuer',options:[['< 5/5 (réenregistrement nécessaire)',0],['5/5 (bon encodage confirmé)',0]]},
+    {id:'cm3',text:'Rappel différé libre — Après 3-5 minutes (faire autre test). Combien de mots rappelés ?',options:[['0 mot',0],['1 mot',1],['2 mots',2],['3 mots',3],['4 mots',4],['5 mots',5]]},
+    {id:'cm4',text:'Rappel différé indicé — Pour les mots non rappelés, indice de catégorie. Combien rappelés ?',options:[['0 mot (indicé)',0],['1 mot (indicé)',1],['2 mots (indicés)',2],['3 mots (indicés)',3],['4 mots (indicés)',4],['5 mots (indicés)',5]]},
+  ],
+  interpret(ans){
+    const total=(ans.cm1||0)+(ans.cm3||0)+(ans.cm4||0);
+    if(total>=8)return{label:`Score total ${total}/10 — Normal (≥ 8)`,cls:'ok'};
+    return{label:`Score total ${total}/10 — Avis spécialisé recommandé (< 8)`,cls:'danger',detail:'Un rappel libre diminué mais total normal évoque un trouble attentionnel (dépression, fatigue)'};
+  }
+},
+
+
+// ─── AUTONOMIE FONCTIONNELLE ───
+iadl4:{
+  cat:'mem', icon:'📞',
+  title:'IADL simplifiée — 4 items',
+  subtitle:'Activités instrumentales de la vie quotidienne : téléphone, transports, médicaments, budget',
+  maxScore:4,
+  note:'Score de perturbation : chaque catégorie vaut 0 si autonomie conservée, 1 si perturbée. Score total de 0 à 4.',
+  questions:[
+    {id:'iadl_tel',text:'Capacité à utiliser le téléphone',sub:'Choisir la proposition la plus proche du fonctionnement habituel du patient',options:[["Je me sers du téléphone de ma propre initiative, cherche et compose les numéros",0],["Je compose un petit nombre de numéros connus",1],["Je réponds au téléphone mais n’appelle pas",1],["Je suis incapable d’utiliser le téléphone",1]]},
+    {id:'iadl_trans',text:'Capacité à utiliser les moyens de transport',options:[["Je peux voyager seul(e) et de façon indépendante avec ma voiture ou les transports en commun",0],["Je peux me déplacer seul(e) en taxi mais pas en autobus",1],["Je peux prendre les transports en commun si je suis accompagné(e)",1],["Transport limité au taxi ou à la voiture en étant accompagné(e)",1],["Je ne me déplace pas du tout",1]]},
+    {id:'iadl_med',text:'Responsabilité pour la prise des médicaments',options:[["Je m’occupe moi-même de la prise, dosage et horaire",0],["Je peux les prendre de moi-même s’ils sont préparés à l’avance",1],["Je suis incapable de les prendre de moi-même",1]]},
+    {id:'iadl_budget',text:'Capacité à gérer son budget',options:[["Je suis autonome pour gérer le budget, faire les chèques, payer les factures",0],["Je me débrouille pour les dépenses au jour le jour, mais j’ai besoin d’aide pour gérer à long terme mon budget",1],["Je suis incapable de gérer l’argent nécessaire à payer mes dépenses au jour le jour",1]]},
+  ],
+  interpret(s){
+    if(s===0)return{label:`Score ${s}/4 — Autonomie instrumentale conservée`,cls:'ok',detail:'Aucun item perturbé sur les 4 items explorés.'};
+    if(s<=2)return{label:`Score ${s}/4 — Perturbation partielle des activités instrumentales`,cls:'warn',detail:'À interpréter selon le contexte cognitif, thymique, sensoriel, moteur et social.'};
+    return{label:`Score ${s}/4 — Perturbation importante des activités instrumentales`,cls:'danger',detail:'Si les 4 items sont perturbés, le risque de démence actuelle ou évolutive est important. Une évaluation cognitive et médico-sociale est recommandée.'};
+  }
+},
+
+adl6:{
+  cat:'mem', icon:'🧍',
+  title:'ADL — Autonomie de base',
+  subtitle:'Hygiène, habillage, toilettes, locomotion, continence, repas',
+  maxScore:12,
+  note:'Score de dépendance : 0 = autonome, 1 = aide partielle, 2 = dépendance importante. Score total de 0 à 12. Un score > 6 signe une dépendance.',
+  questions:[
+    {id:'adl_hyg',text:'Hygiène corporelle',options:[["Autonome",0],["Aide partielle pour une partie du corps",1],["Aide pour plusieurs parties du corps ou toilette impossible",2]]},
+    {id:'adl_hab',text:'Habillage',options:[["Autonome pour le choix et l’habillage",0],["S’habille mais besoin d’aide pour se chausser",1],["Besoin d’aide pour choisir ses vêtements, pour s’habiller, ou reste partiellement ou complètement déshabillé(e)",2]]},
+    {id:'adl_wc',text:'Aller aux toilettes',options:[["Autonome",0],["Doit être accompagné(e), besoin d’aide",1],["Ne va pas aux WC, n’utilise pas le bassin ou l’urinoir",2]]},
+    {id:'adl_loco',text:'Locomotion',options:[["Autonome",0],["Besoin d’aide",1],["Grabataire",2]]},
+    {id:'adl_cont',text:'Continence',options:[["Continent(e)",0],["Incontinence occasionnelle",1],["Incontinence permanente",2]]},
+    {id:'adl_repas',text:'Repas',options:[["Autonome",0],["Aide pour couper la viande ou peler les fruits",1],["Aide complète ou alimentation artificielle",2]]},
+  ],
+  interpret(s){
+    if(s===0)return{label:`Score ${s}/12 — Autonomie de base conservée`,cls:'ok',detail:'Aucune dépendance objectivée sur les 6 activités de base.'};
+    if(s<=6)return{label:`Score ${s}/12 — Dépendance légère à modérée`,cls:'warn',detail:'À surveiller et à réévaluer dans le temps. Cette échelle nécessite idéalement 3 évaluations étalées dans le temps.'};
+    return{label:`Score ${s}/12 — Dépendance significative (> 6)`,cls:'danger',detail:'Utile pour adapter les aides : repas à domicile, aide-ménagère, auxiliaire de vie, protections, évaluation sociale ou protection juridique selon le contexte.'};
+  }
+},
+
+// ─── CARDIOLOGIE / NEUROLOGIE ───
+dn4:{
+  cat:'cardio', icon:'⚡',
+  title:'DN4 — Douleur Neuropathique',
+  subtitle:'Le praticien interroge le patient et remplit le questionnaire',
+  maxScore:10,
+  questions:[
+    {id:'dn1',text:'Q1 — La douleur présente-t-elle des BRÛLURES ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn2',text:'Q1 — La douleur présente-t-elle des SENSATIONS DE FROID DOULOUREUX ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn3',text:'Q1 — La douleur présente-t-elle des DÉCHARGES ÉLECTRIQUES ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn4',text:'Q2 — La douleur est-elle associée à des FOURMILLEMENTS dans la même région ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn5',text:'Q2 — La douleur est-elle associée à des PICOTEMENTS ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn6',text:'Q2 — La douleur est-elle associée à un ENGOURDISSEMENT ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn7',text:'Q2 — La douleur est-elle associée à des DÉMANGEAISONS ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn8',text:'Q3 (Examen) — Hypoesthésie au TACT dans le territoire douloureux ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn9',text:'Q3 (Examen) — Hypoesthésie à la PIQÛRE (épingle) ?',options:[['Non',0],['Oui',1]]},
+    {id:'dn10',text:'Q4 (Examen) — La douleur est-elle provoquée ou augmentée par le FROTTEMENT ?',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s>=4)return{label:`Score ${s}/10 — Douleur neuropathique probable (≥4)`,cls:'danger',detail:'Sensibilité 82,9% · Spécificité 89,9% (Bouhassira et al. 2005)'};
+    return{label:`Score ${s}/10 — Douleur neuropathique peu probable (<4)`,cls:'ok'};
+  }
+},
+
+
+mac_isaac:{
+  cat:'orl', icon:'🧫',
+  title:'Score de Mac Isaac — Angine',
+  subtitle:'Aide à la décision TDR streptocoque A chez l’adulte/enfant',
+  maxScore:5,
+  questions:[
+    {id:'mi1',text:'Âge',options:[['3 à 14 ans',1],['15 à 44 ans',0],['≥ 45 ans',-1]]},
+    {id:'mi2',text:'Fièvre > 38 °C',options:[['Non',0],['Oui',1]]},
+    {id:'mi3',text:'Absence de toux',options:[['Non',0],['Oui',1]]},
+    {id:'mi4',text:'Adénopathies cervicales antérieures sensibles',options:[['Non',0],['Oui',1]]},
+    {id:'mi5',text:'Exsudat amygdalien ou tuméfaction amygdalienne',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<2)return{label:`Score ${s} — Streptocoque A peu probable`,cls:'ok',detail:'En général, TDR non nécessaire chez l’adulte si score <2, à adapter au contexte clinique.'};
+    if(s<=3)return{label:`Score ${s} — TDR streptocoque A indiqué`,cls:'warn'};
+    return{label:`Score ${s} — Probabilité plus élevée : TDR indiqué`,cls:'warn',detail:'Traitement antibiotique uniquement si TDR positif ou indication spécifique selon contexte.'};
+  }
+},
+
+// ─── ADDICTIONS ───
+
+// ─── UROLOGIE ───
+ipss:{
+  cat:'uro', icon:'🚻',
+  title:'IPSS — Symptômes prostatiques',
+  subtitle:'International Prostate Symptom Score — HBP / LUTS. La question qualité de vie est informative et incluse ici séparément dans le score affiché.',
+  maxScore:35,
+  questions:[
+    {id:'ip1',text:'1. Sensation de vidange incomplète après avoir uriné',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip2',text:'2. Besoin d’uriner à nouveau moins de 2 heures après avoir uriné',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip3',text:'3. Interruption du jet urinaire',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip4',text:'4. Difficulté à retenir les urines / urgenturie',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip5',text:'5. Faiblesse du jet urinaire',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip6',text:'6. Effort pour commencer à uriner',options:[['Jamais',0],['Moins d’1 fois sur 5',1],['Moins d’1 fois sur 2',2],['Environ 1 fois sur 2',3],['Plus d’1 fois sur 2',4],['Presque toujours',5]]},
+    {id:'ip7',text:'7. Nombre de levers nocturnes pour uriner',options:[['0 fois',0],['1 fois',1],['2 fois',2],['3 fois',3],['4 fois',4],['5 fois ou plus',5]]},
+  ],
+  interpret(s){
+    if(s<=7)return{label:`Score ${s}/35 — Symptômes légers`,cls:'ok'};
+    if(s<=19)return{label:`Score ${s}/35 — Symptômes modérés`,cls:'warn'};
+    return{label:`Score ${s}/35 — Symptômes sévères`,cls:'danger',detail:'Rechercher rétention, hématurie, infection, insuffisance rénale, toucher rectal/PSA selon contexte ; avis urologique si signes de gravité.'};
+  }
+},
+
+audit:{
+  cat:'add', icon:'🍷',
+  title:'AUDIT — Alcool Use Disorders Test',
+  subtitle:'Les 10 questions suivantes concernent votre consommation d\'alcool au cours de l\'année écoulée',
+  maxScore:40,
+  questions:[
+    {id:'au1',text:'À quelle fréquence consommez-vous de l\'alcool ?',options:[['Jamais',0],['Une fois par mois ou moins',1],['2 à 4 fois par mois',2],['2 à 3 fois par semaine',3],['Au moins 4 fois par semaine',4]]},
+    {id:'au2',text:'Combien de verres contenant de l\'alcool consommez-vous un jour typique où vous buvez ?',options:[['1 ou 2',0],['3 ou 4',1],['5 ou 6',2],['7 à 9',3],['10 ou plus',4]]},
+    {id:'au3',text:'Avec quelle fréquence buvez-vous 6 verres ou davantage lors d\'une même occasion ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au4',text:'Au cours de l\'année écoulée, combien de fois avez-vous constaté que vous n\'étiez plus capable de vous arrêter de boire une fois que vous aviez commencé ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au5',text:'Au cours de l\'année écoulée, combien de fois votre consommation d\'alcool vous a-t-elle empêché de faire ce qui était attendu de vous ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au6',text:'Au cours de l\'année écoulée, combien de fois avez-vous eu besoin d\'un premier verre pour vous sentir en forme le matin après une soirée de forte consommation ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au7',text:'Au cours de l\'année écoulée, combien de fois avez-vous ressenti des remords ou de la culpabilité après avoir bu ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au8',text:'Au cours de l\'année écoulée, combien de fois avez-vous été incapable de vous rappeler ce qui s\'était passé la soirée précédente parce que vous aviez bu ?',options:[['Jamais',0],['Moins d\'une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+    {id:'au9',text:'Vous êtes-vous blessé(e) ou quelqu\'un d\'autre a-t-il été blessé parce que vous aviez bu ?',options:[['Non',0],['Oui, mais pas au cours de l\'année écoulée',2],['Oui, au cours de l\'année écoulée',4]]},
+    {id:'au10',text:'Un parent, un ami, un médecin ou un autre professionnel de santé s\'est-il déjà préoccupé de votre consommation d\'alcool ou vous a-t-il suggéré de la réduire ?',options:[['Non',0],['Oui, mais pas au cours de l\'année écoulée',2],['Oui, au cours de l\'année écoulée',4]]},
+  ],
+  interpret(s){
+    if(s<=7)return{label:`Score ${s}/40 — Usage à faible risque (0-7)`,cls:'ok',detail:'Seuil OMS habituel ≥ 8 ; un seuil plus bas (≥ 7) peut être retenu chez la femme, la personne âgée ou en cas de comorbidité.'};
+    if(s<=15)return{label:`Score ${s}/40 — Usage à risque (8-15) : intervention brève`,cls:'warn'};
+    if(s<=19)return{label:`Score ${s}/40 — Usage nocif (16-19) : prise en charge`,cls:'danger'};
+    return{label:`Score ${s}/40 — Dépendance probable (≥ 20) : avis spécialisé`,cls:'danger'};
+  }
+},
+
+fagerstrom:{
+  cat:'add', icon:'🚬',
+  title:'Test de Fagerström — Dépendance au tabac',
+  subtitle:'Évaluation de la dépendance physique à la nicotine',
+  maxScore:10,
+  questions:[
+    {id:'f1',text:'Le matin, combien de temps après être réveillé(e) fumez-vous votre première cigarette ?',options:[['Dans les 5 minutes',3],['6 à 30 minutes',2],['31 à 60 minutes',1],['Après 60 minutes',0]]},
+    {id:'f2',text:'Trouvez-vous difficile de ne pas fumer dans les endroits où c\'est interdit (cinéma, bibliothèque, transports…) ?',options:[['Non',0],['Oui',1]]},
+    {id:'f3',text:'À quelle cigarette renonceriez-vous le plus difficilement ?',options:[['La première de la journée',1],['Une autre',0]]},
+    {id:'f4',text:'Combien de cigarettes fumez-vous par jour en moyenne ?',options:[['10 ou moins',0],['11 à 20',1],['21 à 30',2],['31 ou plus',3]]},
+    {id:'f5',text:'Fumez-vous à intervalles plus rapprochés durant les premières heures de la matinée que durant le reste de la journée ?',options:[['Non',0],['Oui',1]]},
+    {id:'f6',text:'Fumez-vous lorsque vous êtes malade au point de devoir rester au lit presque toute la journée ?',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=2)return{label:'Pas de dépendance (0-2)',cls:'ok'};
+    if(s<=4)return{label:'Dépendance faible (3-4)',cls:'ok'};
+    if(s<=6)return{label:'Dépendance moyenne (5-6) — substituts recommandés',cls:'warn'};
+    if(s<=8)return{label:'Dépendance forte (7-8) — aide médicale nécessaire',cls:'danger'};
+    return{label:'Dépendance très forte (9-10)',cls:'danger'};
+  }
+},
+
+
+
+mac_isaac:{
+  cat:'orl', icon:'🧫',
+  title:'Score de Mac Isaac — Angine',
+  subtitle:'Aide à la décision TDR streptocoque A chez l’adulte/enfant',
+  maxScore:5,
+  questions:[
+    {id:'mi1',text:'Âge',options:[['3 à 14 ans',1],['15 à 44 ans',0],['≥ 45 ans',-1]]},
+    {id:'mi2',text:'Fièvre > 38 °C',options:[['Non',0],['Oui',1]]},
+    {id:'mi3',text:'Absence de toux',options:[['Non',0],['Oui',1]]},
+    {id:'mi4',text:'Adénopathies cervicales antérieures sensibles',options:[['Non',0],['Oui',1]]},
+    {id:'mi5',text:'Exsudat amygdalien ou tuméfaction amygdalienne',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<2)return{label:`Score ${s} — Streptocoque A peu probable`,cls:'ok',detail:'En général, TDR non nécessaire chez l’adulte si score <2, à adapter au contexte clinique.'};
+    if(s<=3)return{label:`Score ${s} — TDR streptocoque A indiqué`,cls:'warn'};
+    return{label:`Score ${s} — Probabilité plus élevée : TDR indiqué`,cls:'warn',detail:'Traitement antibiotique uniquement si TDR positif ou indication spécifique selon contexte.'};
+  }
+},
+
+// ─── ADDICTIONS COMPLÉMENTAIRES ───
+audit_c:{
+  cat:'add', icon:'🍺',
+  title:'AUDIT-C — Alcool',
+  subtitle:'Dépistage rapide d’une consommation d’alcool à risque — 3 questions',
+  maxScore:12,
+  note:'Version courte issue des 3 premières questions de l’AUDIT. Interprétation à adapter au sexe, à l’âge, aux comorbidités, aux médicaments et au contexte clinique.',
+  questions:[
+    {id:'ac1',text:'À quelle fréquence consommez-vous des boissons contenant de l’alcool ?',options:[['Jamais',0],['1 fois par mois ou moins',1],['2 à 4 fois par mois',2],['2 à 3 fois par semaine',3],['4 fois par semaine ou plus',4]]},
+    {id:'ac2',text:'Combien de verres standards buvez-vous un jour typique où vous consommez de l’alcool ?',options:[['1 ou 2',0],['3 ou 4',1],['5 ou 6',2],['7 à 9',3],['10 ou plus',4]]},
+    {id:'ac3',text:'À quelle fréquence buvez-vous 6 verres ou plus lors d’une même occasion ?',options:[['Jamais',0],['Moins d’une fois par mois',1],['Une fois par mois',2],['Une fois par semaine',3],['Tous les jours ou presque',4]]},
+  ],
+  interpret(s){
+    if(s===0)return{label:`Score ${s}/12 — Pas de consommation déclarée`,cls:'ok'};
+    if(s<=3)return{label:`Score ${s}/12 — Consommation probablement à faible risque`,cls:'ok'};
+    if(s<=6)return{label:`Score ${s}/12 — Consommation à risque possible`,cls:'warn',detail:'Repères pratiques : un score ≥4 chez l’homme ou ≥3 chez la femme est souvent considéré comme positif selon les contextes.'};
+    return{label:`Score ${s}/12 — Consommation à risque élevé`,cls:'danger',detail:'Évaluer quantité hebdomadaire, binge drinking, dépendance, retentissement somatique/psychique et proposer intervention brève.'};
+  }
+},
+
+paquets_annees:{
+  cat:'add', icon:'📦',
+  title:'Nombre de paquets-années',
+  subtitle:'Estimation catégorielle de l’exposition tabagique cumulée',
+  maxScore:null,
+  note:'Calcul exact à faire idéalement : paquets-années = (cigarettes/jour ÷ 20) × nombre d’années de tabagisme.',
+  questions:[
+    {id:'pa1',text:'Nombre moyen de cigarettes par jour',options:[['Non-fumeur / 0',0],['1 à 9 cigarettes/j',1],['10 à 19 cigarettes/j',2],['20 à 29 cigarettes/j',3],['30 cigarettes/j ou plus',4]]},
+    {id:'pa2',text:'Durée du tabagisme actif',options:[['0 an',0],['1 à 9 ans',1],['10 à 19 ans',2],['20 à 29 ans',3],['30 ans ou plus',4]]},
+  ],
+  interpret(ans){
+    const a=ans.pa1||0,b=ans.pa2||0,score=a*b;
+    if(score===0)return{label:'Exposition tabagique non significative déclarée',cls:'ok',score:0,maxScore:16,detail:'Pour un calcul exact : (cigarettes/jour ÷ 20) × années.'};
+    if(score<=4)return{label:'Exposition cumulée faible à modérée',cls:'warn',score,maxScore:16,detail:'Affiner en paquets-années exacts si indication de dépistage ou de suivi BPCO.'};
+    return{label:'Exposition cumulée importante — calcul exact recommandé',cls:'danger',score,maxScore:16,detail:'Penser BPCO, sevrage, vaccination, spirométrie selon symptômes et âge.'};
+  }
+},
+
+// ─── PNEUMOLOGIE ───
+bpco_auto:{
+  cat:'pneumo', icon:'🫁',
+  title:'Auto-questionnaire BPCO',
+  subtitle:'Repérage clinique rapide des symptômes respiratoires chroniques',
+  maxScore:6,
+  questions:[
+    {id:'bp1',text:'Toussez-vous régulièrement, notamment le matin ?',options:[['Non',0],['Oui',1]]},
+    {id:'bp2',text:'Avez-vous des crachats ou expectorations régulières ?',options:[['Non',0],['Oui',1]]},
+    {id:'bp3',text:'Êtes-vous essoufflé(e) plus vite que les personnes de votre âge ?',options:[['Non',0],['Oui',1]]},
+    {id:'bp4',text:'Avez-vous plus de 40 ans ?',options:[['Non',0],['Oui',1]]},
+    {id:'bp5',text:'Fumez-vous ou avez-vous fumé ?',options:[['Non',0],['Oui',1]]},
+    {id:'bp6',text:'Avez-vous été exposé(e) durablement à poussières, fumées, polluants professionnels ou domestiques ?',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=1)return{label:`Score ${s}/6 — Suspicion faible`,cls:'ok'};
+    if(s<=3)return{label:`Score ${s}/6 — Symptômes/risques à explorer`,cls:'warn',detail:'Discuter spirométrie si tabagisme/exposition et symptômes chroniques.'};
+    return{label:`Score ${s}/6 — Suspicion BPCO significative`,cls:'danger',detail:'Spirométrie pré/post bronchodilatateur recommandée selon contexte clinique.'};
+  }
+},
+
+dyspnee_mmrc:{
+  cat:'pneumo', icon:'🌬️',
+  title:'Dyspnée — échelle mMRC',
+  subtitle:'Quantification simple de la dyspnée à l’effort',
+  maxScore:4,
+  questions:[
+    {id:'mmrc',text:'Choisir la situation qui correspond le mieux au patient',options:[['0 — Essoufflé(e) uniquement pour un effort intense',0],['1 — Essoufflé(e) en marche rapide ou en côte légère',1],['2 — Marche plus lentement que les gens du même âge ou doit s’arrêter sur terrain plat',2],['3 — Doit s’arrêter après environ 100 mètres ou quelques minutes sur terrain plat',3],['4 — Trop essoufflé(e) pour quitter la maison ou dyspnée à l’habillage/déshabillage',4]]},
+  ],
+  interpret(s){
+    if(s<=1)return{label:`mMRC ${s}/4 — Dyspnée absente ou légère`,cls:'ok'};
+    if(s===2)return{label:'mMRC 2/4 — Dyspnée fonctionnellement significative',cls:'warn'};
+    return{label:`mMRC ${s}/4 — Dyspnée sévère`,cls:'danger',detail:'Évaluer cause respiratoire, cardiaque, anémie, déconditionnement, urgence selon contexte.'};
+  }
+},
+
+// ─── SOMMEIL COMPLÉMENTAIRES ───
+boss:{
+  cat:'sleep', icon:'🥱',
+  title:'BOSS — Bordeaux Sleepiness Scale',
+  subtitle:'Évaluation complémentaire de la somnolence diurne',
+  maxScore:30,
+  note:'Échelle complémentaire : privilégier Epworth comme score de référence si besoin de comparaison standardisée.',
+  questions:[
+    {id:'bo1',text:'Somnolence en situation passive calme',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+    {id:'bo2',text:'Somnolence devant un écran ou la télévision',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+    {id:'bo3',text:'Somnolence en réunion, cours, salle d’attente',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+    {id:'bo4',text:'Somnolence comme passager en voiture ou transport',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+    {id:'bo5',text:'Somnolence après le repas ou en début d’après-midi',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+    {id:'bo6',text:'Somnolence dans une situation active ou nécessitant vigilance',options:[['Jamais',0],['Rarement',1],['Parfois',2],['Souvent',3],['Très souvent',4],['Quasi systématiquement',5]]},
+  ],
+  interpret(s){
+    if(s<=8)return{label:`Score ${s}/30 — Somnolence faible`,cls:'ok'};
+    if(s<=15)return{label:`Score ${s}/30 — Somnolence modérée`,cls:'warn'};
+    return{label:`Score ${s}/30 — Somnolence importante`,cls:'danger',detail:'À croiser avec Epworth, Berlin, durée de sommeil, médicaments, dépression et conduite.'};
+  }
+},
+
+spruyt_gozal:{
+  cat:'sleep', icon:'👶',
+  title:'Spruyt-Gozal — Sommeil enfant',
+  subtitle:'Repérage simplifié du risque de troubles respiratoires du sommeil chez l’enfant',
+  maxScore:8,
+  note:'À utiliser comme repérage clinique, pas comme diagnostic. Avis ORL/pédiatrique ou exploration du sommeil selon contexte.',
+  questions:[
+    {id:'sg1',text:'Ronflement habituel plusieurs nuits par semaine',options:[['Non',0],['Oui',1]]},
+    {id:'sg2',text:'Pauses respiratoires observées pendant le sommeil',options:[['Non',0],['Oui',1]]},
+    {id:'sg3',text:'Sommeil agité, sueurs nocturnes ou positions anormales',options:[['Non',0],['Oui',1]]},
+    {id:'sg4',text:'Respiration buccale nocturne ou diurne',options:[['Non',0],['Oui',1]]},
+    {id:'sg5',text:'Somnolence diurne, fatigue ou troubles attentionnels',options:[['Non',0],['Oui',1]]},
+    {id:'sg6',text:'Troubles du comportement / hyperactivité',options:[['Non',0],['Oui',1]]},
+    {id:'sg7',text:'Énurésie secondaire ou persistante',options:[['Non',0],['Oui',1]]},
+    {id:'sg8',text:'Hypertrophie amygdalienne, obstruction nasale ou terrain ORL évocateur',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=1)return{label:`Score ${s}/8 — Risque faible`,cls:'ok'};
+    if(s<=3)return{label:`Score ${s}/8 — Risque intermédiaire`,cls:'warn'};
+    return{label:`Score ${s}/8 — Risque élevé de trouble respiratoire du sommeil`,cls:'danger'};
+  }
+},
+
+// ─── CARDIOLOGIE / URGENCES ───
+cha2ds2_vasc:{
+  cat:'urgent', icon:'❤️',
+  title:'CHA₂DS₂-VASc',
+  subtitle:'Risque thromboembolique dans la fibrillation atriale non valvulaire',
+  maxScore:9,
+  questions:[
+    {id:'ch1',text:'Insuffisance cardiaque congestive / dysfonction VG',options:[['Non',0],['Oui',1]]},
+    {id:'ch2',text:'Hypertension artérielle',options:[['Non',0],['Oui',1]]},
+    {id:'ch3',text:'Âge',options:[['< 65 ans',0],['65-74 ans',1],['≥ 75 ans',2]]},
+    {id:'ch4',text:'Diabète',options:[['Non',0],['Oui',1]]},
+    {id:'ch5',text:'AVC/AIT/embolie systémique antérieure',options:[['Non',0],['Oui',2]]},
+    {id:'ch6',text:'Maladie vasculaire (IDM, AOMI, plaque aortique)',options:[['Non',0],['Oui',1]]},
+    {id:'ch7',text:'Sexe féminin',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(a){
+    const v=k=>a[k]||0;
+    const s=v('ch1')+v('ch2')+v('ch3')+v('ch4')+v('ch5')+v('ch6')+v('ch7');
+    const female=v('ch7')===1;
+    const nonSex=s-(female?1:0); // le sexe féminin est un modificateur, pas un initiateur
+    const det='Règle ESC : le point « sexe féminin » ne justifie PAS à lui seul une anticoagulation. Décision sur le score HORS sexe — homme : ≥ 1 envisager, ≥ 2 indiqué ; femme : ≥ 2 envisager, ≥ 3 indiqué. Toujours croiser avec le risque hémorragique (HAS-BLED), l\'âge, les chutes, la fonction rénale et les préférences du patient.';
+    if(nonSex===0)return{rawScore:s,label:`Score ${s}/9 (hors sexe : 0) — Risque bas : pas d'anticoagulation`,cls:'ok',detail:det};
+    if(nonSex===1)return{rawScore:s,label:`Score ${s}/9 (hors sexe : 1) — ${female?'Femme : risque bas / à discuter (≥ 2 facteurs hors sexe pour indiquer)':'Homme : anticoagulation à envisager'}`,cls:'warn',detail:det};
+    return{rawScore:s,label:`Score ${s}/9 (hors sexe : ${nonSex}) — Anticoagulation indiquée si FA non valvulaire confirmée`,cls:'danger',detail:det};
+  }
+},
+
+wells_ep:{
+  cat:'urgent', icon:'🫁',
+  title:'Score de Wells — Embolie pulmonaire',
+  subtitle:'Probabilité clinique pré-test d’embolie pulmonaire',
+  maxScore:12.5,
+  questions:[
+    {id:'we1',text:'Signes cliniques de TVP',options:[['Non',0],['Oui',3]]},
+    {id:'we2',text:'EP plus probable que les diagnostics alternatifs',options:[['Non',0],['Oui',3]]},
+    {id:'we3',text:'Fréquence cardiaque > 100/min',options:[['Non',0],['Oui',1.5]]},
+    {id:'we4',text:'Immobilisation ≥3 jours ou chirurgie dans les 4 dernières semaines',options:[['Non',0],['Oui',1.5]]},
+    {id:'we5',text:'Antécédent de TVP ou EP',options:[['Non',0],['Oui',1.5]]},
+    {id:'we6',text:'Hémoptysie',options:[['Non',0],['Oui',1]]},
+    {id:'we7',text:'Cancer évolutif ou traité dans les 6 derniers mois / palliatif',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=4)return{label:`Score ${s} — EP peu probable`,cls:'ok',detail:'Si faible probabilité et PERC négatif, D-dimères parfois évitables selon contexte.'};
+    return{label:`Score ${s} — EP probable`,cls:'danger',detail:'Orientation diagnostique urgente : D-dimères/imagerie selon probabilité clinique et stabilité hémodynamique.'};
+  }
+},
+
+wells_tvp:{
+  cat:'urgent', icon:'🦵',
+  title:'Score de Wells — TVP',
+  subtitle:'Probabilité clinique de thrombose veineuse profonde',
+  maxScore:9,
+  questions:[
+    {id:'wt1',text:'Cancer actif',options:[['Non',0],['Oui',1]]},
+    {id:'wt2',text:'Paralysie, parésie ou immobilisation plâtrée récente du membre inférieur',options:[['Non',0],['Oui',1]]},
+    {id:'wt3',text:'Alitement >3 jours ou chirurgie majeure <12 semaines',options:[['Non',0],['Oui',1]]},
+    {id:'wt4',text:'Douleur localisée le long du système veineux profond',options:[['Non',0],['Oui',1]]},
+    {id:'wt5',text:'Œdème de tout le membre inférieur',options:[['Non',0],['Oui',1]]},
+    {id:'wt6',text:'Mollet augmenté de >3 cm par rapport au côté opposé',options:[['Non',0],['Oui',1]]},
+    {id:'wt7',text:'Œdème prenant le godet limité au membre symptomatique',options:[['Non',0],['Oui',1]]},
+    {id:'wt8',text:'Circulation veineuse collatérale superficielle non variqueuse',options:[['Non',0],['Oui',1]]},
+    {id:'wt9',text:'Antécédent de TVP documentée',options:[['Non',0],['Oui',1]]},
+    {id:'wt10',text:'Diagnostic alternatif au moins aussi probable que la TVP',options:[['Non',0],['Oui',-2]]},
+  ],
+  interpret(s){
+    if(s<=1)return{label:`Score ${s} — TVP peu probable`,cls:'ok'};
+    return{label:`Score ${s} — TVP probable`,cls:'danger',detail:'Écho-Doppler veineux et/ou D-dimères selon contexte, probabilité et disponibilité.'};
+  }
+},
+
+geneve_modifie:{
+  cat:'urgent', icon:'🚑',
+  title:'Genève modifié — Embolie pulmonaire',
+  subtitle:'Score clinique standardisé sans jugement subjectif',
+  maxScore:22,
+  questions:[
+    {id:'gm1',text:'Âge > 65 ans',options:[['Non',0],['Oui',1]]},
+    {id:'gm2',text:'Antécédent de TVP ou EP',options:[['Non',0],['Oui',3]]},
+    {id:'gm3',text:'Chirurgie ou fracture < 1 mois',options:[['Non',0],['Oui',2]]},
+    {id:'gm4',text:'Cancer actif',options:[['Non',0],['Oui',2]]},
+    {id:'gm5',text:'Douleur unilatérale d’un membre inférieur',options:[['Non',0],['Oui',3]]},
+    {id:'gm6',text:'Hémoptysie',options:[['Non',0],['Oui',2]]},
+    {id:'gm7',text:'Fréquence cardiaque',options:[['<75/min',0],['75-94/min',3],['≥95/min',5]]},
+    {id:'gm8',text:'Douleur à la palpation veineuse profonde et œdème unilatéral',options:[['Non',0],['Oui',4]]},
+  ],
+  interpret(s){
+    if(s<=3)return{label:`Score ${s}/22 — Probabilité faible`,cls:'ok'};
+    if(s<=10)return{label:`Score ${s}/22 — Probabilité intermédiaire`,cls:'warn'};
+    return{label:`Score ${s}/22 — Probabilité forte`,cls:'danger'};
+  }
+},
+
+perc:{
+  cat:'urgent', icon:'✅',
+  title:'Règle PERC — Embolie pulmonaire',
+  subtitle:'Exclusion d’EP chez patient à faible probabilité clinique uniquement',
+  maxScore:8,
+  note:'À utiliser seulement si la probabilité clinique pré-test est faible. Si un item est positif, PERC ne permet pas d’exclure.',
+  questions:[
+    {id:'pe1',text:'Âge ≥ 50 ans',options:[['Non',0],['Oui',1]]},
+    {id:'pe2',text:'Fréquence cardiaque ≥ 100/min',options:[['Non',0],['Oui',1]]},
+    {id:'pe3',text:'SpO₂ < 95 %',options:[['Non',0],['Oui',1]]},
+    {id:'pe4',text:'Hémoptysie',options:[['Non',0],['Oui',1]]},
+    {id:'pe5',text:'Prise d’œstrogènes',options:[['Non',0],['Oui',1]]},
+    {id:'pe6',text:'Antécédent de TVP/EP',options:[['Non',0],['Oui',1]]},
+    {id:'pe7',text:'Chirurgie ou traumatisme récent',options:[['Non',0],['Oui',1]]},
+    {id:'pe8',text:'Œdème unilatéral de jambe',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s===0)return{label:'PERC négatif — EP très improbable si probabilité clinique faible',cls:'ok'};
+    return{label:`PERC positif (${s} item(s)) — Ne permet pas d’exclure l’EP`,cls:'warn'};
+  }
+},
+
+// ─── DOULEUR / RHUMATOLOGIE ───
+lequesne:{
+  cat:'pain', icon:'🦴',
+  title:'Indice de Lequesne — Coxarthrose / Gonarthrose',
+  subtitle:'Retentissement douloureux et fonctionnel de l’arthrose',
+  maxScore:24,
+  questions:[
+    {id:'le1',text:'Douleur ou gêne nocturne',options:[['Aucune',0],['Seulement aux mouvements ou certaines positions',1],['Même immobile',2]]},
+    {id:'le2',text:'Dérouillage matinal ou après repos',options:[['Aucun ou <1 min',0],['1 à 15 min',1],['>15 min',2]]},
+    {id:'le3',text:'Douleur à la marche',options:[['Aucune',0],['Après une certaine distance',1],['Dès le début puis augmente',2]]},
+    {id:'le4',text:'Périmètre de marche maximal',options:[['Illimité',0],['>1 km mais limité',1],['Environ 1 km',2],['500 à 900 m',3],['300 à 500 m',4],['100 à 300 m',5],['<100 m',6]]},
+    {id:'le5',text:'Difficultés dans les activités quotidiennes',options:[['Aucune',0],['Légères',1],['Modérées',2],['Importantes',3],['Très importantes',4]]},
+  ],
+  interpret(s){
+    if(s<=4)return{label:`Score ${s}/24 — Handicap modeste`,cls:'ok'};
+    if(s<=7)return{label:`Score ${s}/24 — Handicap moyen`,cls:'warn'};
+    if(s<=10)return{label:`Score ${s}/24 — Handicap important`,cls:'warn'};
+    return{label:`Score ${s}/24 — Handicap très important`,cls:'danger',detail:'Discuter imagerie, kinésithérapie, antalgiques adaptés, infiltration ou avis orthopédique selon contexte.'};
+  }
+},
+
+
+first:{
+  cat:'pain', icon:'🦴',
+  title:'FIRST — Dépistage fibromyalgie',
+  subtitle:'Fibromyalgia Rapid Screening Tool — douleurs diffuses chroniques',
+  maxScore:6,
+  questions:[
+    {id:'fi1',text:'Mes douleurs sont localisées partout dans tout mon corps',options:[['Non',0],['Oui',1]]},
+    {id:'fi2',text:'Mes douleurs s’accompagnent d’une fatigue générale permanente',options:[['Non',0],['Oui',1]]},
+    {id:'fi3',text:'Mes douleurs sont comme des brûlures, des décharges électriques ou des crampes',options:[['Non',0],['Oui',1]]},
+    {id:'fi4',text:'Mes douleurs s’accompagnent d’autres sensations anormales dans tout le corps : fourmillements, picotements, engourdissements',options:[['Non',0],['Oui',1]]},
+    {id:'fi5',text:'Mes douleurs s’accompagnent d’autres problèmes de santé : troubles digestifs, urinaires, maux de tête ou jambes sans repos',options:[['Non',0],['Oui',1]]},
+    {id:'fi6',text:'Mes douleurs ont un retentissement important sur ma vie : sommeil, concentration, humeur, activités',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s>=5)return{label:`Score ${s}/6 — Dépistage positif : fibromyalgie possible`,cls:'warn',detail:'À confirmer par l’examen clinique et les critères ACR ; rechercher diagnostics différentiels et comorbidités.'};
+    return{label:`Score ${s}/6 — Peu évocateur`,cls:'ok'};
+  }
+},
+
+haq:{
+  cat:'pain', icon:'🦴',
+  title:'HAQ — Handicap fonctionnel',
+  subtitle:'Rhumatologie — score moyen 0 à 3 sur 8 domaines',
+  maxScore:24,
+  questions:[
+    {id:'hq1',text:'S’habiller et se préparer',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq2',text:'Se lever',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq3',text:'Manger',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq4',text:'Marcher',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq5',text:'Hygiène',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq6',text:'Attraper / saisir des objets',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq7',text:'Atteindre / se pencher',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+    {id:'hq8',text:'Activités quotidiennes',options:[['Sans difficulté',0],['Avec quelque difficulté',1],['Avec beaucoup de difficulté',2],['Impossible',3]]},
+  ],
+  interpret(s){
+    const score=(s/8).toFixed(2);
+    if(score<1)return{label:`Score moyen ${score}/3 — Handicap léger`,cls:'ok'};
+    if(score<2)return{label:`Score moyen ${score}/3 — Handicap modéré`,cls:'warn'};
+    return{label:`Score moyen ${score}/3 — Handicap sévère`,cls:'danger'};
+  }
+},
+
+lequesne_genou:{
+  cat:'pain', icon:'🦵',
+  title:'Indice de Lequesne — Genou',
+  subtitle:'Gonarthrose — douleur, périmètre de marche et activités quotidiennes',
+  maxScore:24,
+  questions:[
+    {id:'lg1',text:'Douleur ou gêne nocturne du genou',options:[['Aucune',0],['Seulement aux mouvements ou selon la position',1],['Même immobile',2]]},
+    {id:'lg2',text:'Dérouillage matinal ou après repos',options:[['Aucun ou < 1 minute',0],['1 à 15 minutes',1],['> 15 minutes',2]]},
+    {id:'lg3',text:'Douleur après station debout ou piétinement 30 minutes',options:[['Non',0],['Oui',1]]},
+    {id:'lg4',text:'Douleur à la marche',options:[['Aucune',0],['Seulement après une certaine distance',1],['Dès le début puis augmente',2]]},
+    {id:'lg5',text:'Douleur ou gêne en position assise prolongée puis au lever',options:[['Non',0],['Oui',1]]},
+    {id:'lg6',text:'Périmètre de marche maximal',options:[['Illimité',0],['> 1 km mais limité',1],['Environ 1 km',2],['500 à 900 m',3],['300 à 500 m',4],['100 à 300 m',5],['< 100 m',6]]},
+    {id:'lg7',text:'Monter un étage',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lg8',text:'Descendre un étage',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lg9',text:'S’accroupir ou se mettre à genoux',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lg10',text:'Marcher sur terrain irrégulier',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+  ],
+  interpret(s){
+    if(s<=4)return{label:`Score ${s}/24 — Handicap modeste`,cls:'ok'};
+    if(s<=7)return{label:`Score ${s}/24 — Handicap moyen`,cls:'warn'};
+    if(s<=10)return{label:`Score ${s}/24 — Handicap important`,cls:'warn'};
+    if(s<=13)return{label:`Score ${s}/24 — Handicap très important`,cls:'danger'};
+    return{label:`Score ${s}/24 — Handicap extrêmement important`,cls:'danger',detail:'À confronter à l’examen, aux radiographies en charge et au projet thérapeutique.'};
+  }
+},
+
+lequesne_hanche:{
+  cat:'pain', icon:'🦴',
+  title:'Indice de Lequesne — Hanche',
+  subtitle:'Coxarthrose — douleur, périmètre de marche et activités quotidiennes',
+  maxScore:24,
+  questions:[
+    {id:'lh1',text:'Douleur ou gêne nocturne de hanche',options:[['Aucune',0],['Seulement aux mouvements ou selon la position',1],['Même immobile',2]]},
+    {id:'lh2',text:'Dérouillage matinal ou après repos',options:[['Aucun ou < 1 minute',0],['1 à 15 minutes',1],['> 15 minutes',2]]},
+    {id:'lh3',text:'Douleur après station debout ou piétinement 30 minutes',options:[['Non',0],['Oui',1]]},
+    {id:'lh4',text:'Douleur à la marche',options:[['Aucune',0],['Seulement après une certaine distance',1],['Dès le début puis augmente',2]]},
+    {id:'lh5',text:'Douleur ou gêne en position assise prolongée puis au lever',options:[['Non',0],['Oui',1]]},
+    {id:'lh6',text:'Périmètre de marche maximal',options:[['Illimité',0],['> 1 km mais limité',1],['Environ 1 km',2],['500 à 900 m',3],['300 à 500 m',4],['100 à 300 m',5],['< 100 m',6]]},
+    {id:'lh7',text:'Enfiler chaussettes ou bas',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lh8',text:'Ramasser un objet au sol',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lh9',text:'Monter / descendre un étage',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+    {id:'lh10',text:'Entrer ou sortir d’une voiture',options:[['Sans difficulté',0],['Difficulté légère',0.5],['Difficulté moyenne',1],['Très difficile ou impossible',2]]},
+  ],
+  interpret(s){
+    if(s<=4)return{label:`Score ${s}/24 — Handicap modeste`,cls:'ok'};
+    if(s<=7)return{label:`Score ${s}/24 — Handicap moyen`,cls:'warn'};
+    if(s<=10)return{label:`Score ${s}/24 — Handicap important`,cls:'warn'};
+    if(s<=13)return{label:`Score ${s}/24 — Handicap très important`,cls:'danger'};
+    return{label:`Score ${s}/24 — Handicap extrêmement important`,cls:'danger',detail:'À confronter à l’examen, aux radiographies du bassin/hanche et au projet thérapeutique.'};
+  }
+},
+
+rmqd:{
+  cat:'pain', icon:'🧍',
+  title:'RMQD — Roland-Morris (version courte, 12 items)',
+  subtitle:'Retentissement fonctionnel d’une lombalgie — version courte de repérage',
+  maxScore:12,
+  questions:[
+    {id:'rm1',text:'Je reste plus souvent à la maison à cause de mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm2',text:'Je change souvent de position pour soulager mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm3',text:'Je marche plus lentement que d’habitude à cause de mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm4',text:'Je ne fais plus certaines tâches domestiques habituelles',options:[['Non',0],['Oui',1]]},
+    {id:'rm5',text:'J’utilise une rampe ou un appui pour monter les escaliers',options:[['Non',0],['Oui',1]]},
+    {id:'rm6',text:'Je m’allonge plus souvent pour me reposer le dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm7',text:'Je dois m’asseoir pour m’habiller',options:[['Non',0],['Oui',1]]},
+    {id:'rm8',text:'Je marche seulement sur de courtes distances',options:[['Non',0],['Oui',1]]},
+    {id:'rm9',text:'Je dors moins bien à cause de mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm10',text:'Je demande plus d’aide aux autres à cause de mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm11',text:'Je reste assis(e) une grande partie de la journée à cause de mon dos',options:[['Non',0],['Oui',1]]},
+    {id:'rm12',text:'Je suis plus irritable ou gêné(e) dans ma vie quotidienne à cause de mon dos',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=3)return{label:`Score ${s}/12 — Retentissement faible`,cls:'ok'};
+    if(s<=7)return{label:`Score ${s}/12 — Retentissement modéré`,cls:'warn'};
+    return{label:`Score ${s}/12 — Retentissement important`,cls:'danger',detail:'Version courte de travail : si besoin médico-légal ou suivi standardisé, utiliser le RMQD complet 24 items.'};
+  }
+},
+
+// ─── NUTRITION / GÉRIATRIE ───
+mna_sf:{
+  cat:'nutri', icon:'🥗',
+  title:'MNA-SF — Mini Nutritional Assessment',
+  subtitle:'Dépistage de la dénutrition chez la personne âgée',
+  maxScore:14,
+  questions:[
+    {id:'mn1',text:'Diminution des apports alimentaires sur les 3 derniers mois',options:[['Sévère',0],['Modérée',1],['Aucune',2]]},
+    {id:'mn2',text:'Perte de poids récente',options:[['>3 kg',0],['Ne sait pas',1],['1 à 3 kg',2],['Pas de perte de poids',3]]},
+    {id:'mn3',text:'Motricité',options:[['Lit/fauteuil',0],['Autonome à l’intérieur',1],['Sort du domicile',2]]},
+    {id:'mn4',text:'Maladie aiguë ou stress psychologique dans les 3 derniers mois',options:[['Oui',0],['Non',2]]},
+    {id:'mn5',text:'Troubles neuropsychologiques',options:[['Démence ou dépression sévère',0],['Démence légère',1],['Aucun',2]]},
+    {id:'mn6',text:'IMC ou circonférence du mollet si IMC impossible',options:[['IMC <19 ou mollet <31 cm',0],['IMC 19-21',1],['IMC 21-23',2],['IMC ≥23',3]]},
+  ],
+  interpret(s){
+    if(s>=12)return{label:`Score ${s}/14 — État nutritionnel normal`,cls:'ok'};
+    if(s>=8)return{label:`Score ${s}/14 — Risque de dénutrition`,cls:'warn'};
+    return{label:`Score ${s}/14 — Dénutrition probable`,cls:'danger',detail:'Bilan nutritionnel, poids, albumine/CRP selon contexte, apports protéiques, aide repas et suivi rapproché.'};
+  }
+},
+
+// ─── ORL / SENSORIEL ───
+thi:{
+  cat:'orl', icon:'👂',
+  title:'THI — Tinnitus Handicap Inventory',
+  subtitle:'Retentissement des acouphènes — version clinique simplifiée',
+  maxScore:100,
+  questions:[
+    {id:'th1',text:'Vos acouphènes vous empêchent-ils de vous concentrer ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th2',text:'Le volume des acouphènes rend-il difficile d’entendre les autres ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th3',text:'Vos acouphènes vous mettent-ils en colère ou vous irritent-ils ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th4',text:'Vos acouphènes perturbent-ils votre sommeil ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th5',text:'Vos acouphènes vous rendent-ils anxieux(se) ou déprimé(e) ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th6',text:'Vos acouphènes gênent-ils vos activités sociales ou familiales ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th7',text:'Avez-vous le sentiment de ne pas pouvoir contrôler vos acouphènes ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th8',text:'Vos acouphènes rendent-ils difficile la détente ou le repos ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th9',text:'Vos acouphènes perturbent-ils votre travail ou vos tâches quotidiennes ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+    {id:'th10',text:'Globalement, les acouphènes représentent-ils un handicap important ?',options:[['Non',0],['Parfois',2],['Oui',4]]},
+  ],
+  interpret(s){
+    const score=Math.round(s*2.5); // conversion version courte 10 items vers /100
+    if(score<=16)return{label:`Score estimé ${score}/100 — Handicap léger`,cls:'ok',score,maxScore:100};
+    if(score<=56)return{label:`Score estimé ${score}/100 — Handicap modéré`,cls:'warn',score,maxScore:100};
+    return{label:`Score estimé ${score}/100 — Handicap sévère`,cls:'danger',score,maxScore:100,detail:'Audiogramme, recherche drapeaux rouges ORL/neurologiques et prise en charge spécialisée selon contexte.'};
+  }
+},
+
+brocker_aqrd:{
+  cat:'mem', icon:'👴',
+  title:'Brocker / AQRD — Dépendance et risque gériatrique',
+  subtitle:'Repérage rapide de fragilité fonctionnelle chez le sujet âgé',
+  maxScore:8,
+  questions:[
+    {id:'aq1',text:'Chute dans les 6 derniers mois',options:[['Non',0],['Oui',1]]},
+    {id:'aq2',text:'Trouble de la marche ou de l’équilibre',options:[['Non',0],['Oui',1]]},
+    {id:'aq3',text:'Perte d’autonomie récente pour les activités quotidiennes',options:[['Non',0],['Oui',1]]},
+    {id:'aq4',text:'Trouble cognitif ou plainte mnésique significative',options:[['Non',0],['Oui',1]]},
+    {id:'aq5',text:'Isolement social ou aidant épuisé',options:[['Non',0],['Oui',1]]},
+    {id:'aq6',text:'Polymédication ou problème d’observance',options:[['Non',0],['Oui',1]]},
+    {id:'aq7',text:'Dénutrition, amaigrissement ou anorexie',options:[['Non',0],['Oui',1]]},
+    {id:'aq8',text:'Hospitalisation ou passage aux urgences récent',options:[['Non',0],['Oui',1]]},
+  ],
+  interpret(s){
+    if(s<=1)return{label:`Score ${s}/8 — Risque gériatrique faible`,cls:'ok'};
+    if(s<=3)return{label:`Score ${s}/8 — Fragilité possible`,cls:'warn'};
+    return{label:`Score ${s}/8 — Risque gériatrique élevé`,cls:'danger',detail:'Évaluation gériatrique, aides à domicile, prévention chute, iatrogénie et coordination à discuter.'};
+  }
+},
+
+dutch_score:{
+  cat:'urgent', icon:'🧬',
+  title:'Score de Dutch — Hypercholestérolémie familiale',
+  subtitle:'Dépistage clinique simplifié d’hypercholestérolémie familiale',
+  maxScore:18,
+  questions:[
+    {id:'du1',text:'Antécédent familial de maladie coronaire précoce ou LDL élevé',options:[['Non',0],['Oui',1]]},
+    {id:'du2',text:'Antécédent personnel de maladie coronaire précoce',options:[['Non',0],['Oui',2]]},
+    {id:'du3',text:'Antécédent personnel d’atteinte vasculaire précoce cérébrale/périphérique',options:[['Non',0],['Oui',1]]},
+    {id:'du4',text:'Xanthomes tendineux',options:[['Non',0],['Oui',6]]},
+    {id:'du5',text:'Arc cornéen avant 45 ans',options:[['Non',0],['Oui',4]]},
+    {id:'du6',text:'LDL-cholestérol maximal connu',options:[['< 1,55 g/L (<4 mmol/L)',0],['1,55–1,89 g/L',1],['1,90–2,49 g/L',3],['2,50–3,29 g/L',5],['≥ 3,30 g/L',8]]},
+    {id:'du7',text:'Mutation génétique LDLR/APOB/PCSK9 connue',options:[['Non / non recherchée',0],['Oui',8]]},
+  ],
+  interpret(s){
+    if(s<=2)return{label:`Score ${s} — HF peu probable`,cls:'ok'};
+    if(s<=5)return{label:`Score ${s} — HF possible`,cls:'warn'};
+    if(s<=8)return{label:`Score ${s} — HF probable`,cls:'danger'};
+    return{label:`Score ${s} — HF certaine`,cls:'danger',detail:'Avis lipidologue/cardiologue, dépistage familial en cascade et traitement intensif à discuter.'};
+  }
+},
+
+// ─── PRÉVENTION ───
+prev25:{
+  cat:'prev', icon:'🌱',
+  title:'Bilan de Prévention — 18-25 ans',
+  subtitle:'Questionnaire officiel (47 items) — Mon Bilan Prévention',
+  maxScore:null, ageMin:18, ageMax:30,
+  note:'Auto-questionnaire à compléter avant le rendez-vous avec le professionnel de santé. Pour mémoire — apporter ordonnances, carnet de vaccination, dernières analyses si possible.',
+  questions:[
+    // ─── Section 1 : Situation personnelle, environnement social et familial ───
+    {id:'b25_1',text:'1. SITUATION — Vous êtes :',options:[['Une femme',0],['Un homme',0],['Autre',0]]},
+    {id:'b25_2',text:'2. Vous êtes ?',options:[['En études',0],['En emploi',0],['À la recherche d\'un emploi',1],['En cumul étude-emploi',0],['Autre',0]]},
+    {id:'b25_3',text:'3. Vous habitez :',options:[['Seul(e)',1],['Chez vos parents',0],['En couple',0],['Avec d\'autres personnes (amis, colocataires…)',0]]},
+    {id:'b25_4',text:'4. Avez-vous un ou plusieurs enfants ?',options:[['Oui',0],['Non',0]]},
+    {id:'b25_5',text:'5. Si oui, êtes-vous seul(e) pour l\'élever ou les élever ?',options:[['Oui',1],['Non',0],['Non concerné(e)',0]]},
+    {id:'b25_6',text:'6. Envisagez-vous d\'avoir un enfant dans les 5 prochaines années ?',options:[['Oui',0],['Non',0],['Je ne sais pas',0]]},
+    {id:'b25_7',text:'7. Assumez-vous un rôle d\'aidant ?',sub:'Aider une personne (adolescente ou adulte) régulièrement en raison de son âge, maladie ou handicap',options:[['Oui',1],['Non',0]]},
+    {id:'b25_8',text:'8. En cas de besoin, pouvez-vous compter sur une personne de votre entourage ?',options:[['Oui',0],['Non',1]]},
+    {id:'b25_9',text:'9. Jugez-vous vos conditions de vie, de travail ou d\'étude difficiles/pénibles ?',options:[['Oui',1],['Non',0]]},
+
+    // ─── Section 2 : Antécédents personnels et familiaux ───
+    {id:'b25_10',text:'10. ANTÉCÉDENTS — Avez-vous ou avez-vous eu une de ces maladies ?',sub:'Diabète, maladie congénitale, allergies, cancers, maladies respiratoires (asthme), dépression / troubles anxieux / TCA, autre',options:[['Aucune',0],['Une maladie listée',1],['Plusieurs maladies listées',2]]},
+    {id:'b25_11',text:'11. Avez-vous déjà été hospitalisé(e) ?',options:[['Oui',1],['Non',0]]},
+    {id:'b25_12',text:'12. À quand remonte votre dernière prise de sang et/ou analyse d\'urine ?',sub:'Apporter les résultats si possible',options:[['Moins de 6 mois',0],['Plus de 6 mois',1],['Jamais réalisée',2]]},
+    {id:'b25_13',text:'13. Antécédents familiaux — Personnes de votre famille proche atteintes de maladies connues ?',sub:'Diabète, hypertension, cancer, infarctus, mort subite, hypercholestérolémie familiale…',options:[['Oui',1],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 3 : État de santé actuel ───
+    {id:'b25_14',text:'14. ÉTAT DE SANTÉ — Suivez-vous actuellement un traitement ?',options:[['Oui',1],['Non',0]]},
+    {id:'b25_15',text:'15. Taille — Comment vous situez-vous ?',sub:'À renseigner précisément lors de la consultation',options:[['< 1m60',0],['1m60 - 1m75',0],['> 1m75',0]]},
+    {id:'b25_16',text:'16. Poids — Comment vous situez-vous ?',sub:'À renseigner précisément lors de la consultation',options:[['< 60 kg',0],['60-80 kg',0],['80-100 kg',0],['> 100 kg',0]]},
+    {id:'b25_17',text:'17. Avez-vous constaté une variation de votre poids lors des 6 derniers mois ?',options:[['Oui, un amaigrissement',2],['Oui, une prise de poids',1],['Non',0]]},
+    {id:'b25_18',text:'18. Diriez-vous que la nourriture occupe une place très importante dans votre vie ?',options:[['Oui',1],['Non',0]]},
+    {id:'b25_19',text:'19. Avez-vous l\'impression de voir moins bien (lecture, vision de loin) ?',options:[['Oui',1],['Non',0]]},
+    {id:'b25_20',text:'20. Êtes-vous allé(e) chez le dentiste dans les 12 derniers mois ?',options:[['Oui',0],['Non',1]]},
+
+    // ─── Section 4 : Activité physique, sédentarité, alimentation ───
+    {id:'b25_21',text:'21. ACTIVITÉ PHYSIQUE — Combien de fois par semaine faites-vous au moins 30 min d\'activité physique ?',sub:'Marche, ménage, jogging, vélo, activité professionnelle, sport…',options:[['Jamais',3],['1 à 2 fois / semaine',2],['3 à 4 fois / semaine',1],['5 à 7 fois / semaine',0]]},
+    {id:'b25_22',text:'22. ALIMENTATION — Consommation de fruits et légumes :',options:[['Au moins 5 portions par jour',0],['Entre 1 et 4 portions par jour',1],['De temps en temps',2],['Rarement',2],['Jamais',3]]},
+    {id:'b25_23',text:'23. À quelle fréquence consommez-vous des aliments gras/sucrés/salés ?',sub:'Charcuterie, soda, bonbons, pâtisseries, chips, fast-food, glaces',options:[['Plusieurs fois par jour',3],['Plusieurs fois par semaine',2],['1 fois par semaine',1],['1 fois par mois',0],['Jamais',0]]},
+    {id:'b25_24',text:'24. SÉDENTARITÉ — Combien de temps par jour passez-vous assis(e) ou allongé(e) hors sommeil ?',options:[['Moins de 2 heures',0],['Entre 2 et 4 heures',1],['Entre 4 et 7 heures',2],['Plus de 7 heures',3],['Je ne sais pas',1]]},
+    {id:'b25_25',text:'25. ÉCRANS — Temps quotidien devant un écran (hors études/travail) ?',sub:'Téléphone, télé, jeux vidéo, ordinateur',options:[['Moins d\'1 heure',0],['Entre 1 et 2 heures',1],['Entre 2 et 4 heures',2],['Plus de 4 heures',3],['Je ne sais pas',1]]},
+
+    // ─── Section 5 : Vaccins, dépistages et santé sexuelle ───
+    {id:'b25_26',text:'26. VACCINATIONS — Êtes-vous à jour de vos vaccins et rappels ?',sub:'Apporter le carnet de vaccination si possible',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b25_27',text:'27. Êtes-vous vacciné(e) contre les papillomavirus humains (HPV) ?',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b25_28',text:'28. Si vous avez 25 ans, avez-vous réalisé un frottis de dépistage du cancer du col de l\'utérus ?',options:[['Oui',0],['Non',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b25_29',text:'29. Êtes-vous allée chez le gynécologue dans les 12 derniers mois ?',options:[['Oui',0],['Non',1],['Non concerné(e)',0]]},
+    {id:'b25_30',text:'30. Utilisez-vous un moyen de contraception ?',options:[['Oui',0],['Non',1],['Non concerné(e)',0]]},
+    {id:'b25_31',text:'31. Avez-vous des douleurs intenses au bas-ventre au moment des règles ?',options:[['Oui',1],['Non',0],['Non concerné(e)',0]]},
+    {id:'b25_32',text:'32. Avez-vous déjà réalisé un dépistage des IST ?',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b25_33',text:'33. Êtes-vous dans une de ces situations ?',sub:'Plus d\'un partenaire dans les 12 derniers mois / Souhait d\'arrêter le préservatif avec nouveau partenaire / Partenaire avec IST diagnostiquée',options:[['Au moins une de ces situations',2],['Rapports sexuels mais aucune de ces situations',0],['Non concerné(e)',0]]},
+
+    // ─── Section 6 : Conduites addictives ───
+    {id:'b25_34',text:'34. ALCOOL — Au cours de l\'année écoulée :',options:[['Vous buvez plus de 2 verres standards par jour',2],['Vous buvez plus de 10 verres standards par semaine',2],['Vous ne buvez pas d\'alcool au moins 2 jours / semaine',1],['Aucune des situations ci-dessus',0]]},
+    {id:'b25_35',text:'35. Vous arrive-t-il de consommer rapidement une grande quantité d\'alcool pour vous enivrer (binge drinking) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b25_36',text:'36. TABAC — Actuellement, fumez-vous ou vapotez-vous ?',sub:'Cigarette, tabac à rouler, cigare, pipe, chicha, narguilé, vape',options:[['Oui, je fume',3],['Oui, je vapote',1],['Non',0],['J\'ai arrêté',1]]},
+    {id:'b25_37',text:'37. AUTRES SUBSTANCES — Au cours des 12 derniers mois ?',sub:'Cannabis, autres drogues, protoxyde d\'azote',options:[['Oui, du cannabis',2],['Oui, d\'autres drogues',3],['Oui, du protoxyde d\'azote',2],['Non',0]]},
+    {id:'b25_38',text:'38. JEUX — Avez-vous misé de l\'argent (loterie, poker, paris sportifs/hippiques…) ?',options:[['Oui, souvent',3],['Oui, de temps en temps',2],['Oui, rarement',1],['Non',0]]},
+
+    // ─── Section 7 : Santé et bien-être mental, violences ───
+    {id:'b25_39',text:'39. SOMMEIL — Avez-vous des problèmes de sommeil ?',options:[['Oui, souvent',3],['Oui, parfois',2],['Non',0],['Vous prenez des somnifères',2]]},
+    {id:'b25_40',text:'40. Concernant le sommeil, en moyenne vous dormez :',options:[['Moins de 6h par nuit',2],['Entre 6h et 10h par nuit',0],['10h ou plus par nuit',1]]},
+    {id:'b25_41',text:'41. ANXIÉTÉ — Au cours des 2 dernières semaines, sentiment de nervosité, anxiété ou tension ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b25_42',text:'42. Au cours des 2 dernières semaines, incapacité d\'arrêter ou contrôler vos inquiétudes ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b25_43',text:'43. DÉPRESSION — Au cours des 2 dernières semaines, peu d\'intérêt ou de plaisir à faire les choses ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b25_44',text:'44. Au cours des 2 dernières semaines, sentiment de tristesse, déprime ou désespoir ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b25_45',text:'45. Avez-vous déjà eu des idées noires/suicidaires ou fait une tentative de suicide ?',options:[['Oui, des idées noires/suicidaires',3],['Oui, une ou plusieurs tentatives de suicide',4],['Non',0]]},
+    {id:'b25_46',text:'46. VIOLENCES — Avez-vous déjà été victime de violences physiques, sexuelles ou psychiques ?',sub:'Menaces, chantage, humiliations, coups, mutilations, harcèlements, discriminations, soumission chimique (GHB…)',options:[['Oui',3],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 8 : Priorités du Bilan ───
+    {id:'b25_47',text:'47. PRIORITÉS — Quel(s) sujet(s) souhaitez-vous aborder en priorité avec le professionnel de santé ?',sub:'À cocher selon la principale priorité du patient',options:[['Mieux dormir',0],['Améliorer alimentation et bouger plus',0],['Réduire / arrêter le tabac',0],['Réduire / arrêter l\'alcool',0],['Améliorer bien-être mental, réduire stress / anxiété',0],['Passer moins de temps devant les écrans',0],['Mieux m\'informer sur les dépistages',0]]},
+  ],
+  interpret(s){
+    if(s<8)return{label:`Score de risque global : ${s} pts — Faible`,cls:'ok',detail:'Profil de risque faible. Maintenir les bonnes habitudes et le suivi médical régulier.'};
+    if(s<18)return{label:`Score de risque global : ${s} pts — Modéré`,cls:'warn',detail:'Plusieurs facteurs à discuter avec le professionnel de santé. Identifier les priorités d\'amélioration.'};
+    return{label:`Score de risque global : ${s} pts — Élevé`,cls:'danger',detail:'Plusieurs facteurs de risque cumulés. Prise en charge ciblée recommandée.'};
+  }
+},
+
+prev45:{
+  cat:'prev', icon:'❤️',
+  title:'Bilan de Prévention — 45-50 ans',
+  subtitle:'Questionnaire officiel (46 items) — Mon Bilan Prévention',
+  maxScore:null, ageMin:40, ageMax:55,
+  note:'Auto-questionnaire à compléter avant le rendez-vous. Apporter ordonnances, carnet de vaccination, dernières analyses et résultats de dépistage si possible.',
+  questions:[
+    // ─── Section 1 : Situation personnelle, environnement social et familial ───
+    {id:'b45_1',text:'1. SITUATION — Vous êtes :',options:[['Une femme',0],['Un homme',0],['Autre',0]]},
+    {id:'b45_2',text:'2. Avez-vous un ou plusieurs enfants à la maison ?',options:[['Oui',0],['Non',0]]},
+    {id:'b45_3',text:'3. Si oui, les élevez-vous seul(e) ?',options:[['Oui',1],['Non',0],['Non concerné(e)',0]]},
+    {id:'b45_4',text:'4. Assumez-vous un rôle d\'aidant ?',sub:'Aider une personne régulièrement en raison de son âge, maladie ou handicap',options:[['Oui',1],['Non',0]]},
+    {id:'b45_5',text:'5. En cas de besoin, pouvez-vous compter sur une personne de votre entourage ?',options:[['Oui',0],['Non',1]]},
+    {id:'b45_6',text:'6. Vos conditions de vie et/ou de travail sont-elles difficiles/pénibles ?',options:[['Oui',1],['Non',0]]},
+
+    // ─── Section 2 : Antécédents personnels et familiaux ───
+    {id:'b45_7',text:'7. ANTÉCÉDENTS — Avez-vous ou avez-vous eu une de ces maladies ou facteurs de risque ?',sub:'HTA, diabète, cholestérol élevé · Maladies CV (infarctus, AVC…) · Cancers · Maladies respiratoires (asthme, BPCO) · MICI (Crohn, RCH) · Autre',options:[['Aucune',0],['Une maladie listée',2],['Plusieurs maladies listées',3]]},
+    {id:'b45_8',text:'8. À quand remonte votre dernière prise de sang et/ou analyse d\'urine ?',sub:'Apporter les résultats si possible',options:[['Moins de 6 mois',0],['Plus de 6 mois',2]]},
+    {id:'b45_9',text:'9. ANTÉCÉDENTS FAMILIAUX — Personnes de votre famille proche atteintes de maladies connues ?',sub:'Diabète, hypertension, cancer, infarctus, mort subite, hypercholestérolémie familiale, fracture du col du fémur…',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 3 : État de santé actuel ───
+    {id:'b45_10',text:'10. ÉTAT DE SANTÉ — Suivez-vous actuellement un traitement ?',sub:'Apporter les ordonnances si possible',options:[['Oui',1],['Non',0]]},
+    {id:'b45_11',text:'11. Taille — À renseigner précisément lors de la consultation',options:[['< 1m60',0],['1m60 - 1m75',0],['> 1m75',0]]},
+    {id:'b45_12',text:'12. Poids — À renseigner précisément lors de la consultation',options:[['< 60 kg',0],['60-80 kg',0],['80-100 kg',0],['> 100 kg',1]]},
+    {id:'b45_13',text:'13. Avez-vous constaté une variation de votre poids lors des 6 derniers mois ?',options:[['Oui, un amaigrissement',2],['Oui, une prise de poids',1],['Non',0]]},
+    {id:'b45_14',text:'14. Avez-vous observé des gonflements importants ou inhabituels des chevilles ou des jambes ?',options:[['Oui',2],['Non',0]]},
+    {id:'b45_15',text:'15. Toussez-vous souvent (tous les jours) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b45_16',text:'16. Avez-vous souvent une toux grasse ou qui ramène des crachats ?',options:[['Oui',2],['Non',0]]},
+    {id:'b45_17',text:'17. Êtes-vous plus facilement essoufflé(e) que les personnes de votre âge ?',options:[['Oui',2],['Non',0]]},
+    {id:'b45_18',text:'18. Faites-vous des pauses respiratoires ou des ronflements importants pendant le sommeil (notamment constatés par votre entourage) ?',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+    {id:'b45_19',text:'19. MÉNOPAUSE — Souhaitez-vous aborder les symptômes de la ménopause ?',sub:'Bouffées de chaleur, troubles du sommeil, sécheresse vaginale, troubles urinaires, fatigue, anxiété, irritabilité',options:[['Oui',1],['Non',0],['Je suis déjà ménopausée',0],['Non concerné(e)',0]]},
+    {id:'b45_20',text:'20. Êtes-vous allé(e) chez le dentiste dans les 12 derniers mois ?',options:[['Oui',0],['Non',1]]},
+    {id:'b45_21',text:'21. Avez-vous l\'impression de voir moins bien (lecture, vision de loin) ?',options:[['Oui',1],['Non',0]]},
+    {id:'b45_22',text:'22. Avez-vous l\'impression d\'entendre moins bien (ou votre entourage le constate) ?',options:[['Oui',1],['Non',0]]},
+    {id:'b45_23',text:'23. TMS — Avez-vous eu, dans les 12 derniers mois, des problèmes (courbatures, douleurs, inconfort) au cou, dos, épaules ou mains qui impactent votre vie quotidienne ?',options:[['Oui',2],['Non',0]]},
+
+    // ─── Section 4 : Activité physique, sédentarité, alimentation ───
+    {id:'b45_24',text:'24. ACTIVITÉ PHYSIQUE — Combien de fois par semaine au moins 30 min d\'activité physique dynamique ?',sub:'Marche, ménage, jogging, vélo, profession, sport',options:[['Jamais',3],['1 à 2 fois / semaine',2],['3 à 4 fois / semaine',1],['5 à 7 fois / semaine',0]]},
+    {id:'b45_25',text:'25. ALIMENTATION — Consommation de fruits et légumes :',options:[['Au moins 5 portions par jour',0],['Entre 1 et 4 portions par jour',1],['De temps en temps',2],['Rarement',2],['Jamais',3]]},
+    {id:'b45_26',text:'26. À quelle fréquence consommez-vous des aliments gras/sucrés/salés ?',sub:'Charcuterie, soda, bonbons, pâtisseries, chips, fast-food, glaces',options:[['Plusieurs fois par jour',3],['Plusieurs fois par semaine',2],['1 fois par semaine',1],['1 fois par mois',0],['Jamais',0]]},
+    {id:'b45_27',text:'27. SÉDENTARITÉ — Combien de temps par jour passez-vous assis(e) ou allongé(e) hors sommeil ?',options:[['Moins de 2 heures',0],['Entre 2 et 4 heures',1],['Entre 4 et 7 heures',2],['Plus de 7 heures',3],['Je ne sais pas',1]]},
+    {id:'b45_28',text:'28. ÉCRANS — Temps quotidien devant un écran (hors travail) ?',sub:'Téléphone, télé, ordinateur',options:[['Moins d\'1 heure',0],['Entre 1 et 2 heures',1],['Entre 2 et 4 heures',2],['Plus de 4 heures',3],['Je ne sais pas',1]]},
+
+    // ─── Section 5 : Vaccins, dépistages et santé sexuelle ───
+    {id:'b45_29',text:'29. VACCINATIONS — Êtes-vous à jour de vos vaccins et rappels ?',sub:'Apporter le carnet de vaccination si possible',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b45_30',text:'30. DÉPISTAGES — Avez-vous réalisé un test de dépistage du cancer colorectal et/ou une mammographie ?',sub:'Apporter les résultats si possible',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b45_31',text:'31. Avez-vous réalisé un frottis de dépistage du cancer du col de l\'utérus ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 5 ans',0],['Oui, il y a plus de 5 ans',2],['Non, jamais',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b45_32',text:'32. SITUATIONS À RISQUE — Êtes-vous dans une de ces situations ?',sub:'Plus d\'un partenaire dans les 12 derniers mois / Souhait d\'arrêter le préservatif avec nouveau partenaire / Partenaire avec IST diagnostiquée',options:[['Au moins une de ces situations',2],['Rapports sexuels mais aucune de ces situations',0],['Non concerné(e)',0]]},
+
+    // ─── Section 6 : Conduites addictives ───
+    {id:'b45_33',text:'33. ALCOOL — Au cours de l\'année écoulée :',options:[['Vous buvez plus de 2 verres standards par jour',2],['Vous buvez plus de 10 verres standards par semaine',2],['Vous ne buvez pas d\'alcool au moins 2 jours / semaine',1],['Aucune des situations ci-dessus',0]]},
+    {id:'b45_34',text:'34. TABAC — Actuellement, fumez-vous ou vapotez-vous ?',sub:'Cigarette, tabac à rouler, cigare, pipe, chicha, narguilé, vape',options:[['Oui, je fume',3],['Oui, je vapote',1],['J\'ai arrêté',1],['Non',0]]},
+    {id:'b45_35',text:'35. Si vous avez arrêté de fumer, depuis combien de temps ?',options:[['Moins d\'1 an',1],['Entre 1 an et 5 ans',1],['Plus de 5 ans',0],['Non concerné(e)',0]]},
+    {id:'b45_36',text:'36. AUTRES SUBSTANCES — Au cours des 12 derniers mois ?',sub:'Cannabis ou autres drogues',options:[['Oui, du cannabis',2],['Oui, d\'autres drogues',3],['Non',0]]},
+    {id:'b45_37',text:'37. JEUX — Avez-vous misé de l\'argent (loterie, poker, paris sportifs/hippiques…) ?',options:[['Oui, souvent',3],['Oui, de temps en temps',2],['Oui, rarement',1],['Non',0]]},
+
+    // ─── Section 7 : Santé et bien-être mental, violences ───
+    {id:'b45_38',text:'38. SOMMEIL — Avez-vous des problèmes de sommeil ?',options:[['Oui, souvent',3],['Oui, parfois',2],['Non',0],['Vous prenez des somnifères',2]]},
+    {id:'b45_39',text:'39. Concernant le sommeil, en moyenne vous dormez :',options:[['Moins de 6h par nuit',2],['Entre 6h et 10h par nuit',0],['10h ou plus par nuit',1]]},
+    {id:'b45_40',text:'40. ANXIÉTÉ — Au cours des 2 dernières semaines, sentiment de nervosité, anxiété ou tension ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b45_41',text:'41. Au cours des 2 dernières semaines, incapacité d\'arrêter ou contrôler vos inquiétudes ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b45_42',text:'42. DÉPRESSION — Au cours des 2 dernières semaines, peu d\'intérêt ou de plaisir à faire les choses ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b45_43',text:'43. Au cours des 2 dernières semaines, sentiment de tristesse, déprime ou désespoir ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b45_44',text:'44. Avez-vous déjà eu des idées noires/suicidaires ou fait une tentative de suicide ?',options:[['Oui, des idées noires/suicidaires',3],['Oui, une ou plusieurs tentatives de suicide',4],['Non',0]]},
+    {id:'b45_45',text:'45. VIOLENCES — Avez-vous déjà été victime de violences physiques, sexuelles ou psychiques ?',sub:'Menaces, chantage, humiliations, coups, mutilations, harcèlements, discriminations',options:[['Oui',3],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 8 : Priorités du Bilan ───
+    {id:'b45_46',text:'46. PRIORITÉS — Quel(s) sujet(s) souhaitez-vous aborder en priorité avec le professionnel de santé ?',sub:'Cocher le sujet principal',options:[['Améliorer alimentation et bouger plus',0],['Réduire / arrêter le tabac',0],['Réduire / arrêter l\'alcool',0],['Améliorer bien-être mental, réduire stress / anxiété',0],['Mieux comprendre et prévenir les effets de la ménopause',0],['Passer moins de temps devant les écrans',0],['Mieux m\'informer sur les dépistages',0]]},
+  ],
+  interpret(s){
+    if(s<10)return{label:`Score de risque global : ${s} pts — Faible`,cls:'ok',detail:'Profil de risque faible. Maintenir les bonnes habitudes et le suivi médical régulier.'};
+    if(s<22)return{label:`Score de risque global : ${s} pts — Modéré`,cls:'warn',detail:'Plusieurs facteurs à discuter avec le professionnel. Identifier les priorités d\'amélioration (CV, métabolique, dépistages).'};
+    return{label:`Score de risque global : ${s} pts — Élevé`,cls:'danger',detail:'Plusieurs facteurs de risque cumulés. Prise en charge ciblée recommandée — possible bilan CV / oncologique approfondi.'};
+  }
+},
+
+prev60:{
+  cat:'prev', icon:'🛡️',
+  title:'Bilan de Prévention — 60-65 ans',
+  subtitle:'Questionnaire officiel (51 items) — Mon Bilan Prévention',
+  maxScore:null, ageMin:58, ageMax:69,
+  note:'Auto-questionnaire à compléter avant le rendez-vous. Apporter ordonnances, carnet de vaccination, dernières analyses et résultats de dépistage si possible.',
+  questions:[
+    // ─── Section 1 : Situation personnelle, environnement social et familial ───
+    {id:'b60_1',text:'1. SITUATION — Vous êtes :',options:[['Une femme',0],['Un homme',0],['Autre',0]]},
+    {id:'b60_2',text:'2. Assumez-vous un rôle d\'aidant ?',sub:'Aider une personne régulièrement en raison de son âge, maladie ou handicap',options:[['Oui',1],['Non',0]]},
+    {id:'b60_3',text:'3. En cas de besoin, pouvez-vous compter sur une personne de votre entourage ?',options:[['Oui',0],['Non',2]]},
+    {id:'b60_4',text:'4. ISOLEMENT — Au cours des 6 derniers mois, avez-vous eu des contacts avec des proches (amis, famille) ?',options:[['Oui',0],['Non',3]]},
+
+    // ─── Section 2 : Antécédents personnels et familiaux ───
+    {id:'b60_5',text:'5. ANTÉCÉDENTS — Avez-vous ou avez-vous eu une de ces maladies ou facteurs de risque ?',sub:'HTA, diabète, cholestérol élevé · Maladies CV (infarctus, AVC…) · Cancers · Arthrose ou maladie rhumatismale · Fractures vertèbre/col fémur ou ostéoporose · Autre',options:[['Aucune',0],['Une maladie listée',2],['Plusieurs maladies listées',3]]},
+    {id:'b60_6',text:'6. À quand remonte votre dernière prise de sang et/ou analyse d\'urine ?',sub:'Apporter les résultats si possible',options:[['Moins de 6 mois',0],['Plus de 6 mois',2]]},
+    {id:'b60_7',text:'7. ANTÉCÉDENTS FAMILIAUX — Personnes de votre famille proche atteintes de maladies connues ?',sub:'Diabète, hypertension, cancer, DMLA, maladie d\'Alzheimer, ostéoporose, fracture du col du fémur…',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 3 : État de santé actuel ───
+    {id:'b60_8',text:'8. ÉTAT DE SANTÉ — Suivez-vous actuellement un traitement ?',sub:'Apporter les ordonnances si possible',options:[['Oui',1],['Non',0]]},
+    {id:'b60_9',text:'9. Taille — À renseigner précisément lors de la consultation',options:[['< 1m60',0],['1m60 - 1m75',0],['> 1m75',0]]},
+    {id:'b60_10',text:'10. Poids — À renseigner précisément lors de la consultation',options:[['< 60 kg',1],['60-80 kg',0],['80-100 kg',0],['> 100 kg',1]]},
+    {id:'b60_11',text:'11. Avez-vous constaté une variation de votre poids lors des 6 derniers mois ?',options:[['Oui, un amaigrissement',2],['Oui, une prise de poids',1],['Non',0]]},
+    {id:'b60_12',text:'12. CARDIO — Avez-vous observé des gonflements importants ou inhabituels des chevilles ou des jambes ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_13',text:'13. Vous arrive-t-il d\'avoir des douleurs dans la poitrine notamment lors d\'un effort ?',options:[['Oui',3],['Non',0]]},
+    {id:'b60_14',text:'14. RESPIRATOIRE — Toussez-vous souvent (tous les jours) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_15',text:'15. Avez-vous souvent une toux grasse ou qui ramène des crachats ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_16',text:'16. Êtes-vous plus facilement essoufflé(e) que les personnes de votre âge ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_17',text:'17. Faites-vous des pauses respiratoires ou des ronflements importants pendant le sommeil (notamment constatés par votre entourage) ?',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+    {id:'b60_18',text:'18. MÉNOPAUSE (femmes) — À quel âge avez-vous été ménopausée ?',options:[['Avant 45 ans',1],['45-55 ans',0],['Après 55 ans',0],['Pas encore ménopausée',0],['Non concerné(e)',0]]},
+    {id:'b60_19',text:'19. Êtes-vous allé(e) chez le dentiste dans les 12 derniers mois ?',options:[['Oui',0],['Non',1]]},
+    {id:'b60_20',text:'20. VUE — Avez-vous l\'impression de voir moins bien (lecture, vision de loin) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_21',text:'21. AUDITION — Impression d\'entendre moins bien (ou votre entourage le constate) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_22',text:'22. URO — Êtes-vous sujet à des troubles urinaires ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_23',text:'23. TMS — Dans les 12 derniers mois, problèmes au cou/dos/épaules/mains qui impactent votre vie quotidienne ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_24',text:'24. TRAVAIL — Si encore en activité, vos conditions de travail sont-elles difficiles/pénibles ?',options:[['Oui',1],['Non',0],['Non concerné(e)',0]]},
+    {id:'b60_25',text:'25. MÉMOIRE — Avez-vous la sensation d\'oublier des choses ?',options:[['Oui',2],['Non',0]]},
+    {id:'b60_26',text:'26. AUTONOMIE — Impression d\'avoir plus de difficultés à réaliser vos activités quotidiennes ?',options:[['Oui',3],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 4 : Activité physique, sédentarité, alimentation ───
+    {id:'b60_27',text:'27. ACTIVITÉ PHYSIQUE — Combien de fois par semaine au moins 30 min d\'activité physique dynamique ?',sub:'Marche, ménage, jogging, vélo, jardinage, sport',options:[['Jamais',3],['1 à 2 fois / semaine',2],['3 à 4 fois / semaine',1],['5 à 7 fois / semaine',0]]},
+    {id:'b60_28',text:'28. ALIMENTATION — Consommation de fruits et légumes :',options:[['Au moins 5 portions par jour',0],['Entre 1 et 4 portions par jour',1],['De temps en temps',2],['Rarement',2],['Jamais',3]]},
+    {id:'b60_29',text:'29. À quelle fréquence consommez-vous des aliments gras/sucrés/salés ?',sub:'Charcuterie, soda, bonbons, pâtisseries, chips, fast-food, glaces',options:[['Plusieurs fois par jour',3],['Plusieurs fois par semaine',2],['Une fois par semaine',1],['Une fois par mois',0],['Jamais',0]]},
+    {id:'b60_30',text:'30. SÉDENTARITÉ — Combien de temps par jour passez-vous assis(e) ou allongé(e) hors sommeil ?',options:[['Moins de 2 h',0],['Entre 2 et 4 h',1],['Entre 4 et 7 h',2],['Plus de 7 h',3],['Je ne sais pas',1]]},
+    {id:'b60_31',text:'31. ÉCRANS — Temps quotidien devant un écran (hors travail) ?',sub:'Téléphone, télé, ordinateur',options:[['Moins d\'1 heure',0],['Entre 1 et 2 heures',1],['Entre 2 et 4 heures',2],['Plus de 4 heures',3],['Je ne sais pas',1]]},
+
+    // ─── Section 5 : Vaccins, dépistages, santé sexuelle ───
+    {id:'b60_32',text:'32. VACCINATIONS — Êtes-vous à jour de vos vaccins et rappels ?',sub:'Apporter le carnet de vaccination si possible. À 65 ans : grippe annuelle, zona',options:[['Oui',0],['Non',2],['Je ne sais pas',1]]},
+    {id:'b60_33',text:'33. DÉPISTAGE COLORECTAL — Avez-vous déjà réalisé un test ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 2 ans',0],['Oui, il y a plus de 2 ans',2],['Non, jamais',2],['Je ne sais pas',1]]},
+    {id:'b60_34',text:'34. DÉPISTAGE SEIN (femmes) — Avez-vous déjà réalisé une mammographie ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 2 ans',0],['Oui, il y a plus de 2 ans',2],['Non, jamais',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b60_35',text:'35. DÉPISTAGE COL UTÉRUS (femmes) — Avez-vous déjà réalisé un frottis ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 5 ans',0],['Oui, il y a plus de 5 ans',2],['Non, jamais',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b60_36',text:'36. SITUATIONS À RISQUE — Êtes-vous dans une de ces situations ?',sub:'Plus d\'un partenaire dans les 12 derniers mois / Souhait d\'arrêter le préservatif avec nouveau partenaire / Partenaire avec IST diagnostiquée',options:[['Au moins une de ces situations',2],['Rapports sexuels mais aucune de ces situations',0],['Non concerné(e)',0]]},
+
+    // ─── Section 6 : Conduites addictives ───
+    {id:'b60_37',text:'37. ALCOOL — Au cours de l\'année écoulée :',options:[['Vous buvez plus de 2 verres standards par jour',2],['Vous buvez plus de 10 verres standards par semaine',2],['Vous ne buvez pas d\'alcool au moins 2 jours / semaine',1],['Aucune des situations ci-dessus',0]]},
+    {id:'b60_38',text:'38. TABAC — Actuellement, fumez-vous ou vapotez-vous ?',sub:'Cigarette, tabac à rouler, cigare, pipe, chicha, narguilé, vape',options:[['Oui, je fume',3],['Oui, je vapote',1],['Non',0]]},
+    {id:'b60_39',text:'39. Si vous avez arrêté de fumer, depuis combien de temps ?',options:[['Moins d\'1 an',1],['Entre 1 an et 5 ans',1],['Plus de 5 ans',0],['Non concerné(e)',0]]},
+    {id:'b60_40',text:'40. AUTRES SUBSTANCES — Au cours des 12 derniers mois ?',sub:'Cannabis ou autres drogues',options:[['Oui, du cannabis',2],['Oui, d\'autres drogues',3],['Non',0]]},
+    {id:'b60_41',text:'41. JEUX — Avez-vous misé de l\'argent (loterie, poker, paris sportifs/hippiques…) ?',options:[['Oui, souvent',3],['Oui, de temps en temps',2],['Oui, rarement',1],['Non',0]]},
+
+    // ─── Section 7 : Santé et bien-être mental, violences ───
+    {id:'b60_42',text:'42. RETRAITE — Votre regard sur le fait de passer ou d\'être à la retraite est :',options:[['Très positif',0],['Plutôt positif',0],['Plutôt négatif',2],['Très négatif',3]]},
+    {id:'b60_43',text:'43. À l\'approche de la retraite (ou depuis), envisagez-vous de nouveaux projets ?',sub:'Passe-temps, sorties, associations…',options:[['Oui, déjà mis en place',0],['Oui, prévus mais pas encore concrétisés',1],['Non, je ne sais pas encore',2]]},
+    {id:'b60_44',text:'44. SOMMEIL — Avez-vous des problèmes de sommeil ?',options:[['Oui, souvent',3],['Oui, parfois',2],['Non',0],['Vous prenez des somnifères',2]]},
+    {id:'b60_45',text:'45. Concernant le sommeil, en moyenne vous dormez :',options:[['Moins de 6h par nuit',2],['Entre 6h et 10h par nuit',0],['10h ou plus par nuit',1]]},
+    {id:'b60_46',text:'46. ANXIÉTÉ — Au cours des 2 dernières semaines, sentiment de nervosité, anxiété ou tension ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b60_47',text:'47. Au cours des 2 dernières semaines, incapacité d\'arrêter ou contrôler vos inquiétudes ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b60_48',text:'48. DÉPRESSION — Au cours des 2 dernières semaines, peu d\'intérêt ou de plaisir à faire les choses ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b60_49',text:'49. Au cours des 2 dernières semaines, sentiment de tristesse, déprime ou désespoir ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b60_50',text:'50. Avez-vous déjà eu des idées noires/suicidaires ou fait une tentative de suicide ?',options:[['Oui, des idées noires/suicidaires',3],['Oui, une ou plusieurs tentatives de suicide',4],['Non',0]]},
+    {id:'b60_51',text:'51. VIOLENCES — Avez-vous déjà été victime de violences physiques, sexuelles ou psychiques ?',sub:'Coups, mutilations, menaces, chantage, humiliations, harcèlements, discriminations, soumission chimique',options:[['Oui',3],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 8 : Priorités ───
+    {id:'b60_52',text:'52. PRIORITÉS — Quel(s) sujet(s) souhaitez-vous aborder en priorité avec le professionnel de santé ?',sub:'Cocher le sujet principal',options:[['Mieux dormir',0],['Améliorer alimentation et bouger plus',0],['Réduire / arrêter le tabac',0],['Améliorer bien-être mental, réduire stress / anxiété',0],['Mieux comprendre / prévenir les effets du vieillissement',0],['Mieux m\'informer sur les dépistages',0]]},
+  ],
+  interpret(s){
+    if(s<12)return{label:`Score de risque global : ${s} pts — Faible`,cls:'ok',detail:'Profil de risque faible. Maintenir les bonnes habitudes, le suivi médical régulier et le lien social.'};
+    if(s<25)return{label:`Score de risque global : ${s} pts — Modéré`,cls:'warn',detail:'Plusieurs facteurs à discuter. Identifier les priorités : prévention CV, dépistages, vaccinations, autonomie, lien social.'};
+    return{label:`Score de risque global : ${s} pts — Élevé`,cls:'danger',detail:'Multiples facteurs de risque. Évaluation gériatrique préventive recommandée — bilan CV, oncologique, cognitif et fonctionnel.'};
+  }
+},
+
+prev70:{
+  cat:'prev', icon:'🌟',
+  title:'Bilan de Prévention — 70-75 ans et plus',
+  subtitle:'Questionnaire officiel (52 items) — Mon Bilan Prévention',
+  maxScore:null, ageMin:69, ageMax:150,
+  note:'Auto-questionnaire à compléter avant le rendez-vous. Apporter ordonnances, carnet de vaccination, dernières analyses et résultats de dépistage si possible.',
+  questions:[
+    // ─── Section 1 : Situation personnelle, environnement social et familial ───
+    {id:'b70_1',text:'1. SITUATION — Vous êtes :',options:[['Une femme',0],['Un homme',0],['Autre',0]]},
+    {id:'b70_2',text:'2. Assumez-vous un rôle d\'aidant ?',sub:'Aider une personne régulièrement en raison de son âge, maladie ou handicap',options:[['Oui',1],['Non',0]]},
+    {id:'b70_3',text:'3. En cas de besoin, pouvez-vous compter sur une personne de votre entourage ?',options:[['Oui',0],['Non',3]]},
+    {id:'b70_4',text:'4. ISOLEMENT — Au cours des 6 derniers mois, avez-vous eu des contacts avec des proches (amis, famille) ?',options:[['Oui',0],['Non',3]]},
+
+    // ─── Section 2 : Antécédents personnels et familiaux ───
+    {id:'b70_5',text:'5. ANTÉCÉDENTS — Avez-vous ou avez-vous eu une de ces maladies ou facteurs de risque ?',sub:'HTA, diabète, cholestérol élevé · Maladies CV · Cancers · Maladies respiratoires (asthme, BPCO) · Arthrose ou maladie rhumatismale · Fractures vertèbre/col fémur ou ostéoporose · Autre',options:[['Aucune',0],['Une maladie listée',2],['Plusieurs maladies listées',3]]},
+    {id:'b70_6',text:'6. À quand remonte votre dernière prise de sang et/ou analyse d\'urine ?',sub:'Apporter les résultats si possible',options:[['Moins de 6 mois',0],['Plus de 6 mois',2]]},
+    {id:'b70_7',text:'7. ANTÉCÉDENTS FAMILIAUX — Personnes de votre famille proche atteintes de maladies connues ?',sub:'Diabète, hypertension, cancer, DMLA, maladie d\'Alzheimer, ostéoporose, fracture du col du fémur…',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 3 : État de santé actuel ───
+    {id:'b70_8',text:'8. ÉTAT DE SANTÉ — Suivez-vous actuellement un traitement ?',sub:'Apporter les ordonnances si possible',options:[['Oui',1],['Non',0]]},
+    {id:'b70_9',text:'9. Taille — À renseigner précisément lors de la consultation',options:[['< 1m60',0],['1m60 - 1m75',0],['> 1m75',0]]},
+    {id:'b70_10',text:'10. Poids — À renseigner précisément lors de la consultation',options:[['< 50 kg',2],['50-60 kg',1],['60-80 kg',0],['80-100 kg',0],['> 100 kg',1]]},
+    {id:'b70_11',text:'11. Avez-vous constaté une variation de votre poids lors des 6 derniers mois ?',options:[['Oui, un amaigrissement',3],['Oui, une prise de poids',1],['Non',0]]},
+    {id:'b70_12',text:'12. CARDIO — Avez-vous observé des gonflements importants ou inhabituels des chevilles ou des jambes ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_13',text:'13. Vous arrive-t-il d\'avoir des douleurs dans la poitrine notamment lors d\'un effort ?',options:[['Oui',3],['Non',0]]},
+    {id:'b70_14',text:'14. RESPIRATOIRE — Toussez-vous souvent (tous les jours) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_15',text:'15. Avez-vous souvent une toux grasse ou qui ramène des crachats ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_16',text:'16. Êtes-vous plus facilement essoufflé(e) que les personnes de votre âge ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_17',text:'17. Faites-vous des pauses respiratoires ou des ronflements importants pendant le sommeil ?',sub:'Notamment constatés par votre entourage',options:[['Oui',2],['Non',0],['Je ne sais pas',1]]},
+    {id:'b70_18',text:'18. MÉNOPAUSE (femmes) — À quel âge avez-vous été ménopausée ?',options:[['Avant 45 ans',1],['45-55 ans',0],['Après 55 ans',0],['Non concerné(e)',0]]},
+    {id:'b70_19',text:'19. Êtes-vous allé(e) chez le dentiste dans les 12 derniers mois ?',options:[['Oui',0],['Non',1]]},
+    {id:'b70_20',text:'20. VUE — Avez-vous l\'impression de voir moins bien (lecture, vision de loin) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_21',text:'21. AUDITION — Impression d\'entendre moins bien (ou votre entourage le constate) ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_22',text:'22. URO — Êtes-vous sujet à des troubles urinaires ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_23',text:'23. TMS — Dans les 12 derniers mois, problèmes au cou/dos/épaules/mains qui impactent votre vie quotidienne ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_24',text:'24. MÉMOIRE — Avez-vous la sensation d\'oublier des choses ?',options:[['Oui',2],['Non',0]]},
+    {id:'b70_25',text:'25. AUTONOMIE (ADL) — Avez-vous des difficultés à réaliser certains gestes de la vie quotidienne ?',sub:'Quitter/se coucher au lit · Aller seul aux toilettes · Toilette · S\'habiller · Manger/boire · Marcher (avec ou sans canne) · Utiliser un moyen de transport',options:[['Aucune difficulté',0],['Difficulté pour 1 ou 2 gestes',2],['Difficulté pour 3 gestes ou plus',4]]},
+
+    // ─── Section 4 : Activité physique, sédentarité, alimentation ───
+    {id:'b70_26',text:'26. ACTIVITÉ PHYSIQUE — Combien de fois par semaine au moins 30 min d\'activité physique dynamique ?',sub:'Marche, ménage, jardinage, vélo, sport',options:[['Jamais',3],['1 à 2 fois / semaine',2],['3 à 4 fois / semaine',1],['5 à 7 fois / semaine',0]]},
+    {id:'b70_27',text:'27. ALIMENTATION — Consommation de fruits et légumes :',options:[['Au moins 5 portions par jour',0],['Entre 1 et 4 portions par jour',1],['De temps en temps',2],['Rarement',3],['Jamais',3]]},
+    {id:'b70_28',text:'28. À quelle fréquence consommez-vous des aliments gras/sucrés/salés ?',sub:'Charcuterie, soda, bonbons, pâtisseries, chips, fast-food, glaces',options:[['Plusieurs fois par jour',3],['Plusieurs fois par semaine',2],['1 fois par semaine',1],['1 fois par mois',0],['Jamais',0]]},
+    {id:'b70_29',text:'29. SÉDENTARITÉ — Combien de temps par jour passez-vous assis(e) ou allongé(e) hors sommeil ?',options:[['Moins de 2 heures',0],['Entre 2 et 4 heures',1],['Entre 4 et 7 heures',2],['Plus de 7 heures',3],['Je ne sais pas',1]]},
+    {id:'b70_30',text:'30. ÉCRANS — Temps quotidien devant un écran (hors travail) ?',sub:'Téléphone, télé, ordinateur',options:[['Moins d\'1 heure',0],['Entre 1 et 2 heures',1],['Entre 2 et 4 heures',2],['Plus de 4 heures',3],['Je ne sais pas',1]]},
+
+    // ─── Section 5 : Santé environnement / Logement ───
+    {id:'b70_31',text:'31. LOGEMENT — Votre logement est-il facile d\'accès en cas de mobilité réduite ?',sub:'Plain-pied, ascenseur, rampe d\'accès…',options:[['Oui',0],['Non',3]]},
+    {id:'b70_32',text:'32. PRÉVENTION CHUTES — Logement adapté à la prévention des chutes ?',sub:'Douche plutôt que baignoire, barre de douche, revêtement anti-chute, WC surélevé…',options:[['Oui',0],['Non',3]]},
+
+    // ─── Section 6 : Vaccins, dépistages, santé sexuelle ───
+    {id:'b70_33',text:'33. VACCINATIONS — Êtes-vous à jour de vos vaccins et rappels ?',sub:'Apporter le carnet de vaccination si possible. Important : grippe annuelle, pneumocoque, zona, COVID',options:[['Oui',0],['Non',3],['Je ne sais pas',1]]},
+    {id:'b70_34',text:'34. DÉPISTAGE COLORECTAL — Avez-vous déjà réalisé un test ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 2 ans',0],['Oui, il y a plus de 2 ans',2],['Non, jamais',2],['Je ne sais pas',1]]},
+    {id:'b70_35',text:'35. DÉPISTAGE SEIN (femmes) — Avez-vous déjà réalisé une mammographie ?',sub:'Apporter les résultats si possible',options:[['Oui, il y a moins de 2 ans',0],['Oui, il y a plus de 2 ans',2],['Non, jamais',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b70_36',text:'36. DÉPISTAGE COL UTÉRUS (femmes) — Avez-vous déjà réalisé un frottis ?',sub:'Apporter les résultats si possible',options:[['Oui',0],['Non',2],['Je ne sais pas',1],['Non concerné(e)',0]]},
+    {id:'b70_37',text:'37. SITUATIONS À RISQUE — Êtes-vous dans une de ces situations ?',sub:'Plus d\'un partenaire dans les 12 derniers mois / Souhait d\'arrêter le préservatif avec nouveau partenaire / Partenaire avec IST diagnostiquée',options:[['Au moins une de ces situations',2],['Rapports sexuels mais aucune de ces situations',0],['Non concerné(e)',0]]},
+
+    // ─── Section 7 : Conduites addictives ───
+    {id:'b70_38',text:'38. ALCOOL — Au cours de l\'année écoulée :',options:[['Vous buvez plus de 2 verres standards par jour',2],['Vous buvez plus de 10 verres standards par semaine',2],['Vous ne buvez pas d\'alcool au moins 2 jours / semaine',1],['Aucune des situations ci-dessus',0]]},
+    {id:'b70_39',text:'39. TABAC — Actuellement, fumez-vous ou vapotez-vous ?',sub:'Cigarette, tabac à rouler, cigare, pipe, chicha, narguilé, vape',options:[['Oui, je fume',3],['Oui, je vapote',1],['J\'ai arrêté',1],['Non',0]]},
+    {id:'b70_40',text:'40. Si vous avez arrêté de fumer, depuis combien de temps ?',options:[['Moins d\'1 an',1],['Entre 1 an et 5 ans',1],['Plus de 5 ans',0],['Non concerné(e)',0]]},
+    {id:'b70_41',text:'41. AUTRES SUBSTANCES — Au cours des 12 derniers mois ?',sub:'Cannabis ou autres drogues',options:[['Oui, du cannabis',2],['Oui, d\'autres drogues',3],['Non',0]]},
+    {id:'b70_42',text:'42. JEUX — Avez-vous misé de l\'argent (loterie, poker, paris…) ?',options:[['Oui, souvent',3],['Oui, de temps en temps',2],['Oui, rarement',1],['Non',0]]},
+
+    // ─── Section 8 : Santé et bien-être mental, violences ───
+    {id:'b70_43',text:'43. RETRAITE — Votre regard sur le fait d\'être à la retraite est :',options:[['Très positif',0],['Plutôt positif',0],['Plutôt négatif',2],['Très négatif',3]]},
+    {id:'b70_44',text:'44. PROJETS — Depuis votre retraite, vous impliquez-vous dans de nouveaux projets ?',sub:'Sorties, passe-temps, clubs, associations…',options:[['Oui, déjà mis en place',0],['Oui, prévus mais pas encore concrétisés',1],['Non, je ne sais pas encore',3]]},
+    {id:'b70_45',text:'45. SOMMEIL — Avez-vous des problèmes de sommeil ?',options:[['Oui, souvent',3],['Oui, parfois',2],['Non',0],['Vous prenez des somnifères',2]]},
+    {id:'b70_46',text:'46. Concernant le sommeil, en moyenne vous dormez :',options:[['Moins de 6h par nuit',2],['Entre 6h et 10h par nuit',0],['10h ou plus par nuit',1]]},
+    {id:'b70_47',text:'47. ANXIÉTÉ — Au cours des 2 dernières semaines, sentiment de nervosité, anxiété ou tension ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b70_48',text:'48. Au cours des 2 dernières semaines, incapacité d\'arrêter ou contrôler vos inquiétudes ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b70_49',text:'49. DÉPRESSION — Au cours des 2 dernières semaines, peu d\'intérêt ou de plaisir à faire les choses ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b70_50',text:'50. Au cours des 2 dernières semaines, sentiment de tristesse, déprime ou désespoir ?',options:[['Jamais',0],['Plusieurs jours',1],['Plus de 7 jours',2],['Presque tous les jours',3]]},
+    {id:'b70_51',text:'51. Avez-vous déjà eu des idées noires/suicidaires ou fait une tentative de suicide ?',options:[['Oui, des idées noires/suicidaires',3],['Oui, une ou plusieurs tentatives de suicide',4],['Non',0]]},
+    {id:'b70_52',text:'52. VIOLENCES — Avez-vous déjà été victime de violences physiques, sexuelles ou psychiques ?',sub:'Coups, mutilations, menaces, chantage, humiliations, harcèlements, discriminations, soumission chimique',options:[['Oui',3],['Non',0],['Je ne sais pas',1]]},
+
+    // ─── Section 9 : Priorités ───
+    {id:'b70_53',text:'53. PRIORITÉS — Quel(s) sujet(s) souhaitez-vous aborder en priorité avec le professionnel de santé ?',sub:'Cocher le sujet principal',options:[['Mieux dormir',0],['Améliorer alimentation et bouger plus',0],['Réduire / arrêter le tabac',0],['Réduire / arrêter l\'alcool',0],['Améliorer bien-être mental, réduire stress / anxiété',0],['Mieux comprendre / prévenir les effets du vieillissement',0],['Mieux m\'informer sur les dépistages',0]]},
+  ],
+  interpret(s){
+    if(s<14)return{label:`Score de risque global : ${s} pts — Faible`,cls:'ok',detail:'Profil de risque faible. Maintenir l\'autonomie, la prévention des chutes et le lien social.'};
+    if(s<28)return{label:`Score de risque global : ${s} pts — Modéré`,cls:'warn',detail:'Plusieurs facteurs à discuter. Évaluation gériatrique recommandée — autonomie, nutrition, polypharmacie, sensorialité, lien social.'};
+    return{label:`Score de risque global : ${s} pts — Élevé`,cls:'danger',detail:'Multiples facteurs de fragilité. Évaluation gériatrique standardisée recommandée. Adaptation du logement, prévention des chutes et soutien à l\'autonomie prioritaires.'};
+  }
+},
+
+
+
+
+// ─── IATROGÉNIE / MÉDICAMENTS ───
+iatrogenie:{cat:'iatro', icon:'💊', title:'Risque iatrogénique rapide', subtitle:'Dépistage rapide des situations à risque médicamenteux', maxScore:11, questions:[
+    {id:'iat1',text:'≥ 5 médicaments (≥ 8 = très haut risque)',options:[['Non',0],['Oui',1]]},
+    {id:'iat2',text:'Sujet âgé (>65 ans, surtout >75 ans)',options:[['Non',0],['Oui',1]]},
+    {id:'iat3',text:'Chute, confusion ou fatigue inexpliquée',options:[['Non',0],['Oui',1]]},
+    {id:'iat4',text:'Hypotension / bradycardie / syncope',options:[['Non',0],['Oui',1]]},
+    {id:'iat5',text:'Troubles digestifs chroniques',options:[['Non',0],['Oui',1]]},
+    {id:'iat6',text:'Insuffisance rénale récente',options:[['Non',0],['Oui',1]]},
+    {id:'iat7',text:'Hospitalisation récente',options:[['Non',0],['Oui',1]]},
+    {id:'iat8',text:'Symptôme atypique ou « flou »',options:[['Non',0],['Oui',1]]},
+    {id:'iat9',text:'Automédication (AINS, IPP…)',options:[['Non',0],['Oui',1]]},
+    {id:'iat10',text:'Phytothérapie / compléments',options:[['Non',0],['Oui',1]]},
+    {id:'iat11',text:'Traitements anciens non arrêtés',options:[['Non',0],['Oui',1]]},
+  ], interpret(s){ if(s<=2)return{label:`Score ${s}/11 — Risque faible`,cls:'ok',detail:'Surveillance habituelle.'}; if(s<=5)return{label:`Score ${s}/11 — Risque modéré`,cls:'warn',detail:'Réévaluation thérapeutique ciblée recommandée.'}; return{label:`Score ${s}/11 — Risque élevé`,cls:'danger',detail:'Révision complète de l’ordonnance recommandée : déprescription, adaptation rénale, interactions.'}; } },
+
+naranjo:{cat:'iatro', icon:'💊', title:'Score de Naranjo — Imputabilité médicamenteuse', subtitle:'Probabilité qu’un médicament soit responsable d’un effet indésirable', maxScore:13, questions:[
+    {id:'nar1',text:'Existe-t-il des publications décrivant cet effet ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+    {id:'nar2',text:'L’effet est-il apparu après l’administration du médicament ?',options:[['Ne sait pas',0],['Oui',2],['Non',-1]]},
+    {id:'nar3',text:'L’effet s’est-il amélioré après l’arrêt du médicament ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+    {id:'nar4',text:'L’effet est-il réapparu lors de la réintroduction ?',options:[['Ne sait pas',0],['Oui',2],['Non',-1]]},
+    {id:'nar5',text:'Existe-t-il une cause alternative possible ?',options:[['Ne sait pas',0],['Oui',-1],['Non',2]]},
+    {id:'nar6',text:'L’effet est-il réapparu avec placebo ?',options:[['Ne sait pas',0],['Oui',-1],['Non',1]]},
+    {id:'nar7',text:'Le médicament a-t-il été retrouvé à une concentration toxique ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+    {id:'nar8',text:'L’effet est-il dose-dépendant ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+    {id:'nar9',text:'Le patient a-t-il déjà présenté cet effet avec ce médicament ou un médicament proche ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+    {id:'nar10',text:'L’effet est-il confirmé par un examen objectif ?',options:[['Ne sait pas',0],['Oui',1],['Non',0]]},
+  ], interpret(s){ if(s>=9)return{label:`Score ${s}/13 — Imputabilité certaine`,cls:'danger',detail:'Déclaration de pharmacovigilance à discuter si effet grave ou inattendu.'}; if(s>=5)return{label:`Score ${s}/13 — Imputabilité probable`,cls:'warn',detail:'Réévaluation thérapeutique et surveillance recommandées.'}; if(s>=2)return{label:`Score ${s}/13 — Imputabilité possible`,cls:'warn',detail:'Analyse complémentaire recommandée.'}; return{label:`Score ${s}/13 — Imputabilité douteuse`,cls:'ok',detail:'Rechercher d’autres causes.'}; } },
+
+begaud:{cat:'iatro', icon:'💊', title:'Imputabilité médicamenteuse — Méthode de Bégaud', subtitle:'Chronologie, sémiologie et bibliographie', maxScore:4, questions:[
+    {id:'beg_c',text:'Imputabilité chronologique',options:[['C0 — Chronologie incompatible',0],['C1 — Chronologie douteuse',1],['C2 — Chronologie plausible',2],['C3 — Chronologie vraisemblable',3]]},
+    {id:'beg_s',text:'Imputabilité sémiologique',options:[['S1 — Sémiologie douteuse',1],['S2 — Sémiologie plausible',2],['S3 — Sémiologie vraisemblable',3]]},
+    {id:'beg_b',text:'Imputabilité bibliographique',options:[['B0 — Non décrit après recherche exhaustive',0],['B1 — Non décrit',1],['B2 — Quelques cas / non notoire',2],['B3 — Effet notoire ou référencé',3]]},
+  ], interpret(ans){ const C=ans.beg_c??0,S=ans.beg_s??1,B=ans.beg_b??0; let I=0; if(C===0)I=0; else if(C===1&&S===1)I=1; else if(C===1&&S===2)I=1; else if(C===1&&S===3)I=2; else if(C===2&&S===1)I=1; else if(C===2&&S===2)I=2; else if(C===2&&S===3)I=3; else if(C===3&&S===1)I=3; else if(C===3&&S===2)I=3; else if(C===3&&S===3)I=4; const labels={0:'I0 — Imputabilité incompatible',1:'I1 — Imputabilité douteuse',2:'I2 — Imputabilité plausible',3:'I3 — Imputabilité vraisemblable',4:'I4 — Imputabilité très vraisemblable'}; return{rawScore:I,label:`${labels[I]} | Bibliographie B${B}`,cls:I>=3?'danger':(I===2?'warn':'ok'),detail:'Méthode d’aide à l’analyse. Interpréter avec diagnostics différentiels et chronologie complète.'}; } },
+
+stopp_start:{cat:'iatro', icon:'💊', title:'STOPP/START simplifié — Patient ≥ 65 ans', subtitle:'Checklist de révision thérapeutique', maxScore:20, note:'Version simplifiée pour dépistage. Ne remplace pas l’application complète des critères STOPP/START ni le jugement clinique.', questions:[
+    {id:'ss1',text:'STOPP — Doublon thérapeutique dans une même classe médicamenteuse',options:[['Non',0],['Oui',1]]},
+    {id:'ss2',text:'STOPP — Médicament sans indication actuelle claire',options:[['Non',0],['Oui',1]]},
+    {id:'ss3',text:'STOPP — Traitement ancien poursuivi alors que l’indication a disparu',options:[['Non',0],['Oui',1]]},
+    {id:'ss4',text:'STOPP — Benzodiazépine ou hypnotique au long cours, surtout si chute/confusion',options:[['Non',0],['Oui',1]]},
+    {id:'ss5',text:'STOPP — Anticholinergique chez patient confus, constipé, glaucome ou rétention urinaire',options:[['Non',0],['Oui',1]]},
+    {id:'ss6',text:'STOPP — AINS chronique si insuffisance rénale, HTA déséquilibrée, anticoagulant ou risque digestif',options:[['Non',0],['Oui',1]]},
+    {id:'ss7',text:'STOPP — IPP au long cours sans indication persistante',options:[['Non',0],['Oui',1]]},
+    {id:'ss8',text:'STOPP — Antihypertenseur responsable d’hypotension orthostatique, syncope ou chutes',options:[['Non',0],['Oui',1]]},
+    {id:'ss9',text:'STOPP — Médicament bradycardisant si bradycardie ou malaise',options:[['Non',0],['Oui',1]]},
+    {id:'ss10',text:'STOPP — Adaptation posologique non faite malgré insuffisance rénale',options:[['Non',0],['Oui',1]]},
+    {id:'ss11',text:'STOPP — Association augmentant le risque hémorragique sans justification claire',options:[['Non',0],['Oui',1]]},
+    {id:'ss12',text:'STOPP — Opioïde fort sans réévaluation bénéfice/risque ou constipation non prévenue',options:[['Non',0],['Oui',1]]},
+    {id:'ss13',text:'START — Absence de traitement préventif clairement indiqué',options:[['Non',0],['Oui',1]]},
+    {id:'ss14',text:'START — Ostéoporose ou fracture de fragilité sans prise en charge adaptée',options:[['Non',0],['Oui',1]]},
+    {id:'ss15',text:'START — FA avec indication d’anticoagulation non traitée sans contre-indication',options:[['Non',0],['Oui',1]]},
+    {id:'ss16',text:'START — Diabète ou HTA avec protection cardio-rénale à discuter selon profil',options:[['Non',0],['Oui',1]]},
+    {id:'ss17',text:'START — Douleur chronique sans stratégie antalgique adaptée et réévaluée',options:[['Non',0],['Oui',1]]},
+    {id:'ss18',text:'START — Carence ou risque nutritionnel sans correction proposée',options:[['Non',0],['Oui',1]]},
+    {id:'ss19',text:'START — Vaccinations du sujet âgé non à jour selon recommandations',options:[['Non',0],['Oui',1]]},
+    {id:'ss20',text:'START — Constipation sous opioïde sans laxatif ou prévention associée',options:[['Non',0],['Oui',1]]},
+  ], interpret(s){ if(s===0)return{label:'Aucun critère STOPP/START simplifié coché',cls:'ok',detail:'Pas d’alerte détectée par cette checklist simplifiée.'}; if(s<=3)return{label:`${s} critère(s) coché(s) — Révision ciblée`,cls:'warn',detail:'Réévaluation ciblée recommandée selon les items cochés.'}; return{label:`${s} critères cochés — Révision thérapeutique prioritaire`,cls:'danger',detail:'Révision globale de l’ordonnance recommandée.'}; } },
+
+echo_abdo:{
+  cat:'imagerie', icon:'🖥️', custom:'echo_abdo',
+  title:'Échographie abdominale & pelvienne',
+  subtitle:'Compte rendu structuré abdomen, pelvis, prostate et aorte',
+  maxScore:null,
+  note:'Module de rédaction structurée abdominale. Les valeurs saisies sont intégrées au compte rendu. À adapter selon le contexte clinique et les constatations échographiques.',
+  questions:[],
+  interpret(data){ return interpretEchoAbdo(data); }
+},
+
+echo_thyroide:{
+  cat:'imagerie', icon:'🦋', custom:'echo_thyroide',
+  title:'Échographie thyroïdienne',
+  subtitle:'Volumes lobaires, volume total et nodules thyroïdiens',
+  maxScore:null,
+  note:'Module de rédaction structurée thyroïdienne. Volumes calculés selon la formule ellipsoïde : (L × l × e × 0,52) / 1000 lorsque les dimensions sont saisies en mm. Résultat en mL.',
+  questions:[],
+  interpret(data){ return interpretEchoThyroide(data); }
+},
+
+calgrossesse:{
+  cat:'gyne', icon:'🤰', custom:'grossesse',
+  title:'Calcul grossesse — Terme et âge gestationnel',
+  subtitle:'Calcul à partir de la date des dernières règles ou de la date présumée de conception',
+  maxScore:null,
+  note:'Calcul théorique. À confronter à l’échographie de datation, surtout en cas de cycles irréguliers, PMA, aménorrhée incertaine ou discordance clinique.',
+  questions:[],
+  interpret(data){
+    return interpretGrossesse(data);
+  }
+},
+
+};
+
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
+const ST = {
+  patient:{}, age:0, answers:{}, scores:{},
+  completed:new Set(), current:null, activePrev:[]
+};
+Object.keys(TESTS).forEach(id=>ST.answers[id]={});
+
+// ════════════════════════════════════════════════
+//  SESSION START
+// ════════════════════════════════════════════════
+function calcAge(dob){
+  if(!dob)return 0;
+  const t=new Date(),b=new Date(dob);
+  let a=t.getFullYear()-b.getFullYear();
+  if(t<new Date(t.getFullYear(),b.getMonth(),b.getDate()))a--;
+  return a;
+}
+
+function startSession(){
+  const prenom=document.getElementById('i-prenom').value.trim();
+  const nom=document.getElementById('i-nom').value.trim();
+  if(!prenom||!nom){toast('Veuillez entrer le prénom et le nom');return;}
+  ST.patient={prenom,nom,dob:document.getElementById('i-dob').value,sexe:document.getElementById('i-sexe').value,medecin:document.getElementById('i-med').value.trim()};
+  ST.age=calcAge(ST.patient.dob);
+  // Always show all 4 prevention bilans — doctor chooses
+  ST.activePrev=Object.keys(TESTS).filter(id=>TESTS[id].ageMin);
+  buildMenu();
+  const n=new Date();
+  document.getElementById('mn-name').textContent=prenom+' '+nom.toUpperCase();
+  document.getElementById('mn-date').textContent=n.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('mn-age').textContent=ST.age?ST.age+' ans':'';
+  updateProgress();
+  showScreen('menu');
+}
+
+function allTestIds(){
+  const base=['phq9','hama','hdrs','epds','berlin','epworth','isi','irls','boss','spruyt_gozal','mmse','moca','bref','cinq_mots','iadl4','adl6','brocker_aqrd','dn4','lequesne','first','haq','lequesne_genou','lequesne_hanche','rmqd','audit','audit_c','fagerstrom','paquets_annees','bpco_auto','dyspnee_mmrc','mna_sf','thi','mac_isaac','cha2ds2_vasc','wells_ep','wells_tvp','geneve_modifie','perc','dutch_score','ipss','iatrogenie','naranjo','begaud','stopp_start','echo_abdo','echo_thyroide'];
+  return [...base,...ST.activePrev];
+}
+
+function buildMenu(){
+  const body=document.getElementById('menu-body');
+  body.innerHTML='';
+  // group by cat
+  const groups={};
+  allTestIds().forEach(id=>{
+    const t=TESTS[id];
+    if(!groups[t.cat])groups[t.cat]=[];
+    groups[t.cat].push(id);
+  });
+  CATS.forEach(cat=>{
+    const ids=groups[cat.id];
+    if(!ids||!ids.length)return;
+    const sec=document.createElement('div');
+    sec.innerHTML=`<div class="cat-title"><div class="cat-dot" style="background:${cat.color}"></div>${cat.icon} ${cat.label}</div><div class="menu-cards" id="mc-${cat.id}"></div>`;
+    body.appendChild(sec);
+    const mc=sec.querySelector(`#mc-${cat.id}`);
+    ids.forEach(id=>{
+      const t=TESTS[id];
+      const card=document.createElement('div');
+      card.className='menu-card';
+      card.id='mcard-'+id;
+      card.onclick=()=>startTest(id);
+      const qcount=t.questions.length;
+      // Highlight prevention bilan that matches patient age
+      let badge='';
+      if(t.ageMin && ST.age>=t.ageMin && ST.age<=t.ageMax){
+        badge=' <span style="color:var(--cat-prev);font-weight:600">· Recommandé pour cet âge</span>';
+      }
+      const desc=t.ageMin ? `${qcount} questions${badge}` : `${qcount} questions`;
+      card.innerHTML=`<div class="ci" style="background:${cat.color}">${t.icon}</div><div class="cb"><div class="ct">${t.title}</div><div class="cd">${desc}</div></div><div class="cs" id="cs-${id}">À faire</div>`;
+      mc.appendChild(card);
+    });
+  });
+}
+
+function updateProgress(){
+  const all=allTestIds(),done=all.filter(id=>ST.completed.has(id)).length;
+  const pct=Math.round(done/all.length*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`${done} test${done>1?'s':''} complété${done>1?'s':''} sur ${all.length}`;
+  ST.completed.forEach(id=>{
+    const c=document.getElementById('mcard-'+id);
+    const s=document.getElementById('cs-'+id);
+    if(c)c.classList.add('done');
+    if(s)s.textContent='✓ Fait';
+  });
+  const btn=document.getElementById('btn-finalize');
+  btn.classList.toggle('on',done>0);
+  // Update button text based on completion
+  if(done===all.length){
+    btn.textContent='📋 Voir tous les résultats & générer PDF';
+  } else if(done>0){
+    btn.textContent=`📋 Voir les résultats (${done} test${done>1?'s':''}) & générer PDF`;
+  }
+}
+
+// ════════════════════════════════════════════════
+//  TEST RENDER
+// ════════════════════════════════════════════════
+function startTest(id){
+  ST.current=id;
+  const t=TESTS[id];
+  document.getElementById('t-title').textContent=t.title;
+  document.getElementById('t-sub').textContent=t.subtitle;
+  const content=document.getElementById('test-content');
+  content.innerHTML='';
+  if(t.note){
+    const ib=document.createElement('div');
+    ib.className='info-box';
+    ib.textContent='ℹ '+t.note;
+    content.appendChild(ib);
+  }
+  if(t.references&&t.references.length){
+    const ib=document.createElement('div');
+    ib.className='info-box';
+    ib.innerHTML='<strong>Références</strong><br>'+t.references.map(r=>'• '+r).join('<br>');
+    content.appendChild(ib);
+  }
+
+
+  if(t.custom==='echo_abdo'){
+    const prev=ST.answers[id]||{};
+    const field=(fid,label,unit='',type='number',extra='')=>`
+      <div class="fg"><label style="color:#111;font-weight:600">${label}</label><input style="color:#111;background:#fff" id="e-${fid}" type="${type}" value="${prev[fid]||''}" placeholder="… ${unit}" ${extra}></div>`;
+    const card=document.createElement('div');
+    card.className='qcard';
+    card.innerHTML=`
+      <div class="qnum">Compte rendu échographique abdominal</div>
+      <div class="qtext">Renseigner les mesures utiles. Les champs non renseignés resteront sous forme de points de suspension dans le compte rendu.</div>
+      <div class="section-banner"><h3>Foie / voies biliaires</h3><p>Mesures hépato-biliaires</p></div>
+      <div class="form-row">${field('foie_fleche','Flèche hépatique','cm')}${field('foie_gauche','Épaisseur foie gauche','mm')}</div>
+      ${field('vb_paroi','Paroi vésiculaire','mm')}
+      ${field('bif_portale','Bifurcation portale','mm')}
+      <div class="section-banner"><h3>Pancréas / rate</h3><p>Pancréas, Wirsung, rate</p></div>
+      ${field('wirsung','Canal de Wirsung','mm')}
+      <div class="form-row">${field('rate_l','Rate longueur','cm')}${field('rate_ap','Rate AP','cm')}</div>
+      ${field('rate_t','Rate transverse','cm')}
+      <div class="section-banner"><h3>Reins / vessie / prostate</h3><p>Mensurations uro-néphrologiques</p></div>
+      <div class="form-row">${field('rein_d_l','Rein droit longueur','cm')}${field('rein_d_ap','Rein droit AP','cm')}</div>
+      ${field('rein_d_t','Rein droit transverse','cm')}
+      <div class="form-row">${field('rein_g_l','Rein gauche longueur','cm')}${field('rein_g_ap','Rein gauche AP','cm')}</div>
+      ${field('rein_g_t','Rein gauche transverse','cm')}
+      ${field('rpm','Résidu post-mictionnel','mL')}
+      <div class="form-row">${field('prostate_L','Prostate L','mm')}${field('prostate_l','Prostate l','mm')}</div>
+      <div class="form-row">${field('prostate_e','Prostate e','mm')}${field('prostate_vol','Volume prostate calculé','mL','number','readonly')}</div>
+      <div class="info-box">Volume prostate calculé automatiquement : (L × l × e × 0,52) / 1000. Dimensions en mm, résultat en mL.</div>
+      <div class="section-banner"><h3>Aorte abdominale</h3><p>Aorte sous-rénale et bifurcation iliaque</p></div>
+      ${field('aorte','Aorte sous-rénale','mm')}
+      <div class="info-box">Le compte rendu généré reprend la formulation validée : foie, vésicule, voies biliaires, pancréas, rate, reins, vessie, prostate et aorte.</div>
+    `;
+    content.appendChild(card);
+    const ids=['foie_fleche','foie_gauche','vb_paroi','bif_portale','wirsung','rate_l','rate_ap','rate_t','rein_d_l','rein_d_ap','rein_d_t','rein_g_l','rein_g_ap','rein_g_t','rpm','prostate_L','prostate_l','prostate_e','prostate_vol','aorte'];
+    const num=fid=>parseFloat(String(document.getElementById('e-'+fid)?.value||'').replace(',','.'));
+    const ellipsoid=(a,b,c)=>{const x=num(a),y=num(b),z=num(c); if(!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(z)) return ''; return ((x*y*z*0.52)/1000).toFixed(1);};
+    const calcVolumes=()=>{document.getElementById('e-prostate_vol').value=ellipsoid('prostate_L','prostate_l','prostate_e');};
+    const save=()=>{calcVolumes();ST.answers[id]={};ids.forEach(fid=>ST.answers[id][fid]=document.getElementById('e-'+fid).value);updateTestProg(id);};
+    ids.forEach(fid=>{const el=document.getElementById('e-'+fid); if(el&&!el.readOnly) el.oninput=save;});
+    save(); showScreen('test'); return;
+  }
+
+  if(t.custom==='echo_thyroide'){
+    const prev=ST.answers[id]||{};
+    const field=(fid,label,unit='',type='number',extra='')=>`
+      <div class="fg"><label style="color:#111;font-weight:600">${label}</label><input style="color:#111;background:#fff" id="e-${fid}" type="${type}" value="${prev[fid]||''}" placeholder="… ${unit}" ${extra}></div>`;
+    const noduleFields=(side,label)=>{
+      let html=`<div class="section-banner"><h3>Nodules thyroïdiens — ${label}</h3><p>Jusqu’à 5 nodules. Dimensions en mm. Laisser vide si absent.</p></div>`;
+      for(let i=1;i<=5;i++){
+        html+=`<div class="qcard" style="box-shadow:none;border:1px solid var(--border);margin-bottom:10px">
+          <div class="qnum">Nodule ${i} — ${label}</div>
+          <div class="form-row">${field(`n_${side}_${i}_L`,'L','mm')}${field(`n_${side}_${i}_l`,'l','mm')}</div>
+          ${field(`n_${side}_${i}_e`,'e','mm')}
+          <div class="form-row">${field(`n_${side}_${i}_vol`,'Volume calculé','mL','number','readonly')}${field(`n_${side}_${i}_tirads`,'EU-TIRADS / description','','text','placeholder="ex. EU-TIRADS 3, mixte…"')}</div>
+        </div>`;
+      }
+      return html;
+    };
+    const card=document.createElement('div');
+    card.className='qcard';
+    card.innerHTML=`
+      <div class="qnum">Compte rendu échographique thyroïdien</div>
+      <div class="qtext">Renseigner les mensurations thyroïdiennes et les nodules éventuels. Les volumes sont calculés automatiquement.</div>
+      <div class="section-banner"><h3>Thyroïde</h3><p>Volumes lobaires, volume total et nodules</p></div>
+      <div class="form-row">${field('thy_d_L','Lobe droit L','mm')}${field('thy_d_l','Lobe droit l','mm')}</div>
+      <div class="form-row">${field('thy_d_e','Lobe droit e','mm')}${field('thy_d_vol','Volume lobe droit calculé','mL','number','readonly')}</div>
+      <div class="form-row">${field('thy_g_L','Lobe gauche L','mm')}${field('thy_g_l','Lobe gauche l','mm')}</div>
+      <div class="form-row">${field('thy_g_e','Lobe gauche e','mm')}${field('thy_g_vol','Volume lobe gauche calculé','mL','number','readonly')}</div>
+      <div class="form-row">${field('isthme','Isthme','mm')}${field('thy_vol','Volume thyroïdien total calculé','mL','number','readonly')}</div>
+      <div class="info-box">Volume thyroïdien calculé automatiquement : volume du lobe droit + volume du lobe gauche. Chaque lobe : (L × l × e × 0,52) / 1000. Dimensions en mm, résultat en mL. L’isthme n’est pas inclus dans le volume total.</div>
+      ${noduleFields('d','lobe droit')}
+      ${noduleFields('g','lobe gauche')}
+      <div class="info-box">Les nodules peuvent être saisis avec L × l × e en mm. Le volume de chaque nodule est calculé automatiquement selon la formule ellipsoïde : (L × l × e × 0,52) / 1000, résultat en mL.</div>
+    `;
+    content.appendChild(card);
+    const ids=['thy_d_L','thy_d_l','thy_d_e','thy_d_vol','thy_g_L','thy_g_l','thy_g_e','thy_g_vol','isthme','thy_vol'];
+    ['d','g'].forEach(side=>{for(let i=1;i<=5;i++){ids.push(`n_${side}_${i}_L`,`n_${side}_${i}_l`,`n_${side}_${i}_e`,`n_${side}_${i}_vol`,`n_${side}_${i}_tirads`);}});
+    const num=fid=>parseFloat(String(document.getElementById('e-'+fid)?.value||'').replace(',','.'));
+    const ellipsoid=(a,b,c)=>{const x=num(a),y=num(b),z=num(c); if(!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(z)) return ''; return ((x*y*z*0.52)/1000).toFixed(1);};
+    const calcVolumes=()=>{
+      const vd=ellipsoid('thy_d_L','thy_d_l','thy_d_e');
+      const vg=ellipsoid('thy_g_L','thy_g_l','thy_g_e');
+      document.getElementById('e-thy_d_vol').value=vd;
+      document.getElementById('e-thy_g_vol').value=vg;
+      document.getElementById('e-thy_vol').value=(vd!==''&&vg!=='')?(parseFloat(vd)+parseFloat(vg)).toFixed(1):'';
+      ['d','g'].forEach(side=>{for(let i=1;i<=5;i++){document.getElementById(`e-n_${side}_${i}_vol`).value=ellipsoid(`n_${side}_${i}_L`,`n_${side}_${i}_l`,`n_${side}_${i}_e`);}});
+    };
+    const save=()=>{calcVolumes();ST.answers[id]={};ids.forEach(fid=>ST.answers[id][fid]=document.getElementById('e-'+fid).value);updateTestProg(id);};
+    ids.forEach(fid=>{const el=document.getElementById('e-'+fid); if(el&&!el.readOnly) el.oninput=save;});
+    save(); showScreen('test'); return;
+  }
+
+  if(t.custom==='grossesse'){
+    const prev=ST.answers[id]||{};
+    const card=document.createElement('div');
+    card.className='qcard';
+    card.innerHTML=`
+      <div class="qnum">Calculateur obstétrical</div>
+      <div class="qtext">Renseigner au moins la date des dernières règles. La date de conception peut être utilisée si elle est connue.</div>
+      <div class="fg"><label>Date des dernières règles (DDR)</label><input id="g-ddr" type="date" value="${prev.ddr||''}"></div>
+      <div class="fg"><label>Date présumée de conception / ovulation (optionnel)</label><input id="g-conception" type="date" value="${prev.conception||''}"></div>
+      <div class="fg"><label>Date de référence</label><input id="g-ref" type="date" value="${prev.ref||new Date().toISOString().slice(0,10)}"></div>
+      <div class="info-box">Résultats calculés : âge gestationnel en SA, âge embryonnaire en SG, terme théorique, début/fin de grossesse et repères de suivi.</div>
+    `;
+    content.appendChild(card);
+    ['g-ddr','g-conception','g-ref'].forEach(elid=>{
+      const el=document.getElementById(elid);
+      el.onchange=()=>{ST.answers[id]={ddr:document.getElementById('g-ddr').value,conception:document.getElementById('g-conception').value,ref:document.getElementById('g-ref').value};updateTestProg(id);};
+    });
+    ST.answers[id]={ddr:document.getElementById('g-ddr').value,conception:document.getElementById('g-conception').value,ref:document.getElementById('g-ref').value};
+    updateTestProg(id);
+    showScreen('test');
+    return;
+  }
+  t.questions.forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='qcard';
+    const cur=ST.answers[id][q.id];
+    card.innerHTML=`<div class="qnum">Question ${i+1} / ${t.questions.length}</div><div class="qtext">${q.text}</div>${q.sub?`<div class="qsub">${q.sub}</div>`:''}<div class="options" id="opts-${q.id}"></div>`;
+    content.appendChild(card);
+    const od=card.querySelector('#opts-'+q.id);
+    q.options.forEach(([lbl,sc])=>{
+      const o=document.createElement('button');
+      o.className='opt'+(cur===sc?' sel':'');
+      o.innerHTML=`<div class="ora"></div><div class="otx">${lbl}</div><div class="osc">${q.excludeFromScore?'hors score':(sc+' pt'+(sc>1?'s':''))}</div>`;
+      o.onclick=()=>selectOpt(id,q.id,sc,od,o);
+      od.appendChild(o);
+    });
+  });
+  updateTestProg(id);
+  showScreen('test');
+}
+
+function selectOpt(tid,qid,sc,od,el){
+  od.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  ST.answers[tid][qid]=sc;
+  updateTestProg(tid);
+}
+
+function updateTestProg(id){
+  const t=TESTS[id];
+  if(t.custom==='echo_abdo'||t.custom==='echo_thyroide'){
+    const a=ST.answers[id]||{};
+    const filled=Object.values(a).filter(v=>String(v||'').trim()).length;
+    const pct=Math.min(100, Math.round((filled/8)*100));
+    document.getElementById('tpf').style.width=pct+'%';
+    document.getElementById('tpl').textContent=filled?filled+' valeur(s)':'0%';
+    return;
+  }
+  if(t.custom==='grossesse'){
+    const a=ST.answers[id]||{};
+    const ok=!!(a.ddr||a.conception);
+    document.getElementById('tpf').style.width=(ok?100:0)+'%';
+    document.getElementById('tpl').textContent=ok?'100%':'0%';
+    return;
+  }
+  const ans=Object.keys(ST.answers[id]).length,tot=t.questions.length;
+  const pct=Math.round(ans/tot*100);
+  document.getElementById('tpf').style.width=pct+'%';
+  document.getElementById('tpl').textContent=pct+'%';
+}
+
+
+
+
+function ev(data,id){ const v=(data&&data[id])?String(data[id]).trim():''; return v || '…'; }
+function dims(data,a,b,c,unit){ return `${ev(data,a)} × ${ev(data,b)} × ${ev(data,c)} ${unit}`; }
+function hasAny(data, ids){ return ids.some(id=>String((data&&data[id])||'').trim()); }
+function noduleLine(data, side, i){
+  const ids=[`n_${side}_${i}_L`,`n_${side}_${i}_l`,`n_${side}_${i}_e`,`n_${side}_${i}_vol`,`n_${side}_${i}_tirads`];
+  if(!hasAny(data, ids)) return '';
+  const lobe=side==='d'?'droit':'gauche';
+  const tirads=String(data[`n_${side}_${i}_tirads`]||'').trim();
+  return `Nodule ${i} du lobe ${lobe} : ${dims(data,`n_${side}_${i}_L`,`n_${side}_${i}_l`,`n_${side}_${i}_e`,'mm')}, volume estimé à ${ev(data,`n_${side}_${i}_vol`)} mL${tirads?`, ${tirads}`:''}.`;
+}
+function nodulesText(data){
+  const lines=[];
+  ['d','g'].forEach(side=>{for(let i=1;i<=5;i++){const line=noduleLine(data,side,i); if(line) lines.push(line);}});
+  return lines.length ? '\n\nNodules thyroïdiens :\n'+lines.join('\n') : '';
+}
+function echoAbdoCompteRendu(data){
+  return `Foie de taille normale, flèche hépatique mesurée à ${ev(data,'foie_fleche')} cm.\nÉpaisseur du foie gauche mesurée à ${ev(data,'foie_gauche')} mm.\n\nVésicule biliaire alithiasique, à paroi fine mesurée à ${ev(data,'vb_paroi')} mm.\n\nVoies biliaires non dilatées.\nBifurcation portale mesurée à ${ev(data,'bif_portale')} mm.\n\nPancréas d’aspect homogène.\nCanal de Wirsung visualisé, non dilaté, mesuré à ${ev(data,'wirsung')} mm.\n\nRate de taille normale, mesurée à ${dims(data,'rate_l','rate_ap','rate_t','cm')}.\n\nReins de taille et de morphologie normales :\nRein droit : ${dims(data,'rein_d_l','rein_d_ap','rein_d_t','cm')}.\nRein gauche : ${dims(data,'rein_g_l','rein_g_ap','rein_g_t','cm')}.\n\nVessie : résidu post-mictionnel estimé à ${ev(data,'rpm')} mL.\n\nProstate : dimensions ${dims(data,'prostate_L','prostate_l','prostate_e','mm')}, volume estimé à ${ev(data,'prostate_vol')} mL selon la formule ellipsoïde.\n\nAorte abdominale de calibre normal, mesurée à ${ev(data,'aorte')} mm en sous-rénal.\nBifurcation iliaque de calibre normal.`;
+}
+function echoThyroideCompteRendu(data){
+  return `Thyroïde :\nLobe droit : ${dims(data,'thy_d_L','thy_d_l','thy_d_e','mm')}, volume estimé à ${ev(data,'thy_d_vol')} mL.\nLobe gauche : ${dims(data,'thy_g_L','thy_g_l','thy_g_e','mm')}, volume estimé à ${ev(data,'thy_g_vol')} mL.\nIsthme : ${ev(data,'isthme')} mm.\nVolume thyroïdien total estimé à ${ev(data,'thy_vol')} mL, selon la formule ellipsoïde appliquée séparément à chaque lobe.${nodulesText(data)}`;
+}
+function interpretEchoAbdo(data){
+  const filled=Object.values(data||{}).filter(v=>String(v||'').trim()).length;
+  return {rawScore:filled,scoreDisplay:filled+' valeur(s)',label:'Compte rendu échographie abdominale',cls:'ok',detail:echoAbdoCompteRendu(data)};
+}
+function interpretEchoThyroide(data){
+  const filled=Object.values(data||{}).filter(v=>String(v||'').trim()).length;
+  return {rawScore:filled,scoreDisplay:filled+' valeur(s)',label:'Compte rendu échographie thyroïdienne',cls:'ok',detail:echoThyroideCompteRendu(data)};
+}
+
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function fmtDate(d){return d.toLocaleDateString('fr-FR');}
+function diffDays(a,b){return Math.floor((b-a)/(1000*60*60*24));}
+function formatSA(days){
+  if(days<0)return 'grossesse non débutée selon la date saisie';
+  const sa=Math.floor(days/7), j=days%7;
+  return `${sa} SA + ${j} j`;
+}
+function formatSG(days){
+  const sgDays=days-14;
+  if(sgDays<0)return '< 0 SG';
+  const sg=Math.floor(sgDays/7), j=sgDays%7;
+  return `${sg} SG + ${j} j`;
+}
+function interpretGrossesse(data){
+  const ref=data.ref?new Date(data.ref):new Date();
+  let ddr=data.ddr?new Date(data.ddr):null;
+  const conception=data.conception?new Date(data.conception):null;
+  if(!ddr && conception) ddr=addDays(conception,-14);
+  if(!ddr) return {rawScore:'—',scoreDisplay:'—',label:'Date manquante',cls:'warn',detail:'Renseigner la DDR ou la date présumée de conception.'};
+  const days=diffDays(ddr,ref);
+  const terme=addDays(ddr,280);
+  const debutGrossesse=addDays(ddr,14);
+  const finPremierTrim=addDays(ddr,14*7);
+  const sa=formatSA(days);
+  const sg=formatSG(days);
+  let cls='ok';
+  if(days<0||days>294) cls='warn';
+  const detail=`DDR estimée : ${fmtDate(ddr)} · Début théorique de grossesse : ${fmtDate(debutGrossesse)} · Âge gestationnel au ${fmtDate(ref)} : ${sa} (${sg}) · Terme théorique : ${fmtDate(terme)} · Fin du 1er trimestre ≈ ${fmtDate(finPremierTrim)}. Calcul indicatif, échographie de datation prioritaire si incertitude.`;
+  return {rawScore:sa,scoreDisplay:sa,label:`Âge gestationnel estimé : ${sa}`,cls,detail};
+}
+
+function submitTest(){
+  const id=ST.current,t=TESTS[id];
+  if(t.custom==='echo_abdo'||t.custom==='echo_thyroide'){
+    ST.scores[id]=t.interpret(ST.answers[id]||{});
+    ST.completed.add(id);
+    goMenu();updateProgress();toast('✓ Compte rendu échographique enregistré');
+    return;
+  }
+  if(t.custom==='grossesse'){
+    ST.answers[id]={ddr:document.getElementById('g-ddr').value,conception:document.getElementById('g-conception').value,ref:document.getElementById('g-ref').value};
+    if(!(ST.answers[id].ddr||ST.answers[id].conception)){toast('Renseignez la DDR ou la date de conception');return;}
+    ST.scores[id]=t.interpret(ST.answers[id]);
+    ST.completed.add(id);
+    goMenu();updateProgress();toast('✓ Calcul grossesse enregistré');
+    return;
+  }
+  const ans=Object.keys(ST.answers[id]).length;
+  if(ans<t.questions.length){toast(`Répondez à toutes les questions (${ans}/${t.questions.length})`);return;}
+  let sc;
+  if(id==='berlin'||id==='cinq_mots'||id==='paquets_annees'||id==='begaud'||id==='cha2ds2_vasc'){sc=t.interpret(ST.answers[id]);}
+  else{const s=t.questions.reduce((a,q)=>a+(q.excludeFromScore?0:(ST.answers[id][q.id]||0)),0);sc={rawScore:s,...t.interpret(s)};}
+  ST.scores[id]=sc;
+  ST.completed.add(id);
+  goMenu();
+  updateProgress();
+  toast('✓ '+t.title.split('—')[0].trim()+' enregistré');
+}
+
+function goMenu(){showScreen('menu')}
+
+// ════════════════════════════════════════════════
+//  RESULTS
+// ════════════════════════════════════════════════
+function showResults(){
+  const p=ST.patient;
+  document.getElementById('r-name').textContent=p.prenom+' '+p.nom.toUpperCase();
+  document.getElementById('r-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const rc=document.getElementById('res-content');
+  rc.innerHTML='';
+  // Group by cat
+  CATS.forEach(cat=>{
+    const ids=allTestIds().filter(id=>TESTS[id].cat===cat.id&&ST.completed.has(id));
+    if(!ids.length)return;
+    const st=document.createElement('div');
+    st.className='res-section-title';
+    st.textContent=cat.icon+' '+cat.label;
+    rc.appendChild(st);
+    ids.forEach(id=>{
+      const t=TESTS[id],sc=ST.scores[id];
+      if(!sc)return;
+      const card=document.createElement('div');
+      card.className='rcard '+(sc.cls||'');
+      let shtml='';
+      if(t.custom)shtml=`<div class="rc-score">${sc.scoreDisplay||sc.rawScore}<span></span></div>`;
+      else if(id==='berlin')shtml=`<div class="rc-score">${sc.score}<span>/${sc.maxScore} catégories pos.</span></div>`;
+      else if(id==='cinq_mots')shtml=`<div class="rc-score">${ST.answers[id].cm1+ST.answers[id].cm3+(ST.answers[id].cm4||0)}<span>/10</span></div>`;
+      else if(!t.maxScore)shtml=`<div class="rc-score">${sc.rawScore}<span> pts</span></div>`;
+      else shtml=`<div class="rc-score">${sc.rawScore}<span>/${t.maxScore}</span></div>`;
+      card.innerHTML=`<div class="rc-label">${t.title}</div>${shtml}<div class="rc-interp">${sc.label}</div>${sc.detail?`<div class="rc-detail">${sc.detail}</div>`:''}`;
+      rc.appendChild(card);
+    });
+  });
+  showScreen('result');
+}
+
+function newSession(){
+  Object.assign(ST,{patient:{},age:0,answers:{},scores:{},completed:new Set(),current:null,activePrev:[]});
+  Object.keys(TESTS).forEach(id=>ST.answers[id]={});
+  ['i-prenom','i-nom','i-dob','i-med'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('i-sexe').value='';
+  showScreen('welcome');
+}
+
+// ════════════════════════════════════════════════
+//  PDF
+// ════════════════════════════════════════════════
+function generatePDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const p=ST.patient;
+  const now=new Date().toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
+  // Header
+  doc.setFillColor(15,30,46);doc.rect(0,0,210,40,'F');
+  doc.setTextColor(240,236,230);doc.setFontSize(20);doc.setFont('times','italic');
+  doc.text('Rapport d\'Évaluations Médicales',20,16);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');
+  doc.text(`Patient : ${p.prenom} ${p.nom.toUpperCase()}  |  Date : ${now}`,20,25);
+  if(p.medecin)doc.text(`Médecin : ${p.medecin}  |  Âge : ${ST.age?ST.age+' ans':'—'}  |  Sexe : ${p.sexe||'—'}`,20,32);
+  let y=50;
+  CATS.forEach(cat=>{
+    const ids=allTestIds().filter(id=>TESTS[id].cat===cat.id&&ST.completed.has(id));
+    if(!ids.length)return;
+    if(y>255){doc.addPage();y=20;}
+    // Cat header
+    doc.setFillColor(230,235,240);doc.rect(15,y,180,7,'F');
+    doc.setTextColor(15,30,46);doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text(cat.icon+' '+cat.label.toUpperCase(),19,y+5);
+    y+=11;
+    ids.forEach(id=>{
+      const t=TESTS[id],sc=ST.scores[id];
+      if(!sc)return;
+      if(y>258){doc.addPage();y=20;}
+      doc.setFillColor(26,122,110);doc.rect(15,y,180,7,'F');
+      doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+      doc.text(t.title,19,y+5);y+=11;
+      doc.setTextColor(28,43,58);doc.setFont('helvetica','normal');
+      let scoreStr='';
+      if(t.custom)scoreStr=`Résultat : ${sc.scoreDisplay||sc.rawScore}`;
+      else if(id==='berlin')scoreStr=`Catégories positives : ${sc.score}/${sc.maxScore}`;
+      else if(!t.maxScore)scoreStr=`Score de risque : ${sc.rawScore} pts`;
+      else scoreStr=`Score : ${sc.rawScore}/${t.maxScore}`;
+      doc.setFontSize(11);doc.setFont('helvetica','bold');
+      doc.text(scoreStr,19,y);y+=6;
+      doc.setFontSize(10);doc.setFont('helvetica','italic');
+      const col=sc.cls==='danger'?[184,64,64]:sc.cls==='warn'?[192,128,48]:sc.cls==='ok'?[45,122,95]:[50,50,50];
+      doc.setTextColor(col[0],col[1],col[2]);
+      doc.text('→ '+sc.label,19,y);y+=6;
+      if(sc.detail){doc.setFont('helvetica','normal');doc.setTextColor(107,127,142);doc.setFontSize(8.5);const lines=doc.splitTextToSize(sc.detail,172);doc.text(lines,19,y);y+=lines.length*4;}
+      doc.setTextColor(28,43,58);doc.setFontSize(8);doc.setFont('helvetica','normal');
+      if(t.custom){
+        const a=ST.answers[id]||{};
+        doc.setFontSize(8);doc.setTextColor(28,43,58);
+        doc.text(`  DDR : ${a.ddr||'—'} · Conception : ${a.conception||'—'} · Date référence : ${a.ref||'—'}`,19,y);y+=5;
+      }
+      t.questions.forEach((q,i)=>{
+        if(y>268){doc.addPage();y=20;}
+        const ans=ST.answers[id][q.id];
+        if(ans===undefined)return;
+        const lbl=q.options.find(o=>o[1]===ans);
+        const line=`  Q${i+1}. ${q.text.substring(0,60)}${q.text.length>60?'…':''} → ${lbl?lbl[0]:'—'} (${ans}pt)`;
+        const wrapped=doc.splitTextToSize(line,172);
+        doc.text(wrapped,19,y);y+=wrapped.length*4;
+      });
+      y+=6;
+    });
+  });
+  const pc=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pc;i++){
+    doc.setPage(i);
+    doc.setFillColor(15,30,46);doc.rect(0,285,210,12,'F');
+    doc.setTextColor(180,180,180);doc.setFontSize(7.5);doc.setFont('helvetica','normal');
+    doc.text(`Document confidentiel — ${p.prenom} ${p.nom} — ${now} — Page ${i}/${pc}`,105,291,{align:'center'});
+  }
+  doc.save(`rapport_${p.nom}_${p.prenom}_${new Date().toISOString().slice(0,10)}.pdf`);
+  toast('PDF téléchargé !');
+}
+
+// ════════════════════════════════════════════════
+//  EMAIL
+// ════════════════════════════════════════════════
+function openMail(){document.getElementById('mail-modal').classList.add('on')}
+function closeMail(){document.getElementById('mail-modal').classList.remove('on')}
+function sendMail(){
+  const email=document.getElementById('mail-input').value.trim();
+  if(!email.includes('@')){toast('Email invalide');return;}
+  const p=ST.patient,now=new Date().toLocaleDateString('fr-FR');
+  let body=`Rapport d'évaluations médicales\nPatient : ${p.prenom} ${p.nom} | Date : ${now}\n\n`;
+  CATS.forEach(cat=>{
+    const ids=allTestIds().filter(id=>TESTS[id].cat===cat.id&&ST.completed.has(id));
+    if(!ids.length)return;
+    body+=`\n=== ${cat.label.toUpperCase()} ===\n`;
+    ids.forEach(id=>{
+      const t=TESTS[id],sc=ST.scores[id];
+      if(!sc)return;
+      body+=`\n${t.title}\n`;
+      if(id==='berlin')body+=`Résultat : ${sc.score}/${sc.maxScore} catégories positives\n`;
+      else if(!t.maxScore)body+=`Score de risque : ${sc.rawScore} pts\n`;
+      else body+=`Score : ${sc.rawScore}/${t.maxScore}\n`;
+      body+=`Interprétation : ${sc.label}\n`;
+    });
+  });
+  window.location.href=`mailto:${email}?subject=${encodeURIComponent('Rapport médical — '+p.prenom+' '+p.nom+' — '+now)}&body=${encodeURIComponent(body)}`;
+  closeMail();toast('Ouverture du client email…');
+}
+
+// ════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');window.scrollTo(0,0)}
+let _tt;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('on'),3000)}
+</script>
+</body>
+</html>
