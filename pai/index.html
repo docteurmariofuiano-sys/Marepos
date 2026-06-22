@@ -329,10 +329,12 @@ textarea{resize:vertical;min-height:64px}
     </div>
 
     <div class="btnrow no-print">
-      <button class="btn primary" id="printBtn" type="button">🖨️ Imprimer / Enregistrer en PDF</button>
+      <button class="btn primary" id="pdfBtn" type="button">📄 PDF officiel Eduscol pré-rempli</button>
+      <button class="btn ghost" id="printBtn" type="button">🖨️ Imprimer l'aperçu</button>
       <button class="btn green" id="copyBtn" type="button">📋 Copier le texte</button>
       <button class="btn ghost" id="resetBtn" type="button">↺ Réinitialiser</button>
     </div>
+    <p id="pdfMsg" class="no-print" style="font-size:12px;color:var(--ink-soft);margin-top:8px"></p>
   </div>
 
   <!-- ============== COLONNE APERÇU ============== -->
@@ -351,6 +353,7 @@ textarea{resize:vertical;min-height:64px}
 </div>
 </main>
 
+<script src="vendor/pdf-lib.min.js"></script>
 <script>
 'use strict';
 /* =====================================================================
@@ -919,10 +922,178 @@ function init(){
     if(v){ state.free.push(v); $("#freeMed").value=""; renderFree(); render(); }
   });
   $("#freeMed").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#addFreeBtn").click(); }});
+  $("#pdfBtn").addEventListener("click",buildPdf);
   $("#printBtn").addEventListener("click",()=>window.print());
   $("#resetBtn").addEventListener("click",()=>{ if(confirm("Réinitialiser tout le formulaire ?")) location.reload(); });
   $("#copyBtn").addEventListener("click",copyText);
   render();
+}
+
+/* =====================================================================
+   Génération du PDF officiel Eduscol pré-rempli (pdf-lib)
+   ===================================================================== */
+const TPL = {
+  asthme:"fiche-asthme.pdf",
+  allergie:"fiche-anaphylaxie.pdf", venin:"fiche-anaphylaxie.pdf", allergie_div:"fiche-anaphylaxie.pdf",
+  diabete:"fiche-diabete.pdf",
+  epilepsie:"fiche-epilepsie.pdf",
+  drepano:"fiche-drepanocytose.pdf",
+};
+const nomComplet = ()=>[val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
+function selMedObjs(){
+  return MEDS.filter(m=>state.meds.has(m.id)).map(m=>{const v=medValues(m.id);
+    return {id:m.id,patho:m.patho,nom:m.nom,dci:m.dci,poso:v.poso,voie:v.voie,moment:v.moment,urgent:m.urgent,trousse:m.trousse};});
+}
+/* Rend le texte encodable par la police standard du PDF (WinAnsi) */
+const WINANSI_EXTRA = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ";
+function san(s){
+  s = String(s)
+    .replace(/≥/g,">=").replace(/≤/g,"<=")
+    .replace(/→/g,"->").replace(/⇒/g,"=>").replace(/↓/g,"(baisse)").replace(/↑/g,"(hausse)")
+    .replace(/…/g,"...").replace(/[“”]/g,'"').replace(/[‘’]/g,"'");
+  let out="";
+  for(const ch of s){ const c=ch.codePointAt(0); if(c<=0xFF || WINANSI_EXTRA.indexOf(ch)>=0) out+=ch; }
+  return out;
+}
+const mkT = form => (n,v)=>{ if(!v) return; try{form.getTextField(n).setText(san(v));}catch(e){} };
+const mkC = form => n=>{ try{form.getCheckBox(n).check();}catch(e){} };
+
+function fillGeneral(form){
+  const T=mkT(form), C=mkC(form);
+  T("Nom  Prénom", nomComplet());
+  T("Date de naissance", frDate(val("f_ddn")));
+  T("Adresse", val("f_adresse"));
+  T("Lien de parentéRow1",val("r1_lien")); T("Nom et prénomRow1",val("r1_nom")); T("PortableRow1",val("r1_tel"));
+  T("Lien de parentéRow2",val("r2_lien")); T("Nom et prénomRow2",val("r2_nom")); T("PortableRow2",val("r2_tel"));
+  const isMod = val("f_type").indexOf("Modif")===0;
+  if(isMod){ T("Modifications éventuellesDate",frDate(val("f_date"))); T("Modifications éventuellesClasse",val("f_classe")); }
+  else{ T("PAI 1ere demandeDate",frDate(val("f_date"))); T("PAI 1ere demandeClasse",val("f_classe")); }
+  const med = [val("f_medtraitant"),val("f_medtel")].filter(Boolean).join(" — ");
+  T("NomMédecins traitants services hospitaliers", med);
+  const resto = val("f_resto");
+  if(/garanti/.test(resto)) C("Régime spécifique garanti par le distributeur de la restauration");
+  if(/Éviction des allergènes par le service/.test(resto)) C("Éviction des allergènes dans le régime habituel pratiquée");
+  if(/Éviction demandée par la famille/.test(resto)) C("Éviction demandée par la famille après lecture préalable du menu");
+  if(/Panier/.test(resto)) C("Panier repas fourni par la famille gestion selon la réglementation en");
+  const meds = selMedObjs();
+  if(meds.length){
+    C("Traitement médicamenteux");
+    const m0=meds[0];
+    T("Texte34", m0.nom+(m0.dci?(" ("+m0.dci+")"):""));
+    T("Texte35", m0.poso);
+    T("Texte36", [m0.voie,m0.moment].filter(Boolean).join(" · "));
+    if(meds.length>1) T("Texte37", "Autres traitements et conduite à tenir : voir fiches jointes.");
+  }
+  if(val("f_surveillance")){ C("Surveillances particulières"); T("Texte37", val("f_surveillance")); }
+  if(meds.some(m=>m.trousse)){ C("PAI obligatoirement"); C("Ordonnance"); C("Traitements"); }
+  const P=state.pathos;
+  if(P.has("diabete")||P.has("mici")||P.has("renal")||P.has("drepano")||P.has("muco"))
+    C("Autorisation de sortie de classe toilettes boissons infirmerie vie scolaire etc");
+  if(P.has("drepano")||P.has("muco")||P.has("cancer")) C("Temps de repos");
+}
+
+function fillFicheCommon(form, pathoId){
+  const T=mkT(form);
+  T("Nom Prénom", nomComplet());
+  T("Date de Naissance", frDate(val("f_ddn")));
+  T("Numéros durgence spécifiques éventuels autres que le 15 ou le 112", val("f_numurg"));
+  T("Fiche établie pour la période suivante", val("f_periode")||val("f_annee"));
+  T("Cachet du médecin", val("f_medtraitant"));
+}
+function medsOf(pathoId){ return selMedObjs().filter(m=>m.patho===pathoId); }
+function medSummary(pathoId){ return medsOf(pathoId).map(m=>`${m.nom} (${m.poso}, ${m.voie})`).join(" · "); }
+
+const FILLERS = {
+  asthme(form){
+    const C=mkC(form), T=mkT(form);
+    ["Toux sèche","Gêne respiratoire","Essoufflement","Respiration sifflante","Pâleur"].forEach(C);
+    if(state.meds.has("salbu_asthme")) C("Faire inhaler");
+    if(state.meds.has("cortico_asthme")){ const m=medsOf("asthme").find(x=>x.id==="cortico_asthme"); if(m) T("Traitement complémentaire par", `${m.nom} — ${m.poso}`); }
+  },
+  anaphylaxie(form){ /* signes pré-imprimés ; identité seulement */ },
+  diabete(form){
+    const C=mkC(form);
+    ["Pâleur","Sueurs","Tremblements","Difficultés pour parler","Agitation","Somnolence","Agressivité inhabituelle"].forEach(C);
+    ["Perte de connaissance avec ou sans","Somnolence extrême","Hypoglycémie et impossibilité de"].forEach(C);
+  },
+  epilepsie(form){
+    const C=mkC(form), T=mkT(form);
+    ["Perte de Connaissance","Secousses musculaires involontaires","Raideur généralisée du corps","Contraction de la mâchoire"].forEach(C);
+    const s=medSummary("epilepsie"); if(s) T("Traitement éventuel", s);
+  },
+  drepanocytose(form){
+    const C=mkC(form), T=mkT(form);
+    const m=medsOf("drepano")[0];
+    if(m){ C("Paracétamol"); T("Paracétamol  Forme  Dose  1 dose toutes les 6 heures si douleur maximum 4 doses par jour Autre  Forme  Dose Autre", `${m.nom} — ${m.poso} (1 dose / 6 h, max 4/j)`); }
+  },
+  standard(form, pathoId){
+    /* fiche générique : identité + récap traitement dans la 1re ligne de signes si possible */
+    const T=mkT(form);
+    T("   Row1", "Voir conduite à tenir — "+ (PATHOS.find(p=>p.id===pathoId)||{}).t);
+    const s=medSummary(pathoId); if(s) T("undefined_8", s);
+  }
+};
+
+/* mappe une fiche-template vers son filler */
+const TPL_FILLER = {
+  "fiche-asthme.pdf":"asthme", "fiche-anaphylaxie.pdf":"anaphylaxie", "fiche-diabete.pdf":"diabete",
+  "fiche-epilepsie.pdf":"epilepsie", "fiche-drepanocytose.pdf":"drepanocytose", "fiche-standard.pdf":"standard"
+};
+
+async function loadDoc(file){
+  const res = await fetch("templates/"+file);
+  if(!res.ok) throw new Error("Modèle introuvable : "+file);
+  return PDFLib.PDFDocument.load(await res.arrayBuffer());
+}
+
+async function buildPdf(){
+  const msg = $("#pdfMsg");
+  if(!window.PDFLib){ msg.textContent = "⚠️ Librairie PDF non chargée."; return; }
+  msg.textContent = "⏳ Génération du PDF officiel…";
+  try{
+    const merged = await PDFLib.PDFDocument.create();
+    const addFlattened = async (doc)=>{
+      doc.getForm().flatten();
+      const pages = await merged.copyPages(doc, doc.getPageIndices());
+      pages.forEach(p=>merged.addPage(p));
+    };
+    // 1) PAI général
+    const gen = await loadDoc("pai-general.pdf");
+    fillGeneral(gen.getForm());
+    await addFlattened(gen);
+    // 2) fiches conduite à tenir, une par pathologie disposant d'un modèle
+    const seen = new Set();
+    let nbFiches = 0;
+    for(const p of PATHOS){
+      if(!state.pathos.has(p.id)) continue;
+      let file = TPL[p.id];
+      if(!file){
+        // fiche standard si traitement d'urgence coché et pathologie non « dys »
+        if(!p.pap && MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id))) file="fiche-standard.pdf";
+        else continue;
+      }
+      const dedup = file==="fiche-anaphylaxie.pdf" ? file : p.id+"|"+file;
+      if(seen.has(dedup)) continue;
+      seen.add(dedup);
+      const doc = await loadDoc(file);
+      fillFicheCommon(doc.getForm(), p.id);
+      const fillerName = TPL_FILLER[file];
+      if(FILLERS[fillerName]) FILLERS[fillerName](doc.getForm(), p.id);
+      await addFlattened(doc);
+      nbFiches++;
+    }
+    const bytes = await merged.save();
+    const blob = new Blob([bytes], {type:"application/pdf"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const fnom = (nomComplet()||"PAI").replace(/[^\p{L}\p{N}]+/gu,"_");
+    a.href = url; a.download = "PAI_"+fnom+".pdf";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    msg.textContent = `✓ PDF généré : PAI général + ${nbFiches} fiche(s) conduite à tenir. Pensez à vérifier, dater et signer.`;
+  }catch(e){
+    msg.textContent = "⚠️ "+e.message+" (les modèles PDF doivent être servis via http(s), pas en ouverture directe du fichier).";
+  }
 }
 
 function copyText(){

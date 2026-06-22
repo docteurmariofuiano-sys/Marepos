@@ -32,7 +32,34 @@ document se met en forme tout seul selon les **3 parties officielles**.
 3. Cocher les **médicaments** (posologie / voie / horaire ajustables, médicaments
    libres possibles) ; renseigner lieu de la trousse, surveillances, restauration.
 4. **Aperçu du PAI en temps réel** à droite, au format officiel.
-5. **Imprimer / PDF** (mise en page d'impression dédiée) ou **copier le texte**.
+5. Trois sorties possibles :
+   - **📄 PDF officiel Eduscol pré-rempli** — remplit les **vrais formulaires
+     AcroForm** du ministère (champs + cases à cocher) et les fusionne en un seul
+     PDF : le PAI général + une fiche « conduite à tenir » par pathologie ;
+   - **🖨️ Imprimer l'aperçu** (mise en page d'impression dédiée) ;
+   - **📋 Copier le texte**.
+
+## Remplissage du PDF officiel
+
+Les modèles officiels (dossier `templates/`) sont de vrais formulaires PDF à
+champs nommés. L'app utilise [pdf-lib](https://pdf-lib.js.org/) (embarqué dans
+`vendor/`, hors-ligne) pour :
+
+- **PAI général** : état civil de l'élève, responsables légaux, 1ʳᵉ demande /
+  modification (date, classe), médecin traitant, cases restauration, soins
+  (traitement médicamenteux + nom/posologie/voie du 1ᵉʳ traitement),
+  contenu de la trousse, quelques aménagements selon la pathologie ;
+- **fiches conduite à tenir** : identité / période / n° d'urgence / cachet,
+  cases « signes » cochées, et **traitement déduit des médicaments cochés**
+  (ex. corticoïde dans « traitement complémentaire » de l'asthme, antalgique
+  dans la fiche drépanocytose, traitement de crise dans la fiche épilepsie).
+
+Le PDF fusionné est aplati (valeurs figées) puis téléchargé sous
+`PAI_Nom.pdf`. Les champs incertains restent vides, à compléter par le médecin.
+
+> Le remplissage PDF nécessite que le site soit servi en **http(s)**
+> (GitHub Pages ou serveur local) — l'ouverture directe du fichier `index.html`
+> bloque le chargement des modèles par le navigateur.
 
 ## Pathologies & logique embarquée
 
