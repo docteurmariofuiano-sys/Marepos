@@ -567,7 +567,7 @@
     };
 
     const RAPPEL_STATES = [
-      "Non traité", "Message préparé", "Message envoyé via Doctolib", "Message envoyé via Maiia",
+      "Non traité", "Message préparé", "Message envoyé via messagerie", "Message envoyé via Maiia",
       "Message envoyé via logiciel métier", "Appel à faire", "Appel effectué", "Patient injoignable",
       "Message vocal laissé", "RDV pris", "Refus patient", "Déjà fait selon patient", "À vérifier dans dossier",
       "Prescription à prévoir", "À revoir par le médecin", "Action clôturée"
@@ -1155,7 +1155,7 @@
     }
 
     function rowButtons(p, type) {
-      if (type === "message") return `<div class="actions"><button class="small" data-copy-message="${p.id}"><i data-lucide="copy"></i> Copier</button><button class="small" data-action="${p.id}|Message envoyé via Doctolib">Doctolib</button><button class="small" data-action="${p.id}|Message envoyé via Maiia">Maiia</button><button class="small" data-action="${p.id}|Message envoyé via logiciel métier">Logiciel</button></div>`;
+      if (type === "message") return `<div class="actions"><button class="small" data-copy-message="${p.id}"><i data-lucide="copy"></i> Copier</button><button class="small" data-action="${p.id}|Message envoyé via messagerie">Messagerie</button><button class="small" data-action="${p.id}|Message envoyé via Maiia">Maiia</button><button class="small" data-action="${p.id}|Message envoyé via logiciel métier">Logiciel</button></div>`;
       return `<div class="actions"><button class="small" data-show-script="${p.id}"><i data-lucide="phone"></i> Afficher</button><button class="small" data-copy-consigne="${p.id}"><i data-lucide="clipboard"></i> Consigne</button><button class="small" data-action="${p.id}|Appel effectué">Appel</button><button class="small" data-action="${p.id}|Patient injoignable">Injoignable</button><button class="small" data-action="${p.id}|RDV pris">RDV</button><button class="small" data-action="${p.id}|Refus patient">Refus</button><button class="small" data-action="${p.id}|Action clôturée">Clôturer</button></div>`;
     }
 
