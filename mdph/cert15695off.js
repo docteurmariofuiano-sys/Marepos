@@ -45,8 +45,19 @@ window.CERT15695OFF = (function(){
     h_date:{'À la naissance':[1,36,440],'Depuis moins d\'un an':[1,156,440],'Depuis 1 à 5 ans':[1,36,420],'Depuis plus de 5 ans':[1,156,420]},
     c_lat:{'Droite':[1,440,262],'Gauche':[1,506,262]},
     c_evol:{'Stabilité':[2,36,771],'Aggravation':[2,36,753],'Incapacité fluctuante':[2,127,771],'Évolutivité majeure':[2,127,753],'Amélioration':[2,254,771],'Non définie':[2,254,753]},
+    t_autres:{'Hospitalisations itératives ou programmées':[2,36,156],'Soins ou traitements nocturnes':[2,241,156],'Suivi médical spécialisé':[2,36,136],'Autres':[2,241,136]},
     t_sanit:{'Ergothérapeute':[3,36,756],'Infirmière':[3,36,734],'Kinésithérapeute':[3,36,712],'Orthophoniste':[3,36,689],'Orthoptiste':[3,36,667],'Psychologue':[3,36,645],'Psychomotricien':[3,36,622]},
     t_pluri:{'CMPP':[3,302,756],'CMP':[3,302,734],'CATTP':[3,302,712],'Hôpital de jour':[3,302,689]},
+    a_audi:{'Unilatérale':[3,151,381],'Bilatérale':[3,269,381],'Appareillage':[3,373,381],'Implant':[3,505,381]},
+    a_mob:{'Déambulateur':[3,150,353],'Canne':[3,269,353],'Orthèse/prothèse':[3,373,353],'Fauteuil roulant électrique':[3,150,333],'Fauteuil roulant manuel':[3,373,333],'Autre (scooter…)':[3,150,312]},
+    a_vis:{'Télé-agrandisseur':[3,150,262],'Terminal-braille':[3,269,262],'Logiciel de basse vision':[3,373,262],'Loupe':[3,150,245],'Logiciel de synthèse vocale':[3,269,245]},
+    a_alim:{'Gastro/jéjunostomie d\'alimentation':[3,150,219],'Stomie digestive d\'élimination':[3,373,219],'Sonde urinaire':[3,150,200],'Stomie urinaire':[3,269,200]},
+    a_resp:{'Trachéotomie':[3,150,175],'O₂':[3,269,175],'Appareil de ventilation':[3,373,175]},
+    a_parole:{'Prothèse phonatoire':[3,150,148]},
+    r_aides_int:{'Cannes':[4,206,705],'Déambulateur':[4,206,684],'Fauteuil roulant manuel':[4,206,663],'Fauteuil roulant électrique':[4,206,642]},
+    r_aides_ext:{'Cannes':[4,321,705],'Déambulateur':[4,321,684],'Fauteuil roulant manuel':[4,321,663],'Fauteuil roulant électrique':[4,321,642]},
+    r_depl_div:{'Ralentissement moteur':[4,179,617],'Besoin de pauses':[4,388,617],'Besoin d\'accompagnement pour les déplacements extérieurs':[4,388,596]},
+    r_sait:{'Lire':[5,311,295],'Écrire':[5,362,295],'Calculer':[5,422,295],'Ne se prononce pas':[5,501,295]},
     g_mt:{'Oui':[7,425,350],'Non':[7,479,350]}
   };
   const FREQX={'Permanents':376,'Réguliers (>15j/mois)':448,'Ponctuel (<15j/mois)':518};
