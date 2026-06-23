@@ -31,6 +31,7 @@ mdph/                 MDPH Assist — certificat médical (Cerfa 15695*01)
   kb.js                 Base pathologies (signes, traitement, pronostic, besoins)
   meds.js               Base médicaments locale (effet secondaire principal)
   cerfa_15692.pdf       Formulaire officiel 15692*01 (à champs) rempli par l'app
+  cert15695.js          Remplissage par surimpression du certificat 15695 (chargé par l'utilisateur)
   vendor/pdf-lib.min.js Librairie locale de remplissage PDF (hors-ligne)
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :

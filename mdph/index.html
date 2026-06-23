@@ -214,12 +214,29 @@
         <span class="legend">Se remplit en direct. « Télécharger » ouvre l'impression → « Enregistrer en PDF ».</span>
       </div>
     </div>
+
+    <div class="out-card" style="margin-top:14px">
+      <div class="out-head"><h2>📄 Remplir VOTRE certificat 15695 officiel</h2></div>
+      <div style="padding:14px; display:flex; flex-direction:column; gap:10px">
+        <p class="legend" style="margin:0">Chargez votre certificat <strong>15695*01</strong> (le PDF officiel que vous utilisez),
+          puis générez-le rempli par surimpression — c'est <strong>votre document</strong>, pas une copie. Traité en local,
+          rien n'est envoyé ni stocké. L'ancienne signature est masquée et laissée vierge.</p>
+        <input type="file" id="cert-file" accept="application/pdf" style="font:inherit; font-size:.85rem">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
+          <button class="btn primary" id="btn-cert" type="button">⬇️ Générer mon certificat 15695 rempli</button>
+          <span class="toast" id="cert-msg" aria-live="polite"></span>
+        </div>
+        <p class="legend" style="margin:0">Calage adapté à la mise en page du certificat fourni (type mdphclic).
+          Champs texte des 8 sections ; les petites cases A/B/C/D seront ajoutées ensuite.</p>
+      </div>
+    </div>
   </div>
 
   <div class="footer">MDPH Assist — suite <strong>ASSISTANT MÉDICAL</strong>. Hors-ligne, sans stockage. Bases médicaments/pathologies indicatives à vérifier.</div>
 </main>
 
 <script src="vendor/pdf-lib.min.js"></script>
+<script src="cert15695.js"></script>
 <script src="meds.js"></script>
 <script src="kb.js"></script>
 <script>
@@ -751,6 +768,24 @@ async function fillDemande(){
   toast('✓ Demande 15692 officielle téléchargée');
 }
 
+/* ===== remplissage de VOTRE certificat 15695 (surimpression) ===== */
+let certBytes=null;
+function certMsg(m){ const e=$('#cert-msg'); if(e){ e.textContent=m; setTimeout(()=>{if(e.textContent===m)e.textContent='';},3000);} }
+async function fillCert(){
+  if(!window.CERT15695){ alert('Module cert15695.js non chargé.'); return; }
+  if(!certBytes){ alert('Chargez d\'abord votre certificat 15695 (PDF) via le sélecteur de fichier.'); return; }
+  certMsg('Génération…');
+  try{
+    const signs=(MROWS.c_signes||[]).filter(r=>r.label.trim()).map(r=>r.label.trim());
+    const filled=await window.CERT15695.fill(certBytes.slice(0), V, signs);
+    const blob=new Blob([filled],{type:'application/pdf'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='certificat_MDPH_15695_rempli.pdf'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{a.remove(); URL.revokeObjectURL(a.href);},1000);
+    certMsg('✓ Certificat rempli téléchargé');
+  }catch(e){ certMsg('Erreur : '+e.message); alert('Échec du remplissage : '+e.message); }
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
   build(); recomputeAuto(); refresh();
   $('#btn-dl').addEventListener('click',dl);
@@ -758,6 +793,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('#btn-15692').addEventListener('click',fillDemande);
   $('#btn-print').addEventListener('click',()=>window.print());
   $('#btn-reset').addEventListener('click',reset);
+  $('#cert-file').addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f){certBytes=null;return;}
+    const r=new FileReader(); r.onload=()=>{certBytes=r.result; certMsg('✓ « '+f.name+' » chargé');}; r.readAsArrayBuffer(f);
+  });
+  $('#btn-cert').addEventListener('click',fillCert);
 });
 </script>
 </body>
