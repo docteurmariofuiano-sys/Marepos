@@ -46,9 +46,29 @@ window.CERT15695 = (function(){
     m_dom:{p:6,ys:[748,724,703,682,660,638,617],
       rows:['Prendre son traitement','Gérer son stress','Faire les courses','Préparer le repas','Entretien courant du logement','Démarches administratives','Gérer son budget']}
   };
-  // cases simples (radio) page 2 : origine + date d'apparition
-  const ORI={'Congénitale':[52,506],'Maladie':[124,506],'Accident vie privée':[195,506],'Accident du travail':[52,481],'Maladie professionnelle':[140,481]};
-  const DAT={'À la naissance':[52,434],'Depuis moins d\'un an':[140,434],'Depuis 1 à 5 ans':[52,411],'Depuis plus de 5 ans':[140,411]};
+  // cases simples : champ app -> {valeur:[page,x,y(centre boîte)]}
+  // (radio dans V : h_origine,h_date,c_lat,g_mt ; ensembles dans C : les autres)
+  const CHK={
+    h_origine:{'Congénitale':[1,52,506],'Maladie':[1,124,506],'Accident vie privée':[1,195,506],'Accident du travail':[1,52,481],'Maladie professionnelle':[1,140,481]},
+    h_date:{'À la naissance':[1,52,434],'Depuis moins d\'un an':[1,140,434],'Depuis 1 à 5 ans':[1,52,411],'Depuis plus de 5 ans':[1,140,411]},
+    c_lat:{'Droite':[1,445,276],'Gauche':[1,522,276]},
+    c_evol:{'Stabilité':[2,50,780],'Aggravation':[2,50,757],'Incapacité fluctuante':[2,152,780],'Évolutivité majeure':[2,152,757],'Amélioration':[2,297,780],'Non définie':[2,297,757]},
+    t_autres:{'Hospitalisations itératives ou programmées':[2,38,148],'Suivi médical spécialisé':[2,38,116],'Soins ou traitements nocturnes':[2,243,148],'Autres':[2,243,116]},
+    t_sanit:{'Ergothérapeute':[3,38,763],'Infirmière':[3,38,716],'Kinésithérapeute':[3,38,672],'Orthophoniste':[3,38,631],'Orthoptiste':[3,38,588],'Psychologue':[3,38,545],'Psychomotricien':[3,38,503]},
+    t_pluri:{'CMPP':[3,285,763],'CMP':[3,285,716],'CATTP':[3,285,672],'Hôpital de jour':[3,285,631]},
+    a_audi:{'Unilatérale':[3,161,392],'Bilatérale':[3,281,392],'Appareillage':[3,388,392],'Implant':[3,500,392]},
+    a_mob:{'Déambulateur':[3,161,360],'Canne':[3,281,360],'Orthèse/prothèse':[3,388,360],'Fauteuil roulant électrique':[3,161,340],'Fauteuil roulant manuel':[3,388,340],'Autre (scooter…)':[3,161,312]},
+    a_vis:{'Télé-agrandisseur':[3,161,250],'Terminal-braille':[3,281,250],'Logiciel de basse vision':[3,388,250],'Loupe':[3,161,225],'Logiciel de synthèse vocale':[3,281,225]},
+    a_alim:{'Gastro/jéjunostomie d\'alimentation':[3,161,195],'Stomie digestive d\'élimination':[3,388,195],'Sonde urinaire':[3,161,170],'Stomie urinaire':[3,281,170]},
+    a_resp:{'Trachéotomie':[3,161,140],'O₂':[3,281,140],'Appareil de ventilation':[3,388,140]},
+    a_parole:{'Prothèse phonatoire':[3,161,110]},
+    r_aides_int:{'Cannes':[4,240,763],'Déambulateur':[4,240,746],'Fauteuil roulant manuel':[4,240,729],'Fauteuil roulant électrique':[4,240,712]},
+    r_aides_ext:{'Cannes':[4,358,763],'Déambulateur':[4,358,746],'Fauteuil roulant manuel':[4,358,729],'Fauteuil roulant électrique':[4,358,712]},
+    r_sait:{'Lire':[5,247,300],'Écrire':[5,330,300],'Calculer':[5,425,300],'Ne se prononce pas':[5,505,300]},
+    g_mt:{'Oui':[7,412,358],'Non':[7,462,358]}
+  };
+  const FREQX={'Permanents':380,'Réguliers (>15j/mois)':455,'Ponctuel (<15j/mois)':518};
+  const FREQY=[203,153,103];
 
   async function fill(pdfBytes, state, signs){
     if(!window.PDFLib) throw new Error('pdf-lib non chargé');
@@ -74,12 +94,17 @@ window.CERT15695 = (function(){
     (signs||[]).slice(0,3).forEach((s,i)=>{ if(SIGNS[i]) wrap(1,SIGNS[i].x,SIGNS[i].y,SIGN_W,s,7,9); });
 
     // ----- cases à cocher -----
+    const C=(state&&state.C)||{}, MROWS=(state&&state.MROWS)||{};
     // grilles d'appréciation A/B/C/D/NSP
     for(const id in MAT){ const m=MAT[id], sel=M[id]||{};
       m.rows.forEach((rowLabel,i)=>{ const c=sel[rowLabel]; if(c&&COLX[c]) tick(m.p,COLX[c],m.ys[i]-3); }); }
-    // origine + date d'apparition (page 2)
-    if(ORI[V.h_origine]) tick(1,ORI[V.h_origine][0],ORI[V.h_origine][1]);
-    if(DAT[V.h_date]) tick(1,DAT[V.h_date][0],DAT[V.h_date][1]);
+    // cases discrètes (radio dans V, ensembles dans C)
+    for(const id in CHK){ const map=CHK[id];
+      const rv=V[id]; if(typeof rv==='string' && map[rv]){ const c=map[rv]; tick(c[0],c[1],c[2]-3); }
+      const set=C[id]; if(set && set.forEach) set.forEach(v=>{ if(map[v]){ const c=map[v]; tick(c[0],c[1],c[2]-3); } });
+    }
+    // fréquence des signes invalidants (3 lignes, page 2)
+    (MROWS.c_signes||[]).slice(0,3).forEach((r,i)=>{ const col=r&&r.col; if(col&&FREQX[col]!=null&&FREQY[i]!=null) tick(1,FREQX[col],FREQY[i]-3); });
 
     SIGN_MASKS.forEach(m=>{ if(P[m.p]) P[m.p].drawRectangle({x:m.x,y:m.y,width:m.width,height:m.height,color:rgb(1,1,1)}); });
 
