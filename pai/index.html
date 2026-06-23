@@ -141,7 +141,14 @@ textarea{resize:vertical;min-height:64px}
 .btn.green{background:var(--prev);color:#fff}
 .btn.green:hover{filter:brightness(.93)}
 
-/* ---------- Aperçu / document ---------- */
+/* ---------- Aperçu PDF officiel ---------- */
+.pdfwrap{background:#fff;border:1px solid var(--line);border-radius:var(--rayon);box-shadow:var(--ombre);overflow:hidden;position:sticky;top:14px}
+.pdfbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+#pdfStatus{flex:1}
+#pdfView{width:100%;height:1080px;border:0;display:block;background:#525659}
+@media (max-width:980px){#pdfView{height:78vh}.pdfwrap{position:static}}
+
+/* ---------- Aperçu / document (masqué, sert à la copie) ---------- */
 .doc{
   background:#fff;border:1px solid var(--line);border-radius:var(--rayon);box-shadow:var(--ombre);
   padding:28px 30px;font-size:13px;color:var(--ink);
@@ -329,23 +336,29 @@ textarea{resize:vertical;min-height:64px}
     </div>
 
     <div class="btnrow no-print">
-      <button class="btn primary" id="pdfBtn" type="button">📄 PDF officiel Eduscol pré-rempli</button>
-      <button class="btn ghost" id="printBtn" type="button">🖨️ Imprimer l'aperçu</button>
+      <button class="btn primary" id="pdfBtn" type="button">📄 Télécharger le PDF officiel</button>
+      <button class="btn ghost" id="printBtn" type="button">🖨️ Imprimer le PDF</button>
       <button class="btn green" id="copyBtn" type="button">📋 Copier le texte</button>
       <button class="btn ghost" id="resetBtn" type="button">↺ Réinitialiser</button>
     </div>
     <p id="pdfMsg" class="no-print" style="font-size:12px;color:var(--ink-soft);margin-top:8px"></p>
   </div>
 
-  <!-- ============== COLONNE APERÇU ============== -->
+  <!-- ============== COLONNE APERÇU (PDF officiel) ============== -->
   <div class="col-doc">
-    <div class="doc" id="doc"></div>
+    <div class="pdfwrap">
+      <div class="pdfbar no-print">
+        <span id="pdfStatus">Aperçu du PAI officiel — renseignez le formulaire.</span>
+        <button class="btn ghost" id="refreshBtn" type="button" style="padding:6px 11px;font-size:12.5px">↻ Actualiser</button>
+      </div>
+      <iframe id="pdfView" title="Aperçu du PAI officiel rempli"></iframe>
+    </div>
+    <div class="doc" id="doc" style="display:none"></div>
     <div class="disclaimer no-print">
-      <strong>Avertissement.</strong> Trame d'<strong>aide à la rédaction</strong> reprenant la structure du
-      modèle officiel de PAI (Éducation nationale / Eduscol). Le document généré doit être <strong>relu,
-      complété, daté et signé</strong> par les parties prévues (responsables légaux, médecin prescripteur,
-      médecin de l'Éducation nationale, établissement) et adapté à chaque enfant (doses au poids, allergènes).
-      Il ne remplace ni la prescription individuelle ni le formulaire officiel. <strong>Urgence vitale : 15 / 112.</strong>
+      <strong>Avertissement.</strong> L'aperçu de droite est le <strong>formulaire officiel de l'Éducation
+      nationale (Eduscol)</strong> rempli automatiquement — c'est ce document, à <strong>relire, compléter,
+      dater et signer</strong> (responsables légaux, médecin, établissement), qui doit être remis. Adapter à
+      chaque enfant (doses au poids, allergènes). <strong>Urgence vitale : 15 / 112.</strong>
       Traitement 100 % local : aucune donnée transmise ni enregistrée.
     </div>
   </div>
@@ -761,6 +774,7 @@ function ctBlock(niveau, cls){
 }
 
 function render(){
+  schedulePreview();           // régénère l'aperçu du PDF officiel (anti-rebond)
   const doc = $("#doc");
   const nom = [val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
   if(!(state.pathos.size || nom)){
@@ -922,11 +936,13 @@ function init(){
     if(v){ state.free.push(v); $("#freeMed").value=""; renderFree(); render(); }
   });
   $("#freeMed").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#addFreeBtn").click(); }});
-  $("#pdfBtn").addEventListener("click",buildPdf);
-  $("#printBtn").addEventListener("click",()=>window.print());
+  $("#pdfBtn").addEventListener("click",downloadPdf);
+  $("#printBtn").addEventListener("click",printPdf);
+  $("#refreshBtn").addEventListener("click",updatePreview);
   $("#resetBtn").addEventListener("click",()=>{ if(confirm("Réinitialiser tout le formulaire ?")) location.reload(); });
   $("#copyBtn").addEventListener("click",copyText);
   render();
+  updatePreview();   // affiche d'emblée le PAI général officiel
 }
 
 /* =====================================================================
@@ -1046,54 +1062,91 @@ async function loadDoc(file){
   return PDFLib.PDFDocument.load(await res.arrayBuffer());
 }
 
-async function buildPdf(){
-  const msg = $("#pdfMsg");
-  if(!window.PDFLib){ msg.textContent = "⚠️ Librairie PDF non chargée."; return; }
-  msg.textContent = "⏳ Génération du PDF officiel…";
-  try{
-    const merged = await PDFLib.PDFDocument.create();
-    const addFlattened = async (doc)=>{
-      doc.getForm().flatten();
-      const pages = await merged.copyPages(doc, doc.getPageIndices());
-      pages.forEach(p=>merged.addPage(p));
-    };
-    // 1) PAI général
-    const gen = await loadDoc("pai-general.pdf");
-    fillGeneral(gen.getForm());
-    await addFlattened(gen);
-    // 2) fiches conduite à tenir, une par pathologie disposant d'un modèle
-    const seen = new Set();
-    let nbFiches = 0;
-    for(const p of PATHOS){
-      if(!state.pathos.has(p.id)) continue;
-      let file = TPL[p.id];
-      if(!file){
-        // fiche standard si traitement d'urgence coché et pathologie non « dys »
-        if(!p.pap && MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id))) file="fiche-standard.pdf";
-        else continue;
-      }
-      const dedup = file==="fiche-anaphylaxie.pdf" ? file : p.id+"|"+file;
-      if(seen.has(dedup)) continue;
-      seen.add(dedup);
-      const doc = await loadDoc(file);
-      fillFicheCommon(doc.getForm(), p.id);
-      const fillerName = TPL_FILLER[file];
-      if(FILLERS[fillerName]) FILLERS[fillerName](doc.getForm(), p.id);
-      await addFlattened(doc);
-      nbFiches++;
+/* Construit le PDF officiel fusionné (PAI général + fiches) et renvoie les octets */
+async function buildPdfBytes(){
+  const merged = await PDFLib.PDFDocument.create();
+  const addFlattened = async (doc)=>{
+    try{ doc.getForm().flatten(); }catch(e){}
+    const pages = await merged.copyPages(doc, doc.getPageIndices());
+    pages.forEach(p=>merged.addPage(p));
+  };
+  // 1) PAI général
+  const gen = await loadDoc("pai-general.pdf");
+  fillGeneral(gen.getForm());
+  await addFlattened(gen);
+  // 2) fiches conduite à tenir, une par pathologie disposant d'un modèle
+  const seen = new Set();
+  let nbFiches = 0;
+  for(const p of PATHOS){
+    if(!state.pathos.has(p.id)) continue;
+    let file = TPL[p.id];
+    if(!file){
+      if(!p.pap && MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id))) file="fiche-standard.pdf";
+      else continue;
     }
-    const bytes = await merged.save();
+    const dedup = file==="fiche-anaphylaxie.pdf" ? file : p.id+"|"+file;
+    if(seen.has(dedup)) continue;
+    seen.add(dedup);
+    const doc = await loadDoc(file);
+    fillFicheCommon(doc.getForm(), p.id);
+    const fillerName = TPL_FILLER[file];
+    if(FILLERS[fillerName]) FILLERS[fillerName](doc.getForm(), p.id);
+    await addFlattened(doc);
+    nbFiches++;
+  }
+  const bytes = await merged.save();
+  return {bytes, nbFiches};
+}
+
+/* Aperçu du PDF officiel à droite (régénéré automatiquement, anti-rebond) */
+let previewUrl=null, previewTimer=null, building=false, pending=false, lastBytes=null;
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(updatePreview, 650);
+}
+async function updatePreview(){
+  const st=$("#pdfStatus");
+  if(!window.PDFLib){ st.textContent="⚠️ Librairie PDF non chargée (servez le site via http(s))."; return; }
+  if(building){ pending=true; return; }
+  building=true; pending=false;
+  st.textContent="⏳ Mise à jour du PDF officiel…";
+  try{
+    const {bytes, nbFiches} = await buildPdfBytes();
+    lastBytes = bytes;
+    const blob = new Blob([bytes], {type:"application/pdf"});
+    if(previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(blob);
+    $("#pdfView").src = previewUrl + "#toolbar=1&view=FitH";
+    st.textContent = `✓ PAI officiel : général + ${nbFiches} fiche(s) conduite à tenir. À relire, dater et signer.`;
+  }catch(e){
+    st.textContent = "⚠️ "+e.message;
+  }finally{
+    building=false;
+    if(pending) updatePreview();
+  }
+}
+
+/* Téléchargement du PDF officiel rempli */
+async function downloadPdf(){
+  const st=$("#pdfStatus");
+  if(!window.PDFLib){ st.textContent="⚠️ Librairie PDF non chargée."; return; }
+  try{
+    const {bytes} = await buildPdfBytes();
     const blob = new Blob([bytes], {type:"application/pdf"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const fnom = (nomComplet()||"PAI").replace(/[^\p{L}\p{N}]+/gu,"_");
-    a.href = url; a.download = "PAI_"+fnom+".pdf";
+    a.href=url; a.download="PAI_"+fnom+".pdf";
     document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 4000);
-    msg.textContent = `✓ PDF généré : PAI général + ${nbFiches} fiche(s) conduite à tenir. Pensez à vérifier, dater et signer.`;
-  }catch(e){
-    msg.textContent = "⚠️ "+e.message+" (les modèles PDF doivent être servis via http(s), pas en ouverture directe du fichier).";
-  }
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }catch(e){ st.textContent="⚠️ "+e.message; }
+}
+
+/* Impression du PDF officiel affiché */
+function printPdf(){
+  const fr=$("#pdfView");
+  if(fr && fr.contentWindow){ try{ fr.contentWindow.focus(); fr.contentWindow.print(); return; }catch(e){} }
+  window.print();
 }
 
 function copyText(){

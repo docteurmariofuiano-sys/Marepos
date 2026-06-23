@@ -31,13 +31,20 @@ document se met en forme tout seul selon les **3 parties officielles**.
 2. Cocher la (les) **pathologie(s)** — le choix filtre les médicaments proposés.
 3. Cocher les **médicaments** (posologie / voie / horaire ajustables, médicaments
    libres possibles) ; renseigner lieu de la trousse, surveillances, restauration.
-4. **Aperçu du PAI en temps réel** à droite, au format officiel.
-5. Trois sorties possibles :
-   - **📄 PDF officiel Eduscol pré-rempli** — remplit les **vrais formulaires
-     AcroForm** du ministère (champs + cases à cocher) et les fusionne en un seul
-     PDF : le PAI général + une fiche « conduite à tenir » par pathologie ;
-   - **🖨️ Imprimer l'aperçu** (mise en page d'impression dédiée) ;
-   - **📋 Copier le texte**.
+4. **Aperçu en temps réel = le PDF officiel lui-même** : la colonne de droite
+   affiche le **vrai formulaire Eduscol rempli** (PAI général + une fiche
+   « conduite à tenir » par pathologie), régénéré automatiquement à chaque
+   modification. C'est ce document — le seul accepté par les établissements —
+   qui est imprimé / téléchargé.
+5. Sorties : **📄 Télécharger le PDF officiel**, **🖨️ Imprimer le PDF**,
+   **📋 Copier le texte**.
+
+## Version autonome (un seul fichier, hors-ligne)
+
+`node pai/build-standalone.js` produit **`pai/pai-autonome.html`** : un fichier
+HTML unique embarquant pdf-lib **et** les 7 formulaires officiels (base64). Il
+fonctionne par simple double-clic, sans serveur — le remplissage du PDF officiel
+y compris. (Artefact volumineux, non versionné : voir `.gitignore`.)
 
 ## Remplissage du PDF officiel
 
