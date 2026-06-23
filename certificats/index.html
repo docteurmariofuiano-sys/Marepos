@@ -459,6 +459,7 @@ const CATS = {
   psy:       { t:'Psychiatrie sans consentement',e:'🧩' },
   admin:     { t:'Assurances & administratif',   e:'🗂️' },
   handicap:  { t:'Handicap & ALD',               e:'♿' },
+  demande:   { t:'À la demande du patient',      e:'🙋' },
   sensible:  { t:'Interdits & sensibles',        e:'⛔' },
 };
 
@@ -1050,6 +1051,309 @@ Fait à {{ville}}, le {{date}}.
 (signature)`
   },
 
+  /* ====================== À LA DEMANDE DU PATIENT ======================
+     Principe protecteur commun : le médecin n'atteste QUE l'état de santé
+     constaté et ses conséquences fonctionnelles. Il n'atteste jamais le
+     fait social/administratif invoqué (insalubrité, réalité d'un voyage,
+     comportement d'un tiers) : ces éléments sont rapportés au conditionnel
+     comme déclarations du patient. */
+  {
+    id:'logement-insalubre', cat:'demande', statut:'usuel',
+    titre:'Logement insalubre / relogement — à la demande du patient',
+    resume:`Le médecin n'atteste JAMAIS l'insalubrité (constat technique : ARS, service d'hygiène). Il atteste uniquement l'état de santé et son incompatibilité avec des conditions d'habitat rapportées par le patient.`,
+    bases:['r4127-76','r4127-51','r4127-50','r4127-28'],
+    regles:[
+      'N\'attester que l\'état de santé et ses conséquences ; l\'insalubrité relève d\'un constat technique/administratif (ARS, SCHS), non du médecin.',
+      'Rapporter au conditionnel les conditions d\'habitat décrites par le patient (« déclare que… »).',
+      'Formuler en termes d\'incompatibilité entre l\'état de santé et certaines conditions (humidité, froid, absence de chauffage), sans en affirmer la réalité.',
+      'Renvoyer le patient vers les services compétents (mairie, ARS) pour le constat d\'insalubrité.'
+    ],
+    pieges:[
+      'Écrire « je certifie que le logement est insalubre » : c\'est sortir de son rôle et attester un fait non constaté médicalement (risque de faux — art. 441-7 CP — et de plainte du bailleur).',
+      'Désigner le bailleur ou s\'immiscer dans le litige locatif (art. R.4127-51).',
+      'Affirmer un lien de causalité direct « logement → maladie ».'
+    ],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné ce jour {{patient}}, né(e) le {{ddn}}, et avoir constaté l'état de santé suivant : {{pathologie}}.
+
+L'intéressé(e) déclare résider dans un logement présentant, selon ses dires, les conditions suivantes : {{declarations}} (propos rapportés, que je ne suis pas en mesure de vérifier).
+
+Du strict point de vue médical, l'état de santé constaté est susceptible d'être aggravé par des conditions d'habitat telles que celles décrites (humidité, froid, défaut de chauffage). Un logement adapté serait préférable à la préservation de sa santé.
+
+Le présent certificat n'atteste que des constatations médicales ; il ne se prononce pas sur l'état du logement, dont l'évaluation relève des services compétents (ARS / service communal d'hygiène et de santé).
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'annulation-voyage', cat:'demande', statut:'usuel',
+    titre:'Annulation / interruption de voyage pour raison médicale (assurance)',
+    resume:`Atteste qu'à une date donnée l'état de santé contre-indiquait le voyage. Le patient transmet lui-même à l'assureur ; le secret limite ce qui est écrit.`,
+    bases:['r4127-76','r4127-4','l1110-4','cp226-13'],
+    regles:[
+      'Attester la contre-indication médicale au voyage à la date prévue et la période d\'incapacité.',
+      'Limiter au strict nécessaire ; pas de diagnostic détaillé si non indispensable (secret).',
+      'Remettre au patient, seul juge de la transmission à l\'assureur.'
+    ],
+    pieges:[
+      'Antidater pour couvrir une date déjà passée sans examen = faux (art. 441-7 CP).',
+      'Adresser directement le certificat à l\'assureur (violation du secret — art. 226-13 CP).'
+    ],
+    remise:'Patient (jamais directement l\'assureur).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné {{patient}}, né(e) le {{ddn}}, le {{dateVoyage}}, et avoir constaté à cette date un état de santé constituant une contre-indication médicale au voyage / déplacement prévu.
+
+Cet état a justifié une incapacité de se déplacer du {{dateDebut}} au {{dateFin}} inclus.
+
+Certificat établi à la demande de l'intéressé(e) et remis en main propre, pour servir et valoir ce que de droit auprès de l'organisme de son choix.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'annulation-evenement', cat:'demande', statut:'usuel',
+    titre:'Annulation / remboursement d\'une prestation pour raison médicale',
+    resume:`Spectacle, location, formation, inscription… Atteste que l'état de santé a empêché d'honorer une prestation à une date donnée, sans en garantir le contexte.`,
+    bases:['r4127-76','r4127-4'],
+    regles:[
+      'Attester l\'état de santé empêchant la participation à la date concernée.',
+      'Rester factuel et limité ; pas de diagnostic inutile.'
+    ],
+    pieges:['Certifier un empêchement non constaté (complaisance / faux).','Détailler une pathologie sans nécessité.'],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné {{patient}}, né(e) le {{ddn}}, et avoir constaté, à la date du {{dateEvenement}}, un état de santé incompatible avec la participation à : {{evenement}}.
+
+Cet empêchement médical a couvert la période du {{dateDebut}} au {{dateFin}} inclus.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'rapprochement-sante', cat:'demande', statut:'usuel',
+    titre:'Rapprochement / mutation pour raison de santé',
+    resume:`Atteste que l'état de santé nécessite un suivi/des soins justifiant un rapprochement géographique. N'atteste pas la situation administrative ou familiale.`,
+    bases:['r4127-76','r4127-50','r4127-4'],
+    regles:[
+      'Décrire en termes médicaux la nécessité de soins/d\'un suivi rapproché.',
+      'Ne pas se prononcer sur l\'opportunité administrative de la mutation.'
+    ],
+    pieges:['Statuer sur des éléments non médicaux (logement, emploi du conjoint).','Nommer des tiers.'],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie suivre {{patient}}, né(e) le {{ddn}}, pour un état de santé nécessitant : {{pathologie}}.
+
+Du point de vue médical, cet état justifie un suivi régulier et rapproché, qu'un rapprochement géographique faciliterait, dans l'intérêt de la continuité des soins.
+
+Le présent certificat n'apprécie que la situation médicale.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'amenagement-logement', cat:'demande', statut:'usuel',
+    titre:'Aménagement / adaptation du logement (rez-de-chaussée, ascenseur…)',
+    resume:`Atteste que l'état de santé justifie un logement adapté (difficultés à la marche, aux escaliers). Termes fonctionnels, sans diagnostic obligatoire.`,
+    bases:['r4127-76','r4127-50'],
+    regles:[
+      'Exprimer en termes fonctionnels les limitations (montée d\'escaliers, périmètre de marche).',
+      'Préciser l\'aménagement justifié médicalement (logement de plain-pied, accès ascenseur, adaptations).'
+    ],
+    pieges:['Détailler la pathologie sans nécessité (secret).','Garantir un droit administratif (logement social) hors de son rôle.'],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, examiné(e) ce jour, entraîne les limitations fonctionnelles suivantes : {{pathologie}}.
+
+Compte tenu de ces limitations, un aménagement du logement est médicalement justifié : {{amenagement}}.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'allergie-animal', cat:'demande', statut:'usuel',
+    titre:'Allergie / éviction d\'un facteur environnemental (animal, etc.)',
+    resume:`Atteste une allergie constatée et son incompatibilité avec une exposition. Ne vise jamais un tiers nommément ni n'affirme la cause exacte de l'exposition.`,
+    bases:['r4127-76','r4127-51'],
+    regles:[
+      'Attester l\'allergie constatée (ou documentée) et la nécessité d\'éviction de l\'allergène.',
+      'Formuler de façon générale (ex. « exposition aux phanères d\'animaux »), sans désigner un voisin/un logement précis.'
+    ],
+    pieges:['Mettre en cause un voisin/un tiers (art. R.4127-51).','Affirmer une exposition non vérifiée.'],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir constaté chez {{patient}}, né(e) le {{ddn}}, une allergie à : {{pathologie}}.
+
+Du point de vue médical, l'éviction de cet allergène et la limitation de l'exposition sont recommandées pour préserver son état de santé.
+
+Le présent certificat n'atteste que la situation médicale et ne désigne aucun tiers.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'resiliation-abonnement', cat:'demande', statut:'usuel',
+    titre:'Résiliation d\'un engagement pour raison médicale (salle de sport, etc.)',
+    resume:`Atteste une contre-indication médicale durable à la poursuite d'une activité. C'est l'organisme qui apprécie les conditions contractuelles de résiliation.`,
+    bases:['r4127-76'],
+    regles:[
+      'Attester la contre-indication médicale à l\'activité concernée et son caractère durable/définitif si tel est le cas.',
+      'Rester en termes fonctionnels.'
+    ],
+    pieges:['Certifier une contre-indication non constatée (complaisance).','Diagnostic détaillé inutile.'],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, examiné(e) ce jour, constitue une contre-indication médicale {{duree}} à la pratique de l'activité suivante : {{libre}}.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'garde-enfant-malade', cat:'demande', statut:'usuel',
+    titre:'Présence d\'un parent auprès d\'un enfant malade',
+    resume:`Atteste que l'état de l'enfant nécessite la présence d'un parent à domicile, sur une période donnée. Sans mention du diagnostic.`,
+    bases:['r4127-76','r4127-50','r4127-4'],
+    regles:[
+      'Attester que l\'état de l\'enfant nécessite la présence d\'un parent et la période concernée.',
+      'Ne pas indiquer le diagnostic (secret) ; identifier l\'enfant et le lien.'
+    ],
+    pieges:['Durée disproportionnée (complaisance).','Mention du diagnostic.'],
+    remise:'Parent (pour son employeur, sans diagnostic).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné ce jour l'enfant {{patient}}, né(e) le {{ddn}}, dont l'état de santé nécessite la présence d'un parent à domicile.
+
+Cette présence est médicalement justifiée du {{dateDebut}} au {{dateFin}} inclus.
+
+Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'pai-regime', cat:'demande', statut:'usuel',
+    titre:'Régime / éviction alimentaire (cantine, PAI)',
+    resume:`Atteste la nécessité médicale d'un régime ou d'une éviction alimentaire. S'intègre au projet d'accueil individualisé (PAI) pour l'enfant.`,
+    bases:['r4127-76','r4127-4'],
+    regles:[
+      'Préciser l\'éviction/le régime nécessaire en termes opérationnels (aliments à éviter, conduite à tenir).',
+      'Pour l\'enfant en collectivité, articuler avec le PAI (médecin scolaire / de PMI).'
+    ],
+    pieges:['Régime « de confort » non justifié médicalement.'],
+    remise:'Patient / représentant légal (pour la collectivité, via le PAI).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, nécessite, pour raison médicale, le régime / l'éviction alimentaire suivant(e) : {{libre}}.
+
+Conduite à tenir particulière : {{pathologie}}.
+
+Ce certificat peut être intégré à un projet d'accueil individualisé (PAI). Remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'nuisances-sante', cat:'demande', statut:'usuel',
+    titre:'Retentissement de nuisances sur la santé (bruit, etc.)',
+    resume:`Atteste le retentissement constaté sur la santé. N'atteste NI la réalité de la nuisance, NI son origine, NI un tiers : ces éléments sont rapportés au conditionnel.`,
+    bases:['r4127-76','r4127-51','r4127-4'],
+    regles:[
+      'Décrire le retentissement constaté (troubles du sommeil, anxiété, etc.).',
+      'Rapporter au conditionnel l\'exposition décrite par le patient.',
+      'Ne pas affirmer la réalité ni l\'origine de la nuisance, ne nommer aucun tiers.'
+    ],
+    pieges:[
+      'Affirmer « troubles causés par le bruit du voisin M. X » : causalité + mise en cause d\'un tiers = risque de plainte et de faux.',
+      'Se transformer en arbitre d\'un conflit de voisinage (art. R.4127-51).'
+    ],
+    remise:'Patient.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné {{patient}}, né(e) le {{ddn}}, et avoir constaté l'état de santé suivant : {{pathologie}}.
+
+L'intéressé(e) déclare être exposé(e) à : {{declarations}} (propos rapportés, dont je ne peux attester ni la réalité ni l'origine).
+
+Du strict point de vue médical, je constate un retentissement sur son état de santé. Le présent certificat ne se prononce ni sur la réalité, ni sur la cause des nuisances invoquées, et ne met en cause aucun tiers.
+
+Certificat remis en main propre à l'intéressé(e) pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'amenagement-examen', cat:'demande', statut:'usuel',
+    titre:'Aménagement d\'épreuves / d\'examen pour raison de santé',
+    resume:`Appuie une demande d'aménagement (temps majoré, etc.). Pour les examens officiels, la décision relève d'un médecin désigné (MDPH / médecin agréé) : ce certificat est un élément du dossier.`,
+    bases:['r4127-76','r4127-50'],
+    regles:[
+      'Décrire en termes fonctionnels les limitations justifiant un aménagement.',
+      'Rappeler que la décision d\'aménagement appartient à l\'autorité/au médecin désigné.'
+    ],
+    pieges:['Promettre un aménagement (hors de son pouvoir).','Diagnostic détaillé non indispensable.'],
+    remise:'Patient / représentant légal (pour le dossier de demande).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, entraîne les limitations fonctionnelles suivantes : {{pathologie}}.
+
+Du point de vue médical, ces limitations justifient la demande d'aménagement suivant : {{amenagement}}.
+
+La décision d'aménagement relève de l'autorité compétente / du médecin désigné. Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
   /* ====================== SENSIBLES / INTERDITS ====================== */
   {
     id:'virginite', cat:'sensible', statut:'interdit',
@@ -1324,12 +1628,16 @@ const LIBELLES = {
   troubles:'Troubles constatés', justification:'Justification des soins immédiats', peril:'Péril imminent (description)',
   motifTiers:'Motif d\'absence de tiers', circonstances:'Circonstances (ordre public/sûreté)',
   activite:'Activité visée', finalite:'Finalité du certificat', dateVoyage:'Date du voyage',
-  duree:'Durée', objet:'Objet de la dispense'
+  duree:'Durée', objet:'Objet de la dispense',
+  pathologie:'Élément médical constaté (termes fonctionnels)', amenagement:'Aménagement / mesure justifié(e)',
+  evenement:'Prestation / événement concerné', dateEvenement:'Date de l\'événement'
 };
 const PLACEHS = {
   patient:'Nom Prénom', ddn:'JJ/MM/AAAA', itt:'ex. 5', discipline:'ex. football',
   totalePartielle:'totale / partielle', declarations:'« … » (au conditionnel)',
-  lesions:'siège, type, taille, couleur, stade', obstacle:'non', biere:'non', pile:'non'
+  lesions:'siège, type, taille, couleur, stade', obstacle:'non', biere:'non', pile:'non',
+  duree:'définitive / temporaire', pathologie:'termes fonctionnels, sans diagnostic si possible',
+  evenement:'ex. séjour, formation, spectacle', amenagement:'ex. logement de plain-pied / temps majoré'
 };
 const libelleChamp = k => LIBELLES[k] || (k.charAt(0).toUpperCase()+k.slice(1));
 const placeholderChamp = k => PLACEHS[k] || '';
