@@ -1110,10 +1110,24 @@ const FILLERS = {
     if(m){ C("Paracétamol"); T("Paracétamol  Forme  Dose  1 dose toutes les 6 heures si douleur maximum 4 doses par jour Autre  Forme  Dose Autre", `${m.nom} — ${m.poso} (1 dose / 6 h, max 4/j)`); }
   },
   standard(form, pathoId){
-    /* fiche générique : identité + récap traitement dans la 1re ligne de signes si possible */
+    /* fiche standard : remplit signes / mesures / traitement des 2 niveaux
+       depuis la fiche conduite à tenir interne + les médicaments. */
     const T=mkT(form);
-    T("   Row1", "Voir conduite à tenir — "+ (PATHOS.find(p=>p.id===pathoId)||{}).t);
-    const s=medSummary(pathoId); if(s) T("undefined_8", s);
+    const f=FICHES[pathoId];
+    const meds=medsOf(pathoId);
+    const medLines=meds.map(m=>`${m.nom} — ${m.poso} (${m.voie})`);
+    const fillRows=(names,values)=>{ for(let i=0;i<names.length;i++){ if(values && values[i]) T(names[i], values[i]); } };
+    if(f){
+      fillRows(["Texte13","Texte12","Texte3","Texte4"], f.n1.signes);
+      fillRows(["Texte16","Texte17","Texte18"], f.n1.mesures);
+      fillRows(["Texte19","Texte21","Texte20"], medLines.length?medLines:[f.n1.traite]);
+      fillRows(["Texte30","Texte31","Texte32","Texte33"], f.n2.signes);
+      fillRows(["Texte34","Texte35"], f.n2.mesures);
+      fillRows(["Texte40","Texte41","Texte42"], [f.n2.traite]);
+    }else{
+      T("   Row1", "Voir conduite à tenir — "+ (PATHOS.find(p=>p.id===pathoId)||{}).t);
+      fillRows(["Texte19","Texte21","Texte20"], medLines);
+    }
   }
 };
 
@@ -1148,7 +1162,7 @@ async function buildPdfBytes(){
     if(!state.pathos.has(p.id)) continue;
     let file = TPL[p.id];
     if(!file){
-      if(!p.pap && MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id))) file="fiche-standard.pdf";
+      if(!p.pap && (FICHES[p.id] || MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id)))) file="fiche-standard.pdf";
       else continue;
     }
     const dedup = file==="fiche-anaphylaxie.pdf" ? file : p.id+"|"+file;
