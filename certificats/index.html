@@ -1354,6 +1354,153 @@ Fait à {{ville}}, le {{date}}.
 (signature)`
   },
 
+  /* ====================== COMPLÉMENTS (scolaire, handicap, admin, justice) ====================== */
+  {
+    id:'dispense-eps-ponctuelle', cat:'collectivite', statut:'usuel',
+    titre:'Dispense ponctuelle d\'EPS / de piscine (courte durée)',
+    resume:`Dispense d'une ou de quelques séances d'éducation physique. Pour une inaptitude prolongée et détaillée, utiliser le certificat d'inaptitude à l'EPS (Cerfa).`,
+    bases:['r4127-76'],
+    regles:[
+      'Limiter à la durée réellement justifiée par l\'état constaté.',
+      'Pas de diagnostic (secret) ; préciser la période.'
+    ],
+    pieges:['Dispense « toute l\'année » de confort ; mention de la pathologie.'],
+    remise:'Élève / représentant légal (pour l\'établissement).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, justifie une dispense de la pratique de l'éducation physique et sportive (ou de natation) pour la période du {{dateDebut}} au {{dateFin}} inclus.
+
+Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'perimetre-marche', cat:'handicap', statut:'usuel',
+    titre:'Réduction du périmètre de marche (appui carte mobilité inclusion / stationnement)',
+    resume:`Décrit la réduction de l'autonomie de déplacement, en appui d'une demande de carte mobilité inclusion (mention « stationnement »). L'attribution relève de la MDPH.`,
+    bases:['r4127-76','r4127-50'],
+    regles:[
+      'Exprimer en termes fonctionnels la limitation (périmètre de marche, aides techniques, dyspnée d\'effort).',
+      'Rappeler que la décision (CMI) appartient à la MDPH, sur évaluation.'
+    ],
+    pieges:['Garantir l\'octroi de la carte (hors de son rôle).','Diagnostic détaillé non indispensable.'],
+    remise:'Patient (pour le dossier MDPH).',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que {{patient}}, né(e) le {{ddn}}, examiné(e) ce jour, présente une réduction de son autonomie de déplacement : {{pathologie}}.
+Périmètre de marche / capacités de déplacement estimés : {{libre}}.
+
+Ces éléments médicaux sont fournis en appui d'une demande de carte mobilité inclusion (mention stationnement), dont l'attribution relève de la MDPH.
+
+Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'transport-adapte', cat:'handicap', statut:'usuel',
+    titre:'Transport adapté pour raison de santé (scolaire / quotidien)',
+    resume:`Justifie le recours à un transport adapté du fait de l'état de santé. À ne pas confondre avec la prescription médicale de transport sanitaire (Cerfa, pour remboursement VSL/ambulance).`,
+    bases:['r4127-76','r4127-50'],
+    regles:[
+      'Décrire en termes fonctionnels le besoin de transport adapté et sa durée.',
+      'Pour un transport sanitaire remboursé, utiliser le formulaire « prescription médicale de transport ».'
+    ],
+    pieges:['Confondre avec la prescription médicale de transport (Cerfa).','Durée injustifiée.'],
+    remise:'Patient / représentant légal.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, nécessite, pour ses déplacements, un transport adapté : {{libre}}.
+Durée / période : {{duree}}.
+
+Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'ci-vaccination', cat:'admin', statut:'usuel',
+    titre:'Contre-indication médicale à une vaccination',
+    resume:`Atteste une véritable contre-indication médicale à une vaccination déterminée, temporaire ou définitive. Une contre-indication de complaisance est un faux.`,
+    bases:['r4127-76','r4127-4','r4127-28','cp441-7'],
+    regles:[
+      'S\'appuyer sur une contre-indication réelle et reconnue ; préciser le vaccin et la durée.',
+      'Réévaluer les contre-indications temporaires.'
+    ],
+    pieges:[
+      'Établir une fausse contre-indication (complaisance) = faux (art. 441-7 CP) + enjeu de santé publique.',
+      'Contre-indication vague non étayée.'
+    ],
+    remise:'Patient / représentant légal.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie que l'état de santé de {{patient}}, né(e) le {{ddn}}, constitue une contre-indication médicale {{duree}} à la vaccination suivante : {{libre}}.
+
+Certificat remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
+  {
+    id:'permis-conduite', cat:'admin', statut:'encadré',
+    titre:'Aptitude médicale à la conduite (permis) — médecin agréé',
+    resume:`L'aptitude médicale à la conduite est évaluée par un médecin agréé par la préfecture (en cabinet ou en commission), sur formulaire dédié. Le médecin traitant ne délivre pas ce certificat.`,
+    bases:['r4127-76'],
+    regles:[
+      'Orienter vers un médecin agréé figurant sur la liste préfectorale.',
+      'Le médecin traitant ne se prononce pas sur l\'aptitude réglementaire à la conduite.'
+    ],
+    pieges:['Délivrer une « aptitude à la conduite » en tant que médecin traitant non agréé.'],
+    remise:'— (procédure auprès d\'un médecin agréé / préfecture).',
+    noGen:true,
+    genNote:`La visite médicale du permis de conduire est réalisée par un <strong>médecin agréé</strong> (liste consultable en préfecture), sur le formulaire réglementaire (Cerfa). Le médecin traitant n'établit pas ce certificat ; aucun modèle n'est généré ici.`
+  },
+
+  {
+    id:'temoignage-justice', cat:'demande', statut:'encadré',
+    titre:'Certificat descriptif destiné à une procédure judiciaire',
+    resume:`À la demande de son patient, le médecin peut décrire ce qu'il a personnellement constaté chez CE patient. Il ne témoigne jamais sur un tiers et ne prend jamais parti (divorce, garde d'enfants).`,
+    bases:['r4127-76','r4127-51','r4127-4','cp441-7','cpp-requisition'],
+    regles:[
+      'Ne décrire que des constatations médicales personnelles concernant son propre patient.',
+      'Rapporter les dires au conditionnel ; aucune appréciation sur un tiers ni sur la garde des enfants.',
+      'Hors réquisition/expertise, ne répondre qu\'à la demande du patient et rester dans le champ médical.'
+    ],
+    pieges:[
+      'Se prononcer sur l\'aptitude d\'un parent à l\'autorité parentale ou sur la résidence des enfants : hors compétence, faute déontologique fréquemment sanctionnée.',
+      'Décrire l\'état d\'un tiers non examiné (ex. l\'autre parent).',
+      'Prendre parti dans un conflit (art. R.4127-51).'
+    ],
+    remise:'Patient (seul juge de l\'usage). Sur réquisition/expertise : à l\'autorité requérante.',
+    modele:`CERTIFICAT MÉDICAL
+
+Je soussigné(e) {{medecin}}, {{qualite}}, certifie suivre / avoir examiné {{patient}}, né(e) le {{ddn}}, et avoir personnellement constaté : {{pathologie}}.
+
+L'intéressé(e) déclare : « {{declarations}} » (propos rapportés, dont je ne peux attester la matérialité).
+
+Le présent certificat ne décrit que des constatations médicales relatives à mon patient. Il ne porte aucune appréciation sur des tiers, ni sur des questions étrangères au domaine médical (notamment la résidence ou la garde d'enfants).
+
+Certificat établi à la demande de l'intéressé(e) et remis en main propre pour faire valoir ce que de droit.
+
+Fait à {{ville}}, le {{date}}.
+{{medecin}} — {{qualite}}
+{{adresse}}{{rppsLine}}
+(signature)`
+  },
+
   /* ====================== SENSIBLES / INTERDITS ====================== */
   {
     id:'virginite', cat:'sensible', statut:'interdit',
