@@ -134,7 +134,10 @@
     align-items:center}
   .legend{font-size:.8rem; color:var(--muted); margin:6px 2px 0}
 
-  #cerfa-scroll{max-height:72vh; overflow:auto; background:#eceae3; padding:14px}
+  #cerfa-scroll{height:78vh; overflow:hidden; background:#eceae3; padding:0; position:relative}
+  #cerfa-frame{width:100%; height:100%; border:0; background:#eceae3; display:block}
+  .cerfa-fallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:28px; color:var(--muted); font-size:.85rem}
   .cerfa{background:#fff; color:#10171c; max-width:760px; margin:0 auto; padding:26px 30px;
     font-family:Georgia,"Times New Roman",serif; font-size:13px; line-height:1.5;
     box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -185,8 +188,8 @@
     <div class="top-actions">
       <a class="btn ghost" href="../index.html" title="Retour au portail">← Portail</a>
       <button class="btn" id="btn-reset" type="button">↺ Réinitialiser</button>
-      <button class="btn" id="btn-dl" type="button" title="Aperçu du certificat 15695 (impression PDF)">🖨️ Certificat (aperçu)</button>
-      <button class="btn primary" id="btn-15692" type="button" title="Remplit et télécharge le formulaire officiel 15692*01">⬇️ Demande 15692 officielle remplie</button>
+      <button class="btn" id="btn-15692" type="button" title="Remplit et télécharge le formulaire officiel 15692*01">⬇️ Demande 15692</button>
+      <button class="btn primary" id="btn-cert-top" type="button" title="Télécharge le certificat 15695 officiel rempli">⬇️ Certificat 15695 officiel</button>
     </div>
   </div>
 </header>
@@ -206,37 +209,27 @@
 
   <div class="col-out">
     <div class="out-card">
-      <div class="out-head"><h2>Aperçu du Cerfa 15695*01</h2><span class="toast" id="toast" aria-live="polite"></span></div>
-      <div id="cerfa-scroll"><div class="cerfa" id="cerfa"></div></div>
+      <div class="out-head"><h2>Aperçu du Cerfa 15695*01 officiel</h2><span class="toast" id="toast" aria-live="polite"></span></div>
+      <div id="cerfa-scroll">
+        <iframe id="cerfa-frame" title="Aperçu du certificat officiel rempli"></iframe>
+        <div id="cerfa-fallback" class="cerfa-fallback">L'aperçu du PDF officiel se charge ici. S'il reste vide,
+          servez l'application en <strong>http(s)</strong> (localhost ou GitHub Pages) : l'ouverture en double-clic
+          local bloque le chargement du PDF.</div>
+      </div>
       <div class="out-foot">
-        <button class="btn primary" id="btn-dl2" type="button">⬇️ Télécharger (PDF)</button>
-        <button class="btn" id="btn-print" type="button">🖨️ Imprimer</button>
-        <span class="legend">Se remplit en direct. « Télécharger » ouvre l'impression → « Enregistrer en PDF ».</span>
+        <button class="btn primary" id="btn-cert" type="button">⬇️ Télécharger le certificat 15695 officiel rempli</button>
+        <span class="toast" id="cert-msg" aria-live="polite"></span>
       </div>
     </div>
-
-    <div class="out-card" style="margin-top:14px">
-      <div class="out-head"><h2>📄 Remplir VOTRE certificat 15695 officiel</h2></div>
-      <div style="padding:14px; display:flex; flex-direction:column; gap:10px">
-        <p class="legend" style="margin:0">Chargez votre certificat <strong>15695*01</strong> (le PDF officiel que vous utilisez),
-          puis générez-le rempli par surimpression — c'est <strong>votre document</strong>, pas une copie. Traité en local,
-          rien n'est envoyé ni stocké. L'ancienne signature est masquée et laissée vierge.</p>
-        <input type="file" id="cert-file" accept="application/pdf" style="font:inherit; font-size:.85rem">
-        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
-          <button class="btn primary" id="btn-cert" type="button">⬇️ Générer mon certificat 15695 rempli</button>
-          <span class="toast" id="cert-msg" aria-live="polite"></span>
-        </div>
-        <p class="legend" style="margin:0">Calage adapté à la mise en page du certificat fourni (type mdphclic).
-          Champs texte des 8 sections ; les petites cases A/B/C/D seront ajoutées ensuite.</p>
-      </div>
-    </div>
+    <p class="legend">L'aperçu et le téléchargement sont le <strong>vrai formulaire officiel Cerfa 15695*01</strong>,
+      rempli dans ses champs (texte + cases + grilles A/B/C/D). Signature laissée vierge. 100 % local, rien n'est transmis.</p>
   </div>
 
   <div class="footer">MDPH Assist — suite <strong>ASSISTANT MÉDICAL</strong>. Hors-ligne, sans stockage. Bases médicaments/pathologies indicatives à vérifier.</div>
 </main>
 
 <script src="vendor/pdf-lib.min.js"></script>
-<script src="cert15695.js"></script>
+<script src="cert15695off.js"></script>
 <script src="meds.js"></script>
 <script src="kb.js"></script>
 <script>
@@ -682,7 +675,7 @@ function renderCerfa(){
 function radioPair(label,id){ return `${label} : <span class="chk">${C[id]&&C[id].has('Oui')?'☒':'☐'} Oui</span> <span class="chk">${C[id]&&C[id].has('Non')?'☒':'☐'} Non</span>`; }
 
 /* ===== boucle de rafraîchissement ===== */
-function refresh(){ counts(); renderCerfa(); }
+function refresh(){ counts(); if(typeof schedulePreview==='function') schedulePreview(); }
 
 /* ===== actions ===== */
 function toast(m){const t=$('#toast');t.textContent=m;setTimeout(()=>{if(t.textContent===m)t.textContent='';},2600);}
@@ -768,36 +761,52 @@ async function fillDemande(){
   toast('✓ Demande 15692 officielle téléchargée');
 }
 
-/* ===== remplissage de VOTRE certificat 15695 (surimpression) ===== */
-let certBytes=null;
+/* ===== aperçu + remplissage du VRAI Cerfa 15695*01 officiel ===== */
 function certMsg(m){ const e=$('#cert-msg'); if(e){ e.textContent=m; setTimeout(()=>{if(e.textContent===m)e.textContent='';},3000);} }
-async function fillCert(){
-  if(!window.CERT15695){ alert('Module cert15695.js non chargé.'); return; }
-  if(!certBytes){ alert('Chargez d\'abord votre certificat 15695 (PDF) via le sélecteur de fichier.'); return; }
+let off15695=null, offError=false, lastCertUrl=null;
+async function loadOfficial(){
+  if(off15695) return off15695;
+  try{ const r=await fetch('cerfa_15695.pdf'); if(!r.ok) throw 0; off15695=await r.arrayBuffer(); return off15695; }
+  catch(e){ offError=true; return null; }
+}
+async function buildCert(){
+  if(!window.CERT15695OFF) throw new Error('module officiel non chargé');
+  const bytes=await loadOfficial();
+  if(!bytes) throw new Error('PDF officiel introuvable (servez en http)');
+  return await window.CERT15695OFF.fill(bytes.slice(0), {V,C,M,MROWS});
+}
+let previewTimer=null;
+function schedulePreview(){ clearTimeout(previewTimer); previewTimer=setTimeout(updatePreview,700); }
+async function updatePreview(){
+  const fb=$('#cerfa-fallback'), fr=$('#cerfa-frame');
+  try{
+    const out=await buildCert();
+    const blob=new Blob([out],{type:'application/pdf'});
+    const url=URL.createObjectURL(blob);
+    if(fr) fr.src=url+'#toolbar=1&view=FitH';
+    if(fb) fb.style.display='none';
+    if(lastCertUrl) URL.revokeObjectURL(lastCertUrl); lastCertUrl=url;
+  }catch(e){ if(fb){ fb.style.display='flex'; fb.innerHTML='Aperçu indisponible : '+e.message+'.<br>Servez l\'app en http(s) (localhost / GitHub Pages).'; } }
+}
+async function downloadCert(){
   certMsg('Génération…');
   try{
-    const signs=(MROWS.c_signes||[]).filter(r=>r.label.trim()).map(r=>r.label.trim());
-    const filled=await window.CERT15695.fill(certBytes.slice(0), {V,C,M,MROWS}, signs);
-    const blob=new Blob([filled],{type:'application/pdf'});
+    const out=await buildCert();
+    const blob=new Blob([out],{type:'application/pdf'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download='certificat_MDPH_15695_rempli.pdf'; document.body.appendChild(a); a.click();
+    a.download='certificat_MDPH_15695_officiel_rempli.pdf'; document.body.appendChild(a); a.click();
     setTimeout(()=>{a.remove(); URL.revokeObjectURL(a.href);},1000);
-    certMsg('✓ Certificat rempli téléchargé');
-  }catch(e){ certMsg('Erreur : '+e.message); alert('Échec du remplissage : '+e.message); }
+    certMsg('✓ Certificat officiel téléchargé');
+  }catch(e){ certMsg('Erreur : '+e.message); alert('Échec : '+e.message+'\n\nServez l\'application en http(s) (localhost ou GitHub Pages).'); }
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
   build(); recomputeAuto(); refresh();
-  $('#btn-dl').addEventListener('click',dl);
-  $('#btn-dl2').addEventListener('click',dl);
   $('#btn-15692').addEventListener('click',fillDemande);
-  $('#btn-print').addEventListener('click',()=>window.print());
   $('#btn-reset').addEventListener('click',reset);
-  $('#cert-file').addEventListener('change',e=>{
-    const f=e.target.files&&e.target.files[0]; if(!f){certBytes=null;return;}
-    const r=new FileReader(); r.onload=()=>{certBytes=r.result; certMsg('✓ « '+f.name+' » chargé');}; r.readAsArrayBuffer(f);
-  });
-  $('#btn-cert').addEventListener('click',fillCert);
+  $('#btn-cert').addEventListener('click',downloadCert);
+  $('#btn-cert-top').addEventListener('click',downloadCert);
+  updatePreview();
 });
 </script>
 </body>
