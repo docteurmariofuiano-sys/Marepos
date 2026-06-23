@@ -26,6 +26,9 @@ assistant.js          Catalogue des apps + recherche/filtres
 .nojekyll             Sert le site statique tel quel (pas de Jekyll)
 
 neuro-gp/             NEURO-GP ASSIST (neurologie)
+dermato-mg/           DERMATO MG — Assistant dermatologique de consultation
+                        (recherche, symptôme/localisation, fiches, red flags,
+                        ordonnances, conseils patients, apprentissage)
 bilan-biologique/     Lecture de bilan biologique
 suite-clinique/       Suite clinique :
   index.html            Fiches d'interrogatoire par symptôme (64 fiches)
@@ -39,6 +42,7 @@ suite-clinique/       Suite clinique :
 | Domaine | Application | Accès |
 |---|---|---|
 | Neurologie | NEURO-GP ASSIST | `neuro-gp/` |
+| Dermatologie | Dermato MG — Assistant de consultation | `dermato-mg/` |
 | Dermatologie | Dermato Consult | `suite-clinique/apps-externes/dermato.html` |
 | Cardiologie | ECG Cabinet | `suite-clinique/apps-externes/ecg_assistant.html` |
 | ORL | Bilan ORL — vertiges | `suite-clinique/apps-externes/bilan_orl_vertiges.html` |

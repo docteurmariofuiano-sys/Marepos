@@ -1,0 +1,281 @@
+/* =====================================================================
+   DERMATO MG — feuille de style
+   Style médical, moderne, lisible, mobile/tablette friendly.
+   Code couleur : bleu=info · vert=traitement · orange=prudence ·
+   rouge=urgence · gris=diff. différentiel · violet=apprentissage.
+   ===================================================================== */
+:root{
+  --ink:#16212b; --muted:#5d6b78; --line:#dde3ea; --line-2:#eef2f6;
+  --paper:#f4f7fa; --panel:#ffffff;
+  --blue:#1e6fd6;  --blue-bg:#e8f1fc;
+  --green:#1f8a4c; --green-bg:#e6f6ec;
+  --orange:#c9760f; --orange-bg:#fdf1e1;
+  --red:#cf2a2a;   --red-bg:#fdeaea;
+  --grey:#697682;  --grey-bg:#eef1f4;
+  --violet:#6a40c0; --violet-bg:#efe9fb;
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 8px 24px rgba(22,33,43,.08);
+  --shadow-sm:0 2px 8px rgba(22,33,43,.06);
+  --maxw:1180px;
+  --font:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); background:var(--paper);
+  font-family:var(--font); line-height:1.5; font-size:16px;
+}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .4em}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.muted{color:var(--muted)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:18px 16px 40px}
+
+/* ---------- HEADER ---------- */
+.app-header{
+  position:sticky;top:0;z-index:30;background:var(--panel);
+  border-bottom:1px solid var(--line);box-shadow:var(--shadow-sm);
+}
+.header-inner{
+  max-width:var(--maxw);margin:0 auto;padding:10px 16px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;flex:0 0 auto}
+.brand:hover{text-decoration:none}
+.brand-logo{font-size:1.7rem;line-height:1}
+.brand-txt{display:flex;flex-direction:column}
+.brand-txt strong{font-size:1.18rem;letter-spacing:.2px}
+.brand-txt small{color:var(--muted);font-size:.78rem}
+.header-search{
+  flex:1 1 320px;display:flex;align-items:center;gap:8px;
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;
+  padding:8px 14px;min-width:0;
+}
+.header-search:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-bg)}
+.hs-ic{opacity:.7}
+#globalSearch{border:0;background:transparent;outline:0;font-size:1rem;width:100%;color:var(--ink)}
+.terrain-btn{
+  flex:0 0 auto;border:1px solid var(--orange);color:var(--orange);background:var(--orange-bg);
+  border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.9rem;
+}
+.terrain-btn.on{background:var(--orange);color:#fff}
+.terrain-btn:hover{filter:brightness(.97)}
+
+/* ---------- TABS ---------- */
+.tabs{
+  max-width:var(--maxw);margin:0 auto;padding:0 10px 8px;
+  display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.tab{
+  flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  border-radius:999px;padding:7px 13px;font-size:.9rem;font-weight:600;cursor:pointer;white-space:nowrap;
+}
+.tab:hover{color:var(--ink);border-color:#c6cfd8}
+.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.tab-urg.active{background:var(--red);border-color:var(--red)}
+.tab-app.active{background:var(--violet);border-color:var(--violet)}
+
+/* ---------- TERRAIN BANNER ---------- */
+.terrain-banner{
+  max-width:var(--maxw);margin:10px auto 0;padding:10px 16px;
+  background:var(--orange-bg);border:1px solid var(--orange);border-left-width:5px;
+  border-radius:var(--radius-sm);color:#7a4a08;font-size:.92rem;
+}
+.terrain-banner ul{margin:6px 0 0;padding-left:18px}
+.terrain-banner b{color:var(--orange)}
+
+/* ---------- CARDS / GENERIC ---------- */
+.panel{animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+.section-title h2{font-size:1.35rem;margin:0}
+.lead{color:var(--muted);max-width:70ch;margin:0 0 16px}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;box-shadow:var(--shadow-sm);text-align:left;width:100%;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;color:inherit;
+}
+button.card{font:inherit}
+.card:hover{box-shadow:var(--shadow);border-color:#c6cfd8;transform:translateY(-1px)}
+.card h3{font-size:1.02rem;margin:0}
+.card p{margin:0;color:var(--muted);font-size:.88rem}
+.card-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-ic{font-size:1.4rem;line-height:1}
+.card-cat{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+
+/* badges urgence */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:700;
+  padding:3px 9px;border-radius:999px;white-space:nowrap}
+.u-ok{background:var(--green-bg);color:var(--green)}
+.u-warn{background:var(--orange-bg);color:var(--orange)}
+.u-crit{background:var(--red-bg);color:var(--red)}
+.badge-dot::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+
+.tag{display:inline-block;font-size:.72rem;background:var(--grey-bg);color:var(--grey);
+  border-radius:6px;padding:2px 7px}
+.tagrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+
+/* chips de filtre */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;
+  font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer}
+.chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip:hover{border-color:#c6cfd8}
+
+/* listes de dx (symptome/localisation) */
+.dx-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.dx-pill{font-size:.8rem;background:var(--blue-bg);color:var(--blue);border-radius:999px;padding:3px 10px;
+  border:1px solid transparent;cursor:pointer}
+.dx-pill.plain{background:var(--grey-bg);color:var(--grey);cursor:default}
+.dx-pill:hover{border-color:var(--blue)}
+
+/* notice / encadrés couleur */
+.note{border-radius:var(--radius-sm);padding:12px 14px;margin:12px 0;border:1px solid;border-left-width:5px;font-size:.92rem}
+.note-blue{background:var(--blue-bg);border-color:var(--blue);color:#0f4f9e}
+.note-green{background:var(--green-bg);border-color:var(--green);color:#13632f}
+.note-orange{background:var(--orange-bg);border-color:var(--orange);color:#8a510a}
+.note-red{background:var(--red-bg);border-color:var(--red);color:#9c1d1d}
+.note-violet{background:var(--violet-bg);border-color:var(--violet);color:#4a2a93}
+.note b{font-weight:700}
+
+.empty{padding:30px;text-align:center;color:var(--muted);background:var(--panel);
+  border:1px dashed var(--line);border-radius:var(--radius)}
+
+/* ---------- MODAL ---------- */
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-start;justify-content:center}
+.modal[hidden]{display:none}
+.modal-back{position:absolute;inset:0;background:rgba(16,24,32,.45)}
+.modal-card{position:relative;background:var(--panel);width:min(860px,100%);margin:24px 12px 40px;
+  border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:calc(100vh - 48px);
+  display:flex;flex-direction:column;overflow:hidden}
+.modal-sm{width:min(460px,100%)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+.modal-head h2{font-size:1.18rem;margin:0}
+.modal-actions{display:flex;gap:8px;flex:0 0 auto}
+.modal-body{padding:16px 18px 26px;overflow:auto}
+
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;
+  font-weight:600;cursor:pointer;font-size:.88rem;color:var(--ink)}
+.btn:hover{border-color:#c6cfd8}
+.btn-ghost{background:var(--paper)}
+.btn-blue{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff}
+.btn-sm{padding:5px 11px;font-size:.82rem}
+
+/* ---------- FICHE PATHOLOGIE ---------- */
+.fiche-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.fiche-cat{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.fiche-def{font-size:1.02rem;color:var(--ink);margin:6px 0 12px}
+.fiche-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+
+.acc{border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden;background:var(--panel)}
+.acc>summary{cursor:pointer;padding:11px 14px;font-weight:700;list-style:none;display:flex;
+  align-items:center;gap:9px;font-size:.96rem}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+.acc[open]>summary::before{transform:rotate(90deg)}
+.acc .acc-in{padding:0 14px 14px 32px}
+.acc ul{margin:0;padding-left:18px}
+.acc li{margin:3px 0}
+.acc.crit>summary{color:var(--red)}
+.acc.warn>summary{color:var(--orange)}
+
+.ordo-box,.conseil-box{background:#fbfdff;border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:14px;white-space:pre-wrap;font-size:.94rem;line-height:1.55}
+.ordo-box{border-left:5px solid var(--green)}
+.conseil-box{border-left:5px solid var(--blue)}
+
+.src-line{margin-top:14px;font-size:.84rem;color:var(--muted)}
+
+/* tableaux */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-sm)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--panel)}
+th,td{border-bottom:1px solid var(--line-2);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--grey-bg);color:var(--ink);font-weight:700;position:sticky;top:0}
+tbody tr:hover{background:#fafcfe}
+
+/* urgences */
+.urg-block{border-radius:var(--radius);padding:16px;margin-bottom:18px;border:1px solid}
+.urg-crit{background:var(--red-bg);border-color:var(--red)}
+.urg-warn{background:var(--orange-bg);border-color:var(--orange)}
+.urg-block h3{display:flex;align-items:center;gap:8px}
+.urg-crit h3{color:var(--red)}
+.urg-warn h3{color:var(--orange)}
+.urg-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}
+.urg-list li{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.urg-list .lk{font-size:.8rem;color:var(--blue);cursor:pointer;flex:0 0 auto}
+.samu{font-weight:800;font-size:1.05rem}
+
+/* médicaments */
+.med-grid dl{margin:0}
+.med-grid dt{font-weight:700;font-size:.82rem;color:var(--muted);text-transform:uppercase;margin-top:8px}
+.med-grid dd{margin:2px 0 0}
+
+/* apprentissage */
+.app-sub{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.flash{perspective:1000px;cursor:pointer}
+.flash-in{position:relative;min-height:120px;border-radius:var(--radius);border:1px solid var(--line);
+  background:var(--violet-bg);padding:16px;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-weight:600;transition:background .2s}
+.flash.flip .flash-in{background:var(--panel)}
+.flash small{display:block;color:var(--violet);font-weight:700;text-transform:uppercase;font-size:.7rem;margin-bottom:6px}
+.qcm-q{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.qcm-q h4{margin:0 0 10px}
+.qcm-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--paper);
+  border-radius:var(--radius-sm);padding:10px 12px;margin:6px 0;cursor:pointer;font:inherit}
+.qcm-opt:hover{border-color:#c6cfd8}
+.qcm-opt.good{background:var(--green-bg);border-color:var(--green);color:var(--green);font-weight:600}
+.qcm-opt.bad{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.qcm-expl{margin-top:8px;font-size:.9rem;color:var(--ink);background:var(--blue-bg);
+  border-radius:var(--radius-sm);padding:10px 12px;border-left:4px solid var(--blue)}
+.cas-q{margin:6px 0}
+.cas-q summary{cursor:pointer;font-weight:600;padding:8px 0}
+
+/* terrain panel list */
+.terrain-list{display:grid;gap:8px}
+.terrain-item{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer}
+.terrain-item input{margin-top:3px}
+.terrain-item.on{background:var(--orange-bg);border-color:var(--orange)}
+.terrain-item b{display:block}
+.terrain-item small{color:var(--muted)}
+
+/* schéma lésionnel (SVG) */
+.schema{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px;text-align:center}
+.schema svg{max-width:100%;height:auto}
+
+/* responsive */
+@media (max-width:720px){
+  body{font-size:15px}
+  .brand-txt small{display:none}
+  .header-search{flex-basis:100%;order:3}
+  .terrain-btn{order:2}
+  .section-title h2{font-size:1.2rem}
+}
+
+/* ---------- IMPRESSION ---------- */
+@media print{
+  .app-header,.app-footer,.tabs,.terrain-btn,.fiche-actions,.modal-actions,
+  .terrain-banner,#terrainPanel{display:none !important}
+  body{background:#fff}
+  .modal{position:static}
+  .modal-back{display:none}
+  .modal-card{box-shadow:none;margin:0;max-height:none;width:100%}
+  .modal-body{overflow:visible}
+  .acc{border:0}
+  .acc>summary::before{display:none}
+  .acc .acc-in{padding-left:0}
+  .ordo-box,.conseil-box{border:1px solid #999}
+  .print-only{display:block !important}
+}
+.print-only{display:none}
+.print-head{display:none}
+@media print{.print-head{display:block;margin-bottom:10px;border-bottom:2px solid #000;padding-bottom:6px}}
