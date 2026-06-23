@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASSISTANT MÉDICAL — Suite d'aides cliniques</title>
+<meta name="description" content="Portail ASSISTANT MÉDICAL : accès unifié aux applications d'aide clinique (neurologie, dermatologie, cardiologie, ORL, gynécologie, biologie, prévention…). Outils de raisonnement, ne remplacent pas le jugement médical.">
+<style>
+/* =====================================================================
+   ASSISTANT MÉDICAL — Portail (page de lancement)
+   Regroupe les applications cliniques. Design autonome, hors-ligne.
+   ===================================================================== */
+:root{
+  --bg:#f5f7fb;
+  --bg-soft:#eef2f9;
+  --card:#ffffff;
+  --ink:#0f1c2e;
+  --ink-soft:#5b6b82;
+  --line:#e2e8f2;
+  --brand:#1f6feb;
+  --brand-deep:#0b3a82;
+  --teal:#0fb5a6;
+  --ombre:0 1px 3px rgba(15,28,46,.06), 0 8px 24px rgba(15,28,46,.06);
+  --ombre-fort:0 12px 40px rgba(15,28,46,.16);
+  --rayon:18px;
+  --rayon-s:12px;
+  /* couleurs de domaine */
+  --d-neuro:#6366f1;
+  --d-derm:#f59e0b;
+  --d-cardio:#ef4444;
+  --d-orl:#14b8a6;
+  --d-gyneco:#ec4899;
+  --d-bio:#0ea5e9;
+  --d-rais:#8b5cf6;
+  --d-prev:#22c55e;
+  --d-trans:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- En-tête ---------- */
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 400px at 12% -20%, rgba(255,255,255,.18), transparent 60%),
+    linear-gradient(120deg,#0b3a82 0%,#1f6feb 55%,#16a3a3 115%);
+  color:#fff;
+  padding:46px 20px 64px;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.6) 1px,transparent 1.4px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,#000,transparent);
+}
+.hero-inner{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-logo{
+  width:62px;height:62px;border-radius:18px;flex-shrink:0;
+  display:grid;place-items:center;font-size:32px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  backdrop-filter:blur(4px);
+}
+.brand h1{font-size:30px;font-weight:800;letter-spacing:.4px;line-height:1.05}
+.brand .tagline{font-size:14.5px;opacity:.9;font-weight:500;margin-top:3px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);
+  padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+}
+.pill strong{font-weight:900}
+
+/* ---------- Barre de recherche / filtres ---------- */
+.toolbar{
+  max-width:1180px;margin:-34px auto 0;position:relative;z-index:3;
+  padding:0 20px;
+}
+.toolbar-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  box-shadow:var(--ombre-fort);padding:16px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.search{position:relative;display:flex;align-items:center}
+.search .ic{position:absolute;left:14px;font-size:18px;opacity:.55}
+.search input{
+  width:100%;padding:14px 16px 14px 44px;border:1.5px solid var(--line);
+  border-radius:var(--rayon-s);font-size:15.5px;font-family:inherit;background:var(--bg-soft);
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.search input:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(31,111,235,.14)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);
+  border-radius:999px;padding:7px 13px;font-size:12.8px;font-weight:700;cursor:pointer;
+  transition:all .15s;display:inline-flex;align-items:center;gap:6px;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:var(--c,var(--d-trans))}
+.chip.active .dot{background:#fff}
+
+/* ---------- Grille d'applications ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 10px}
+.section-title{
+  display:flex;align-items:baseline;gap:10px;margin:18px 2px 14px;
+}
+.section-title h2{font-size:15px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft)}
+.section-title .count{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;
+}
+.card{
+  position:relative;display:flex;flex-direction:column;gap:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  padding:20px 18px 16px;box-shadow:var(--ombre);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  overflow:hidden;outline:none;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c,var(--brand));
+}
+.card:hover,.card:focus-visible{transform:translateY(-5px);box-shadow:var(--ombre-fort);border-color:var(--c,var(--brand))}
+.card:focus-visible{box-shadow:0 0 0 4px rgba(31,111,235,.18),var(--ombre-fort)}
+.card-top{display:flex;align-items:flex-start;gap:13px}
+.card-icon{
+  width:50px;height:50px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;
+  font-size:25px;background:var(--cb,#eef2ff);border:1px solid var(--line);
+}
+.card h3{font-size:17px;font-weight:800;line-height:1.2;color:var(--ink)}
+.card p{font-size:13.3px;color:var(--ink-soft);flex:1}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.tag{
+  font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
+  color:var(--c,var(--d-trans));background:var(--cb,#eef2ff);
+  padding:4px 9px;border-radius:999px;
+}
+.go{font-size:13px;font-weight:800;color:var(--c,var(--brand));display:inline-flex;align-items:center;gap:5px}
+.card:hover .go{gap:9px}
+
+/* à venir */
+.card.soon{opacity:.62;cursor:default;background:repeating-linear-gradient(135deg,#fff,#fff 10px,#fbfcfe 10px,#fbfcfe 20px)}
+.card.soon:hover{transform:none;box-shadow:var(--ombre);border-color:var(--line)}
+.badge-soon{
+  position:absolute;top:12px;right:12px;font-size:10.5px;font-weight:900;letter-spacing:.5px;
+  background:#fef3c7;color:#92400e;border:1px solid #fde68a;padding:3px 9px;border-radius:999px;text-transform:uppercase;
+}
+.empty{
+  grid-column:1/-1;text-align:center;color:var(--ink-soft);
+  background:#fff;border:1px dashed var(--line);border-radius:var(--rayon);padding:34px;
+}
+
+/* ---------- Avertissement / pied ---------- */
+.disclaimer{
+  max-width:1180px;margin:26px auto 0;padding:0 20px;
+}
+.disclaimer-card{
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--d-prev);
+  border-radius:var(--rayon-s);padding:16px 18px;font-size:13px;color:var(--ink-soft);
+}
+.disclaimer-card strong{color:var(--ink)}
+.footer{
+  max-width:1180px;margin:22px auto 0;padding:24px 20px 44px;
+  color:var(--ink-soft);font-size:12.5px;text-align:center;line-height:1.7;
+}
+.footer strong{color:var(--ink)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:600px){
+  .brand h1{font-size:24px}
+  .brand-logo{width:54px;height:54px;font-size:27px}
+  .hero{padding:36px 16px 56px}
+  .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+  .card:hover,.card:focus-visible{transform:none}
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">⚕️</div>
+      <div>
+        <h1>ASSISTANT MÉDICAL</h1>
+        <div class="tagline">Suite d'aides cliniques au cabinet — Dr Mario Fuiano</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="pill">🧩 <strong id="total">0</strong>&nbsp;applications</span>
+      <span class="pill">📴 Fonctionne hors-ligne</span>
+      <span class="pill">🔒 Aucune donnée patient stockée</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-card">
+    <label class="search">
+      <span class="ic" aria-hidden="true">🔎</span>
+      <input id="search" type="search" placeholder="Rechercher une application, un domaine, un mot-clé…" autocomplete="off" aria-label="Rechercher une application">
+    </label>
+    <div class="filters" id="filters" role="group" aria-label="Filtrer par domaine"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="section-title">
+    <h2>Applications</h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <section id="section-soon" style="display:none">
+    <div class="section-title"><h2>À venir</h2></div>
+    <div class="grid" id="grid-soon"></div>
+  </section>
+</main>
+
+<div class="disclaimer">
+  <div class="disclaimer-card">
+    <strong>Avertissement.</strong> Ces applications sont des supports d'aide au <strong>raisonnement clinique</strong>.
+    Elles ne remplacent ni l'examen clinique, ni le jugement médical, ni les recommandations en vigueur (HAS, sociétés savantes).
+    En cas d'urgence vitale : <strong>15 / 112</strong>.
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>ASSISTANT MÉDICAL</strong> — portail regroupant les outils de la suite clinique.<br>
+  Traitement <strong>local</strong> dans le navigateur, sans stockage ni transmission par défaut.
+</footer>
+
+<script>
+/* =====================================================================
+   ASSISTANT MÉDICAL — moteur du portail
+   Données embarquées (fonctionne hors-ligne, sans serveur ni fetch).
+   ===================================================================== */
+'use strict';
+
+/* Domaines : libellé + couleur (var CSS) + fond clair */
+const DOMAINES = {
+  "Neurologie":   {c:"var(--d-neuro)",  cb:"#eef0ff"},
+  "Dermatologie": {c:"var(--d-derm)",   cb:"#fff5e6"},
+  "Cardiologie":  {c:"var(--d-cardio)", cb:"#feecec"},
+  "ORL":          {c:"var(--d-orl)",    cb:"#e6faf6"},
+  "Gynécologie":  {c:"var(--d-gyneco)", cb:"#fdecf5"},
+  "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
+  "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
+  "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
+  "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
+};
+
+/* Catalogue des applications (chemins relatifs à la racine du portail) */
+const APPS = [
+  {t:"NEURO-GP ASSIST", e:"🧠", dom:"Neurologie",
+   d:"Aide clinique neurologique : triage des urgences, examen guidé, céphalées, courriers et formation.",
+   href:"neuro-gp/index.html"},
+  {t:"Dermato Consult", e:"🔬", dom:"Dermatologie",
+   d:"Aide au diagnostic dermatologique, avec paliers d'urgence (dont urgence vitale).",
+   href:"suite-clinique/apps-externes/dermato.html"},
+  {t:"ECG Cabinet", e:"🫀", dom:"Cardiologie",
+   d:"Assistant local de lecture de l'ECG, repères et pièges (recommandations ESC).",
+   href:"suite-clinique/apps-externes/ecg_assistant.html"},
+  {t:"Bilan ORL — Vertiges", e:"👂", dom:"ORL",
+   d:"Démarche devant un vertige : HINTS/INFARCT, central vs périphérique.",
+   href:"suite-clinique/apps-externes/bilan_orl_vertiges.html"},
+  {t:"GynoAide", e:"🩺", dom:"Gynécologie",
+   d:"Gynécologie en médecine générale : femme en âge de procréer et ménopausée (sous-portail).",
+   href:"suite-clinique/apps-externes/index-accueil.html"},
+  {t:"Contraception", e:"🤰", dom:"Gynécologie",
+   d:"Pilule, oubli, contraception d'urgence, relais, IVG, grossesse & allaitement.",
+   href:"suite-clinique/apps-externes/contraception.html"},
+  {t:"Ménopause", e:"🌸", dom:"Gynécologie",
+   d:"Péri/ménopause, score de symptômes, décision THM, SGUM, os, cardio-métabolique.",
+   href:"suite-clinique/apps-externes/menopause.html"},
+  {t:"Fiches d'interrogatoire", e:"📋", dom:"Raisonnement",
+   d:"64 fiches : du symptôme au diagnostic — interrogatoire ciblé, différentiels, red flags.",
+   href:"suite-clinique/index.html"},
+  {t:"Aide au raisonnement clinique", e:"🧭", dom:"Raisonnement",
+   d:"Préparation de consultation et raisonnement clinique structuré.",
+   href:"suite-clinique/aide-decision/index.html"},
+  {t:"Catalogue des motifs", e:"🗂️", dom:"Raisonnement",
+   d:"Catalogue des motifs de consultation, point d'entrée du raisonnement.",
+   href:"suite-clinique/aide-decision/catalogue.html"},
+  {t:"Procédures & prévention", e:"✅", dom:"Prévention",
+   d:"Aide-mémoire des procédures et de la prévention au cabinet.",
+   href:"suite-clinique/aide-decision/procedures.html"},
+  {t:"Interprétation biologique", e:"🧪", dom:"Biologie",
+   d:"Aide au raisonnement devant un bilan biologique.",
+   href:"suite-clinique/aide-decision/biologie.html"},
+  {t:"Lecture de bilan biologique", e:"🩸", dom:"Biologie",
+   d:"Import d'un bilan en PDF + lecture intelligente (troponine, calcémie corrigée, seuils…).",
+   href:"suite-clinique/apps-externes/biologie_lecture_bilan.html"},
+  {t:"Suivi préventif CNAM", e:"🛡️", dom:"Prévention",
+   d:"Suivi préventif au cabinet selon les référentiels CNAM.",
+   href:"suite-clinique/apps-externes/suivi_preventif.html"},
+  {t:"Échelles & évaluations", e:"📊", dom:"Transversal",
+   d:"MoCA, CHA₂DS₂-VASc, AUDIT, RMQD, iatrogénie… échelles cliniques.",
+   href:"suite-clinique/apps-externes/evaluations_medicales.html"},
+  /* ---- à venir (non encore fournies / volontairement exclues) ---- */
+  {t:"Cotation NGAP/CCAM", e:"💶", dom:"Transversal", soon:true,
+   d:"Cotation des actes — nécessite une base tarifaire Ameli sourcée et datée + disclaimer avant diffusion."},
+  {t:"Pneumologie / Spirométrie", e:"🫁", dom:"Transversal", soon:true,
+   d:"Lecture de spirométrie / aide pneumologique — application à fournir."}
+];
+
+/* ---------- utilitaires ---------- */
+const $ = (s,c=document)=>c.querySelector(s);
+const norm = t => String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+
+let etat = {q:"", dom:"Toutes"};
+
+function carte(app){
+  const dm = DOMAINES[app.dom] || DOMAINES["Transversal"];
+  const styleVars = `--c:${dm.c};--cb:${dm.cb}`;
+  if(app.soon){
+    return `<div class="card soon" style="${styleVars}" aria-disabled="true">
+      <span class="badge-soon">Bientôt</span>
+      <div class="card-top">
+        <div class="card-icon">${app.e}</div>
+        <div><h3>${app.t}</h3></div>
+      </div>
+      <p>${app.d}</p>
+      <div class="card-foot"><span class="tag">${app.dom}</span><span class="go">À venir</span></div>
+    </div>`;
+  }
+  return `<a class="card" style="${styleVars}" href="${app.href}" aria-label="Ouvrir ${app.t}">
+    <div class="card-top">
+      <div class="card-icon">${app.e}</div>
+      <div><h3>${app.t}</h3></div>
+    </div>
+    <p>${app.d}</p>
+    <div class="card-foot"><span class="tag">${app.dom}</span><span class="go">Ouvrir →</span></div>
+  </a>`;
+}
+
+function correspond(app){
+  if(etat.dom!=="Toutes" && app.dom!==etat.dom) return false;
+  if(!etat.q) return true;
+  return norm([app.t,app.dom,app.d].join(" ")).includes(norm(etat.q));
+}
+
+function rendre(){
+  const dispo = APPS.filter(a=>!a.soon).filter(correspond);
+  const soon  = APPS.filter(a=>a.soon).filter(correspond);
+
+  const g = $("#grid");
+  if(!dispo.length && !soon.length){
+    g.innerHTML = `<div class="empty"><strong>Aucune application ne correspond.</strong><br>Essayez un autre mot-clé ou un autre domaine.</div>`;
+  }else{
+    g.innerHTML = dispo.map(carte).join("");
+  }
+  $("#count").textContent = `${dispo.length} application${dispo.length>1?"s":""}`;
+
+  const sg = $("#grid-soon");
+  const sec = $("#section-soon");
+  if(soon.length){ sec.style.display=""; sg.innerHTML = soon.map(carte).join(""); }
+  else{ sec.style.display="none"; }
+}
+
+function initFiltres(){
+  const doms = ["Toutes", ...Object.keys(DOMAINES).filter(d=>APPS.some(a=>a.dom===d))];
+  const f = $("#filters");
+  f.innerHTML = doms.map(d=>{
+    const dm = DOMAINES[d];
+    const dot = dm ? `<span class="dot" style="--c:${dm.c}"></span>` : "";
+    return `<button class="chip${d==="Toutes"?" active":""}" data-dom="${d}">${dot}${d}</button>`;
+  }).join("");
+  f.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+    f.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    etat.dom = b.dataset.dom;
+    rendre();
+  }));
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  $("#total").textContent = APPS.filter(a=>!a.soon).length;
+  initFiltres();
+  $("#search").addEventListener("input",e=>{ etat.q = e.target.value; rendre(); });
+  rendre();
+});
+
+</script>
+</body>
+</html>
