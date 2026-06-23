@@ -314,6 +314,23 @@ textarea{resize:vertical;min-height:64px}
           <input type="text" id="f_trousse_lieu" placeholder="ex. bureau de la vie scolaire"></label>
         <label class="check" style="align-self:end"><input type="checkbox" id="f_porter"> Élève autorisé à garder son traitement d'urgence sur lui</label>
       </div>
+
+      <div id="diaBox" style="display:none;margin-top:14px">
+        <div class="subhead">Diabète — valeurs reportées dans la fiche d'urgence</div>
+        <div class="fields">
+          <label class="field">Resucrage : nombre de sucres (hypo)
+            <input type="text" id="f_dia_sucres" placeholder="ex. 2"></label>
+          <label class="field">Glucagon : dose (auto selon le poids)
+            <input type="text" id="f_dia_glucagon" placeholder="½ ampoule (0,5 mg)"></label>
+          <label class="field">Insuline : UI pour faire baisser la glycémie de 50 mg/dL
+            <input type="text" id="f_dia_inscorr" placeholder="ex. 1"></label>
+          <label class="field">Insuline rapide : dose (1/10 du poids)
+            <input type="text" id="f_dia_insdose" placeholder="auto selon le poids"></label>
+          <label class="field full">Zone d'injection de l'insuline
+            <input type="text" id="f_dia_zone" placeholder="ex. cuisse / abdomen / bras"></label>
+        </div>
+        <p class="hint" style="margin-top:8px">Glucagon et dose d'insuline (1/10 du poids) sont pré-calculés à partir du poids saisi — modifiables.</p>
+      </div>
     </div>
 
     <div class="panel">
@@ -773,7 +790,22 @@ function ctBlock(niveau, cls){
   return h;
 }
 
+function updateDiaDefaults(){
+  const box=$("#diaBox"); if(!box) return;
+  const on=state.pathos.has("diabete");
+  box.style.display = on ? "" : "none";
+  if(!on) return;
+  const p=parseFloat(String(val("f_poids")||"").replace(",","."));
+  if(p>0){
+    const g = p<25 ? "½ ampoule (0,5 mg)" : "1 ampoule (1 mg)";
+    $("#f_dia_glucagon").placeholder=g; if(!val("f_dia_glucagon")) $("#f_dia_glucagon").value=g;
+    const d = String(Math.round(p/10));
+    $("#f_dia_insdose").placeholder=d+" UI"; if(!val("f_dia_insdose")) $("#f_dia_insdose").value=d;
+  }
+}
+
 function render(){
+  updateDiaDefaults();         // affiche/pré-remplit le bloc diabète selon le poids
   schedulePreview();           // régénère l'aperçu du PDF officiel (anti-rebond)
   const doc = $("#doc");
   const nom = [val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
@@ -922,7 +954,8 @@ function render(){
 const FIELD_IDS = ["f_nom","f_prenom","f_ddn","f_sexe","f_poids","f_adresse","f_type",
   "r1_lien","r1_nom","r1_tel","r2_lien","r2_nom","r2_tel",
   "f_etab","f_classe","f_annee","f_medtraitant","f_medtel","f_numurg","f_periode","f_date",
-  "f_consequences","f_precisions","f_surveillance","f_hb","f_trousse_lieu","f_resto","f_amenag"];
+  "f_consequences","f_precisions","f_surveillance","f_hb","f_trousse_lieu","f_resto","f_amenag",
+  "f_dia_sucres","f_dia_glucagon","f_dia_inscorr","f_dia_insdose","f_dia_zone"];
 
 function init(){
   buildPathos();
@@ -1048,12 +1081,23 @@ const FILLERS = {
     if(salbu){ T("Texte3", shortDrug(salbu)); const n=firstNum(salbu.poso); if(n) T("Texte2", n); }
   },
   diabete(form){
-    const C=mkC(form);
+    const C=mkC(form), T=mkT(form);
     // signes d'hypoglycémie (modérée puis sévère)
     ["Pâleur","Sueurs","Tremblements","Difficultés pour parler","Agitation","Somnolence","Agressivité inhabituelle"].forEach(C);
     ["Perte de connaissance avec ou sans","Somnolence extrême","Hypoglycémie et impossibilité de"].forEach(C);
-    // disponibilité du glucagon (les doses chiffrées restent au médecin : individualisées)
-    if(state.meds.has("glucagon")){ C("Injecter le Glucagen en souscutané ou intramusculaire"); }
+    // resucrage : nombre de sucres (3 emplacements)
+    const sucres = val("f_dia_sucres");
+    if(sucres){ T("Texte1",sucres); T("Texte2",sucres); T("Texte3",sucres); }
+    // glucagon
+    if(state.meds.has("glucagon")){
+      C("Injecter le Glucagen en souscutané ou intramusculaire");
+      const g=val("f_dia_glucagon"); if(g) T("Texte7", g);          // nombre d'ampoules
+      const lieu=val("f_trousse_lieu"); if(lieu){ T("Texte5",lieu); T("Texte6",lieu); }  // lieux de stockage
+    }
+    // insuline (hyperglycémie)
+    const corr=val("f_dia_inscorr"); if(corr) T("Texte9", corr);    // UI pour ↓ 50 mg/dL
+    const dose=val("f_dia_insdose"); if(dose) T("Texte11", dose);   // dose 1/10 du poids (2 emplacements)
+    const zone=val("f_dia_zone");    if(zone) T("Texte10", zone);   // zone d'injection (2 emplacements)
   },
   epilepsie(form){
     const C=mkC(form), T=mkT(form);
