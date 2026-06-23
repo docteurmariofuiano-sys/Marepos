@@ -520,38 +520,56 @@ const CERTIFICATS = [
   /* ====================== VIOLENCES ====================== */
   {
     id:'cmi-violences', cat:'violences', statut:'légal',
-    titre:'Certificat médical initial (CMI) de coups et blessures — avec ITT',
-    resume:`Certificat descriptif des lésions après violences, avec détermination de l'ITT au sens pénal. Pièce déterminante pour la qualification judiciaire.`,
+    titre:'Certificat médical initial (CMI) de coups et blessures — avec ITTP',
+    resume:`Certificat descriptif des lésions après violences, avec détermination de l'Incapacité Temporaire Totale Personnelle (ITTP, au sens pénal). Pièce déterminante pour la qualification judiciaire.`,
     bases:['r4127-76','cp222-11','r4127-4','cp226-14'],
     regles:[
       'Décrire précisément chaque lésion (siège, type, dimensions, couleur, stade) ; un schéma daté peut être joint.',
-      'Rapporter les déclarations entre guillemets / au conditionnel, distinctes des constatations.',
-      'Déterminer l\'ITT (gêne à accomplir les gestes de la vie courante) — distincte de l\'arrêt de travail.',
+      'Rapporter les déclarations entre guillemets / au conditionnel (« disant avoir été victime de… »), distinctes des constatations.',
+      'Déterminer l\'ITTP (gêne à accomplir les gestes de la vie courante) — distincte de l\'arrêt de travail — et l\'indiquer en chiffres et en lettres.',
       'Ne jamais nommer l\'agresseur ni affirmer un lien de causalité avec un fait précis.',
-      'Mentionner le retentissement psychologique constaté le cas échéant.'
+      'Mentionner les examens complémentaires prescrits ; l\'ITTP est donnée sous réserve de leurs résultats et de complications.'
     ],
     pieges:[
-      'Confondre ITT pénale et arrêt de travail : erreur classique aux conséquences judiciaires.',
+      'Confondre ITTP (pénale) et arrêt de travail : erreur classique aux conséquences judiciaires.',
       'Écrire « lésions consécutives à l\'agression par M. X » = affirmer une causalité et nommer un tiers : à proscrire.',
-      'Sous-estimer le retentissement psychique.'
+      'Omettre la mention « sous réserve » et la réserve liée aux examens complémentaires.'
     ],
     remise:'Victime (en main propre). Sur réquisition : à l\'autorité requérante.',
     modele:`CERTIFICAT MÉDICAL INITIAL
 
-Je soussigné(e) {{medecin}}, {{qualite}}, certifie avoir examiné ce jour {{date}}, à {{ville}}, {{patient}}, né(e) le {{ddn}}.
+Je soussigné(e) {{medecin}}, {{qualite}},
+demeurant à {{adresse}},
 
-L'intéressé(e) déclare : « {{declarations}} » (propos rapportés, sous toute réserve).
+certifie avoir examiné ce jour {{patient}},
+né(e) le {{ddn}} à {{lieuNaissance}},
+demeurant à {{patientAdresse}},
+de sexe {{sexe}},
+de nationalité {{nationalite}},
+en date du {{date}}
+à (heure) {{heure}}.
 
-À l'examen, je constate :
-- {{lesions}}
+Disant avoir été victime de : {{declarations}}
+en date du : {{dateFaits}}
+à (heure) : {{heureFaits}}
+à (lieu) : {{lieuFaits}}
+(propos rapportés par l'intéressé(e), sous toute réserve.)
 
-Retentissement psychologique constaté : {{psy}}
+J'ai constaté lors de mon examen clinique :
+{{lesions}}
 
-Compte tenu des constatations, l'incapacité totale de travail (ITT), au sens pénal (gêne à accomplir les actes de la vie courante), est évaluée à : {{itt}} jours, sous réserve de complications ou d'éléments ultérieurs.
+Les lésions constatées ce jour justifient une Incapacité Temporaire Totale Personnelle (ITTP) de {{itt}} jours (en lettres : {{ittLettres}}), sous réserve de complications.
 
-Certificat établi à la demande de l'intéressé(e) et remis en main propre pour faire valoir ce que de droit.
+Les examens complémentaires suivants ont été prescrits pour compléter le dossier médical :
+{{examens}}
+Les résultats pouvant éventuellement modifier la détermination de l'ITTP.
 
-Fait à {{ville}}, le {{date}}.
+Ce certificat a été fait à la demande de l'intéressé(e) et remis en mains propres pour valoir ce que de droit.
+
+Fait à : {{ville}}
+Le : {{date}}
+Heure : {{heure}}
+
 {{medecin}} — {{qualite}}
 {{adresse}}{{rppsLine}}
 (signature)`
@@ -1758,7 +1776,7 @@ function champsDuModele(modele){
   const set=new Set(); const re=/\{\{(\w+)\}\}/g; let m;
   while((m=re.exec(modele||''))){ set.add(m[1]); }
   // champs gérés par l'identité (en-tête) ou auto : on ne les met pas dans le form spécifique
-  const auto = new Set(['medecin','qualite','rpps','adresse','ville','rppsLine','date']);
+  const auto = new Set(['medecin','qualite','rpps','adresse','ville','rppsLine','date','ittLettres']);
   return [...set].filter(k=>!auto.has(k));
 }
 
@@ -1777,7 +1795,10 @@ const LIBELLES = {
   activite:'Activité visée', finalite:'Finalité du certificat', dateVoyage:'Date du voyage',
   duree:'Durée', objet:'Objet de la dispense',
   pathologie:'Élément médical constaté (termes fonctionnels)', amenagement:'Aménagement / mesure justifié(e)',
-  evenement:'Prestation / événement concerné', dateEvenement:'Date de l\'événement'
+  evenement:'Prestation / événement concerné', dateEvenement:'Date de l\'événement',
+  lieuNaissance:'Lieu de naissance', sexe:'Sexe', nationalite:'Nationalité', heure:'Heure (de l\'examen)',
+  dateFaits:'Date des faits allégués', heureFaits:'Heure des faits', lieuFaits:'Lieu des faits',
+  examens:'Examens complémentaires prescrits'
 };
 const PLACEHS = {
   patient:'Nom Prénom', ddn:'JJ/MM/AAAA', itt:'ex. 5', discipline:'ex. football',
@@ -1795,11 +1816,50 @@ function valeursCourantes(){
   $$('#genFields input').forEach(inp=>{ v[inp.dataset.k]=inp.value.trim(); });
   v.date = v.date || dateDuJour();
   v.rppsLine = v.rpps ? `\nRPPS : ${v.rpps}` : '';
+  // ITTP en lettres : calculée automatiquement à partir du nombre de jours
+  if(!v.ittLettres && v.itt){
+    const n = parseInt(String(v.itt).replace(/\D/g,''),10);
+    if(!isNaN(n)) v.ittLettres = enLettres(n);
+  }
   return v;
 }
 function dateDuJour(){
   const d=new Date();
   return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+}
+/* Conversion d'un entier (0–9999) en toutes lettres (français) */
+function enLettres(n){
+  if(n===0) return 'zéro';
+  if(n<0||n>9999) return String(n);
+  const u=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix',
+    'onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+  const d=['','','vingt','trente','quarante','cinquante','soixante','soixante','quatre-vingt','quatre-vingt'];
+  function centaines(x){
+    let s='';
+    const c=Math.floor(x/100), r=x%100;
+    if(c){ s += (c>1?u[c]+'-':'')+'cent'+((c>1&&r===0)?'s':''); if(r) s+='-'; }
+    if(r) s += dizaines(r);
+    return s;
+  }
+  function dizaines(x){
+    if(x<20) return u[x];
+    const t=Math.floor(x/10), un=x%10;
+    if(t===7||t===9){ // soixante-dix / quatre-vingt-dix
+      const base=d[t]; const reste=10+un;
+      const lien=(t===7&&un===1)?'-et-':'-'; // 71 = soixante-et-onze ; 91 = quatre-vingt-onze
+      return base+lien+u[reste];
+    }
+    let s=d[t];
+    if(un===1 && (t!==8)) s+='-et-un';
+    else if(un){ s+='-'+u[un]; }
+    else if(t===8) s+='s'; // quatre-vingts
+    return s;
+  }
+  const mille=Math.floor(n/1000), reste=n%1000;
+  let s='';
+  if(mille){ s += (mille>1?centaines(mille)+'-':'')+'mille'; if(reste) s+='-'; }
+  if(reste) s += centaines(reste);
+  return s;
 }
 function remplir(modele,v){
   return (modele||'').replace(/\{\{(\w+)\}\}/g,(m,k)=>{
