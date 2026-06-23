@@ -30,14 +30,38 @@ window.CERT15695 = (function(){
     {p:0,x:388,y:330,width:158,height:48}  // page 1 (certificat simplifié)
   ];
 
-  async function fill(pdfBytes, V, signs){
+  // ----- cases à cocher -----
+  // colonnes des grilles d'appréciation A/B/C/D/NSP (position de dessin du X)
+  const COLX={A:395,B:433,C:471,D:509,NSP:547};
+  // grilles : page, y de chaque ligne, libellés app (ordre = lignes du PDF)
+  const MAT={
+    m_mot:{p:4,ys:[388,358,328,298,268,238],
+      rows:['Marcher','Se déplacer à l\'intérieur','Se déplacer à l\'extérieur','Préhension (main non dominante)','Préhension (main dominante)','Motricité fine']},
+    m_comm:{p:4,ys:[185,155,128],
+      rows:['Communiquer avec autrui','Utiliser le téléphone','Utiliser d\'autres appareils/techniques de communication']},
+    m_cog:{p:5,ys:[698,675,651,628],
+      rows:['Orientation dans le temps','Orientation dans l\'espace','Gestion de la sécurité personnelle','Maîtrise du comportement']},
+    m_perso:{p:5,ys:[225,205,185,155,135,115],
+      rows:['Faire sa toilette','S\'habiller / se déshabiller','Manger et boire des aliments préparés','Couper ses aliments','Assurer l\'hygiène de l\'élimination urinaire','Assurer l\'hygiène de l\'élimination fécale']},
+    m_dom:{p:6,ys:[748,724,703,682,660,638,617],
+      rows:['Prendre son traitement','Gérer son stress','Faire les courses','Préparer le repas','Entretien courant du logement','Démarches administratives','Gérer son budget']}
+  };
+  // cases simples (radio) page 2 : origine + date d'apparition
+  const ORI={'Congénitale':[52,506],'Maladie':[124,506],'Accident vie privée':[195,506],'Accident du travail':[52,481],'Maladie professionnelle':[140,481]};
+  const DAT={'À la naissance':[52,434],'Depuis moins d\'un an':[140,434],'Depuis 1 à 5 ans':[52,411],'Depuis plus de 5 ans':[140,411]};
+
+  async function fill(pdfBytes, state, signs){
     if(!window.PDFLib) throw new Error('pdf-lib non chargé');
     const {PDFDocument,rgb,StandardFonts}=window.PDFLib;
+    const V=(state&&state.V)||{}, M=(state&&state.M)||{};
+    if(!signs && state && state.MROWS) signs=(state.MROWS.c_signes||[]).filter(r=>r.label&&r.label.trim()).map(r=>r.label.trim());
     const doc=await PDFDocument.load(pdfBytes);
     const font=await doc.embedFont(StandardFonts.Helvetica);
+    const fontB=await doc.embedFont(StandardFonts.HelveticaBold);
     const P=doc.getPages();
     const COLOR=rgb(0.05,0.15,0.5);
     const draw=(pi,x,y,txt,size)=>{ if(P[pi]) P[pi].drawText(String(txt),{x,y,size,font,color:COLOR}); };
+    const tick=(pi,x,y)=>{ if(P[pi]) P[pi].drawText('X',{x,y,size:9,font:fontB,color:COLOR}); };
     const wrap=(pi,x,y,maxW,txt,size,lh)=>{ if(!txt)return; lh=lh||size+3;
       const words=String(txt).split(/\s+/); let line='',yy=y;
       for(const w of words){ const t=line?line+' '+w:w;
@@ -48,6 +72,15 @@ window.CERT15695 = (function(){
       if(v==null||String(v).trim()==='') continue;
       if(m.w) wrap(m.p,m.x,m.y,m.w,v,m.s||8); else draw(m.p,m.x,m.y,v,m.s||9); }
     (signs||[]).slice(0,3).forEach((s,i)=>{ if(SIGNS[i]) wrap(1,SIGNS[i].x,SIGNS[i].y,SIGN_W,s,7,9); });
+
+    // ----- cases à cocher -----
+    // grilles d'appréciation A/B/C/D/NSP
+    for(const id in MAT){ const m=MAT[id], sel=M[id]||{};
+      m.rows.forEach((rowLabel,i)=>{ const c=sel[rowLabel]; if(c&&COLX[c]) tick(m.p,COLX[c],m.ys[i]-3); }); }
+    // origine + date d'apparition (page 2)
+    if(ORI[V.h_origine]) tick(1,ORI[V.h_origine][0],ORI[V.h_origine][1]);
+    if(DAT[V.h_date]) tick(1,DAT[V.h_date][0],DAT[V.h_date][1]);
+
     SIGN_MASKS.forEach(m=>{ if(P[m.p]) P[m.p].drawRectangle({x:m.x,y:m.y,width:m.width,height:m.height,color:rgb(1,1,1)}); });
 
     return await doc.save();

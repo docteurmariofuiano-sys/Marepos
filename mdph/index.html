@@ -777,7 +777,7 @@ async function fillCert(){
   certMsg('Génération…');
   try{
     const signs=(MROWS.c_signes||[]).filter(r=>r.label.trim()).map(r=>r.label.trim());
-    const filled=await window.CERT15695.fill(certBytes.slice(0), V, signs);
+    const filled=await window.CERT15695.fill(certBytes.slice(0), {V,C,M,MROWS}, signs);
     const blob=new Blob([filled],{type:'application/pdf'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
     a.download='certificat_MDPH_15695_rempli.pdf'; document.body.appendChild(a); a.click();
