@@ -14,6 +14,7 @@ const DOMAINES = {
   "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
+  "Prescription": {c:"var(--d-presc)",  cb:"#e2f5f3"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
 
@@ -61,6 +62,9 @@ const APPS = [
   {t:"Suivi préventif CNAM", e:"🛡️", dom:"Prévention",
    d:"Suivi préventif au cabinet selon les référentiels CNAM.",
    href:"suite-clinique/apps-externes/suivi_preventif.html"},
+  {t:"MAGISTRA — Préparations magistrales", e:"⚗️", dom:"Prescription",
+   d:"Aide à la prescription de préparations magistrales : base de formules sourcée, consultation rapide, alertes de sécurité, générateur d'ordonnance, calculateurs (%, qsp).",
+   href:"magistrales/index.html"},
   {t:"Échelles & évaluations", e:"📊", dom:"Transversal",
    d:"MoCA, CHA₂DS₂-VASc, AUDIT, RMQD, iatrogénie… échelles cliniques.",
    href:"suite-clinique/apps-externes/evaluations_medicales.html"},

@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAGISTRA — Aide à la prescription de préparations magistrales</title>
+<meta name="description" content="Assistant d'aide à la prescription de préparations magistrales (dermatologie, douleur, pédiatrie, gériatrie…). Base de formules sourcée, alertes de sécurité, générateur d'ordonnance. Ne remplace ni le jugement médical ni la validation pharmaceutique.">
+<style>
+/* ============================================================
+   MAGISTRA — feuille de style (sobre, médicale, responsive)
+   Thème clair/sombre via [data-theme]. Fonctionne hors-ligne.
+   ============================================================ */
+:root{
+  --ink:#172029; --muted:#5f6c78; --paper:#f5f7f8; --panel:#ffffff;
+  --line:#dde2e6; --line-soft:#eceff2;
+  --teal:#0a6c74; --teal-soft:#dbeef0; --teal-ink:#075057;
+  --green:#1f7a45; --green-soft:#e3f4e9;
+  --orange:#b1601a; --orange-soft:#fbeede;
+  --red:#b3261e; --red-soft:#fbe6e4;
+  --blue:#2b5f92; --blue-soft:#e6eef7;
+  --violet:#6648a6; --violet-soft:#efe9fb;
+  --shadow:0 10px 30px rgba(24,32,39,.10);
+  --radius:14px;
+}
+[data-theme="dark"]{
+  --ink:#e7edf2; --muted:#9aa7b3; --paper:#0f161c; --panel:#19222b;
+  --line:#2b3742; --line-soft:#222d36;
+  --teal:#3fb9c4; --teal-soft:#123339; --teal-ink:#8fe0e8;
+  --green:#5cc985; --green-soft:#13301f;
+  --orange:#e0974a; --orange-soft:#36230f;
+  --red:#f08a82; --red-soft:#3a1512;
+  --blue:#7fb0e0; --blue-soft:#13243a;
+  --violet:#b59ae8; --violet-soft:#241a3a;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);background:var(--paper);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.5;
+  font-size:15px;
+}
+a{color:var(--teal)}
+h1,h2,h3{margin:0 0 .4em}
+h2{font-size:1.25rem}
+h3{font-size:1.05rem}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.hide{display:none!important}
+
+/* ---------- en-tête ---------- */
+header.app{
+  position:sticky;top:0;z-index:40;background:var(--panel);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(10px);
+}
+.bar{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;
+  align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.brand .logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:var(--teal-soft);color:var(--teal-ink);font-size:1.4rem}
+.brand h1{font-size:1.15rem;margin:0;letter-spacing:.5px}
+.brand .sub{font-size:.74rem;color:var(--muted)}
+.bar .spacer{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:10px;padding:8px 12px;font-size:.9rem;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:5px 9px;font-size:.82rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* bandeau sécurité permanent */
+.safety-bar{background:var(--orange-soft);color:var(--orange);
+  border-bottom:1px solid var(--line);font-size:.82rem}
+.safety-bar .in{max-width:1200px;margin:0 auto;padding:7px 16px}
+.safety-bar strong{color:var(--orange)}
+
+/* ---------- navigation onglets ---------- */
+nav.tabs{position:sticky;top:62px;z-index:30;background:var(--panel);
+  border-bottom:1px solid var(--line)}
+.tabs-in{max-width:1200px;margin:0 auto;padding:6px 10px;display:flex;gap:4px;
+  overflow-x:auto;flex-wrap:nowrap}
+.tabs button{white-space:nowrap;border:0;background:transparent;color:var(--muted);
+  padding:8px 11px;border-radius:9px;cursor:pointer;font-size:.86rem;font-weight:500}
+.tabs button:hover{background:var(--line-soft);color:var(--ink)}
+.tabs button.active{background:var(--teal-soft);color:var(--teal-ink);font-weight:700}
+
+/* ---------- conteneur ---------- */
+main{max-width:1200px;margin:0 auto;padding:18px 16px 80px}
+.view{animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel.flat{box-shadow:none}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+label.field{display:block;margin-bottom:10px;font-size:.85rem;font-weight:600;color:var(--muted)}
+label.field span.lab{display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);
+  border-radius:9px;background:var(--panel);color:var(--ink);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--teal-soft);border-color:var(--teal)}
+textarea{min-height:80px;resize:vertical}
+.check{display:flex;align-items:flex-start;gap:8px;font-weight:500;color:var(--ink);
+  font-size:.9rem;margin-bottom:7px;cursor:pointer}
+.check input{width:auto;margin-top:3px}
+
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  padding:6px 11px;border-radius:999px;cursor:pointer;font-size:.82rem}
+.chip:hover{border-color:var(--teal)}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* tags / badges */
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:700;
+  padding:3px 8px;border-radius:999px;background:var(--line-soft);color:var(--muted)}
+.tag.teal{background:var(--teal-soft);color:var(--teal-ink)}
+.tag.green{background:var(--green-soft);color:var(--green)}
+.tag.orange{background:var(--orange-soft);color:var(--orange)}
+.tag.red{background:var(--red-soft);color:var(--red)}
+.tag.blue{background:var(--blue-soft);color:var(--blue)}
+.tag.violet{background:var(--violet-soft);color:var(--violet)}
+
+/* cartes de formules */
+.fcard{border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:12px;
+  padding:14px;background:var(--panel);display:flex;flex-direction:column;gap:8px}
+.fcard h3{margin:0;font-size:1rem}
+.fcard .compo{font-size:.82rem;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+.fcard .foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fcard.lvl-douce{border-left-color:var(--green)}
+.fcard.lvl-intermediaire{border-left-color:var(--orange)}
+.fcard.lvl-forte{border-left-color:var(--red)}
+
+/* alertes */
+.alert{border-radius:11px;padding:11px 13px;margin-bottom:9px;font-size:.88rem;
+  border:1px solid;display:flex;gap:9px;align-items:flex-start}
+.alert .ico{font-size:1.05rem;line-height:1.2}
+.alert.block{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.alert.warn{background:var(--orange-soft);border-color:var(--orange);color:var(--orange)}
+.alert.info{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.alert.ok{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.alert strong{color:inherit}
+
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);
+  color:var(--teal-ink);padding:10px 13px;border-radius:0 10px 10px 0;font-size:.88rem;margin:8px 0}
+
+/* listes définition */
+dl.kv{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:.88rem}
+dl.kv dt{color:var(--muted);font-weight:600}
+ul.tight{margin:.3em 0;padding-left:1.2em}
+ul.tight li{margin:.15em 0}
+
+/* ordonnance */
+.rx{background:#fff;color:#172029;border:1px solid var(--line);border-radius:12px;
+  padding:20px;font-family:Georgia,"Times New Roman",serif;white-space:pre-wrap;
+  font-size:.95rem;line-height:1.55}
+[data-theme="dark"] .rx{background:#f7f9fa}
+
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.section-head .spacer{flex:1}
+
+.hint{font-size:.8rem;color:var(--muted);margin-top:-4px;margin-bottom:8px}
+
+.kpi{display:flex;gap:14px;flex-wrap:wrap}
+.kpi .b{background:var(--line-soft);border-radius:10px;padding:10px 14px;min-width:90px}
+.kpi .b b{font-size:1.4rem;display:block;color:var(--teal)}
+.kpi .b span{font-size:.74rem;color:var(--muted)}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+table.tbl th,table.tbl td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line-soft)}
+table.tbl th{color:var(--muted);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:10px;
+  z-index:100;box-shadow:var(--shadow);font-size:.9rem;opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+footer.foot{max-width:1200px;margin:0 auto;padding:20px 16px;color:var(--muted);
+  font-size:.8rem;border-top:1px solid var(--line)}
+
+/* impression : n'imprimer que l'ordonnance */
+@media print{
+  header.app,nav.tabs,.safety-bar,footer.foot,.no-print{display:none!important}
+  main{padding:0;max-width:none}
+  .panel{box-shadow:none;border:none;padding:0}
+  .rx{border:none;padding:0}
+  body{background:#fff;font-size:12pt}
+}
+@media (max-width:600px){
+  .brand .sub{display:none}
+  dl.kv{grid-template-columns:1fr}
+  dl.kv dt{margin-top:6px}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- ===================== EN-TÊTE ===================== -->
+<header class="app">
+  <div class="bar">
+    <div class="brand" onclick="go('accueil')" title="Accueil">
+      <div class="logo">⚗️</div>
+      <div>
+        <h1>MAGISTRA</h1>
+        <div class="sub">Aide à la prescription de préparations magistrales</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn ghost sm" id="themeBtn" onclick="toggleTheme()">🌙 Sombre</button>
+    <button class="btn ghost sm" onclick="go('apropos')">ℹ️ À propos</button>
+  </div>
+  <div class="safety-bar">
+    <div class="in">
+      ⚠️ <strong>Outil d'aide</strong> — il ne remplace ni l'examen clinique, ni les recommandations officielles, ni la
+      <strong>validation du pharmacien préparateur</strong> (compatibilité, stabilité, conservation, excipients, disponibilité, remboursement).
+    </div>
+  </div>
+  <nav class="tabs"><div class="tabs-in" id="tabs"></div></nav>
+</header>
+
+<main id="main"></main>
+
+<footer class="foot">
+  <strong>MAGISTRA</strong> — assistant de prescription de préparations magistrales. Traitement <strong>local</strong> dans le navigateur,
+  aucune donnée patient transmise. Sources documentaires : pharmacie-des-rosiers.com/formules-magistrales · codexial.com.
+  <br>Les dosages, excipients, compatibilités, stabilités, conservations et modalités de remboursement doivent être vérifiés avant délivrance.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================================================================
+   MAGISTRA — moteur applicatif (100% local, sans dépendance)
+   Sections : 1) données  2) sécurité  3) vues  4) routeur/outils
+   =================================================================== */
+'use strict';
+
+/* ---------- petits utilitaires ---------- */
+const $  = (s,c=document)=>c.querySelector(s);
+const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const norm = t => String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1900);}
+function copy(text){
+  navigator.clipboard?.writeText(text).then(()=>toast('Copié dans le presse-papiers ✓'),
+    ()=>fallbackCopy(text));
+}
+function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copié ✓');}catch(e){toast('Copie impossible');}ta.remove();}
+
+/* ===================================================================
+   1) BASE DE DONNÉES DES FORMULES
+   Chaque formule est sourcée et datée. Les "flags" alimentent le
+   moteur de sécurité. validation_pharmacien = toujours true.
+   =================================================================== */
+const CATEGORIES = {
+  keratolytique:   {label:'Kératolytique', emoji:'🧱', color:'orange'},
+  hydratant:       {label:'Hydratant / émollient', emoji:'💧', color:'blue'},
+  antiprurigineux: {label:'Antiprurigineux', emoji:'🌿', color:'green'},
+  antalgique:      {label:'Antalgique (capsaïcine)', emoji:'🌶️', color:'red'},
+  antiseptique:    {label:'Antiseptique / Dalibour', emoji:'🧴', color:'teal'},
+  cicatrisant:     {label:'Cicatrisant', emoji:'🩹', color:'green'},
+  antibiotique:    {label:'Antibiotique dermato', emoji:'🦠', color:'violet'},
+  depigmentant:    {label:'Dépigmentant', emoji:'🌗', color:'violet'}
+};
+
+const SOURCE_C = 'Codexial — codexial.com/preparation-magistrale/prescription';
+const SOURCE_R = 'Pharmacie des Rosiers — pharmacie-des-rosiers.com/formules-magistrales';
+const DATE_V = '2026-06-23';
+
+/* Helper de fabrication d'une formule (valeurs par défaut sûres) */
+function F(o){
+  return Object.assign({
+    forme:'crème', quantite_finale:'50 g', age_min:null,
+    grossesse:'À évaluer — validation requise',
+    indications_sec:[], contre_indications:[], precautions:[], effets:[], conseils:[],
+    conservation:'Au frais, à l\'abri de la lumière ; respecter la date limite fixée par le pharmacien.',
+    remboursement:'verifier', mention_remb:'',
+    source:SOURCE_C, date_verif:DATE_V, validation_pharmacien:true,
+    flags:{}, niveau:null
+  }, o);
+}
+
+const FORMULES = [
+  /* ---------------- KÉRATOLYTIQUES ---------------- */
+  F({id:'as_5_obase', nom:'Acide salicylique 5 % — Obase',
+    categorie:'keratolytique', niveau:'douce',
+    indications:['hyperkératose','kératodermie palmo-plantaire','psoriasis'],
+    indications_sec:['fissures','hyperkératose légère'],
+    composition:[{substance:'Acide salicylique',quantite:'2,5 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    forme:'crème', quantite_finale:'50 g',
+    posologie:'Appliquer une fine couche le soir, 1 fois par jour, sur les zones épaissies.',
+    duree:'10 à 14 jours, puis réévaluation.',
+    zone:'Zones hyperkératosiques (mains, pieds, coudes).',
+    age_min:'≥ 6 ans (prudence, surface limitée)',
+    contre_indications:['Allergie aux salicylés','Plaie/peau fissurée profonde, lésion infectée','Application sur grande surface'],
+    precautions:['Éviter les muqueuses et le pourtour des yeux','Ne pas appliquer sur peau lésée','Surveiller l\'irritation'],
+    effets:['Irritation, desquamation, sensation de tiraillement'],
+    conseils:['Application le soir','Hydratation associée le matin','Arrêter si irritation importante'],
+    flags:{keratolytique:true, salicyle:5}}),
+
+  F({id:'as_10_obase', nom:'Acide salicylique 10 % — Obase',
+    categorie:'keratolytique', niveau:'intermediaire',
+    indications:['hyperkératose','kératodermie palmo-plantaire','psoriasis'],
+    composition:[{substance:'Acide salicylique',quantite:'5 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer une fine couche le soir, 1 fois par jour.',
+    duree:'14 jours, réévaluation impérative.',
+    zone:'Zones hyperkératosiques localisées.',
+    age_min:'≥ 12 ans (surface limitée)',
+    contre_indications:['Allergie aux salicylés','Enfant (concentration ≥ 10 %)','Grande surface','Peau lésée/fissurée','Grossesse/allaitement (à éviter)'],
+    precautions:['Limiter la surface traitée','Éviter muqueuses et yeux','Insuffisance rénale : prudence sur grande surface'],
+    effets:['Irritation, desquamation marquée'],
+    conseils:['Application localisée le soir','Hydrater les zones voisines','Arrêt si brûlure/irritation'],
+    flags:{keratolytique:true, salicyle:10}}),
+
+  F({id:'as_20_obase', nom:'Acide salicylique 20 % — Obase',
+    categorie:'keratolytique', niveau:'forte',
+    indications:['hyperkératose','kératodermie palmo-plantaire','verrues'],
+    composition:[{substance:'Acide salicylique',quantite:'10 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer ponctuellement sur la zone très épaissie, le soir.',
+    duree:'Cure courte, réévaluation rapprochée.',
+    zone:'Hyperkératoses épaisses palmo-plantaires, strictement localisées.',
+    age_min:'Adulte uniquement',
+    contre_indications:['Enfant','Grossesse/allaitement','Grande surface','Insuffisance rénale','Peau fissurée/lésée','Allergie aux salicylés'],
+    precautions:['Concentration élevée : usage ponctuel et localisé','Risque d\'intoxication salicylée si grande surface/occlusion prolongée','Protéger la peau saine péri-lésionnelle'],
+    effets:['Irritation forte, desquamation, brûlure possible'],
+    conseils:['Usage très localisé','Ne jamais étendre la surface','Surveillance étroite'],
+    flags:{keratolytique:true, salicyle:20}}),
+
+  F({id:'as10_al5_pommade', nom:'Acide salicylique 10 % + acide lactique 5 % — Pommade',
+    categorie:'keratolytique', niveau:'forte',
+    indications:['hyperkératose','kératodermie palmo-plantaire'],
+    composition:[{substance:'Acide salicylique',quantite:'5 g'},{substance:'Acide lactique',quantite:'2,5 g'},{substance:'Codexial Pommade',quantite:'qsp 50 g'}],
+    forme:'pommade',
+    posologie:'Appliquer le soir sur les zones très kératosiques.',
+    duree:'14 jours, réévaluation.',
+    zone:'Hyperkératoses épaisses localisées.',
+    age_min:'Adulte',
+    contre_indications:['Enfant','Grossesse/allaitement','Grande surface','Peau lésée','Allergie aux salicylés'],
+    precautions:['Double action kératolytique : risque d\'irritation accru','Surface limitée'],
+    effets:['Irritation, picotements, desquamation'],
+    conseils:['Occlusion seulement si validée par le pharmacien/médecin','Hydratation associée'],
+    flags:{keratolytique:true, salicyle:10}}),
+
+  F({id:'uree_20_al10_coldcream', nom:'Urée 20 % + acide lactique 10 % — Cold Cream',
+    categorie:'keratolytique', niveau:'intermediaire',
+    indications:['hyperkératose','ichtyose','xérose','kératodermie palmo-plantaire'],
+    composition:[{substance:'Urée',quantite:'40 g'},{substance:'Acide lactique',quantite:'20 g'},{substance:'Codexial Cold Cream',quantite:'qsp 200 g'}],
+    quantite_finale:'200 g',
+    posologie:'Appliquer 1 à 2 fois par jour.',
+    duree:'2 à 4 semaines.',
+    zone:'Zones sèches et épaissies (corps, membres).',
+    age_min:'≥ 3 ans (prudence)',
+    contre_indications:['Allergie à un composant','Peau très inflammatoire/excoriée','Plaie ouverte'],
+    precautions:['Peut piquer sur peau fissurée','Éviter les muqueuses'],
+    effets:['Picotements transitoires'],
+    conseils:['Appliquer après la douche','Émollient d\'entretien'],
+    flags:{keratolytique:true, uree:20}}),
+
+  F({id:'koh_10_cerat', nom:'Hydroxyde de potassium 10 % — Cérat',
+    categorie:'keratolytique', niveau:'forte',
+    indications:['molluscum contagiosum','verrues'],
+    composition:[{substance:'Hydroxyde de potassium (KOH)',quantite:'5 g'},{substance:'Cérat',quantite:'qsp 50 g'}],
+    forme:'cérat',
+    posologie:'Application ponctuelle, strictement sur la lésion, selon protocole.',
+    duree:'Selon réponse, sous surveillance.',
+    zone:'Lésion ciblée uniquement (jamais sur peau saine).',
+    age_min:'Sur avis spécialisé',
+    contre_indications:['Application sur peau saine','Muqueuses','Visage (prudence)','Grande surface'],
+    precautions:['CAUSTIQUE : risque de brûlure chimique','Protéger impérativement la peau péri-lésionnelle','Usage encadré, surveillance rapprochée'],
+    effets:['Inflammation locale, brûlure, cicatrice possible si mauvais usage'],
+    conseils:['Cibler la lésion uniquement','Arrêt immédiat si douleur/brûlure importante'],
+    flags:{keratolytique:true, caustique:true}}),
+
+  /* ---------------- HYDRATANTS / ÉMOLLIENTS ---------------- */
+  F({id:'glyceamidon_10_obase', nom:'Glycérolé d\'amidon 10 % — Obase',
+    categorie:'hydratant', niveau:'douce',
+    indications:['xérose','dermatite atopique','prurit','ichtyose'],
+    composition:[{substance:'Glycérolé d\'amidon',quantite:'5 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 1 à 2 fois par jour.',
+    duree:'Entretien, en cures renouvelables.',
+    zone:'Peau sèche, y compris zones étendues.',
+    age_min:'Tout âge (formule douce — validation pédiatrique)',
+    contre_indications:['Allergie à un composant'],
+    precautions:['Bien tolérée ; éviter les yeux'],
+    effets:['Rares'],
+    conseils:['Application après la douche','Éviter les savons irritants'],
+    flags:{}}),
+
+  F({id:'uree_10_coldcream', nom:'Urée 10 % — Cold Cream',
+    categorie:'hydratant', niveau:'intermediaire',
+    indications:['xérose','dermatite atopique','ichtyose'],
+    composition:[{substance:'Urée',quantite:'5 g'},{substance:'Codexial Cold Cream',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 1 à 2 fois par jour.',
+    duree:'2 à 4 semaines, renouvelable.',
+    zone:'Peau sèche.',
+    age_min:'≥ 3 ans',
+    contre_indications:['Allergie à un composant','Peau très inflammatoire/excoriée'],
+    precautions:['Peut piquer sur peau lésée'],
+    effets:['Picotements transitoires'],
+    conseils:['Appliquer après la douche'],
+    flags:{uree:10}}),
+
+  F({id:'creme_eau', nom:'Crème à l\'eau (vaseline + glycérine + cérat)',
+    categorie:'hydratant', niveau:'douce',
+    indications:['xérose','prurit sénile','dermatite atopique'],
+    composition:[{substance:'Vaseline',quantite:'q.s.'},{substance:'Glycérine',quantite:'q.s.'},{substance:'Cérat',quantite:'qsp 100 g'}],
+    quantite_finale:'100 g',
+    posologie:'Appliquer aussi souvent que nécessaire.',
+    duree:'Entretien.',
+    zone:'Peau très sèche, sujets âgés.',
+    age_min:'Tout âge',
+    contre_indications:['Allergie à un composant'],
+    precautions:['Texture riche : préférer le soir si zones pileuses'],
+    conseils:['Émollient d\'entretien quotidien'],
+    flags:{}}),
+
+  /* ---------------- ANTIPRURIGINEUX ---------------- */
+  F({id:'glyceamidon_al_cerat', nom:'Glycérolé d\'amidon 10 % + acide lactique 5 % — Cérat',
+    categorie:'antiprurigineux', niveau:'intermediaire',
+    indications:['prurit','xérose','prurit sénile'],
+    composition:[{substance:'Glycérolé d\'amidon',quantite:'5 g'},{substance:'Acide lactique',quantite:'2,5 g'},{substance:'Cérat',quantite:'qsp 50 g'}],
+    forme:'cérat',
+    posologie:'Appliquer 1 à 2 fois par jour.',
+    duree:'Cures renouvelables.',
+    zone:'Peau sèche prurigineuse.',
+    age_min:'≥ 3 ans',
+    contre_indications:['Allergie à un composant','Lésions excoriées (l\'acide lactique peut brûler)'],
+    precautions:['Éviter sur peau très inflammatoire'],
+    conseils:['Hydratation régulière','Éviter eau trop chaude'],
+    flags:{}}),
+
+  /* ---------------- ANTALGIQUES (CAPSAÏCINE) ---------------- */
+  F({id:'capsa_002', nom:'Capsaïcine 0,02 % — crème',
+    categorie:'antalgique', niveau:'douce',
+    indications:['douleur neuropathique localisée'],
+    composition:[{substance:'Capsaïcine',quantite:'0,01 g'},{substance:'Excipient crème',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 3 à 4 fois par jour sur la zone douloureuse.',
+    duree:'Plusieurs semaines ; effet progressif.',
+    zone:'Zone douloureuse limitée, peau intacte.',
+    age_min:'Adulte',
+    contre_indications:['Peau lésée/irritée','Muqueuses, yeux','Hypersensibilité à la capsaïcine','Grossesse/allaitement (si non validé)','Enfant'],
+    precautions:['Sensation de brûlure initiale fréquente','Porter des gants','Ne pas appliquer juste avant douche/bain chaud'],
+    effets:['Brûlure, érythème, picotements à l\'application'],
+    conseils:['Se laver les mains après (ou utiliser des gants)','Éviter yeux et muqueuses','Éviter contact avec enfants/animaux'],
+    flags:{capsaicine:true}}),
+
+  F({id:'capsa_007', nom:'Capsaïcine 0,07 % — crème',
+    categorie:'antalgique', niveau:'forte',
+    indications:['douleur neuropathique localisée'],
+    composition:[{substance:'Capsaïcine',quantite:'0,035 g'},{substance:'Excipient crème',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 3 à 4 fois par jour, augmentation progressive.',
+    duree:'Plusieurs semaines.',
+    zone:'Zone douloureuse limitée, peau intacte.',
+    age_min:'Adulte',
+    contre_indications:['Peau lésée/irritée','Muqueuses, yeux','Hypersensibilité','Grossesse/allaitement (si non validé)','Enfant'],
+    precautions:['Brûlure plus marquée qu\'à 0,02 %','Gants obligatoires','Introduction progressive recommandée'],
+    effets:['Brûlure, érythème'],
+    conseils:['Gants, éviter yeux/muqueuses','Pas de douche chaude juste après'],
+    flags:{capsaicine:true}}),
+
+  /* ---------------- ANTISEPTIQUES / DALIBOUR ---------------- */
+  F({id:'dalibour_obase', nom:'Dalibour (sulfate de cuivre + sulfate de zinc) — Obase',
+    categorie:'antiseptique', niveau:'intermediaire',
+    indications:['lésions suintantes','intertrigo','eczéma suintant'],
+    composition:[{substance:'Sulfate de cuivre',quantite:'0,05 g'},{substance:'Sulfate de zinc',quantite:'0,05 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 1 à 2 fois par jour sur les zones suintantes.',
+    duree:'Cure courte ; réévaluation.',
+    zone:'Lésions suintantes, plis.',
+    age_min:'Prudence selon âge — validation',
+    contre_indications:['Allergie à un composant','Plaie profonde/infectée nécessitant antibiothérapie'],
+    precautions:['Ne pas prolonger sans diagnostic','Rechercher infection bactérienne, mycose, impétigo, dermite de contact'],
+    effets:['Coloration cutanée transitoire'],
+    conseils:['Réévaluer si pas d\'amélioration rapide'],
+    flags:{antiseptique:true}}),
+
+  F({id:'oxyde_zinc_pate', nom:'Pâte à l\'oxyde de zinc',
+    categorie:'antiseptique', niveau:'douce',
+    indications:['lésions suintantes','intertrigo','érythème fessier'],
+    composition:[{substance:'Oxyde de zinc',quantite:'10 g'},{substance:'Excipient pâte',quantite:'qsp 50 g'}],
+    forme:'pâte',
+    posologie:'Appliquer en couche protectrice 1 à 2 fois par jour.',
+    duree:'Selon évolution.',
+    zone:'Zones macérées/suintantes, siège.',
+    age_min:'Tout âge',
+    contre_indications:['Allergie à un composant'],
+    precautions:['Nettoyage doux entre les applications'],
+    conseils:['Protection et assèchement des plis'],
+    flags:{antiseptique:true}}),
+
+  F({id:'ichtyol_pommade', nom:'Pommade ichtyolée',
+    categorie:'antiseptique', niveau:'intermediaire',
+    indications:['furoncle','lésions inflammatoires localisées'],
+    composition:[{substance:'Ichtyol (ichthammol)',quantite:'5 g'},{substance:'Codexial Pommade',quantite:'qsp 50 g'}],
+    forme:'pommade',
+    posologie:'Appliquer 1 à 2 fois par jour sur la lésion.',
+    duree:'Cure courte.',
+    zone:'Lésion inflammatoire localisée.',
+    age_min:'Prudence selon âge',
+    contre_indications:['Allergie à un composant','Plaie ouverte étendue'],
+    precautions:['Odeur caractéristique','Tache les textiles'],
+    flags:{antiseptique:true}}),
+
+  /* ---------------- CICATRISANTS ---------------- */
+  F({id:'baume_commandeur_pommade', nom:'Baume du commandeur 10 % — Pommade',
+    categorie:'cicatrisant', niveau:'douce',
+    indications:['fissures','crevasses','petites plaies superficielles non compliquées'],
+    composition:[{substance:'Baume du commandeur',quantite:'5 g'},{substance:'Codexial Pommade',quantite:'qsp 50 g'}],
+    forme:'pommade',
+    posologie:'Appliquer 1 à 2 fois par jour.',
+    duree:'Jusqu\'à cicatrisation, réévaluation.',
+    zone:'Fissures, crevasses, peau abîmée non infectée.',
+    age_min:'Prudence selon âge',
+    contre_indications:['Allergie (contient des dérivés de baumes/résines, alcool)','Plaie infectée/nécrotique/profonde','Plaie du pied diabétique'],
+    precautions:['Ne remplace pas la prise en charge d\'une plaie compliquée'],
+    conseils:['Hygiène de la plaie','Consulter si signes d\'infection'],
+    flags:{}}),
+
+  /* ---------------- ANTIBIOTIQUES DERMATO ---------------- */
+  F({id:'erythro_4_obase', nom:'Érythromycine 4 % — Obase',
+    categorie:'antibiotique', niveau:'intermediaire',
+    indications:['acné inflammatoire'],
+    composition:[{substance:'Érythromycine base',quantite:'2 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 1 à 2 fois par jour sur les zones atteintes.',
+    duree:'Limitée (risque de résistance) ; réévaluation à 4–8 semaines.',
+    zone:'Zones d\'acné, peau saine.',
+    age_min:'Selon indication',
+    contre_indications:['Allergie aux macrolides','Absence d\'indication documentée'],
+    precautions:['Limiter la durée (résistance bactérienne)','Associer un kératolytique/rétinoïde non-antibiotique si possible'],
+    conseils:['Ne pas utiliser en continu prolongé'],
+    flags:{antibiotique:true}}),
+
+  F({id:'erythro_4_as3_obase', nom:'Érythromycine 4 % + acide salicylique 3 % — Obase',
+    categorie:'antibiotique', niveau:'forte',
+    indications:['acné inflammatoire et rétentionnelle'],
+    composition:[{substance:'Érythromycine base',quantite:'2 g'},{substance:'Acide salicylique',quantite:'1,5 g'},{substance:'Codexial Obase',quantite:'qsp 50 g'}],
+    posologie:'Appliquer 1 fois par jour le soir.',
+    duree:'Limitée ; réévaluation.',
+    zone:'Zones d\'acné.',
+    age_min:'Selon indication, adolescent/adulte',
+    contre_indications:['Allergie aux macrolides ou salicylés','Grossesse/allaitement (à éviter)','Absence d\'indication documentée'],
+    precautions:['Durée limitée','Irritation possible (salicylé)'],
+    conseils:['Hydratation, photoprotection'],
+    flags:{antibiotique:true, salicyle:3}}),
+
+  /* ---------------- DÉPIGMENTANTS ---------------- */
+  F({id:'depigmentant_trio', nom:'Trio dépigmentant (hydroquinone + trétinoïne + dermocorticoïde)',
+    categorie:'depigmentant', niveau:'forte',
+    indications:['mélasma','hyperpigmentation post-inflammatoire'],
+    composition:[{substance:'Hydroquinone',quantite:'2 g (4 %)'},{substance:'Trétinoïne',quantite:'0,025 g (0,05 %)'},{substance:'Dermocorticoïde',quantite:'q.s.'},{substance:'Excipient crème',quantite:'qsp 50 g'}],
+    posologie:'Appliquer le soir sur les taches, cure limitée.',
+    duree:'Cure courte (ex. 8 semaines) sous surveillance — ne pas prolonger.',
+    zone:'Taches ciblées du visage.',
+    age_min:'Adulte',
+    contre_indications:['Grossesse','Allaitement','Allergie à un composant','Application large/prolongée'],
+    precautions:['Photoprotection STRICTE indispensable','Risque d\'irritation, d\'ochronose si usage prolongé','Durée limitée, cible les taches'],
+    effets:['Irritation, érythème, photosensibilité'],
+    conseils:['Écran solaire SPF 50+ quotidien','Application localisée le soir','Arrêt programmé, pas d\'usage chronique'],
+    flags:{depigmentant:true, photosensibilisant:true},
+    source:SOURCE_C+' / '+SOURCE_R}),
+];
+
+/* index rapide par id */
+const byId = id => FORMULES.find(f=>f.id===id);
+
+/* ===================================================================
+   AIDE CLINIQUE PAR PATHOLOGIE
+   =================================================================== */
+const PATHOS = [
+  {id:'xerose', nom:'Xérose / dermatite atopique', emoji:'💧',
+   diagnostic:'Sécheresse cutanée diffuse, ± eczéma atopique (plis, prurit chronique, antécédents atopiques).',
+   differentiels:['Ichtyose','Eczéma de contact','Gale (prurit familial, sillons)','Lymphome cutané si atypique et résistant'],
+   formules:['glyceamidon_10_obase','uree_10_coldcream','glyceamidon_al_cerat','creme_eau'],
+   alternative:'Émollients industriels (cérat, cold cream du commerce), dermocorticoïdes sur les poussées.',
+   eviter:'Urée/acide lactique forts sur peau très inflammatoire ou excoriée (brûlure). Kératolytiques forts.',
+   adresser:'Eczéma sévère/résistant, surinfection, doute diagnostique, eczéma de l\'adulte d\'apparition récente.',
+   prelevement:'Prélèvement mycologique/bactériologique si surinfection ; biopsie si lésion atypique persistante.'},
+
+  {id:'keratodermie', nom:'Kératodermie palmo-plantaire / hyperkératose', emoji:'🧱',
+   diagnostic:'Épaississement kératosique des paumes/plantes, fissures possibles.',
+   differentiels:['Psoriasis palmo-plantaire','Eczéma chronique','Mycose (dermatophytie)','Kératodermie héréditaire','Toxidermie','Cause professionnelle/mécanique'],
+   formules:['uree_20_al10_coldcream','as_5_obase','as_10_obase','as_20_obase','as10_al5_pommade'],
+   alternative:'Pommades kératolytiques industrielles, soins de pédicurie médicale.',
+   eviter:'Acide salicylique fort chez l\'enfant, la femme enceinte, l\'insuffisant rénal, sur grande surface ou peau très fissurée.',
+   adresser:'Doute psoriasis/héréditaire, atteinte invalidante, résistance au traitement.',
+   prelevement:'Prélèvement mycologique avant traitement prolongé ; biopsie si kératodermie atypique.'},
+
+  {id:'psoriasis', nom:'Psoriasis', emoji:'🩹',
+   diagnostic:'Plaques érythémato-squameuses bien limitées (coudes, genoux, cuir chevelu, ongles).',
+   differentiels:['Eczéma','Dermatophytie','Pityriasis rosé','Lymphome cutané (si atypique)'],
+   formules:['as_5_obase','as_10_obase','uree_20_al10_coldcream'],
+   alternative:'Dermocorticoïdes, analogues de la vitamine D, photothérapie, traitements systémiques si étendu.',
+   eviter:'Salicylé fort sur grande surface ; pas de substitution à une prise en charge spécialisée si psoriasis étendu/sévère.',
+   adresser:'Psoriasis étendu, pustuleux, érythrodermique, rhumatisme psoriasique → spécialiste.',
+   prelevement:'Biopsie si doute diagnostique.'},
+
+  {id:'prurit', nom:'Prurit / prurit sénile', emoji:'🌿',
+   diagnostic:'Démangeaisons, souvent sur xérose chez le sujet âgé.',
+   differentiels:['Cause systémique (cholestase, IR, thyroïde, hémopathie)','Gale','Médicaments','Dermatose spécifique'],
+   formules:['glyceamidon_10_obase','glyceamidon_al_cerat','creme_eau'],
+   alternative:'Émollients, antihistaminiques si composante allergique, traitement de la cause.',
+   eviter:'Actifs irritants sur peau fine du sujet âgé.',
+   adresser:'Prurit sans lésion, résistant, avec altération de l\'état général → bilan étiologique.',
+   prelevement:'Bilan biologique (NFS, bilan hépatique/rénal, TSH, ferritine…) si prurit inexpliqué.'},
+
+  {id:'douleur_neuro', nom:'Douleur neuropathique localisée', emoji:'🌶️',
+   diagnostic:'Douleur localisée à type de brûlure/décharge, allodynie, sur territoire défini (ex. post-zostérienne).',
+   differentiels:['Douleur nociceptive','Zona aigu (contre-indique la capsaïcine sur lésions actives)','Cause compressive/radiculaire'],
+   formules:['capsa_002','capsa_007'],
+   alternative:'Antalgiques systémiques de la douleur neuropathique, emplâtres de lidocaïne, avis algologie.',
+   eviter:'Capsaïcine sur peau lésée, muqueuses, zona aigu, enfant, grossesse/allaitement si non validé.',
+   adresser:'Douleur inexpliquée, déficit neurologique, douleur étendue/réfractaire.',
+   prelevement:'Pas de prélèvement ; explorer la cause si red flags (déficit, signes systémiques).',
+   redflags:['Déficit neurologique','Zona aigu','Infection cutanée','Douleur inexpliquée d\'apparition récente']},
+
+  {id:'lesions_suintantes', nom:'Lésions suintantes / intertrigo', emoji:'🧴',
+   diagnostic:'Lésions humides, macérées, des plis ou eczéma suintant.',
+   differentiels:['Intertrigo candidosique/dermatophytique','Impétigo','Dermite de contact','Eczéma surinfecté'],
+   formules:['dalibour_obase','oxyde_zinc_pate','ichtyol_pommade'],
+   alternative:'Antiseptiques, antifongiques/antibactériens selon le germe identifié.',
+   eviter:'Usage prolongé sans diagnostic ; occlusif excessif sur zone suintante.',
+   adresser:'Surinfection franche, résistance, terrain fragile (diabète, immunodépression).',
+   prelevement:'Prélèvement mycologique/bactériologique en cas de doute ou de résistance.'},
+
+  {id:'depigmentation', nom:'Mélasma / hyperpigmentation', emoji:'🌗',
+   diagnostic:'Macules pigmentées symétriques du visage, aggravées par le soleil et les hormones.',
+   differentiels:['Hyperpigmentation post-inflammatoire','Lentigos','Mélanose','Lésion mélanocytaire suspecte (à exclure)'],
+   formules:['depigmentant_trio'],
+   alternative:'Photoprotection seule, dépigmentants cosmétiques doux, peelings/laser en milieu spécialisé.',
+   eviter:'Grossesse/allaitement, usage prolongé (ochronose), absence de photoprotection.',
+   adresser:'Doute sur une lésion mélanocytaire, mélasma résistant → dermatologue.',
+   prelevement:'Dermoscopie/biopsie si lésion pigmentée atypique.'}
+];
+
+/* Consultation rapide : pathologie -> 3 paliers max */
+const RAPIDE = [
+  {id:'xerose', nom:'Xérose / dermatite atopique', emoji:'💧',
+   paliers:[
+     {niveau:'douce', fid:'glyceamidon_10_obase', benefice:'Très bien tolérée, tout âge, grandes surfaces.', risque:'Effet hydratant modéré.'},
+     {niveau:'intermediaire', fid:'uree_10_coldcream', benefice:'Hydratation renforcée (urée).', risque:'Peut piquer sur peau lésée ; éviter < 3 ans.'},
+     {niveau:'forte', fid:'uree_20_al10_coldcream', benefice:'Forte hydratation + kératolyse douce.', risque:'Irritation possible, éviter peau excoriée.'}
+   ]},
+  {id:'keratodermie', nom:'Kératodermie / hyperkératose', emoji:'🧱',
+   paliers:[
+     {niveau:'douce', fid:'as_5_obase', benefice:'Kératolyse douce, mieux tolérée.', risque:'Effet limité sur kératose épaisse.'},
+     {niveau:'intermediaire', fid:'as_10_obase', benefice:'Kératolyse efficace.', risque:'Irritation ; éviter enfant, grande surface.'},
+     {niveau:'forte', fid:'as_20_obase', benefice:'Kératolyse puissante sur zone très épaisse.', risque:'Adulte, usage très localisé ; risque salicylé.'}
+   ]},
+  {id:'prurit', nom:'Prurit / xérose du sujet âgé', emoji:'🌿',
+   paliers:[
+     {niveau:'douce', fid:'glyceamidon_10_obase', benefice:'Doux, large surface, sujet âgé.', risque:'Effet apaisant modéré.'},
+     {niveau:'intermediaire', fid:'glyceamidon_al_cerat', benefice:'Apaisant + hydratant.', risque:'Éviter lésions excoriées (acide lactique).'},
+     {niveau:'forte', fid:'creme_eau', benefice:'Émollient riche d\'entretien.', risque:'Texture grasse.'}
+   ]},
+  {id:'douleur_neuro', nom:'Douleur neuropathique localisée', emoji:'🌶️',
+   paliers:[
+     {niveau:'douce', fid:'capsa_002', benefice:'Début progressif, mieux toléré.', risque:'Brûlure initiale ; peau intacte uniquement.'},
+     {niveau:'forte', fid:'capsa_007', benefice:'Effet antalgique renforcé.', risque:'Brûlure plus marquée ; adulte, peau intacte.'}
+   ]},
+  {id:'lesions_suintantes', nom:'Lésions suintantes / intertrigo', emoji:'🧴',
+   paliers:[
+     {niveau:'douce', fid:'oxyde_zinc_pate', benefice:'Protecteur, asséchant, tout âge.', risque:'Effet antiseptique limité.'},
+     {niveau:'intermediaire', fid:'dalibour_obase', benefice:'Antiseptique (cuivre/zinc).', risque:'Réévaluer ; chercher infection sous-jacente.'}
+   ]},
+  {id:'depigmentation', nom:'Mélasma / taches', emoji:'🌗',
+   paliers:[
+     {niveau:'forte', fid:'depigmentant_trio', benefice:'Dépigmentation active (taches du visage).', risque:'CI grossesse/allaitement ; photoprotection stricte ; cure limitée.'}
+   ]}
+];
+
+/* ===================================================================
+   2) MOTEUR DE SÉCURITÉ
+   Évalue une formule dans un contexte clinique et renvoie
+   { bloquantes:[], nonBloquantes:[] }.
+   Contexte : {age, poids, grossesse, allaitement, allergies,
+   localisation, surface(petite/mains/membre/corps), peauLesee,
+   muqueuse, duree, ir, diabete, immuno, plaieChronique,
+   indicationAtb (bool), objectif}
+   =================================================================== */
+function evaluerSecurite(f, ctx){
+  const B=[], N=[];
+  const fl = f.flags||{};
+  const age = ctx.age===''||ctx.age==null?null:Number(ctx.age);
+  const grande = ctx.surface==='corps' || ctx.surface==='membre';
+
+  /* --- salicylé --- */
+  if(fl.salicyle){
+    if(age!=null && age<3) B.push('Acide salicylique chez le nourrisson/jeune enfant (< 3 ans) : contre-indiqué.');
+    else if(age!=null && age<12 && fl.salicyle>=10) B.push('Acide salicylique ≥ 10 % chez l\'enfant (< 12 ans) : risque d\'intoxication salicylée.');
+    if(grande && fl.salicyle>=10) B.push('Acide salicylique concentré sur grande surface : risque d\'absorption systémique (intoxication salicylée).');
+    if(ctx.ir && grande) B.push('Kératolytique sur grande surface + insuffisance rénale : contre-indiqué.');
+    if(ctx.peauLesee) B.push('Kératolytique (salicylé) sur peau lésée/fissurée : contre-indiqué.');
+    N.push('Salicylé : risque d\'irritation locale — limiter la surface et la durée.');
+  }
+  /* --- urée concentrée --- */
+  if(fl.uree){
+    if(ctx.peauLesee) N.push('Urée sur peau lésée/excoriée : peut provoquer une sensation de brûlure.');
+    if(age!=null && age<3 && fl.uree>=20) N.push('Urée ≥ 20 % chez le jeune enfant : à éviter, préférer une formule douce.');
+  }
+  /* --- caustique (KOH) --- */
+  if(fl.caustique){
+    if(ctx.peauLesee||ctx.muqueuse) B.push('Produit caustique (KOH) sur peau lésée ou muqueuse : contre-indiqué.');
+    if(grande) B.push('Produit caustique sur grande surface : contre-indiqué (usage strictement ponctuel).');
+    N.push('KOH caustique : application ciblée sur la lésion uniquement, sous surveillance.');
+  }
+  /* --- capsaïcine --- */
+  if(fl.capsaicine){
+    if(ctx.peauLesee) B.push('Capsaïcine sur peau lésée/irritée : contre-indiqué.');
+    if(ctx.muqueuse) B.push('Capsaïcine sur muqueuse ou près des yeux : contre-indiqué.');
+    if(age!=null && age<18) B.push('Capsaïcine chez l\'enfant : non recommandée (sécurité non établie).');
+    if(ctx.grossesse||ctx.allaitement) N.push('Capsaïcine en grossesse/allaitement : à éviter sauf validation spécifique.');
+    N.push('Capsaïcine : brûlure initiale fréquente — gants, éviter yeux/muqueuses, pas de douche chaude juste après.');
+  }
+  /* --- antibiotique --- */
+  if(fl.antibiotique){
+    if(!ctx.indicationAtb) B.push('Préparation antibiotique sans indication documentée cochée : risque de mésusage et de résistance.');
+    N.push('Antibiotique topique : limiter la durée (résistance bactérienne), indication à réévaluer.');
+  }
+  /* --- dépigmentant --- */
+  if(fl.depigmentant){
+    if(ctx.grossesse) B.push('Dépigmentant (ex. hydroquinone/trétinoïne) en cours de grossesse : contre-indiqué.');
+    if(ctx.allaitement) B.push('Dépigmentant pendant l\'allaitement : contre-indiqué.');
+    N.push('Dépigmentant : photoprotection stricte indispensable, durée de cure limitée, risque d\'irritation.');
+  }
+  if(fl.photosensibilisant) N.push('Risque de photosensibilisation : protection solaire indispensable.');
+
+  /* --- terrain transversal --- */
+  if(ctx.diabete && /pied|plante|orteil/.test(norm(ctx.localisation)) && (ctx.peauLesee||ctx.plaieChronique))
+    B.push('Plaie du pied chez un patient diabétique : ne pas auto-traiter — prise en charge spécialisée.');
+  if(ctx.peauLesee && (fl.antiseptique||fl.depigmentant) ) N.push('Peau lésée : surveiller la tolérance, réévaluer le diagnostic (infection ?).');
+  if(ctx.plaieChronique) N.push('Plaie chronique : une préparation magistrale ne remplace pas une prise en charge de plaie adaptée.');
+  if(ctx.immuno) N.push('Immunodépression : risque infectieux accru, surveillance rapprochée.');
+
+  /* --- grossesse/allaitement générique pour actifs « à valider » --- */
+  if((ctx.grossesse||ctx.allaitement) && (fl.salicyle>=10 || fl.caustique) && !B.some(x=>/grossesse|allaitement/i.test(x)))
+    B.push('Grossesse/allaitement + actif non validé (salicylé concentré / caustique) : à éviter, validation requise.');
+
+  /* --- allergies : recherche d'un composant dans le texte saisi --- */
+  if(ctx.allergies && ctx.allergies.trim()){
+    const allg = norm(ctx.allergies);
+    f.composition.forEach(c=>{
+      const sub = norm(c.substance);
+      // match grossier mot-clé (3+ lettres)
+      allg.split(/[,;\s]+/).filter(w=>w.length>3).forEach(w=>{
+        if(sub.includes(w)) B.push('Allergie déclarée « '+esc(w)+' » correspondant à un composant ('+esc(c.substance)+').');
+      });
+    });
+    N.push('Allergies déclarées : vérifier l\'absence de réaction croisée avec excipients et conservateurs.');
+  }
+
+  /* --- cohérence quantité / durée (information) --- */
+  N.push('Vérifier que la quantité finale ('+f.quantite_finale+') est cohérente avec la surface et la durée prévues.');
+  if(f.remboursement==='verifier') N.push('Remboursement à vérifier (indication, absence d\'alternative, règles CNAM/caisse locale).');
+
+  /* --- validation pharmaceutique systématique --- */
+  N.push('Validation par le pharmacien préparateur requise (compatibilité galénique, stabilité, conservation, disponibilité).');
+
+  return {bloquantes:[...new Set(B)], nonBloquantes:[...new Set(N)]};
+}
+
+/* ===================================================================
+   3) ÉTAT + VUES
+   =================================================================== */
+const ONGLETS = [
+  {id:'accueil',     t:'🏠 Accueil'},
+  {id:'rapide',      t:'⚡ Consultation rapide'},
+  {id:'base',        t:'🔎 Recherche & base'},
+  {id:'clinique',    t:'🩺 Aide clinique'},
+  {id:'generateur',  t:'✍️ Générateur d\'ordonnance'},
+  {id:'calc',        t:'🧮 Calculateurs'},
+  {id:'pediatrie',   t:'👶 Pédiatrie'},
+  {id:'geriatrie',   t:'👴 Gériatrie'},
+  {id:'sevrage',     t:'📉 Sevrage'},
+  {id:'rupture',     t:'📦 Rupture de stock'},
+  {id:'veto',        t:'🐾 Vétérinaire'},
+  {id:'securite',    t:'⚠️ Sécurité'},
+  {id:'remboursement',t:'💶 Remboursement'}
+];
+
+const state = {
+  vue:'accueil',
+  filtres:{q:'', cat:'', forme:'', remb:''},
+  selected:null,         // formule sélectionnée pour le générateur
+  ctx:defaultCtx(),
+  lastRx:null            // dernière ordonnance générée {rx, conseils}
+};
+function defaultCtx(){return {age:'',poids:'',grossesse:false,allaitement:false,allergies:'',
+  localisation:'',surface:'petite',peauLesee:false,muqueuse:false,duree:'',
+  ir:false,diabete:false,immuno:false,plaieChronique:false,indicationAtb:false,objectif:''};}
+
+/* ----- rendu des onglets ----- */
+function renderTabs(){
+  $('#tabs').innerHTML = ONGLETS.map(o=>
+    `<button class="${o.id===state.vue?'active':''}" onclick="go('${o.id}')">${o.t}</button>`).join('');
+}
+
+/* ----- routeur ----- */
+function go(vue){ state.vue=vue; renderTabs(); window.scrollTo(0,0); render(); }
+
+function render(){
+  const m = $('#main');
+  const v = state.vue;
+  if(v==='accueil')        m.innerHTML = vAccueil();
+  else if(v==='rapide')    m.innerHTML = vRapide();
+  else if(v==='base')      { m.innerHTML = vBase(); bindBase(); }
+  else if(v==='clinique')  m.innerHTML = vClinique();
+  else if(v==='generateur'){ m.innerHTML = vGenerateur(); bindGenerateur(); }
+  else if(v==='calc')      { m.innerHTML = vCalc(); bindCalc(); }
+  else if(v==='pediatrie') { m.innerHTML = vPediatrie(); bindPedia(); }
+  else if(v==='geriatrie') m.innerHTML = vGeriatrie();
+  else if(v==='sevrage')   { m.innerHTML = vSevrage(); bindSevrage(); }
+  else if(v==='rupture')   { m.innerHTML = vRupture(); bindRupture(); }
+  else if(v==='veto')      m.innerHTML = vVeto();
+  else if(v==='securite')  m.innerHTML = vSecurite();
+  else if(v==='remboursement') m.innerHTML = vRemboursement();
+  else if(v==='apropos')   m.innerHTML = vApropos();
+}
+
+/* ---------- vue : ACCUEIL ---------- */
+function vAccueil(){
+  const cats = Object.entries(CATEGORIES).map(([k,c])=>{
+    const n = FORMULES.filter(f=>f.categorie===k).length;
+    return `<button class="fcard" style="cursor:pointer;text-align:left" onclick="openCat('${k}')">
+      <h3>${c.emoji} ${c.label}</h3>
+      <div class="muted small">${n} formule${n>1?'s':''}</div>
+      <div class="foot"><span class="go" style="color:var(--teal)">Voir →</span></div>
+    </button>`;
+  }).join('');
+  return `<div class="view">
+    <div class="panel">
+      <div class="section-head">
+        <h2>Assistant de prescription magistrale</h2>
+        <span class="spacer"></span>
+        <button class="btn primary" onclick="go('rapide')">⚡ Consultation rapide</button>
+        <button class="btn" onclick="go('base')">🔎 Rechercher une formule</button>
+      </div>
+      <p class="muted">Choisissez une situation clinique, sélectionnez une formule adaptée, vérifiez les alertes
+      (âge, grossesse, surface, peau lésée…) puis générez une ordonnance prête à copier-coller.</p>
+      <div class="kpi">
+        <div class="b"><b>${FORMULES.length}</b><span>formules sourcées</span></div>
+        <div class="b"><b>${PATHOS.length}</b><span>situations cliniques</span></div>
+        <div class="b"><b>${Object.keys(CATEGORIES).length}</b><span>familles</span></div>
+        <div class="b"><b>100%</b><span>hors-ligne</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Familles de préparations</h2>
+      <div class="grid g3" style="margin-top:8px">${cats}</div>
+    </div>
+
+    <div class="alert warn no-print"><span class="ico">⚠️</span>
+      <div>Cet outil aide à structurer une prescription. Il ne remplace ni l'examen clinique, ni les recommandations officielles,
+      ni la validation du pharmacien préparateur. Les dosages, excipients, compatibilités, stabilités, conservations et
+      modalités de remboursement doivent être vérifiés avant délivrance.</div>
+    </div>
+  </div>`;
+}
+function openCat(k){ state.filtres={q:'',cat:k,forme:'',remb:''}; go('base'); }
+
+/* ---------- vue : CONSULTATION RAPIDE ---------- */
+function vRapide(){
+  const opts = RAPIDE.map(r=>`<button class="chip ${state._rapide===r.id?'on':''}" onclick="setRapide('${r.id}')">${r.emoji} ${r.nom}</button>`).join('');
+  let body='';
+  if(state._rapide){
+    const r = RAPIDE.find(x=>x.id===state._rapide);
+    const cards = r.paliers.map(p=>{
+      const f = byId(p.fid);
+      return `<div class="fcard lvl-${p.niveau}">
+        <div class="row" style="justify-content:space-between">
+          <span class="tag ${p.niveau==='douce'?'green':p.niveau==='intermediaire'?'orange':'red'}">${p.niveau}</span>
+          <span class="tag">${CATEGORIES[f.categorie].emoji} ${CATEGORIES[f.categorie].label}</span>
+        </div>
+        <h3>${esc(f.nom)}</h3>
+        <div class="compo">${f.composition.map(c=>esc(c.substance)+' '+esc(c.quantite)).join(' · ')}</div>
+        <div class="small"><strong style="color:var(--green)">Bénéfice :</strong> ${esc(p.benefice)}</div>
+        <div class="small"><strong style="color:var(--red)">Risque :</strong> ${esc(p.risque)}</div>
+        <div class="foot">
+          <button class="btn sm" onclick="openFormule('${f.id}')">Détails</button>
+          <button class="btn sm primary" onclick="choisir('${f.id}')">Prescrire →</button>
+        </div>
+      </div>`;
+    }).join('');
+    body = `<div class="panel"><h2>${r.emoji} ${esc(r.nom)} — 3 niveaux</h2>
+      <p class="hint">Bénéfices / risques résumés. Le générateur appliquera ensuite les alertes selon le patient.</p>
+      <div class="grid g3">${cards}</div></div>`;
+  }
+  return `<div class="view">
+    <div class="panel">
+      <h2>⚡ Consultation rapide</h2>
+      <p class="muted">Sélectionnez une situation clinique : MAGISTRA propose jusqu'à 3 préparations (douce / intermédiaire / forte)
+      avec bénéfices et risques, puis l'ordonnance correspondante.</p>
+      <div class="chips" style="margin-top:8px">${opts}</div>
+    </div>
+    ${body}
+  </div>`;
+}
+function setRapide(id){ state._rapide=id; render(); }
+
+/* ---------- vue : RECHERCHE & BASE ---------- */
+function vBase(){
+  const cats = `<option value="">Toutes familles</option>`+Object.entries(CATEGORIES)
+    .map(([k,c])=>`<option value="${k}" ${state.filtres.cat===k?'selected':''}>${c.emoji} ${c.label}</option>`).join('');
+  const formes = [...new Set(FORMULES.map(f=>f.forme))].sort();
+  const fopts = `<option value="">Toutes formes</option>`+formes.map(x=>`<option value="${x}" ${state.filtres.forme===x?'selected':''}>${x}</option>`).join('');
+  return `<div class="view">
+    <div class="panel no-print">
+      <h2>🔎 Recherche de formules</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Recherche libre</span>
+          <input id="fq" placeholder="pathologie, actif, excipient, indication…" value="${esc(state.filtres.q)}"></label>
+        <label class="field"><span class="lab">Famille</span><select id="fcat">${cats}</select></label>
+        <label class="field"><span class="lab">Forme galénique</span><select id="fforme">${fopts}</select></label>
+      </div>
+      <div class="row">
+        <label class="field" style="margin:0"><span class="lab">Remboursement</span>
+          <select id="fremb" style="width:auto">
+            <option value="">Tous</option>
+            <option value="oui" ${state.filtres.remb==='oui'?'selected':''}>Possible</option>
+            <option value="verifier" ${state.filtres.remb==='verifier'?'selected':''}>À vérifier</option>
+            <option value="non" ${state.filtres.remb==='non'?'selected':''}>Non</option>
+          </select></label>
+        <button class="btn ghost sm" onclick="resetFiltres()" style="align-self:flex-end">Réinitialiser</button>
+      </div>
+    </div>
+    <div id="results"></div>
+  </div>`;
+}
+function bindBase(){
+  ['fq','fcat','fforme','fremb'].forEach(id=>{
+    const el=$('#'+id); if(!el)return;
+    el.addEventListener('input',()=>{ state.filtres={q:$('#fq').value,cat:$('#fcat').value,forme:$('#fforme').value,remb:$('#fremb').value}; renderResults(); });
+  });
+  renderResults();
+}
+function resetFiltres(){ state.filtres={q:'',cat:'',forme:'',remb:''}; render(); }
+function filtrer(){
+  const {q,cat,forme,remb}=state.filtres; const nq=norm(q);
+  return FORMULES.filter(f=>{
+    if(cat && f.categorie!==cat) return false;
+    if(forme && f.forme!==forme) return false;
+    if(remb && f.remboursement!==remb) return false;
+    if(nq){
+      const hay = norm([f.nom,f.indications.join(' '),(f.indications_sec||[]).join(' '),
+        f.composition.map(c=>c.substance).join(' '),f.forme,CATEGORIES[f.categorie].label].join(' '));
+      if(!hay.includes(nq)) return false;
+    }
+    return true;
+  });
+}
+function renderResults(){
+  const list = filtrer();
+  const el = $('#results'); if(!el) return;
+  if(!list.length){ el.innerHTML=`<div class="panel"><em>Aucune formule ne correspond.</em></div>`; return; }
+  el.innerHTML = `<div class="section-head"><h2>${list.length} formule${list.length>1?'s':''}</h2></div>
+    <div class="grid g2">`+list.map(fcardHTML).join('')+`</div>`;
+}
+function fcardHTML(f){
+  const c = CATEGORIES[f.categorie];
+  const remb = f.remboursement==='oui'?'<span class="tag green">Remb. possible</span>'
+    : f.remboursement==='non'?'<span class="tag">Non remb.</span>'
+    : '<span class="tag orange">Remb. à vérifier</span>';
+  const niv = f.niveau?`<span class="tag ${f.niveau==='douce'?'green':f.niveau==='intermediaire'?'orange':'red'}">${f.niveau}</span>`:'';
+  return `<div class="fcard lvl-${f.niveau||''}">
+    <div class="row" style="justify-content:space-between">
+      <span class="tag ${c.color}">${c.emoji} ${c.label}</span>${niv}
+    </div>
+    <h3>${esc(f.nom)}</h3>
+    <div class="compo">${f.composition.map(x=>esc(x.substance)+' '+esc(x.quantite)).join(' · ')}</div>
+    <div class="small muted">${f.indications.map(i=>esc(i)).join(' · ')}</div>
+    <div class="foot">${remb}
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn sm" onclick="openFormule('${f.id}')">Détails</button>
+      <button class="btn sm primary" onclick="choisir('${f.id}')">Prescrire →</button>
+    </div>
+  </div>`;
+}
+
+/* détail d'une formule (modale simple => panneau plein) */
+function openFormule(id){ state._detail=id; state.vue='detail'; renderTabs(); window.scrollTo(0,0); $('#main').innerHTML=vDetail(id); }
+function vDetail(id){
+  const f = byId(id); const c=CATEGORIES[f.categorie];
+  const ul = (arr)=> arr&&arr.length?`<ul class="tight">${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<span class="muted">—</span>';
+  return `<div class="view">
+    <div class="panel">
+      <div class="section-head">
+        <button class="btn ghost sm" onclick="go('base')">← Retour</button>
+        <span class="spacer"></span>
+        <button class="btn primary" onclick="choisir('${f.id}')">✍️ Prescrire cette formule</button>
+      </div>
+      <span class="tag ${c.color}">${c.emoji} ${c.label}</span>
+      <h2 style="margin-top:8px">${esc(f.nom)}</h2>
+      <dl class="kv">
+        <dt>Composition</dt><dd>${f.composition.map(x=>esc(x.substance)+' — <strong>'+esc(x.quantite)+'</strong>').join('<br>')}</dd>
+        <dt>Forme</dt><dd>${esc(f.forme)} — quantité finale ${esc(f.quantite_finale)}</dd>
+        <dt>Indications</dt><dd>${f.indications.concat(f.indications_sec||[]).map(esc).join(', ')}</dd>
+        <dt>Posologie</dt><dd>${esc(f.posologie)}</dd>
+        <dt>Durée</dt><dd>${esc(f.duree)}</dd>
+        <dt>Zone</dt><dd>${esc(f.zone)}</dd>
+        <dt>Âge minimum</dt><dd>${esc(f.age_min||'Non précisé — validation requise')}</dd>
+        <dt>Grossesse/allaitement</dt><dd>${esc(f.grossesse)}</dd>
+        <dt>Conservation</dt><dd>${esc(f.conservation)}</dd>
+        <dt>Remboursement</dt><dd>${f.remboursement==='oui'?'Possible selon indication':f.remboursement==='non'?'Non':'À vérifier'} ${f.mention_remb?'— '+esc(f.mention_remb):''}</dd>
+      </dl>
+      <div class="grid g2" style="margin-top:14px">
+        <div><h3>Contre-indications</h3>${ul(f.contre_indications)}</div>
+        <div><h3>Précautions</h3>${ul(f.precautions)}</div>
+        <div><h3>Effets indésirables</h3>${ul(f.effets)}</div>
+        <div><h3>Conseils patient</h3>${ul(f.conseils)}</div>
+      </div>
+      <div class="callout"><strong>Validation pharmaceutique requise.</strong> Source : ${esc(f.source)} — dernière vérification : ${esc(f.date_verif)}.</div>
+    </div>
+  </div>`;
+}
+
+/* sélectionner une formule et aller au générateur */
+function choisir(id){ state.selected=id; go('generateur'); }
+
+/* ---------- vue : AIDE CLINIQUE ---------- */
+function vClinique(){
+  const cards = PATHOS.map(p=>{
+    const formules = p.formules.map(fid=>{const f=byId(fid);return f?`<button class="chip" onclick="choisir('${fid}')">${esc(f.nom)}</button>`:'';}).join('');
+    const rf = p.redflags?`<div class="alert block"><span class="ico">🚩</span><div><strong>Red flags :</strong> ${p.redflags.map(esc).join(' · ')}</div></div>`:'';
+    return `<div class="panel">
+      <h2>${p.emoji} ${esc(p.nom)}</h2>
+      <dl class="kv">
+        <dt>Diagnostic probable</dt><dd>${esc(p.diagnostic)}</dd>
+        <dt>Différentiels</dt><dd>${p.differentiels.map(esc).join(', ')}</dd>
+        <dt>Alternative non magistrale</dt><dd>${esc(p.alternative)}</dd>
+        <dt>Quand éviter</dt><dd>${esc(p.eviter)}</dd>
+        <dt>Quand adresser</dt><dd>${esc(p.adresser)}</dd>
+        <dt>Prélèvement / biopsie</dt><dd>${esc(p.prelevement)}</dd>
+      </dl>
+      ${rf}
+      <h3 style="margin-top:12px">Préparations possibles</h3>
+      <div class="chips">${formules}</div>
+    </div>`;
+  }).join('');
+  return `<div class="view">
+    <div class="panel flat"><h2>🩺 Aide clinique par pathologie</h2>
+    <p class="muted">Diagnostic probable, différentiels, quand éviter une préparation magistrale, quand adresser, quand prélever.</p></div>
+    ${cards}
+  </div>`;
+}
+
+/* ---------- vue : GÉNÉRATEUR D'ORDONNANCE ---------- */
+function vGenerateur(){
+  const f = state.selected?byId(state.selected):null;
+  const choixFormule = `<select id="gsel">
+    <option value="">— Choisir une formule —</option>
+    ${Object.entries(CATEGORIES).map(([k,c])=>`<optgroup label="${c.label}">`+
+      FORMULES.filter(x=>x.categorie===k).map(x=>`<option value="${x.id}" ${state.selected===x.id?'selected':''}>${esc(x.nom)}</option>`).join('')+`</optgroup>`).join('')}
+  </select>`;
+  const ctx=state.ctx;
+  const form = `
+   <div class="panel no-print">
+     <h2>✍️ Générateur d'ordonnance</h2>
+     <label class="field"><span class="lab">Formule</span>${choixFormule}</label>
+     <h3 style="margin-top:6px">Contexte patient</h3>
+     <div class="grid g3">
+       <label class="field"><span class="lab">Âge (années)</span><input id="cAge" type="number" min="0" value="${esc(ctx.age)}"></label>
+       <label class="field"><span class="lab">Poids (kg)</span><input id="cPoids" type="number" min="0" value="${esc(ctx.poids)}"></label>
+       <label class="field"><span class="lab">Localisation</span><input id="cLoc" placeholder="ex. plante des pieds" value="${esc(ctx.localisation)}"></label>
+       <label class="field"><span class="lab">Surface à traiter</span>
+         <select id="cSurf">
+           <option value="petite" ${ctx.surface==='petite'?'selected':''}>Petite zone (30–50 g)</option>
+           <option value="mains" ${ctx.surface==='mains'?'selected':''}>Mains/pieds (50–100 g)</option>
+           <option value="membre" ${ctx.surface==='membre'?'selected':''}>Un membre (100–200 g)</option>
+           <option value="corps" ${ctx.surface==='corps'?'selected':''}>Corps entier (300–500 g)</option>
+         </select></label>
+       <label class="field"><span class="lab">Durée souhaitée</span><input id="cDuree" placeholder="ex. 14 jours" value="${esc(ctx.duree)}"></label>
+       <label class="field"><span class="lab">Objectif thérapeutique</span><input id="cObj" placeholder="ex. réduire l'hyperkératose" value="${esc(ctx.objectif)}"></label>
+     </div>
+     <div class="grid g3">
+       <div>
+         <label class="check"><input type="checkbox" id="cGros" ${ctx.grossesse?'checked':''}> Grossesse</label>
+         <label class="check"><input type="checkbox" id="cAllait" ${ctx.allaitement?'checked':''}> Allaitement</label>
+         <label class="check"><input type="checkbox" id="cLese" ${ctx.peauLesee?'checked':''}> Peau lésée/fissurée</label>
+         <label class="check"><input type="checkbox" id="cMuq" ${ctx.muqueuse?'checked':''}> Application près muqueuse/yeux</label>
+       </div>
+       <div>
+         <label class="check"><input type="checkbox" id="cIR" ${ctx.ir?'checked':''}> Insuffisance rénale</label>
+         <label class="check"><input type="checkbox" id="cDiab" ${ctx.diabete?'checked':''}> Diabète</label>
+         <label class="check"><input type="checkbox" id="cImm" ${ctx.immuno?'checked':''}> Immunodépression</label>
+         <label class="check"><input type="checkbox" id="cPlaie" ${ctx.plaieChronique?'checked':''}> Plaie chronique</label>
+       </div>
+       <div>
+         <label class="check"><input type="checkbox" id="cAtb" ${ctx.indicationAtb?'checked':''}> Indication antibiotique documentée</label>
+         <label class="field" style="margin-top:6px"><span class="lab">Allergies connues</span><input id="cAllerg" placeholder="ex. salicylés, macrolides…" value="${esc(ctx.allergies)}"></label>
+       </div>
+     </div>
+   </div>`;
+
+  let preview='';
+  if(f){
+    const sec = evaluerSecurite(f, readCtx(false) || ctx);
+    preview = renderApercu(f, sec);
+  } else {
+    preview = `<div class="panel"><em>Sélectionnez une formule pour afficher le résumé, les alertes et générer l'ordonnance.</em></div>`;
+  }
+  return `<div class="view">${form}<div id="apercu">${preview}</div>${state.lastRx?rxBlock():''}</div>`;
+}
+function renderApercu(f, sec){
+  const bloc = sec.bloquantes.length;
+  const alertsB = sec.bloquantes.map(a=>`<div class="alert block"><span class="ico">⛔</span><div>${esc(a)}</div></div>`).join('');
+  const alertsN = sec.nonBloquantes.map(a=>`<div class="alert warn"><span class="ico">⚠️</span><div>${esc(a)}</div></div>`).join('');
+  return `<div class="panel">
+    <h2>Résumé avant génération</h2>
+    <dl class="kv">
+      <dt>Formule</dt><dd><strong>${esc(f.nom)}</strong></dd>
+      <dt>Composition</dt><dd>${f.composition.map(x=>esc(x.substance)+' '+esc(x.quantite)).join(' · ')}</dd>
+      <dt>Forme</dt><dd>${esc(f.forme)} — ${esc(f.quantite_finale)}</dd>
+      <dt>Posologie</dt><dd>${esc(f.posologie)}</dd>
+    </dl>
+    ${bloc?`<h3 style="color:var(--red);margin-top:12px">⛔ Alertes bloquantes (${bloc})</h3>${alertsB}
+      <div class="alert info"><span class="ico">ℹ️</span><div>Génération possible mais <strong>fortement déconseillée</strong> en l'état. Levez les contre-indications ou choisissez une autre formule.</div></div>`
+      :`<div class="alert ok"><span class="ico">✓</span><div>Aucune alerte bloquante détectée pour ce contexte.</div></div>`}
+    <h3 style="margin-top:12px">⚠️ Précautions / alertes non bloquantes</h3>${alertsN||'<span class="muted">—</span>'}
+    <div class="row no-print" style="margin-top:14px">
+      <button class="btn primary" onclick="genererRx()">${bloc?'Générer malgré les alertes':'✅ Valider et générer l\'ordonnance'}</button>
+      <button class="btn" onclick="openFormule('${f.id}')">Voir la fiche complète</button>
+    </div>
+  </div>`;
+}
+function readCtx(commit){
+  const get=id=>{const e=$('#'+id);return e?e.value:'';};
+  const chk=id=>{const e=$('#'+id);return e?e.checked:false;};
+  if(!$('#cAge')) return null;
+  const c = {
+    age:get('cAge'), poids:get('cPoids'), localisation:get('cLoc'), surface:get('cSurf')||'petite',
+    duree:get('cDuree'), objectif:get('cObj'), allergies:get('cAllerg'),
+    grossesse:chk('cGros'), allaitement:chk('cAllait'), peauLesee:chk('cLese'), muqueuse:chk('cMuq'),
+    ir:chk('cIR'), diabete:chk('cDiab'), immuno:chk('cImm'), plaieChronique:chk('cPlaie'), indicationAtb:chk('cAtb')
+  };
+  if(commit) state.ctx=c;
+  return c;
+}
+function bindGenerateur(){
+  const sel=$('#gsel');
+  if(sel) sel.addEventListener('change',()=>{ state.selected=sel.value||null; readCtx(true); refreshApercu(); });
+  ['cAge','cPoids','cLoc','cSurf','cDuree','cObj','cAllerg','cGros','cAllait','cLese','cMuq','cIR','cDiab','cImm','cPlaie','cAtb']
+    .forEach(id=>{const e=$('#'+id);if(e)e.addEventListener('input',()=>{readCtx(true);refreshApercu();});});
+}
+function refreshApercu(){
+  const f=state.selected?byId(state.selected):null;
+  const c=readCtx(true)||state.ctx;
+  $('#apercu').innerHTML = f?renderApercu(f, evaluerSecurite(f,c)):`<div class="panel"><em>Sélectionnez une formule.</em></div>`;
+}
+function genererRx(){
+  const f=byId(state.selected); if(!f){toast('Choisissez une formule');return;}
+  const c=readCtx(true)||state.ctx;
+  state.lastRx = buildOrdonnance(f,c);
+  render(); // re-render generator pour afficher le bloc ordonnance
+  setTimeout(()=>{const el=$('#rxZone');if(el)el.scrollIntoView({behavior:'smooth'});},60);
+}
+function buildOrdonnance(f,c){
+  const date = new Date().toLocaleDateString('fr-FR');
+  // alignement en colonnes avec points de conduite
+  const maxLen = Math.max(...f.composition.map(x=>x.substance.length));
+  const compo = f.composition.map(x=>{
+    const pad = '.'.repeat(Math.max(3,maxLen+4-x.substance.length));
+    return '  '+x.substance+' '+pad+' '+x.quantite;
+  }).join('\n');
+  const zone = c.localisation?c.localisation:f.zone;
+  const duree = c.duree?c.duree:f.duree;
+
+  const rx =
+`Préparation magistrale — ${f.nom}
+
+${compo}
+  (Excipient : ${f.composition.find(x=>/qsp/i.test(x.quantite))?.substance||'—'} ${f.quantite_finale})
+
+Forme : ${f.forme} — Quantité finale : ${f.quantite_finale}
+
+${f.posologie}
+Zone d'application : ${zone}.
+Durée : ${duree}.
+
+Précautions : ${(f.precautions[0]||'')}${f.precautions[1]?' ; '+f.precautions[1]:''}.
+Arrêter en cas d'irritation importante.
+
+— Préparation magistrale à réaliser selon les règles de l'art pharmaceutique.
+— À valider par le pharmacien préparateur selon disponibilité, compatibilité, stabilité et réglementation en vigueur.${
+  f.remboursement!=='non' ? `
+— Préparation magistrale à but thérapeutique en l'absence de spécialité équivalente adaptée ; remboursement à vérifier selon réglementation locale et circulaire CNAM applicable.` : ''}
+
+Date : ${date}
+Signature du médecin : ............................................`;
+
+  const conseils = buildConseils(f,c);
+  return {rx, conseils, formule:f.nom};
+}
+function buildConseils(f,c){
+  const L=[];
+  L.push('• À quoi ça sert : '+(f.indications[0]||'préparation dermatologique')+'.');
+  L.push('• Comment l\'appliquer : '+f.posologie.replace(/^Appliquer/i,'appliquer'));
+  L.push('• Zones à éviter : muqueuses, yeux'+(f.flags.keratolytique?', plaies, fissures profondes, peau très irritée':'')+'.');
+  if(f.flags.capsaicine){
+    L.push('• Capsaïcine : porter des gants, éviter les yeux et les muqueuses, pas de douche/bain chaud juste après, éviter le contact avec enfants et animaux.');
+  }
+  L.push('• En cas d\'irritation : espacer ou arrêter les applications et reprendre l\'avis du médecin.');
+  L.push('• Conservation : '+f.conservation);
+  L.push('• Ne pas partager la préparation ; tenir hors de portée des enfants ; se laver les mains après application.');
+  return 'Conseils patient — '+f.nom+'\n\n'+L.join('\n');
+}
+function rxBlock(){
+  const r=state.lastRx;
+  return `<div class="panel" id="rxZone">
+    <div class="section-head no-print">
+      <h2>📄 Ordonnance générée</h2><span class="spacer"></span>
+      <button class="btn sm" onclick="copy(state.lastRx.rx)">📋 Copier ordonnance</button>
+      <button class="btn sm" onclick="copy(state.lastRx.conseils)">📋 Copier conseils</button>
+      <button class="btn sm" onclick="window.print()">🖨️ Imprimer / PDF</button>
+    </div>
+    <div class="rx">${esc(r.rx)}</div>
+    <details class="no-print" style="margin-top:12px"><summary>Voir la fiche conseils patient</summary>
+      <div class="rx" style="margin-top:8px">${esc(r.conseils)}</div></details>
+  </div>`;
+}
+
+/* ---------- vue : CALCULATEURS ---------- */
+function vCalc(){
+  return `<div class="view">
+    <div class="panel">
+      <h2>🧮 Calculateur de pourcentage → grammes</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Concentration (%)</span><input id="pcConc" type="number" step="0.01" placeholder="ex. 10"></label>
+        <label class="field"><span class="lab">Quantité finale (g)</span><input id="pcQte" type="number" step="1" placeholder="ex. 50"></label>
+        <div style="align-self:flex-end"><div class="kpi"><div class="b"><b id="pcRes">—</b><span>g d'actif</span></div></div></div>
+      </div>
+      <p class="hint">Exemple : 10 % dans 50 g = 5 g ; 5 % dans 200 g = 10 g.</p>
+    </div>
+
+    <div class="panel">
+      <h2>🧪 Calculateur qsp (excipient)</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Quantité finale (g)</span><input id="qspQte" type="number" placeholder="ex. 50"></label>
+        <label class="field"><span class="lab">Somme des actifs (g)</span><input id="qspAct" type="number" step="0.01" placeholder="ex. 7,5"></label>
+        <div style="align-self:flex-end"><div class="kpi"><div class="b"><b id="qspRes">—</b><span>g d'excipient (qsp)</span></div></div></div>
+      </div>
+      <p class="hint">Excipient « qsp quantité finale » = quantité finale − somme des actifs.</p>
+    </div>
+
+    <div class="panel">
+      <h2>📦 Quantité nécessaire selon la zone</h2>
+      <table class="tbl">
+        <tr><th>Zone</th><th>Quantité indicative (par application large)</th></tr>
+        <tr><td>Petite zone</td><td>30–50 g</td></tr>
+        <tr><td>Mains / pieds</td><td>50–100 g</td></tr>
+        <tr><td>Un membre</td><td>100–200 g</td></tr>
+        <tr><td>Corps entier</td><td>300–500 g</td></tr>
+      </table>
+      <p class="hint">À adapter selon la fréquence et la durée du traitement.</p>
+    </div>
+
+    <div class="panel">
+      <h2>🧴 Aide au choix galénique</h2>
+      <ul class="tight">
+        <li><strong>Peau sèche :</strong> cérat, cold cream, pommade.</li>
+        <li><strong>Zone pileuse :</strong> préparation fluide, lotion.</li>
+        <li><strong>Zone suintante :</strong> éviter l'occlusif excessif (pâte, lotion asséchante).</li>
+        <li><strong>Zone hyperkératosique :</strong> pommade / cérat selon tolérance.</li>
+        <li><strong>Grande surface :</strong> éviter les actifs irritants ou potentiellement toxiques.</li>
+      </ul>
+    </div>
+  </div>`;
+}
+function bindCalc(){
+  const calcPc=()=>{const c=parseFloat($('#pcConc').value),q=parseFloat($('#pcQte').value);
+    $('#pcRes').textContent=(isFinite(c)&&isFinite(q))?(+(c*q/100).toFixed(3)+'').replace('.',','):'—';};
+  ['pcConc','pcQte'].forEach(id=>$('#'+id).addEventListener('input',calcPc));
+  const calcQsp=()=>{const q=parseFloat($('#qspQte').value),a=parseFloat($('#qspAct').value);
+    $('#qspRes').textContent=(isFinite(q)&&isFinite(a))?((+(q-a).toFixed(3)+'').replace('.',',')):'—';};
+  ['qspQte','qspAct'].forEach(id=>$('#'+id).addEventListener('input',calcQsp));
+}
+
+/* ---------- vue : PÉDIATRIE ---------- */
+function vPediatrie(){
+  return `<div class="view">
+    <div class="alert warn"><span class="ico">👶</span><div><strong>Sécurité pédiatrique renforcée.</strong>
+      Éviter les actifs kératolytiques forts (acide salicylique concentré) et irritants chez le jeune enfant.
+      Toujours raisonner en mg/kg quand applicable et demander la validation pharmaceutique.</div></div>
+    <div class="panel">
+      <h2>👶 Vérification pédiatrique</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Âge (années)</span><input id="pAge" type="number" min="0" step="0.1"></label>
+        <label class="field"><span class="lab">Poids (kg)</span><input id="pPoids" type="number" min="0" step="0.1"></label>
+        <label class="field"><span class="lab">Indication</span><input id="pInd" placeholder="ex. xérose"></label>
+      </div>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Dose unitaire (mg/kg) — optionnel</span><input id="pDose" type="number" step="0.1" placeholder="ex. 10"></label>
+        <label class="field"><span class="lab">Dose max (mg/kg/j) — optionnel</span><input id="pMax" type="number" step="0.1" placeholder="ex. 30"></label>
+        <div style="align-self:flex-end"><div class="kpi">
+          <div class="b"><b id="pResU">—</b><span>mg / prise</span></div>
+          <div class="b"><b id="pResM">—</b><span>mg / j max</span></div>
+        </div></div>
+      </div>
+      <div id="pAlert"></div>
+    </div>
+    <div class="panel">
+      <h2>Formules adaptées (douces)</h2>
+      <div class="grid g2">${FORMULES.filter(f=>!f.flags.salicyle&&!f.flags.capsaicine&&!f.flags.caustique&&!f.flags.depigmentant&&!f.flags.antibiotique).map(fcardHTML).join('')}</div>
+    </div>
+  </div>`;
+}
+function bindPedia(){
+  const upd=()=>{
+    const p=parseFloat($('#pPoids').value),d=parseFloat($('#pDose').value),mx=parseFloat($('#pMax').value),age=parseFloat($('#pAge').value);
+    $('#pResU').textContent=(isFinite(p)&&isFinite(d))?(+(p*d).toFixed(1)+'').replace('.',','):'—';
+    $('#pResM').textContent=(isFinite(p)&&isFinite(mx))?(+(p*mx).toFixed(1)+'').replace('.',','):'—';
+    let a='';
+    if(!isFinite(p)) a+=`<div class="alert info"><span class="ico">ℹ️</span><div>Renseignez le poids pour calculer les doses.</div></div>`;
+    if(isFinite(age)&&age<2) a+=`<div class="alert warn"><span class="ico">⚠️</span><div>Nourrisson : préférer émollients doux ; éviter urée ≥ 10 %, salicylés, capsaïcine. Validation pharmaceutique impérative.</div></div>`;
+    $('#pAlert').innerHTML=a;
+  };
+  ['pAge','pPoids','pDose','pMax'].forEach(id=>$('#'+id).addEventListener('input',upd));
+}
+
+/* ---------- vue : GÉRIATRIE ---------- */
+function vGeriatrie(){
+  return `<div class="view">
+    <div class="alert info"><span class="ico">👴</span><div>Sujet âgé : peau fine et fragile, xérose et prurit fréquents, polymédication.
+      Privilégier les émollients doux ; surveiller la fonction rénale avant kératolytiques sur grande surface.</div></div>
+    <div class="panel">
+      <h2>Formules privilégiées chez le sujet âgé</h2>
+      <div class="grid g2">${['creme_eau','glyceamidon_10_obase','glyceamidon_al_cerat','uree_10_coldcream'].map(id=>fcardHTML(byId(id))).join('')}</div>
+    </div>
+    <div class="panel">
+      <h2>Points de vigilance</h2>
+      <ul class="tight">
+        <li>Prurit sans lésion : rechercher une cause systémique (cholestase, IR, thyroïde, hémopathie, médicaments).</li>
+        <li>Éviter les actifs irritants sur peau atrophique.</li>
+        <li>Insuffisance rénale : prudence avec les kératolytiques sur grande surface.</li>
+        <li>Observance : limiter le nombre d'applications quotidiennes, simplifier le schéma.</li>
+      </ul>
+    </div>
+  </div>`;
+}
+
+/* ---------- vue : SEVRAGE ---------- */
+function vSevrage(){
+  return `<div class="view">
+    <div class="alert warn"><span class="ico">📉</span><div><strong>Schéma théorique personnalisable</strong> — aide à la décroissance fine quand les dosages
+      industriels ne le permettent pas. Ne remplace pas l'évaluation clinique ; risque de syndrome de sevrage et de rechute.
+      Avis spécialisé recommandé pour les molécules complexes.</div></div>
+    <div class="panel">
+      <h2>📉 Aide au sevrage progressif</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Molécule</span><input id="sMol" placeholder="ex. paroxétine, alprazolam…"></label>
+        <label class="field"><span class="lab">Classe</span>
+          <select id="sClasse">
+            <option value="">—</option>
+            <option>Antidépresseur</option><option>Benzodiazépine</option>
+            <option>Neuroleptique</option><option>Morphinique</option><option>Corticoïde</option>
+          </select></label>
+        <label class="field"><span class="lab">Dose actuelle (mg/j)</span><input id="sDose" type="number" step="0.1" placeholder="ex. 20"></label>
+        <label class="field"><span class="lab">Réduction par palier (%)</span><input id="sPct" type="number" value="10" min="1" max="50"></label>
+        <label class="field"><span class="lab">Durée d'un palier</span><input id="sDur" placeholder="ex. 2 à 4 semaines" value="2 à 4 semaines"></label>
+        <label class="field"><span class="lab">Nombre de paliers</span><input id="sN" type="number" value="6" min="2" max="20"></label>
+      </div>
+      <div class="row"><button class="btn primary" onclick="calcSevrage()">Calculer le schéma</button></div>
+      <div id="sOut" style="margin-top:12px"></div>
+    </div>
+  </div>`;
+}
+function bindSevrage(){ /* boutons inline */ }
+function calcSevrage(){
+  const mol=$('#sMol').value||'la molécule', classe=$('#sClasse').value;
+  const dose=parseFloat($('#sDose').value), pct=parseFloat($('#sPct').value)||10;
+  const n=Math.min(20,Math.max(2,parseInt($('#sN').value)||6)), dur=$('#sDur').value||'2 à 4 semaines';
+  if(!isFinite(dose)){ $('#sOut').innerHTML=`<div class="alert info"><span class="ico">ℹ️</span><div>Renseignez la dose actuelle.</div></div>`; return; }
+  let d=dose; const rows=[];
+  for(let i=1;i<=n;i++){ d = +(d*(1-pct/100)).toFixed(3); rows.push(`<tr><td>Palier ${i}</td><td>${(''+(+d.toFixed(3))).replace('.',',')} mg/j</td><td>${esc(dur)}</td></tr>`); }
+  const last = (''+(+d.toFixed(3))).replace('.',',');
+  $('#sOut').innerHTML = `
+    <table class="tbl"><tr><th>Étape</th><th>Dose cible</th><th>Maintien</th></tr>
+      <tr><td>Départ</td><td>${(''+dose).replace('.',',')} mg/j</td><td>—</td></tr>${rows.join('')}</table>
+    <div class="alert warn" style="margin-top:10px"><span class="ico">⚠️</span><div>
+      Schéma indicatif (−${pct}%/palier). Adapter à la tolérance ; ralentir aux faibles doses (sevrage hyperbolique).
+      Dose en fin de schéma : <strong>${last} mg/j</strong>${classe?' ('+esc(classe)+')':''}.
+      Surveiller le syndrome de sevrage et la rechute. Une forme magistrale (gélules/solution buvable) n'est envisageable que si
+      ${esc(mol)} est compatible avec une préparation validée par la pharmacie.</div></div>
+    <div class="alert info"><span class="ico">ℹ️</span><div>Ordonnance de préparation à valider par le pharmacien ; pour les morphiniques/neuroleptiques complexes, avis spécialisé.</div></div>`;
+}
+
+/* ---------- vue : RUPTURE DE STOCK ---------- */
+function vRupture(){
+  return `<div class="view">
+    <div class="alert warn"><span class="ico">📦</span><div>La substitution d'un médicament industriel par une préparation magistrale doit respecter la réglementation
+      et nécessite une <strong>validation pharmaceutique</strong>. MAGISTRA ne propose pas de formule systémique non documentée.</div></div>
+    <div class="panel">
+      <h2>📦 Médicament indisponible</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Médicament</span><input id="rMed" placeholder="DCI / spécialité"></label>
+        <label class="field"><span class="lab">Dosage</span><input id="rDose" placeholder="ex. 5 mg"></label>
+        <label class="field"><span class="lab">Forme initiale</span><input id="rForme" placeholder="ex. comprimé"></label>
+        <label class="field"><span class="lab">Posologie habituelle</span><input id="rPoso" placeholder="ex. 1/j"></label>
+        <label class="field"><span class="lab">Indication</span><input id="rInd"></label>
+        <label class="field"><span class="lab">Âge / poids</span><input id="rAge"></label>
+      </div>
+      <div class="row"><button class="btn primary" onclick="analyseRupture()">Analyser la faisabilité</button></div>
+      <div id="rOut" style="margin-top:12px"></div>
+    </div>
+  </div>`;
+}
+function bindRupture(){}
+function analyseRupture(){
+  const med=$('#rMed').value.trim();
+  if(!med){ $('#rOut').innerHTML=`<div class="alert info"><span class="ico">ℹ️</span><div>Indiquez le médicament indisponible.</div></div>`; return; }
+  // chercher si un actif correspond dans la base dermatologique
+  const nq=norm(med);
+  const match=FORMULES.filter(f=>norm(f.composition.map(c=>c.substance).join(' ')).includes(nq)||norm(f.nom).includes(nq));
+  let html=`<div class="alert info"><span class="ico">🔎</span><div>Recherche dans la base magistrale pour « ${esc(med)} ».</div></div>`;
+  if(match.length){
+    html+=`<p>Préparation(s) magistrale(s) potentiellement pertinente(s) (à valider) :</p><div class="grid g2">${match.map(fcardHTML).join('')}</div>`;
+  } else {
+    html+=`<div class="alert warn"><span class="ico">⚠️</span><div>Aucune préparation documentée correspondante dans cette base (orientée dermatologie/topiques).
+      Une substitution magistrale ne doit pas être inventée : vérifier auprès de la pharmacie la faisabilité, la légalité, la dosabilité et la stabilité.</div></div>`;
+  }
+  html+=`<div class="callout">La substitution par préparation magistrale doit respecter la réglementation et nécessite une validation pharmaceutique.
+    Préparation possible : <strong>oui / non / à discuter</strong> avec le pharmacien.</div>`;
+  $('#rOut').innerHTML=html;
+}
+
+/* ---------- vue : VÉTÉRINAIRE ---------- */
+function vVeto(){
+  return `<div class="view">
+    <div class="alert block"><span class="ico">🐾</span><div><strong>Prescription ou validation vétérinaire nécessaire.</strong>
+      Toxicités spécifiques (chat ++). Attention aux huiles essentielles, salicylés, dérivés du zinc, excipients et au léchage.</div></div>
+    <div class="panel">
+      <h2>🐾 Préparation vétérinaire</h2>
+      <div class="grid g3">
+        <label class="field"><span class="lab">Espèce</span>
+          <select id="vEsp"><option>Chien</option><option>Chat</option><option>NAC (alerte forte)</option></select></label>
+        <label class="field"><span class="lab">Poids (kg)</span><input id="vPoids" type="number" step="0.1"></label>
+        <label class="field"><span class="lab">Âge</span><input id="vAge"></label>
+        <label class="field"><span class="lab">Indication</span><input id="vInd"></label>
+        <label class="field"><span class="lab">Voie</span><input id="vVoie" placeholder="ex. cutanée"></label>
+        <label class="field"><span class="lab">Traitements en cours</span><input id="vTrait"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="vLech"> Risque de léchage de la zone traitée</label>
+      <div class="row"><button class="btn primary" onclick="analyseVeto()">Vérifier les alertes</button></div>
+      <div id="vOut" style="margin-top:12px"></div>
+    </div>
+  </div>`;
+}
+function analyseVeto(){
+  const esp=$('#vEsp').value, lech=$('#vLech').checked;
+  let a=`<div class="callout">Prescription/validation vétérinaire indispensable. Aucune formule n'est délivrée automatiquement.</div>`;
+  if(/chat/i.test(esp)) a+=`<div class="alert block"><span class="ico">⛔</span><div>Chat : sensibilité accrue — éviter salicylés, phénols, huiles essentielles (terpènes), certains excipients ; risque de toxicité.</div></div>`;
+  if(/nac/i.test(esp)) a+=`<div class="alert block"><span class="ico">⛔</span><div>NAC : marges thérapeutiques étroites et données limitées — avis vétérinaire spécialisé requis.</div></div>`;
+  if(lech) a+=`<div class="alert warn"><span class="ico">⚠️</span><div>Risque de léchage : prévoir collerette/pansement ; éviter les actifs toxiques par ingestion (zinc, salicylés, capsaïcine).</div></div>`;
+  a+=`<div class="alert warn"><span class="ico">⚠️</span><div>Huiles essentielles : toxicité possible (surtout chat) — à proscrire sans validation vétérinaire.</div></div>`;
+  $('#vOut').innerHTML=a;
+}
+
+/* ---------- vue : SÉCURITÉ ---------- */
+function vSecurite(){
+  const B=['Enfant + acide salicylique concentré ou grande surface',
+   'Femme enceinte/allaitante + actif non validé',
+   'Application sur muqueuses sans formulation adaptée',
+   'Peau ulcérée, infectée, nécrotique ou plaie profonde',
+   'Diabétique avec plaie du pied',
+   'Insuffisance rénale sévère + kératolytiques sur grande surface',
+   'Allergie connue à un composant',
+   'Préparation antibiotique sans indication claire',
+   'Concentration incohérente ou hors plage de sécurité',
+   'Quantité finale incompatible avec la durée ou la surface'];
+  const N=['Risque d\'irritation','Risque de brûlure avec la capsaïcine','Risque de photosensibilisation',
+   'Risque d\'inobservance si application trop fréquente','Remboursement incertain','Nécessité de validation pharmaceutique'];
+  return `<div class="view">
+    <div class="panel"><h2>⚠️ Moteur d'alertes — principes</h2>
+      <p class="muted">Le générateur évalue chaque formule selon le contexte patient saisi (âge, grossesse, surface, peau lésée, terrain…).</p>
+      <h3 style="color:var(--red)">⛔ Alertes bloquantes</h3>
+      <ul class="tight">${B.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <h3 style="color:var(--orange);margin-top:10px">⚠️ Alertes non bloquantes</h3>
+      <ul class="tight">${N.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    </div>
+    <div class="panel"><h2>Données demandées avant génération</h2>
+      <ul class="tight">
+        <li>Âge, poids</li><li>Grossesse / allaitement</li><li>Allergies</li>
+        <li>Localisation, surface estimée</li><li>Peau saine ou lésée</li>
+        <li>Durée souhaitée, objectif thérapeutique</li>
+        <li>Antécédents : insuffisance rénale, diabète, immunodépression, plaie chronique</li>
+      </ul>
+      <div class="callout">L'application signale les données manquantes et exige toujours la validation pharmaceutique. Elle n'invente jamais de formule non sourcée.</div>
+    </div>
+  </div>`;
+}
+
+/* ---------- vue : REMBOURSEMENT ---------- */
+function vRemboursement(){
+  const items=['Préparation à but thérapeutique','Absence d\'alternative industrielle adaptée',
+    'Préparation non cosmétique','Prescription complète avec quantité et posologie','Validation pharmacien'];
+  return `<div class="view">
+    <div class="panel"><h2>💶 Remboursement</h2>
+      <p>Certaines préparations peuvent être remboursables (cadre de la <strong>circulaire CNAM 58-2008</strong>). Le remboursement dépend de
+      l'indication thérapeutique, de la composition, de l'absence d'alternative industrielle adaptée, des règles locales de caisse et de la
+      conformité de l'ordonnance.</p>
+      <div class="alert info"><span class="ico">ℹ️</span><div>MAGISTRA ne garantit jamais le remboursement : <strong>« Remboursement possible / à vérifier avec la pharmacie et la caisse »</strong>.</div></div>
+      <h3>Checklist d'éligibilité</h3>
+      ${items.map((x,i)=>`<label class="check"><input type="checkbox" id="rb${i}" onchange="majRemb()"> ${esc(x)}</label>`).join('')}
+      <div id="rbOut" class="callout">Cochez les critères réunis pour estimer l'éligibilité (indicatif).</div>
+    </div>
+  </div>`;
+}
+function majRemb(){
+  let n=0; for(let i=0;i<5;i++){const e=$('#rb'+i); if(e&&e.checked)n++;}
+  const out=$('#rbOut');
+  if(n===5) out.innerHTML='✅ Les 5 critères usuels sont réunis : remboursement <strong>possible</strong> — à confirmer avec la pharmacie et la caisse.';
+  else out.innerHTML=`${n}/5 critères réunis. Remboursement <strong>incertain</strong> tant que tous les critères (et la validation pharmacien) ne sont pas réunis.`;
+}
+
+/* ---------- vue : À PROPOS ---------- */
+function vApropos(){
+  return `<div class="view">
+    <div class="panel">
+      <h2>ℹ️ À propos de MAGISTRA</h2>
+      <p>Assistant d'aide à la prescription de préparations magistrales pour médecins généralistes, dermatologues, pédiatres,
+      gériatres et pharmaciens préparateurs. Fonctionne entièrement <strong>hors-ligne</strong>, sans serveur ni transmission de données.</p>
+      <h3>Sources documentaires</h3>
+      <ul class="tight">
+        <li><a href="https://www.pharmacie-des-rosiers.com/formules-magistrales" target="_blank" rel="noopener">pharmacie-des-rosiers.com/formules-magistrales</a></li>
+        <li><a href="https://www.codexial.com/preparation-magistrale/prescription/" target="_blank" rel="noopener">codexial.com/preparation-magistrale/prescription</a></li>
+      </ul>
+      <p class="small muted">Dernière vérification des formules : ${DATE_V}. Les concentrations indiquées sont des repères usuels à adapter
+      au patient et à valider par le pharmacien.</p>
+      <div class="alert warn"><span class="ico">⚠️</span><div>Cet outil aide à structurer une prescription de préparation magistrale. Il ne remplace ni l'examen clinique,
+        ni les recommandations officielles, ni la validation du pharmacien préparateur. Les dosages, excipients, compatibilités,
+        stabilités, conditions de conservation et modalités de remboursement doivent être vérifiés avant délivrance.</div></div>
+    </div>
+  </div>`;
+}
+
+/* ===================================================================
+   4) THÈME + DÉMARRAGE
+   =================================================================== */
+function toggleTheme(){
+  const b=document.body, dark=b.getAttribute('data-theme')==='dark';
+  b.setAttribute('data-theme',dark?'light':'dark');
+  $('#themeBtn').textContent=dark?'🌙 Sombre':'☀️ Clair';
+  try{localStorage.setItem('magistra-theme',dark?'light':'dark');}catch(e){}
+}
+(function init(){
+  try{const t=localStorage.getItem('magistra-theme'); if(t==='dark'){document.body.setAttribute('data-theme','dark');}}catch(e){}
+  if(document.body.getAttribute('data-theme')==='dark') $('#themeBtn').textContent='☀️ Clair';
+  renderTabs(); render();
+})();
+</script>
+</body>
+</html>
