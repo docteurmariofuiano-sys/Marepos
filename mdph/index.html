@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MDPH Assist — Certificat médical Cerfa 15695*01 (remplissage assisté)</title>
+<meta name="description" content="Remplissage assisté du certificat médical MDPH (Cerfa 15695*01) : la sélection des pathologies pré-remplit la demande, les antécédents, les signes invalidants, le traitement (effet secondaire principal), le pronostic et les besoins ; aperçu du Cerfa rempli, téléchargeable en PDF. 100% local, aucune donnée stockée ni transmise, signature laissée vierge.">
+<style>
+  :root{
+    --ink:#182027; --muted:#64717c; --paper:#f7f6f1; --panel:#fff;
+    --line:#d9ddd8; --teal:#0a6c74; --teal-soft:#d9eef0; --teal-ink:#074a4f;
+    --green:#2f7d4a; --green-soft:#e8f9ee; --orange:#b56419; --red:#b3261e;
+    --blue:#2b5f92; --shadow:0 12px 35px rgba(24,32,39,.10); --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; color:var(--ink);
+    background:linear-gradient(90deg,rgba(10,108,116,.06) 0 1px,transparent 1px 100%),
+      linear-gradient(rgba(10,108,116,.045) 0 1px,transparent 1px 100%),var(--paper);
+    background-size:28px 28px; font-family:"Aptos","Segoe UI",system-ui,sans-serif; line-height:1.45}
+  a{color:var(--teal)}
+  header{position:sticky; top:0; z-index:30; background:rgba(247,246,241,.94);
+    border-bottom:1px solid var(--line); backdrop-filter:blur(14px)}
+  .topbar{max-width:1560px; margin:0 auto; padding:14px 20px;
+    display:grid; grid-template-columns:minmax(240px,1fr) auto; gap:16px; align-items:center}
+  .brand{display:flex; gap:14px; align-items:center}
+  .logo{font-size:2rem; line-height:1}
+  h1{margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.3rem,2.2vw,2rem)}
+  .subtitle{color:var(--muted); font-size:.9rem; margin-top:2px}
+  .top-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+  .btn{border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:9px 14px;
+    border-radius:10px; font:inherit; font-weight:600; cursor:pointer; display:inline-flex; gap:7px;
+    align-items:center; white-space:nowrap; text-decoration:none}
+  .btn:hover{border-color:var(--teal)}
+  .btn.primary{background:var(--teal); color:#fff; border-color:var(--teal)}
+  .btn.primary:hover{background:var(--teal-ink)}
+  .btn.ghost{background:transparent}
+
+  .wrap{max-width:1560px; margin:0 auto; padding:18px 20px 80px;
+    display:grid; grid-template-columns:1.05fr .95fr; gap:22px; align-items:start}
+  @media(max-width:1080px){ .wrap{grid-template-columns:1fr} }
+
+  .disclaimer{grid-column:1/-1; background:#fff8ec; border:1px solid #f0d9a8; color:#6a4a12;
+    padding:11px 14px; border-radius:12px; font-size:.9rem}
+  .disclaimer strong{color:#5a3c0a}
+
+  .col-form{display:flex; flex-direction:column; gap:14px}
+  details.section{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:visible}
+  details.section>summary{list-style:none; cursor:pointer; padding:13px 16px;
+    display:flex; align-items:center; gap:12px; user-select:none}
+  details.section>summary::-webkit-details-marker{display:none}
+  details.section>summary:hover{background:#fafbfa}
+  .sec-icon{width:38px; height:38px; flex:0 0 38px; border-radius:10px; display:grid; place-items:center;
+    font-size:1.15rem; background:var(--teal-soft); color:var(--teal-ink)}
+  .sec-titles{flex:1; min-width:0}
+  .sec-titles h2{margin:0; font-size:1.02rem}
+  .sec-titles p{margin:2px 0 0; color:var(--muted); font-size:.83rem}
+  .sec-count{font-size:.76rem; font-weight:700; color:var(--teal-ink); background:var(--teal-soft);
+    border-radius:999px; padding:3px 10px; min-width:24px; text-align:center}
+  .sec-count.empty{background:#eef1ef; color:var(--muted)}
+  .chev{color:var(--muted); transition:transform .2s}
+  details[open] .chev{transform:rotate(180deg)}
+  .sec-body{padding:6px 16px 18px}
+
+  .block{margin-top:16px; position:relative}
+  .block:first-child{margin-top:8px}
+  .b-label{font-size:.92rem; font-weight:700; margin:0 0 7px}
+  .b-sub{font-size:.8rem; color:var(--muted); font-weight:400; margin:2px 0 7px}
+  .auto-tag{display:inline-block; font-size:.68rem; font-weight:700; color:var(--teal-ink);
+    background:var(--teal-soft); border-radius:6px; padding:1px 6px; margin-left:6px; vertical-align:middle}
+  .grp-title{font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--muted); margin:12px 0 7px}
+
+  .opts{display:grid; gap:5px 14px}
+  .opts.c1{grid-template-columns:1fr}
+  .opts.c2{grid-template-columns:1fr 1fr}
+  @media(max-width:600px){ .opts.c2{grid-template-columns:1fr} }
+  label.opt{display:flex; gap:9px; align-items:flex-start; padding:5px 8px; border-radius:9px;
+    cursor:pointer; font-size:.9rem}
+  label.opt:hover{background:#f4f8f7}
+  label.opt input{margin-top:2px; width:16px; height:16px; accent-color:var(--teal); flex:0 0 auto}
+
+  .pills{display:flex; gap:6px; flex-wrap:wrap}
+  .pill-opt{border:1px solid var(--line); background:#fff; border-radius:999px; font:inherit;
+    font-size:.82rem; padding:4px 13px; cursor:pointer; color:var(--muted)}
+  .pill-opt.on{border-color:var(--teal); background:var(--teal-soft); color:var(--teal-ink); font-weight:700}
+
+  textarea,input[type=text]{width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 11px;
+    font:inherit; font-size:.9rem; color:var(--ink); background:#fff; resize:vertical}
+  textarea:focus,input[type=text]:focus{outline:2px solid var(--teal-soft); border-color:var(--teal)}
+
+  /* médicaments */
+  .medbox{position:relative}
+  .medhint{font-size:.8rem; color:var(--muted); margin:6px 0}
+  .medhint b{color:var(--ink)}
+  .chip-ins{border:1px dashed var(--teal); background:var(--teal-soft); color:var(--teal-ink);
+    border-radius:8px; font:inherit; font-size:.78rem; padding:2px 9px; cursor:pointer; margin-left:6px}
+  .medlist{position:absolute; z-index:40; left:0; right:0; top:100%; margin-top:3px; background:#fff;
+    border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); max-height:240px; overflow:auto}
+  .medlist div{padding:8px 11px; cursor:pointer; font-size:.86rem; border-top:1px solid #eef1ef}
+  .medlist div:first-child{border-top:none}
+  .medlist div:hover{background:var(--teal-soft)}
+  .medlist b{color:var(--teal-ink)} .medlist small{color:var(--muted)}
+
+  /* matrice d'appréciation A/B/C/D/NSP */
+  .matrix{border:1px solid var(--line); border-radius:10px; overflow:hidden}
+  .mrow{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+    padding:7px 11px; border-top:1px solid var(--line)}
+  .mrow:first-child{border-top:none}
+  .mrow .mlab{font-size:.88rem; width:100%}
+  .mrow input.mlab{border:1px solid var(--line); border-radius:8px; padding:6px 9px}
+  .mrow .mbtns{display:flex; gap:4px}
+  .mbtn{width:30px; height:28px; border:1px solid var(--line); background:#fff; border-radius:7px;
+    font:inherit; font-size:.78rem; font-weight:700; cursor:pointer; color:var(--muted)}
+  .mbtn.on{color:#fff; border-color:var(--teal)}
+  .mbtn.on[data-v="A"]{background:#2f7d4a; border-color:#2f7d4a}
+  .mbtn.on[data-v="B"]{background:#6a9a2f; border-color:#6a9a2f}
+  .mbtn.on[data-v="C"]{background:#b56419; border-color:#b56419}
+  .mbtn.on[data-v="D"]{background:#b3261e; border-color:#b3261e}
+  .mbtn.on[data-v="NSP"]{background:#64717c; border-color:#64717c}
+  .mbtn.on[data-v="P"],.mbtn.on[data-v="R"],.mbtn.on[data-v="Pn"]{background:var(--teal); border-color:var(--teal)}
+  .legend-rate{font-size:.78rem; color:var(--muted); margin:6px 2px 10px; line-height:1.5}
+  .legend-rate b{color:var(--ink)}
+
+  /* colonne Cerfa */
+  .col-out{position:sticky; top:84px}
+  .out-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden}
+  .out-head{padding:13px 16px; border-bottom:1px solid var(--line); display:flex; align-items:center;
+    gap:10px; flex-wrap:wrap}
+  .out-head h2{margin:0; font-size:1rem; flex:1}
+  .toast{font-size:.82rem; color:var(--green); font-weight:600}
+  .out-foot{padding:11px 16px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap;
+    align-items:center}
+  .legend{font-size:.8rem; color:var(--muted); margin:6px 2px 0}
+
+  #cerfa-scroll{height:78vh; overflow:hidden; background:#eceae3; padding:0; position:relative}
+  #cerfa-frame{width:100%; height:100%; border:0; background:#eceae3; display:block}
+  .cerfa-fallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:28px; color:var(--muted); font-size:.85rem}
+  .cerfa{background:#fff; color:#10171c; max-width:760px; margin:0 auto; padding:26px 30px;
+    font-family:Georgia,"Times New Roman",serif; font-size:13px; line-height:1.5;
+    box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .cerfa .doc-h{text-align:center; border-bottom:2px solid var(--teal); padding-bottom:8px; margin-bottom:14px}
+  .cerfa .doc-h h3{margin:0; font-size:16px; color:var(--teal-ink); letter-spacing:.02em}
+  .cerfa .doc-h .sub{font-size:11px; color:#555}
+  .cerfa h4{margin:16px 0 6px; font-size:13px; color:#fff; background:var(--teal);
+    padding:4px 9px; border-radius:4px; font-family:"Aptos","Segoe UI",sans-serif}
+  .cerfa .f{margin:4px 0; display:flex; gap:6px}
+  .cerfa .f .k{color:#555; font-weight:700; flex:0 0 auto}
+  .cerfa .f .v{flex:1; border-bottom:1px dotted #aaa; min-height:1.2em; white-space:pre-wrap}
+  .cerfa .blk{white-space:pre-wrap; border:1px solid #ddd; border-radius:5px; padding:7px 9px;
+    margin:5px 0; min-height:1.4em; background:#fcfcfb}
+  .cerfa .chk{margin:3px 12px 3px 0; display:inline-block}
+  .cerfa .mline{display:flex; justify-content:space-between; gap:8px; border-bottom:1px solid #eee; padding:2px 0}
+  .cerfa .mline .let{font-weight:700; font-family:"Aptos",sans-serif}
+  .cerfa .muted{color:#aaa; font-style:italic}
+  .cerfa .sign{margin-top:18px; border-top:1px solid #ccc; padding-top:10px; display:flex; justify-content:space-between}
+  .cerfa .sign .box{width:46%}
+  .cerfa .sign .line{margin-top:34px; border-top:1px solid #888}
+  .cerfa .small{font-size:11px; color:#777}
+
+  .footer{grid-column:1/-1; color:var(--muted); font-size:.82rem; text-align:center; padding-top:8px}
+
+  @media print{
+    @page{margin:12mm}
+    header,.disclaimer,.col-form,.out-head,.out-foot,.footer,.top-actions{display:none!important}
+    .wrap{display:block; padding:0; max-width:none}
+    .col-out{position:static}
+    .out-card{box-shadow:none; border:none}
+    #cerfa-scroll{max-height:none; overflow:visible; background:#fff; padding:0}
+    .cerfa{box-shadow:none; max-width:none; padding:0}
+    .cerfa h4{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">📝</div>
+      <div>
+        <h1>MDPH Assist</h1>
+        <div class="subtitle">Certificat médical Cerfa 15695*01 — remplissage assisté par les pathologies</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="../index.html" title="Retour au portail">← Portail</a>
+      <button class="btn" id="btn-reset" type="button">↺ Réinitialiser</button>
+      <button class="btn" id="btn-15692" type="button" title="Remplit et télécharge le formulaire officiel 15692*01">⬇️ Demande 15692</button>
+      <button class="btn primary" id="btn-cert-top" type="button" title="Télécharge le certificat 15695 officiel rempli">⬇️ Certificat 15695 officiel</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="disclaimer">
+    <strong>Aide à la rédaction — pas le formulaire officiel.</strong> La sélection des pathologies pré-remplit
+    automatiquement la demande, les antécédents, les signes invalidants, le traitement type, le pronostic et les besoins :
+    contenu <strong>indicatif à relire, corriger et compléter</strong> sous votre responsabilité médicale. L'aperçu de droite
+    reproduit le <strong>Cerfa 15695*01</strong> (validité 12 mois) et se télécharge en PDF. <strong>100 % local</strong> :
+    aucune donnée patient enregistrée ni transmise. La <strong>signature reste vierge</strong> (à dater et signer à la main).
+    Le bouton <strong>« Demande 15692 officielle remplie »</strong> génère le <strong>vrai formulaire Cerfa 15692*01</strong>
+    (à champs) pré-rempli à partir de la section « Demande » ci-dessous — à servir en http(s) (pas en double-clic local).
+  </div>
+
+  <div class="col-form" id="form"></div>
+
+  <div class="col-out">
+    <div class="out-card">
+      <div class="out-head"><h2>Aperçu du Cerfa 15695*01 officiel</h2><span class="toast" id="toast" aria-live="polite"></span></div>
+      <div id="cerfa-scroll">
+        <iframe id="cerfa-frame" title="Aperçu du certificat officiel rempli"></iframe>
+        <div id="cerfa-fallback" class="cerfa-fallback">L'aperçu du PDF officiel se charge ici. S'il reste vide,
+          servez l'application en <strong>http(s)</strong> (localhost ou GitHub Pages) : l'ouverture en double-clic
+          local bloque le chargement du PDF.</div>
+      </div>
+      <div class="out-foot">
+        <button class="btn primary" id="btn-cert" type="button">⬇️ Télécharger le certificat 15695 officiel rempli</button>
+        <span class="toast" id="cert-msg" aria-live="polite"></span>
+      </div>
+    </div>
+    <p class="legend">L'aperçu et le téléchargement sont le <strong>vrai formulaire officiel Cerfa 15695*01</strong>,
+      rempli dans ses champs (texte + cases + grilles A/B/C/D). Signature laissée vierge. 100 % local, rien n'est transmis.</p>
+  </div>
+
+  <div class="footer">MDPH Assist — suite <strong>ASSISTANT MÉDICAL</strong>. Hors-ligne, sans stockage. Bases médicaments/pathologies indicatives à vérifier.</div>
+</main>
+
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="cert15695off.js"></script>
+<script src="meds.js"></script>
+<script src="kb.js"></script>
+<script>
+'use strict';
+const $=(s,c=document)=>c.querySelector(s);
+const $$=(s,c=document)=>Array.from(c.querySelectorAll(s));
+const el=h=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
+const norm=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const KB=window.KB||{}, MEDS=window.MEDS||[];
+const kbMotiv=p=>(KB[p]&&KB[p].motiv)||p;
+
+const RATE=['A','B','C','D','NSP'];
+const RATE_TXT={A:'réalisé sans difficulté et sans aide',B:'réalisé avec difficulté, sans aide humaine',
+  C:'réalisé avec aide humaine (directe ou stimulation)',D:'non réalisé',NSP:'ne se prononce pas'};
+
+/* ===== modèle = 8 sections du Cerfa 15695*01 ===== */
+const FORM=[
+{sec:'1',icon:'🩺',title:'1. Pathologie motivant la demande',
+ desc:'Cochez les pathologies : la 1re alimente la demande, les suivantes les « autres pathologies ».',blocks:[
+  {type:'palette',id:'pal_patho',label:'Sélection des pathologies / antécédents',
+   sub:'1re cochée → Pathologie motivante · suivantes → Autres pathologies · toutes → Antécédents (section 2).',
+   groups:[
+    {t:'Cardio-vasculaire & métabolique',items:['Hypertension artérielle','Cardiopathie ischémique','Insuffisance cardiaque','Trouble du rythme (FA…)','AVC/AIT (séquelles)','Artériopathie des membres inférieurs','Diabète','Obésité','Dyslipidémie']},
+    {t:'Respiratoire',items:['BPCO','Asthme sévère','SAOS','Insuffisance respiratoire / O₂']},
+    {t:'Neurologique',items:['Épilepsie','Maladie de Parkinson','Sclérose en plaques','Maladie neurodégénérative','Traumatisme crânien (séquelles)','Lésion médullaire (para/tétraplégie)','Maladie neuromusculaire (myopathie, SLA…)','Migraine/céphalées chroniques']},
+    {t:'Psychiatrique & neuro-développement',items:['Trouble dépressif','Trouble anxieux','Trouble bipolaire','Trouble psychotique/schizophrénie','État de stress post-traumatique','Trouble de l\'usage/addiction','Trouble du spectre de l\'autisme','TDAH','Trouble du développement intellectuel','Troubles « dys »']},
+    {t:'Ostéo-articulaire & rhumato',items:['Arthrose invalidante','Rhumatisme inflammatoire (PR…)','Lombalgie/rachialgie chronique','Ostéoporose/fractures','Amputation','Prothèse articulaire']},
+    {t:'Sensoriel',items:['Déficience visuelle/malvoyance','Cécité','Déficience auditive','Surdité']},
+    {t:'Cancéro / hémato / immuno / infectieux',items:['Cancer (en cours/antécédent)','Hémopathie','Déficit immunitaire/immunosuppression','Pathologie infectieuse chronique (VIH, hépatite…)']},
+    {t:'Digestif / néphro / uro / rare',items:['MICI (Crohn, RCH)','Hépatopathie chronique','Insuffisance rénale chronique/dialyse','Transplantation d\'organe','Troubles vésico-sphinctériens','Stomie','Maladie rare/génétique']},
+   ]},
+  {type:'textarea',id:'p_motiv',label:'Pathologie motivant la demande',auto:true,rows:2},
+  {type:'textarea',id:'p_autres',label:'Autres pathologies éventuelles',auto:true,rows:2},
+  {type:'textarea',id:'p_elements',label:'Éléments essentiels à retenir (diagnostic, facteurs de gravité)',rows:3},
+ ]},
+{sec:'2',icon:'📜',title:'2. Histoire de la pathologie',
+ desc:'Origine, ancienneté, antécédents en rapport.',blocks:[
+  {type:'radio',id:'h_origine',label:'Origine, circonstances d\'apparition',
+   options:['Congénitale','Maladie','Accident vie privée','Accident du travail','Maladie professionnelle']},
+  {type:'radio',id:'h_date',label:'Date d\'apparition',
+   options:['À la naissance','Depuis moins d\'un an','Depuis 1 à 5 ans','Depuis plus de 5 ans']},
+  {type:'textarea',id:'h_atcd',label:'Antécédents médicaux, chirurgicaux, périnataux en rapport avec le handicap',auto:true,rows:3},
+  {type:'textarea',id:'h_retard',label:'Enfant : retard éventuel dans les acquisitions (psychomoteur, langage…)',rows:2},
+ ]},
+{sec:'3',icon:'🔎',title:'3. Description clinique actuelle',
+ desc:'Signes invalidants (pré-remplis selon la pathologie motivante) et leur fréquence.',blocks:[
+  {type:'text',id:'c_poids',label:'Poids (kg)'},
+  {type:'text',id:'c_taille',label:'Taille (cm)'},
+  {type:'radio',id:'c_lat',label:'Latéralité dominante avant handicap',options:['Droite','Gauche']},
+  {type:'matrix',id:'c_signes',label:'Description des signes cliniques invalidants et fréquence',auto:true,
+   cols:['Permanents','Réguliers (>15j/mois)','Ponctuel (<15j/mois)'],freerows:true},
+  {type:'textarea',id:'c_precis',label:'Précisions',rows:2},
+  {type:'check',id:'c_evol',label:'Perspective d\'évolution globale',cols:2,
+   options:['Stabilité','Aggravation','Incapacité fluctuante','Évolutivité majeure','Amélioration','Non définie']},
+ ]},
+{sec:'4',icon:'👁️',title:'4. Déficiences sensorielles',
+ desc:'Auditive (volet 1 ORL) / visuelle (volet 2 ophtalmo).',blocks:[
+  {type:'check',id:'s_def',label:'Déficience présente',cols:2,options:['Déficience auditive','Déficience visuelle']},
+  {type:'textarea',id:'s_audi',label:'Observations — déficience auditive',rows:2},
+  {type:'textarea',id:'s_visu',label:'Observations — déficience visuelle',rows:2},
+ ]},
+{sec:'5',icon:'💊',title:'5. Traitements & prises en charge',
+ desc:'Recherche d\'un médicament → effet secondaire principal pré-rempli.',blocks:[
+  {type:'medsearch',id:'medsearch',label:'Médicament (tapez ≥ 3 lettres : nom ou classe)'},
+  {type:'textarea',id:'t_classes',label:'Classes thérapeutiques ou nom des médicaments',rows:2},
+  {type:'textarea',id:'t_effets',label:'Effets secondaires du traitement',rows:2},
+  {type:'textarea',id:'t_contraintes',label:'Autres contraintes (administration, tierce personne, vie sociale/pro…)',rows:2},
+  {type:'text',id:'t_regime',label:'Régime alimentaire'},
+  {type:'check',id:'t_autres',label:'Autre prise en charge concernant les soins',cols:2,
+   options:['Hospitalisations itératives ou programmées','Suivi médical spécialisé','Soins ou traitements nocturnes','Autres']},
+  {type:'check',id:'t_sanit',label:'Prise en charge sanitaire régulière',cols:2,
+   options:['Ergothérapeute','Infirmière','Kinésithérapeute','Orthophoniste','Orthoptiste','Psychologue','Psychomotricien']},
+  {type:'check',id:'t_pluri',label:'Suivis pluridisciplinaires',cols:2,options:['CMPP','CMP','CATTP','Hôpital de jour']},
+  {type:'textarea',id:'t_projet',label:'Projet thérapeutique',rows:2},
+  {type:'group',label:'Type d\'appareillage'},
+  {type:'check',id:'a_audi',label:'Corrections auditives',cols:2,options:['Unilatérale','Bilatérale','Appareillage','Implant']},
+  {type:'check',id:'a_mob',label:'Aide à la mobilité',cols:2,
+   options:['Déambulateur','Canne','Orthèse/prothèse','Fauteuil roulant électrique','Fauteuil roulant manuel','Autre (scooter…)']},
+  {type:'check',id:'a_vis',label:'Appareillage visuel',cols:2,
+   options:['Télé-agrandisseur','Terminal-braille','Logiciel de basse vision','Loupe','Logiciel de synthèse vocale']},
+  {type:'check',id:'a_alim',label:'Alimentation / Élimination',cols:2,
+   options:['Gastro/jéjunostomie d\'alimentation','Stomie digestive d\'élimination','Sonde urinaire','Stomie urinaire']},
+  {type:'check',id:'a_resp',label:'Aides respiratoires',cols:2,options:['Trachéotomie','O₂','Appareil de ventilation']},
+  {type:'check',id:'a_parole',label:'Aide à la parole',cols:2,options:['Prothèse phonatoire']},
+  {type:'textarea',id:'a_precis',label:'Précisions appareillage (type, adaptation, autonomie, compliance)',rows:2},
+ ]},
+{sec:'6',icon:'🧭',title:'6. Retentissement fonctionnel et/ou relationnel',
+ desc:'Échelle A/B/C/D/NSP — motricité, communication, cognition, entretien personnel, vie domestique.',rate:true,blocks:[
+  {type:'text',id:'r_perim',label:'Déplacement : périmètre de marche'},
+  {type:'check',id:'r_aides_int',label:'Aides techniques utilisées — en intérieur',cols:2,
+   options:['Cannes','Déambulateur','Fauteuil roulant manuel','Fauteuil roulant électrique']},
+  {type:'check',id:'r_aides_ext',label:'Aides techniques utilisées — en extérieur',cols:2,
+   options:['Cannes','Déambulateur','Fauteuil roulant manuel','Fauteuil roulant électrique']},
+  {type:'check',id:'r_depl_div',label:'Déplacement — divers',cols:1,
+   options:['Ralentissement moteur','Besoin de pauses','Besoin d\'accompagnement pour les déplacements extérieurs']},
+  {type:'matrix',id:'m_mot',label:'Mobilité, manipulation / capacité motrice',cols:RATE,
+   rows:['Marcher','Se déplacer à l\'intérieur','Se déplacer à l\'extérieur','Préhension (main non dominante)','Préhension (main dominante)','Motricité fine']},
+  {type:'matrix',id:'m_comm',label:'Communication',cols:RATE,
+   rows:['Communiquer avec autrui','Utiliser le téléphone','Utiliser d\'autres appareils/techniques de communication']},
+  {type:'matrix',id:'m_cog',label:'Cognition / capacité cognitive',cols:RATE,
+   rows:['Orientation dans le temps','Orientation dans l\'espace','Gestion de la sécurité personnelle','Maîtrise du comportement']},
+  {type:'textarea',id:'r_cog_precis',label:'Précisions cognitif / conduite émotionnelle et comportementale',rows:2},
+  {type:'check',id:'r_sait',label:'La personne sait',cols:2,options:['Lire','Écrire','Calculer','Ne se prononce pas']},
+  {type:'matrix',id:'m_perso',label:'Entretien personnel',cols:RATE,
+   rows:['Faire sa toilette','S\'habiller / se déshabiller','Manger et boire des aliments préparés','Couper ses aliments','Assurer l\'hygiène de l\'élimination urinaire','Assurer l\'hygiène de l\'élimination fécale']},
+  {type:'matrix',id:'m_dom',label:'Vie quotidienne et vie domestique',cols:RATE,
+   rows:['Prendre son traitement','Gérer son stress','Faire les courses','Préparer le repas','Entretien courant du logement','Démarches administratives','Gérer son budget']},
+  {type:'textarea',id:'r_perso_precis',label:'Précisions (incontinence, supervision ou stimulation nécessaire…)',rows:2},
+  {type:'textarea',id:'r_social',label:'Réinvestissement de la vie sociale et familiale',rows:2},
+  {type:'textarea',id:'r_scol',label:'Retentissement sur la scolarité et les études supérieures',rows:2},
+  {type:'textarea',id:'r_emploi',label:'Retentissement sur l\'emploi (aptitude, maintien, reclassement)',rows:2},
+ ]},
+{sec:'7',icon:'📌',title:'7. Remarques ou observations complémentaires',
+ desc:'Pronostic et besoins pré-remplis selon les pathologies cochées.',blocks:[
+  {type:'textarea',id:'o_remarques',label:'Remarques ou observations complémentaires',auto:true,rows:6},
+ ]},
+{sec:'8',icon:'✍️',title:'8. Coordonnées et signature',
+ desc:'Bloc signature laissé VIERGE — à dater et signer manuellement.',blocks:[
+  {type:'check',id:'g_mt',label:'Médecin traitant',cols:2,options:['Oui','Non']},
+  {type:'check',id:'g_remis',label:'Document',cols:1,options:['Rédigé à la demande du patient et remis en main propre']},
+ ]},
+{sec:'9',icon:'📄',title:'Demande MDPH 15692*01 — identité & droits',
+ desc:'Renseigne ces champs pour remplir et télécharger le VRAI formulaire officiel 15692*01.',blocks:[
+  {type:'group',label:'Identité du demandeur'},
+  {type:'text',id:'id_nom',label:'Nom de naissance'},
+  {type:'text',id:'id_usage',label:'Nom d\'usage (facultatif)'},
+  {type:'text',id:'id_prenom',label:'Prénom(s)'},
+  {type:'radio',id:'id_sexe',label:'Sexe',options:['Masculin','Féminin']},
+  {type:'text',id:'id_naiss',label:'Date de naissance (JJ/MM/AAAA)'},
+  {type:'text',id:'id_ss',label:'N° de sécurité sociale (15 chiffres)'},
+  {type:'text',id:'id_commune_naiss',label:'Commune de naissance'},
+  {type:'text',id:'id_adresse',label:'Adresse (n° et rue)'},
+  {type:'text',id:'id_cp',label:'Code postal'},
+  {type:'text',id:'id_commune',label:'Commune'},
+  {type:'text',id:'id_tel',label:'Téléphone'},
+  {type:'text',id:'id_email',label:'E-mail'},
+  {type:'group',label:'Demande'},
+  {type:'radio',id:'id_demande_type',label:'Type de demande',options:['Première demande','Renouvellement (droits identiques)','Situation a changé','Réévaluation']},
+  {type:'radio',id:'id_age',label:'Âge du demandeur',options:['20 ans et plus','Moins de 20 ans']},
+  {type:'check',id:'id_droits',label:'Droits / prestations demandés',cols:2,
+   options:['AAH','PCH','RQTH','Orientation professionnelle','CMI invalidité','CMI stationnement','Orientation médico-sociale','AEEH (enfant)']},
+ ]},
+];
+
+/* ===== état ===== */
+const V={}, C={}, M={}, MROWS={}, DOM={}, AUTO={}, MAPI={};
+let signsAuto=true;
+
+const SEC_TITLE={'1':'1. Pathologie motivant la demande','2':'2. Histoire de la pathologie',
+ '3':'3. Description clinique actuelle','4':'4. Déficiences sensorielles','5':'5. Traitements et prises en charge',
+ '6':'6. Retentissement fonctionnel et/ou relationnel','7':'7. Remarques / observations complémentaires',
+ '8':'8. Coordonnées et signature'};
+
+/* ===== construction du formulaire ===== */
+function build(){
+  const root=$('#form');
+  FORM.forEach(sec=>{
+    const det=el(`<details class="section" id="sec-${sec.sec}" ${sec.sec==='1'?'open':''}>
+      <summary><span class="sec-icon">${sec.icon}</span>
+      <span class="sec-titles"><h2>${sec.title}</h2><p>${sec.desc}</p></span>
+      <span class="sec-count empty" id="cnt-${sec.sec}">0</span><span class="chev">▾</span></summary>
+      <div class="sec-body" id="body-${sec.sec}"></div></details>`);
+    root.appendChild(det);
+    const body=$('#body-'+sec.sec,det);
+    if(sec.rate) body.appendChild(el(`<p class="legend-rate"><b>Échelle :</b>
+      <b>A</b> ${RATE_TXT.A} · <b>B</b> ${RATE_TXT.B} · <b>C</b> ${RATE_TXT.C} · <b>D</b> ${RATE_TXT.D} · <b>NSP</b> ${RATE_TXT.NSP}</p>`));
+    sec.blocks.forEach(b=>body.appendChild(renderBlock(b,sec)));
+  });
+}
+
+function labelHTML(b){ return `<p class="b-label">${b.label}${b.auto?'<span class="auto-tag">auto</span>':''}</p>`; }
+
+function renderBlock(b,sec){
+  if(b.type==='group') return el(`<p class="grp-title" style="font-size:.84rem;color:var(--teal-ink)">▸ ${b.label}</p>`);
+  const box=el(`<div class="block"></div>`);
+  if(b.label) box.appendChild(el(labelHTML(b)));
+  if(b.sub) box.appendChild(el(`<p class="b-sub">${b.sub}</p>`));
+
+  if(b.type==='palette'){
+    C[b.id]=new Set();
+    b.groups.forEach(g=>{
+      box.appendChild(el(`<p class="grp-title">${g.t}</p>`));
+      const grid=el(`<div class="opts c2"></div>`);
+      g.items.forEach(it=>{
+        const lab=el(`<label class="opt"><input type="checkbox"><span>${it}</span></label>`);
+        $('input',lab).addEventListener('change',e=>{
+          e.target.checked?C[b.id].add(it):C[b.id].delete(it);
+          recomputeAuto(); refresh();
+        });
+        grid.appendChild(lab);
+      });
+      box.appendChild(grid);
+    });
+  }
+  else if(b.type==='text'||b.type==='textarea'){
+    V[b.id]=''; if(b.auto) AUTO[b.id]=true;
+    const node=b.type==='text'?el(`<input type="text">`):el(`<textarea rows="${b.rows||2}"></textarea>`);
+    DOM[b.id]=node;
+    node.addEventListener('input',e=>{
+      V[b.id]=e.target.value;
+      if(b.auto) AUTO[b.id]=(e.target.value.trim()==='');   // vidé → redevient auto
+      refresh();
+    });
+    box.appendChild(node);
+  }
+  else if(b.type==='radio'){
+    V[b.id]='';
+    const p=el(`<div class="pills"></div>`);
+    b.options.forEach(o=>{
+      const btn=el(`<button type="button" class="pill-opt">${o}</button>`);
+      btn.addEventListener('click',()=>{ V[b.id]=(V[b.id]===o)?'':o;
+        $$('.pill-opt',p).forEach(x=>x.classList.toggle('on',x.textContent===V[b.id])); refresh(); });
+      p.appendChild(btn);
+    });
+    box.appendChild(p);
+  }
+  else if(b.type==='check'){
+    C[b.id]=new Set();
+    const grid=el(`<div class="opts c${b.cols||2}"></div>`);
+    b.options.forEach(o=>{
+      const lab=el(`<label class="opt"><input type="checkbox"><span>${o}</span></label>`);
+      $('input',lab).addEventListener('change',e=>{ e.target.checked?C[b.id].add(o):C[b.id].delete(o); refresh(); });
+      grid.appendChild(lab);
+    });
+    box.appendChild(grid);
+  }
+  else if(b.type==='medsearch'){
+    const wrap=el(`<div class="medbox"></div>`);
+    const inp=el(`<input type="text" placeholder="ex. « ram », « stat », « bpco »…">`);
+    const hint=el(`<div class="medhint" id="medhint"></div>`);
+    const list=el(`<div class="medlist" style="display:none"></div>`);
+    wrap.appendChild(inp); wrap.appendChild(hint); wrap.appendChild(list);
+    const closeList=()=>{ list.style.display='none'; list.innerHTML=''; };
+    inp.addEventListener('input',()=>{
+      const q=norm(inp.value);
+      if(q.length<3){ closeList(); return; }
+      const res=MEDS.filter(m=>norm(m.n).includes(q)||norm(m.c).includes(q)).slice(0,10);
+      if(!res.length){ closeList(); return; }
+      list.innerHTML=''; res.forEach(m=>{
+        const d=el(`<div><b>${m.n}</b> <small>— ${m.c}</small></div>`);
+        d.addEventListener('click',()=>{ pickMed(m); inp.value=''; closeList(); inp.focus(); });
+        list.appendChild(d);
+      });
+      list.style.display='';
+    });
+    inp.addEventListener('blur',()=>setTimeout(closeList,180));
+    box.appendChild(wrap);
+  }
+  else if(b.type==='matrix'){
+    if(b.freerows){
+      MROWS[b.id]=[];
+      const wrap=el(`<div class="matrix"></div>`);
+      const add=el(`<div class="addrow" style="padding:8px 11px"><button type="button" class="btn" style="padding:5px 12px;font-size:.82rem">+ Ajouter un signe</button></div>`);
+      const addRow=(label='')=>{
+        const idx=MROWS[b.id].length; MROWS[b.id].push({label,col:''});
+        const row=el(`<div class="mrow"><input type="text" class="mlab" placeholder="Signe clinique invalidant…"><div class="mbtns"></div></div>`);
+        const inp=$('.mlab',row); inp.value=label;
+        inp.addEventListener('input',e=>{ MROWS[b.id][idx].label=e.target.value;
+          if(b.auto) signsAuto=MROWS[b.id].every(r=>!r.label.trim()); refresh(); });
+        const btns=$('.mbtns',row);
+        b.cols.forEach((c,ci)=>{ const tag=['P','R','Pn'][ci]||c[0];
+          const mb=el(`<button type="button" class="mbtn" data-v="${tag}" title="${c}">${tag}</button>`);
+          mb.addEventListener('click',()=>{ MROWS[b.id][idx].col=(MROWS[b.id][idx].col===c)?'':c;
+            $$('.mbtn',btns).forEach((x,xi)=>x.classList.toggle('on',b.cols[xi]===MROWS[b.id][idx].col)); refresh(); });
+          btns.appendChild(mb);
+        });
+        wrap.insertBefore(row,add);
+      };
+      wrap.appendChild(add);
+      $('button',add).addEventListener('click',()=>{ addRow(); if(b.auto) signsAuto=false; });
+      MAPI[b.id]={ setRows:(labels)=>{ $$('.mrow',wrap).forEach(r=>r.remove()); MROWS[b.id]=[]; labels.forEach(l=>addRow(l)); if(!labels.length) addRow(); } };
+      box.appendChild(wrap);
+      box.appendChild(el(`<p class="b-sub" style="margin-top:6px">P = Permanents · R = Réguliers (&gt;15j/mois) · Pn = Ponctuel (&lt;15j/mois)</p>`));
+      addRow();
+    } else {
+      M[b.id]={};
+      const wrap=el(`<div class="matrix"></div>`);
+      b.rows.forEach(r=>{ M[b.id][r]='';
+        const row=el(`<div class="mrow"><span class="mlab">${r}</span><div class="mbtns"></div></div>`);
+        const btns=$('.mbtns',row);
+        b.cols.forEach(c=>{ const mb=el(`<button type="button" class="mbtn" data-v="${c}">${c}</button>`);
+          mb.addEventListener('click',()=>{ M[b.id][r]=(M[b.id][r]===c)?'':c;
+            $$('.mbtn',btns).forEach(x=>x.classList.toggle('on',x.dataset.v===M[b.id][r])); refresh(); });
+          btns.appendChild(mb);
+        });
+        wrap.appendChild(row);
+      });
+      box.appendChild(wrap);
+    }
+  }
+  return box;
+}
+
+/* ===== médicament choisi ===== */
+function pickMed(m){
+  const cls=`${m.n} (${m.c})`;
+  V.t_classes=V.t_classes?V.t_classes+' ; '+cls:cls;
+  V.t_effets=V.t_effets?V.t_effets+' ; '+`${m.n} : ${m.es}`:`${m.n} : ${m.es}`;
+  if(DOM.t_classes) DOM.t_classes.value=V.t_classes;
+  if(DOM.t_effets) DOM.t_effets.value=V.t_effets;
+  AUTO.t_classes=false; AUTO.t_effets=false;
+  toast('✓ '+m.n+' ajouté');
+  refresh();
+}
+
+/* ===== pré-remplissage automatique ===== */
+function setAuto(id,txt){ V[id]=txt; if(DOM[id]) DOM[id].value=txt; }
+function recomputeAuto(){
+  const checked=[...(C.pal_patho||[])];
+  if(AUTO.p_motiv!==false) setAuto('p_motiv', checked[0]?kbMotiv(checked[0]):'');
+  if(AUTO.p_autres!==false) setAuto('p_autres', checked.slice(1).map(kbMotiv).join(' ; '));
+  if(AUTO.h_atcd!==false) setAuto('h_atcd', checked.map(kbMotiv).join(' ; '));
+  if(AUTO.o_remarques!==false){
+    const parts=checked.filter(p=>KB[p]).map(p=>`• ${p}\n  Pronostic : ${KB[p].pronostic}\n  Besoins : ${KB[p].besoin}`);
+    setAuto('o_remarques', parts.join('\n\n'));
+  }
+  // médicament habituel (proposition) selon pathologie motivante
+  const motiv=checked[0]; const hint=$('#medhint');
+  if(hint){
+    if(motiv&&KB[motiv]&&KB[motiv].traitement){
+      hint.innerHTML=`<b>Traitement habituel</b> (${motiv}) : ${KB[motiv].traitement}
+        <button type="button" class="chip-ins" id="ins-cls">insérer</button>`;
+      $('#ins-cls',hint).addEventListener('click',()=>{
+        const t=KB[motiv].traitement;
+        V.t_classes=V.t_classes?V.t_classes+' ; '+t:t;
+        if(DOM.t_classes) DOM.t_classes.value=V.t_classes; AUTO.t_classes=false; refresh();
+      });
+    } else hint.innerHTML='';
+  }
+  // signes invalidants (3) de la pathologie motivante
+  if(signsAuto && MAPI.c_signes){
+    if(motiv&&KB[motiv]&&KB[motiv].signs){
+      MAPI.c_signes.setRows(KB[motiv].signs.map(s=>`${s.t} : ${s.d}`));
+    } else MAPI.c_signes.setRows([]);
+  }
+}
+
+/* ===== compteurs ===== */
+function secFilled(secId){
+  let n=0;
+  FORM.find(s=>s.sec===secId).blocks.forEach(b=>{
+    if(b.type==='text'||b.type==='textarea'||b.type==='radio'){ if((V[b.id]||'').trim()) n++; }
+    else if(b.type==='check'||b.type==='palette'){ n+=C[b.id]?C[b.id].size:0; }
+    else if(b.type==='matrix'){ if(b.freerows){ n+=(MROWS[b.id]||[]).filter(r=>r.label.trim()||r.col).length; }
+      else { n+=Object.values(M[b.id]||{}).filter(Boolean).length; } }
+  });
+  return n;
+}
+function counts(){ FORM.forEach(s=>{ const n=secFilled(s.sec),b=$('#cnt-'+s.sec);
+  if(b){ b.textContent=n; b.classList.toggle('empty',n===0); } }); }
+
+/* ===== rendu du Cerfa (aperçu) ===== */
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function field(k,v){ return `<div class="f"><span class="k">${k} :</span><span class="v">${v?esc(v):''}</span></div>`; }
+function blk(v){ return `<div class="blk">${v?esc(v):'<span class="muted">—</span>'}</div>`; }
+function chks(id,opts){ return (opts||FORMopts(id)).map(o=>`<span class="chk">${C[id]&&C[id].has(o)?'☒':'☐'} ${esc(o)}</span>`).join(''); }
+function radioChks(id,opts){ return opts.map(o=>`<span class="chk">${V[id]===o?'☒':'☐'} ${esc(o)}</span>`).join(''); }
+function FORMopts(id){ let r=[]; FORM.forEach(s=>s.blocks.forEach(b=>{ if(b.id===id&&b.options) r=b.options; })); return r; }
+function matDisp(label,id,rows){ const m=M[id]||{};
+  const body=rows.map(r=>{ const v=m[r]; return `<div class="mline"><span>${esc(r)}</span><span class="let">${v?v:'<span class="muted">—</span>'}</span></div>`; }).join('');
+  return `<div style="margin:6px 0"><b>${esc(label)}</b>${body}</div>`; }
+
+function renderCerfa(){
+  const today=new Date().toLocaleDateString('fr-FR');
+  const signs=(MROWS.c_signes||[]).filter(r=>r.label.trim());
+  const c=$('#cerfa');
+  let h=`<div class="doc-h"><h3>CERTIFICAT MÉDICAL</h3>
+    <div class="sub">à joindre à une demande à la MDPH — Cerfa n°15695*01 · validité 12 mois</div></div>`;
+
+  h+=`<h4>1. Pathologie motivant la demande</h4>`;
+  h+=field('Pathologie motivant la demande',V.p_motiv);
+  h+=field('Autres pathologies éventuelles',V.p_autres);
+  h+=`<div class="small">Éléments essentiels à retenir</div>`+blk(V.p_elements);
+
+  h+=`<h4>2. Histoire de la pathologie</h4>`;
+  h+=`<div>${radioChks('h_origine',['Congénitale','Maladie','Accident vie privée','Accident du travail','Maladie professionnelle'])}</div>`;
+  h+=`<div>${radioChks('h_date',['À la naissance','Depuis moins d\'un an','Depuis 1 à 5 ans','Depuis plus de 5 ans'])}</div>`;
+  h+=`<div class="small">Antécédents en rapport avec le handicap</div>`+blk(V.h_atcd);
+  if((V.h_retard||'').trim()) h+=`<div class="small">Retard d'acquisitions (enfant)</div>`+blk(V.h_retard);
+
+  h+=`<h4>3. Description clinique actuelle</h4>`;
+  h+=`<div class="f"><span class="k">Poids :</span><span class="v">${esc(V.c_poids)}</span>
+      <span class="k" style="margin-left:10px">Taille :</span><span class="v">${esc(V.c_taille)}</span>
+      <span class="k" style="margin-left:10px">Latéralité :</span><span class="v">${esc(V.c_lat)}</span></div>`;
+  h+=`<div class="small">Signes cliniques invalidants et fréquence</div>`;
+  if(signs.length) h+=signs.map(r=>`<div class="blk"><b>•</b> ${esc(r.label)}${r.col?` <i>(${esc(r.col)})</i>`:''}</div>`).join('');
+  else h+=blk('');
+  if((V.c_precis||'').trim()) h+=`<div class="small">Précisions</div>`+blk(V.c_precis);
+  h+=`<div style="margin-top:4px">${chks('c_evol')}</div>`;
+
+  h+=`<h4>4. Déficiences sensorielles</h4>`;
+  h+=`<div>${chks('s_def')}</div>`;
+  if((V.s_audi||'').trim()) h+=`<div class="small">Observations auditives</div>`+blk(V.s_audi);
+  if((V.s_visu||'').trim()) h+=`<div class="small">Observations visuelles</div>`+blk(V.s_visu);
+
+  h+=`<h4>5. Traitements et prises en charge</h4>`;
+  h+=`<div class="small">Classes thérapeutiques / médicaments</div>`+blk(V.t_classes);
+  h+=`<div class="small">Effets secondaires</div>`+blk(V.t_effets);
+  if((V.t_contraintes||'').trim()) h+=`<div class="small">Autres contraintes</div>`+blk(V.t_contraintes);
+  if((V.t_regime||'').trim()) h+=field('Régime alimentaire',V.t_regime);
+  if(C.t_autres&&C.t_autres.size) h+=`<div>${chks('t_autres')}</div>`;
+  if(C.t_sanit&&C.t_sanit.size) h+=`<div class="small">Prise en charge sanitaire régulière</div><div>${chks('t_sanit')}</div>`;
+  if(C.t_pluri&&C.t_pluri.size) h+=`<div class="small">Suivis pluridisciplinaires</div><div>${chks('t_pluri')}</div>`;
+  if((V.t_projet||'').trim()) h+=`<div class="small">Projet thérapeutique</div>`+blk(V.t_projet);
+  const appAny=['a_audi','a_mob','a_vis','a_alim','a_resp','a_parole'].some(id=>C[id]&&C[id].size)||(V.a_precis||'').trim();
+  if(appAny){
+    h+=`<div class="small" style="margin-top:6px"><b>Appareillage</b></div>`;
+    [['Corrections auditives','a_audi'],['Aide à la mobilité','a_mob'],['Appareillage visuel','a_vis'],
+     ['Alimentation/Élimination','a_alim'],['Aides respiratoires','a_resp'],['Aide à la parole','a_parole']]
+     .forEach(([lab,id])=>{ if(C[id]&&C[id].size) h+=`<div><i>${lab} :</i> ${chks(id)}</div>`; });
+    if((V.a_precis||'').trim()) h+=blk(V.a_precis);
+  }
+
+  h+=`<h4>6. Retentissement fonctionnel et/ou relationnel</h4>`;
+  if((V.r_perim||'').trim()) h+=field('Périmètre de marche',V.r_perim);
+  if(C.r_aides_int&&C.r_aides_int.size) h+=`<div><i>Aides (intérieur) :</i> ${chks('r_aides_int')}</div>`;
+  if(C.r_aides_ext&&C.r_aides_ext.size) h+=`<div><i>Aides (extérieur) :</i> ${chks('r_aides_ext')}</div>`;
+  if(C.r_depl_div&&C.r_depl_div.size) h+=`<div>${chks('r_depl_div')}</div>`;
+  h+=matDisp('Mobilité, manipulation / capacité motrice','m_mot',['Marcher','Se déplacer à l\'intérieur','Se déplacer à l\'extérieur','Préhension (main non dominante)','Préhension (main dominante)','Motricité fine']);
+  h+=matDisp('Communication','m_comm',['Communiquer avec autrui','Utiliser le téléphone','Utiliser d\'autres appareils/techniques de communication']);
+  h+=matDisp('Cognition / capacité cognitive','m_cog',['Orientation dans le temps','Orientation dans l\'espace','Gestion de la sécurité personnelle','Maîtrise du comportement']);
+  if((V.r_cog_precis||'').trim()) h+=blk(V.r_cog_precis);
+  if(C.r_sait&&C.r_sait.size) h+=`<div><i>La personne sait :</i> ${chks('r_sait')}</div>`;
+  h+=matDisp('Entretien personnel','m_perso',['Faire sa toilette','S\'habiller / se déshabiller','Manger et boire des aliments préparés','Couper ses aliments','Assurer l\'hygiène de l\'élimination urinaire','Assurer l\'hygiène de l\'élimination fécale']);
+  h+=matDisp('Vie quotidienne et vie domestique','m_dom',['Prendre son traitement','Gérer son stress','Faire les courses','Préparer le repas','Entretien courant du logement','Démarches administratives','Gérer son budget']);
+  if((V.r_perso_precis||'').trim()) h+=blk(V.r_perso_precis);
+  if((V.r_social||'').trim()) h+=`<div class="small">Vie sociale et familiale</div>`+blk(V.r_social);
+  if((V.r_scol||'').trim()) h+=`<div class="small">Scolarité / études</div>`+blk(V.r_scol);
+  if((V.r_emploi||'').trim()) h+=`<div class="small">Emploi</div>`+blk(V.r_emploi);
+
+  h+=`<h4>7. Remarques ou observations complémentaires</h4>`+blk(V.o_remarques);
+
+  h+=`<h4>8. Coordonnées et signature</h4>`;
+  h+=`<div>${radioPair('Médecin traitant','g_mt')}</div>`;
+  if(C.g_remis&&C.g_remis.size) h+=`<div>${chks('g_remis')}</div>`;
+  h+=field('Médecin','');
+  h+=field('Identifiant RPPS','');
+  h+=`<div class="sign"><div class="box">Fait à ……………… le ${today}<div class="line"></div><div class="small">Signature et cachet du médecin</div></div>
+    <div class="box"><div class="line"></div><div class="small">Signature du patient</div></div></div>`;
+  h+=`<div class="small" style="margin-top:8px">Aide à la rédaction — à reporter sur le formulaire officiel, dater, signer et cacheter.</div>`;
+  c.innerHTML=h;
+}
+function radioPair(label,id){ return `${label} : <span class="chk">${C[id]&&C[id].has('Oui')?'☒':'☐'} Oui</span> <span class="chk">${C[id]&&C[id].has('Non')?'☒':'☐'} Non</span>`; }
+
+/* ===== boucle de rafraîchissement ===== */
+function refresh(){ counts(); if(typeof schedulePreview==='function') schedulePreview(); }
+
+/* ===== actions ===== */
+function toast(m){const t=$('#toast');t.textContent=m;setTimeout(()=>{if(t.textContent===m)t.textContent='';},2600);}
+function dl(){ toast('Choisissez « Enregistrer en PDF »'); setTimeout(()=>window.print(),120); }
+function reset(){ if(confirm('Effacer toutes les saisies ?')) location.reload(); }
+
+/* ===== remplissage du VRAI formulaire officiel 15692*01 (pdf-lib) ===== */
+const DROITS_FIELD=(d,enfant)=>({
+  'AAH':'Vous avez plus de 20 ans Allocations aux adultes handicapés',
+  'RQTH':'RQTH',
+  'Orientation professionnelle':'Orientation professionnelle',
+  'Orientation médico-sociale':'Vous avez plus de 20 ans Orientation vers un établissement ou service médico-social pour adultes',
+  'PCH':enfant?'Vous avez moins de 20 ans Prestation de compensation du handicap':'Prestation de compensation du handicap',
+  'CMI invalidité':enfant?'Vous avez moins de 20 ans Carte mobilité inclusion Mention invalidité':'Vous avez plus de 20 ans Carte mobilité inclusion Mention invalidité',
+  'CMI stationnement':enfant?'Vous avez moins de 20 ans Carte mobilité inclusion Mention stationnement':'Vous avez plus de 20 ans Carte mobilité inclusion Mention stationnement',
+  'AEEH (enfant)':'Vous avez moins de 20 ans Allocation d\'éducation de l\'enfant handicapé'
+}[d]);
+const DEMANDE_FIELD={'Première demande':'Première demande à la MDPH','Renouvellement (droits identiques)':'Renouvellement droits identiques','Situation a changé':'Ma situation a changé','Réévaluation':'Réévaluation de ma situation'};
+
+async function fillDemande(){
+  if(!window.PDFLib){ alert('pdf-lib non chargé (vendor/pdf-lib.min.js).'); return; }
+  let bytes;
+  try{ const r=await fetch('cerfa_15692.pdf'); if(!r.ok) throw 0; bytes=await r.arrayBuffer(); }
+  catch(e){ toast('PDF officiel introuvable'); alert("Impossible de charger « cerfa_15692.pdf ».\n\nOuvre l'application via un serveur (http://localhost ou GitHub Pages). En double-clic local (file://), le navigateur bloque le chargement du PDF."); return; }
+  toast('Génération du PDF…');
+  const {PDFDocument}=window.PDFLib;
+  const doc=await PDFDocument.load(bytes);
+  const form=doc.getForm();
+  const T=(n,v)=>{ if(v==null||String(v).trim()==='')return; try{form.getTextField(n).setText(String(v));}catch(e){} };
+  const X=n=>{ if(!n)return; try{form.getCheckBox(n).check();}catch(e){} };
+  const today=new Date();
+
+  // identité
+  T('Nom de naissance p2',V.id_nom); T('Nom d\'usage p2',V.id_usage); T('Prénoms p2',V.id_prenom);
+  T('NOM BAS DE PAGE',V.id_nom); T('PRENOM BAS DE PAGE',V.id_prenom);
+  if(V.id_sexe==='Masculin') X('Sexe H p2'); if(V.id_sexe==='Féminin') X('Sexe F p2');
+  const dn=String(V.id_naiss||'').split(/[\/\-.]/); if(dn.length===3){ T('DN J p2',dn[0]); T('DN M p2',dn[1]); T('DN A p2',dn[2]); }
+  { const s=String(V.id_ss||'').replace(/\s/g,''); for(let i=0;i<15;i++) if(s[i]) T('Numero SS '+(i+1),s[i]); }
+  T('Commune de naissance p2',V.id_commune_naiss); if((V.id_commune_naiss||'').trim()) X('Pays de naissance France p2');
+  T('Adresse p2',V.id_adresse);
+  { const s=String(V.id_cp||'').replace(/\s/g,''); for(let i=0;i<5;i++) if(s[i]) T('Code postal '+(i+1)+' p2',s[i]); }
+  T('Commune p2',V.id_commune); T('Numéro de téléphone p2',V.id_tel);
+  T('Adresse e-mail p2',V.id_email); if((V.id_email||'').trim()) X('E-mail p2');
+
+  // type de demande + date
+  X(DEMANDE_FIELD[V.id_demande_type]);
+  T('Date de rédaction formulaire Jour',String(today.getDate()).padStart(2,'0'));
+  T('Date de rédaction formulaire Mois',String(today.getMonth()+1).padStart(2,'0'));
+  T('Date de rédaction formulaire Année',String(today.getFullYear()));
+
+  // droits
+  const enfant=V.id_age==='Moins de 20 ans';
+  (C.id_droits||new Set()).forEach(d=>X(DROITS_FIELD(d,enfant)));
+
+  // besoins vie quotidienne déduits du retentissement (note C/D = aide humaine)
+  const need=v=>v==='C'||v==='D'; const mp=M.m_perso||{}, md=M.m_dom||{};
+  if(need(mp['Faire sa toilette'])) X("Besoin pour l'hygiène corporelle");
+  if(need(mp['S\'habiller / se déshabiller'])) X("Besoin pour s'habiller");
+  if(need(mp['Manger et boire des aliments préparés'])) X('Besoin pour prendre les repas');
+  if(need(md['Préparer le repas'])) X('Besoin pour préparer les repas');
+  if(need(md['Faire les courses'])) X('Besoin pour faire les courses');
+  if(need(md['Entretien courant du logement'])) X('Besoin pour faire le ménage');
+  if(need(md['Gérer son budget'])) X('Besoin pour gérer son budget');
+  if(need(md['Démarches administratives'])) X('Besoin pour régler les dépenses courantes');
+  if(need(md['Prendre son traitement'])) X('Besoin pour prendre soin de sa santé');
+
+  // synthèse médicale → renseignements vie quotidienne / pro / scolaire
+  const synth=[];
+  if((V.p_motiv||'').trim()) synth.push('Pathologie principale : '+V.p_motiv.trim()+'.');
+  if((V.p_autres||'').trim()) synth.push('Autres pathologies : '+V.p_autres.trim()+'.');
+  const sg=(MROWS.c_signes||[]).filter(r=>r.label.trim()).map(r=>r.label.trim());
+  if(sg.length) synth.push('Retentissement : '+sg.join(' '));
+  T('Autres renseignements concernant votre vie quotidienne', synth.join(' '));
+  T('Autres renseignements', V.o_remarques);
+  T('Autres renseignements importants sur votre situation professionnelle', V.r_emploi);
+  if((V.r_scol||'').trim()){ T('Demandes relatives à la vie scolaire Préciser', V.r_scol); X('Demandes relatives à la vie scolaire'); }
+
+  const out=await doc.save();
+  const blob=new Blob([out],{type:'application/pdf'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='demande_MDPH_15692_rempli.pdf'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{a.remove(); URL.revokeObjectURL(a.href);},1000);
+  toast('✓ Demande 15692 officielle téléchargée');
+}
+
+/* ===== aperçu + remplissage du VRAI Cerfa 15695*01 officiel ===== */
+function certMsg(m){ const e=$('#cert-msg'); if(e){ e.textContent=m; setTimeout(()=>{if(e.textContent===m)e.textContent='';},3000);} }
+let off15695=null, offError=false, lastCertUrl=null;
+async function loadOfficial(){
+  if(off15695) return off15695;
+  try{ const r=await fetch('cerfa_15695.pdf'); if(!r.ok) throw 0; off15695=await r.arrayBuffer(); return off15695; }
+  catch(e){ offError=true; return null; }
+}
+async function buildCert(){
+  if(!window.CERT15695OFF) throw new Error('module officiel non chargé');
+  const bytes=await loadOfficial();
+  if(!bytes) throw new Error('PDF officiel introuvable (servez en http)');
+  return await window.CERT15695OFF.fill(bytes.slice(0), {V,C,M,MROWS});
+}
+let previewTimer=null;
+function schedulePreview(){ clearTimeout(previewTimer); previewTimer=setTimeout(updatePreview,700); }
+async function updatePreview(){
+  const fb=$('#cerfa-fallback'), fr=$('#cerfa-frame');
+  try{
+    const out=await buildCert();
+    const blob=new Blob([out],{type:'application/pdf'});
+    const url=URL.createObjectURL(blob);
+    if(fr) fr.src=url+'#toolbar=1&view=FitH';
+    if(fb) fb.style.display='none';
+    if(lastCertUrl) URL.revokeObjectURL(lastCertUrl); lastCertUrl=url;
+  }catch(e){ if(fb){ fb.style.display='flex'; fb.innerHTML='Aperçu indisponible : '+e.message+'.<br>Servez l\'app en http(s) (localhost / GitHub Pages).'; } }
+}
+async function downloadCert(){
+  certMsg('Génération…');
+  try{
+    const out=await buildCert();
+    const blob=new Blob([out],{type:'application/pdf'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='certificat_MDPH_15695_officiel_rempli.pdf'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{a.remove(); URL.revokeObjectURL(a.href);},1000);
+    certMsg('✓ Certificat officiel téléchargé');
+  }catch(e){ certMsg('Erreur : '+e.message); alert('Échec : '+e.message+'\n\nServez l\'application en http(s) (localhost ou GitHub Pages).'); }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  build(); recomputeAuto(); refresh();
+  $('#btn-15692').addEventListener('click',fillDemande);
+  $('#btn-reset').addEventListener('click',reset);
+  $('#btn-cert').addEventListener('click',downloadCert);
+  $('#btn-cert-top').addEventListener('click',downloadCert);
+  updatePreview();
+});
+</script>
+</body>
+</html>

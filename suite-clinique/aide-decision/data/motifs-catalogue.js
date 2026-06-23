@@ -5,7 +5,7 @@
  *   b = id d'une fiche d'interprétation biologique (window.BIOKB)
  *   p = id d'une fiche procédure / prévention (window.PROCEDURES)
  * Sinon = entrée « référence » (à approfondir, sources : Manuel du Généraliste,
- * Médecine Générale pour le Praticien, fiches dermato CESU — Drive du Dr Fuiano).
+ * Médecine Générale pour le Praticien, fiches dermato CESU).
  *
  * Format : { n, titre, icone, frequents:[motif], urgences:[motif] }
  *   motif : { l:libellé, f?:ficheClinique, b?:ficheBio, p?:ficheProcedure }

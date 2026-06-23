@@ -1,7 +1,7 @@
 /* ============================================================================
  * BASE DE CONNAISSANCES CLINIQUE — Aide au raisonnement (NE POSE PAS DE DIAGNOSTIC)
  * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » /
- *          « Fiches d'interrogatoire par symptôme » — Dr Mario Fuiano.
+ *          « Fiches d'interrogatoire par symptôme ».
  *
  * Format documenté dans docs/modele-de-donnees.md.
  * Prédicats (champ `when` / `showIf` / `w.when`) évalués par engine.js :
@@ -13,7 +13,7 @@
 window.KB = {
   meta: {
     version: "0.1.0",
-    source: "Manuel du Généraliste — Dr Mario Fuiano",
+    source: "Manuel du Généraliste",
     avertissement:
       "Outil d'aide au raisonnement clinique. Ne pose pas de diagnostic. " +
       "Toute conclusion doit être validée par un médecin."

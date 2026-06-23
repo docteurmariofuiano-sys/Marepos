@@ -14,7 +14,7 @@ médecin. Aucun diagnostic n'est délivré automatiquement ; toute conclusion es
 ## 2. Sources de connaissances
 
 - *Manuel du Généraliste — Du Symptôme au Diagnostic*
-- *Fiches d'interrogatoire par symptôme — Manuel du Généraliste* (Dr M. Fuiano)
+- *Fiches d'interrogatoire par symptôme — Manuel du Généraliste*
 
 Chaque fiche fournit : interrogatoire ciblé, diagnostics différentiels, signes
 discriminants, signe pathognomonique / d'orientation forte, red flags / urgences,

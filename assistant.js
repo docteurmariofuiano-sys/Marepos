@@ -14,6 +14,7 @@ const DOMAINES = {
   "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
+  "Médico-social":{c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
 
@@ -64,6 +65,9 @@ const APPS = [
   {t:"Échelles & évaluations", e:"📊", dom:"Transversal",
    d:"MoCA, CHA₂DS₂-VASc, AUDIT, RMQD, iatrogénie… échelles cliniques.",
    href:"suite-clinique/apps-externes/evaluations_medicales.html"},
+  {t:"MDPH Assist", e:"📝", dom:"Médico-social",
+   d:"Certificat médical MDPH (Cerfa 15695*01) : cochez les pathologies, le dossier se pré-remplit (demande, antécédents, signes invalidants, traitement + effet secondaire, pronostic, besoins) ; aperçu du Cerfa téléchargeable en PDF.",
+   href:"mdph/index.html"},
   /* ---- à venir (non encore fournies / volontairement exclues) ---- */
   {t:"Cotation NGAP/CCAM", e:"💶", dom:"Transversal", soon:true,
    d:"Cotation des actes — nécessite une base tarifaire Ameli sourcée et datée + disclaimer avant diffusion."},
