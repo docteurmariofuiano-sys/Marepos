@@ -62,10 +62,10 @@ window.CERT15695 = (function(){
     a_alim:{'Gastro/jéjunostomie d\'alimentation':[3,161,195],'Stomie digestive d\'élimination':[3,388,195],'Sonde urinaire':[3,161,170],'Stomie urinaire':[3,281,170]},
     a_resp:{'Trachéotomie':[3,161,140],'O₂':[3,281,140],'Appareil de ventilation':[3,388,140]},
     a_parole:{'Prothèse phonatoire':[3,161,110]},
-    r_aides_int:{'Cannes':[4,240,763],'Déambulateur':[4,240,746],'Fauteuil roulant manuel':[4,240,729],'Fauteuil roulant électrique':[4,240,712]},
-    r_aides_ext:{'Cannes':[4,358,763],'Déambulateur':[4,358,746],'Fauteuil roulant manuel':[4,358,729],'Fauteuil roulant électrique':[4,358,712]},
-    r_sait:{'Lire':[5,247,300],'Écrire':[5,330,300],'Calculer':[5,425,300],'Ne se prononce pas':[5,505,300]},
-    g_mt:{'Oui':[7,412,358],'Non':[7,462,358]}
+    r_aides_int:{'Cannes':[4,209,708],'Déambulateur':[4,209,686],'Fauteuil roulant manuel':[4,209,664],'Fauteuil roulant électrique':[4,209,642]},
+    r_aides_ext:{'Cannes':[4,330,708],'Déambulateur':[4,330,686],'Fauteuil roulant manuel':[4,330,664],'Fauteuil roulant électrique':[4,330,642]},
+    r_sait:{'Lire':[5,317,302],'Écrire':[5,364,302],'Calculer':[5,425,302],'Ne se prononce pas':[5,510,302]},
+    g_mt:{'Oui':[7,426,358],'Non':[7,483,358]}
   };
   const FREQX={'Permanents':380,'Réguliers (>15j/mois)':455,'Ponctuel (<15j/mois)':518};
   const FREQY=[203,153,103];
@@ -80,13 +80,22 @@ window.CERT15695 = (function(){
     const fontB=await doc.embedFont(StandardFonts.HelveticaBold);
     const P=doc.getPages();
     const COLOR=rgb(0.05,0.15,0.5);
-    const draw=(pi,x,y,txt,size)=>{ if(P[pi]) P[pi].drawText(String(txt),{x,y,size,font,color:COLOR}); };
-    const tick=(pi,x,y)=>{ if(P[pi]) P[pi].drawText('X',{x,y,size:9,font:fontB,color:COLOR}); };
+    // la police standard (WinAnsi) n'encode pas certains caractères (indices ₂, ≈, flèches…) : on assainit.
+    const SAN={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9',
+      '⁰':'0','¹':'1','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-',
+      '≈':'~','≤':'<=','≥':'>=','≠':'!=','→':'->','←':'<-','↔':'<->','⇒':'=>','·':'.','✓':'v','✔':'v','☒':'X','☐':'','′':"'",'″':'"','µ':'u'};
+    const san=t=>String(t==null?'':t)
+      .replace(/[₀-₉⁰¹⁴-⁹⁺⁻≈≤≥≠→←↔⇒·✓✔☒☐′″µ]/g,c=>SAN[c]!=null?SAN[c]:'')
+      .replace(/[⁰-₟←-⇿∀-⋿]/g,'');
+    const drawRaw=(pi,x,y,s,size,f)=>{ try{ P[pi].drawText(s,{x,y,size,font:f||font,color:COLOR}); }
+      catch(e){ try{ P[pi].drawText(s.replace(/[^\x00-\xFF]/g,''),{x,y,size,font:f||font,color:COLOR}); }catch(_){ } } };
+    const draw=(pi,x,y,txt,size)=>{ if(P[pi]) drawRaw(pi,x,y,san(txt),size); };
+    const tick=(pi,x,y)=>{ if(P[pi]) drawRaw(pi,x,y,'X',9,fontB); };
     const wrap=(pi,x,y,maxW,txt,size,lh)=>{ if(!txt)return; lh=lh||size+3;
-      const words=String(txt).split(/\s+/); let line='',yy=y;
+      const words=san(txt).split(/\s+/); let line='',yy=y;
       for(const w of words){ const t=line?line+' '+w:w;
-        if(font.widthOfTextAtSize(t,size)>maxW){ draw(pi,x,yy,line,size); line=w; yy-=lh; } else line=t; }
-      if(line) draw(pi,x,yy,line,size); };
+        if(font.widthOfTextAtSize(t,size)>maxW){ drawRaw(pi,x,yy,line,size); line=w; yy-=lh; } else line=t; }
+      if(line) drawRaw(pi,x,yy,line,size); };
 
     for(const id in MAP){ const m=MAP[id], v=V[id];
       if(v==null||String(v).trim()==='') continue;
