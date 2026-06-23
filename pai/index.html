@@ -1018,19 +1018,42 @@ function fillFicheCommon(form, pathoId){
 }
 function medsOf(pathoId){ return selMedObjs().filter(m=>m.patho===pathoId); }
 function medSummary(pathoId){ return medsOf(pathoId).map(m=>`${m.nom} (${m.poso}, ${m.voie})`).join(" · "); }
+function firstNum(s){ const m=String(s||"").match(/\d+/); return m?m[0]:""; }
+function shortDrug(m){ return m ? (m.dci && m.dci.length<=30 ? m.dci : m.nom) : ""; }
 
 const FILLERS = {
   asthme(form){
     const C=mkC(form), T=mkT(form);
+    // signes d'appel
     ["Toux sèche","Gêne respiratoire","Essoufflement","Respiration sifflante","Pâleur"].forEach(C);
-    if(state.meds.has("salbu_asthme")) C("Faire inhaler");
-    if(state.meds.has("cortico_asthme")){ const m=medsOf("asthme").find(x=>x.id==="cortico_asthme"); if(m) T("Traitement complémentaire par", `${m.nom} — ${m.poso}`); }
+    const salbu = medsOf("asthme").find(m=>m.id==="salbu_asthme");
+    if(salbu){
+      // cases « faire inhaler … chambre d'inhalation » des 3 paliers
+      ["Faire inhaler","toggle_8","suivie de 5 respirations","Faire inhaler_2","toggle_11",
+       "Poursuivre le traitement par inhalation","toggle_16","suivie de 5 respirations_2"].forEach(C);
+      T("Texte9", shortDrug(salbu));        // nom du bronchodilatateur (rempli dans les 3 cellules)
+      const n=firstNum(salbu.poso); if(n) T("Texte8", n);   // nombre de bouffées
+    }
+    const cort = medsOf("asthme").find(m=>m.id==="cortico_asthme");
+    if(cort) T("Traitement complémentaire par", `${cort.nom} — ${cort.poso}`);
   },
-  anaphylaxie(form){ /* signes pré-imprimés ; identité seulement */ },
+  anaphylaxie(form, pathoId){
+    const T=mkT(form);
+    const meds = medsOf(pathoId);
+    const adr = meds.find(m=>/adrenaline/.test(m.id));
+    if(adr) T("Texte1", adr.poso);                          // dose/spécialité adrénaline
+    const ah  = meds.find(m=>/antihist/.test(m.id));
+    if(ah)  T("Texte1234", `${ah.nom} — ${ah.poso}`);       // antihistaminique (réaction modérée)
+    const salbu = meds.find(m=>/salbu/.test(m.id));
+    if(salbu){ T("Texte3", shortDrug(salbu)); const n=firstNum(salbu.poso); if(n) T("Texte2", n); }
+  },
   diabete(form){
     const C=mkC(form);
+    // signes d'hypoglycémie (modérée puis sévère)
     ["Pâleur","Sueurs","Tremblements","Difficultés pour parler","Agitation","Somnolence","Agressivité inhabituelle"].forEach(C);
     ["Perte de connaissance avec ou sans","Somnolence extrême","Hypoglycémie et impossibilité de"].forEach(C);
+    // disponibilité du glucagon (les doses chiffrées restent au médecin : individualisées)
+    if(state.meds.has("glucagon")){ C("Injecter le Glucagen en souscutané ou intramusculaire"); }
   },
   epilepsie(form){
     const C=mkC(form), T=mkT(form);
