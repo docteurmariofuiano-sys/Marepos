@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALD Express — Renouvellement en 1 clic</title>
+<!--
+  ALD Express — texte de renouvellement d'ALD en 1 clic.
+  100% local, sans backend ni librairie. Double-clic pour ouvrir.
+  Liste ALD 30 officielle (29 affections actives ; ALD 12 / HTA sévère retirée en 2011).
+  Le texte reflète les critères HAS de MAINTIEN (chronicité, soins actifs > 6 mois,
+  surveillance, suivi spécialisé). Il N'INVENTE aucune donnée patient.
+  Décision finale = médecin-conseil.
+-->
+<style>
+:root{
+  --bg:#eef2f5;--card:#fff;--card2:#f4f7f9;--ink:#16242f;--soft:#5a6b78;
+  --line:#d6e0e8;--line2:#bcccd9;--blue:#15506e;--blue2:#2c7da0;--ghost:#e6f0f5;
+  --ok:#2e7d5b;--warn:#b7791f;--shadow:0 1px 2px rgba(20,40,55,.06),0 6px 18px rgba(20,40,55,.06);
+}
+[data-theme="dark"]{
+  --bg:#0d1820;--card:#15242f;--card2:#1b2e3b;--ink:#e7eef3;--soft:#9fb1bf;
+  --line:#26404f;--line2:#33576b;--blue:#7fc3e3;--blue2:#5aa9cf;--ghost:#173341;
+  --ok:#54c08a;--warn:#e0ad55;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.top{position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.logo{width:34px;height:34px;border-radius:8px;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;
+  background:linear-gradient(150deg,var(--blue),var(--blue2))}
+.title h1{font-size:15px;margin:0;letter-spacing:-.2px}
+.title p{font-size:11.5px;margin:1px 0 0;color:var(--soft)}
+.spacer{margin-left:auto}
+button{font-family:inherit;cursor:pointer}
+.icbtn{border:1px solid var(--line2);background:var(--card);color:var(--ink);width:36px;height:36px;border-radius:8px;font-size:15px}
+.icbtn:hover{border-color:var(--blue2);color:var(--blue)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:16px 18px 40px}
+
+/* ---- recherche ---- */
+.search{position:relative;margin-bottom:14px}
+.search input{width:100%;font-size:16px;padding:13px 15px 13px 42px;border:1px solid var(--line2);
+  border-radius:10px;background:var(--card);color:var(--ink)}
+.search input:focus{outline:2px solid var(--blue2);outline-offset:1px;border-color:var(--blue2)}
+.search::before{content:"⌕";position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--soft)}
+
+/* ---- panneau résultat (sticky) ---- */
+.result{display:none;position:sticky;top:60px;z-index:20;background:var(--card);border:1px solid var(--line2);
+  border-left:4px solid var(--blue2);border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.result.show{display:block}
+.r-head{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line);background:var(--card2);flex-wrap:wrap}
+.r-head .num{font-weight:800;color:#fff;background:var(--blue);border-radius:7px;padding:3px 9px;font-size:12px;flex:0 0 auto}
+.r-head h2{font-size:14px;margin:0;flex:1;min-width:140px}
+.r-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--soft);font-size:12px;font-weight:700;padding:6px 11px}
+.seg button.on{background:var(--blue);color:#fff}
+.btn{border:1px solid var(--line2);background:var(--card);color:var(--ink);padding:7px 13px;border-radius:8px;font-size:13px;font-weight:700;display:inline-flex;gap:6px;align-items:center}
+.btn:hover{border-color:var(--blue2);color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.primary:hover{background:var(--blue2);border-color:var(--blue2);color:#fff}
+.r-body{padding:14px 16px}
+.r-text{white-space:pre-wrap;font-size:14px;line-height:1.55;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:13px 15px;color:var(--ink)}
+.precise{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.precise input{flex:1;min-width:180px;font-size:13px;padding:8px 11px;border:1px solid var(--line2);border-radius:8px;background:var(--card);color:var(--ink)}
+.precise input:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.warnbox{background:#fbf1dc;border:1px solid #e7cf94;color:#7a5a16;border-radius:9px;padding:12px 14px;font-size:13px}
+[data-theme="dark"] .warnbox{background:#3a2e16;border-color:#6b531f;color:#e0ad55}
+.disc{font-size:11px;color:var(--soft);margin-top:9px;font-style:italic}
+
+/* ---- grille ALD ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+.ald{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:11px 12px;transition:.12s;color:var(--ink)}
+.ald:hover{border-color:var(--blue2);box-shadow:var(--shadow);transform:translateY(-1px)}
+.ald .n{font-weight:800;font-size:12px;color:var(--blue2);background:var(--ghost);border-radius:6px;padding:2px 7px;flex:0 0 auto;min-width:34px;text-align:center}
+.ald .lab{font-size:13px;line-height:1.35}
+.ald.retired{opacity:.62}
+.ald.retired .n{color:var(--warn);background:transparent;border:1px dashed var(--line2)}
+.count{font-size:12px;color:var(--soft);margin:2px 2px 10px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--card);
+  padding:11px 20px;border-radius:9px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:.22s;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:11px;color:var(--soft);text-align:center;margin-top:22px}
+@media print{.top,.search,.grid,.r-tools,.precise,.no-print{display:none!important}.result{position:static;border:1px solid #999}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo">ALD</div>
+    <div class="title">
+      <h1>ALD Express — renouvellement en 1 clic</h1>
+      <p>Clique une affection → le texte HAS-conforme se copie automatiquement</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="icbtn no-print" id="theme" title="Mode sombre" aria-label="Mode sombre">◐</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="search no-print">
+    <input id="q" type="text" placeholder="Rechercher une ALD (ex. diabète, cœur, rein, cancer…)" autocomplete="off" autofocus>
+  </div>
+
+  <!-- panneau résultat -->
+  <section class="result" id="result">
+    <div class="r-head">
+      <span class="num" id="rNum">ALD</span>
+      <h2 id="rTitle"></h2>
+      <div class="r-tools no-print">
+        <span class="seg" id="seg">
+          <button data-etat="actif" class="on">Actif</button>
+          <button data-etat="stable">Stabilisé</button>
+        </span>
+        <button class="btn primary" id="copyBtn">Copier</button>
+        <button class="btn" id="printBtn">Imprimer</button>
+      </div>
+    </div>
+    <div class="r-body">
+      <div class="r-text" id="rText"></div>
+      <div class="precise no-print">
+        <input id="precision" type="text" placeholder="Optionnel : un élément clé (examen récent, complication, traitement) — Entrée pour insérer">
+        <button class="btn" id="clearPrec">Vider</button>
+      </div>
+      <p class="disc">Aide à la rédaction — ne garantit pas l'acceptation. La décision relève du médecin-conseil de l'Assurance Maladie. Aucune donnée patient n'est inventée.</p>
+    </div>
+  </section>
+
+  <p class="count" id="count"></p>
+  <div class="grid" id="grid"></div>
+
+  <p class="foot">Liste ALD 30 — art. D160-4 CSS · 29 affections actives (HTA sévère retirée par décret du 24/06/2011, sauf admission antérieure). Outil local, aucune donnée transmise.</p>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =========================================================
+   BASE ALD 30 — n° officiel, libellé, suivi spécialisé type,
+   examens de surveillance type. Contenu catégoriel (jamais
+   de valeur/dosage patient). Pour modifier : éditer un objet.
+   ========================================================= */
+const ALD = [
+ {n:1, label:"Accident vasculaire cérébral invalidant", spe:"neurologique et de médecine physique (MPR)", ex:"imagerie de contrôle si indiquée, suivi des séquelles et de la prévention secondaire"},
+ {n:2, label:"Insuffisances médullaires et autres cytopénies chroniques", spe:"hématologique", ex:"NFS-plaquettes, bilan médullaire si indiqué"},
+ {n:3, label:"Artériopathies chroniques avec manifestations ischémiques", spe:"de médecine vasculaire", ex:"écho-doppler artériel, surveillance du traitement antithrombotique et des facteurs de risque"},
+ {n:4, label:"Bilharziose compliquée", spe:"infectiologique", ex:"bilan parasitaire et d'imagerie selon l'atteinte"},
+ {n:5, label:"Insuffisance cardiaque grave, troubles du rythme graves, cardiopathies valvulaires ou congénitales graves", spe:"cardiologique", ex:"ECG, échocardiographie, biologie (dont peptides natriurétiques si indiqués)"},
+ {n:6, label:"Maladies chroniques actives du foie et cirrhoses", spe:"hépatologique", ex:"bilan hépatique, imagerie hépatique, dépistage des complications (CHC, varices)"},
+ {n:7, label:"Déficit immunitaire primitif grave / infection par le VIH", spe:"infectiologique / immunologique", ex:"charge virale, CD4, bilan immunitaire et dépistage des complications"},
+ {n:8, label:"Diabète de type 1 et de type 2", spe:"par le médecin traitant et l'endocrinologue", ex:"HbA1c, bilan rénal et albuminurie, bilan lipidique, fond d'œil, surveillance podologique et cardiovasculaire"},
+ {n:9, label:"Formes graves des affections neurologiques et musculaires (dont myopathie), épilepsie grave", spe:"neurologique", ex:"explorations (EEG, EMG, imagerie) et surveillance thérapeutique selon l'atteinte"},
+ {n:10, label:"Hémoglobinopathies, hémolyses chroniques constitutionnelles et acquises sévères", spe:"hématologique", ex:"NFS, électrophorèse de l'hémoglobine, surveillance des complications"},
+ {n:11, label:"Hémophilies et affections constitutionnelles de l'hémostase graves", spe:"hématologique (centre de référence)", ex:"bilan d'hémostase, dosage des facteurs, surveillance des traitements substitutifs"},
+ {n:12, label:"Hypertension artérielle sévère", retired:true},
+ {n:13, label:"Maladie coronaire", spe:"cardiologique", ex:"ECG, bilan lipidique, explorations cardiologiques et surveillance du traitement"},
+ {n:14, label:"Insuffisance respiratoire chronique grave (BPCO, asthme grave)", spe:"pneumologique", ex:"EFR, oxymétrie, gaz du sang si indiqué, surveillance des exacerbations et de l'oxygénothérapie"},
+ {n:15, label:"Maladie d'Alzheimer et autres démences", spe:"neurologique / gériatrique", ex:"évaluation cognitive, suivi de l'autonomie et adaptation médico-sociale"},
+ {n:16, label:"Maladie de Parkinson", spe:"neurologique", ex:"suivi moteur et non moteur, adaptation du traitement dopaminergique"},
+ {n:17, label:"Maladies métaboliques héréditaires nécessitant un traitement prolongé spécialisé", spe:"spécialisé (centre de référence)", ex:"bilan métabolique et surveillance spécifique"},
+ {n:18, label:"Mucoviscidose", spe:"par un centre de ressources et de compétences (CRCM)", ex:"EFR, bilan microbiologique et nutritionnel, surveillance multi-organe"},
+ {n:19, label:"Néphropathie chronique grave et syndrome néphrotique primitif", spe:"néphrologique", ex:"DFG, ionogramme, albuminurie/protéinurie, surveillance du risque cardiovasculaire"},
+ {n:20, label:"Paraplégie", spe:"de médecine physique (MPR) / neurologique", ex:"suivi rééducatif et prévention des complications (cutanées, urinaires, etc.)"},
+ {n:21, label:"Vascularites, lupus érythémateux systémique, sclérodermie systémique", spe:"de médecine interne", ex:"bilan immunologique et inflammatoire, surveillance des atteintes d'organe et des traitements"},
+ {n:22, label:"Polyarthrite rhumatoïde évolutive", spe:"rhumatologique", ex:"bilan inflammatoire, imagerie, surveillance du traitement de fond / de la biothérapie"},
+ {n:23, label:"Affections psychiatriques de longue durée", spe:"psychiatrique", ex:"suivi psychiatrique régulier et surveillance biologique des traitements"},
+ {n:24, label:"Rectocolite hémorragique et maladie de Crohn évolutives", spe:"gastro-entérologique", ex:"biologie, calprotectine fécale, endoscopies, surveillance des biothérapies"},
+ {n:25, label:"Sclérose en plaques", spe:"neurologique", ex:"IRM de surveillance, suivi du handicap et du traitement de fond"},
+ {n:26, label:"Scoliose idiopathique structurale évolutive (jusqu'à maturation rachidienne)", spe:"orthopédique / MPR", ex:"surveillance radiologique de la courbure"},
+ {n:27, label:"Spondylarthrite grave", spe:"rhumatologique", ex:"bilan inflammatoire, imagerie, surveillance de la biothérapie"},
+ {n:28, label:"Suites de transplantation d'organe", spe:"par l'équipe de transplantation", ex:"surveillance de la fonction du greffon, dosage et adaptation des immunosuppresseurs"},
+ {n:29, label:"Tuberculose active et lèpre", spe:"infectiologique / pneumologique", ex:"surveillance bactériologique, de l'observance et de la tolérance du traitement"},
+ {n:30, label:"Tumeur maligne, affection maligne du tissu lymphatique ou hématopoïétique", spe:"oncologique / hématologique", ex:"imagerie, biologie et surveillance post-thérapeutique active (risque de rechute)"}
+];
+
+const $ = id => document.getElementById(id);
+let current = null, etat = "actif";
+
+/* ----- texte de renouvellement ----- */
+function buildText(a, etat, precision){
+  if(a.retired){
+    return `ALD n°12 — Hypertension artérielle sévère\n\n`+
+      `⚠ L'HTA sévère isolée n'est plus une ALD exonérante depuis le décret du 24/06/2011 (considérée comme facteur de risque, non comme pathologie).\n\n`+
+      `• Patient admis AVANT le 27/06/2011 : le renouvellement reste possible si les critères médicaux sont toujours présents — utiliser la justification standard d'une affection cardiovasculaire chronique active.\n`+
+      `• Sinon : ne pas demander d'ALD au titre de l'HTA. Rattacher les antihypertenseurs à l'ALD en cause (diabète, maladie coronaire, insuffisance cardiaque, néphropathie…) dont ils relèvent.`;
+  }
+  const noyau = (etat==="stable")
+    ? `Affection chronique reconnue, actuellement stabilisée sous traitement, mais nécessitant la poursuite d'un traitement de fond, d'une surveillance régulière (${a.ex}) et d'un suivi ${a.spe}. L'arrêt de cette prise en charge exposerait à un risque de décompensation ou de complication.`
+    : `Affection chronique reconnue, évoluant depuis plus de 6 mois et toujours active à ce jour, nécessitant la poursuite d'un traitement de fond, d'une surveillance régulière (${a.ex}) et d'un suivi ${a.spe}.`;
+  const prec = precision ? ` Élément clinique en faveur du maintien : ${precision}.` : "";
+  return `Renouvellement de l'ALD n°${a.n} — ${a.label}.\n\n`+
+    noyau + prec + `\n\n`+
+    `Les soins en rapport (consultations, examens de surveillance et traitements spécifiques) demeurent directement liés à l'affection et justifient le maintien de l'exonération du ticket modérateur au-delà de l'échéance. Critères de maintien réunis : chronicité, soins actifs et prolongés (durée > 6 mois), surveillance et suivi spécialisé. Soins à porter en partie haute de l'ordonnance bizone.`;
+}
+
+function render(){
+  if(!current) return;
+  const txt = buildText(current, etat, $("precision").value.trim());
+  $("rNum").textContent = current.retired ? "ALD 12" : ("ALD "+current.n);
+  $("rTitle").textContent = current.label;
+  $("rText").textContent = txt;
+  $("result").classList.add("show");
+  // l'interrupteur et la copie n'ont pas de sens pour la 12 (retirée)
+  $("seg").style.display = current.retired ? "none" : "";
+}
+
+/* ----- sélection d'une ALD = affichage + copie auto ----- */
+function select(a){
+  current = a; etat = "actif";
+  $("precision").value = "";
+  document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on", b.dataset.etat==="actif"));
+  render();
+  if(!a.retired) copy(true);          // copie immédiate
+  $("result").scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+/* ----- copie ----- */
+function copy(silentAuto){
+  const text = $("rText").textContent;
+  if(!text) return;
+  const done = ()=> toast(silentAuto ? "Texte copié ✓" : "Copié ✓");
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(done, ()=>fallback(text,done));
+  } else fallback(text, done);
+}
+function fallback(text, done){
+  const ta=document.createElement("textarea"); ta.value=text;
+  ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); done(); }catch(_){ toast("Sélectionnez le texte pour copier"); }
+  document.body.removeChild(ta);
+}
+
+/* ----- impression ----- */
+function printText(){
+  const text=$("rText").textContent; if(!text) return;
+  const w=window.open("","_blank","width=720,height=820"); if(!w){toast("Pop-up bloquée");return;}
+  w.document.write("<!DOCTYPE html><meta charset='utf-8'><title>Renouvellement ALD</title>"+
+    "<body style=\"font-family:Georgia,serif;max-width:680px;margin:32px auto;padding:0 20px;line-height:1.55;color:#16242f\">"+
+    "<pre style='white-space:pre-wrap;font-family:inherit;font-size:14px'>"+
+    text.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))+"</pre></body>");
+  w.document.close(); w.focus(); setTimeout(()=>w.print(),250);
+}
+
+/* ----- grille + recherche ----- */
+function noAcc(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function draw(filter){
+  const g=$("grid"); g.innerHTML="";
+  const f = noAcc(filter||"");
+  const list = ALD.filter(a => !f || noAcc(a.n+" "+a.label).includes(f));
+  list.forEach(a=>{
+    const b=document.createElement("button");
+    b.className="ald"+(a.retired?" retired":"");
+    b.innerHTML=`<span class="n">${a.n}</span><span class="lab">${a.label}</span>`;
+    b.addEventListener("click",()=>select(a));
+    g.appendChild(b);
+  });
+  $("count").textContent = list.length + " affection" + (list.length>1?"s":"") + (f? " trouvée"+(list.length>1?"s":"") : " (liste ALD 30)");
+}
+
+/* ----- toast ----- */
+let tT; function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove("show"),1500); }
+
+/* ----- événements ----- */
+$("q").addEventListener("input", e=>draw(e.target.value));
+$("q").addEventListener("keydown", e=>{                 // Entrée = sélectionne le 1er résultat
+  if(e.key==="Enter"){ const first=ALD.filter(a=>!noAcc($("q").value)||noAcc(a.n+" "+a.label).includes(noAcc($("q").value)))[0]; if(first) select(first); }
+});
+$("seg").addEventListener("click", e=>{
+  const b=e.target.closest("button[data-etat]"); if(!b) return;
+  etat=b.dataset.etat;
+  document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x===b));
+  render(); copy(true);
+});
+$("copyBtn").addEventListener("click",()=>copy(false));
+$("printBtn").addEventListener("click",printText);
+$("precision").addEventListener("keydown",e=>{ if(e.key==="Enter"){ render(); copy(true);} });
+$("clearPrec").addEventListener("click",()=>{ $("precision").value=""; render(); });
+$("theme").addEventListener("click",()=>{ const d=document.documentElement; d.setAttribute("data-theme", d.getAttribute("data-theme")==="dark"?"":"dark"); });
+
+draw("");
+</script>
+</body>
+</html>

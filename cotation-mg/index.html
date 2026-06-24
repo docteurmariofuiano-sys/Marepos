@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CotaMG Pro — NGAP & CCAM Médecine Générale</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#161b27;--bg3:#1c2333;--bg4:#242d3f;
+  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);
+  --blue:#3b82f6;--bdim:rgba(59,130,246,.13);
+  --green:#10b981;--gdim:rgba(16,185,129,.12);
+  --amber:#f59e0b;--adim:rgba(245,158,11,.12);
+  --red:#ef4444;--rdim:rgba(239,68,68,.12);
+  --purple:#a78bfa;--pdim:rgba(167,139,250,.12);
+  --cyan:#06b6d4;--cdim:rgba(6,182,212,.12);
+  --tx:#e2e8f0;--tx2:#94a3b8;--tx3:#4a5f7a;
+  --r:10px;--rs:6px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;min-height:100vh}
+header{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:.95rem}
+.logo-ico{width:26px;height:26px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:6px;display:grid;place-items:center;font-size:12px}
+.hinfo{font-size:.7rem;color:var(--tx3);display:flex;align-items:center;gap:.75rem}
+.bliv{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:.68rem;font-weight:600;background:var(--gdim);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+.bliv::before{content:'';width:4px;height:4px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.app{display:grid;grid-template-columns:295px 1fr;min-height:calc(100vh - 52px)}
+.sb{background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;max-height:calc(100vh - 52px);position:sticky;top:52px}
+.main{padding:1.25rem;overflow-y:auto;min-height:calc(100vh - 52px)}
+.sbs{border-bottom:1px solid var(--bd);padding:.875rem 1rem}
+.sbl{font-size:.63rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.fi{margin-bottom:.65rem}
+.fi label{font-size:.73rem;color:var(--tx2);font-weight:500;display:block;margin-bottom:3px}
+select,input[type=text],input[type=number]{width:100%;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);padding:6px 9px;border-radius:var(--rs);font-family:inherit;font-size:.79rem;outline:none;transition:border-color .15s}
+select:focus,input:focus{border-color:var(--blue)}
+select option{background:var(--bg3)}
+.tr{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
+.tr span{font-size:.79rem;color:var(--tx)}
+.tog{position:relative;width:34px;height:18px;flex-shrink:0;cursor:pointer}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tt{position:absolute;inset:0;background:var(--bg4);border-radius:9px;transition:background .2s}
+.tog input:checked~.tt{background:var(--blue)}
+.tt::after{content:'';position:absolute;width:12px;height:12px;background:white;border-radius:50%;top:3px;left:3px;transition:left .2s}
+.tog input:checked~.tt::after{left:19px}
+.bg{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.bo{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx2);padding:4px 9px;border-radius:var(--rs);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .12s;font-family:inherit}
+.bo:hover{color:var(--tx)}
+.bo.on{background:var(--bdim);border-color:var(--blue);color:var(--blue)}
+.sw{position:relative;margin-bottom:.7rem}
+.sw input{padding-left:28px}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none}
+.cr{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.6rem}
+.cb{background:var(--bg3);border:1px solid var(--bd);color:var(--tx3);padding:3px 8px;border-radius:999px;font-size:.66rem;font-weight:700;cursor:pointer;transition:all .12s;white-space:nowrap;font-family:inherit}
+.cb.on,.cb:hover{background:var(--bdim);border-color:var(--blue);color:var(--blue)}
+.al{display:flex;flex-direction:column;gap:5px}
+.ai{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 10px;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ai:hover{border-color:var(--bd2);background:var(--bg4)}
+.ai.on{border-color:rgba(16,185,129,.4);background:var(--gdim)}
+.an{font-size:.77rem;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px}
+.ac{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--tx3);margin-top:2px}
+.tg{font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:3px}
+.tn{background:var(--pdim);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+.tc{background:var(--cdim);color:var(--cyan);border:1px solid rgba(6,182,212,.2)}
+.ta{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.tm{background:var(--cdim);color:var(--cyan);border:1px solid rgba(6,182,212,.2)}
+.t1{background:var(--gdim);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.tu{background:var(--adim);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.tx_cx{background:var(--pdim);color:var(--purple);border:1px solid rgba(167,139,250,.3)}
+.ap{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.77rem;color:var(--tx2);white-space:nowrap}
+.ba{background:var(--bdim);border:1px solid rgba(59,130,246,.3);color:var(--blue);width:22px;height:22px;border-radius:4px;display:grid;place-items:center;font-size:.88rem;cursor:pointer;transition:all .12s;flex-shrink:0;font-family:inherit}
+.ba:hover{background:var(--blue);color:white}
+.ba.on{background:var(--green);border-color:var(--green);color:white;font-size:.68rem}
+.tabs{display:flex;gap:2px;margin-bottom:1.25rem;background:var(--bg2);border-radius:var(--rs);padding:3px;width:fit-content}
+.tab{padding:5px 13px;border-radius:5px;font-size:.75rem;font-weight:600;cursor:pointer;color:var(--tx3);transition:all .12s;border:none;background:none;font-family:inherit}
+.tab.on{background:var(--bg4);color:var(--tx)}
+.st{font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:.875rem;display:flex;align-items:center;gap:7px}
+.st small{font-size:.7rem;font-weight:400;color:var(--tx3)}
+.emp{text-align:center;padding:2rem 1rem;color:var(--tx3);font-size:.8rem;border:1px dashed var(--bd2);border-radius:var(--r)}
+.sl{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem}
+.si-item{background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--r);padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
+.si-item.err{border-color:rgba(239,68,68,.45);background:var(--rdim)}
+.si-item.warn{border-color:rgba(245,158,11,.35);background:var(--adim)}
+.sib{font-family:'JetBrains Mono',monospace;font-size:.73rem;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.sib1{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+.sib2{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
+.sib3{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:var(--blue)}
+.sic{font-family:'JetBrains Mono',monospace;font-size:.77rem;font-weight:700;color:var(--cyan);min-width:98px}
+.sii{flex:1;min-width:0}
+.sin{font-size:.8rem;font-weight:500;color:var(--tx)}
+.sis{font-size:.7rem;color:var(--tx3);margin-top:2px}
+.sin2{font-size:.68rem;margin-top:3px;display:flex;align-items:flex-start;gap:4px;line-height:1.4}
+.sin2.err{color:var(--red)}.sin2.warn{color:var(--amber)}.sin2.info{color:var(--blue)}
+.sip{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
+.sio{font-size:.7rem;color:var(--tx3);text-decoration:line-through;font-family:'JetBrains Mono',monospace}
+.sif{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.88rem;color:var(--tx)}
+.sif.rd{color:var(--amber)}.sif.ze{color:var(--red)}
+.brm{background:none;border:none;color:var(--tx3);cursor:pointer;padding:2px;border-radius:3px;font-size:.85rem;transition:color .12s;font-family:inherit}
+.brm:hover{color:var(--red)}
+.tb{background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--r);padding:.875rem 1.125rem;margin-bottom:1.25rem}
+.tr2{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:.8rem}
+.tr2.main{border-top:1px solid var(--bd);margin-top:7px;padding-top:9px;font-size:.93rem;font-weight:700}
+.tv{font-family:'JetBrains Mono',monospace;font-weight:600}
+.tv.big{font-size:1.1rem;color:var(--green)}
+.tv.bl{color:var(--blue)}.tv.pu{color:var(--purple)}
+.fb{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:1.25rem}
+.fh{background:var(--bg3);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)}
+.fh h3{font-size:.77rem;font-weight:600;color:var(--tx2)}
+table.ft{width:100%;border-collapse:collapse;font-size:.73rem}
+table.ft th{background:var(--bg4);padding:6px 9px;text-align:left;font-weight:600;color:var(--tx3);border-bottom:1px solid var(--bd)}
+table.ft td{padding:6px 9px;border-bottom:1px solid var(--bd);vertical-align:middle}
+table.ft tr:last-child td{border-bottom:none}
+table.ft .mo{font-family:'JetBrains Mono',monospace}
+table.ft .rc{text-align:right}
+table.ft tfoot tr td{background:var(--bg3);font-weight:700;padding:8px 9px}
+.als{display:flex;flex-direction:column;gap:5px;margin-bottom:1.25rem}
+.al2{padding:8px 11px;border-radius:var(--rs);font-size:.75rem;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+.aok{background:var(--gdim);border:1px solid rgba(16,185,129,.2)}
+.aw{background:var(--adim);border:1px solid rgba(245,158,11,.2)}
+.ae{background:var(--rdim);border:1px solid rgba(239,68,68,.2)}
+.ain{background:var(--bdim);border:1px solid rgba(59,130,246,.2)}
+.aic{flex-shrink:0}
+
+/* ══ SUGGESTIONS PANEL ══ */
+.sg-panel{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(6,182,212,.05));border:1px solid rgba(59,130,246,.25);border-radius:var(--r);padding:1rem 1.125rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.sg-panel::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);pointer-events:none}
+.sg-head{display:flex;align-items:center;gap:8px;margin-bottom:.875rem;font-size:.83rem;font-weight:700;color:var(--tx)}
+.sg-head .sgi{width:24px;height:24px;background:var(--bdim);border:1px solid rgba(59,130,246,.3);border-radius:6px;display:grid;place-items:center;font-size:.85rem}
+.sg-head small{font-size:.7rem;font-weight:400;color:var(--tx3);margin-left:auto}
+.sg-section{margin-bottom:.875rem}
+.sg-section:last-child{margin-bottom:0}
+.sg-stitle{font-size:.66rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;display:flex;align-items:center;gap:5px}
+.sg-stitle.green{color:var(--green)}
+.sg-stitle.amber{color:var(--amber)}
+.sg-stitle.cyan{color:var(--cyan)}
+.sg-list{display:flex;flex-wrap:wrap;gap:6px}
+.sg-chip{background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--rs);padding:6px 10px;display:flex;align-items:center;gap:7px;cursor:pointer;transition:all .15s;font-size:.75rem}
+.sg-chip:hover{border-color:var(--blue);transform:translateY(-1px)}
+.sg-chip.green{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.08)}
+.sg-chip.green:hover{border-color:var(--green)}
+.sg-chip.amber{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)}
+.sg-chip.amber:hover{border-color:var(--amber)}
+.sg-chip.cyan{border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.08)}
+.sg-chip-code{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.72rem;color:var(--cyan)}
+.sg-chip.green .sg-chip-code{color:var(--green)}
+.sg-chip.amber .sg-chip-code{color:var(--amber)}
+.sg-chip-name{color:var(--tx);font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sg-chip-price{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tx2);font-size:.72rem}
+.sg-chip-add{width:18px;height:18px;border-radius:4px;background:var(--bdim);border:1px solid rgba(59,130,246,.3);color:var(--blue);display:grid;place-items:center;font-size:.78rem;font-weight:700}
+.sg-chip:hover .sg-chip-add{background:var(--blue);color:white;border-color:var(--blue)}
+.sg-chip.green:hover .sg-chip-add{background:var(--green);border-color:var(--green)}
+.sg-chip.amber:hover .sg-chip-add{background:var(--amber);border-color:var(--amber)}
+.sg-empty-hint{font-size:.78rem;color:var(--tx3);padding:.75rem 1rem;background:var(--bg2);border:1px dashed var(--bd2);border-radius:var(--rs);text-align:center;line-height:1.5}
+.sg-empty-hint strong{color:var(--tx2)}
+.sg-tip{display:flex;gap:7px;align-items:flex-start;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--rs);padding:8px 11px;font-size:.74rem;color:var(--tx);line-height:1.55;margin-top:.625rem}
+.sg-tip strong{color:var(--amber)}
+
+/* ══ MAJORATIONS PANEL ══ */
+.mgt{font-size:.65rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:1.1rem 0 .45rem;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.mc{background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--r);padding:.8rem .95rem;display:flex;align-items:flex-start;gap:.8rem;transition:border-color .15s;margin-bottom:5px}
+.mc.ok{border-color:rgba(16,185,129,.35)}
+.mc.mb{border-color:rgba(245,158,11,.3)}
+.mc.no{opacity:.42}
+.mc.add{border-color:var(--green);background:var(--gdim)}
+.ms{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-size:.82rem;flex-shrink:0;margin-top:1px}
+.ms.ok{background:var(--gdim);border:1px solid rgba(16,185,129,.3)}
+.ms.mb{background:var(--adim);border:1px solid rgba(245,158,11,.3)}
+.ms.no{background:var(--bg3);border:1px solid var(--bd)}
+.mb2{flex:1;min-width:0}
+.mn{font-size:.83rem;font-weight:600;color:var(--tx)}
+.mco{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--tx3);margin-bottom:3px}
+.mr{font-size:.73rem;margin-top:3px;line-height:1.5}
+.mr.ok{color:var(--green)}.mr.mb{color:var(--amber)}.mr.no{color:var(--tx3)}
+.mcd{font-size:.7rem;color:var(--tx3);margin-top:3px;font-style:italic}
+.mri{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.mp{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.88rem;white-space:nowrap}
+.mp.ok{color:var(--green)}.mp.mb{color:var(--amber)}.mp.no{color:var(--tx3)}
+.bma{background:var(--bdim);border:1px solid rgba(59,130,246,.3);color:var(--blue);padding:4px 9px;border-radius:var(--rs);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .12s;font-family:inherit;white-space:nowrap}
+.bma:hover{background:var(--blue);color:white}
+.bma.add{background:var(--green);border-color:var(--green);color:white}
+.bma.add:hover{background:#059669}
+
+/* ══ PLAIES ══ */
+.wr{background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--rs);padding:.7rem .875rem;display:flex;gap:.6rem;align-items:flex-end;margin-bottom:7px}
+.wr select,.wr input{flex:1}
+.pr{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem 1.125rem;margin-top:.875rem}
+.pr h3{font-size:.83rem;font-weight:600;margin-bottom:.875rem}
+.rg{margin-bottom:.8rem;padding-bottom:.8rem;border-bottom:1px solid var(--bd)}
+.rg:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+
+/* ══ RÈGLES ══ */
+.rc2{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:.65rem;overflow:hidden}
+.rch{padding:.8rem .95rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;user-select:none}
+.rn{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-size:.73rem;font-weight:700;flex-shrink:0}
+.rn.e{background:var(--rdim);color:var(--red)}
+.rn.w{background:var(--adim);color:var(--amber)}
+.rn.i{background:var(--bdim);color:var(--blue)}
+.rn.g{background:var(--gdim);color:var(--green)}
+.rt{font-size:.83rem;font-weight:600;color:var(--tx)}
+.rb{padding:.8rem .95rem;border-top:1px solid var(--bd);font-size:.78rem;color:var(--tx2);line-height:1.7;display:none}
+.rc2.op .rb{display:block}
+.rb strong{color:var(--tx);font-weight:600}
+.rb .ex{background:var(--bg3);border-radius:var(--rs);padding:.45rem .8rem;margin-top:.55rem;font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--cyan)}
+
+.btn-a{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);padding:7px 14px;border-radius:var(--rs);font-family:inherit;font-size:.77rem;font-weight:500;cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;gap:5px}
+.btn-a:hover{border-color:var(--tx3)}
+.btn-d{background:var(--rdim);border-color:rgba(239,68,68,.25);color:var(--red)}
+.btn-d:hover{background:var(--red);color:white}
+.ar{display:flex;gap:.5rem;flex-wrap:wrap}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+@media(max-width:860px){.app{grid-template-columns:1fr}.sb{max-height:none;position:static}}
+@media print{header,.sb,.tabs,.ar,.als,.btn-a,button{display:none!important}.app{display:block}.fb{border:1px solid #ccc}body{background:white;color:black}table.ft th{background:#eee;color:#333}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-ico">🩺</div>CotaMG Pro</div>
+  <div class="hinfo">
+    <span class="bliv">Tarifs 2026</span>
+    <span>NGAP + CCAM · MG · Sources : MG France · OmniPrat · Ameli</span>
+  </div>
+</header>
+
+<div class="app">
+<aside class="sb">
+  <div class="sbs">
+    <div class="sbl">Contexte patient</div>
+    <div class="fi"><label>Âge</label>
+      <select id="s-age" onchange="go()">
+        <option value="nn">Nourrisson &lt; 2 ans</option>
+        <option value="ch">Enfant 2–6 ans</option>
+        <option value="ju">6–15 ans</option>
+        <option value="no" selected>16–79 ans</option>
+        <option value="se">≥ 80 ans</option>
+      </select>
+    </div>
+    <div class="fi"><label>Secteur</label>
+      <select id="s-sect" onchange="go()">
+        <option value="s1" selected>Secteur 1</option>
+        <option value="s2o">Secteur 2 / OPTAM signataire</option>
+        <option value="s2">Secteur 2 non OPTAM</option>
+      </select>
+    </div>
+    <div class="tr"><span>Médecin traitant</span><label class="tog"><input type="checkbox" id="s-mt" checked onchange="go()"><span class="tt"></span></label></div>
+    <div class="tr"><span>Patient en ALD</span><label class="tog"><input type="checkbox" id="s-ald" onchange="go()"><span class="tt"></span></label></div>
+    <div class="tr"><span>Nouveau patient / changement MT</span><label class="tog"><input type="checkbox" id="s-nv" onchange="go()"><span class="tt"></span></label></div>
+  </div>
+  <div class="sbs">
+    <div class="sbl">Lieu & Contexte</div>
+    <div class="fi"><label>Lieu</label>
+      <div class="bg" id="bg-lieu">
+        <button class="bo on" data-v="cabinet" onclick="setOpt('lieu',this)">Cabinet</button>
+        <button class="bo" data-v="visite" onclick="setOpt('lieu',this)">Visite</button>
+        <button class="bo" data-v="tele" onclick="setOpt('lieu',this)">Téléconsult.</button>
+      </div>
+    </div>
+    <div class="fi"><label>Jour</label>
+      <div class="bg" id="bg-jour">
+        <button class="bo on" data-v="sem" onclick="setOpt('jour',this)">Semaine</button>
+        <button class="bo" data-v="sam" onclick="setOpt('jour',this)">Samedi</button>
+        <button class="bo" data-v="dim" onclick="setOpt('jour',this)">Dim/Férié</button>
+      </div>
+    </div>
+    <div class="fi"><label>Horaire</label>
+      <select id="s-h" onchange="go()">
+        <option value="n" selected>8h – 20h (normal)</option>
+        <option value="s1">20h – 21h</option>
+        <option value="s2">21h – 00h</option>
+        <option value="np">00h – 06h (nuit profonde)</option>
+        <option value="m">06h – 08h</option>
+      </select>
+    </div>
+    <div class="tr"><span>Urgence non régulée</span><label class="tog"><input type="checkbox" id="s-urg" onchange="go()"><span class="tt"></span></label></div>
+    <div class="tr"><span>Garde PDSA régulée</span><label class="tog"><input type="checkbox" id="s-gd" onchange="go()"><span class="tt"></span></label></div>
+  </div>
+  <div class="sbs">
+    <div class="sbl">Recherche d'actes</div>
+    <div class="sw"><span class="si">🔍</span><input type="text" id="srch" placeholder="Code, mot-clé (ECG, DIU, suture…)" oninput="filterActs()"></div>
+    <div class="cr" id="cat-row"></div>
+    <div class="al" id="act-list"></div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('fact',this)">📋 Facturation</button>
+    <button class="tab" onclick="switchTab('maj',this)">⚡ Majorations suggérées</button>
+    <button class="tab" onclick="switchTab('plaies',this)">🩹 Plaies multiples</button>
+    <button class="tab" onclick="switchTab('regles',this)">📏 Règles NGAP/CCAM</button>
+  </div>
+
+  <!-- FACTURATION -->
+  <div id="tab-fact">
+    <div class="st">Actes sélectionnés <small id="act-count"></small></div>
+    <div class="sl" id="sel-list"><div class="emp">Cliquez sur <strong>+</strong> dans la liste pour ajouter un acte</div></div>
+    <div class="als" id="alerts"></div>
+    <div id="suggestions-panel"></div>
+    <div class="tb">
+      <div class="tr2"><span style="color:var(--tx2)">Sous-total actes</span><span class="tv" id="t-a">0,00 €</span></div>
+      <div class="tr2"><span style="color:var(--tx2)">Majorations</span><span class="tv" id="t-m">0,00 €</span></div>
+      <div class="tr2"><span style="color:var(--tx2)">Part AMO (Sécu)</span><span class="tv bl" id="t-amo">0,00 €</span></div>
+      <div class="tr2"><span style="color:var(--tx2)">Part AMC (mutuelle)</span><span class="tv pu" id="t-amc">0,00 €</span></div>
+      <div class="tr2 main"><span>TOTAL</span><span class="tv big" id="t-tot">0,00 €</span></div>
+    </div>
+    <div class="fb">
+      <div class="fh"><h3>🗒️ Feuille de soins</h3><button class="btn-a" onclick="window.print()">🖨️ Imprimer</button></div>
+      <table class="ft">
+        <thead><tr><th>Code</th><th>Libellé</th><th>Type</th><th>Modif.</th><th class="rc">Base</th><th class="rc">Facturé</th><th class="rc">AMO</th></tr></thead>
+        <tbody id="fds-body"><tr><td colspan="7" style="text-align:center;padding:1.25rem;color:var(--tx3)">Aucun acte</td></tr></tbody>
+        <tfoot id="fds-foot"></tfoot>
+      </table>
+    </div>
+    <div class="ar">
+      <button class="btn-a" onclick="window.print()">🖨️ Imprimer</button>
+      <button class="btn-a btn-d" onclick="resetAll()">🗑️ Réinitialiser</button>
+    </div>
+  </div>
+
+  <!-- MAJORATIONS -->
+  <div id="tab-maj" style="display:none">
+    <div class="st">Majorations applicables <small>— selon votre contexte et vos actes sélectionnés</small></div>
+    <div id="maj-panel"></div>
+  </div>
+
+  <!-- PLAIES MULTIPLES -->
+  <div id="tab-plaies" style="display:none">
+    <div class="st">Calculateur plaies multiples</div>
+    <p style="font-size:.8rem;color:var(--tx2);margin-bottom:.875rem;line-height:1.6">Saisissez chaque plaie. L'outil additionne les longueurs par zone et profondeur, puis calcule le code CCAM et les codes association.</p>
+    <div id="wounds-list"></div>
+    <button class="btn-a" onclick="addWound()" style="margin-bottom:.875rem">+ Ajouter une plaie</button>
+    <div id="plaies-result"></div>
+  </div>
+
+  <!-- RÈGLES -->
+  <div id="tab-regles" style="display:none">
+    <div class="st">Règles NGAP & CCAM</div>
+    <div id="regles-content"></div>
+  </div>
+</main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// ACTES — ngapT: 'simple'|'complexe'  ccamS: 'ADC'|'ATM'
+// ngapOk: exception règle 4 (cumulable NGAP+CCAM)
+// zone: anatomique pour ADC
+// ═══════════════════════════════════════════════════
+const ACTS=[
+  // NGAP simples
+  {id:'G',   code:'G',   name:'Consultation (spécialiste MG)',              cat:'Consultation',       type:'NGAP',ngapT:'simple',  tarif:30,   amo:.70,tags:[],      desc:'Consultation standard.',                                    cond:'Non cumulable avec CCAM sauf 5 exceptions strictes.'},
+  {id:'VG',  code:'VG',  name:'Visite à domicile (MG)',                     cat:'Visite',             type:'NGAP',ngapT:'simple',  tarif:30,   amo:.70,tags:[],      desc:'Visite standard.',                                          cond:'Ajouter MD (10€) si visite justifiée + IFI/IK pour les déplacements.'},
+  {id:'TCG', code:'TCG', name:'Téléconsultation (MG)',                      cat:'Télémédecine',       type:'NGAP',ngapT:'simple',  tarif:25,   amo:.70,tags:[],      desc:'Limitée à 20% de l\'activité totale annuelle.',             cond:'20% max/an.'},
+  // NGAP complexes
+  {id:'VL',  code:'VL',  name:'Visite longue (domicile, complexe)',         cat:'Visite',             type:'NGAP',ngapT:'complexe',tarif:60,   amo:.70,tags:[],      desc:'≥80 ans ALD/neuro-dégénératif, ou changement MT.',          cond:'Max 4/an/patient. MT uniquement.'},
+  {id:'VSP', code:'VSP', name:'Visite soins palliatifs',                    cat:'Visite',             type:'NGAP',ngapT:'complexe',tarif:60,   amo:1,  tags:['100'], desc:'Soins palliatifs/fin de vie par le MT.',                    cond:'Non limité/an. MT uniquement.'},
+  {id:'IMT', code:'IMT', name:'Nouveau MT — patient ALD',                   cat:'Consultation',       type:'NGAP',ngapT:'complexe',tarif:60,   amo:1,  tags:['100'], desc:'Nouveau médecin traitant pour patient ALD.',                cond:'Cocher "nouveau MT" sur FDS.'},
+  {id:'RDV', code:'RDV', name:'Bilan de prévention',                        cat:'Prévention',         type:'NGAP',ngapT:'complexe',tarif:30,   amo:1,  tags:['100'], desc:'18–25, 45–50, 60–65, 70–75 ans.',                          cond:'Exception R1 : G+RDV possible sur 2 FDS distinctes.'},
+  {id:'APC', code:'APC', name:'Acte ponctuel consultant (envoi MTT)',        cat:'Consultation',       type:'NGAP',ngapT:'complexe',tarif:50,   amo:.70,tags:[],      desc:'Sur envoi explicite du MTT.',                               cond:'MTT uniquement.'},
+  {id:'GL1', code:'GL1', name:'Consult. longue sortie hospit. (≥80 ans)',   cat:'Consultation longue',type:'NGAP',ngapT:'complexe',tarif:60,   amo:.70,tags:[],      desc:'Dans les 45 jours suivant hospitalisation.',               cond:'≥80 ans. 1/an.'},
+  {id:'GL2', code:'GL2', name:'Consult. longue déprescription (≥80 ans)',   cat:'Consultation longue',type:'NGAP',ngapT:'complexe',tarif:60,   amo:.70,tags:[],      desc:'≥10 lignes traitement. Bilan pharmacien.',                  cond:'1/an.'},
+  {id:'GL3', code:'GL3', name:'Consult. longue orientation médico-soc.',    cat:'Consultation longue',type:'NGAP',ngapT:'complexe',tarif:60,   amo:.70,tags:[],      desc:'Remplissage dossier APA.',                                  cond:'≥80 ans. 1/an.'},
+  {id:'MPH', code:'MPH', name:'Consultation personne handicapée (MDPH/APA)',cat:'Consultation',       type:'NGAP',ngapT:'complexe',tarif:60,   amo:.70,tags:[],      desc:'1er certificat MDPH, changement MT, ou APA <80 ans.',       cond:''},
+  {id:'COE', code:'COE', name:'Consultation bébé J8 / M9 / M24',           cat:'Pédiatrie',          type:'NGAP',ngapT:'complexe',tarif:60,   amo:1,  tags:['100'], desc:'Carnet de santé obligatoire. Tarif revalorisé au 1er janvier 2026.',cond:'100% RO.'},
+  {id:'CSO', code:'CSO', name:'Enfant suivi obésité (3–12 ans)',            cat:'Pédiatrie',          type:'NGAP',ngapT:'complexe',tarif:46,   amo:1,  tags:['100'], desc:'2 fois/an max.',                                            cond:'Anonymisation : CSX.'},
+  {id:'CCP', code:'CCP', name:'Adolescente Contraception/Prévention',       cat:'Prévention',         type:'NGAP',ngapT:'complexe',tarif:46,   amo:1,  tags:['100'], desc:'15–18 ans. 1 consultation.',                                cond:'Anonymisation : CCX.'},
+  {id:'RQD', code:'RQD', name:'Téléexpertise — requérant',                  cat:'Télémédecine',       type:'NGAP',ngapT:'complexe',tarif:10,   amo:.70,tags:[],      desc:'Demande téléexpertise.',                                    cond:'Max 4/an/patient.'},
+  {id:'TE2', code:'TE2', name:'Téléexpertise — requis',                     cat:'Télémédecine',       type:'NGAP',ngapT:'complexe',tarif:23,   amo:.70,tags:[],      desc:'Réponse téléexpertise.',                                    cond:'Max 4/an/patient.'},
+  // CCAM ATM exception (cumulable NGAP)
+  {id:'DEQP003',code:'DEQP003',name:'Électrocardiogramme (ECG)',            cat:'Cardiologie',        type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:44.52,amo:.70,tags:[],      zone:null,desc:'Exception R4 — cumulable avec NGAP. Tarif revalorisé 2025.',cond:'G + ECG = 74,52€.'},
+  {id:'GLQP012',code:'GLQP012',name:'Spirométrie standard (EFR)',           cat:'Pneumologie',        type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:40.28,amo:.70,tags:[],      zone:null,desc:'Exception R4 — cumulable avec NGAP (avenant 2026).',cond:''},
+  {id:'JKHD001',code:'JKHD001',name:'Frottis cervico-vaginal',              cat:'Gynécologie',        type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:12.46,amo:1,  tags:['100'],zone:'trunk',desc:'Exception R4 — cumulable avec NGAP. Association 1.',cond:'G + frottis sur 2 lignes FDS.'},
+  // CCAM ATM sans exception
+  {id:'ALQP003',code:'ALQP003',name:'Évaluation dépression Hamilton (1/an)',cat:'Psychiatrie',        type:'CCAM',ccamS:'ATM',ngapOk:false,tarif:69.12,amo:.70,tags:[],      zone:null,desc:'Échelle Hamilton.',cond:'1/an.'},
+  {id:'NZLB001',code:'NZLB001',name:'Infiltration articulation membre inf.',cat:'Infiltrations',      type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:30.82,amo:.70,tags:[],      zone:null,desc:'Exception R4 (avenant fin 2025) — cumulable avec NGAP.',cond:'G + NZLB001 = 60,82€.'},
+  {id:'MZLB001',code:'MZLB001',name:'Infiltration articulation membre sup.',cat:'Infiltrations',      type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:26.13,amo:.70,tags:[],      zone:null,desc:'Exception R4 (avenant fin 2025) — cumulable avec NGAP.',cond:'G + MZLB001 = 56,13€.'},
+  {id:'NZJB001',code:'NZJB001',name:'Infiltration articulation vertébrale post.',cat:'Infiltrations',  type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:63.00,amo:.70,tags:[],      zone:null,desc:'Infiltration articulation vertébrale postérieure. Cumulable avec G.',cond:'G + NZJB001 = 93€.'},
+  {id:'MZJB001',code:'MZJB001',name:'Infiltration articulation vertébrale post. (sup.)',cat:'Infiltrations',type:'CCAM',ccamS:'ATM',ngapOk:true, tarif:81.90,amo:.70,tags:[],      zone:null,desc:'Cumulable avec G.',cond:'G + MZJB001 = 113,60€.'},
+  {id:'AHLB006',code:'AHLB006',name:'Infiltration canal carpien',           cat:'Infiltrations',      type:'CCAM',ccamS:'ATM',ngapOk:false,tarif:29.48,amo:.70,tags:[],      zone:null,desc:'',cond:''},
+  {id:'LHLB001',code:'LHLB001',name:'Infiltration articulation vertébrale (alt.)', cat:'Infiltrations',type:'CCAM',ccamS:'ATM',ngapOk:false,tarif:34.17,amo:.70,tags:[],      zone:null,desc:'',cond:''},
+  {id:'YYYY010',code:'YYYY010',name:'Détresse — traitement 1er recours',    cat:'Urgences',           type:'CCAM',ccamS:'ATM',ngapOk:false,tarif:74.88,amo:.70,tags:['urgM'],zone:null,desc:'Perfusion, O2, réanimation.',cond:'Modificateur M applicable.'},
+  // CCAM ADC sutures corps
+  {id:'QZJA002',code:'QZJA002',name:'Suture superficielle < 3 cm (corps)', cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:52.40,amo:.70,tags:['urgM'],zone:'body',desc:'Hors face et main.',cond:''},
+  {id:'QZJA017',code:'QZJA017',name:'Suture superficielle 3–10 cm (corps)',cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:78.64,amo:.70,tags:['urgM'],zone:'body',desc:'',cond:''},
+  {id:'QZJA015',code:'QZJA015',name:'Suture superficielle > 10 cm (corps)',cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:88.56,amo:.70,tags:['urgM'],zone:'body',desc:'',cond:''},
+  {id:'QZJA010',code:'QZJA010',name:'Suture profonde 3–10 cm (corps)',     cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:89.87,amo:.70,tags:['urgM'],zone:'body',desc:'',cond:''},
+  // CCAM ADC sutures face
+  {id:'QAJA013',code:'QAJA013',name:'Suture superficielle < 3 cm (face)',  cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:58.23,amo:.70,tags:['urgM'],zone:'face',desc:'',cond:''},
+  {id:'QAJA005',code:'QAJA005',name:'Suture superficielle 3–10 cm (face)', cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:101.33,amo:.70,tags:['urgM'],zone:'face',desc:'',cond:''},
+  {id:'QAJA002',code:'QAJA002',name:'Suture superficielle > 10 cm (face)', cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:109.83,amo:.70,tags:['urgM'],zone:'face',desc:'',cond:''},
+  // CCAM ADC autres
+  {id:'MJPA010',code:'MJPA010',name:'Incision/excision panaris',           cat:'Petite chirurgie',   type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:38.29,amo:.70,tags:[],      zone:'upperLimb',desc:'',cond:''},
+  {id:'QZFA036',code:'QZFA036',name:'Exérèse naevus/tumeur < 5 cm²',      cat:'Dermatologie',       type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:68.80,amo:.70,tags:['urgM'],zone:'body',desc:'Avec FSD.',cond:''},
+  {id:'QAGA003',code:'QAGA003',name:'Ablation corps étranger (visage/main)',cat:'Dermatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:47.50,amo:.70,tags:['urgM'],zone:'face',desc:'',cond:''},
+  {id:'EGFA007',code:'EGFA007',name:'Excision thrombose hémorroïdaire',    cat:'Proctologie',        type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:62.70,amo:.70,tags:[],      zone:'trunk',desc:'',cond:''},
+  {id:'GABD002',code:'GABD002',name:'Tamponnement nasal antérieur',        cat:'ORL',                type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:54.60,amo:.70,tags:['urgM'],zone:'face',desc:'Épistaxis.',cond:''},
+  {id:'MADP001',code:'MADP001',name:'Contention ortho fracture clavicule', cat:'Traumatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:68.68,amo:.70,tags:['urgM'],zone:'trunk',desc:'',cond:''},
+  {id:'MEEP002',code:'MEEP002',name:'Réduction luxation scapulo-humérale', cat:'Traumatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:66.58,amo:.70,tags:['urgM'],zone:'upperLimb',desc:'',cond:''},
+  {id:'MFEP001',code:'MFEP001',name:'Réduction pronation douloureuse',     cat:'Traumatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:31.35,amo:.70,tags:[],      zone:'upperLimb',desc:'',cond:''},
+  {id:'NGMP001',code:'NGMP001',name:'Contention souple cheville/pied',     cat:'Traumatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:47.78,amo:.70,tags:['urgM'],zone:'lowerLimb',desc:'',cond:''},
+  {id:'NFMP001',code:'NFMP001',name:'Contention souple genou',             cat:'Traumatologie',      type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:68.68,amo:.70,tags:['urgM'],zone:'lowerLimb',desc:'',cond:''},
+  {id:'JKLD001',code:'JKLD001',name:'Pose DIU (stérilet)',                  cat:'Gynécologie',        type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:1,  tags:['100'],zone:'trunk',desc:'Cumulable avec G (avenant fin 2025). G + JKLD001 = 68,40€.',cond:'100% AMO.'},
+  {id:'JKKD001',code:'JKKD001',name:'Changement DIU (stérilet)',            cat:'Gynécologie',        type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:1,  tags:['100'],zone:'trunk',desc:'Cumulable avec G. G + JKKD001 = 68,40€.',cond:'100% AMO.'},
+  {id:'JKGD001',code:'JKGD001',name:'Ablation DIU (stérilet)',              cat:'Gynécologie',        type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:1,  tags:['100'],zone:'trunk',desc:'Cumulable avec G. G + JKGD001 = 68,40€.',cond:'100% AMO.'},
+  {id:'QZGA002',code:'QZGA002',name:'Ablation/changement implant sous-cut.',cat:'Gynécologie',       type:'CCAM',ccamS:'ADC',ngapOk:false,tarif:41.80,amo:1,  tags:['100'],zone:'body',desc:'',cond:''},
+  // ── BIOPSIES — cumulables avec G à 50% ──
+  {id:'QZHA001',code:'QZHA001',name:'Biopsie dermo-épidermique',            cat:'Dermatologie',       type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:.70,tags:[],      zone:'body',desc:'Cumulable avec G à 50% (Association 2). G + biopsie = 30 + 19,20 = 49,20€.',cond:'Association 2 obligatoire.'},
+  {id:'QZHA005',code:'QZHA005',name:'Biopsie tissus sous-cutanés susfasciaux',cat:'Dermatologie',     type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:.70,tags:[],      zone:'body',desc:'Cumulable avec G à 50% (Association 2).',cond:''},
+  {id:'GAHA001',code:'GAHA001',name:'Biopsie peau du nez / muqueuse narinaire',cat:'Dermatologie',    type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:.70,tags:[],      zone:'face',desc:'Cumulable avec G à 50%.',cond:''},
+  {id:'HAHA002',code:'HAHA002',name:'Biopsie de lèvre',                     cat:'Dermatologie',       type:'CCAM',ccamS:'ADC',ngapOk:true, tarif:38.40,amo:.70,tags:[],      zone:'face',desc:'Cumulable avec G à 50%.',cond:''},
+  // ── MIS / PIV — cotations complexes d'annonce ──
+  {id:'MIS', code:'MIS', name:'Annonce maladie grave (cancer, neuro-dég.)', cat:'Consultation',       type:'NGAP',ngapT:'complexe',tarif:60,amo:.70,tags:[],      desc:'Consultation très complexe d\'annonce et organisation PEC. G + MIS (30€).',cond:'Anonymisation : MTX. MT uniquement.'},
+  {id:'PIV', code:'PIV', name:'Annonce VIH',                                cat:'Consultation',       type:'NGAP',ngapT:'complexe',tarif:60,amo:.70,tags:[],      desc:'Consultation très complexe d\'annonce d\'une infection VIH.',cond:'Anonymisation : MTX. MT uniquement.'},
+];
+
+// Zones anatomiques pour calcul association ADC
+const ZG={face:'head',upperLimb:'limb',lowerLimb:'limb',trunk:'trunk',body:'body',hand:'limb'};
+function diffZone(z1,z2){
+  const a=ZG[z1]||'body',b=ZG[z2]||'body';
+  if(a===b) return false;
+  // tête+membre, tronc+membre, 2 membres = diff
+  if(a==='limb'&&b==='limb') return true;
+  if((a==='head'||a==='trunk')&&b==='limb') return true;
+  if(a==='limb'&&(b==='head'||b==='trunk')) return true;
+  if(a==='head'&&b==='trunk') return true;
+  if(a==='trunk'&&b==='head') return true;
+  return false;
+}
+
+const CATS=['Tout','Consultation','Visite','Télémédecine','Consultation longue','Prévention','Pédiatrie','Petite chirurgie','Dermatologie','Gynécologie','Cardiologie','Infiltrations','Traumatologie','ORL','Pneumologie','Psychiatrie','Urgences','Proctologie'];
+
+let selected=[]; // actId[]
+let majsAdded={}; // code -> {code,name,tarif}
+let activeCat='Tout';
+let wounds=[];
+let wid=0;
+
+const ctx=()=>({
+  age:  document.getElementById('s-age').value,
+  lieu: document.querySelector('#bg-lieu .on')?.dataset.v||'cabinet',
+  jour: document.querySelector('#bg-jour .on')?.dataset.v||'sem',
+  h:    document.getElementById('s-h').value,
+  mt:   document.getElementById('s-mt').checked,
+  ald:  document.getElementById('s-ald').checked,
+  nv:   document.getElementById('s-nv').checked,
+  urg:  document.getElementById('s-urg').checked,
+  gd:   document.getElementById('s-gd').checked,
+});
+
+function go(){recalc();renderMaj();}
+
+// ── CATEGORIES ──
+function renderCats(){
+  document.getElementById('cat-row').innerHTML=CATS.map(c=>`<button class="cb${c===activeCat?' on':''}" onclick="setCat('${c.replace(/'/g,'\\\'')},this)">${c}</button>`).join('');
+  // fix onclick
+  document.querySelectorAll('.cb').forEach((b,i)=>{
+    b.onclick=()=>{setCat(CATS[i],b)};
+  });
+}
+function setCat(c,b){
+  activeCat=c;
+  document.querySelectorAll('.cb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  filterActs();
+}
+
+// ── ACT LIST ──
+function filterActs(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  const el=document.getElementById('act-list');
+  const list=ACTS.filter(a=>{
+    const mc=activeCat==='Tout'||a.cat===activeCat;
+    const mq=!q||a.name.toLowerCase().includes(q)||a.code.toLowerCase().includes(q)||(a.cat||'').toLowerCase().includes(q);
+    return mc&&mq;
+  });
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.77rem">Aucun résultat</div>';return;}
+  el.innerHTML=list.map(a=>{
+    const on=selected.includes(a.id);
+    return`<div class="ai${on?' on':''}" onclick="detail('${a.id}')">
+      <div style="flex:1;min-width:0">
+        <div class="an" title="${a.name}">${a.name}</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:2px;flex-wrap:wrap">
+          <span class="ac">${a.code}</span>
+          <span class="tg ${a.type==='NGAP'?'tn':'tc'}">${a.type}</span>
+          ${a.ccamS?`<span class="tg ${a.ccamS==='ADC'?'ta':'tm'}">${a.ccamS}</span>`:''}
+          ${a.ngapT==='complexe'?'<span class="tg tx_cx">cx</span>':''}
+          ${a.ngapOk?'<span class="tg t1">+NGAP</span>':''}
+          ${a.tags.includes('100')?'<span class="tg t1">100%</span>':''}
+          ${a.tags.includes('urgM')?'<span class="tg tu">+M</span>':''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <span class="ap">${a.tarif.toFixed(2).replace('.',',')}€</span>
+        <button class="ba${on?' on':''}" onclick="event.stopPropagation();tog('${a.id}')">${on?'✓':'+'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tog(id){
+  if(selected.includes(id)) selected=selected.filter(x=>x!==id);
+  else selected.push(id);
+  filterActs();go();
+}
+
+// ── RECALC ──
+function recalc(){
+  const C=ctx();
+  const acts=selected.map(id=>ACTS.find(a=>a.id===id));
+  const ngapS=acts.filter(a=>a.type==='NGAP'&&a.ngapT==='simple');
+  const ngapC=acts.filter(a=>a.type==='NGAP'&&a.ngapT==='complexe');
+  const ccam=acts.filter(a=>a.type==='CCAM');
+  const ccamOk=ccam.filter(a=>a.ngapOk);
+  const ccamNo=ccam.filter(a=>!a.ngapOk);
+  const ccamADC=ccam.filter(a=>a.ccamS==='ADC');
+  const ccamATM=ccam.filter(a=>a.ccamS==='ATM');
+  const hasNG=ngapS.length>0||ngapC.length>0;
+  const alerts=[];
+
+  // Règle 1 : simple + complexe
+  if(ngapS.length>0&&ngapC.length>0){
+    const rdvOnly=ngapC.every(a=>a.id==='RDV');
+    if(rdvOnly) alerts.push({cl:'aw',i:'⚠️',m:'Règle 1 — G + RDV : possible UNIQUEMENT sur deux feuilles de soins distinctes.'});
+    else alerts.push({cl:'ae',i:'🚫',m:'Règle 1 — INCOMPATIBILITÉ : consultation simple + consultation complexe (ex: G + VL, G + CCP). Choisir l\'un ou l\'autre.'});
+  }
+  // Règle 4 : NGAP + CCAM non-exception
+  if(hasNG&&ccamNo.length>0){
+    alerts.push({cl:'ae',i:'🚫',m:`Règle 4 — INCOMPATIBILITÉ : NGAP + acte(s) CCAM non autorisé(s) : ${ccamNo.map(a=>a.code).join(', ')}. Seules 6 familles cumulables : ECG, frottis, biopsies (50%), infiltrations, spirométrie, stérilet.`});
+  }
+  if(hasNG&&ccamOk.length>0){
+    alerts.push({cl:'aok',i:'✅',m:`Exception R4 : ${ccamOk.map(a=>a.code).join(', ')} — cumulable avec la consultation NGAP.`});
+  }
+  // Règle 2 : complexe + majorants (sauf MUT)
+  const hasMutOnly=Object.keys(majsAdded).every(k=>k==='MUT');
+  if(ngapC.length>0&&ngapS.length===0&&Object.keys(majsAdded).length>0&&!hasMutOnly){
+    alerts.push({cl:'ae',i:'🚫',m:'Règle 2 — Consultation complexe : aucun majorateur autorisé sauf MUT. Retirez les autres majorations.'});
+  }
+  if(ccamADC.length>1) alerts.push({cl:'ain',i:'ℹ️',m:'2 actes ADC — codes association calculés selon localisation anatomique (A3 75% zones diff., A2 50% même zone).'});
+  if(ccamATM.length>1) alerts.push({cl:'ain',i:'ℹ️',m:'2 actes ATM — 2ème acte en association A2 (50%).'});
+  if(!acts.length&&!Object.keys(majsAdded).length) alerts.push({cl:'ain',i:'ℹ️',m:'Aucun acte. Utilisez la liste à gauche.'});
+  else if(!alerts.length) alerts.push({cl:'aok',i:'✅',m:'Aucune incompatibilité détectée.'});
+
+  // Calcul association CCAM
+  let iADC=0,iATM=0;
+  const computed=acts.map(a=>{
+    if(a.type!=='CCAM') return{...a,assoc:null,cT:a.tarif};
+    if(a.ngapOk&&hasNG){
+      // Biopsies = exception spéciale : Association 2 (50%) avec NGAP
+      const isBiopsy=['QZHA001','QZHA005','BAHA001','CAHA001','CAHA002','GAHA001','HAHA002','QEHA001','JHHA001','JMHA001'].includes(a.id);
+      if(isBiopsy) return{...a,assoc:2,cT:a.tarif*.5,note:'Biopsie + NGAP → Assoc. 2 (50%)'};
+      return{...a,assoc:1,cT:a.tarif,note:'Exception R4 — Assoc. 1 (100%)'};
+    }
+    if(a.ccamS==='ATM'){
+      const idx=iATM++;
+      if(idx===0) return{...a,assoc:1,cT:a.tarif};
+      return{...a,assoc:2,cT:a.tarif*.5,note:'2ème ATM → A2 (50%)'};
+    }
+    if(a.ccamS==='ADC'){
+      const idx=iADC++;
+      if(idx===0) return{...a,assoc:1,cT:a.tarif};
+      const prev=ccamADC[idx-1];
+      const diff=diffZone(a.zone||'body',prev.zone||'body');
+      if(diff) return{...a,assoc:3,cT:a.tarif*.75,note:'Zones diff. → A3 (75%)'};
+      return{...a,assoc:2,cT:a.tarif*.5,note:'Même zone → A2 (50%)'};
+    }
+    return{...a,assoc:1,cT:a.tarif};
+  });
+
+  const majs=Object.values(majsAdded);
+  const tA=computed.reduce((s,a)=>s+a.cT,0);
+  const tM=majs.reduce((s,m)=>s+m.tarif,0);
+  const tot=tA+tM;
+  const avgAmo=computed.length?computed.reduce((s,a)=>s+(a.amo||.70),0)/computed.length:.70;
+  const tAmo=computed.reduce((s,a)=>s+a.cT*(a.amo||.70),0)+tM*.70;
+  const tAmc=tot-tAmo;
+
+  renderSel(computed,majs);
+  renderAlerts(alerts);
+  renderTot(tA,tM,tAmo,tAmc,tot);
+  renderFDS(computed,majs,tA,tM,tAmo);
+  document.getElementById('act-count').textContent=acts.length?`(${acts.length} acte${acts.length>1?'s':''})` :'';
+  renderSuggestions(acts);
+}
+
+// ══════════════════════════════════════════════════
+// MOTEUR DE SUGGESTIONS INTELLIGENTES
+// Analyse les actes sélectionnés et propose :
+//   - Actes complémentaires fréquemment associés
+//   - Majorations applicables au contexte
+//   - Conseils de cotation
+// ══════════════════════════════════════════════════
+
+// Map de suggestions par acte/catégorie
+const SUGGEST_MAP={
+  // Consultation simple → propose les CCAM cumulables courants
+  G:{
+    actes:['DEQP003','GLQP012','JKHD001','JKLD001','JKKD001','JKGD001','MZLB001','NZLB001','NZJB001'],
+    tip:'G est cumulable avec 6 familles CCAM : ECG, frottis, biopsies (à 50%), infiltrations, spirométrie, stérilet.'
+  },
+  VG:{
+    actes:['DEQP003','GLQP012'],
+    tip:'En visite, ajoutez MD (10€, majoration déplacement) et IFI (10,60€) + IK (0,62€/km) si nécessaire. VG + MD = 40€.'
+  },
+  TCG:{
+    actes:[],
+    tip:'Téléconsultation : limitée à 20% de l\'activité totale annuelle. MUT applicable si envoi spécialiste urgent.'
+  },
+  // Cardiologie
+  DEQP003:{
+    actes:['G','VG'],
+    tip:'L\'ECG s\'associe à G ou VG (Association 1, tarif plein). G + DEQP003 = 74,52€.'
+  },
+  // Pneumologie
+  GLQP012:{
+    actes:['G','VG'],
+    tip:'Spirométrie cumulable avec G/VG depuis fin 2025. G + GLQP012 = 70,28€.'
+  },
+  // Gynéco
+  JKHD001:{
+    actes:['G'],
+    tip:'Frottis cumulable avec G à 100%. Facturer sur deux lignes distinctes de la FDS.'
+  },
+  JKLD001:{
+    actes:['G'],
+    tip:'Pose de stérilet cumulable avec G depuis fin 2025. G + JKLD001 = 68,40€.'
+  },
+  JKKD001:{actes:['G'],tip:'Changement stérilet cumulable avec G. G + JKKD001 = 68,40€.'},
+  JKGD001:{actes:['G'],tip:'Ablation stérilet cumulable avec G. G + JKGD001 = 68,40€.'},
+  // Infiltrations
+  MZLB001:{actes:['G'],tip:'Infiltration membre supérieur cumulable avec G depuis fin 2025.'},
+  NZLB001:{actes:['G'],tip:'Infiltration membre inférieur cumulable avec G depuis fin 2025.'},
+  NZJB001:{actes:['G'],tip:'Infiltration vertébrale cumulable avec G. G + NZJB001 = 93€.'},
+  MZJB001:{actes:['G'],tip:'Infiltration vertébrale cumulable avec G. G + MZJB001 = 113,60€.'},
+  // Sutures → suggérer autres sutures pour plaies multiples + traumato
+  QZJA017:{actes:['QAJA013','QAJA005','MJPA010'],tip:'Pour plaies multiples, utilisez l\'onglet "Plaies multiples" pour calculer les longueurs cumulées et les codes association.'},
+  QZJA002:{actes:['QAJA013','MJPA010'],tip:'Pour plaies multiples, utilisez l\'onglet "Plaies multiples".'},
+  QZJA015:{actes:['QAJA013','QAJA005'],tip:'Pensez à ajouter le modificateur M si urgence (+26,88€).'},
+  QZJA010:{actes:['QAJA013','QAJA005'],tip:'Plaie profonde — pensez au modificateur M si urgence.'},
+  QAJA013:{actes:['QZJA002','QZJA017'],tip:'Plaie de la face — bien codée. Penser à M si urgence.'},
+  QAJA005:{actes:['QZJA017'],tip:'Plaie de la face 3-10cm — pensez à M si urgence.'},
+  QAJA002:{actes:['QZJA015'],tip:'Plaie de la face >10cm — pensez à M si urgence.'},
+  // Visites complexes
+  VL:{actes:[],tip:'VL = visite longue. Aucun majorateur applicable sauf MUT. Max 4 VL/an/patient.'},
+  VSP:{actes:[],tip:'Visite soins palliatifs. 100% AMO. Aucun majorateur sauf MUT.'},
+  // Pédiatrie
+  COE:{actes:[],tip:'Consultation bébé J8/M9/M24. Carnet de santé obligatoire. 100% AMO. Tarif revalorisé à 60€ depuis 2026.'},
+};
+
+// Suggestions par catégorie d'acte
+const SUGGEST_BY_CAT={
+  'Petite chirurgie':{
+    actes:[],
+    tip:'Petite chirurgie : pensez au modificateur M (+26,88€) si urgence. Pour plaies multiples, utilisez l\'onglet dédié.'
+  },
+  'Traumatologie':{
+    actes:[],
+    tip:'Traumatologie : modificateur M applicable en urgence. Visites pour traumato → pensez VG + IFI/IK.'
+  },
+  'Gynécologie':{
+    actes:[],
+    tip:'Gynéco : DIU (pose/changement/ablation) cumulables avec G depuis fin 2025.'
+  },
+  'Infiltrations':{
+    actes:[],
+    tip:'Infiltrations cumulables avec G depuis fin 2025 (avenant). Pensez à associer la consultation.'
+  },
+};
+
+function renderSuggestions(acts){
+  const el=document.getElementById('suggestions-panel');
+  const C=ctx();
+
+  // Si aucun acte sélectionné
+  if(!acts.length){
+    el.innerHTML=`<div class="sg-panel">
+      <div class="sg-head">
+        <div class="sgi">💡</div>
+        Suggestions intelligentes
+        <small>Sélectionnez un acte pour voir des recommandations</small>
+      </div>
+      <div class="sg-empty-hint">
+        Cliquez sur <strong>+</strong> à côté d'un acte dans la liste de gauche.<br>
+        L'outil analysera votre contexte et proposera automatiquement les associations possibles.
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Collecte des suggestions
+  const sugActes=new Set();
+  const sugMaj=new Set();
+  const tips=new Set();
+  const ngapS=acts.filter(a=>a.type==='NGAP'&&a.ngapT==='simple');
+  const ngapC=acts.filter(a=>a.type==='NGAP'&&a.ngapT==='complexe');
+  const hasSimple=ngapS.length>0;
+  const hasComplexe=ngapC.length>0;
+  const hasNGAP=hasSimple||hasComplexe;
+  const hasCCAM=acts.some(a=>a.type==='CCAM');
+  const hasADCurgM=acts.some(a=>a.type==='CCAM'&&a.ccamS==='ADC'&&a.tags.includes('urgM'));
+  const isVisite=C.lieu==='visite'||acts.some(a=>['VG','VL','VSP'].includes(a.id));
+
+  // 1) Suggestions par acte
+  for(const a of acts){
+    const map=SUGGEST_MAP[a.id]||SUGGEST_BY_CAT[a.cat];
+    if(map){
+      if(map.tip) tips.add(map.tip);
+      if(map.actes){
+        for(const id of map.actes){
+          if(!selected.includes(id)) sugActes.add(id);
+        }
+      }
+    }
+  }
+
+  // 2) Filtrer les suggestions pour ne garder que les compatibles
+  const compatActes=[...sugActes].filter(id=>{
+    const a=ACTS.find(x=>x.id===id);if(!a) return false;
+    // Si NGAP simple présent, exclure les complexes (Règle 1)
+    if(hasSimple&&a.type==='NGAP'&&a.ngapT==='complexe') return false;
+    if(hasComplexe&&a.type==='NGAP'&&a.ngapT==='simple') return false;
+    // Si NGAP présent, n'autoriser que les CCAM ngapOk (Règle 4)
+    if(hasNGAP&&a.type==='CCAM'&&!a.ngapOk) return false;
+    // Si CCAM non-exception présent, ne pas suggérer NGAP
+    if(acts.some(x=>x.type==='CCAM'&&!x.ngapOk)&&a.type==='NGAP') return false;
+    return true;
+  }).map(id=>ACTS.find(x=>x.id===id));
+
+  // 3) Suggestions de majorations (top 4 en vert applicables)
+  const majSuggest=[];
+  // M urgence
+  if(C.urg&&hasADCurgM&&!majsAdded.M){
+    majSuggest.push({code:'M',name:'Modificateur M (urgence CCAM)',tarif:26.88,cl:'green',reason:'Urgence + acte ADC'});
+  }
+  // F dimanche
+  if(C.jour==='dim'&&hasNGAP&&!majsAdded.F){
+    majSuggest.push({code:'F',name:'Dimanche/férié',tarif:19.06,cl:'green',reason:'Dimanche/férié'});
+  }
+  // N nuit
+  const isNuit20=(C.h==='s1'||C.h==='s2');
+  const isMatin=C.h==='m';
+  const canSimpleMaj=hasSimple||!hasNGAP;
+  if((isNuit20||isMatin)&&canSimpleMaj&&!majsAdded.N){
+    majSuggest.push({code:'N',name:'Nuit 20h-00h / 6h-8h',tarif:35,cl:'green',reason:'Plage horaire détectée'});
+  }
+  // MM nuit profonde
+  if(C.h==='np'&&canSimpleMaj&&!majsAdded.MM){
+    majSuggest.push({code:'MM',name:'Nuit profonde 0h-6h',tarif:40,cl:'green',reason:'Nuit profonde'});
+  }
+  // P CCAM 21h-00h
+  if(C.h==='s2'&&hasCCAM&&!majsAdded.P){
+    majSuggest.push({code:'P',name:'CCAM nuit 21h-00h',tarif:35,cl:'green',reason:'Acte CCAM nocturne'});
+  }
+  // S CCAM 0h-8h
+  if((C.h==='np'||isMatin)&&hasCCAM&&!majsAdded.S){
+    majSuggest.push({code:'S',name:'CCAM nuit profonde',tarif:40,cl:'green',reason:'CCAM 0h-8h'});
+  }
+  // MRT
+  if(C.mt&&C.gd&&canSimpleMaj&&!majsAdded.MRT){
+    majSuggest.push({code:'MRT',name:'MT urgence régulée',tarif:10,cl:'green',reason:'MT en garde régulée'});
+  }
+  // Visite : MD + IFI/IK
+  if(isVisite&&!majsAdded.MD){
+    majSuggest.push({code:'MD',name:'Maj. déplacement (visite justifiée)',tarif:10,cl:'green',reason:'Visite à domicile'});
+  }
+  if(isVisite&&!majsAdded.IFI){
+    majSuggest.push({code:'IFI',name:'Indemnité forfaitaire',tarif:10.60,cl:'green',reason:'Visite à domicile'});
+  }
+  if(isVisite&&!majsAdded.IK){
+    majSuggest.push({code:'IK',name:'Indemnité km (par km)',tarif:0.62,cl:'green',reason:'Visite à domicile'});
+  }
+  // MUT (toujours applicable si NGAP)
+  if(hasNGAP&&!majsAdded.MUT){
+    majSuggest.push({code:'MUT',name:'Envoi spé. urgent (RDV<48h)',tarif:5,cl:'amber',reason:'Si envoi spécialiste urgent'});
+  }
+  // MT options conditionnelles (amber)
+  if(C.mt&&canSimpleMaj){
+    if(!majsAdded.MCG) majSuggest.push({code:'MCG',name:'Acte coordonné (envoi MTT)',tarif:5,cl:'amber',reason:'Si soins itératifs sur envoi'});
+    if(!majsAdded.MSH) majSuggest.push({code:'MSH',name:'Suite hospit. patho. chronique',tarif:18,cl:'amber',reason:'Si sortie hospit. <1 mois'});
+    if(!majsAdded.MIC) majSuggest.push({code:'MIC',name:'Suite hospit. insuf. cardiaque',tarif:18,cl:'amber',reason:'Si sortie hospit. IC <2 mois'});
+    if(!majsAdded.MIS) majSuggest.push({code:'MIS',name:'Annonce maladie grave',tarif:25,cl:'amber',reason:'Si annonce cancer/neuro-dég.'});
+  }
+
+  // 4) Render
+  const f=v=>v.toFixed(2).replace('.',',')+'€';
+  let html=`<div class="sg-panel">
+    <div class="sg-head">
+      <div class="sgi">💡</div>
+      Suggestions intelligentes
+      <small>Basées sur vos actes et votre contexte</small>
+    </div>`;
+
+  // Section actes complémentaires
+  if(compatActes.length){
+    html+=`<div class="sg-section">
+      <div class="sg-stitle cyan">⊕ Actes fréquemment associés</div>
+      <div class="sg-list">${compatActes.slice(0,8).map(a=>`
+        <div class="sg-chip cyan" onclick="tog('${a.id}')">
+          <span class="sg-chip-code">${a.code}</span>
+          <span class="sg-chip-name" title="${a.name}">${a.name}</span>
+          <span class="sg-chip-price">${f(a.tarif)}</span>
+          <span class="sg-chip-add">+</span>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+
+  // Section majorations applicables (vertes)
+  const majOk=majSuggest.filter(m=>m.cl==='green');
+  if(majOk.length){
+    html+=`<div class="sg-section">
+      <div class="sg-stitle green">✅ Majorations applicables (à ajouter)</div>
+      <div class="sg-list">${majOk.map(m=>`
+        <div class="sg-chip green" onclick="togMaj('${m.code}','${m.name.replace(/'/g,'\\\'')}',${m.tarif})">
+          <span class="sg-chip-code">${m.code}</span>
+          <span class="sg-chip-name">${m.name}</span>
+          <span class="sg-chip-price">+${f(m.tarif)}</span>
+          <span class="sg-chip-add">+</span>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+
+  // Section majorations conditionnelles (ambre)
+  const majMaybe=majSuggest.filter(m=>m.cl==='amber');
+  if(majMaybe.length){
+    html+=`<div class="sg-section">
+      <div class="sg-stitle amber">💭 Majorations possibles (à vérifier)</div>
+      <div class="sg-list">${majMaybe.map(m=>`
+        <div class="sg-chip amber" onclick="togMaj('${m.code}','${m.name.replace(/'/g,'\\\'')}',${m.tarif})" title="${m.reason}">
+          <span class="sg-chip-code">${m.code}</span>
+          <span class="sg-chip-name">${m.name}</span>
+          <span class="sg-chip-price">+${f(m.tarif)}</span>
+          <span class="sg-chip-add">+</span>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+
+  // Tips
+  if(tips.size){
+    html+=[...tips].map(t=>`<div class="sg-tip"><span>💡</span><span>${t}</span></div>`).join('');
+  }
+
+  // Si rien à suggérer
+  if(!compatActes.length&&!majSuggest.length&&!tips.size){
+    html+=`<div class="sg-empty-hint">Pas de suggestion supplémentaire pour cette combinaison. La cotation est complète.</div>`;
+  }
+
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+const f=v=>v.toFixed(2).replace('.',',')+'&nbsp;€';
+
+function renderSel(acts,majs){
+  const el=document.getElementById('sel-list');
+  if(!acts.length&&!majs.length){el.innerHTML='<div class="emp">Cliquez sur <strong>+</strong> dans la liste pour ajouter un acte</div>';return;}
+  el.innerHTML=acts.map(a=>`<div class="si-item">
+    ${a.type==='CCAM'&&a.assoc?`<span class="sib sib${a.assoc}">A${a.assoc}</span>`:''}
+    <div class="sic">${a.code}</div>
+    <div class="sii">
+      <div class="sin">${a.name}</div>
+      <div class="sis">${a.cat}·${a.type}${a.ccamS?' · '+a.ccamS:''}${a.amo===1?' · 100% AMO':''}</div>
+      ${a.note?`<div class="sin2 warn">⚠️ ${a.note}</div>`:''}
+    </div>
+    <div class="sip">
+      ${a.cT!==a.tarif?`<span class="sio">${f(a.tarif)}</span>`:''}
+      <span class="sif${a.cT===0?' ze':a.cT<a.tarif?' rd':''}">${f(a.cT)}</span>
+    </div>
+    <button class="brm" onclick="tog('${a.id}')">✕</button>
+  </div>`).join('')+majs.map(m=>`<div class="si-item" style="border-color:rgba(245,158,11,.3)">
+    <div class="sic" style="color:var(--amber)">${m.code}</div>
+    <div class="sii"><div class="sin">${m.name}</div><div class="sis">Majoration</div></div>
+    <div class="sip"><span class="sif" style="color:var(--amber)">+${f(m.tarif)}</span></div>
+    <button class="brm" onclick="delMaj('${m.code}')">✕</button>
+  </div>`).join('');
+}
+
+function renderAlerts(als){
+  document.getElementById('alerts').innerHTML=als.map(a=>`<div class="al2 ${a.cl}"><span class="aic">${a.i}</span><span>${a.m}</span></div>`).join('');
+}
+
+function renderTot(ta,tm,amo,amc,tot){
+  document.getElementById('t-a').innerHTML=f(ta);
+  document.getElementById('t-m').innerHTML=f(tm);
+  document.getElementById('t-amo').innerHTML=f(amo);
+  document.getElementById('t-amc').innerHTML=f(amc);
+  document.getElementById('t-tot').innerHTML=f(tot);
+}
+
+function renderFDS(acts,majs,tA,tM,tAmo){
+  const body=document.getElementById('fds-body');
+  const foot=document.getElementById('fds-foot');
+  if(!acts.length&&!majs.length){body.innerHTML='<tr><td colspan="7" style="text-align:center;padding:1.25rem;color:var(--tx3)">Aucun acte</td></tr>';foot.innerHTML='';return;}
+  body.innerHTML=acts.map(a=>`<tr>
+    <td class="mo">${a.code}</td><td>${a.name}</td>
+    <td><span class="tg ${a.type==='NGAP'?'tn':a.ccamS==='ADC'?'ta':'tm'}">${a.type==='NGAP'?'NGAP':a.ccamS}</span></td>
+    <td class="mo" style="color:var(--amber)">${a.assoc?`A${a.assoc}`+( a.tags.includes('urgM')?' M':''):'—'}</td>
+    <td class="mo rc">${f(a.tarif)}</td>
+    <td class="mo rc" style="color:${a.cT<a.tarif?'var(--amber)':'var(--tx)'}">${f(a.cT)}</td>
+    <td class="mo rc" style="color:var(--blue)">${f(a.cT*(a.amo||.70))}</td>
+  </tr>`).join('')+majs.map(m=>`<tr>
+    <td class="mo" style="color:var(--amber)">${m.code}</td><td>${m.name}</td>
+    <td><span class="tg tu">Maj.</span></td><td>—</td>
+    <td class="mo rc" style="color:var(--amber)">+${f(m.tarif)}</td>
+    <td class="mo rc" style="color:var(--amber)">+${f(m.tarif)}</td><td>—</td>
+  </tr>`).join('');
+  const tot=tA+tM;
+  foot.innerHTML=`<tr><td colspan="4" style="color:var(--tx3)">TOTAL</td><td class="mo rc">${f(tA)}</td><td class="mo rc" style="color:var(--green)">${f(tot)}</td><td class="mo rc" style="color:var(--blue)">${f(tAmo)}</td></tr>`;
+}
+
+// ══════════════════════════════════
+// MOTEUR DE SUGGESTION DE MAJORATIONS
+// ══════════════════════════════════
+function renderMaj(){
+  const C=ctx();
+  const acts=selected.map(id=>ACTS.find(a=>a.id===id));
+  const hasSimple=acts.some(a=>a.type==='NGAP'&&a.ngapT==='simple');
+  const hasComplexe=acts.some(a=>a.type==='NGAP'&&a.ngapT==='complexe');
+  const hasNGAP=hasSimple||hasComplexe;
+  const hasADCurgM=acts.some(a=>a.type==='CCAM'&&a.ccamS==='ADC'&&a.tags.includes('urgM'));
+  const hasCCAM=acts.some(a=>a.type==='CCAM');
+  const isVisite=C.lieu==='visite'||acts.some(a=>['VG','VL','VSP'].includes(a.id));
+  const canRecvSimpleMaj=hasSimple||(hasNGAP===false); // si pas d'acte ou seulement simples
+
+  // Suggestions: {code,name,tarif,group,status:'ok'|'mb'|'no',reason,cond}
+  const S=[];
+  function add(code,name,tarif,group,status,reason,cond=''){
+    S.push({code,name,tarif,group,status,reason,cond});
+  }
+
+  // ── NUIT & GARDE ──
+  const isNuit20=(C.h==='s1'||C.h==='s2');
+  const isNuitProf=C.h==='np';
+  const isMatin=C.h==='m';
+
+  // N : NGAP nuit 20h-00h ou 6h-8h — simples uniquement
+  if((isNuit20||isMatin)&&canRecvSimpleMaj){
+    add('N','Majoration nuit 20h–00h ou 6h–8h',35,'Nuit & Garde','ok',`✅ Horaire ${isMatin?'6h–8h':'20h–00h'} détecté — applicable sur consultation simple.`,'Appel après 19h pour acte après 20h. Cabinet uniquement.');
+  } else if((isNuit20||isMatin)&&hasComplexe&&!hasSimple){
+    add('N','Majoration nuit 20h–00h ou 6h–8h',35,'Nuit & Garde','no','❌ Consultations complexes uniquement — les majorations horaires ne s\'appliquent pas (sauf MUT).');
+  } else {
+    add('N','Majoration nuit 20h–00h ou 6h–8h',35,'Nuit & Garde','no',`❌ Horaire actuel (${C.h==='n'?'8h–20h':C.h}) hors plage 20h–00h / 6h–8h.`);
+  }
+
+  // MM : nuit profonde 0h-6h NGAP
+  if(isNuitProf&&canRecvSimpleMaj){
+    add('MM','Nuit profonde 0h–6h (cabinet)',40,'Nuit & Garde','ok','✅ Nuit profonde 0h–6h — applicable sur consultation simple.');
+  } else if(isNuitProf&&hasComplexe&&!hasSimple){
+    add('MM','Nuit profonde 0h–6h (cabinet)',40,'Nuit & Garde','no','❌ Non applicable aux consultations complexes.');
+  } else {
+    add('MM','Nuit profonde 0h–6h (cabinet)',40,'Nuit & Garde','no','❌ Horaire actuel hors plage nuit profonde (0h–6h).');
+  }
+
+  // F : dimanche/férié
+  if(C.jour==='dim'){
+    add('F','Dimanche / Jour férié',19.06,'Nuit & Garde','ok','✅ Dimanche ou férié sélectionné — applicable.');
+  } else {
+    add('F','Dimanche / Jour férié',19.06,'Nuit & Garde','no','❌ Jour actuel : semaine ou samedi. Pas de dimanche/férié sélectionné.');
+  }
+
+  // P : CCAM 21h-00h
+  if(C.h==='s2'&&hasCCAM){
+    add('P','Majoration nuit 21h–00h (CCAM)',35,'Nuit & Garde','ok','✅ Acte CCAM entre 21h et 00h — modificateur P applicable.');
+  } else {
+    add('P','Majoration nuit 21h–00h (CCAM)',35,'Nuit & Garde','no',hasCCAM?'❌ Horaire 21h–00h non sélectionné.':'❌ Aucun acte CCAM sélectionné.');
+  }
+
+  // S : CCAM nuit 0h-8h
+  if((isNuitProf||isMatin)&&hasCCAM){
+    add('S','Majoration nuit profonde 0h–8h (CCAM)',40,'Nuit & Garde','ok','✅ Acte CCAM en nuit profonde 0h–8h — modificateur S applicable.');
+  } else {
+    add('S','Majoration nuit profonde 0h–8h (CCAM)',40,'Nuit & Garde','no',hasCCAM?'❌ Horaire nuit profonde non sélectionné.':'❌ Aucun acte CCAM sélectionné.');
+  }
+
+  // ── URGENCE ──
+  if(C.urg&&hasADCurgM){
+    add('M','Modificateur urgence (CCAM)',26.88,'Urgence','ok','✅ Urgence + acte ADC éligible (+M) — modificateur M applicable.','Indiquer M dans la colonne Modificateurs CCAM sur la feuille de soins.');
+  } else if(C.urg&&!hasADCurgM&&hasCCAM){
+    add('M','Modificateur urgence (CCAM)',26.88,'Urgence','mb','💡 Urgence activée mais aucun acte ADC avec indicateur +M sélectionné.','Vérifiez si un acte marqué +M est réalisé (sutures, traumatologie, ORL…).');
+  } else if(C.urg&&!hasCCAM){
+    add('M','Modificateur urgence (CCAM)',26.88,'Urgence','mb','💡 Urgence activée mais aucun acte CCAM sélectionné pour le moment.','Le modificateur M s\'applique sur les actes CCAM ADC réalisés en urgence.');
+  } else {
+    add('M','Modificateur urgence (CCAM)',26.88,'Urgence','no','❌ Urgence non activée.','Cochez "Urgence non régulée" si acte réalisé en urgence.');
+  }
+
+  // ── MÉDECIN TRAITANT ──
+  if(C.mt&&canRecvSimpleMaj){
+    add('MCG','Acte coordonné (soins itératifs, envoi MTT)',5,'Médecin Traitant','mb','💡 Vous êtes MT + consultation simple — MCG applicable si soins itératifs sur envoi du MTT.','Soins itératifs sur envoi explicite d\'un autre médecin traitant. G+MCG = 35€.');
+    add('MSH','Suite hospitalisation — pathologie chronique',18,'Médecin Traitant','mb','💡 Applicable si le patient sort d\'hospitalisation pour pathologie chronique.','1 fois dans le mois suivant la sortie. MT uniquement.');
+    add('MIC','Suite hospit. insuffisance cardiaque',18,'Médecin Traitant','mb','💡 Applicable si hospitalisation pour insuffisance cardiaque.','1 fois dans les 2 mois suivant la sortie. MT uniquement.');
+    add('MIS','Info initiale cancer / neuro-dégénératif',25,'Médecin Traitant','mb','💡 Consultation initiale d\'annonce d\'un cancer ou pathologie neuro-dégénérative.','Anonymisation : coter MTX. MT uniquement.');
+  } else if(!C.mt){
+    add('MCG','Acte coordonné (soins itératifs, envoi MTT)',5,'Médecin Traitant','no','❌ MT uniquement — non sélectionné.');
+    add('MSH','Suite hospitalisation — pathologie chronique',18,'Médecin Traitant','no','❌ MT uniquement.');
+    add('MIC','Suite hospit. insuffisance cardiaque',18,'Médecin Traitant','no','❌ MT uniquement.');
+    add('MIS','Info initiale cancer / neuro-dégénératif',25,'Médecin Traitant','no','❌ MT uniquement.');
+  } else {
+    add('MCG','Acte coordonné (soins itératifs, envoi MTT)',5,'Médecin Traitant','no','❌ Consultations complexes — MCG non applicable (sauf MUT).');
+    add('MSH','Suite hospitalisation — pathologie chronique',18,'Médecin Traitant','no','❌ Non applicable aux consultations complexes.');
+    add('MIC','Suite hospit. insuffisance cardiaque',18,'Médecin Traitant','no','❌ Non applicable aux consultations complexes.');
+    add('MIS','Info initiale cancer / neuro-dégénératif',25,'Médecin Traitant','no','❌ Non applicable aux consultations complexes.');
+  }
+
+  if(C.mt&&C.gd&&canRecvSimpleMaj){
+    add('MRT','MT urgence sur demande de régulation',10,'Médecin Traitant','ok','✅ MT + Garde PDSA — MRT applicable si patient reçu sur demande du centre de régulation.');
+  } else {
+    const miss=[];if(!C.mt)miss.push('MT');if(!C.gd)miss.push('Garde PDSA');
+    add('MRT','MT urgence sur demande de régulation',10,'Médecin Traitant','no',`❌ Nécessite : ${miss.length?miss.join(' + '):'consultation simple'}. ${miss.length?'Non activé(s).':''}`);
+  }
+
+  // MUT — applicable simples ET complexes (seul majorateur des complexes)
+  if(C.urg||hasNGAP){
+    const st=C.urg?'ok':'mb';
+    const reason=C.urg?'✅ Urgence activée — MUT applicable si envoi urgent vers spécialiste (RDV obtenu sous 48h).':'💡 MUT : seul majorateur applicable aux consultations complexes. Applicable si envoi urgent vers spécialiste.';
+    add('MUT','Envoi urgent spécialiste (RDV < 48h)',5,'Coordination',st,reason,'Valable aussi en téléconsultation TCG.');
+  } else {
+    add('MUT','Envoi urgent spécialiste (RDV < 48h)',5,'Coordination','no','❌ Aucun acte NGAP sélectionné.','MUT s\'applique sur les consultations NGAP (simples et complexes).');
+  }
+
+  // ── DÉPLACEMENT ──
+  if(isVisite){
+    add('MD','Majoration de déplacement (visite justifiée)',10,'Déplacement','ok','✅ Visite à domicile justifiée médicalement — MD applicable.','Visite médicalement justifiée (patient ne pouvant se déplacer). À ajouter systématiquement à la VG.');
+    add('IFI','Indemnité forfaitaire déplacement',10.60,'Déplacement','ok','✅ Visite à domicile — indemnité forfaitaire applicable.','Par déplacement aller-retour en plaine (voiture).');
+    add('IK','Indemnité kilométrique — plaine (par km)',0.62,'Déplacement','ok','✅ Visite à domicile — IK applicable en complément ou alternative à IFI.','Par km réel aller-retour. Indiquer la distance sur la FDS.');
+  } else {
+    add('MD','Majoration de déplacement (visite justifiée)',10,'Déplacement','no','❌ Cabinet ou téléconsultation — pas de déplacement.');
+    add('IFI','Indemnité forfaitaire déplacement',10.60,'Déplacement','no','❌ Cabinet ou téléconsultation — pas de déplacement factorable.');
+    add('IK','Indemnité kilométrique — plaine (par km)',0.62,'Déplacement','no','❌ Cabinet ou téléconsultation — pas de déplacement factorable.');
+  }
+
+  // ── RENDER ──
+  const groups=['Nuit & Garde','Urgence','Médecin Traitant','Coordination','Déplacement'];
+  const byGroup={};
+  for(const s of S){if(!byGroup[s.group])byGroup[s.group]=[];byGroup[s.group].push(s);}
+
+  document.getElementById('maj-panel').innerHTML=groups.filter(g=>byGroup[g]).map(g=>`
+    <div class="mgt">${g}</div>
+    ${byGroup[g].map(m=>{
+      const isAdd=!!majsAdded[m.code];
+      return`<div class="mc ${m.status==='ok'?'ok':m.status==='mb'?'mb':'no'}${isAdd?' add':''}">
+        <div class="ms ${m.status==='ok'?'ok':m.status==='mb'?'mb':'no'}">${m.status==='ok'?'✅':m.status==='mb'?'💡':'—'}</div>
+        <div class="mb2">
+          <div class="mn">${m.name}</div>
+          <div class="mco">${m.code}${m.tarif?' · +'+m.tarif.toFixed(2).replace('.',',')+'€':''}</div>
+          <div class="mr ${m.status}">${m.reason}</div>
+          ${m.cond?`<div class="mcd">${m.cond}</div>`:''}
+        </div>
+        <div class="mri">
+          <span class="mp ${m.status==='ok'?'ok':m.status==='mb'?'mb':'no'}">${m.tarif?'+'+m.tarif.toFixed(2).replace('.',',')+'€':'—'}</span>
+          ${m.tarif&&m.status!=='no'?`<button class="bma${isAdd?' add':''}" onclick="togMaj('${m.code}','${m.name.replace(/'/g,'\\\'')}}',${m.tarif})">${isAdd?'✓ Ajouté':'+ Ajouter'}</button>`:''}
+        </div>
+      </div>`;
+    }).join('')}`).join('');
+}
+
+function togMaj(code,name,tarif){
+  if(majsAdded[code]) delete majsAdded[code];
+  else majsAdded[code]={code,name:name.replace(/}$/,''),tarif:parseFloat(tarif)};
+  go();renderMaj();
+}
+function delMaj(code){delete majsAdded[code];go();renderMaj();}
+
+// ══ PLAIES MULTIPLES ══
+const WC={
+  face:{sup:{s3:'QAJA013',s10:'QAJA005',sl:'QAJA002'},deep:{s3:'QAJA013',s10:'QAJA005',sl:'QAJA002'}},
+  body:{sup:{s3:'QZJA002',s10:'QZJA017',sl:'QZJA015'},deep:{s3:'QZJA002',s10:'QZJA010',sl:'QZJA015'}},
+};
+const WT={QAJA013:58.23,QAJA005:101.33,QAJA002:109.83,QZJA002:52.40,QZJA017:78.64,QZJA015:88.56,QZJA010:89.87};
+const WL={face:'Face',body:'Corps / membres',hand:'Main'};
+function getWCode(zone,depth,l){
+  const z=zone==='face'?'face':'body';
+  const d=depth==='sup'?'sup':'deep';
+  const m=WC[z]?.[d]||WC.body.sup;
+  return l<3?m.s3:l<=10?m.s10:m.sl;
+}
+function addWound(){wounds.push({id:wid++,zone:'body',depth:'sup',len:''});renderWounds();}
+function delWound(id){wounds=wounds.filter(w=>w.id!==id);if(!wounds.length)addWound();else renderWounds();}
+function updWound(id,k,v){const w=wounds.find(x=>x.id===id);if(w){w[k]=v;renderWounds();}}
+function renderWounds(){
+  document.getElementById('wounds-list').innerHTML=wounds.map(w=>`<div class="wr">
+    <select onchange="updWound(${w.id},'zone',this.value)" style="flex:1.4">
+      <option value="face"${w.zone==='face'?' selected':''}>Face</option>
+      <option value="body"${w.zone==='body'?' selected':''}>Corps/membres</option>
+    </select>
+    <select onchange="updWound(${w.id},'depth',this.value)" style="flex:1">
+      <option value="sup"${w.depth==='sup'?' selected':''}>Superficielle</option>
+      <option value="deep"${w.depth==='deep'?' selected':''}>Profonde</option>
+    </select>
+    <input type="number" min="0" step="0.5" placeholder="cm" value="${w.len}" oninput="updWound(${w.id},'len',this.value)" style="max-width:65px;flex:.6">
+    <button class="btn-a btn-d" onclick="delWound(${w.id})" style="padding:5px 9px">✕</button>
+  </div>`).join('');
+  calcPlaies();
+}
+function calcPlaies(){
+  const el=document.getElementById('plaies-result');
+  const grps={};
+  for(const w of wounds){
+    const l=parseFloat(w.len)||0;if(!l) continue;
+    const k=`${w.zone}|${w.depth}`;
+    if(!grps[k]) grps[k]={zone:w.zone,depth:w.depth,tot:0,n:0};
+    grps[k].tot+=l;grps[k].n++;
+  }
+  const gl=Object.values(grps);
+  if(!gl.length){el.innerHTML='<div style="color:var(--tx3);font-size:.79rem;padding:.5rem">Saisissez les longueurs de chaque plaie.</div>';return;}
+  const res=gl.map((g,i)=>{
+    const code=getWCode(g.zone,g.depth,g.tot);
+    const base=WT[code]||0;
+    let assoc=1,cT=base,lbl='A1 (100%)';
+    if(i>0){
+      const first=gl[0];
+      const diff=diffZone(g.zone,first.zone);
+      assoc=diff?3:2;cT=diff?base*.75:base*.5;
+      lbl=diff?'A3 (75% — zones diff.)':'A2 (50% — même zone)';
+    }
+    return{...g,code,base,assoc,cT,lbl};
+  });
+  const tot=res.reduce((s,r)=>s+r.cT,0);
+  el.innerHTML=`<div class="pr">
+    <h3>🧮 Code(s) CCAM suggéré(s)</h3>
+    ${res.map(r=>`<div class="rg">
+      <div style="font-size:.7rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">${WL[r.zone]||r.zone} · ${r.depth==='sup'?'Superficielle':'Profonde'} · Total ${r.tot.toFixed(1)} cm (${r.n} plaie${r.n>1?'s':''})</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;color:var(--cyan)">${r.code}</span>
+        <span class="tg ${r.assoc===1?'t1':r.assoc===3?'tc':'tu'}">${r.lbl}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${r.assoc===1?'var(--green)':r.assoc===3?'var(--blue)':'var(--amber)'}">= ${f(r.cT)}</span>
+        ${r.cT!==r.base?`<span style="font-size:.72rem;color:var(--tx3)">(base ${f(r.base)})</span>`:''}
+      </div>
+      ${r.assoc>1?`<div style="font-size:.72rem;color:var(--tx3);margin-top:3px">→ Placer <strong>assoc. ${r.assoc}</strong> dans la colonne Modificateurs de la FDS</div>`:''}
+    </div>`).join('')}
+    <div style="border-top:1px solid var(--bd);margin-top:.875rem;padding-top:.875rem;display:flex;justify-content:space-between">
+      <span style="font-size:.83rem;font-weight:700">TOTAL plaies</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.05rem;color:var(--green)">${f(tot)}</span>
+    </div>
+    <div style="margin-top:.7rem;background:var(--bg4);border-radius:var(--rs);padding:.65rem .875rem;font-size:.73rem;color:var(--tx2);line-height:1.6">
+      💡 Ajouter modificateur <strong>M</strong> si réalisé en urgence (+26,88€ sur l'acte en A1). Les actes en A2/A3 reçoivent aussi +M si urgence.
+    </div>
+  </div>`;
+}
+
+// ══ RÈGLES ══
+const REGLES=[
+  {n:'R1',cl:'e',t:'Règle 1 — Simple ≠ Complexe',b:`<strong>Impossible</strong> de cumuler une consultation simple (G, VG, TCG) avec une consultation complexe (VL, CCP, CSO, IMT, GL1…).<br><br><strong>Exception unique :</strong> G + RDV possible, mais obligatoirement sur <em>deux feuilles de soins distinctes</em>.<div class="ex">✗ G + CCP &nbsp;·&nbsp; ✗ G + VL &nbsp;·&nbsp; ✗ G + CSO<br>✓ G + RDV (2 FDS distinctes)</div>`},
+  {n:'R2',cl:'w',t:'Règle 2 — Consultations complexes et majorateurs',b:`Les consultations complexes <strong>n'acceptent aucun majorateur</strong>.<br><br>Exception unique : <strong>MUT</strong> (+5€, envoi urgent spécialiste RDV <48h) est le seul majorateur applicable aux consultations complexes.<div class="ex">✗ VL + N &nbsp;·&nbsp; ✗ APC + MCG &nbsp;·&nbsp; ✗ IMT + MSH<br>✓ VL + MUT &nbsp;·&nbsp; ✓ APC + MUT</div>`},
+  {n:'R3',cl:'i',t:'Règle 3 — Consultations simples et majorateurs',b:`Les consultations simples (G, VG, TCG) acceptent des majorateurs selon :<br><br>
+    <strong>· L'heure :</strong> N (20h–00h / 6h–8h), MM (0h–6h), P et S (CCAM), F (dim/férié)<br>
+    <strong>· Le statut MT :</strong> MCG, MSH, MIC, MIS, MRT — tous réservés au médecin traitant<br>
+    <strong>· La coordination :</strong> MUT (envoi spécialiste urgent)<div class="ex">✓ G + N &nbsp;·&nbsp; ✓ VG + MM &nbsp;·&nbsp; ✓ G + MCG &nbsp;·&nbsp; ✓ TCG + MUT</div>`},
+  {n:'R4',cl:'w',t:'Règle 4 — Pas NGAP + CCAM (sauf 6 familles)',b:`Il est <strong>impossible</strong> d'associer une consultation NGAP avec un acte technique CCAM, <strong>sauf les 6 familles suivantes</strong> (mises à jour fin 2025) :<br><br>
+    <strong>1. ECG</strong> (DEQP003 — 44,52€) — Association 1 (100%)<br>
+    <strong>2. Frottis cervico-vaginal</strong> (JKHD001) — Association 1 (100%)<br>
+    <strong>3. Biopsies</strong> (QZHA001, QZHA005, GAHA001, HAHA002, etc.) — <em>Association 2 (50%)</em><br>
+    <strong>4. Infiltrations</strong> (membre supérieur, membre inférieur, articulations vertébrales postérieures) — Association 1<br>
+    <strong>5. Spirométrie</strong> (GLQP012 — 40,28€) — Association 1<br>
+    <strong>6. Stérilet</strong> (pose JKLD001, changement JKKD001, ablation JKGD001) — Association 1<br><br>
+    💡 Idem pour APC (acte ponctuel de consultant).<div class="ex">✓ G + ECG (DEQP003)            = 74,52€<br>✓ G + Spirométrie (GLQP012)    = 70,28€<br>✓ G + Pose stérilet (JKLD001)  = 68,40€<br>✓ G + Infiltration vertébrale (NZJB001) = 93€<br>✓ G + Biopsie (QZHA001) à 50%  = 49,20€<br><br>✗ G + suture &nbsp;·&nbsp; ✗ G + traumato</div>`},
+  {n:'R5',cl:'g',t:'Règle 5 — Association ATM + ATM',b:`Deux actes techniques médicaux (ATM) s'associent ainsi :<br><br>
+    · 1er acte → <strong>A1 (100%)</strong><br>
+    · 2ème acte → <strong>A2 (50%)</strong><br><br>
+    Chaque acte sur une ligne distincte de la FDS.<div class="ex">GLQP012 &nbsp; A1 &nbsp; 40,28€<br>DEQP003 &nbsp; A2 &nbsp; 7,13€ (50%)</div>`},
+  {n:'R6',cl:'g',t:'Règle 6 — Association ADC + ADC (chirurgie)',b:`Deux actes de chirurgie (ADC) :<br><br>
+    <strong>Zones anatomiques différentes</strong> (2 membres, tronc+membre, tête+membre) :<br>
+    → 1er acte : A1 (100%) · 2ème acte : <strong>A3 (75%)</strong><br><br>
+    <strong>Même zone anatomique</strong> :<br>
+    → 1er acte : A1 (100%) · 2ème acte : <strong>A2 (50%)</strong><br><br>
+    ⚠️ Les actes suivants (3ème+) ne sont pas cotés.<div class="ex">Suture bras + Suture jambe → A1 + A3 (membres diff.)<br>Suture bras G + Suture bras D → A1 + A3 (membres diff.)<br>Suture bras + Panaris main → A1 + A2 (même membre sup.)</div>`},
+  {n:'R7',cl:'g',t:'Règle 7 — Plaies multiples : additionner les longueurs',b:`Plusieurs plaies traitées dans le même temps :<br><br>
+    ➤ <strong>Additionner les longueurs</strong> par zone (face / main / corps) et profondeur (sup / prof)<br>
+    ➤ Utiliser la <strong>longueur totale</strong> pour choisir le code CCAM<br>
+    ➤ Appliquer les codes association entre groupes<div class="ex">Plaie sup 3cm bras G + Plaie sup 8cm bras G<br>→ Total 11cm corps → QZJA015 (>10cm) &nbsp; A1<br><br>Plaie prof 4cm bras D &nbsp; A1 → QZJA010 &nbsp; 89,87€<br>Plaie sup 2cm face &nbsp; A3 → QAJA013 &nbsp; 43,67€ (75%)<br>Total = 133,54€</div>`},
+];
+function renderRegles(){
+  document.getElementById('regles-content').innerHTML=REGLES.map(r=>`
+    <div class="rc2" onclick="this.classList.toggle('op')">
+      <div class="rch">
+        <div class="rn ${r.cl}">${r.n}</div>
+        <div class="rt">${r.t}</div>
+        <span style="margin-left:auto;color:var(--tx3);font-size:.78rem">▾</span>
+      </div>
+      <div class="rb">${r.b}</div>
+    </div>`).join('');
+}
+
+function setOpt(key,btn){
+  const g=btn.closest('.bg');
+  g.querySelectorAll('.bo').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  go();
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  ['fact','maj','plaies','regles'].forEach(t=>document.getElementById('tab-'+t).style.display=t===name?'block':'none');
+  if(name==='maj') renderMaj();
+}
+
+function resetAll(){if(!confirm('Réinitialiser la facturation ?'))return;selected=[];majsAdded={};filterActs();go();}
+
+function detail(id){
+  const a=ACTS.find(x=>x.id===id);if(!a) return;
+  const on=selected.includes(id);
+  if(confirm(`${a.name}\nCode : ${a.code} · Tarif : ${a.tarif.toFixed(2)}€\n${a.cond?'⚠️ '+a.cond:''}\n\n${on?'Retirer de la facturation ?':'Ajouter à la facturation ?'}`)) tog(id);
+}
+
+// ── INIT ──
+renderCats();filterActs();renderRegles();addWound();go();renderMaj();
+</script>
+</body>
+</html>
