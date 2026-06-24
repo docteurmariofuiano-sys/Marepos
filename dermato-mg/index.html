@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dermato MG — Assistant dermatologique de consultation</title>
 <meta name="description" content="Dermato MG : assistant dermatologique de consultation pour le médecin généraliste. Recherche rapide, navigation par symptôme/localisation, fiches pathologies, red flags, ordonnances types, conseils patients, mode apprentissage. Source : Dermatoclic. Outil d'aide à la décision.">
+<!-- PWA : application installable et hors-ligne -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1e6fd6">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Dermato MG">
 <link rel="stylesheet" href="style.css?v=1">
 </head>
 <body>
@@ -113,5 +122,13 @@
 
 <script src="data.js?v=1"></script>
 <script src="app.js?v=1"></script>
+<script>
+/* Enregistrement du service worker (hors-ligne). Ignoré en file:// ou si non supporté. */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {/* silencieux */});
+  });
+}
+</script>
 </body>
 </html>
