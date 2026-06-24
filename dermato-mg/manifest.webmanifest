@@ -1,0 +1,19 @@
+{
+  "name": "Dermato MG — Assistant dermatologique de consultation",
+  "short_name": "Dermato MG",
+  "description": "Assistant dermatologique de consultation pour le médecin généraliste : recherche, symptôme/localisation, fiches, red flags, ordonnances, conseils patients, apprentissage. Outil d'aide à la décision.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fa",
+  "theme_color": "#1e6fd6",
+  "categories": ["medical", "health", "education"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
