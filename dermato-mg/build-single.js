@@ -16,9 +16,11 @@ let html = fs.readFileSync(dir + 'index.html', 'utf8');
 const css  = fs.readFileSync(dir + 'style.css', 'utf8');
 const data = fs.readFileSync(dir + 'data.js', 'utf8');
 const app  = fs.readFileSync(dir + 'app.js', 'utf8');
+const photos = fs.existsSync(dir + 'photos.js') ? fs.readFileSync(dir + 'photos.js', 'utf8') : 'window.DERMATO_PHOTOS={};';
 
 html = html.replace(/<link rel="stylesheet" href="style\.css\?v=1">/, () => '<style>\n' + css + '\n</style>');
 html = html.replace(/<script src="data\.js\?v=1"><\/script>/, () => '<script>\n' + data + '\n</script>');
+html = html.replace(/<script src="photos\.js\?v=1"><\/script>/, () => '<script>\n' + photos + '\n</script>');
 html = html.replace(/<script src="app\.js\?v=1"><\/script>/, () => '<script>\n' + app + '\n</script>');
 html = html.replace('</title>', () =>
   '</title>\n<!-- Fichier autonome unique : CSS + donnees + script inlines.' +

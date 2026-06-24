@@ -559,11 +559,14 @@ function svgFor(item){
 }
 
 /* -- photos personnelles (importées par l'utilisateur, stockées localement) -- */
+/* images intégrées par défaut (générées dans photos.js) ; l'import utilisateur prime */
+const DEFAULT_PHOTOS = (typeof window !== "undefined" && window.DERMATO_PHOTOS) || {};
 const PHOTOS = Object.create(null);
 function photoKey(id){ return "dmg_photo_"+id; }
 function getPhoto(id){
   if(id in PHOTOS) return PHOTOS[id];
   let v=null; try{ v=localStorage.getItem(photoKey(id)); }catch(e){}
+  if(!v && DEFAULT_PHOTOS[id]) v=DEFAULT_PHOTOS[id];
   PHOTOS[id]=v||null; return PHOTOS[id];
 }
 function setPhoto(id,dataURL){
@@ -571,8 +574,11 @@ function setPhoto(id,dataURL){
   try{ localStorage.setItem(photoKey(id),dataURL); }catch(e){/* quota / file:// : reste en mémoire */}
 }
 function delPhoto(id){
-  PHOTOS[id]=null;
+  delete PHOTOS[id];            /* re-évalue (revient à l'image par défaut si elle existe) */
   try{ localStorage.removeItem(photoKey(id)); }catch(e){}
+}
+function userHasOverride(id){
+  try{ return !!localStorage.getItem(photoKey(id)); }catch(e){ return false; }
 }
 function importPhoto(id,file,cb){
   const reader=new FileReader();
@@ -664,15 +670,16 @@ function openLesion(key){
   const arr = kind==="d" ? LESIONS_DERMATO : LESIONS_ELEMENTAIRES;
   const it = arr.find(x=>x.id===id); if(!it) return;
   const hasPhoto = !!getPhoto(it.id);
+  const ownPhoto = userHasOverride(it.id);
   const body = `
     <div class="lez-modal-duo">
       <div><div class="lez-cap">Schéma</div><div class="schema">${svgFor(it)}</div></div>
-      <div><div class="lez-cap">Photo réelle (la vôtre)</div>${photoCell(it,true)}</div>
+      <div><div class="lez-cap">Photo réelle</div>${photoCell(it,true)}</div>
     </div>
     <div class="fiche-actions">
       <label class="btn btn-sm btn-blue">📷 ${hasPhoto?'Remplacer la photo':'Importer une photo'}
         <input type="file" accept="image/*" id="lezPhotoInput" hidden></label>
-      ${hasPhoto?'<button class="btn btn-sm" id="lezPhotoDel" type="button">🗑️ Supprimer la photo</button>':''}
+      ${ownPhoto?'<button class="btn btn-sm" id="lezPhotoDel" type="button">🗑️ Supprimer ma photo</button>':''}
     </div>
     <small class="muted">Importez une photo dont vous détenez les droits. Elle est enregistrée uniquement dans votre navigateur (aucun envoi sur internet) et reste privée.</small>
     ${(typeof it.alerte==='number')?`<p style="margin-top:10px">${badge(it.alerte)} ${it.alerte===2?'Structure suspecte (signe de malignité)':it.alerte===1?'À interpréter selon le contexte':'Aspect plutôt rassurant'}</p>`:`<p class="fiche-cat" style="margin-top:10px">${esc(it.groupe||'')}</p>`}
