@@ -252,6 +252,11 @@ tbody tr:hover{background:#fafcfe}
 .schema{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px;text-align:center}
 .schema svg{max-width:100%;height:auto}
 
+/* aide visuelle */
+.lez-card{align-items:stretch}
+.lez-wrap{width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin-bottom:6px;background:#fff8f1}
+.lez{display:block;width:100%;height:auto}
+
 /* responsive */
 @media (max-width:720px){
   body{font-size:15px}

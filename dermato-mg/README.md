@@ -59,6 +59,10 @@ Ne pas éditer `dermato-mg.html` à la main.
 - **Traitements** : base médicamenteuse par classe (indications, CI, grossesse/allaitement,
   EI, durée, erreurs fréquentes, application).
 - **Dermatoscopie MG** · **Lecture d'image** (grille structurée, aucune donnée transmise).
+- **Aide visuelle** : schémas originaux des lésions élémentaires (coupe de peau) et des
+  structures dermatoscopiques (réseau pigmenté, globules, stries, voile bleu-blanc,
+  télangiectasies…), avec définitions et exemples. Schémas pédagogiques originaux,
+  sans reproduction d'images protégées.
 - **Apprentissage** : cas cliniques, QCM, flashcards, fiches synthétiques.
 - **Alertes terrain** : grossesse, allaitement, nourrisson, enfant, immunodépression,
   insuffisance rénale, allergie.
