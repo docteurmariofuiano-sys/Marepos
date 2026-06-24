@@ -539,13 +539,21 @@
 
   <script type="module">
     /* pdf.js — local-first (vendor/) avec repli CDN automatique */
-    let pdfjsLib;
+    let pdfjsLib = null;
     try {
       pdfjsLib = await import('./vendor/pdf.min.mjs');
       pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.mjs';
     } catch {
-      pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs';
+      try {
+        pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs';
+      } catch {
+        /* pdf.js indisponible (hors-ligne sans vendor/ ET CDN injoignable) :
+           on désactive proprement la lecture de PDF, sans rejet non géré.
+           XLSX/CSV restent pleinement fonctionnels. */
+        pdfjsLib = null;
+        console.warn("pdf.js indisponible : vendor/ absent et CDN injoignable. La lecture de PDF est désactivée ; l'import XLSX/CSV reste disponible.");
+      }
     }
 
     const INDICATEURS = {
@@ -848,6 +856,7 @@
     }
 
     async function parsePdf(file) {
+      if (!pdfjsLib) throw new Error("lecture PDF indisponible (bibliothèque pdf.js non chargée). Placez les fichiers dans vendor/ pour un usage hors-ligne, ou activez l'accès Internet. L'import XLSX/CSV reste possible.");
       const data = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data }).promise;
       let text = "";
