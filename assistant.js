@@ -23,7 +23,7 @@ const APPS = [
    d:"Aide clinique neurologique : triage des urgences, examen guidé, céphalées, courriers et formation.",
    href:"neuro-gp/index.html"},
   {t:"Dermato MG", e:"🩺", dom:"Dermatologie",
-   d:"Assistant dermatologique de consultation : recherche, symptôme/localisation, fiches, red flags, ordonnances, conseils patients, apprentissage. Source : Dermatoclic.",
+   d:"Assistant dermatologique de consultation : recherche, symptôme/localisation, fiches, red flags, ordonnances, conseils patients, aide visuelle (lésions + dermatoscopie), apprentissage. Source : Dermatoclic.",
    href:"dermato-mg/index.html"},
   {t:"Dermato Consult", e:"🔬", dom:"Dermatologie",
    d:"Aide au diagnostic dermatologique, avec paliers d'urgence (dont urgence vitale).",
