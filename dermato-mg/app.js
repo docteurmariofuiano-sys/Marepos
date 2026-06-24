@@ -10,7 +10,7 @@
 const DB = window.DERMATO_DB;
 const {PATHOLOGIES, SYMPTOMES, LOCALISATIONS, URGENCES, DIFFERENTIELS,
        MEDICAMENTS, TERRAINS, CAS_CLINIQUES, QCM, FLASHCARDS,
-       DERMATOSCOPIE, ANALYSE_IMAGE, SOURCES, NIVEAUX} = DB;
+       DERMATOSCOPIE, ANALYSE_IMAGE, NIVEAUX} = DB;
 
 /* ---------- utilitaires ---------- */
 const $  = (s,c=document)=>c.querySelector(s);
@@ -439,26 +439,6 @@ function fichesHTML(){
 }
 
 /* ===================================================================
-   SOURCES
-   =================================================================== */
-function RENDER_sources(panel){
-  const s=SOURCES;
-  panel.innerHTML = `
-    <div class="section-title"><h2>Références / Sources</h2></div>
-    <div class="note note-blue">
-      <b>Source principale : <a href="${esc(s.principale.url)}" target="_blank" rel="noopener">${esc(s.principale.nom)}</a></b><br>
-      <a href="${esc(s.principale.url)}" target="_blank" rel="noopener">${esc(s.principale.url)}</a>
-      <p style="margin:.5em 0 0">${esc(s.principale.desc)}</p>
-    </div>
-    <div class="note note-orange">${esc(s.note)}</div>
-    <h3 style="margin:16px 0 8px">Autres références</h3>
-    ${list(s.autres)}
-    <div class="note note-green" style="margin-top:16px">
-      <b>Respect des sources et du droit d'auteur.</b> Les contenus sont reformulés à partir des recommandations et arbres décisionnels (Dermatoclic, HAS, sociétés savantes). Aucun texte protégé n'est reproduit intégralement et aucune image source protégée n'est copiée ; les schémas éventuels sont originaux et pédagogiques.
-    </div>`;
-};
-
-/* ===================================================================
    ALERTES TERRAIN
    =================================================================== */
 function terrainAlertHTML(){
@@ -509,8 +489,7 @@ const RENDER = {
   recherche:RENDER_recherche, symptome:RENDER_symptome, localisation:RENDER_localisation,
   pathologies:RENDER_pathologies, urgences:RENDER_urgences, differentiel:RENDER_differentiel,
   ordonnances:RENDER_ordonnances, conseils:RENDER_conseils, medicaments:RENDER_medicaments,
-  dermatoscopie:RENDER_dermatoscopie, image:RENDER_image, apprentissage:RENDER_apprentissage,
-  sources:RENDER_sources
+  dermatoscopie:RENDER_dermatoscopie, image:RENDER_image, apprentissage:RENDER_apprentissage
 };
 
 /* ===================================================================
