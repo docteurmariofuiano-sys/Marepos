@@ -375,14 +375,14 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
   <footer class="foot">
     <p>Outil d'aide au raisonnement — <strong>ne remplace pas le médecin</strong>.
       Red flags codés en règles explicites · raisonnement différentiel · validation médicale obligatoire.
-      Source clinique : Manuel du Généraliste, Dr Mario Fuiano. Prototype — mode local, aucune donnée transmise.</p>
+      Source clinique : Manuel du Généraliste. Prototype — mode local, aucune donnée transmise.</p>
   </footer>
 
   <script>
 /* ============================================================================
  * BASE DE CONNAISSANCES CLINIQUE — Aide au raisonnement (NE POSE PAS DE DIAGNOSTIC)
  * Source : « Manuel du Généraliste — Du Symptôme au Diagnostic » /
- *          « Fiches d'interrogatoire par symptôme » — Dr Mario Fuiano.
+ *          « Fiches d'interrogatoire par symptôme ».
  *
  * Format documenté dans docs/modele-de-donnees.md.
  * Prédicats (champ `when` / `showIf` / `w.when`) évalués par engine.js :
@@ -394,7 +394,7 @@ fieldset.field{border:1px solid var(--line);border-radius:10px;padding:12px 14px
 window.KB = {
   meta: {
     version: "0.1.0",
-    source: "Manuel du Généraliste — Dr Mario Fuiano",
+    source: "Manuel du Généraliste",
     avertissement:
       "Outil d'aide au raisonnement clinique. Ne pose pas de diagnostic. " +
       "Toute conclusion doit être validée par un médecin."
@@ -7067,7 +7067,7 @@ window.KB = {
  *   b = id d'une fiche d'interprétation biologique (window.BIOKB)
  *   p = id d'une fiche procédure / prévention (window.PROCEDURES)
  * Sinon = entrée « référence » (à approfondir, sources : Manuel du Généraliste,
- * Médecine Générale pour le Praticien, fiches dermato CESU — Drive du Dr Fuiano).
+ * Médecine Générale pour le Praticien, fiches dermato CESU — Drive source).
  *
  * Format : { n, titre, icone, frequents:[motif], urgences:[motif] }
  *   motif : { l:libellé, f?:ficheClinique, b?:ficheBio, p?:ficheProcedure }

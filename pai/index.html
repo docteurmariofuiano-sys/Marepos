@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAI ASSIST — Projet d'Accueil Individualisé (modèle officiel Éducation nationale)</title>
+<meta name="description" content="Génère un Projet d'Accueil Individualisé (PAI) au format officiel Éducation nationale / Eduscol : renseignements administratifs, aménagements et adaptations, conduite à tenir en cas d'urgence et trousse d'urgence déduites des médicaments prescrits. 100% local, hors-ligne, sans stockage.">
+<style>
+/* =====================================================================
+   PAI ASSIST — feuille de style autonome (reprend la charte du portail)
+   ===================================================================== */
+:root{
+  --bg:#f5f7fb; --bg-soft:#eef2f9; --card:#ffffff;
+  --ink:#0f1c2e; --ink-soft:#5b6b82; --line:#e2e8f2;
+  --brand:#1f6feb; --brand-deep:#0b3a82; --teal:#0fb5a6;
+  --prev:#16a34a; --prev-soft:#e8f9ee;
+  --warn:#d97706; --warn-soft:#fff7ed;
+  --danger:#dc2626; --danger-soft:#fef2f2;
+  --ombre:0 1px 3px rgba(15,28,46,.06), 0 8px 24px rgba(15,28,46,.06);
+  --ombre-fort:0 12px 40px rgba(15,28,46,.16);
+  --rayon:18px; --rayon-s:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.5;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+a{color:var(--brand);text-decoration:none}
+
+/* ---------- En-tête ---------- */
+.hero{
+  position:relative; overflow:hidden; color:#fff; padding:34px 20px 56px;
+  background:
+    radial-gradient(1200px 400px at 12% -20%, rgba(255,255,255,.18), transparent 60%),
+    linear-gradient(120deg,#0b3a82 0%,#1f6feb 55%,#16a3a3 115%);
+}
+.hero-inner{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.back{font-size:13px;font-weight:700;opacity:.92;display:inline-flex;gap:6px;align-items:center;color:#fff;margin-bottom:16px}
+.back:hover{opacity:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-logo{
+  width:62px;height:62px;border-radius:18px;flex-shrink:0;display:grid;place-items:center;font-size:32px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.brand h1{font-size:28px;font-weight:800;letter-spacing:.3px;line-height:1.05}
+.brand .tagline{font-size:14px;opacity:.9;font-weight:500;margin-top:3px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.26);padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+}
+
+/* ---------- Disposition ---------- */
+.wrap{max-width:1180px;margin:-30px auto 0;padding:0 20px 60px;position:relative;z-index:2}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--rayon);
+  box-shadow:var(--ombre);padding:20px;
+}
+.panel + .panel{margin-top:18px}
+.panel h2{
+  font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.panel h2 .n{
+  width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-size:12px;font-weight:800;
+}
+.subhead{font-size:12px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px}
+
+/* ---------- Formulaire ---------- */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fields .full{grid-column:1/-1}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+label.field{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+input[type=text],input[type=tel],input[type=date],textarea,select{
+  font-family:inherit;font-size:14px;color:var(--ink);background:var(--bg-soft);
+  border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;transition:.15s;width:100%;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(31,111,235,.14)}
+textarea{resize:vertical;min-height:64px}
+.check{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+
+/* ---------- Pathologies ---------- */
+.patho-grid{display:flex;flex-direction:column;gap:14px;max-height:560px;overflow:auto;padding-right:4px}
+.cat-title{font-size:11px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pap-mini{font-size:9px;font-weight:800;background:#ede9fe;color:#6d28d9;padding:1px 5px;border-radius:999px;vertical-align:middle;letter-spacing:.3px}
+@media (max-width:520px){.cat-grid{grid-template-columns:1fr}}
+.patho{
+  display:flex;gap:10px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);
+  border-radius:12px;cursor:pointer;background:#fff;transition:.15s;
+}
+.patho:hover{border-color:var(--brand)}
+.patho.on{border-color:var(--brand);background:#f3f8ff;box-shadow:0 0 0 3px rgba(31,111,235,.1)}
+.patho input{margin-top:3px}
+.patho .ico{font-size:22px;line-height:1}
+.patho .t{font-weight:800;font-size:14px;color:var(--ink)}
+.patho .s{font-size:11.5px;color:var(--ink-soft)}
+
+/* ---------- Médicaments ---------- */
+.med-group{margin-bottom:16px}
+.med-group .gtitle{font-size:12px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.med{
+  border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:#fff;transition:.15s;
+}
+.med.on{border-color:var(--prev);background:var(--prev-soft)}
+.med-head{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.med-head input{margin-top:3px}
+.med-name{font-weight:800;font-size:14px;color:var(--ink)}
+.med-dci{font-size:11.5px;color:var(--ink-soft);font-weight:600}
+.med-tag{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;
+  padding:2px 7px;border-radius:999px;margin-left:auto;white-space:nowrap;
+}
+.med-tag.urgent{background:var(--danger-soft);color:var(--danger)}
+.med-tag.std{background:var(--bg-soft);color:var(--ink-soft)}
+.med-detail{margin-top:10px;display:none;gap:10px;grid-template-columns:1fr 1fr}
+.med.on .med-detail{display:grid}
+.med-detail .full{grid-column:1/-1}
+.med-detail label{font-size:11.5px;font-weight:700;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px}
+.hint{font-size:11.5px;color:var(--ink-soft);background:var(--bg-soft);border-radius:8px;padding:6px 9px;margin-top:6px}
+
+.addfree{display:flex;gap:8px;margin-top:6px}
+.addfree input{flex:1}
+
+/* ---------- Boutons ---------- */
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:800;border:none;border-radius:10px;padding:11px 16px;
+  cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-deep)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+.btn.green{background:var(--prev);color:#fff}
+.btn.green:hover{filter:brightness(.93)}
+
+/* ---------- Aperçu PDF officiel ---------- */
+.pdfwrap{background:#fff;border:1px solid var(--line);border-radius:var(--rayon);box-shadow:var(--ombre);overflow:hidden;position:sticky;top:14px}
+.pdfbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+#pdfStatus{flex:1}
+#pdfView{width:100%;height:1080px;border:0;display:block;background:#525659}
+@media (max-width:980px){#pdfView{height:78vh}.pdfwrap{position:static}}
+
+/* ---------- Aperçu / document (masqué, sert à la copie) ---------- */
+.doc{
+  background:#fff;border:1px solid var(--line);border-radius:var(--rayon);box-shadow:var(--ombre);
+  padding:28px 30px;font-size:13px;color:var(--ink);
+}
+.doc .doc-head{border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:16px}
+.doc .doc-head h3{font-size:19px;font-weight:800;letter-spacing:.3px}
+.doc .doc-head .sub{font-size:11px;color:var(--ink-soft);margin-top:4px}
+.doc .part{
+  background:var(--brand-deep);color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;
+  text-transform:uppercase;padding:6px 12px;border-radius:8px;margin:20px 0 12px;
+}
+.doc h4{
+  font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--brand-deep);
+  border-bottom:1px solid var(--line);padding-bottom:4px;margin:16px 0 8px;
+}
+.doc .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12.5px}
+.doc .kv dt{font-weight:700;color:var(--ink-soft)}
+.doc .kv dd{color:var(--ink)}
+.doc ul{margin:6px 0 6px 20px}
+.doc li{margin:3px 0}
+.doc .placeholder{color:#b6c0d0;font-style:italic}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tbl th{background:var(--bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--ink-soft)}
+
+/* conduite à tenir : 2 niveaux */
+.ct{border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}
+.ct .ct-h{padding:8px 12px;font-weight:800;font-size:12.5px;color:#fff;display:flex;align-items:center;gap:8px}
+.ct.n1 .ct-h{background:var(--warn)}
+.ct.n2 .ct-h{background:var(--danger)}
+.ct .ct-b{padding:10px 12px}
+.ct .grid3{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.ct .grid3{grid-template-columns:1fr}}
+.ct .lab{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--ink-soft);margin-bottom:2px}
+.ct .traite{margin-top:8px;background:var(--bg-soft);border-radius:8px;padding:8px 10px}
+.callout{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:8px;padding:9px 12px;font-size:12px;margin:8px 0}
+.callout.info{background:#eff6ff;border-left-color:var(--brand)}
+.callout.danger{background:var(--danger-soft);border-left-color:var(--danger)}
+.kit li{margin:2px 0}
+.sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:20px}
+.sig .box{border:1px solid var(--line);border-radius:10px;padding:10px;min-height:78px}
+.sig .box .lbl{font-size:11px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px}
+@media (max-width:520px){.sig{grid-template-columns:1fr}}
+
+.empty-doc{text-align:center;color:var(--ink-soft);padding:30px 10px}
+.empty-doc .big{font-size:40px;margin-bottom:8px}
+
+/* ---------- Avertissement ---------- */
+.disclaimer{
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--prev);
+  border-radius:var(--rayon-s);padding:14px 16px;font-size:12.5px;color:var(--ink-soft);margin-top:18px;
+}
+.disclaimer strong{color:var(--ink)}
+
+/* ---------- Impression ---------- */
+@media print{
+  body{background:#fff}
+  .hero,.col-form,.btnrow,.disclaimer,.no-print{display:none!important}
+  .wrap{margin:0;padding:0;max-width:none}
+  .layout{display:block}
+  .doc{border:none;box-shadow:none;border-radius:0;padding:0;font-size:11.5px}
+  .ct,.tbl,.sig{break-inside:avoid}
+  .doc .part{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:13mm}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="back" href="../index.html">← Retour au portail</a>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🏫</div>
+      <div>
+        <h1>PAI ASSIST</h1>
+        <div class="tagline">Projet d'Accueil Individualisé — modèle officiel Éducation nationale, conduite à tenir générée selon les médicaments</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="pill">📄 Structure officielle Eduscol (3 parties)</span>
+      <span class="pill">⚡ Conduite à tenir générée automatiquement</span>
+      <span class="pill">📴 Hors-ligne · 🔒 sans stockage</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<div class="layout">
+
+  <!-- ============== COLONNE FORMULAIRE ============== -->
+  <div class="col-form">
+
+    <div class="panel">
+      <h2><span class="n">1</span> Partie 1 — Renseignements administratifs</h2>
+      <div class="subhead">Élève</div>
+      <div class="fields">
+        <label class="field">Nom <input type="text" id="f_nom" placeholder="Nom"></label>
+        <label class="field">Prénom <input type="text" id="f_prenom" placeholder="Prénom"></label>
+        <label class="field">Date de naissance <input type="date" id="f_ddn"></label>
+        <label class="field">Sexe
+          <select id="f_sexe"><option value="">—</option><option>Fille</option><option>Garçon</option></select></label>
+        <label class="field full">Adresse <input type="text" id="f_adresse" placeholder="Adresse de l'élève"></label>
+        <label class="field">Poids (kg) — utile aux doses <input type="text" id="f_poids" placeholder="ex. 22" inputmode="decimal"></label>
+        <label class="field">Demande
+          <select id="f_type"><option>1ʳᵉ demande</option><option>Modification / révision</option></select></label>
+      </div>
+
+      <div class="subhead">Responsables légaux</div>
+      <div class="fields">
+        <label class="field">Responsable 1 — lien <input type="text" id="r1_lien" placeholder="ex. Mère"></label>
+        <label class="field">Nom et prénom <input type="text" id="r1_nom" placeholder="Nom prénom"></label>
+        <label class="field">Téléphone portable <input type="tel" id="r1_tel" placeholder="06 …"></label>
+        <label class="field">Responsable 2 — lien <input type="text" id="r2_lien" placeholder="ex. Père"></label>
+        <label class="field">Nom et prénom <input type="text" id="r2_nom" placeholder="Nom prénom"></label>
+        <label class="field">Téléphone portable <input type="tel" id="r2_tel" placeholder="06 …"></label>
+      </div>
+
+      <div class="subhead">Scolarité &amp; référents</div>
+      <div class="fields">
+        <label class="field full">Établissement (école / collège / crèche…) <input type="text" id="f_etab" placeholder="Nom de l'établissement"></label>
+        <label class="field">Classe / niveau <input type="text" id="f_classe" placeholder="ex. CE2"></label>
+        <label class="field">Année scolaire <input type="text" id="f_annee" placeholder="2025–2026"></label>
+        <label class="field">Médecin traitant / spécialiste <input type="text" id="f_medtraitant" placeholder="Dr …"></label>
+        <label class="field">Téléphone du médecin <input type="tel" id="f_medtel" placeholder="…"></label>
+        <label class="field">N° d'urgence spécifique (autre que 15/112) <input type="text" id="f_numurg" placeholder="ex. centre de référence"></label>
+        <label class="field">Période de validité de la fiche <input type="text" id="f_periode" placeholder="ex. année scolaire 2025–2026"></label>
+        <label class="field">Date de rédaction <input type="date" id="f_date"></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">2</span> Pathologie(s) concernée(s)</h2>
+      <div class="patho-grid" id="pathoGrid"></div>
+      <label class="field full" style="margin-top:12px">Conséquences de la maladie utiles à la compréhension (Partie 2 · I)
+        <textarea id="f_consequences" placeholder="ex. fatigabilité, besoin de boire/uriner souvent, éviction de l'arachide…"></textarea>
+      </label>
+      <label class="field full" style="margin-top:10px">Précisions / allergènes / facteurs déclenchants
+        <textarea id="f_precisions" placeholder="ex. allergie à l'arachide et aux fruits à coque ; asthme d'effort…"></textarea>
+      </label>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">3</span> Soins &amp; médicaments prescrits</h2>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px">
+        Cochez les médicaments : la <strong>conduite à tenir d'urgence</strong> (Partie 3) et la
+        <strong>trousse d'urgence</strong> se construisent automatiquement à droite.</p>
+      <div id="medList"></div>
+      <div class="med-group" style="margin-top:6px">
+        <div class="gtitle">Ajouter un médicament / soin libre</div>
+        <div class="addfree">
+          <input type="text" id="freeMed" placeholder="Nom + posologie (ex. Doliprane 250 mg si fièvre)">
+          <button class="btn ghost" id="addFreeBtn" type="button">+ Ajouter</button>
+        </div>
+        <div id="freeList" style="margin-top:8px"></div>
+      </div>
+      <div class="fields" style="margin-top:12px">
+        <label class="field full">Surveillances particulières (qui, horaires, recueil…)
+          <input type="text" id="f_surveillance" placeholder="ex. glycémie capillaire avant le repas"></label>
+        <label class="field">Taux d'hémoglobine de base (g/dL) — drépanocytose
+          <input type="text" id="f_hb" placeholder="ex. 8" inputmode="decimal"></label>
+        <label class="field">Lieu de stockage de la trousse d'urgence
+          <input type="text" id="f_trousse_lieu" placeholder="ex. bureau de la vie scolaire"></label>
+        <label class="check" style="align-self:end"><input type="checkbox" id="f_porter"> Élève autorisé à garder son traitement d'urgence sur lui</label>
+      </div>
+
+      <div id="diaBox" style="display:none;margin-top:14px">
+        <div class="subhead">Diabète — valeurs reportées dans la fiche d'urgence</div>
+        <div class="fields">
+          <label class="field">Resucrage : nombre de sucres (hypo)
+            <input type="text" id="f_dia_sucres" placeholder="ex. 2"></label>
+          <label class="field">Glucagon : dose (auto selon le poids)
+            <input type="text" id="f_dia_glucagon" placeholder="½ ampoule (0,5 mg)"></label>
+          <label class="field">Insuline : UI pour faire baisser la glycémie de 50 mg/dL
+            <input type="text" id="f_dia_inscorr" placeholder="ex. 1"></label>
+          <label class="field">Insuline rapide : dose (1/10 du poids)
+            <input type="text" id="f_dia_insdose" placeholder="auto selon le poids"></label>
+          <label class="field full">Zone d'injection de l'insuline
+            <input type="text" id="f_dia_zone" placeholder="ex. cuisse / abdomen / bras"></label>
+        </div>
+        <p class="hint" style="margin-top:8px">Glucagon et dose d'insuline (1/10 du poids) sont pré-calculés à partir du poids saisi — modifiables.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="n">4</span> Aménagements &amp; restauration (Partie 2)</h2>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px">
+        Des aménagements sont <strong>suggérés automatiquement</strong> selon les pathologies cochées.</p>
+      <div class="fields">
+        <label class="field full">Restauration scolaire
+          <select id="f_resto">
+            <option value="">—</option>
+            <option>Régime spécifique garanti par la restauration collective</option>
+            <option>Éviction des allergènes par le service de restauration</option>
+            <option>Éviction demandée par la famille après lecture du menu</option>
+            <option>Panier-repas fourni par la famille</option>
+            <option>Externe (déjeune hors établissement)</option>
+          </select></label>
+        <label class="field full">Précisions / aménagements spécifiques à l'enfant
+          <textarea id="f_amenag" placeholder="ex. accès libre à l'eau et aux toilettes ; dispense partielle d'EPS en crise ; sorties scolaires : emporter la trousse…"></textarea></label>
+      </div>
+    </div>
+
+    <div class="btnrow no-print">
+      <button class="btn primary" id="pdfBtn" type="button">📄 Télécharger le PDF officiel</button>
+      <button class="btn ghost" id="printBtn" type="button">🖨️ Imprimer le PDF</button>
+      <button class="btn green" id="copyBtn" type="button">📋 Copier le texte</button>
+      <button class="btn ghost" id="resetBtn" type="button">↺ Réinitialiser</button>
+    </div>
+    <p id="pdfMsg" class="no-print" style="font-size:12px;color:var(--ink-soft);margin-top:8px"></p>
+  </div>
+
+  <!-- ============== COLONNE APERÇU (PDF officiel) ============== -->
+  <div class="col-doc">
+    <div class="pdfwrap">
+      <div class="pdfbar no-print">
+        <span id="pdfStatus">Aperçu du PAI officiel — renseignez le formulaire.</span>
+        <button class="btn ghost" id="refreshBtn" type="button" style="padding:6px 11px;font-size:12.5px">↻ Actualiser</button>
+      </div>
+      <iframe id="pdfView" title="Aperçu du PAI officiel rempli"></iframe>
+    </div>
+    <div class="doc" id="doc" style="display:none"></div>
+    <div class="disclaimer no-print">
+      <strong>Avertissement.</strong> L'aperçu de droite est le <strong>formulaire officiel de l'Éducation
+      nationale (Eduscol)</strong> rempli automatiquement — c'est ce document, à <strong>relire, compléter,
+      dater et signer</strong> (responsables légaux, médecin, établissement), qui doit être remis. Adapter à
+      chaque enfant (doses au poids, allergènes). <strong>Urgence vitale : 15 / 112.</strong>
+      Traitement 100 % local : aucune donnée transmise ni enregistrée.
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script src="vendor/pdf-lib.min.js"></script>
+<script>
+'use strict';
+/* =====================================================================
+   PAI ASSIST — moteur (données embarquées, hors-ligne)
+   Aligné sur le modèle officiel Éducation nationale / Eduscol (2021).
+   ===================================================================== */
+
+/* ---------- Pathologies (regroupées par catégorie) ----------
+   pap:true => relève le plus souvent d'un PAP/PPS (affiche un repère)
+*/
+const PATHOS = [
+  {id:"allergie", cat:"Allergies & immunité", ico:"🥜", t:"Allergie alimentaire / anaphylaxie", s:"Éviction + protocole anaphylaxie"},
+  {id:"venin",    cat:"Allergies & immunité", ico:"🐝", t:"Allergie aux venins (guêpe, abeille)", s:"Protocole piqûre"},
+  {id:"allergie_div", cat:"Allergies & immunité", ico:"💉", t:"Allergie médicamenteuse / latex", s:"Éviction stricte"},
+
+  {id:"asthme", cat:"Respiratoire", ico:"🫁", t:"Asthme", s:"Crise & traitement de secours"},
+  {id:"muco",   cat:"Respiratoire", ico:"🌬️", t:"Mucoviscidose", s:"Enzymes, kiné, hygiène"},
+
+  {id:"diabete",    cat:"Endocrino-métabolique", ico:"🩸", t:"Diabète de type 1", s:"Hypo / hyperglycémie, insuline"},
+  {id:"surrenale",  cat:"Endocrino-métabolique", ico:"🧂", t:"Insuffisance surrénale", s:"Hydrocortisone, doses de stress"},
+  {id:"metabolique",cat:"Endocrino-métabolique", ico:"🧬", t:"Maladie métabolique héréditaire (PCU…)", s:"Régime strict"},
+
+  {id:"celiaque",    cat:"Digestif & nutrition", ico:"🌾", t:"Maladie cœliaque", s:"Régime sans gluten"},
+  {id:"intolerance", cat:"Digestif & nutrition", ico:"🥛", t:"Intolérance alimentaire", s:"Éviction adaptée"},
+  {id:"mici",        cat:"Digestif & nutrition", ico:"🍽️", t:"MICI (Crohn / RCH)", s:"Accès toilettes, traitement"},
+
+  {id:"drepano",   cat:"Hématologie & oncologie", ico:"🔴", t:"Drépanocytose", s:"Hydratation, douleur, froid"},
+  {id:"hemophilie",cat:"Hématologie & oncologie", ico:"🩹", t:"Hémophilie / troubles de la coagulation", s:"Conduite si saignement"},
+  {id:"cancer",    cat:"Hématologie & oncologie", ico:"🎗️", t:"Cancer / chimiothérapie en cours", s:"Immunodépression, fièvre = urgence"},
+
+  {id:"cardio", cat:"Cardio-rénal", ico:"🫀", t:"Cardiopathie", s:"Effort, traitement"},
+  {id:"renal",  cat:"Cardio-rénal", ico:"🫘", t:"Insuffisance rénale chronique", s:"Hydratation, régime"},
+
+  {id:"epilepsie", cat:"Neurologie", ico:"⚡", t:"Épilepsie", s:"Crise convulsive prolongée"},
+  {id:"migraine",  cat:"Neurologie", ico:"🤕", t:"Migraine", s:"Repos, antalgique"},
+
+  {id:"tdah",      cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🌀", t:"TDAH", s:"Méthylphénidate + aménagements"},
+  {id:"dyslexie",  cat:"Neurodéveloppement & apprentissages", pap:true, ico:"📖", t:"Dyslexie / dysorthographie", s:"Aménagements lecture & écrit"},
+  {id:"dysgraphie",cat:"Neurodéveloppement & apprentissages", pap:true, ico:"✍️", t:"Dysgraphie", s:"Outils d'écriture"},
+  {id:"dyscalculie",cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🔢", t:"Dyscalculie", s:"Aménagements en maths"},
+  {id:"dyspraxie", cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🧩", t:"Dyspraxie (TDC)", s:"Geste, organisation"},
+  {id:"dysphasie", cat:"Neurodéveloppement & apprentissages", pap:true, ico:"💬", t:"Dysphasie / trouble du langage", s:"Communication"},
+  {id:"tsa",       cat:"Neurodéveloppement & apprentissages", pap:true, ico:"🧠", t:"Trouble du spectre autistique", s:"Cadre & sensoriel"},
+
+  {id:"anxiete", cat:"Santé mentale", pap:true, ico:"😰", t:"Trouble anxieux / refus scolaire", s:"Soutien & aménagements"},
+];
+
+/* ---------- Base médicaments (Soins + trousse) ----------
+   urgent:true => médicament mobilisé dans la conduite à tenir
+   trousse:true => figure dans la trousse d'urgence
+*/
+const MEDS = [
+  /* Allergie alimentaire / anaphylaxie */
+  {id:"adrenaline", patho:"allergie", urgent:true, trousse:true,
+   nom:"Adrénaline auto-injecteur", dci:"adrénaline IM (Anapen® / Epipen® / Jext® / Emerade®)",
+   poso:"150 µg si <25 kg, 300 µg si ≥25 kg", voie:"IM, face antéro-externe de la cuisse"},
+  {id:"antihistaminique", patho:"allergie", urgent:true, trousse:true,
+   nom:"Antihistaminique", dci:"cétirizine / desloratadine / dexchlorphéniramine",
+   poso:"Dose adaptée à l'âge/poids", voie:"Orale"},
+  {id:"cortico_oral_aller", patho:"allergie", urgent:true, trousse:true,
+   nom:"Corticoïde oral", dci:"prednisolone / bétaméthasone",
+   poso:"Selon prescription", voie:"Orale"},
+  {id:"salbu_aller", patho:"allergie", urgent:true, trousse:true,
+   nom:"Bronchodilatateur (Ventoline®)", dci:"salbutamol",
+   poso:"2 à 10 bouffées, chambre d'inhalation", voie:"Inhalée"},
+
+  /* Allergie aux venins */
+  {id:"adrenaline_venin", patho:"venin", urgent:true, trousse:true,
+   nom:"Adrénaline auto-injecteur", dci:"adrénaline IM (Anapen® / Epipen® / Jext® / Emerade®)",
+   poso:"150 µg si <25 kg, 300 µg si ≥25 kg", voie:"IM, face antéro-externe de la cuisse"},
+  {id:"antihist_venin", patho:"venin", urgent:true, trousse:true,
+   nom:"Antihistaminique", dci:"cétirizine / desloratadine",
+   poso:"Dose adaptée à l'âge/poids", voie:"Orale"},
+
+  /* Asthme */
+  {id:"salbu_asthme", patho:"asthme", urgent:true, trousse:true,
+   nom:"Bronchodilatateur de secours (Ventoline®)", dci:"salbutamol",
+   poso:"2 bouffées, jusqu'à 10 selon prescription", voie:"Inhalée + chambre d'inhalation"},
+  {id:"cortico_asthme", patho:"asthme", urgent:true, trousse:true,
+   nom:"Corticoïde oral de crise", dci:"prednisolone / prednisone",
+   poso:"≈ 1–2 mg/kg en une prise", voie:"Orale"},
+  {id:"cortico_fond", patho:"asthme", urgent:false, trousse:false,
+   nom:"Corticoïde inhalé de fond", dci:"béclométasone / budésonide / fluticasone",
+   poso:"Traitement de fond quotidien", voie:"Inhalée"},
+
+  /* Diabète type 1 */
+  {id:"resucrage", patho:"diabete", urgent:true, trousse:true,
+   nom:"Resucrage (sucre rapide)", dci:"sucre / jus de fruit / pâte de fruits",
+   poso:"≈ 1 sucre / 5 kg (≈ 15 g de glucides)", voie:"Orale"},
+  {id:"glucagon", patho:"diabete", urgent:true, trousse:true,
+   nom:"Glucagon", dci:"GlucaGen® (injectable) / Baqsimi® (spray nasal)",
+   poso:"½ amp (<25 kg) ou 1 amp (≥25 kg) ; ou 1 dose nasale", voie:"IM/SC ou intranasale"},
+  {id:"insuline", patho:"diabete", urgent:false, trousse:true,
+   nom:"Insuline", dci:"insuline (stylo / pompe)",
+   poso:"Selon protocole individuel", voie:"Sous-cutanée / pompe"},
+
+  /* Insuffisance surrénale */
+  {id:"hydrocort_orale", patho:"surrenale", urgent:true, trousse:true,
+   nom:"Hydrocortisone orale — dose de stress", dci:"hydrocortisone",
+   poso:"Dose ×2 à ×3 en cas de stress", voie:"Orale"},
+  {id:"hydrocort_inj", patho:"surrenale", urgent:true, trousse:true,
+   nom:"Hydrocortisone injectable (kit d'urgence)", dci:"hydrocortisone IM/SC",
+   poso:"Selon prescription", voie:"IM ou SC"},
+
+  /* Drépanocytose */
+  {id:"antalgique_drepano", patho:"drepano", urgent:true, trousse:true,
+   nom:"Antalgique (crise douloureuse)", dci:"paracétamol ± ibuprofène",
+   poso:"Dose adaptée au poids", voie:"Orale"},
+
+  /* Hémophilie */
+  {id:"facteur", patho:"hemophilie", urgent:true, trousse:true,
+   nom:"Conduite saignement / facteur de coagulation", dci:"facteur (protocole du centre traitant)",
+   poso:"Selon protocole individuel", voie:"—"},
+
+  /* Mucoviscidose */
+  {id:"enzymes", patho:"muco", urgent:false, trousse:true,
+   nom:"Enzymes pancréatiques (Créon®)", dci:"pancréatine",
+   poso:"À chaque repas/collation", voie:"Orale, avant de manger"},
+
+  /* Migraine */
+  {id:"antalgique_migraine", patho:"migraine", urgent:true, trousse:true,
+   nom:"Antalgique de crise", dci:"paracétamol / ibuprofène (± triptan si prescrit)",
+   poso:"Dose adaptée au poids, le plus tôt possible", voie:"Orale"},
+
+  /* Épilepsie */
+  {id:"midazolam", patho:"epilepsie", urgent:true, trousse:true,
+   nom:"Midazolam buccal (Buccolam®)", dci:"midazolam (voie buccale)",
+   poso:"Seringue préremplie selon l'âge", voie:"Buccale (joue/gencive)"},
+  {id:"diazepam", patho:"epilepsie", urgent:true, trousse:true,
+   nom:"Diazépam intrarectal (Valium®)", dci:"diazépam (voie intrarectale)",
+   poso:"≈ 0,5 mg/kg", voie:"Intrarectale"},
+
+  /* Cardio / rénal / cancer */
+  {id:"traitement_cardio", patho:"cardio", urgent:false, trousse:false,
+   nom:"Traitement de fond", dci:"selon prescription", poso:"Selon prescription", voie:"Orale"},
+  {id:"traitement_renal", patho:"renal", urgent:false, trousse:false,
+   nom:"Traitement de fond", dci:"selon prescription", poso:"Selon prescription", voie:"Orale"},
+
+  /* TDAH */
+  {id:"methylphenidate", patho:"tdah", urgent:false, trousse:false,
+   nom:"Méthylphénidate", dci:"méthylphénidate (Ritaline® / Concerta® / Quasym® / Medikinet®)",
+   poso:"Prise du midi si prescrite", voie:"Orale"},
+];
+
+/* ---------- Fiches « conduite à tenir » (format officiel à 2 niveaux) ----------
+   n1 = signes d'appel / réaction modérée ; n2 = signes de gravité / réaction grave.
+   Les médicaments réellement prescrits sont rappelés sous chaque niveau.
+*/
+const FICHES = {
+  asthme:{
+    titre:"Asthme / gêne respiratoire",
+    n1:{label:"Signes d'appel",
+      signes:["Toux sèche","Gêne respiratoire / essoufflement","Respiration sifflante","Pâleur"],
+      mesures:["Asseoir l'enfant au calme, le rassurer, noter l'heure","Le garder sous la surveillance d'un adulte"],
+      traite:"Faire inhaler le bronchodilatateur dans la chambre d'inhalation (5 respirations après chaque bouffée). En l'absence d'amélioration après quelques minutes et sans signe de gravité : renouveler les bouffées."},
+    n2:{label:"Signes de gravité → APPELER LE 15 / 112",
+      signes:["Difficulté à parler / à tousser","Lèvres bleutées","Sueurs, agitation","Position assise penchée en avant","Troubles de la conscience, pauses respiratoires"],
+      mesures:["APPELER le 15 (ou 112) et suivre les consignes","Garder l'enfant assis, au calme, sous surveillance"],
+      traite:"Poursuivre les bouffées de bronchodilatateur dans la chambre d'inhalation toutes les minutes jusqu'à l'arrivée des secours."}
+  },
+  allergie:{
+    titre:"Allergie alimentaire / anaphylaxie",
+    n1:{label:"Réaction MODÉRÉE (parle bien et respire bien)",
+      signes:["La bouche pique, les lèvres gonflent","Les yeux piquent, le nez coule","Plaques rouges qui démangent, localisées","Un peu mal au ventre et/ou envie de vomir"],
+      mesures:["Surveiller l'enfant jusqu'à disparition des symptômes","Prévenir les parents et conseiller de consulter"],
+      traite:"Donner l'antihistaminique par voie orale. Réévaluer la gravité en continu pour ne pas retarder l'adrénaline en cas d'aggravation."},
+    n2:{label:"Réaction GRAVE (un seul signe suffit) → ADRÉNALINE + 15",
+      signes:["Respire mal et la voix change","Respire mal, siffle ou tousse","Très mal au ventre, vomissements répétés","Rouge sur tout le corps, démangeaisons des mains/pieds/cuir chevelu","Malaise, se sent mal ou bizarre"],
+      mesures:["Allonger l'enfant (ou ½ assis si gêne pour respirer)","Injecter L'ADRÉNALINE dans la face externe de la cuisse","Puis appeler le SAMU (15 ou 112)","2ᵉ injection possible après 5–10 min si les symptômes persistent"],
+      traite:"Adrénaline IM sans délai. Si gêne respiratoire : faire inhaler le bronchodilatateur (chambre d'inhalation). Ne jamais retarder l'adrénaline."}
+  },
+  venin:{
+    titre:"Allergie aux venins (piqûre d'insecte)",
+    n1:{label:"Réaction locale / cutanée isolée",
+      signes:["Rougeur, douleur, gonflement localisé","Plaques qui démangent autour de la piqûre"],
+      mesures:["Retirer le dard si visible (gratter, ne pas pincer)","Appliquer du froid, surveiller"],
+      traite:"Donner l'antihistaminique par voie orale. Surveiller l'apparition de tout signe de gravité."},
+    n2:{label:"Réaction GRAVE → ADRÉNALINE + 15",
+      signes:["Gêne respiratoire, voix modifiée","Gonflement du visage / de la gorge","Malaise, urticaire généralisée","Perte de connaissance"],
+      mesures:["Allonger l'enfant","Injecter L'ADRÉNALINE dans la face externe de la cuisse","Appeler le 15 (ou 112)","2ᵉ injection possible après 5 min si besoin"],
+      traite:"Adrénaline IM sans délai, puis surveillance jusqu'à l'arrivée des secours."}
+  },
+  diabete:{
+    titre:"Diabète de type 1 (hypo / hyperglycémie)",
+    n1:{label:"Hypoglycémie MODÉRÉE (enfant conscient)",
+      signes:["Pâleur, sueurs, tremblements","Difficulté à parler","Agitation, somnolence, agressivité inhabituelle"],
+      mesures:["Arrêter l'activité, asseoir l'enfant sur place","Glycémie au doigt si possible (< 70 mg/dL)","Faire patienter ; recontrôler ~15 min après"],
+      traite:"Donner le resucrage (sucre rapide), puis selon le moment : repas / collation / biscuit. Si signes persistants après 10 min, redonner la même dose. Informer les parents."},
+    n2:{label:"Hypoglycémie SÉVÈRE (perte de connaissance) → GLUCAGON + 15",
+      signes:["Perte de connaissance ± convulsions","Somnolence extrême","Impossibilité de prendre du sucre par la bouche"],
+      mesures:["NE RIEN donner par la bouche","Mettre en position latérale de sécurité (PLS)","Appeler le 15 / 112 (signaler diabète + glucagon disponible)"],
+      traite:"Administrer le glucagon (GlucaGen® injectable IM/SC, ou Baqsimi® spray nasal). Au réveil (5–15 min), resucrer en petites quantités. Avertir les parents."}
+  },
+  epilepsie:{
+    titre:"Épilepsie (crise convulsive)",
+    n1:{label:"Les signes",
+      signes:["Perte de connaissance","Secousses musculaires involontaires","Raideur généralisée du corps","Contraction de la mâchoire"],
+      mesures:["Rester calme et faire évacuer les autres élèves au calme","Noter l'heure de début de la crise","Laisser l'élève allongé par terre, éloigner tout objet dangereux","Sécuriser son périmètre","Alerter le SAMU 15 et suivre les consignes ; surveiller jusqu'à la fin de la crise"],
+      traite:"Administrer le traitement de crise prescrit (midazolam buccal entre joue et gencive, ou diazépam intrarectal) si la crise dépasse le seuil prescrit."},
+    n2:{label:"Signes de gravité → APPELER / RAPPELER LE 15",
+      signes:["Durée de perte de connaissance longue (> 5 minutes)","Répétition des crises","Arrêt de la respiration"],
+      mesures:["Contacter à nouveau le SAMU 15 et suivre les consignes du médecin","Si l'enfant ne respire pas, pratiquer un massage cardiaque"],
+      traite:"Poursuivre / renouveler le traitement de crise selon la prescription et les consignes du SAMU."},
+    aNePasFaire:["Ne pas chercher à maîtriser l'enfant","Ne pas essayer de placer un objet entre ses dents"]
+  },
+  surrenale:{
+    titre:"Insuffisance surrénale",
+    n1:{label:"Situation de stress (fièvre, vomissements, accident)",
+      signes:["Fièvre, infection","Vomissements","Fatigue inhabituelle, pâleur"],
+      mesures:["Administrer la dose de stress d'hydrocortisone orale","Prévenir la famille","Surveiller l'état général"],
+      traite:"Hydrocortisone orale (dose de stress prescrite) sans attendre."},
+    n2:{label:"Insuffisance surrénale aiguë → HYDROCORTISONE INJECTABLE + 15",
+      signes:["Malaise, troubles de la conscience","Vomissements répétés / impossibilité d'avaler","Somnolence"],
+      mesures:["Injecter l'hydrocortisone du kit d'urgence sans délai","Allonger l'enfant","Appeler le 15 / 112"],
+      traite:"Hydrocortisone injectable (IM/SC) immédiate, puis surveillance jusqu'aux secours."}
+  },
+  drepano:{
+    titre:"Drépanocytose",
+    n1:{label:"Douleur isolée non thoracique (sans fièvre ni pâleur ni fatigue)",
+      signes:["Douleur isolée (membres, dos, ventre)","Sans fièvre, sans pâleur, sans fatigue"],
+      mesures:["Appeler les parents, mettre l'enfant au repos, le réchauffer, le faire boire","Si la douleur persiste après 30 min : consultation urgente — rappeler les parents et, s'ils ne sont pas joignables rapidement, appeler le 15 / 112"],
+      traite:"Paracétamol : 1 dose toutes les 6 h si douleur (maximum 4 doses par jour), selon la prescription."},
+    n2:{label:"Signes de gravité → consultation hospitalière urgente + 15",
+      signes:["Fièvre ≥ 38,5 °C","ET/OU pâleur avec fatigue intense d'apparition rapide","Douleur au niveau du thorax, même isolée"],
+      mesures:["Appeler les parents et le 15 / 112 pour transport vers le centre hospitalier référent","En attendant les secours : mise au repos + boisson + éviter tout refroidissement"],
+      traite:"En cas de fièvre, paracétamol en attendant les secours (selon la prescription)."}
+  },
+  hemophilie:{
+    titre:"Hémophilie / troubles de la coagulation",
+    n1:{label:"Saignement ou choc léger",
+      signes:["Saignement extérieur","Bosse / articulation douloureuse"],
+      mesures:["Comprimer le saignement, immobiliser","Glace sur l'articulation","Prévenir la famille et le centre traitant"],
+      traite:"Suivre le protocole individuel. Éviter aspirine et injections IM."},
+    n2:{label:"Traumatisme grave / saignement non maîtrisé → 15",
+      signes:["Choc à la tête, au cou ou à l'abdomen","Saignement qui ne s'arrête pas","Douleur intense, gonflement rapide"],
+      mesures:["Appeler le 15 / 112","Prévenir famille et centre traitant","Mettre au repos, ne pas mobiliser inutilement"],
+      traite:"Mise en œuvre du facteur de coagulation selon le protocole du centre / décision des secours."}
+  },
+  cancer:{
+    titre:"Cancer / chimiothérapie (immunodépression)",
+    n1:{label:"Vigilance quotidienne",
+      signes:["Fatigue, baisse de forme","Contact avec une maladie contagieuse"],
+      mesures:["Renforcer l'hygiène des mains, aérer","Limiter l'exposition aux enfants malades","Aménager la fatigue et les absences"],
+      traite:"Pas de médicament systématique — surveillance et hygiène."},
+    n2:{label:"Fièvre ≥ 38 °C = URGENCE (neutropénie)",
+      signes:["Fièvre, frissons","Altération de l'état général"],
+      mesures:["Prévenir IMMÉDIATEMENT la famille et le centre traitant","Isoler des enfants malades","Appeler le 15 si malaise"],
+      traite:"NE PAS donner d'antipyrétique sans avis du centre traitant."}
+  },
+  migraine:{
+    titre:"Migraine",
+    n1:{label:"Début de crise",
+      signes:["Mal de tête","Photophobie, nausées"],
+      mesures:["Installer l'enfant au calme, dans la pénombre","Laisser se reposer"],
+      traite:"Donner l'antalgique prescrit dès le début de la crise."},
+    n2:{label:"Signes inhabituels → prévenir / 15 si besoin",
+      signes:["Mal de tête brutal et intense, inhabituel","Troubles visuels, de la parole ou de l'équilibre","Vomissements répétés, somnolence"],
+      mesures:["Prévenir la famille","Appeler le 15 en cas de signe neurologique inhabituel"],
+      traite:"Surveillance rapprochée."}
+  }
+};
+
+/* ---------- Aménagements suggérés par pathologie (auto) ---------- */
+const AMENAGEMENTS = {
+  allergie:["Éviction stricte de l'allergène (repas, collations, ateliers).","Vérifier la composition des aliments ; pas d'échange de nourriture.","Repas personnalisé ou panier fourni par la famille si besoin."],
+  venin:["Surveillance lors des activités extérieures (printemps/été).","Éviter les boissons sucrées dehors, chaussures fermées."],
+  allergie_div:["Éviction du produit en cause (médicament / latex).","Signaler l'allergie à toute personne intervenant auprès de l'enfant."],
+  asthme:["Bronchodilatateur de secours accessible en permanence.","Échauffement avant l'EPS ; adaptation/dispense en cas de crise.","Éviter les déclencheurs connus (poussière, animaux, froid, effort)."],
+  muco:["Accès libre à l'eau et aux toilettes.","Enzymes à chaque repas/collation.","Éviter le contact avec les personnes enrhumées ; hygiène des mains.","Aménagement de la fatigue et des absences (soins)."],
+  diabete:["Autosurveillance glycémique autorisée en classe et au sport.","Accès libre à un resucrage et à l'eau ; collations autorisées.","Repas comportant des féculents ; ne jamais laisser seul en cas d'hypo.","Sorties : emporter la trousse d'urgence et prévenir la famille à l'avance."],
+  surrenale:["Doses de stress disponibles ; protocole d'urgence affiché.","Prévenir la famille en cas de fièvre, vomissements ou accident."],
+  metabolique:["Régime alimentaire strict selon prescription.","Repas adapté / panier familial ; vigilance sur la composition."],
+  celiaque:["Régime sans gluten strict (repas, collations, ateliers).","Éviter la contamination croisée ; repas dédié ou panier familial."],
+  intolerance:["Éviction de l'aliment concerné ; alternatives proposées.","Lecture des étiquettes / menus."],
+  mici:["Accès libre et immédiat aux toilettes.","Tolérance pour les absences liées aux poussées ; collations possibles."],
+  drepano:["Hydratation renforcée et accès libre à l'eau/toilettes.","Éviter le froid, les efforts intenses et la déshydratation.","Adaptation de l'EPS ; vigilance douleur/fièvre."],
+  hemophilie:["Éviter les sports de contact ; activités adaptées.","Conduite à tenir affichée en cas de choc ou de saignement.","Éviter aspirine et injections IM."],
+  cancer:["Limiter l'exposition aux infections ; hygiène renforcée.","Aménagement de la fatigue, des absences et du rattrapage.","Fièvre = contact immédiat de la famille / du centre."],
+  cardio:["Adaptation de l'effort physique selon l'avis du cardiologue.","Repos en cas de fatigue ; conduite à tenir en cas de malaise."],
+  renal:["Accès libre aux toilettes et à l'eau ; régime respecté.","Aménagement des absences liées aux soins."],
+  epilepsie:["Protocole de crise affiché ; ne jamais laisser seul en crise.","Aménagement possible des écrans / de la fatigue selon le type."],
+  migraine:["Accès à un endroit calme et sombre en début de crise.","Antalgique disponible ; tolérance pour le repos."],
+  tdah:["Place au calme, près de l'enseignant ; consignes courtes et reformulées.","Pauses motrices autorisées ; temps majoré pour les évaluations.","Aide à l'organisation (agenda, étapes)."],
+  dyslexie:["Temps majoré ; consignes lues à voix haute.","Supports aérés, police adaptée ; ne pas pénaliser l'orthographe.","Recours aux outils numériques / lecteur."],
+  dysgraphie:["Recours à l'ordinateur / supports à compléter ; photocopies des cours.","Réduire la quantité d'écrit ; ne pas pénaliser le graphisme.","Temps majoré."],
+  dyscalculie:["Tables et formules autorisées ; calculatrice.","Énoncés simplifiés ; manipulation et supports visuels.","Temps majoré."],
+  dyspraxie:["Supports pré-tracés / à compléter ; outils numériques.","Adapter l'EPS et les travaux manuels ; aide à l'organisation spatiale."],
+  dysphasie:["Consignes simples, reformulées et illustrées.","Supports visuels ; temps de réponse allongé ; valoriser l'oral aidé."],
+  tsa:["Cadre prévisible (emploi du temps visuel) ; prévenir les changements.","Aménagement sensoriel (bruit, lumière) ; espace de retrait possible.","Consignes explicites et individualisées."],
+  anxiete:["Accueil bienveillant ; personne ou lieu repère identifié.","Aménagement progressif des évaluations / de la présence.","Conduite à tenir convenue en cas de crise d'angoisse."],
+};
+
+/* ---------- État ---------- */
+const state = {pathos:new Set(), meds:new Set(), free:[]};
+const $ = (s,c=document)=>c.querySelector(s);
+const esc = s => String(s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const li = arr => arr.map(x=>`<li>${esc(x)}</li>`).join("");
+
+/* ---------- Pathologies UI ---------- */
+function buildPathos(){
+  const cats = [];
+  PATHOS.forEach(p=>{ if(!cats.includes(p.cat)) cats.push(p.cat); });
+  $("#pathoGrid").innerHTML = cats.map(cat=>{
+    const items = PATHOS.filter(p=>p.cat===cat).map(p=>`
+      <label class="patho" data-id="${p.id}">
+        <input type="checkbox" value="${p.id}">
+        <span class="ico">${p.ico}</span>
+        <span><span class="t">${p.t}${p.pap?' <span class="pap-mini">PAP/PPS</span>':''}</span><br>
+          <span class="s">${p.s}</span></span>
+      </label>`).join("");
+    return `<div class="cat-block"><div class="cat-title">${esc(cat)}</div><div class="cat-grid">${items}</div></div>`;
+  }).join("");
+  $("#pathoGrid").querySelectorAll("input").forEach(cb=>{
+    cb.addEventListener("change",()=>{
+      const lab = cb.closest(".patho");
+      if(cb.checked){ state.pathos.add(cb.value); lab.classList.add("on"); }
+      else{ state.pathos.delete(cb.value); lab.classList.remove("on"); }
+      buildMeds(); render();
+    });
+  });
+}
+
+/* ---------- Médicaments UI ---------- */
+function buildMeds(){
+  const list = $("#medList");
+  if(!state.pathos.size){
+    list.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft)">Sélectionnez d'abord une pathologie pour voir les médicaments proposés.</p>`;
+    return;
+  }
+  let html = "";
+  for(const p of PATHOS){
+    if(!state.pathos.has(p.id)) continue;
+    const meds = MEDS.filter(m=>m.patho===p.id);
+    html += `<div class="med-group"><div class="gtitle">${p.ico} ${esc(p.t)}</div>`;
+    if(!meds.length){
+      html += `<p class="hint" style="margin-top:0">Pas de médicament d'urgence type — aménagements générés automatiquement${p.pap?" (relève généralement d'un PAP/PPS)":""}.</p></div>`;
+      continue;
+    }
+    html += meds.map(m=>{
+      const on = state.meds.has(m.id);
+      return `<div class="med ${on?"on":""}" data-id="${m.id}">
+        <label class="med-head">
+          <input type="checkbox" value="${m.id}" ${on?"checked":""}>
+          <span><span class="med-name">${esc(m.nom)}</span>
+            <span class="med-tag ${m.urgent?"urgent":"std"}">${m.urgent?"Urgence":"Traitement"}</span><br>
+            <span class="med-dci">${esc(m.dci)}</span></span>
+        </label>
+        <div class="med-detail">
+          <label class="full">Posologie / dose
+            <input type="text" data-f="poso" placeholder="${esc(m.poso)}"></label>
+          <label>Voie
+            <input type="text" data-f="voie" placeholder="${esc(m.voie)}"></label>
+          <label>Horaire / situation
+            <input type="text" data-f="moment" placeholder="ex. en cas de crise"></label>
+        </div>
+      </div>`;
+    }).join("");
+    html += `</div>`;
+  }
+  list.innerHTML = html;
+  list.querySelectorAll(".med-head input").forEach(cb=>{
+    cb.addEventListener("change",()=>{
+      const card = cb.closest(".med");
+      if(cb.checked){ state.meds.add(cb.value); card.classList.add("on"); }
+      else{ state.meds.delete(cb.value); card.classList.remove("on"); }
+      render();
+    });
+  });
+  list.querySelectorAll(".med-detail input").forEach(inp=>inp.addEventListener("input",render));
+}
+
+function medValues(id){
+  const card = $(`.med[data-id="${id}"]`);
+  const m = MEDS.find(x=>x.id===id);
+  const get = f=>{ const el = card && card.querySelector(`[data-f="${f}"]`); return el && el.value.trim() ? el.value.trim() : ""; };
+  return {poso:get("poso")||m.poso, voie:get("voie")||m.voie, moment:get("moment")};
+}
+
+/* ---------- Médicaments libres ---------- */
+function renderFree(){
+  $("#freeList").innerHTML = state.free.map((t,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;background:var(--bg-soft);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:13px">
+      <span style="flex:1">💊 ${esc(t)}</span>
+      <button class="btn ghost" style="padding:4px 9px;font-size:12px" data-i="${i}" type="button">✕</button>
+    </div>`).join("");
+  $("#freeList").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    state.free.splice(+b.dataset.i,1); renderFree(); render();
+  }));
+}
+
+/* ---------- Document ---------- */
+function val(id){return $("#"+id).value.trim();}
+function frDate(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; }
+const ph = t => t ? esc(t) : `<span class="placeholder">…</span>`;
+
+function ctBlock(niveau, cls){
+  let h = `<div class="ct ${cls}"><div class="ct-h">${cls==="n1"?"①":"②"} ${esc(niveau.label)}</div><div class="ct-b">`;
+  h += `<div class="grid3">`;
+  h += `<div><div class="lab">Signes</div><ul>${li(niveau.signes)}</ul></div>`;
+  h += `<div><div class="lab">Mesures à prendre</div><ul>${li(niveau.mesures)}</ul></div>`;
+  h += `</div>`;
+  h += `<div class="traite"><div class="lab">Traitement</div>${esc(niveau.traite)}</div>`;
+  h += `</div></div>`;
+  return h;
+}
+
+function updateDiaDefaults(){
+  const box=$("#diaBox"); if(!box) return;
+  const on=state.pathos.has("diabete");
+  box.style.display = on ? "" : "none";
+  if(!on) return;
+  const p=parseFloat(String(val("f_poids")||"").replace(",","."));
+  if(p>0){
+    const g = p<25 ? "½ ampoule (0,5 mg)" : "1 ampoule (1 mg)";
+    $("#f_dia_glucagon").placeholder=g; if(!val("f_dia_glucagon")) $("#f_dia_glucagon").value=g;
+    const d = String(Math.round(p/10));
+    $("#f_dia_insdose").placeholder=d+" UI"; if(!val("f_dia_insdose")) $("#f_dia_insdose").value=d;
+  }
+}
+
+function render(){
+  updateDiaDefaults();         // affiche/pré-remplit le bloc diabète selon le poids
+  schedulePreview();           // régénère l'aperçu du PDF officiel (anti-rebond)
+  const doc = $("#doc");
+  const nom = [val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
+  if(!(state.pathos.size || nom)){
+    doc.innerHTML = `<div class="empty-doc"><div class="big">🏫</div>
+      <strong>Le PAI s'affiche ici</strong><br>
+      <span style="font-size:13px">Renseignez l'identité et cochez les pathologies + médicaments :
+      la conduite à tenir d'urgence se rédige automatiquement, au format officiel.</span></div>`;
+    return;
+  }
+
+  const selMeds = MEDS.filter(m=>state.meds.has(m.id));
+  let h = "";
+
+  /* En-tête */
+  h += `<div class="doc-head"><h3>PROJET D'ACCUEIL INDIVIDUALISÉ (PAI)</h3>
+    <div class="sub">Article D. 351-9 du Code de l'éducation — modèle Éducation nationale / Eduscol.
+    Accueil en collectivité scolaire et périscolaire d'un enfant présentant un trouble de la santé évoluant sur une longue période.</div></div>`;
+
+  /* PARTIE 1 */
+  h += `<div class="part">Partie 1 — Renseignements administratifs</div>`;
+  h += `<dl class="kv">
+    <dt>Élève</dt><dd>${ph(nom)} ${val("f_sexe")?("· "+esc(val("f_sexe"))):""} ${val("f_poids")?("· "+esc(val("f_poids"))+" kg"):""}</dd>
+    <dt>Né(e) le</dt><dd>${ph(frDate(val("f_ddn")))}</dd>
+    ${val("f_adresse")?`<dt>Adresse</dt><dd>${esc(val("f_adresse"))}</dd>`:""}
+    <dt>Établissement</dt><dd>${ph(val("f_etab"))} ${val("f_classe")?("· classe : "+esc(val("f_classe"))):""} ${val("f_annee")?("· "+esc(val("f_annee"))):""}</dd>
+    <dt>Type</dt><dd>${esc(val("f_type"))}${val("f_date")?(" · établi le "+esc(frDate(val("f_date")))):""}${val("f_periode")?(" · période : "+esc(val("f_periode"))):""}</dd>
+  </dl>`;
+  /* responsables */
+  const resps = [[val("r1_lien"),val("r1_nom"),val("r1_tel")],[val("r2_lien"),val("r2_nom"),val("r2_tel")]].filter(r=>r[1]||r[2]);
+  if(resps.length){
+    h += `<h4>Responsables légaux</h4><table class="tbl"><tr><th>Lien</th><th>Nom et prénom</th><th>Téléphone</th></tr>`;
+    h += resps.map(r=>`<tr><td>${ph(r[0])}</td><td>${ph(r[1])}</td><td>${ph(r[2])}</td></tr>`).join("");
+    h += `</table>`;
+  }
+  if(val("f_medtraitant")||val("f_medtel")||val("f_numurg"))
+    h += `<dl class="kv"><dt>Médecin traitant</dt><dd>${ph(val("f_medtraitant"))} ${val("f_medtel")?("· "+esc(val("f_medtel"))):""}</dd>
+      ${val("f_numurg")?`<dt>N° d'urgence spécifique</dt><dd>${esc(val("f_numurg"))}</dd>`:""}</dl>`;
+
+  /* PARTIE 2 */
+  h += `<div class="part">Partie 2 — Aménagements et adaptations</div>`;
+  const pathoLabels = PATHOS.filter(p=>state.pathos.has(p.id)).map(p=>`${p.ico} ${p.t}`);
+  h += `<h4>I · Pathologie(s) et conséquences</h4>`;
+  h += `<p>${pathoLabels.length?pathoLabels.map(esc).join(" · "):'<span class="placeholder">à préciser</span>'}</p>`;
+  if(val("f_consequences")) h += `<p style="margin-top:6px">${esc(val("f_consequences"))}</p>`;
+  if(val("f_precisions")) h += `<p style="margin-top:6px"><b>Précisions :</b> ${esc(val("f_precisions"))}</p>`;
+  const hasPap = PATHOS.some(p=>p.pap && state.pathos.has(p.id));
+  if(hasPap)
+    h += `<div class="callout info">ℹ️ Les troubles des apprentissages / du neurodéveloppement relèvent le plus souvent d'un <b>PAP</b> ou d'un <b>PPS</b>. Le PAI s'applique surtout s'il y a un <b>traitement</b> ou un <b>protocole de soins</b> à mettre en œuvre sur le temps scolaire.</div>`;
+
+  /* aménagements auto + restauration */
+  const sugg = [];
+  for(const p of PATHOS){ if(state.pathos.has(p.id) && AMENAGEMENTS[p.id]) AMENAGEMENTS[p.id].forEach(a=>{ if(!sugg.includes(a)) sugg.push(a); }); }
+  if(sugg.length || val("f_amenag")){
+    h += `<h4>II–IV · Aménagements (temps de présence, environnement, sorties)</h4>`;
+    if(sugg.length) h += `<ul>${li(sugg)}</ul>`;
+    if(val("f_amenag")) h += `<p style="margin-top:6px"><b>Précisions :</b> ${esc(val("f_amenag"))}</p>`;
+  }
+  if(val("f_resto") || state.pathos.has("allergie") || state.pathos.has("celiaque")){
+    h += `<h4>V · Restauration</h4>`;
+    if(val("f_resto")) h += `<p>${esc(val("f_resto"))}</p>`;
+    if(state.pathos.has("allergie")||state.pathos.has("celiaque"))
+      h += `<div class="callout">⚠️ <b>Éviction stricte</b> du ou des allergènes : vérifier la composition des repas, collations et activités (ateliers cuisine, travaux manuels). Pas d'échange de nourriture.</div>`;
+  }
+
+  /* VI · Soins (médicaments) */
+  if(selMeds.length || state.free.length || val("f_surveillance")){
+    h += `<h4>VI · Soins — traitement sur le temps de présence</h4>`;
+    if(selMeds.length || state.free.length){
+      h += `<table class="tbl"><tr><th>Médicament</th><th>Posologie</th><th>Voie</th><th>Horaire / situation</th></tr>`;
+      for(const m of selMeds){ const v=medValues(m.id);
+        h += `<tr><td><b>${esc(m.nom)}</b><br><span style="color:var(--ink-soft)">${esc(m.dci)}</span></td><td>${esc(v.poso)}</td><td>${esc(v.voie)}</td><td>${v.moment?esc(v.moment):'<span class="placeholder">—</span>'}</td></tr>`;
+      }
+      for(const t of state.free){ h += `<tr><td colspan="4">${esc(t)}</td></tr>`; }
+      h += `</table>`;
+    }
+    if(val("f_surveillance")) h += `<p><b>Surveillances particulières :</b> ${esc(val("f_surveillance"))}</p>`;
+  }
+
+  /* Trousse d'urgence */
+  const kit = selMeds.filter(m=>m.trousse);
+  if(kit.length){
+    h += `<h4>Trousse d'urgence</h4><ul class="kit">`;
+    for(const m of kit){ const v=medValues(m.id); h += `<li>☐ <b>${esc(m.nom)}</b> — ${esc(v.poso)}</li>`; }
+    h += `<li>☐ Copie du présent PAI + ordonnance</li><li>☐ Pli confidentiel pour les secours (le cas échéant)</li></ul>`;
+    h += `<dl class="kv">
+      <dt>Lieu de stockage</dt><dd>${ph(val("f_trousse_lieu"))}</dd>
+      <dt>Traitement sur soi</dt><dd>${$("#f_porter").checked?"Oui — l'élève est autorisé à garder son traitement d'urgence avec la fiche « conduite à tenir ».":"Non"}</dd>
+    </dl>`;
+    h += `<div class="callout info">ℹ️ Trousse nominative, à portée de main, fournie par la famille. Vérifier régulièrement les <b>dates de péremption</b> et le bon fonctionnement des dispositifs. Doit accompagner l'enfant lors des sorties.</div>`;
+  }
+
+  /* PARTIE 3 — Conduite à tenir (toute pathologie disposant d'une fiche) */
+  const fichePathos = PATHOS.filter(p=>state.pathos.has(p.id) && FICHES[p.id]);
+  if(fichePathos.length){
+    h += `<div class="part">Partie 3 — Conduite à tenir en cas d'urgence</div>`;
+    h += `<p style="font-size:12px;color:var(--ink-soft)">Dès les premiers signes, faire chercher la <b>trousse d'urgence</b> de l'enfant et un <b>téléphone</b>. Ne pas quitter l'enfant. ${val("f_numurg")?("N° d'urgence spécifique : <b>"+esc(val("f_numurg"))+"</b>."):""}</p>`;
+    for(const p of fichePathos){
+      const f = FICHES[p.id];
+      h += `<h4>${p.ico} ${esc(f.titre)}</h4>`;
+      h += ctBlock(f.n1,"n1");
+      h += ctBlock(f.n2,"n2");
+      if(f.aNePasFaire)
+        h += `<div class="callout danger"><b>À NE PAS FAIRE :</b><ul style="margin:4px 0 0 18px">${li(f.aNePasFaire)}</ul></div>`;
+      if(p.id==="drepano" && val("f_hb"))
+        h += `<div style="font-size:12px;margin:4px 0"><b>Taux d'hémoglobine de base :</b> ${esc(val("f_hb"))} g/dL</div>`;
+      const fm = MEDS.filter(m=>m.patho===p.id && state.meds.has(m.id));
+      if(fm.length){
+        h += `<div style="font-size:12px;margin:4px 0 10px"><b>Médicaments prescrits :</b> `+
+          fm.map(m=>{const v=medValues(m.id);return `${esc(m.nom)} (${esc(v.poso)}, ${esc(v.voie)})`;}).join(" · ")+`</div>`;
+      }
+    }
+    /* Fiche standard (gabarit générique) pour une pathologie sans fiche dédiée mais avec traitement coché */
+    const stdPathos = PATHOS.filter(p=>state.pathos.has(p.id) && !FICHES[p.id] && !p.pap &&
+      MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id)));
+    for(const p of stdPathos){
+      const fm = MEDS.filter(m=>m.patho===p.id && m.urgent && state.meds.has(m.id));
+      const fiche = {
+        n1:{label:"Signes d'appel — "+p.t,
+          signes:["À préciser par le médecin"],
+          mesures:["Mettre l'enfant au repos, le rassurer, noter l'heure","Prévenir la famille"],
+          traite:fm.map(m=>{const v=medValues(m.id);return `${m.nom} (${v.poso}, ${v.voie})`;}).join(" · ")},
+        n2:{label:"Signes de gravité → APPELER LE 15",
+          signes:["À préciser par le médecin"],
+          mesures:["Appeler le 15 / 112 et suivre les consignes","Ne pas quitter l'enfant, prévenir la famille"],
+          traite:"Selon la prescription / les consignes du SAMU."}
+      };
+      h += `<h4>${p.ico} ${esc(p.t)} (fiche standard à compléter)</h4>`;
+      h += ctBlock(fiche.n1,"n1") + ctBlock(fiche.n2,"n2");
+    }
+    h += `<div class="callout danger">📞 <b>En cas de signe de gravité : appeler le 15 (SAMU) ou le 112.</b> Prévenir la famille, ne jamais laisser l'enfant seul, rester auprès de lui jusqu'à l'arrivée des secours.</div>`;
+    h += `<p style="font-size:12px;color:var(--ink-soft)">Un courrier confidentiel sous pli cacheté à l'attention des secours peut être joint. Fiche à dater, cacheter et signer par le médecin.</p>`;
+  }
+
+  /* Signatures */
+  h += `<h4>Signatures</h4><div class="sig">
+    <div class="box"><div class="lbl">Médecin (cachet, date)</div></div>
+    <div class="box"><div class="lbl">Responsables légaux</div></div>
+    <div class="box"><div class="lbl">Établissement / directeur</div></div>
+  </div>`;
+
+  doc.innerHTML = h;
+}
+
+/* ---------- Init & actions ---------- */
+const FIELD_IDS = ["f_nom","f_prenom","f_ddn","f_sexe","f_poids","f_adresse","f_type",
+  "r1_lien","r1_nom","r1_tel","r2_lien","r2_nom","r2_tel",
+  "f_etab","f_classe","f_annee","f_medtraitant","f_medtel","f_numurg","f_periode","f_date",
+  "f_consequences","f_precisions","f_surveillance","f_hb","f_trousse_lieu","f_resto","f_amenag",
+  "f_dia_sucres","f_dia_glucagon","f_dia_inscorr","f_dia_insdose","f_dia_zone"];
+
+function init(){
+  buildPathos();
+  buildMeds();
+  $("#f_date").value = new Date().toISOString().slice(0,10);
+  FIELD_IDS.forEach(id=>$("#"+id).addEventListener("input",render));
+  $("#f_porter").addEventListener("change",render);
+
+  $("#addFreeBtn").addEventListener("click",()=>{
+    const v = $("#freeMed").value.trim();
+    if(v){ state.free.push(v); $("#freeMed").value=""; renderFree(); render(); }
+  });
+  $("#freeMed").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#addFreeBtn").click(); }});
+  $("#pdfBtn").addEventListener("click",downloadPdf);
+  $("#printBtn").addEventListener("click",printPdf);
+  $("#refreshBtn").addEventListener("click",updatePreview);
+  $("#resetBtn").addEventListener("click",()=>{ if(confirm("Réinitialiser tout le formulaire ?")) location.reload(); });
+  $("#copyBtn").addEventListener("click",copyText);
+  render();
+  updatePreview();   // affiche d'emblée le PAI général officiel
+}
+
+/* =====================================================================
+   Génération du PDF officiel Eduscol pré-rempli (pdf-lib)
+   ===================================================================== */
+const TPL = {
+  asthme:"fiche-asthme.pdf",
+  allergie:"fiche-anaphylaxie.pdf", venin:"fiche-anaphylaxie.pdf", allergie_div:"fiche-anaphylaxie.pdf",
+  diabete:"fiche-diabete.pdf",
+  epilepsie:"fiche-epilepsie.pdf",
+  drepano:"fiche-drepanocytose.pdf",
+};
+const nomComplet = ()=>[val("f_nom"),val("f_prenom")].filter(Boolean).join(" ");
+function selMedObjs(){
+  return MEDS.filter(m=>state.meds.has(m.id)).map(m=>{const v=medValues(m.id);
+    return {id:m.id,patho:m.patho,nom:m.nom,dci:m.dci,poso:v.poso,voie:v.voie,moment:v.moment,urgent:m.urgent,trousse:m.trousse};});
+}
+/* Rend le texte encodable par la police standard du PDF (WinAnsi) */
+const WINANSI_EXTRA = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ";
+function san(s){
+  s = String(s)
+    .replace(/≥/g,">=").replace(/≤/g,"<=")
+    .replace(/→/g,"->").replace(/⇒/g,"=>").replace(/↓/g,"(baisse)").replace(/↑/g,"(hausse)")
+    .replace(/…/g,"...").replace(/[“”]/g,'"').replace(/[‘’]/g,"'");
+  let out="";
+  for(const ch of s){ const c=ch.codePointAt(0); if(c<=0xFF || WINANSI_EXTRA.indexOf(ch)>=0) out+=ch; }
+  return out;
+}
+const mkT = form => (n,v)=>{ if(!v) return; try{form.getTextField(n).setText(san(v));}catch(e){} };
+const mkC = form => n=>{ try{form.getCheckBox(n).check();}catch(e){} };
+
+function fillGeneral(form){
+  const T=mkT(form), C=mkC(form);
+  T("Nom  Prénom", nomComplet());
+  T("Date de naissance", frDate(val("f_ddn")));
+  T("Adresse", val("f_adresse"));
+  T("Lien de parentéRow1",val("r1_lien")); T("Nom et prénomRow1",val("r1_nom")); T("PortableRow1",val("r1_tel"));
+  T("Lien de parentéRow2",val("r2_lien")); T("Nom et prénomRow2",val("r2_nom")); T("PortableRow2",val("r2_tel"));
+  const isMod = val("f_type").indexOf("Modif")===0;
+  if(isMod){ T("Modifications éventuellesDate",frDate(val("f_date"))); T("Modifications éventuellesClasse",val("f_classe")); }
+  else{ T("PAI 1ere demandeDate",frDate(val("f_date"))); T("PAI 1ere demandeClasse",val("f_classe")); }
+  const med = [val("f_medtraitant"),val("f_medtel")].filter(Boolean).join(" — ");
+  T("NomMédecins traitants services hospitaliers", med);
+  const resto = val("f_resto");
+  if(/garanti/.test(resto)) C("Régime spécifique garanti par le distributeur de la restauration");
+  if(/Éviction des allergènes par le service/.test(resto)) C("Éviction des allergènes dans le régime habituel pratiquée");
+  if(/Éviction demandée par la famille/.test(resto)) C("Éviction demandée par la famille après lecture préalable du menu");
+  if(/Panier/.test(resto)) C("Panier repas fourni par la famille gestion selon la réglementation en");
+  const meds = selMedObjs();
+  if(meds.length){
+    C("Traitement médicamenteux");
+    const m0=meds[0];
+    T("Texte34", m0.nom+(m0.dci?(" ("+m0.dci+")"):""));
+    T("Texte35", m0.poso);
+    T("Texte36", [m0.voie,m0.moment].filter(Boolean).join(" · "));
+    if(meds.length>1) T("Texte37", "Autres traitements et conduite à tenir : voir fiches jointes.");
+  }
+  if(val("f_surveillance")){ C("Surveillances particulières"); T("Texte37", val("f_surveillance")); }
+  if(meds.some(m=>m.trousse)){ C("PAI obligatoirement"); C("Ordonnance"); C("Traitements"); }
+  const P=state.pathos;
+  if(P.has("diabete")||P.has("mici")||P.has("renal")||P.has("drepano")||P.has("muco"))
+    C("Autorisation de sortie de classe toilettes boissons infirmerie vie scolaire etc");
+  if(P.has("drepano")||P.has("muco")||P.has("cancer")) C("Temps de repos");
+}
+
+function fillFicheCommon(form, pathoId){
+  const T=mkT(form);
+  T("Nom Prénom", nomComplet());
+  T("Date de Naissance", frDate(val("f_ddn")));
+  T("Numéros durgence spécifiques éventuels autres que le 15 ou le 112", val("f_numurg"));
+  T("Fiche établie pour la période suivante", val("f_periode")||val("f_annee"));
+  T("Cachet du médecin", val("f_medtraitant"));
+}
+function medsOf(pathoId){ return selMedObjs().filter(m=>m.patho===pathoId); }
+function medSummary(pathoId){ return medsOf(pathoId).map(m=>`${m.nom} (${m.poso}, ${m.voie})`).join(" · "); }
+function firstNum(s){ const m=String(s||"").match(/\d+/); return m?m[0]:""; }
+function shortDrug(m){ return m ? (m.dci && m.dci.length<=30 ? m.dci : m.nom) : ""; }
+
+const FILLERS = {
+  asthme(form){
+    const C=mkC(form), T=mkT(form);
+    // signes d'appel
+    ["Toux sèche","Gêne respiratoire","Essoufflement","Respiration sifflante","Pâleur"].forEach(C);
+    const salbu = medsOf("asthme").find(m=>m.id==="salbu_asthme");
+    if(salbu){
+      // cases « faire inhaler … chambre d'inhalation » des 3 paliers
+      ["Faire inhaler","toggle_8","suivie de 5 respirations","Faire inhaler_2","toggle_11",
+       "Poursuivre le traitement par inhalation","toggle_16","suivie de 5 respirations_2"].forEach(C);
+      T("Texte9", shortDrug(salbu));        // nom du bronchodilatateur (rempli dans les 3 cellules)
+      const n=firstNum(salbu.poso); if(n) T("Texte8", n);   // nombre de bouffées
+    }
+    const cort = medsOf("asthme").find(m=>m.id==="cortico_asthme");
+    if(cort) T("Traitement complémentaire par", `${cort.nom} — ${cort.poso}`);
+  },
+  anaphylaxie(form, pathoId){
+    const T=mkT(form);
+    const meds = medsOf(pathoId);
+    const adr = meds.find(m=>/adrenaline/.test(m.id));
+    if(adr) T("Texte1", adr.poso);                          // dose/spécialité adrénaline
+    const ah  = meds.find(m=>/antihist/.test(m.id));
+    if(ah)  T("Texte1234", `${ah.nom} — ${ah.poso}`);       // antihistaminique (réaction modérée)
+    const salbu = meds.find(m=>/salbu/.test(m.id));
+    if(salbu){ T("Texte3", shortDrug(salbu)); const n=firstNum(salbu.poso); if(n) T("Texte2", n); }
+  },
+  diabete(form){
+    const C=mkC(form), T=mkT(form);
+    // signes d'hypoglycémie (modérée puis sévère)
+    ["Pâleur","Sueurs","Tremblements","Difficultés pour parler","Agitation","Somnolence","Agressivité inhabituelle"].forEach(C);
+    ["Perte de connaissance avec ou sans","Somnolence extrême","Hypoglycémie et impossibilité de"].forEach(C);
+    // resucrage : nombre de sucres (3 emplacements)
+    const sucres = val("f_dia_sucres");
+    if(sucres){ T("Texte1",sucres); T("Texte2",sucres); T("Texte3",sucres); }
+    // glucagon
+    if(state.meds.has("glucagon")){
+      C("Injecter le Glucagen en souscutané ou intramusculaire");
+      const g=val("f_dia_glucagon"); if(g) T("Texte7", g);          // nombre d'ampoules
+      const lieu=val("f_trousse_lieu"); if(lieu){ T("Texte5",lieu); T("Texte6",lieu); }  // lieux de stockage
+    }
+    // insuline (hyperglycémie)
+    const corr=val("f_dia_inscorr"); if(corr) T("Texte9", corr);    // UI pour ↓ 50 mg/dL
+    const dose=val("f_dia_insdose"); if(dose) T("Texte11", dose);   // dose 1/10 du poids (2 emplacements)
+    const zone=val("f_dia_zone");    if(zone) T("Texte10", zone);   // zone d'injection (2 emplacements)
+  },
+  epilepsie(form){
+    const C=mkC(form), T=mkT(form);
+    ["Perte de Connaissance","Secousses musculaires involontaires","Raideur généralisée du corps","Contraction de la mâchoire"].forEach(C);
+    const s=medSummary("epilepsie"); if(s) T("Traitement éventuel", s);
+  },
+  drepanocytose(form){
+    const C=mkC(form), T=mkT(form);
+    const m=medsOf("drepano")[0];
+    if(m){ C("Paracétamol"); T("Paracétamol  Forme  Dose  1 dose toutes les 6 heures si douleur maximum 4 doses par jour Autre  Forme  Dose Autre", `${m.nom} — ${m.poso} (1 dose / 6 h, max 4/j)`); }
+  },
+  standard(form, pathoId){
+    /* fiche standard : remplit signes / mesures / traitement des 2 niveaux
+       depuis la fiche conduite à tenir interne + les médicaments. */
+    const T=mkT(form);
+    const f=FICHES[pathoId];
+    const meds=medsOf(pathoId);
+    const medLines=meds.map(m=>`${m.nom} — ${m.poso} (${m.voie})`);
+    const fillRows=(names,values)=>{ for(let i=0;i<names.length;i++){ if(values && values[i]) T(names[i], values[i]); } };
+    if(f){
+      fillRows(["Texte13","Texte12","Texte3","Texte4"], f.n1.signes);
+      fillRows(["Texte16","Texte17","Texte18"], f.n1.mesures);
+      fillRows(["Texte19","Texte21","Texte20"], medLines.length?medLines:[f.n1.traite]);
+      fillRows(["Texte30","Texte31","Texte32","Texte33"], f.n2.signes);
+      fillRows(["Texte34","Texte35"], f.n2.mesures);
+      fillRows(["Texte40","Texte41","Texte42"], [f.n2.traite]);
+    }else{
+      T("   Row1", "Voir conduite à tenir — "+ (PATHOS.find(p=>p.id===pathoId)||{}).t);
+      fillRows(["Texte19","Texte21","Texte20"], medLines);
+    }
+  }
+};
+
+/* mappe une fiche-template vers son filler */
+const TPL_FILLER = {
+  "fiche-asthme.pdf":"asthme", "fiche-anaphylaxie.pdf":"anaphylaxie", "fiche-diabete.pdf":"diabete",
+  "fiche-epilepsie.pdf":"epilepsie", "fiche-drepanocytose.pdf":"drepanocytose", "fiche-standard.pdf":"standard"
+};
+
+async function loadDoc(file){
+  const res = await fetch("templates/"+file);
+  if(!res.ok) throw new Error("Modèle introuvable : "+file);
+  return PDFLib.PDFDocument.load(await res.arrayBuffer());
+}
+
+/* Construit le PDF officiel fusionné (PAI général + fiches) et renvoie les octets */
+async function buildPdfBytes(){
+  const merged = await PDFLib.PDFDocument.create();
+  const addFlattened = async (doc)=>{
+    try{ doc.getForm().flatten(); }catch(e){}
+    const pages = await merged.copyPages(doc, doc.getPageIndices());
+    pages.forEach(p=>merged.addPage(p));
+  };
+  // 1) PAI général
+  const gen = await loadDoc("pai-general.pdf");
+  fillGeneral(gen.getForm());
+  await addFlattened(gen);
+  // 2) fiches conduite à tenir, une par pathologie disposant d'un modèle
+  const seen = new Set();
+  let nbFiches = 0;
+  for(const p of PATHOS){
+    if(!state.pathos.has(p.id)) continue;
+    let file = TPL[p.id];
+    if(!file){
+      if(!p.pap && (FICHES[p.id] || MEDS.some(m=>m.patho===p.id && m.urgent && state.meds.has(m.id)))) file="fiche-standard.pdf";
+      else continue;
+    }
+    const dedup = file==="fiche-anaphylaxie.pdf" ? file : p.id+"|"+file;
+    if(seen.has(dedup)) continue;
+    seen.add(dedup);
+    const doc = await loadDoc(file);
+    fillFicheCommon(doc.getForm(), p.id);
+    const fillerName = TPL_FILLER[file];
+    if(FILLERS[fillerName]) FILLERS[fillerName](doc.getForm(), p.id);
+    await addFlattened(doc);
+    nbFiches++;
+  }
+  const bytes = await merged.save();
+  return {bytes, nbFiches};
+}
+
+/* Aperçu du PDF officiel à droite (régénéré automatiquement, anti-rebond) */
+let previewUrl=null, previewTimer=null, building=false, pending=false, lastBytes=null;
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(updatePreview, 650);
+}
+async function updatePreview(){
+  const st=$("#pdfStatus");
+  if(!window.PDFLib){ st.textContent="⚠️ Librairie PDF non chargée (servez le site via http(s))."; return; }
+  if(building){ pending=true; return; }
+  building=true; pending=false;
+  st.textContent="⏳ Mise à jour du PDF officiel…";
+  try{
+    const {bytes, nbFiches} = await buildPdfBytes();
+    lastBytes = bytes;
+    const blob = new Blob([bytes], {type:"application/pdf"});
+    if(previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(blob);
+    $("#pdfView").src = previewUrl + "#toolbar=1&view=FitH";
+    st.textContent = `✓ PAI officiel : général + ${nbFiches} fiche(s) conduite à tenir. À relire, dater et signer.`;
+  }catch(e){
+    st.textContent = "⚠️ "+e.message;
+  }finally{
+    building=false;
+    if(pending) updatePreview();
+  }
+}
+
+/* Téléchargement du PDF officiel rempli */
+async function downloadPdf(){
+  const st=$("#pdfStatus");
+  if(!window.PDFLib){ st.textContent="⚠️ Librairie PDF non chargée."; return; }
+  try{
+    const {bytes} = await buildPdfBytes();
+    const blob = new Blob([bytes], {type:"application/pdf"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const fnom = (nomComplet()||"PAI").replace(/[^\p{L}\p{N}]+/gu,"_");
+    a.href=url; a.download="PAI_"+fnom+".pdf";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }catch(e){ st.textContent="⚠️ "+e.message; }
+}
+
+/* Impression du PDF officiel affiché */
+function printPdf(){
+  const fr=$("#pdfView");
+  if(fr && fr.contentWindow){ try{ fr.contentWindow.focus(); fr.contentWindow.print(); return; }catch(e){} }
+  window.print();
+}
+
+function copyText(){
+  const txt = $("#doc").innerText.replace(/\n{3,}/g,"\n\n").trim();
+  navigator.clipboard?.writeText(txt).then(
+    ()=>{ const b=$("#copyBtn"); const o=b.textContent; b.textContent="✓ Copié"; setTimeout(()=>b.textContent=o,1500); },
+    ()=>alert("Copie impossible dans ce navigateur.")
+  );
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>

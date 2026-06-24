@@ -2,7 +2,7 @@
 
 Prototype **fonctionnel** d'application d'aide au raisonnement clinique pour la
 médecine générale, construit à partir du *Manuel du Généraliste — Du Symptôme au
-Diagnostic* et des *Fiches d'interrogatoire par symptôme* (Dr Mario Fuiano).
+Diagnostic* et des *Fiches d'interrogatoire par symptôme*.
 
 > ⚠️ **Cet outil ne pose pas de diagnostic.** Il structure les symptômes,
 > détecte des *red flags* par règles explicites et génère une synthèse à

@@ -1,7 +1,7 @@
 # ASSISTANT MÉDICAL — portail unifié
 
 Site web statique qui **regroupe toutes les applications d'aide clinique** de la
-suite (Dr Mario Fuiano). La page d'accueil (`index.html`) est un **portail** :
+suite. La page d'accueil (`index.html`) est un **portail** :
 recherche, filtres par domaine, et une carte par application. Tout fonctionne
 **hors-ligne**, sans serveur ni dépendance.
 
