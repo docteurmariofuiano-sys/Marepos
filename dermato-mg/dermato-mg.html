@@ -276,8 +276,18 @@ tbody tr:hover{background:#fafcfe}
   color:var(--blue);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.86rem;text-decoration:none}
 .atlas-links a:hover{background:var(--blue);color:#fff;text-decoration:none}
 .lez-card{align-items:stretch}
-.lez-wrap{width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin-bottom:6px;background:#fff8f1}
+.lez-wrap{border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fff8f1}
 .lez{display:block;width:100%;height:auto}
+/* schéma + photo côte à côte */
+.lez-duo{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.lez-photo{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#f1ede8;
+  display:flex;align-items:center;justify-content:center;min-height:84px}
+.lez-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.empty-photo{border-style:dashed;color:var(--muted);font-size:.7rem;text-align:center;line-height:1.25}
+.lez-modal-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
+.lez-modal-duo .lez-photo.big,.lez-modal-duo .schema{min-height:150px}
+.lez-cap{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+@media (max-width:520px){.lez-modal-duo{grid-template-columns:1fr}}
 
 /* responsive */
 @media (max-width:720px){
@@ -2499,6 +2509,47 @@ function svgFor(item){
   return (SVG_ELEM[item.svg] || SVG_DERMO[item.svg] || (()=> '<div class="muted">schéma indisponible</div>'))();
 }
 
+/* -- photos personnelles (importées par l'utilisateur, stockées localement) -- */
+const PHOTOS = Object.create(null);
+function photoKey(id){ return "dmg_photo_"+id; }
+function getPhoto(id){
+  if(id in PHOTOS) return PHOTOS[id];
+  let v=null; try{ v=localStorage.getItem(photoKey(id)); }catch(e){}
+  PHOTOS[id]=v||null; return PHOTOS[id];
+}
+function setPhoto(id,dataURL){
+  PHOTOS[id]=dataURL;
+  try{ localStorage.setItem(photoKey(id),dataURL); }catch(e){/* quota / file:// : reste en mémoire */}
+}
+function delPhoto(id){
+  PHOTOS[id]=null;
+  try{ localStorage.removeItem(photoKey(id)); }catch(e){}
+}
+function importPhoto(id,file,cb){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const max=720, sc=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement("canvas");
+        c.width=Math.max(1,Math.round(img.width*sc)); c.height=Math.max(1,Math.round(img.height*sc));
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        setPhoto(id,c.toDataURL("image/jpeg",0.82));
+      }catch(e){ setPhoto(id,reader.result); }
+      cb&&cb();
+    };
+    img.onerror=()=>{ setPhoto(id,reader.result); cb&&cb(); };
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function photoCell(it,big){
+  const p=getPhoto(it.id);
+  if(p) return `<div class="lez-photo${big?' big':''}"><img src="${p}" alt="Photo : ${esc(it.nom)}"></div>`;
+  return `<div class="lez-photo empty-photo${big?' big':''}"><span>📷<br>photo<br>à ajouter</span></div>`;
+}
+
 /* requêtes (en anglais : meilleurs résultats d'images) pour les atlas en accès libre */
 const ATLAS_Q = {
   macule:"skin macule", papule:"skin papule", plaque:"skin plaque dermatology",
@@ -2534,7 +2585,7 @@ function atlasLinks(it){
 
 function RENDER_visuel(panel){
   const card = (it, kind) => `<button class="card lez-card" data-lesion="${kind}:${it.id}">
-      <div class="lez-wrap">${svgFor(it)}</div>
+      <div class="lez-duo"><div class="lez-wrap">${svgFor(it)}</div>${photoCell(it)}</div>
       <div class="card-row">${typeof it.alerte==='number'?badge(it.alerte):''}<h3>${esc(it.nom)}</h3></div>
       <p>${esc((it.groupe||(it.exemples&&it.exemples[0]))||'')}</p>
     </button>`;
@@ -2544,7 +2595,7 @@ function RENDER_visuel(panel){
     <div class="section-title"><h2>🖼️ Aide visuelle</h2></div>
     <p class="lead">Schémas pédagogiques originaux des lésions élémentaires (vue en coupe de la peau) et des principales structures dermatoscopiques. Cliquez sur un schéma pour le détail.</p>
     <div class="note note-orange">${esc(AIDE_VISUELLE_NOTE)}</div>
-    <div class="note note-blue">📷 Chaque lésion comporte, dans son détail, un lien <b>« Voir des photos réelles »</b> vers des atlas en accès libre (Wikimedia Commons, DermNet). Les images ne sont pas copiées dans l'application — elles sont consultées en ligne, pour respecter le droit d'auteur.</div>
+    <div class="note note-blue">📷 À côté de chaque schéma, vous pouvez <b>importer votre propre photo</b> (dont vous détenez les droits) : ouvrez une lésion puis « Importer une photo ». Elle s'affiche à côté du dessin et reste <b>enregistrée dans votre navigateur</b> (aucun envoi). Pour trouver des images, chaque fiche propose aussi des liens vers des <b>atlas en accès libre</b> (Wikimedia Commons, DermNet) — les images ne sont pas copiées dans l'app, pour respecter le droit d'auteur.</div>
 
     <h3 style="margin:16px 0 8px">Lésions élémentaires — primitives</h3>
     <div class="grid grid-3">${prim.map(l=>card(l,"e")).join("")}</div>
@@ -2555,19 +2606,40 @@ function RENDER_visuel(panel){
     <h3 style="margin:18px 0 8px">Structures dermatoscopiques</h3>
     <div class="grid grid-3">${LESIONS_DERMATO.map(l=>card(l,"d")).join("")}</div>`;
 }
+function refreshVisuelPanel(){
+  const p=$('.panel[data-panel="visuel"]');
+  if(p && p.dataset.rendered) RENDER_visuel(p);
+}
 function openLesion(key){
   const [kind,id] = key.split(":");
   const arr = kind==="d" ? LESIONS_DERMATO : LESIONS_ELEMENTAIRES;
   const it = arr.find(x=>x.id===id); if(!it) return;
+  const hasPhoto = !!getPhoto(it.id);
   const body = `
-    <div class="schema" style="max-width:340px;margin:0 auto 12px">${svgFor(it)}</div>
-    ${(typeof it.alerte==='number')?`<p>${badge(it.alerte)} ${it.alerte===2?'Structure suspecte (signe de malignité)':it.alerte===1?'À interpréter selon le contexte':'Aspect plutôt rassurant'}</p>`:`<p class="fiche-cat">${esc(it.groupe||'')}</p>`}
+    <div class="lez-modal-duo">
+      <div><div class="lez-cap">Schéma</div><div class="schema">${svgFor(it)}</div></div>
+      <div><div class="lez-cap">Photo réelle (la vôtre)</div>${photoCell(it,true)}</div>
+    </div>
+    <div class="fiche-actions">
+      <label class="btn btn-sm btn-blue">📷 ${hasPhoto?'Remplacer la photo':'Importer une photo'}
+        <input type="file" accept="image/*" id="lezPhotoInput" hidden></label>
+      ${hasPhoto?'<button class="btn btn-sm" id="lezPhotoDel" type="button">🗑️ Supprimer la photo</button>':''}
+    </div>
+    <small class="muted">Importez une photo dont vous détenez les droits. Elle est enregistrée uniquement dans votre navigateur (aucun envoi sur internet) et reste privée.</small>
+    ${(typeof it.alerte==='number')?`<p style="margin-top:10px">${badge(it.alerte)} ${it.alerte===2?'Structure suspecte (signe de malignité)':it.alerte===1?'À interpréter selon le contexte':'Aspect plutôt rassurant'}</p>`:`<p class="fiche-cat" style="margin-top:10px">${esc(it.groupe||'')}</p>`}
     <div class="note note-blue">${esc(it.definition)}</div>
     <h3 style="margin:12px 0 6px">Exemples / contextes</h3>
     ${list(it.exemples)}
     ${atlasLinks(it)}
     <div class="src-line">${esc(AIDE_VISUELLE_NOTE)}</div>`;
   openModal(it.nom, body);
+  const inp=$("#lezPhotoInput");
+  if(inp) inp.addEventListener("change",e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    importPhoto(it.id,f,()=>{ openLesion(key); refreshVisuelPanel(); });
+  });
+  const del=$("#lezPhotoDel");
+  if(del) del.addEventListener("click",()=>{ delPhoto(it.id); openLesion(key); refreshVisuelPanel(); });
 }
 
 /* ===================================================================
