@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "plaud": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/harshav167/plaud", "plaud", "mcp"],
+      "env": {
+        "PLAUD_TOKEN": "bearer eyJ_REMPLACE_PAR_TON_TOKEN",
+        "ELEVENLABS_API_KEY": "sk_optionnel_pour_la_transcription"
+      }
+    }
+  }
+}
