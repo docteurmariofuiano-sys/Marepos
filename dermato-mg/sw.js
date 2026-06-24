@@ -5,12 +5,13 @@
    Incrémenter CACHE à chaque modification des fichiers pour rafraîchir.
    ===================================================================== */
 'use strict';
-const CACHE = 'dermato-mg-v1';
+const CACHE = 'dermato-mg-v3';
 const ASSETS = [
   './',
   './index.html',
   './style.css?v=1',
   './data.js?v=1',
+  './photos.js?v=1',
   './app.js?v=1',
   './manifest.webmanifest',
   './icon-192.png',

@@ -59,6 +59,14 @@ Ne pas éditer `dermato-mg.html` à la main.
 - **Traitements** : base médicamenteuse par classe (indications, CI, grossesse/allaitement,
   EI, durée, erreurs fréquentes, application).
 - **Dermatoscopie MG** · **Lecture d'image** (grille structurée, aucune donnée transmise).
+- **Aide visuelle** : schémas originaux des lésions élémentaires (coupe de peau) et des
+  structures dermatoscopiques (réseau pigmenté, globules, stries, voile bleu-blanc,
+  télangiectasies…), avec définitions et exemples. Schémas pédagogiques originaux,
+  sans reproduction d'images protégées. **À côté de chaque schéma, un emplacement
+  photo** : le praticien peut **importer sa propre photo** (dont il détient les droits),
+  enregistrée localement dans le navigateur (aucun envoi). Pour les photos réelles,
+  chaque lésion propose aussi des liens vers un **atlas en accès libre** (Wikimedia
+  Commons, DermNet) — les images ne sont pas hébergées dans l'app (droit d'auteur).
 - **Apprentissage** : cas cliniques, QCM, flashcards, fiches synthétiques.
 - **Alertes terrain** : grossesse, allaitement, nourrisson, enfant, immunodépression,
   insuffisance rénale, allergie.

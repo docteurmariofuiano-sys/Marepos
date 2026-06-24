@@ -10,7 +10,8 @@
 const DB = window.DERMATO_DB;
 const {PATHOLOGIES, SYMPTOMES, LOCALISATIONS, URGENCES, DIFFERENTIELS,
        MEDICAMENTS, TERRAINS, CAS_CLINIQUES, QCM, FLASHCARDS,
-       DERMATOSCOPIE, ANALYSE_IMAGE, SOURCES, NIVEAUX} = DB;
+       DERMATOSCOPIE, ANALYSE_IMAGE, NIVEAUX,
+       LESIONS_ELEMENTAIRES, LESIONS_DERMATO, AIDE_VISUELLE_NOTE} = DB;
 
 /* ---------- utilitaires ---------- */
 const $  = (s,c=document)=>c.querySelector(s);
@@ -439,24 +440,263 @@ function fichesHTML(){
 }
 
 /* ===================================================================
-   SOURCES
+   AIDE VISUELLE — schémas SVG originaux (lésions élémentaires + dermato)
    =================================================================== */
-function RENDER_sources(panel){
-  const s=SOURCES;
-  panel.innerHTML = `
-    <div class="section-title"><h2>Références / Sources</h2></div>
-    <div class="note note-blue">
-      <b>Source principale : <a href="${esc(s.principale.url)}" target="_blank" rel="noopener">${esc(s.principale.nom)}</a></b><br>
-      <a href="${esc(s.principale.url)}" target="_blank" rel="noopener">${esc(s.principale.url)}</a>
-      <p style="margin:.5em 0 0">${esc(s.principale.desc)}</p>
-    </div>
-    <div class="note note-orange">${esc(s.note)}</div>
-    <h3 style="margin:16px 0 8px">Autres références</h3>
-    ${list(s.autres)}
-    <div class="note note-green" style="margin-top:16px">
-      <b>Respect des sources et du droit d'auteur.</b> Les contenus sont reformulés à partir des recommandations et arbres décisionnels (Dermatoclic, HAS, sociétés savantes). Aucun texte protégé n'est reproduit intégralement et aucune image source protégée n'est copiée ; les schémas éventuels sont originaux et pédagogiques.
-    </div>`;
+/* -- coupe de peau (vue latérale) -- */
+const SKIN =
+  '<rect width="200" height="130" fill="#fff8f1"/>' +
+  '<rect y="42" width="200" height="22" fill="#f2d6bf"/>' +      /* épiderme */
+  '<rect y="64" width="200" height="48" fill="#e7bfa6"/>' +      /* derme */
+  '<rect y="112" width="200" height="18" fill="#f7ead4"/>' +     /* hypoderme */
+  '<line x1="0" y1="42" x2="200" y2="42" stroke="#c69a7c" stroke-width="1.5"/>';
+function elemSVG(inner){
+  return `<svg viewBox="0 0 200 130" class="lez" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img">${SKIN}${inner}</svg>`;
+}
+const SVG_ELEM = {
+  macule:  ()=>elemSVG('<ellipse cx="100" cy="53" rx="44" ry="9" fill="#8a5a3c" opacity="0.5"/>'),
+  papule:  ()=>elemSVG('<path d="M74 42 Q100 14 126 42 Z" fill="#d59873" stroke="#b9774f" stroke-width="1.5"/>'),
+  plaque:  ()=>elemSVG('<path d="M48 42 Q50 22 70 22 L130 22 Q150 22 152 42 Z" fill="#d59873" stroke="#b9774f" stroke-width="1.5"/>'),
+  nodule:  ()=>elemSVG('<path d="M62 42 Q62 98 100 98 Q138 98 138 42 Z" fill="#cf8f6f" stroke="#b9774f" stroke-width="1.5"/>'),
+  vesicule:()=>elemSVG('<path d="M80 42 Q100 16 120 42 Z" fill="#dff1f7" stroke="#7fb3c4" stroke-width="1.5"/><ellipse cx="100" cy="33" rx="6" ry="3.5" fill="#ffffff" opacity="0.7"/>'),
+  bulle:   ()=>elemSVG('<path d="M58 42 Q100 6 142 42 Z" fill="#dff1f7" stroke="#7fb3c4" stroke-width="1.5"/><ellipse cx="100" cy="28" rx="9" ry="5" fill="#ffffff" opacity="0.6"/>'),
+  pustule: ()=>elemSVG('<path d="M80 42 Q100 16 120 42 Z" fill="#f3e6c2" stroke="#caa15a" stroke-width="1.5"/><ellipse cx="100" cy="31" rx="9" ry="6" fill="#e8c45f"/>'),
+  oedeme:  ()=>elemSVG('<path d="M52 42 Q54 24 100 24 Q146 24 148 42 Z" fill="#f3c9d2" stroke="#dd9aa8" stroke-width="1.5" opacity="0.85"/><path d="M40 20 l-8 0 m4 -4 l-4 4 4 4" stroke="#c0392b" stroke-width="1.5" fill="none"/><path d="M160 20 l8 0 m-4 -4 l4 4 -4 4" stroke="#c0392b" stroke-width="1.5" fill="none"/>'),
+  squame:  ()=>elemSVG('<g fill="#f4ead7" stroke="#cdb38f" stroke-width="1">'+
+                 '<path d="M68 42 l14 -7 l5 7 z"/><path d="M88 42 l13 -8 l5 8 z"/><path d="M108 42 l13 -6 l5 6 z"/><path d="M126 42 l12 -8 l5 8 z"/></g>'),
+  croute:  ()=>elemSVG('<path d="M70 42 Q76 24 92 30 Q104 20 116 30 Q132 24 134 42 Z" fill="#a9682f" stroke="#7d4a20" stroke-width="1.2"/><path d="M86 34 q6 4 12 0 m4 2 q6 3 10 -1" stroke="#7d4a20" stroke-width="1" fill="none"/>'),
+  erosion: ()=>elemSVG('<path d="M72 42 Q100 60 128 42 Z" fill="#e7bfa6"/><path d="M72 42 Q100 60 128 42" fill="none" stroke="#d98c7a" stroke-width="2.5"/>'),
+  ulceration:()=>elemSVG('<path d="M74 42 Q100 104 126 42 Z" fill="#e7bfa6"/><path d="M74 42 Q100 104 126 42" fill="none" stroke="#b3261e" stroke-width="2.5"/><path d="M84 56 q16 10 32 0" stroke="#b3261e" stroke-width="1" fill="none" opacity="0.6"/>'),
+  atrophie:()=>elemSVG('<rect x="60" y="51" width="80" height="11" fill="#f7e6d6"/><path d="M60 42 Q100 51 140 42" fill="none" stroke="#c69a7c" stroke-width="1.5"/><path d="M70 47 h60 M74 49 h52" stroke="#d8b79c" stroke-width="0.8"/>'),
+  lichen:  ()=>elemSVG('<rect x="58" y="28" width="84" height="14" rx="2" fill="#c79a78" stroke="#a9774f" stroke-width="1.2"/><path d="M70 28 v14 M86 28 v14 M102 28 v14 M118 28 v14 M130 28 v14 M58 35 h84" stroke="#8a5e3c" stroke-width="0.8"/>'),
+  fissure: ()=>elemSVG('<path d="M100 42 L96 82 L100 86 L104 82 Z" fill="#7d4a20"/><path d="M100 42 L96 82" stroke="#5e3414" stroke-width="0.6"/>')
 };
+
+/* -- champ dermatoscopique (vue de dessus) -- */
+function dermoSVG(id, inner, bg){
+  return `<svg viewBox="0 0 200 150" class="lez" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img">`+
+    `<defs><clipPath id="dc_${id}"><circle cx="100" cy="73" r="62"/></clipPath></defs>`+
+    `<circle cx="100" cy="73" r="64" fill="${bg||'#d9a684'}"/>`+
+    `<g clip-path="url(#dc_${id})">${inner}</g>`+
+    `<circle cx="100" cy="73" r="62" fill="none" stroke="#3a3a3a" stroke-width="3"/>`+
+    `</svg>`;
+}
+function grid(reg){
+  let s='';
+  const x0=42,x1=158,y0=14,y1=132;
+  for(let i=0;i<=8;i++){
+    const x=x0+(x1-x0)*i/8;
+    const w=reg?1.4:(1+ (i%3)*1.3);
+    const op=reg?0.7:(0.5+(i%2)*0.4);
+    const dash=reg?'':(i%2? '6 4':'');
+    s+=`<line x1="${x}" y1="${y0}" x2="${x+(reg?0:(i%2?6:-5))}" y2="${y1}" stroke="#6b4226" stroke-width="${w}" opacity="${op}" stroke-dasharray="${dash}"/>`;
+  }
+  for(let j=0;j<=8;j++){
+    const y=y0+(y1-y0)*j/8;
+    const w=reg?1.4:(1+(j%3)*1.2);
+    const op=reg?0.7:(0.5+(j%2)*0.4);
+    const dash=reg?'':(j%2?'5 5':'');
+    s+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y+(reg?0:(j%2?5:-4))}" stroke="#6b4226" stroke-width="${w}" opacity="${op}" stroke-dasharray="${dash}"/>`;
+  }
+  return s;
+}
+function dots(reg){
+  let s='';
+  const pts = reg
+    ? [[80,55],[100,55],[120,55],[80,75],[100,75],[120,75],[80,95],[100,95],[120,95]]
+    : [[70,48],[96,52],[128,46],[150,72],[58,70],[84,80],[112,88],[140,98],[74,108],[120,116],[100,72]];
+  pts.forEach((p,i)=>{
+    const r = reg?5:(3+ (i%4)*2);
+    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="#5a3318"/>`;
+  });
+  return s;
+}
+const SVG_DERMO = {
+  reseau_typique: ()=>dermoSVG('rt', grid(true), '#d9a684'),
+  reseau_atypique:()=>dermoSVG('ra', grid(false)+'<ellipse cx="120" cy="92" rx="26" ry="20" fill="#3b2414" opacity="0.45"/>', '#d3a07e'),
+  points_globules:()=>dermoSVG('pg', dots(false), '#d9a684'),
+  stries: ()=>dermoSVG('st', (function(){
+      let s='<ellipse cx="100" cy="73" rx="34" ry="30" fill="#7a4a28" opacity="0.55"/>';
+      const ang=[0,32,60,95,130,160,200,235,270,305,335];
+      ang.forEach((a,i)=>{ const r1=30,r2=52+(i%3)*7; const t=a*Math.PI/180;
+        const x1=100+r1*Math.cos(t),y1=73+r1*Math.sin(t),x2=100+r2*Math.cos(t),y2=73+r2*Math.sin(t);
+        s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#4a2a12" stroke-width="${3+(i%2)*2}"/>`;
+        if(i%2) s+=`<circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="4" fill="#4a2a12"/>`; });
+      return s; })(), '#d9a684'),
+  voile: ()=>dermoSVG('vo', grid(false)+'<ellipse cx="106" cy="82" rx="44" ry="34" fill="#5b7fa6" opacity="0.5"/><ellipse cx="92" cy="64" rx="18" ry="12" fill="#eef3f8" opacity="0.55"/>', '#caa07e'),
+  regression: ()=>dermoSVG('rg', (function(){
+      let s='<ellipse cx="100" cy="73" rx="46" ry="36" fill="#efeae3" opacity="0.92"/>';
+      for(let i=0;i<60;i++){ const a=i*47%360, r=10+ (i*7%44); const t=a*Math.PI/180;
+        s+=`<circle cx="${(100+r*Math.cos(t)).toFixed(1)}" cy="${(73+r*Math.sin(t)).toFixed(1)}" r="1.4" fill="#6b7480"/>`; }
+      return s; })(), '#d9a684'),
+  telangiectasies: ()=>dermoSVG('te',
+      '<path d="M44 120 Q80 92 104 78 Q128 64 158 40" stroke="#c0392b" stroke-width="3" fill="none"/>'+
+      '<path d="M104 78 Q116 86 138 92" stroke="#c0392b" stroke-width="2.2" fill="none"/>'+
+      '<path d="M104 78 Q98 96 110 116" stroke="#c0392b" stroke-width="2" fill="none"/>'+
+      '<path d="M80 92 Q70 100 50 102" stroke="#c0392b" stroke-width="1.8" fill="none"/>'+
+      '<path d="M128 64 Q140 58 150 64" stroke="#c0392b" stroke-width="1.6" fill="none"/>', '#e9c0aa'),
+  nids: ()=>dermoSVG('nd',
+      '<path d="M60 60 q-12 14 2 26 q16 6 20 -10 q2 -18 -22 -16 z" fill="#4a5a78"/>'+
+      '<path d="M140 64 q14 12 2 28 q-16 8 -22 -8 q-2 -18 20 -20 z" fill="#566a8a"/>'+
+      '<ellipse cx="100" cy="104" rx="16" ry="11" fill="#4a5a78"/>'+
+      '<ellipse cx="104" cy="52" rx="12" ry="9" fill="#5d7193"/>', '#caa07e'),
+  glomerulaires: ()=>dermoSVG('gl', (function(){
+      let s='';
+      const cl=[[78,58],[112,62],[92,92],[128,96],[64,96]];
+      cl.forEach((c,i)=>{ for(let k=0;k<4;k++){ const a=k*90+i*20; const t=a*Math.PI/180;
+        s+=`<circle cx="${(c[0]+5*Math.cos(t)).toFixed(1)}" cy="${(c[1]+5*Math.sin(t)).toFixed(1)}" r="3.2" fill="#c0392b"/>`; } });
+      return s; })(), '#e3b89e'),
+  comedons: ()=>dermoSVG('cm', (function(){
+      let s='';
+      const black=[[72,56],[110,50],[140,80],[88,96],[122,108]];
+      const white=[[96,72],[128,64],[64,90],[112,90]];
+      black.forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="#2a1a0e"/>`);
+      white.forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#f4ecd8" stroke="#d8c39a" stroke-width="1"/>`);
+      return s; })(), '#b07a4a')
+};
+
+function svgFor(item){
+  return (SVG_ELEM[item.svg] || SVG_DERMO[item.svg] || (()=> '<div class="muted">schéma indisponible</div>'))();
+}
+
+/* -- photos personnelles (importées par l'utilisateur, stockées localement) -- */
+/* images intégrées par défaut (générées dans photos.js) ; l'import utilisateur prime */
+const DEFAULT_PHOTOS = (typeof window !== "undefined" && window.DERMATO_PHOTOS) || {};
+const PHOTOS = Object.create(null);
+function photoKey(id){ return "dmg_photo_"+id; }
+function getPhoto(id){
+  if(id in PHOTOS) return PHOTOS[id];
+  let v=null; try{ v=localStorage.getItem(photoKey(id)); }catch(e){}
+  if(!v && DEFAULT_PHOTOS[id]) v=DEFAULT_PHOTOS[id];
+  PHOTOS[id]=v||null; return PHOTOS[id];
+}
+function setPhoto(id,dataURL){
+  PHOTOS[id]=dataURL;
+  try{ localStorage.setItem(photoKey(id),dataURL); }catch(e){/* quota / file:// : reste en mémoire */}
+}
+function delPhoto(id){
+  delete PHOTOS[id];            /* re-évalue (revient à l'image par défaut si elle existe) */
+  try{ localStorage.removeItem(photoKey(id)); }catch(e){}
+}
+function userHasOverride(id){
+  try{ return !!localStorage.getItem(photoKey(id)); }catch(e){ return false; }
+}
+function importPhoto(id,file,cb){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const max=720, sc=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement("canvas");
+        c.width=Math.max(1,Math.round(img.width*sc)); c.height=Math.max(1,Math.round(img.height*sc));
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        setPhoto(id,c.toDataURL("image/jpeg",0.82));
+      }catch(e){ setPhoto(id,reader.result); }
+      cb&&cb();
+    };
+    img.onerror=()=>{ setPhoto(id,reader.result); cb&&cb(); };
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function photoCell(it,big){
+  const p=getPhoto(it.id);
+  if(p) return `<div class="lez-photo${big?' big':''}"><img src="${p}" alt="Photo : ${esc(it.nom)}"></div>`;
+  return `<div class="lez-photo empty-photo${big?' big':''}"><span>📷<br>photo<br>à ajouter</span></div>`;
+}
+
+/* requêtes (en anglais : meilleurs résultats d'images) pour les atlas en accès libre */
+const ATLAS_Q = {
+  macule:"skin macule", papule:"skin papule", plaque:"skin plaque dermatology",
+  nodule:"skin nodule", vesicule:"skin vesicle", bulle:"skin bulla blister",
+  pustule:"skin pustule", papule_oedemateuse:"urticaria wheal hives",
+  squame:"skin scale desquamation", croute:"skin crust impetigo",
+  erosion:"skin erosion", ulceration:"skin ulcer", atrophie:"skin atrophy",
+  lichenification:"lichenification skin", fissure:"skin fissure",
+  reseau_typique:"dermoscopy pigment network nevus",
+  reseau_atypique:"dermoscopy atypical pigment network melanoma",
+  points_globules:"dermoscopy dots globules",
+  stries:"dermoscopy streaks pseudopods melanoma",
+  voile_bleu_blanc:"dermoscopy blue white veil",
+  regression:"dermoscopy regression structures melanoma",
+  telangiectasies:"dermoscopy arborizing vessels basal cell carcinoma",
+  nids_bleu_gris:"dermoscopy blue gray ovoid nests basal cell carcinoma",
+  vaisseaux_glomerulaires:"dermoscopy glomerular vessels bowen",
+  comedons_milia:"dermoscopy seborrheic keratosis comedo milia"
+};
+function atlasLinks(it){
+  const q = encodeURIComponent(ATLAS_Q[it.id] || it.nom);
+  const commons = `https://commons.wikimedia.org/wiki/Special:MediaSearch?type=image&search=${q}`;
+  const dermnet = `https://dermnetnz.org/search?q=${q}`;
+  return `<div class="note note-blue" style="margin-top:10px">
+    <b>📷 Voir des photos réelles (accès libre — ouvre un nouvel onglet) :</b>
+    <div class="atlas-links">
+      <a href="${commons}" target="_blank" rel="noopener">Images libres · Wikimedia Commons ↗</a>
+      <a href="${dermnet}" target="_blank" rel="noopener">Atlas DermNet (anglais) ↗</a>
+    </div>
+    <small class="muted">Les photos ne sont pas hébergées dans l'application (respect du droit d'auteur) : elles sont consultées sur des ressources externes en accès libre. Nécessite une connexion internet.</small>
+  </div>`;
+}
+
+function RENDER_visuel(panel){
+  const card = (it, kind) => `<button class="card lez-card" data-lesion="${kind}:${it.id}">
+      <div class="lez-duo"><div class="lez-wrap">${svgFor(it)}</div>${photoCell(it)}</div>
+      <div class="card-row">${typeof it.alerte==='number'?badge(it.alerte):''}<h3>${esc(it.nom)}</h3></div>
+      <p>${esc((it.groupe||(it.exemples&&it.exemples[0]))||'')}</p>
+    </button>`;
+  const prim = LESIONS_ELEMENTAIRES.filter(l=>l.groupe==="Lésion primitive");
+  const seco = LESIONS_ELEMENTAIRES.filter(l=>l.groupe==="Lésion secondaire");
+  panel.innerHTML = `
+    <div class="section-title"><h2>🖼️ Aide visuelle</h2></div>
+    <p class="lead">Schémas pédagogiques originaux des lésions élémentaires (vue en coupe de la peau) et des principales structures dermatoscopiques. Cliquez sur un schéma pour le détail.</p>
+    <div class="note note-orange">${esc(AIDE_VISUELLE_NOTE)}</div>
+    <div class="note note-blue">📷 À côté de chaque schéma, vous pouvez <b>importer votre propre photo</b> (dont vous détenez les droits) : ouvrez une lésion puis « Importer une photo ». Elle s'affiche à côté du dessin et reste <b>enregistrée dans votre navigateur</b> (aucun envoi). Pour trouver des images, chaque fiche propose aussi des liens vers des <b>atlas en accès libre</b> (Wikimedia Commons, DermNet) — les images ne sont pas copiées dans l'app, pour respecter le droit d'auteur.</div>
+
+    <h3 style="margin:16px 0 8px">Lésions élémentaires — primitives</h3>
+    <div class="grid grid-3">${prim.map(l=>card(l,"e")).join("")}</div>
+
+    <h3 style="margin:18px 0 8px">Lésions élémentaires — secondaires</h3>
+    <div class="grid grid-3">${seco.map(l=>card(l,"e")).join("")}</div>
+
+    <h3 style="margin:18px 0 8px">Structures dermatoscopiques</h3>
+    <div class="grid grid-3">${LESIONS_DERMATO.map(l=>card(l,"d")).join("")}</div>`;
+}
+function refreshVisuelPanel(){
+  const p=$('.panel[data-panel="visuel"]');
+  if(p && p.dataset.rendered) RENDER_visuel(p);
+}
+function openLesion(key){
+  const [kind,id] = key.split(":");
+  const arr = kind==="d" ? LESIONS_DERMATO : LESIONS_ELEMENTAIRES;
+  const it = arr.find(x=>x.id===id); if(!it) return;
+  const hasPhoto = !!getPhoto(it.id);
+  const ownPhoto = userHasOverride(it.id);
+  const body = `
+    <div class="lez-modal-duo">
+      <div><div class="lez-cap">Schéma</div><div class="schema">${svgFor(it)}</div></div>
+      <div><div class="lez-cap">Photo réelle</div>${photoCell(it,true)}</div>
+    </div>
+    <div class="fiche-actions">
+      <label class="btn btn-sm btn-blue">📷 ${hasPhoto?'Remplacer la photo':'Importer une photo'}
+        <input type="file" accept="image/*" id="lezPhotoInput" hidden></label>
+      ${ownPhoto?'<button class="btn btn-sm" id="lezPhotoDel" type="button">🗑️ Supprimer ma photo</button>':''}
+    </div>
+    <small class="muted">Importez une photo dont vous détenez les droits. Elle est enregistrée uniquement dans votre navigateur (aucun envoi sur internet) et reste privée.</small>
+    ${(typeof it.alerte==='number')?`<p style="margin-top:10px">${badge(it.alerte)} ${it.alerte===2?'Structure suspecte (signe de malignité)':it.alerte===1?'À interpréter selon le contexte':'Aspect plutôt rassurant'}</p>`:`<p class="fiche-cat" style="margin-top:10px">${esc(it.groupe||'')}</p>`}
+    <div class="note note-blue">${esc(it.definition)}</div>
+    <h3 style="margin:12px 0 6px">Exemples / contextes</h3>
+    ${list(it.exemples)}
+    ${atlasLinks(it)}
+    <div class="src-line">${esc(AIDE_VISUELLE_NOTE)}</div>`;
+  openModal(it.nom, body);
+  const inp=$("#lezPhotoInput");
+  if(inp) inp.addEventListener("change",e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    importPhoto(it.id,f,()=>{ openLesion(key); refreshVisuelPanel(); });
+  });
+  const del=$("#lezPhotoDel");
+  if(del) del.addEventListener("click",()=>{ delPhoto(it.id); openLesion(key); refreshVisuelPanel(); });
+}
 
 /* ===================================================================
    ALERTES TERRAIN
@@ -509,8 +749,8 @@ const RENDER = {
   recherche:RENDER_recherche, symptome:RENDER_symptome, localisation:RENDER_localisation,
   pathologies:RENDER_pathologies, urgences:RENDER_urgences, differentiel:RENDER_differentiel,
   ordonnances:RENDER_ordonnances, conseils:RENDER_conseils, medicaments:RENDER_medicaments,
-  dermatoscopie:RENDER_dermatoscopie, image:RENDER_image, apprentissage:RENDER_apprentissage,
-  sources:RENDER_sources
+  dermatoscopie:RENDER_dermatoscopie, visuel:RENDER_visuel, image:RENDER_image,
+  apprentissage:RENDER_apprentissage
 };
 
 /* ===================================================================
@@ -538,6 +778,7 @@ function init(){
     const od=e.target.closest("[data-ordo]"); if(od){ openOrdo(od.dataset.ordo); return; }
     const co=e.target.closest("[data-conseil]"); if(co){ openConseil(co.dataset.conseil); return; }
     const me=e.target.closest("[data-med]"); if(me){ openMed(+me.dataset.med); return; }
+    const lz=e.target.closest("[data-lesion]"); if(lz){ openLesion(lz.dataset.lesion); return; }
     const fl=e.target.closest("[data-flash]"); if(fl){ flipFlash(fl); return; }
   });
 

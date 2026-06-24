@@ -1420,10 +1420,103 @@ const SOURCES = {
   ]
 };
 
+/* ---------------------------------------------------------------------
+   AIDE VISUELLE — Lésions élémentaires (schémas originaux pédagogiques)
+   Les schémas (SVG) sont générés dans app.js, sans reproduction d'images
+   protégées. Vue de la peau en coupe.
+   --------------------------------------------------------------------- */
+const LESIONS_ELEMENTAIRES = [
+  { id:"macule", svg:"macule", nom:"Macule", groupe:"Lésion primitive",
+    definition:"Tache plane, visible mais NON palpable, de couleur différente de la peau normale (sans relief ni infiltration).",
+    exemples:["Vitiligo (achromique)","Lentigo / éphélides","Purpura","Exanthème maculeux viral"] },
+  { id:"papule", svg:"papule", nom:"Papule", groupe:"Lésion primitive",
+    definition:"Élevure solide, circonscrite, palpable, de petite taille (< 1 cm), ressortant au-dessus du plan cutané.",
+    exemples:["Lichen plan","Acné (papule inflammatoire)","Verrue plane","Prurigo"] },
+  { id:"plaque", svg:"plaque", nom:"Plaque", groupe:"Lésion primitive",
+    definition:"Lésion en relief à surface plane et étendue (> 1 cm), souvent formée par la confluence de papules.",
+    exemples:["Psoriasis en plaques","Eczéma","Mycosis fongoïde"] },
+  { id:"nodule", svg:"nodule", nom:"Nodule", groupe:"Lésion primitive",
+    definition:"Lésion solide, palpable, plus profonde (dermique ou hypodermique), de taille > 1 cm.",
+    exemples:["Érythème noueux","Kyste / lipome","Carcinome nodulaire"] },
+  { id:"vesicule", svg:"vesicule", nom:"Vésicule", groupe:"Lésion primitive",
+    definition:"Soulèvement circonscrit de l'épiderme contenant un liquide clair, de petite taille (< 5 mm).",
+    exemples:["Herpès","Varicelle / zona","Eczéma aigu","Dyshidrose"] },
+  { id:"bulle", svg:"bulle", nom:"Bulle", groupe:"Lésion primitive",
+    definition:"Collection liquidienne intra- ou sous-épidermique de grande taille (> 5 mm).",
+    exemples:["Pemphigoïde bulleuse","Brûlure","Impétigo bulleux","Toxidermie bulleuse"] },
+  { id:"pustule", svg:"pustule", nom:"Pustule", groupe:"Lésion primitive",
+    definition:"Soulèvement épidermique contenant un liquide purulent (pus), blanc-jaunâtre.",
+    exemples:["Acné","Folliculite","Psoriasis pustuleux"] },
+  { id:"papule_oedemateuse", svg:"oedeme", nom:"Papule œdémateuse (urticaire)", groupe:"Lésion primitive",
+    definition:"Papule ou plaque œdémateuse, rosée à bord net, FUGACE et migratrice (< 24 h au même endroit).",
+    exemples:["Urticaire aiguë / chronique"] },
+  { id:"squame", svg:"squame", nom:"Squame", groupe:"Lésion secondaire",
+    definition:"Lamelle de couche cornée se détachant de la surface de la peau (desquamation).",
+    exemples:["Psoriasis","Dermatite séborrhéique","Pityriasis","Dermatophytie"] },
+  { id:"croute", svg:"croute", nom:"Croûte", groupe:"Lésion secondaire",
+    definition:"Concrétion due au dessèchement d'une sérosité, de pus ou de sang à la surface de la peau.",
+    exemples:["Impétigo (croûtes mélicériques)","Herpès","Eczéma surinfecté"] },
+  { id:"erosion", svg:"erosion", nom:"Érosion", groupe:"Lésion secondaire",
+    definition:"Perte de substance SUPERFICIELLE (épiderme), cicatrisant SANS séquelle.",
+    exemples:["Aphte","Post-vésicule / post-bulle","Érosion muqueuse"] },
+  { id:"ulceration", svg:"ulceration", nom:"Ulcération", groupe:"Lésion secondaire",
+    definition:"Perte de substance PROFONDE (derme ± hypoderme), cicatrisant AVEC cicatrice.",
+    exemples:["Ulcère de jambe","Carcinome ulcéré","Chancre"] },
+  { id:"atrophie", svg:"atrophie", nom:"Atrophie", groupe:"Lésion secondaire",
+    definition:"Amincissement de la peau qui devient fine, lisse, plissée et translucide.",
+    exemples:["Vieillissement cutané","Corticothérapie locale prolongée","Lichen scléreux"] },
+  { id:"lichenification", svg:"lichen", nom:"Lichénification", groupe:"Lésion secondaire",
+    definition:"Épaississement de la peau avec accentuation du quadrillage normal, secondaire au grattage chronique.",
+    exemples:["Eczéma chronique","Prurigo","Névrodermite"] },
+  { id:"fissure", svg:"fissure", nom:"Fissure", groupe:"Lésion secondaire",
+    definition:"Perte de substance linéaire (crevasse) traversant l'épiderme, souvent douloureuse.",
+    exemples:["Eczéma des mains","Intertrigo","Perlèche"] }
+];
+
+/* ---------------------------------------------------------------------
+   AIDE VISUELLE — Structures dermatoscopiques (schémas originaux)
+   Vue de la lésion au dermatoscope (champ circulaire).
+   --------------------------------------------------------------------- */
+const LESIONS_DERMATO = [
+  { id:"reseau_typique", svg:"reseau_typique", nom:"Réseau pigmenté typique", alerte:0,
+    definition:"Mailles fines, régulières et homogènes, à espacement régulier, s'estompant en périphérie. En faveur d'une lésion mélanocytaire bénigne.",
+    exemples:["Naevus commun"] },
+  { id:"reseau_atypique", svg:"reseau_atypique", nom:"Réseau pigmenté atypique", alerte:2,
+    definition:"Mailles épaisses, irrégulières, de couleur et d'espacement variables, interrompues brutalement. Critère de suspicion de mélanome.",
+    exemples:["Mélanome","Naevus atypique"] },
+  { id:"points_globules", svg:"points_globules", nom:"Points et globules", alerte:1,
+    definition:"Amas pigmentés ronds (globules) ou punctiformes (points). Réguliers et centraux = rassurant ; irréguliers et périphériques = suspect.",
+    exemples:["Naevus","Mélanome (si irréguliers)"] },
+  { id:"stries", svg:"stries", nom:"Stries radiaires / pseudopodes", alerte:2,
+    definition:"Projections pigmentées linéaires (stries) ou bulbeuses (pseudopodes) à la périphérie. Irrégulières et asymétriques = mélanome.",
+    exemples:["Mélanome à extension superficielle","Naevus de Spitz"] },
+  { id:"voile_bleu_blanc", svg:"voile", nom:"Voile bleu-blanc", alerte:2,
+    definition:"Plage bleutée translucide, irrégulière, recouvrant la lésion. Critère fort de mélanome (pigment profond).",
+    exemples:["Mélanome"] },
+  { id:"regression", svg:"regression", nom:"Zones de régression", alerte:2,
+    definition:"Plages blanches cicatricielles associées à un granité gris-bleu (« poivre »). Témoignent d'une régression : à surveiller.",
+    exemples:["Mélanome en régression"] },
+  { id:"telangiectasies", svg:"telangiectasies", nom:"Télangiectasies arborescentes", alerte:1,
+    definition:"Vaisseaux rouges ramifiés, nets, à branches qui se divisent. Très évocateur de carcinome basocellulaire.",
+    exemples:["Carcinome basocellulaire"] },
+  { id:"nids_bleu_gris", svg:"nids", nom:"Nids ovoïdes bleu-gris / feuilles d'érable", alerte:1,
+    definition:"Structures bleu-gris en nids ovoïdes ou en « feuilles d'érable » à la périphérie. Évocateur de carcinome basocellulaire pigmenté.",
+    exemples:["Carcinome basocellulaire pigmenté"] },
+  { id:"vaisseaux_glomerulaires", svg:"glomerulaires", nom:"Vaisseaux glomérulaires", alerte:1,
+    definition:"Vaisseaux groupés « en pelote » (glomérule). Évocateurs de carcinome épidermoïde in situ (maladie de Bowen).",
+    exemples:["Maladie de Bowen","Carcinome épidermoïde"] },
+  { id:"comedons_milia", svg:"comedons", nom:"Comédons et kystes milia", alerte:0,
+    definition:"Bouchons cornés (pseudo-comédons, points bruns/noirs) et kystes milia (globules blanc-jaune). Aspect bénin de kératose séborrhéique.",
+    exemples:["Kératose séborrhéique"] }
+];
+
+const AIDE_VISUELLE_NOTE = "Schémas originaux et illustrations à visée pédagogique (images générées, et non des photographies de patients réels) — ils ne remplacent pas l'observation de lésions réelles ni la dermatoscopie. En cas de doute : avis dermatologique.";
+
 /* Expose global */
 const DERMATO_DB = {
   NIVEAUX, PATHOLOGIES, SYMPTOMES, LOCALISATIONS, URGENCES, DIFFERENTIELS,
   MEDICAMENTS, TERRAINS, CAS_CLINIQUES, QCM, FLASHCARDS, DERMATOSCOPIE,
-  ANALYSE_IMAGE, SOURCES, SRC, SRC_URL
+  ANALYSE_IMAGE, SOURCES, SRC, SRC_URL,
+  LESIONS_ELEMENTAIRES, LESIONS_DERMATO, AIDE_VISUELLE_NOTE
 };
 if (typeof window !== "undefined") window.DERMATO_DB = DERMATO_DB;
