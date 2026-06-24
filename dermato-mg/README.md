@@ -12,9 +12,22 @@ rapide, claire, mobile/tablette friendly.
 
 ## Démarrage
 
-- Ouvrir `index.html` (double-clic) — fonctionne en `file://`, ou via le portail
-  **ASSISTANT MÉDICAL** (`../index.html`).
+- **Multi-fichiers** : ouvrir `index.html` (double-clic) — fonctionne en `file://`,
+  ou via le portail **ASSISTANT MÉDICAL** (`../index.html`).
+- **Fichier unique portable** : ouvrir `dermato-mg.html` — tout (CSS + données +
+  script) est inliné dans un seul fichier, idéal pour partager/archiver hors-ligne.
 - En statique : `python3 -m http.server` puis ouvrir `/dermato-mg/`.
+
+### Régénérer le fichier unique
+
+`dermato-mg.html` est **généré** depuis les sources (`index.html`, `style.css`,
+`data.js`, `app.js`). Après modification des sources :
+
+```bash
+node build-single.js
+```
+
+Ne pas éditer `dermato-mg.html` à la main.
 
 ## Fonctions (parcours < 30 s : symptôme → hypothèses → red flags → traitement → ordonnance → conseil)
 
