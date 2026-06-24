@@ -1510,7 +1510,7 @@ const LESIONS_DERMATO = [
     exemples:["Kératose séborrhéique"] }
 ];
 
-const AIDE_VISUELLE_NOTE = "Schémas originaux à visée pédagogique, créés à partir des descriptions cliniques — ils ne reproduisent aucune image protégée et ne remplacent pas l'observation de lésions réelles ni la dermatoscopie. En cas de doute : avis dermatologique.";
+const AIDE_VISUELLE_NOTE = "Schémas originaux et illustrations à visée pédagogique (images générées, et non des photographies de patients réels) — ils ne remplacent pas l'observation de lésions réelles ni la dermatoscopie. En cas de doute : avis dermatologique.";
 
 /* Expose global */
 const DERMATO_DB = {
