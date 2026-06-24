@@ -558,6 +558,39 @@ function svgFor(item){
   return (SVG_ELEM[item.svg] || SVG_DERMO[item.svg] || (()=> '<div class="muted">schéma indisponible</div>'))();
 }
 
+/* requêtes (en anglais : meilleurs résultats d'images) pour les atlas en accès libre */
+const ATLAS_Q = {
+  macule:"skin macule", papule:"skin papule", plaque:"skin plaque dermatology",
+  nodule:"skin nodule", vesicule:"skin vesicle", bulle:"skin bulla blister",
+  pustule:"skin pustule", papule_oedemateuse:"urticaria wheal hives",
+  squame:"skin scale desquamation", croute:"skin crust impetigo",
+  erosion:"skin erosion", ulceration:"skin ulcer", atrophie:"skin atrophy",
+  lichenification:"lichenification skin", fissure:"skin fissure",
+  reseau_typique:"dermoscopy pigment network nevus",
+  reseau_atypique:"dermoscopy atypical pigment network melanoma",
+  points_globules:"dermoscopy dots globules",
+  stries:"dermoscopy streaks pseudopods melanoma",
+  voile_bleu_blanc:"dermoscopy blue white veil",
+  regression:"dermoscopy regression structures melanoma",
+  telangiectasies:"dermoscopy arborizing vessels basal cell carcinoma",
+  nids_bleu_gris:"dermoscopy blue gray ovoid nests basal cell carcinoma",
+  vaisseaux_glomerulaires:"dermoscopy glomerular vessels bowen",
+  comedons_milia:"dermoscopy seborrheic keratosis comedo milia"
+};
+function atlasLinks(it){
+  const q = encodeURIComponent(ATLAS_Q[it.id] || it.nom);
+  const commons = `https://commons.wikimedia.org/wiki/Special:MediaSearch?type=image&search=${q}`;
+  const dermnet = `https://dermnetnz.org/search?q=${q}`;
+  return `<div class="note note-blue" style="margin-top:10px">
+    <b>📷 Voir des photos réelles (accès libre — ouvre un nouvel onglet) :</b>
+    <div class="atlas-links">
+      <a href="${commons}" target="_blank" rel="noopener">Images libres · Wikimedia Commons ↗</a>
+      <a href="${dermnet}" target="_blank" rel="noopener">Atlas DermNet (anglais) ↗</a>
+    </div>
+    <small class="muted">Les photos ne sont pas hébergées dans l'application (respect du droit d'auteur) : elles sont consultées sur des ressources externes en accès libre. Nécessite une connexion internet.</small>
+  </div>`;
+}
+
 function RENDER_visuel(panel){
   const card = (it, kind) => `<button class="card lez-card" data-lesion="${kind}:${it.id}">
       <div class="lez-wrap">${svgFor(it)}</div>
@@ -570,6 +603,7 @@ function RENDER_visuel(panel){
     <div class="section-title"><h2>🖼️ Aide visuelle</h2></div>
     <p class="lead">Schémas pédagogiques originaux des lésions élémentaires (vue en coupe de la peau) et des principales structures dermatoscopiques. Cliquez sur un schéma pour le détail.</p>
     <div class="note note-orange">${esc(AIDE_VISUELLE_NOTE)}</div>
+    <div class="note note-blue">📷 Chaque lésion comporte, dans son détail, un lien <b>« Voir des photos réelles »</b> vers des atlas en accès libre (Wikimedia Commons, DermNet). Les images ne sont pas copiées dans l'application — elles sont consultées en ligne, pour respecter le droit d'auteur.</div>
 
     <h3 style="margin:16px 0 8px">Lésions élémentaires — primitives</h3>
     <div class="grid grid-3">${prim.map(l=>card(l,"e")).join("")}</div>
@@ -590,6 +624,7 @@ function openLesion(key){
     <div class="note note-blue">${esc(it.definition)}</div>
     <h3 style="margin:12px 0 6px">Exemples / contextes</h3>
     ${list(it.exemples)}
+    ${atlasLinks(it)}
     <div class="src-line">${esc(AIDE_VISUELLE_NOTE)}</div>`;
   openModal(it.nom, body);
 }

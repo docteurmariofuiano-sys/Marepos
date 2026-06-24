@@ -253,6 +253,10 @@ tbody tr:hover{background:#fafcfe}
 .schema svg{max-width:100%;height:auto}
 
 /* aide visuelle */
+.atlas-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+.atlas-links a{display:inline-block;background:var(--panel);border:1px solid var(--blue);
+  color:var(--blue);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.86rem;text-decoration:none}
+.atlas-links a:hover{background:var(--blue);color:#fff;text-decoration:none}
 .lez-card{align-items:stretch}
 .lez-wrap{width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin-bottom:6px;background:#fff8f1}
 .lez{display:block;width:100%;height:auto}
