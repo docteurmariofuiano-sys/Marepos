@@ -13,6 +13,7 @@ const DOMAINES = {
   "Gynécologie":  {c:"var(--d-gyneco)", cb:"#fdecf5"},
   "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
+  "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
@@ -40,6 +41,9 @@ const APPS = [
   {t:"GynoAide", e:"🩺", dom:"Gynécologie",
    d:"Gynécologie en médecine générale (application principale) : femme en âge de procréer (contraception, oubli, urgence, IVG, grossesse) et femme ménopausée (THM, SGUM, os, cardio).",
    href:"suite-clinique/apps-externes/index-accueil.html"},
+  {t:"Atlas épaule MG", e:"🦴", dom:"Rhumatologie",
+   d:"Atlas clinique de l'épaule pour le médecin généraliste : repères anatomiques, manœuvres d'examen, diagnostics fréquents et conduite à tenir (aide visuelle intégrée).",
+   href:"atlas-epaule/index.html"},
   {t:"Fiches d'interrogatoire", e:"📋", dom:"Raisonnement",
    d:"64 fiches : du symptôme au diagnostic — interrogatoire ciblé, différentiels, red flags.",
    href:"suite-clinique/index.html"},
