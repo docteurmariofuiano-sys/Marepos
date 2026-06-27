@@ -1,0 +1,2588 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTA-MG Assistant - Choix et associations des antihypertenseurs</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f8;
+      --surface: #ffffff;
+      --surface-2: #edf4f2;
+      --ink: #17202a;
+      --muted: #60707c;
+      --border: #cbd8de;
+      --navy: #12364a;
+      --blue: #22658a;
+      --teal: #0e7f78;
+      --green: #17824c;
+      --green-bg: #e7f5ed;
+      --orange: #b56500;
+      --orange-bg: #fff2df;
+      --red: #b42318;
+      --red-bg: #fff0ed;
+      --violet: #6657a8;
+      --shadow: 0 12px 32px rgba(18, 54, 74, 0.12);
+      --radius: 8px;
+      --focus: 0 0 0 3px rgba(14, 127, 120, 0.28);
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101820;
+      --surface: #172331;
+      --surface-2: #203241;
+      --ink: #eef5f6;
+      --muted: #b8c7cf;
+      --border: #375064;
+      --navy: #0b2434;
+      --blue: #7db7d4;
+      --teal: #4fc4ba;
+      --green: #74d99b;
+      --green-bg: #173b2b;
+      --orange: #ffc06e;
+      --orange-bg: #463119;
+      --red: #ff9b91;
+      --red-bg: #46211e;
+      --violet: #b8aeff;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Aptos", "Segoe UI", "Candara", system-ui, sans-serif;
+      background:
+        linear-gradient(180deg, rgba(18, 54, 74, 0.08), transparent 320px),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px clamp(18px, 4vw, 44px);
+      background: var(--navy);
+      color: #ffffff;
+      border-bottom: 6px solid var(--teal);
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: #bce7e3;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      line-height: 1.18;
+    }
+
+    h1 {
+      font-family: "Constantia", "Georgia", serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 1.42rem;
+      color: var(--navy);
+    }
+
+    [data-theme="dark"] h2 {
+      color: #f2fbff;
+    }
+
+    h3 {
+      font-size: 1.08rem;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin: 6px 0 0;
+      color: #d6e7ed;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 9px 13px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn:focus-visible,
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .icon {
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.14);
+      font-weight: 900;
+    }
+
+    .safety-banner {
+      margin: 18px clamp(16px, 4vw, 44px) 0;
+      padding: 14px 16px;
+      border: 2px solid var(--red);
+      border-radius: var(--radius);
+      background: var(--red-bg);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+      gap: 24px;
+      padding: 22px clamp(16px, 4vw, 44px) 42px;
+    }
+
+    .side-nav {
+      position: sticky;
+      top: 14px;
+      align-self: start;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-btn {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 8px;
+      align-items: center;
+      min-height: 44px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      padding: 9px;
+      font-weight: 800;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--surface-2);
+      border-color: var(--border);
+    }
+
+    .nav-btn.active {
+      color: var(--teal);
+    }
+
+    .nav-symbol {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 0.9rem;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .section {
+      display: none;
+      animation: rise 0.22s ease-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .panel,
+    .result-panel,
+    .decision-output {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel.tight {
+      padding: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .action-tile {
+      min-height: 90px;
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--teal);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      text-align: left;
+      padding: 14px;
+      font-weight: 900;
+    }
+
+    .action-tile small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px;
+      min-height: 96px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--navy);
+      font-size: 1.45rem;
+    }
+
+    [data-theme="dark"] .stat strong {
+      color: #ffffff;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+
+    label.field {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 11px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .check {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      font-weight: 750;
+    }
+
+    .check input {
+      margin-top: 4px;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .decision-output {
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .output-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface-2);
+    }
+
+    .output-card h4 {
+      margin-bottom: 8px;
+      color: var(--navy);
+    }
+
+    [data-theme="dark"] .output-card h4 {
+      color: #ffffff;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .pill.green {
+      border-color: rgba(23, 130, 76, 0.45);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .pill.orange {
+      border-color: rgba(181, 101, 0, 0.45);
+      background: var(--orange-bg);
+      color: var(--orange);
+    }
+
+    .pill.red {
+      border-color: rgba(180, 35, 24, 0.45);
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .alert-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .alert {
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-weight: 800;
+    }
+
+    .alert.red {
+      border: 1px solid var(--red);
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .alert.orange {
+      border: 1px solid var(--orange);
+      background: var(--orange-bg);
+      color: var(--orange);
+    }
+
+    .alert.green {
+      border: 1px solid var(--green);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .stepper {
+      display: grid;
+      gap: 10px;
+      counter-reset: steps;
+      margin-top: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface-2);
+    }
+
+    .step::before {
+      counter-increment: steps;
+      content: counter(steps);
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--surface-2);
+      color: var(--navy);
+      font-size: 0.9rem;
+    }
+
+    [data-theme="dark"] th {
+      color: #ffffff;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .matrix-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .map-box {
+      min-height: 520px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .association-map {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: block;
+      background:
+        linear-gradient(90deg, rgba(34, 101, 138, 0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(34, 101, 138, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .map-node rect {
+      fill: var(--surface);
+      stroke: var(--border);
+      stroke-width: 2;
+      rx: 8;
+    }
+
+    .map-node text {
+      fill: var(--ink);
+      font-weight: 900;
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .map-node:hover rect {
+      stroke: var(--teal);
+      stroke-width: 4;
+    }
+
+    .edge {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      opacity: 0.82;
+      cursor: pointer;
+    }
+
+    .edge:hover {
+      stroke-width: 10;
+      opacity: 1;
+    }
+
+    .edge.green {
+      stroke: var(--green);
+    }
+
+    .edge.orange {
+      stroke: var(--orange);
+      stroke-dasharray: 12 12;
+    }
+
+    .edge.red {
+      stroke: var(--red);
+      stroke-dasharray: 4 12;
+    }
+
+    .relation-detail {
+      min-height: 520px;
+      padding: 16px;
+    }
+
+    .relation-detail h3 {
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    [data-theme="dark"] .relation-detail h3 {
+      color: #ffffff;
+    }
+
+    .drug-tools {
+      display: grid;
+      grid-template-columns: 1fr minmax(220px, 0.7fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .drug-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .drug-card {
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--blue);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: var(--surface);
+    }
+
+    .drug-card h3 {
+      margin-bottom: 6px;
+      color: var(--navy);
+    }
+
+    [data-theme="dark"] .drug-card h3 {
+      color: #ffffff;
+    }
+
+    .drug-card ul,
+    .compact-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .drug-card li,
+    .compact-list li {
+      margin-bottom: 5px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-weight: 800;
+    }
+
+    .tab-btn.active {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list li {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: var(--surface-2);
+      font-weight: 750;
+    }
+
+    .print-only {
+      display: none;
+    }
+
+    @media (max-width: 1040px) {
+      .layout,
+      .matrix-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side-nav {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-4,
+      .quick-stats,
+      .action-grid,
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .checks,
+      .grid-3,
+      .drug-list,
+      .source-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .side-nav,
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .quick-stats,
+      .action-grid,
+      .form-grid,
+      .checks,
+      .output-grid,
+      .drug-tools,
+      .drug-list,
+      .source-list {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .map-box,
+      .association-map,
+      .relation-detail {
+        min-height: 420px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .side-nav,
+      .toolbar,
+      .action-grid,
+      .form-actions {
+        display: none !important;
+      }
+
+      .layout {
+        display: block;
+        padding: 0;
+      }
+
+      .section {
+        display: block !important;
+        page-break-after: always;
+      }
+
+      .panel,
+      .decision-output,
+      .result-panel {
+        box-shadow: none;
+      }
+
+      .print-only {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" data-theme="light">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Assistant clinique local</p>
+        <h1>HTA-MG Assistant</h1>
+        <p class="subtitle">Choix, associations et surveillance des antihypertenseurs en médecine générale</p>
+      </div>
+      <div class="toolbar" aria-label="Actions">
+        <button class="btn btn-outline" id="themeBtn" type="button" title="Basculer clair/sombre"><span class="icon">◐</span>Thème</button>
+        <button class="btn btn-outline" id="copyBtn" type="button" title="Copier la synthèse du dernier calcul"><span class="icon">⧉</span>Copier</button>
+        <button class="btn btn-outline" id="printBtn" type="button" title="Imprimer ou exporter en PDF"><span class="icon">⌁</span>PDF</button>
+        <button class="btn btn-outline" id="resetBtn" type="button" title="Réinitialiser les champs"><span class="icon">↺</span>Reset</button>
+      </div>
+    </header>
+
+    <div class="safety-banner">
+      Outil d'aide à la décision pour médecin. Ne remplace pas l'analyse clinique, la vérification VIDAL/Base publique du médicament, les contre-indications individuelles ni les recommandations locales.
+    </div>
+
+    <div class="layout">
+      <nav class="side-nav" aria-label="Navigation principale">
+        <button class="nav-btn active" data-target="accueil" type="button"><span class="nav-symbol">A</span>Accueil</button>
+        <button class="nav-btn" data-target="confirmation" type="button"><span class="nav-symbol">C</span>Confirmer HTA</button>
+        <button class="nav-btn" data-target="profil" type="button"><span class="nav-symbol">P</span>Profil patient</button>
+        <button class="nav-btn" data-target="initial" type="button"><span class="nav-symbol">1</span>Traitement initial</button>
+        <button class="nav-btn" data-target="adaptation" type="button"><span class="nav-symbol">2</span>Adapter / associer</button>
+        <button class="nav-btn" data-target="resistante" type="button"><span class="nav-symbol">R</span>HTA résistante</button>
+        <button class="nav-btn" data-target="associations" type="button"><span class="nav-symbol">M</span>Associations</button>
+        <button class="nav-btn" data-target="comorbidites" type="button"><span class="nav-symbol">D</span>Comorbidités</button>
+        <button class="nav-btn" data-target="medicaments" type="button"><span class="nav-symbol">F</span>Fiches médicaments</button>
+        <button class="nav-btn" data-target="surveillance" type="button"><span class="nav-symbol">S</span>Surveillance</button>
+        <button class="nav-btn" data-target="effets" type="button"><span class="nav-symbol">E</span>Effets indésirables</button>
+        <button class="nav-btn" data-target="urgences" type="button"><span class="nav-symbol">U</span>Urgences</button>
+      </nav>
+
+      <main class="content">
+        <section id="accueil" class="section active">
+          <div class="section-head">
+            <div>
+              <h2>HTA-MG Assistant</h2>
+              <p>Outil local pour structurer le choix thérapeutique, les associations, la surveillance et les alertes de sécurité en consultation.</p>
+            </div>
+          </div>
+
+          <div class="quick-stats" aria-label="Repères">
+            <div class="stat"><strong>140/90</strong><span>Seuil cabinet à confirmer hors urgence</span></div>
+            <div class="stat"><strong>3 x 2 x 3</strong><span>Automesure : 3 mesures, matin et soir, 3 jours</span></div>
+            <div class="stat"><strong>4-6 sem.</strong><span>Délai usuel avant intensification si non contrôlé</span></div>
+            <div class="stat"><strong>0 dose</strong><span>Aucune posologie générée automatiquement</span></div>
+          </div>
+
+          <div class="action-grid">
+            <button class="action-tile" data-target="initial" type="button">Choisir un traitement initial<small>HTA non compliquée, indications associées</small></button>
+            <button class="action-tile" data-target="adaptation" type="button">Adapter un traitement insuffisant<small>Bithérapie, trithérapie, facteurs de résistance</small></button>
+            <button class="action-tile" data-target="profil" type="button">Calcul rapide du profil patient<small>Sortie structurée : préférer, accepter, éviter</small></button>
+            <button class="action-tile" data-target="comorbidites" type="button">Patient avec comorbidité<small>Diabète, MRC, cardiopathie, grossesse, âge</small></button>
+            <button class="action-tile" data-target="associations" type="button">Associations autorisées / à éviter<small>Carte interactive type feu tricolore</small></button>
+            <button class="action-tile" data-target="medicaments" type="button">Fiches médicaments<small>Classes, DCI, noms commerciaux, surveillance</small></button>
+            <button class="action-tile" data-target="resistante" type="button">HTA résistante<small>Vérifications, 4e ligne, avis spécialisé</small></button>
+            <button class="action-tile" data-target="urgences" type="button">Urgences hypertensives<small>Souffrance viscérale, grossesse, signes d'alarme</small></button>
+            <button class="action-tile" data-target="surveillance" type="button">Surveillance biologique<small>Créatinine, DFG, kaliémie, natrémie</small></button>
+          </div>
+
+          <div class="panel" style="margin-top:18px;">
+            <h3>Dernière synthèse</h3>
+            <div id="homeSummary" class="decision-output">
+              <p class="empty-state">Aucun profil calculé pour le moment.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Références intégrées comme garde-fous</h3>
+            <ul class="source-list">
+              <li><a href="https://www.vidal.fr/maladies/coeur-circulation-veines/hypertension-arterielle/medicaments.html" target="_blank" rel="noreferrer">VIDAL - médicaments de l'HTA</a></li>
+              <li><a href="https://www.vidal.fr/maladies/recommandations/hta-hypertension-arterielle-1640.html" target="_blank" rel="noreferrer">VIDAL Reco - HTA</a></li>
+              <li><a href="https://www.vidal.fr/maladies/recommandations/hta-severe-et-urgences-hypertensives-3715.html" target="_blank" rel="noreferrer">VIDAL Reco - HTA sévère et urgences</a></li>
+              <li><a href="https://www.has-sante.fr/jcms/c_2059286/fr/prise-en-charge-de-l-hypertension-arterielle-de-l-adulte" target="_blank" rel="noreferrer">HAS/SFHTA - prise en charge de l'HTA de l'adulte</a></li>
+              <li><a href="https://www.frhta.org/" target="_blank" rel="noreferrer">FRHTA - Fondation de Recherche sur l'HTA</a></li>
+              <li><a href="https://www.larevuedupraticien.fr/" target="_blank" rel="noreferrer">La Revue du Praticien - antihypertenseurs</a></li>
+              <li><a href="https://recomedicales.fr/" target="_blank" rel="noreferrer">RecoMédicales - hypertension artérielle</a></li>
+              <li><a href="https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines/Elevated-Blood-Pressure-and-Hypertension" target="_blank" rel="noreferrer">ESC 2024 - Elevated Blood Pressure and Hypertension</a></li>
+            </ul>
+            <p class="empty-state">Références à revérifier avant prescription : disponibilité, dosages, contre-indications, AMM et interactions peuvent évoluer.</p>
+          </div>
+        </section>
+
+        <section id="confirmation" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Confirmer l'HTA avant traitement</h2>
+              <p>La confirmation est recherchée hors situation urgente, HTA grade 3 symptomatique ou atteinte d'organe cible.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="form-grid">
+              <label class="field">PAS cabinet
+                <input id="confirmSbp" type="number" min="70" max="280" value="150">
+              </label>
+              <label class="field">PAD cabinet
+                <input id="confirmDbp" type="number" min="40" max="160" value="92">
+              </label>
+              <label class="field">Contexte
+                <select id="confirmContext">
+                  <option value="routine">Mesure élevée sans symptôme</option>
+                  <option value="repeated">Mesures répétées élevées</option>
+                  <option value="home">Automesure/MAPA déjà élevée</option>
+                  <option value="target">Atteinte d'organe cible connue</option>
+                </select>
+              </label>
+              <label class="field">Grossesse
+                <select id="confirmPregnancy">
+                  <option value="no">Non / non concerné</option>
+                  <option value="possible">Possible</option>
+                  <option value="current">Actuelle</option>
+                </select>
+              </label>
+            </div>
+            <div class="checks" aria-label="Signes d'alerte confirmation">
+              <label class="check"><input type="checkbox" id="symChest">Douleur thoracique</label>
+              <label class="check"><input type="checkbox" id="symNeuro">Déficit neurologique</label>
+              <label class="check"><input type="checkbox" id="symDyspnea">Dyspnée aiguë / OAP</label>
+              <label class="check"><input type="checkbox" id="symConfusion">Confusion</label>
+              <label class="check"><input type="checkbox" id="symVisual">Trouble visuel aigu</label>
+              <label class="check"><input type="checkbox" id="symRenal">IRA suspectée</label>
+              <label class="check"><input type="checkbox" id="symDissection">Dissection suspectée</label>
+              <label class="check"><input type="checkbox" id="symPreeclampsia">Signes de prééclampsie</label>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" id="confirmBtn" type="button">Analyser</button>
+            </div>
+            <div id="confirmOutput" class="decision-output">
+              <p class="empty-state">Renseigner les valeurs puis lancer l'analyse.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="panel">
+              <h3>Mini-algorithme</h3>
+              <div class="stepper">
+                <div class="step"><div><strong>Mesure cabinet élevée</strong><br>Rechercher qualité de mesure, brassard adapté, repos, répétition.</div></div>
+                <div class="step"><div><strong>Confirmation ambulatoire</strong><br>Automesure : 3 mesures par prise, matin et soir, pendant 3 jours ; MAPA 24 h si disponible.</div></div>
+                <div class="step"><div><strong>Alternative</strong><br>Mesures répétées au cabinet lors d'au moins deux visites espacées si ambulatoire impossible.</div></div>
+                <div class="step"><div><strong>Exception</strong><br>PA ≥ 180/110 mmHg, symptômes, atteinte d'organe cible, urgence hypertensive : ne pas attendre la confirmation habituelle.</div></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Seuils pratiques</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Cadre</th><th>Seuil / grade</th></tr></thead>
+                  <tbody>
+                    <tr><td>Cabinet</td><td>HTA si ≥ 140/90 mmHg</td></tr>
+                    <tr><td>Grade 1</td><td>140-159 / 90-99 mmHg</td></tr>
+                    <tr><td>Grade 2</td><td>160-179 / 100-109 mmHg</td></tr>
+                    <tr><td>Grade 3</td><td>≥ 180 / ≥ 110 mmHg</td></tr>
+                    <tr><td>Automesure</td><td>Seuil usuel ≥ 135/85 mmHg, à vérifier selon contexte</td></tr>
+                    <tr><td>MAPA</td><td>Seuils usuels : 24 h ≥ 130/80, éveil ≥ 135/85, sommeil ≥ 120/70 mmHg, à vérifier</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="profil" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Profil patient</h2>
+              <p>Le moteur classe les options en préférées, acceptables, à éviter, puis associe surveillance et alertes.</p>
+            </div>
+          </div>
+
+          <form id="profileForm" class="panel">
+            <div class="form-grid">
+              <label class="field">Âge
+                <input id="age" type="number" min="18" max="110" value="58">
+              </label>
+              <label class="field">Sexe
+                <select id="sex">
+                  <option value="unspecified">Non précisé</option>
+                  <option value="female">Femme</option>
+                  <option value="male">Homme</option>
+                </select>
+              </label>
+              <label class="field">Grossesse / projet
+                <select id="pregnancy">
+                  <option value="no">Non / non concerné</option>
+                  <option value="possible">Possible</option>
+                  <option value="project">Projet</option>
+                  <option value="current">Actuelle</option>
+                </select>
+              </label>
+              <label class="field">Observance estimée
+                <select id="adherence">
+                  <option value="unknown">À évaluer</option>
+                  <option value="good">Bonne</option>
+                  <option value="partial">Partielle</option>
+                  <option value="poor">Mauvaise</option>
+                </select>
+              </label>
+              <label class="field">PAS moyenne
+                <input id="sbp" type="number" min="80" max="280" value="158">
+              </label>
+              <label class="field">PAD moyenne
+                <input id="dbp" type="number" min="40" max="160" value="94">
+              </label>
+              <label class="field">Fréquence cardiaque
+                <input id="hr" type="number" min="30" max="170" value="72">
+              </label>
+              <label class="field">IMC
+                <input id="bmi" type="number" min="12" max="70" step="0.1" value="28">
+              </label>
+              <label class="field">DFG ml/min/1,73 m²
+                <input id="egfr" type="number" min="3" max="160" value="58">
+              </label>
+              <label class="field">Créatinine µmol/L
+                <input id="creatinine" type="number" min="20" max="900" value="92">
+              </label>
+              <label class="field">Kaliémie mmol/L
+                <input id="potassium" type="number" min="1.5" max="8" step="0.1" value="4.4">
+              </label>
+              <label class="field">Natrémie mmol/L
+                <input id="sodium" type="number" min="110" max="165" step="1" value="140">
+              </label>
+            </div>
+
+            <h3 style="margin-top:18px;">Comorbidités et facteurs</h3>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="smoking">Tabac</label>
+              <label class="check"><input type="checkbox" id="diabetes">Diabète</label>
+              <label class="check"><input type="checkbox" id="albuminuria">Albuminurie</label>
+              <label class="check"><input type="checkbox" id="stroke">Antécédent AVC/AIT</label>
+              <label class="check"><input type="checkbox" id="ischemic">Cardiopathie ischémique / angor / post-infarctus</label>
+              <label class="check"><input type="checkbox" id="hfref">Insuffisance cardiaque à FEVG réduite</label>
+              <label class="check"><input type="checkbox" id="afib">FA ou tachyarythmie</label>
+              <label class="check"><input type="checkbox" id="block">BAV connu</label>
+              <label class="check"><input type="checkbox" id="asthma">Asthme/BPCO</label>
+              <label class="check"><input type="checkbox" id="gout">Goutte / hyperuricémie</label>
+              <label class="check"><input type="checkbox" id="edema">Œdèmes des membres inférieurs</label>
+              <label class="check"><input type="checkbox" id="orthostasis">Hypotension orthostatique / chutes</label>
+              <label class="check"><input type="checkbox" id="bph">HBP symptomatique</label>
+              <label class="check"><input type="checkbox" id="migraine">Migraine</label>
+              <label class="check"><input type="checkbox" id="raynaud">Syndrome de Raynaud</label>
+              <label class="check"><input type="checkbox" id="nsaids">AINS fréquents</label>
+              <label class="check"><input type="checkbox" id="lithium">Lithium</label>
+              <label class="check"><input type="checkbox" id="diureticsTaken">Diurétique déjà pris</label>
+            </div>
+
+            <h3 style="margin-top:18px;">Effets indésirables déjà apparus</h3>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="aeCough">Toux sous IEC</label>
+              <label class="check"><input type="checkbox" id="aeEdema">Œdèmes sous inhibiteur calcique</label>
+              <label class="check"><input type="checkbox" id="aeHypokalemia">Hypokaliémie</label>
+              <label class="check"><input type="checkbox" id="aeHyperkalemia">Hyperkaliémie</label>
+              <label class="check"><input type="checkbox" id="aeSexual">Dysfonction sexuelle</label>
+              <label class="check"><input type="checkbox" id="aeBradycardia">Bradycardie</label>
+              <label class="check"><input type="checkbox" id="aeHyponatremia">Hyponatrémie</label>
+              <label class="check"><input type="checkbox" id="aeRenal">Insuffisance rénale</label>
+              <label class="check"><input type="checkbox" id="aeOrthostasis">Hypotension orthostatique</label>
+            </div>
+
+            <label class="field" style="margin-top:16px;">Traitement actuel HTA / médicaments à risque
+              <textarea id="currentTreatment" placeholder="Ex. ramipril (Triatec), hydrochlorothiazide (Esidrex), AINS, lithium..."></textarea>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" id="evaluateBtn" type="button">Calculer le profil</button>
+              <button class="btn" type="reset">Effacer</button>
+              <button class="btn" id="buildPrescriptionBtn" type="button">Proposition à vérifier</button>
+            </div>
+          </form>
+
+          <div id="profileOutput" class="decision-output">
+            <p class="empty-state">Le résultat apparaîtra ici après calcul.</p>
+          </div>
+        </section>
+
+        <section id="initial" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Choix du traitement initial</h2>
+              <p>Les options sont présentées par classes, avec les DCI et noms commerciaux courants en France, à vérifier avant prescription.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="panel">
+              <h3>HTA non compliquée</h3>
+              <div class="stepper">
+                <div class="step"><div><strong>Confirmer l'HTA</strong><br>Automesure, MAPA ou mesures répétées, sauf grade 3 symptomatique ou urgence.</div></div>
+                <div class="step"><div><strong>Évaluer le profil</strong><br>Âge, grossesse, DFG, kaliémie, albuminurie, cardiopathie, orthostatisme, interactions.</div></div>
+                <div class="step"><div><strong>Choisir une classe compatible</strong><br>Diurétique thiazidique/apparenté, inhibiteur calcique dihydropyridinique, IEC ou ARA2 selon contexte.</div></div>
+                <div class="step"><div><strong>Organiser la surveillance</strong><br>Biologie initiale, recontrôle ciblé, automesure, tolérance et observance.</div></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Classes initiales possibles</h3>
+              <ul class="compact-list">
+                <li>Diurétique thiazidique ou apparenté : indapamide (Fludex), hydrochlorothiazide (Esidrex), chlortalidone (nom commercial à vérifier dans VIDAL/Base publique du médicament).</li>
+                <li>Inhibiteur calcique dihydropyridinique : amlodipine (Amlor), lercanidipine (Lercapress/Zanidip), nifédipine LP (Adalate), nicardipine LP (Loxen).</li>
+                <li>IEC : périndopril (Coversyl), ramipril (Triatec), énalapril (Renitec), lisinopril (Zestril), trandolapril (Odrik), captopril (Lopril).</li>
+                <li>ARA2 : candésartan (Atacand/Kenzen), irbésartan (Aprovel), losartan (Cozaar), telmisartan (Micardis/Pritor), valsartan (Tareg/Nisis), olmésartan (Olmetec/Alteis).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Bêtabloquant : indication associée plutôt que réflexe</h3>
+            <p>Ne pas le présenter comme traitement systématique de première intention dans l'HTA non compliquée. Le discuter surtout si post-infarctus, angor, tachycardie sinusale gênante, FA nécessitant contrôle de fréquence, insuffisance cardiaque selon molécule validée, migraine, hyperthyroïdie ou tremblement essentiel.</p>
+            <div class="pill-row">
+              <span class="pill">bisoprolol (Cardensiel/Bisoce)</span>
+              <span class="pill">nébivolol (Temerit/Nebilox)</span>
+              <span class="pill">métoprolol (Lopressor/Seloken)</span>
+              <span class="pill">aténolol (Tenormine)</span>
+              <span class="pill">acébutolol (Sectral)</span>
+              <span class="pill">carvédilol (Kredex)</span>
+              <span class="pill">labétalol (Trandate)</span>
+              <span class="pill">propranolol (Avlocardyl)</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="adaptation" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Adapter un traitement insuffisant</h2>
+              <p>Avant d'associer, vérifier mesure, observance, facteurs de résistance et interactions.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="form-grid">
+              <label class="field">Situation actuelle
+                <select id="stageSelect">
+                  <option value="mono">PA non contrôlée sous monothérapie</option>
+                  <option value="bi">PA non contrôlée sous bithérapie</option>
+                  <option value="tri">PA non contrôlée sous trithérapie</option>
+                  <option value="none">Traitement non débuté</option>
+                </select>
+              </label>
+              <label class="field">Délai depuis adaptation
+                <select id="timeSelect">
+                  <option value="short">Moins de 4 semaines</option>
+                  <option value="standard">4 à 6 semaines ou plus</option>
+                  <option value="long">Plus de 3 mois</option>
+                </select>
+              </label>
+              <label class="field">Contrôle hors cabinet
+                <select id="outOfficeSelect">
+                  <option value="unknown">Non vérifié</option>
+                  <option value="confirmed">HTA confirmée hors cabinet</option>
+                  <option value="white">Effet blouse blanche possible</option>
+                </select>
+              </label>
+              <label class="field">Tolérance
+                <select id="toleranceSelect">
+                  <option value="good">Bonne</option>
+                  <option value="issue">Effet indésirable</option>
+                  <option value="unknown">À réévaluer</option>
+                </select>
+              </label>
+            </div>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="factorSalt">Excès de sel</label>
+              <label class="check"><input type="checkbox" id="factorAlcohol">Alcool</label>
+              <label class="check"><input type="checkbox" id="factorNsaid">AINS</label>
+              <label class="check"><input type="checkbox" id="factorSteroids">Corticoïdes</label>
+              <label class="check"><input type="checkbox" id="factorDecongest">Décongestionnants nasaux</label>
+              <label class="check"><input type="checkbox" id="factorSleepApnea">Apnée du sommeil</label>
+              <label class="check"><input type="checkbox" id="factorKidney">Insuffisance rénale</label>
+              <label class="check"><input type="checkbox" id="factorAldo">Hyperaldostéronisme</label>
+              <label class="check"><input type="checkbox" id="factorInteractions">Interactions</label>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" id="adaptBtn" type="button">Proposer la suite</button>
+            </div>
+            <div id="adaptOutput" class="decision-output">
+              <p class="empty-state">Sélectionner la situation puis lancer l'analyse.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-3">
+            <div class="panel tight">
+              <h3>Bithérapie préférée 1</h3>
+              <p>IEC ou ARA2 + inhibiteur calcique dihydropyridinique.</p>
+              <ul class="compact-list">
+                <li>périndopril (Coversyl) + amlodipine (Amlor)</li>
+                <li>ramipril (Triatec) + lercanidipine (Lercapress/Zanidip)</li>
+                <li>candésartan (Atacand/Kenzen) + amlodipine (Amlor)</li>
+                <li>valsartan (Tareg/Nisis) + amlodipine (Amlor)</li>
+              </ul>
+            </div>
+            <div class="panel tight">
+              <h3>Bithérapie préférée 2</h3>
+              <p>IEC ou ARA2 + diurétique thiazidique ou apparenté.</p>
+              <ul class="compact-list">
+                <li>périndopril (Coversyl) + indapamide (Fludex)</li>
+                <li>ramipril (Triatec) + hydrochlorothiazide (Esidrex)</li>
+                <li>irbésartan (Aprovel) + hydrochlorothiazide</li>
+                <li>losartan (Cozaar) + hydrochlorothiazide</li>
+              </ul>
+            </div>
+            <div class="panel tight">
+              <h3>Trithérapie standard</h3>
+              <p>IEC ou ARA2 + inhibiteur calcique dihydropyridinique + diurétique thiazidique ou apparenté.</p>
+              <p><strong>Privilégier les associations fixes si disponibles pour améliorer l'observance.</strong></p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Associations fixes à vérifier</h3>
+            <div class="pill-row">
+              <span class="pill">périndopril + indapamide (Preterax/Bipreterax)</span>
+              <span class="pill">périndopril + amlodipine (Coveram)</span>
+              <span class="pill">périndopril + indapamide + amlodipine (Triplixam)</span>
+              <span class="pill">amlodipine + valsartan (Exforge)</span>
+              <span class="pill">amlodipine + valsartan + hydrochlorothiazide (Exforge HCT)</span>
+              <span class="pill">irbésartan + hydrochlorothiazide (CoAprovel)</span>
+              <span class="pill">losartan + hydrochlorothiazide (Hyzaar/Fortzaar)</span>
+              <span class="pill">telmisartan + hydrochlorothiazide (MicardisPlus/PritorPlus)</span>
+              <span class="pill">valsartan + hydrochlorothiazide (Co-Tareg/Nisisco)</span>
+              <span class="pill">olmésartan + hydrochlorothiazide (Alteisduo/Coolmetec)</span>
+              <span class="pill">olmésartan + amlodipine (Axeler/Sevikar)</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="resistante" class="section">
+          <div class="section-head">
+            <div>
+              <h2>HTA résistante</h2>
+              <p>PA non contrôlée malgré trithérapie bien conduite à doses optimisées incluant IEC/ARA2, inhibiteur calcique et diurétique, avec observance et automesure/MAPA confirmées.</p>
+            </div>
+          </div>
+          <div class="grid grid-2">
+            <div class="panel">
+              <h3>Avant le 4e traitement</h3>
+              <div class="checks">
+                <label class="check"><input type="checkbox">Observance</label>
+                <label class="check"><input type="checkbox">Mesure correcte</label>
+                <label class="check"><input type="checkbox">Effet blouse blanche</label>
+                <label class="check"><input type="checkbox">Excès de sel / alcool</label>
+                <label class="check"><input type="checkbox">AINS / corticoïdes / réglisse</label>
+                <label class="check"><input type="checkbox">Décongestionnants</label>
+                <label class="check"><input type="checkbox">Apnée du sommeil</label>
+                <label class="check"><input type="checkbox">Hyperaldostéronisme primaire</label>
+                <label class="check"><input type="checkbox">Sténose artère rénale</label>
+                <label class="check"><input type="checkbox">Maladie rénale chronique</label>
+                <label class="check"><input type="checkbox">Phéochromocytome si évocateur</label>
+                <label class="check"><input type="checkbox">Syndrome de Cushing si évocateur</label>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>4e ligne possible</h3>
+              <ul class="compact-list">
+                <li>spironolactone (Aldactone) si DFG et kaliémie compatibles.</li>
+                <li>éplérénone (Inspra) si intolérance à spironolactone, selon contexte.</li>
+                <li>amiloride (Modamide) selon contexte.</li>
+                <li>bêtabloquant si indication associée.</li>
+                <li>alphabloquant si HBP et orthostatisme toléré.</li>
+                <li>antihypertenseur central plutôt en recours spécialisé.</li>
+              </ul>
+              <div class="alert red">HTA résistante = avis cardiologue ou néphrologue recommandé, surtout si DFG bas, hypo/hyperkaliémie, sujet jeune, HTA sévère ou atteinte d'organe cible.</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="associations" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Carte interactive des associations</h2>
+              <p>Vert = utile. Orange = possible avec surveillance. Rouge = déconseillé ou dangereux.</p>
+            </div>
+          </div>
+
+          <div class="matrix-shell">
+            <div class="map-box">
+              <svg class="association-map" viewBox="0 0 940 560" role="img" aria-label="Carte des associations d'antihypertenseurs">
+                <path class="edge green" data-assoc="raas-dhp" d="M 180 102 C 300 82, 392 82, 518 102"></path>
+                <path class="edge green" data-assoc="raas-thiazide" d="M 177 136 C 285 250, 350 310, 506 360"></path>
+                <path class="edge green" data-assoc="triple" d="M 608 142 C 640 230, 630 300, 585 350"></path>
+                <path class="edge green" data-assoc="bb-raas" d="M 246 408 C 338 380, 415 294, 506 380"></path>
+                <path class="edge green" data-assoc="bb-dhp" d="M 248 394 C 340 310, 444 215, 520 142"></path>
+                <path class="edge orange" data-assoc="raas-mra" d="M 170 150 C 220 270, 226 326, 218 420"></path>
+                <path class="edge orange" data-assoc="thiazide-gout" d="M 590 430 C 646 482, 712 494, 786 450"></path>
+                <path class="edge orange" data-assoc="alpha-vaso" d="M 720 138 C 760 220, 770 318, 750 410"></path>
+                <path class="edge red" data-assoc="iec-ara2" d="M 112 80 C 82 130, 82 165, 118 222"></path>
+                <path class="edge red" data-assoc="bb-nondhp" d="M 690 120 C 604 258, 448 382, 260 438"></path>
+                <path class="edge red" data-assoc="triple-whammy" d="M 135 154 C 105 300, 246 440, 518 422"></path>
+                <path class="edge red" data-assoc="lithium" d="M 580 416 C 650 522, 760 525, 842 472"></path>
+
+                <g class="map-node" data-class="iec" tabindex="0" transform="translate(58 42)">
+                  <rect width="170" height="88"></rect>
+                  <text x="18" y="35">IEC</text>
+                  <text x="18" y="60">périndopril</text>
+                </g>
+                <g class="map-node" data-class="ara2" tabindex="0" transform="translate(58 172)">
+                  <rect width="170" height="88"></rect>
+                  <text x="18" y="35">ARA2</text>
+                  <text x="18" y="60">candesartan</text>
+                </g>
+                <g class="map-node" data-class="ccb-dhp" tabindex="0" transform="translate(520 52)">
+                  <rect width="202" height="92"></rect>
+                  <text x="18" y="35">ICa DHP</text>
+                  <text x="18" y="60">amlodipine</text>
+                </g>
+                <g class="map-node" data-class="ccb-nondhp" tabindex="0" transform="translate(722 52)">
+                  <rect width="178" height="92"></rect>
+                  <text x="18" y="35">ICa non DHP</text>
+                  <text x="18" y="60">diltiazem</text>
+                </g>
+                <g class="map-node" data-class="thiazide" tabindex="0" transform="translate(512 350)">
+                  <rect width="196" height="96"></rect>
+                  <text x="18" y="35">Thiazidique</text>
+                  <text x="18" y="60">indapamide</text>
+                </g>
+                <g class="map-node" data-class="mra" tabindex="0" transform="translate(64 418)">
+                  <rect width="190" height="92"></rect>
+                  <text x="18" y="35">Anti-aldostérone</text>
+                  <text x="18" y="60">spironolactone</text>
+                </g>
+                <g class="map-node" data-class="bb" tabindex="0" transform="translate(266 418)">
+                  <rect width="178" height="92"></rect>
+                  <text x="18" y="35">Bêtabloquant</text>
+                  <text x="18" y="60">bisoprolol</text>
+                </g>
+                <g class="map-node" data-class="alpha" tabindex="0" transform="translate(738 392)">
+                  <rect width="168" height="92"></rect>
+                  <text x="18" y="35">Alphabloquant</text>
+                  <text x="18" y="60">urapidil</text>
+                </g>
+              </svg>
+            </div>
+            <div id="relationDetail" class="relation-detail result-panel">
+              <h3>Sélection</h3>
+              <p class="empty-state">Sélectionner une classe ou une liaison de la carte.</p>
+              <div class="pill-row">
+                <span class="pill green">Association utile</span>
+                <span class="pill orange">Surveillance</span>
+                <span class="pill red">À éviter</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:18px;">
+            <h3>Associations rouges majeures</h3>
+            <div class="alert-list" id="redAssociationList"></div>
+          </div>
+        </section>
+
+        <section id="comorbidites" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Choix selon maladie ou profil</h2>
+              <p>Fiches décisionnelles rapides, à combiner avec le profil patient et la vérification des contre-indications.</p>
+            </div>
+          </div>
+          <div id="profileCards" class="grid grid-2"></div>
+        </section>
+
+        <section id="medicaments" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Fiches médicaments</h2>
+              <p>Chaque fiche affiche mécanisme, DCI, indications préférentielles, contre-indications, effets indésirables, surveillance et points pratiques MG.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="drug-tools">
+              <label class="field">Recherche
+                <input id="drugSearch" type="text" placeholder="Classe, DCI, nom commercial, effet...">
+              </label>
+              <label class="field">Classe
+                <select id="classFilter">
+                  <option value="all">Toutes</option>
+                </select>
+              </label>
+            </div>
+            <div id="drugList" class="drug-list"></div>
+          </div>
+        </section>
+
+        <section id="surveillance" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Surveillance biologique et clinique</h2>
+              <p>Repères pratiques sans remplacer l'ajustement aux risques individuels et aux protocoles locaux.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Classe / situation</th><th>Avant</th><th>Après introduction ou augmentation</th><th>Points d'alerte</th></tr>
+                </thead>
+                <tbody id="monitoringRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="effets" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Effets indésirables → que faire ?</h2>
+              <p>Outil inversé : classe suspecte, conduite pratique, alternatives, bilan et niveau d'urgence.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="form-grid">
+              <label class="field">Effet indésirable
+                <select id="effectSelect"></select>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" id="effectBtn" type="button">Analyser</button>
+            </div>
+            <div id="effectOutput" class="decision-output">
+              <p class="empty-state">Choisir un effet indésirable.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="urgences" class="section">
+          <div class="section-head">
+            <div>
+              <h2>Urgences hypertensives</h2>
+              <p>Ne pas gérer comme HTA chronique si souffrance viscérale aiguë ou contexte obstétrical inquiétant.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="form-grid">
+              <label class="field">PAS
+                <input id="urgentSbp" type="number" min="80" max="300" value="190">
+              </label>
+              <label class="field">PAD
+                <input id="urgentDbp" type="number" min="40" max="180" value="112">
+              </label>
+              <label class="field">Grossesse
+                <select id="urgentPregnancy">
+                  <option value="no">Non / non concerné</option>
+                  <option value="possible">Possible</option>
+                  <option value="current">Actuelle</option>
+                </select>
+              </label>
+            </div>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="uChest">Douleur thoracique</label>
+              <label class="check"><input type="checkbox" id="uNeuro">Déficit neurologique aigu</label>
+              <label class="check"><input type="checkbox" id="uDyspnea">Dyspnée aiguë / OAP</label>
+              <label class="check"><input type="checkbox" id="uConfusion">Confusion</label>
+              <label class="check"><input type="checkbox" id="uVision">Trouble visuel aigu</label>
+              <label class="check"><input type="checkbox" id="uRenal">IRA suspectée</label>
+              <label class="check"><input type="checkbox" id="uDissection">Dissection suspectée</label>
+              <label class="check"><input type="checkbox" id="uPregSigns">Signes de prééclampsie</label>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-danger" id="urgentBtn" type="button">Évaluer l'urgence</button>
+            </div>
+            <div id="urgentOutput" class="decision-output">
+              <p class="empty-state">Cocher les signes présents.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="panel">
+              <h3>Signes rouges</h3>
+              <ul class="compact-list">
+                <li>Douleur thoracique, dissection suspectée, OAP, dyspnée aiguë.</li>
+                <li>Déficit neurologique, confusion, trouble visuel aigu.</li>
+                <li>Insuffisance rénale aiguë, hématurie/protéinurie marquée selon contexte.</li>
+                <li>Grossesse avec céphalées, phosphènes, douleur épigastrique, signes de prééclampsie.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Prudence</h3>
+              <p>HTA sévère sans souffrance viscérale immédiate : éviter les baisses brutales non justifiées ; organiser repos, recontrôle rapproché et conduite selon recommandations locales.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+      const has = (id) => Boolean($("#" + id)?.checked);
+      const value = (id) => $("#" + id)?.value || "";
+      const num = (id) => {
+        const parsed = Number(value(id));
+        return Number.isFinite(parsed) ? parsed : null;
+      };
+      const escapeHtml = (text) => String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+      let latestSummary = "";
+
+      const classData = [
+        {
+          id: "iec",
+          label: "IEC",
+          mechanism: "Blocage de la conversion de l'angiotensine I en angiotensine II, baisse de la vasoconstriction et de l'aldostérone.",
+          drugs: ["périndopril (Coversyl)", "ramipril (Triatec)", "énalapril (Renitec)", "lisinopril (Zestril)", "trandolapril (Odrik)", "captopril (Lopril)", "zophénopril (Zofenil)"],
+          preferred: ["Albuminurie/protéinurie", "diabète avec risque rénal", "insuffisance cardiaque selon contexte", "post-infarctus selon contexte"],
+          contraindications: ["Grossesse/projet de grossesse", "antécédent d'angioœdème sous IEC", "hyperkaliémie non contrôlée", "sténose bilatérale des artères rénales suspectée/connue"],
+          adverse: ["Toux sèche", "hyperkaliémie", "hausse créatinine", "angioœdème rare"],
+          monitoring: ["Créatinine/DFG et kaliémie avant traitement", "recontrôle 7-15 jours si patient à risque ou titration", "vigilance AINS, déshydratation, canicule"],
+          favorable: ["Inhibiteur calcique dihydropyridinique", "diurétique thiazidique/apparenté"],
+          avoid: ["ARA2", "aliskiren", "lithium sans surveillance spécialisée", "AINS + diurétique"],
+          practical: ["Si toux évocatrice : discuter remplacement par ARA2.", "Toujours vérifier grossesse possible chez patiente concernée."]
+        },
+        {
+          id: "ara2",
+          label: "ARA2",
+          mechanism: "Antagonisme du récepteur AT1 de l'angiotensine II.",
+          drugs: ["candésartan (Atacand/Kenzen)", "irbésartan (Aprovel)", "losartan (Cozaar)", "telmisartan (Micardis/Pritor)", "valsartan (Tareg/Nisis)", "olmésartan (Olmetec/Alteis)"],
+          preferred: ["Intolérance à IEC par toux", "albuminurie/protéinurie", "diabète avec risque rénal", "cardiopathie selon contexte"],
+          contraindications: ["Grossesse/projet de grossesse", "hyperkaliémie non contrôlée", "association IEC + ARA2", "sténose bilatérale des artères rénales suspectée/connue"],
+          adverse: ["Hyperkaliémie", "hausse créatinine", "hypotension", "entéropathie possible avec olmésartan si diarrhée chronique/perte de poids"],
+          monitoring: ["Créatinine/DFG et kaliémie avant traitement", "contrôle rapproché après introduction ou augmentation", "surveillance si AINS, MRA, suppléments potassiques"],
+          favorable: ["Inhibiteur calcique dihydropyridinique", "diurétique thiazidique/apparenté"],
+          avoid: ["IEC", "aliskiren", "lithium sans surveillance spécialisée", "AINS + diurétique"],
+          practical: ["Losartan (Cozaar) peut être intéressant en cas de goutte par effet uricosurique relatif.", "Diarrhée chronique sous olmésartan : penser entéropathie."]
+        },
+        {
+          id: "ccb-dhp",
+          label: "Inhibiteurs calciques dihydropyridiniques",
+          mechanism: "Vasodilatation artérielle par inhibition des canaux calciques vasculaires.",
+          drugs: ["amlodipine (Amlor)", "lercanidipine (Lercapress/Zanidip)", "nicardipine LP (Loxen)", "nifédipine LP (Adalate)", "félodipine (Flodil)", "manidipine (Iperten)", "nitrendipine (Baypress/Nidrel)"],
+          preferred: ["Sujet âgé", "HTA systolique isolée", "Raynaud", "angor selon fréquence cardiaque", "association avec IEC/ARA2"],
+          contraindications: ["Hypotension symptomatique", "œdèmes gênants non réévalués", "prudence insuffisance cardiaque selon molécule et contexte"],
+          adverse: ["Œdèmes malléolaires", "céphalées", "flush", "gingivopathie"],
+          monitoring: ["Œdèmes", "céphalées/flush", "pression artérielle", "tolérance gingivale"],
+          favorable: ["IEC ou ARA2", "bêtabloquant si angor/HTA sans bradycardie"],
+          avoid: ["Réponse automatique aux œdèmes par diurétique seul sans reconsidérer l'IC"],
+          practical: ["Associer IEC/ARA2 peut diminuer les œdèmes.", "Réduire la dose ou changer de classe si œdèmes gênants."]
+        },
+        {
+          id: "ccb-nondhp",
+          label: "Inhibiteurs calciques non dihydropyridiniques",
+          mechanism: "Effet cardiaque chronotrope/dromotrope négatif, avec effet vasculaire.",
+          drugs: ["diltiazem (Tildiem/Mono-Tildiem)", "vérapamil (Isoptine)"],
+          preferred: ["Angor ou contrôle de fréquence si FEVG conservée et absence de BAV/bradycardie"],
+          contraindications: ["Bêtabloquant associé", "bradycardie", "BAV", "insuffisance cardiaque à FEVG réduite"],
+          adverse: ["Bradycardie", "BAV", "constipation avec vérapamil", "interactions CYP3A4/P-gp"],
+          monitoring: ["Fréquence cardiaque", "ECG si symptômes ou risque de conduction", "interactions médicamenteuses"],
+          favorable: ["IEC/ARA2 selon contexte"],
+          avoid: ["Bêtabloquant", "FEVG réduite", "BAV/bradycardie"],
+          practical: ["Ne pas confondre avec les dihydropyridiniques : le risque de conduction domine."]
+        },
+        {
+          id: "thiazide",
+          label: "Diurétiques thiazidiques et apparentés",
+          mechanism: "Natriurèse distale, réduction volémique initiale puis effet vasculaire.",
+          drugs: ["hydrochlorothiazide (Esidrex)", "indapamide (Fludex)", "chlortalidone (nom commercial à vérifier dans VIDAL/Base publique du médicament)", "altizide (souvent en association)"],
+          preferred: ["HTA non compliquée", "association IEC/ARA2", "sujet âgé selon tolérance"],
+          contraindications: ["Hyponatrémie importante non corrigée", "hypokaliémie importante non corrigée", "goutte active : prudence forte"],
+          adverse: ["Hypokaliémie", "hyponatrémie", "hyperuricémie", "photosensibilité", "hyperglycémie modérée possible"],
+          monitoring: ["Na/K/créatinine", "uricémie si goutte", "rechercher hyponatrémie chez sujet âgé"],
+          favorable: ["IEC ou ARA2", "inhibiteur calcique si IEC/ARA2 non possible"],
+          avoid: ["Lithium", "hypoNa/hypoK non corrigée", "AINS + IEC/ARA2"],
+          practical: ["Moins efficace si DFG très abaissé ; discuter diurétique de l'anse selon contexte."]
+        },
+        {
+          id: "loop",
+          label: "Diurétiques de l'anse",
+          mechanism: "Natriurèse puissante par inhibition du cotransporteur Na-K-2Cl dans l'anse de Henle.",
+          drugs: ["furosémide (Lasilix)", "bumétanide (Burinex)"],
+          preferred: ["Congestion", "insuffisance cardiaque", "DFG bas selon contexte"],
+          contraindications: ["Déshydratation", "troubles ioniques sévères non corrigés"],
+          adverse: ["Hypokaliémie", "hyponatrémie", "déshydratation", "hypotension"],
+          monitoring: ["Na/K/créatinine", "poids", "signes de déshydratation"],
+          favorable: ["Traitement de congestion avec suivi clinique"],
+          avoid: ["Escalade sans indication de congestion ou DFG bas"],
+          practical: ["Pas premier choix dans l'HTA simple non compliquée."]
+        },
+        {
+          id: "mra",
+          label: "Antagonistes de l'aldostérone",
+          mechanism: "Blocage du récepteur minéralocorticoïde, effet natriurétique et anti-aldostérone.",
+          drugs: ["spironolactone (Aldactone)", "éplérénone (Inspra)"],
+          preferred: ["HTA résistante", "hyperaldostéronisme", "insuffisance cardiaque selon DFG/kaliémie"],
+          contraindications: ["Hyperkaliémie", "DFG très bas sans avis spécialisé", "association RAAS sans surveillance stricte"],
+          adverse: ["Hyperkaliémie", "hausse créatinine", "gynécomastie avec spironolactone"],
+          monitoring: ["Kaliémie et créatinine rapprochées", "surveillance renforcée si IEC/ARA2", "attention AINS et suppléments potassiques"],
+          favorable: ["HTA résistante après vérifications"],
+          avoid: ["Hyperkaliémie", "IEC/ARA2 sans contrôle strict", "DFG bas non évalué"],
+          practical: ["Avis spécialisé si DFG bas, kaliémie limite ou HTA sévère persistante."]
+        },
+        {
+          id: "enac",
+          label: "Épargneurs de potassium ENaC",
+          mechanism: "Blocage du canal sodique épithélial, réduction de l'excrétion potassique.",
+          drugs: ["amiloride (Modamide)", "triamtérène (nom commercial à vérifier dans VIDAL/Base publique du médicament)"],
+          preferred: ["Hypokaliémie compatible avec hyperaldostéronisme", "alternative selon contexte en HTA résistante"],
+          contraindications: ["Hyperkaliémie", "DFG bas sans avis", "association à RAAS/MRA sans surveillance"],
+          adverse: ["Hyperkaliémie", "troubles digestifs", "hausse créatinine"],
+          monitoring: ["Kaliémie", "créatinine/DFG", "interactions potassiques"],
+          favorable: ["Situations sélectionnées avec suivi biologique"],
+          avoid: ["Hyperkaliémie", "DFG très altéré", "suppléments potassiques non justifiés"],
+          practical: ["Ne pas banaliser avec IEC/ARA2 ou spironolactone."]
+        },
+        {
+          id: "bb",
+          label: "Bêtabloquants",
+          mechanism: "Blocage bêta-adrénergique, baisse fréquence cardiaque, contractilité et rénine.",
+          drugs: ["bisoprolol (Cardensiel/Bisoce)", "nébivolol (Temerit/Nebilox)", "métoprolol (Lopressor/Seloken)", "aténolol (Tenormine)", "acébutolol (Sectral)", "céliprolol (Celectol)", "labétalol (Trandate)", "carvédilol (Kredex)", "propranolol (Avlocardyl)", "nadolol (Corgard)"],
+          preferred: ["Post-infarctus", "angor", "FA/tachyarythmie nécessitant contrôle de fréquence", "insuffisance cardiaque selon molécule validée", "migraine selon profil"],
+          contraindications: ["Bradycardie importante", "BAV", "asthme sévère surtout non sélectifs", "association vérapamil/diltiazem"],
+          adverse: ["Bradycardie", "fatigue", "bronchospasme", "dysfonction sexuelle", "masquage hypoglycémie", "syndrome de sevrage si arrêt brutal"],
+          monitoring: ["Fréquence cardiaque", "PA", "ECG si BAV/brady/symptômes", "respiration si asthme/BPCO"],
+          favorable: ["IEC/ARA2 si cardiopathie ischémique/insuffisance cardiaque", "ICa DHP si angor/HTA sans bradycardie"],
+          avoid: ["Vérapamil/diltiazem", "bradycardie/BAV", "non sélectif si asthme sévère"],
+          practical: ["Arrêt progressif si interruption.", "Ne pas utiliser comme réflexe en HTA non compliquée."]
+        },
+        {
+          id: "alpha",
+          label: "Alphabloquants",
+          mechanism: "Vasodilatation par blocage alpha-1 périphérique.",
+          drugs: ["prazosine (Minipress/Alpress)", "urapidil (Eupressyl/Mediatensyl)", "doxazosine (nom commercial à vérifier dans VIDAL/Base publique du médicament)"],
+          preferred: ["Complément si HBP symptomatique et orthostatisme toléré"],
+          contraindications: ["Hypotension orthostatique", "chutes", "sujet âgé fragile sans nécessité"],
+          adverse: ["Hypotension orthostatique", "malaise", "chutes", "vertiges"],
+          monitoring: ["PA debout/couché", "chutes", "tolérance au lever"],
+          favorable: ["Complément sélectionné si HBP"],
+          avoid: ["Association vasodilatatrice non surveillée", "risque de chute élevé"],
+          practical: ["Ne pas le mettre comme traitement central de première ligne HTA."]
+        },
+        {
+          id: "central",
+          label: "Antihypertenseurs centraux",
+          mechanism: "Diminution du tonus sympathique central.",
+          drugs: ["clonidine (Catapressan)", "méthyldopa (Aldomet)", "rilmenidine (Hyperium)", "moxonidine (Physiotens)"],
+          preferred: ["Recours spécialisé ou contexte particulier", "méthyldopa possible en grossesse selon contexte"],
+          contraindications: ["Somnolence marquée", "orthostatisme/chutes", "arrêt brutal de clonidine"],
+          adverse: ["Somnolence", "bouche sèche", "hypotension orthostatique", "rebond si arrêt brutal de clonidine"],
+          monitoring: ["Vigilance", "PA debout/couché", "observance pour éviter rebond"],
+          favorable: ["Situations de recours"],
+          avoid: ["Sujet âgé fragile si alternative", "arrêt brutal clonidine"],
+          practical: ["À manier prudemment en médecine générale hors contexte cadré."]
+        }
+      ];
+
+      const classMap = Object.fromEntries(classData.map((item) => [item.id, item]));
+
+      const associationData = {
+        "raas-dhp": {
+          title: "IEC/ARA2 + inhibiteur calcique dihydropyridinique",
+          status: "green",
+          detail: "Association utile et fréquente. Exemples : périndopril (Coversyl) + amlodipine (Amlor), candésartan (Atacand/Kenzen) + amlodipine (Amlor). Surveiller PA, tolérance, œdèmes, créatinine/DFG et kaliémie si RAAS."
+        },
+        "raas-thiazide": {
+          title: "IEC/ARA2 + thiazidique/apparenté",
+          status: "green",
+          detail: "Association utile. Exemples : périndopril (Coversyl) + indapamide (Fludex), ramipril (Triatec) + hydrochlorothiazide (Esidrex), irbésartan (Aprovel) + hydrochlorothiazide. Surveiller créatinine, DFG, Na et K."
+        },
+        "triple": {
+          title: "Trithérapie standard",
+          status: "green",
+          detail: "IEC ou ARA2 + inhibiteur calcique dihydropyridinique + diurétique thiazidique/apparenté. À envisager après bithérapie optimisée non suffisante, avec vérification observance et mesures hors cabinet."
+        },
+        "bb-raas": {
+          title: "Bêtabloquant + IEC/ARA2",
+          status: "green",
+          detail: "Association favorable si indication cardiaque associée : cardiopathie ischémique, post-infarctus ou insuffisance cardiaque selon molécule. Surveiller FC, PA, créatinine et kaliémie."
+        },
+        "bb-dhp": {
+          title: "Bêtabloquant + inhibiteur calcique DHP",
+          status: "green",
+          detail: "Possible en angor/HTA, car les DHP n'ont pas l'effet de freinage nodal de diltiazem/vérapamil. Surveiller PA, œdèmes, bradycardie selon bêtabloquant."
+        },
+        "raas-mra": {
+          title: "IEC/ARA2 + spironolactone/éplérénone/amiloride",
+          status: "orange",
+          detail: "Possible seulement si indication claire et surveillance stricte : risque d'hyperkaliémie et d'insuffisance rénale, surtout DFG bas, AINS, déshydratation ou sujet âgé."
+        },
+        "thiazide-gout": {
+          title: "Thiazidique chez patient goutteux",
+          status: "orange",
+          detail: "Prudence : risque d'hyperuricémie et crise de goutte. Alternative possible : inhibiteur calcique ou losartan (Cozaar) si ARA2 compatible."
+        },
+        "alpha-vaso": {
+          title: "Alphabloquant + autres vasodilatateurs",
+          status: "orange",
+          detail: "Prudence hypotension orthostatique, surtout sujet âgé, chute, polymédication. Vérifier PA debout/couché et intérêt HBP."
+        },
+        "iec-ara2": {
+          title: "IEC + ARA2",
+          status: "red",
+          detail: "À éviter : risque d'insuffisance rénale et d'hyperkaliémie sans bénéfice suffisant dans l'HTA courante."
+        },
+        "bb-nondhp": {
+          title: "Bêtabloquant + vérapamil/diltiazem",
+          status: "red",
+          detail: "Association dangereuse : risque bradycardie, BAV et insuffisance cardiaque. À éviter sauf situation très spécialisée et monitorée."
+        },
+        "triple-whammy": {
+          title: "IEC/ARA2 + AINS + diurétique",
+          status: "red",
+          detail: "Risque d'insuffisance rénale aiguë, surtout sujet âgé, DFG bas, déshydratation ou canicule. Rechercher alternatives aux AINS et surveiller créatinine/kaliémie."
+        },
+        "lithium": {
+          title: "Lithium + IEC/ARA2 ou thiazidique",
+          status: "red",
+          detail: "Risque d'augmentation de la lithémie. Association à éviter ou à gérer avec surveillance spécialisée stricte."
+        }
+      };
+
+      const profileCards = [
+        {
+          title: "Diabète sans albuminurie",
+          points: ["Même stratégie globale que HTA non compliquée.", "IEC/ARA2 souvent privilégié si risque rénal ou cardiovasculaire.", "Surveiller DFG, kaliémie, albuminurie."]
+        },
+        {
+          title: "Diabète avec albuminurie",
+          points: ["Privilégier IEC ou ARA2 si grossesse exclue et kaliémie/DFG compatibles.", "Ne pas associer IEC + ARA2.", "Ajouter inhibiteur calcique DHP ou diurétique si besoin.", "Surveiller créatinine/DFG/kaliémie."]
+        },
+        {
+          title: "Maladie rénale chronique",
+          points: ["Si albuminurie/protéinurie : IEC ou ARA2 privilégié.", "Si DFG très abaissé : thiazidique moins efficace, discuter diurétique de l'anse comme furosémide (Lasilix).", "Avis néphrologue si DFG bas, progression rapide, albuminurie importante ou hyperkaliémie."]
+        },
+        {
+          title: "Insuffisance cardiaque à FEVG réduite",
+          points: ["IEC/ARA2/ARNI selon recommandations cardiologiques.", "Bêtabloquant validé : bisoprolol, carvédilol, métoprolol succinate, nébivolol selon contexte.", "Spironolactone/éplérénone selon DFG/kaliémie.", "Éviter vérapamil/diltiazem."]
+        },
+        {
+          title: "Cardiopathie ischémique / post-infarctus",
+          points: ["Bêtabloquant si pas de contre-indication.", "IEC/ARA2 souvent indiqué.", "Inhibiteur calcique DHP si besoin tensionnel/angor.", "Éviter baisse tensionnelle trop brutale."]
+        },
+        {
+          title: "Angor stable",
+          points: ["Bêtabloquant ou inhibiteur calcique selon fréquence cardiaque.", "Diltiazem/vérapamil seulement si pas de bradycardie, BAV ou FEVG réduite.", "DHP possible si besoin tensionnel."]
+        },
+        {
+          title: "Fibrillation atriale",
+          points: ["Bêtabloquant si contrôle de fréquence nécessaire.", "Diltiazem/vérapamil uniquement si FEVG conservée et pas de BAV/bradycardie.", "Éviter bêtabloquant + diltiazem/vérapamil."]
+        },
+        {
+          title: "Sujet âgé / > 80 ans",
+          points: ["Débuter bas, augmenter lentement.", "Évaluer orthostatisme, chutes, fragilité, autonomie et polymédication.", "Objectifs tensionnels individualisés.", "Éviter centraux et alphabloquants si risque de chute sauf nécessité."]
+        },
+        {
+          title: "Grossesse / projet",
+          points: ["IEC et ARA2 contre-indiqués.", "Éviter inhibiteurs directs de la rénine.", "Options classiques selon recommandations : labétalol (Trandate), nifédipine LP (Adalate), méthyldopa (Aldomet).", "Toute HTA gravidique suit les recommandations obstétricales."]
+        },
+        {
+          title: "Asthme/BPCO",
+          points: ["Éviter bêtabloquants non sélectifs.", "Bêtabloquant cardiosélectif possible seulement si indication forte, avec prudence.", "IEC/ARA2, inhibiteur calcique ou diurétique selon contexte."]
+        },
+        {
+          title: "Goutte / hyperuricémie",
+          points: ["Éviter ou limiter thiazidiques si possible.", "Losartan (Cozaar) peut être intéressant par effet uricosurique relatif.", "Inhibiteur calcique possible."]
+        },
+        {
+          title: "Œdèmes sous inhibiteur calcique",
+          points: ["Réduire dose.", "Associer IEC/ARA2 peut diminuer les œdèmes.", "Changer de classe si gênant.", "Ne pas répondre uniquement par diurétique sans reconsidérer l'inhibiteur calcique."]
+        },
+        {
+          title: "Hypokaliémie",
+          points: ["Rechercher hyperaldostéronisme si HTA + hypokaliémie spontanée ou sous faible dose de diurétique.", "Éviter majoration thiazidique non réévaluée.", "Discussion spironolactone/éplérénone/amiloride selon contexte et fonction rénale."]
+        },
+        {
+          title: "Hyperkaliémie",
+          points: ["Éviter ou surveiller strictement IEC/ARA2/MRA/amiloride.", "Vérifier DFG, AINS, suppléments potassiques, médicaments associés.", "Contrôle biologique rapproché."]
+        },
+        {
+          title: "HBP",
+          points: ["Alphabloquant possible en complément si symptômes urinaires.", "Attention hypotension orthostatique.", "Ne pas le placer comme traitement central de première ligne HTA."]
+        },
+        {
+          title: "Migraine / Raynaud",
+          points: ["Migraine : certains bêtabloquants utiles, notamment propranolol (Avlocardyl) ou métoprolol selon profil.", "Éviter bêtabloquant si asthme, bradycardie ou BAV.", "Raynaud : inhibiteur calcique DHP utile, par exemple nifédipine LP ou amlodipine selon contexte."]
+        }
+      ];
+
+      const monitoringData = [
+        ["IEC/ARA2", "Créatinine, DFG, kaliémie ; vérifier grossesse possible.", "7-15 jours si patient à risque ou augmentation ; sinon dans le mois selon contexte.", "Hausse importante créatinine, hyperkaliémie, AINS, déshydratation, canicule."],
+        ["Diurétiques thiazidiques", "Na, K, créatinine ; uricémie si goutte.", "Contrôle après introduction/augmentation et si sujet âgé, symptômes ou troubles ioniques.", "Hyponatrémie, hypokaliémie, hyperuricémie, photosensibilité avec hydrochlorothiazide."],
+        ["Spironolactone/éplérénone/amiloride", "Kaliémie, créatinine/DFG ; rechercher interactions potassiques.", "Contrôle rapproché, surtout avec IEC/ARA2, DFG bas ou sujet âgé.", "Hyperkaliémie, IRA, AINS, suppléments potassiques."],
+        ["Bêtabloquants", "FC, PA, antécédent BAV/bradycardie, asthme/BPCO.", "FC/PA après introduction et chaque adaptation ; ECG si symptôme ou conduction à risque.", "Bradycardie, BAV, bronchospasme, fatigue, arrêt brutal."],
+        ["Inhibiteurs calciques DHP", "PA, œdèmes, antécédents d'intolérance.", "Tolérance clinique, œdèmes, céphalées, flush.", "Œdèmes gênants, hypotension, gingivopathie."],
+        ["Diltiazem/vérapamil", "FC, ECG si risque de conduction, FEVG.", "FC, PA, ECG si symptômes.", "BAV, bradycardie, association bêtabloquant, FEVG réduite."],
+        ["Alphabloquants/centraux", "PA couché/debout, chutes, vigilance.", "Orthostatisme, somnolence, tolérance au lever.", "Chute, malaise, rebond clonidine si arrêt brutal."]
+      ];
+
+      const effectData = {
+        toux: {
+          label: "Toux",
+          suspect: "IEC : périndopril (Coversyl), ramipril (Triatec), énalapril (Renitec) ...",
+          action: ["Vérifier chronologie et autres causes respiratoires.", "Si toux sèche évocatrice et gênante : discuter remplacement par ARA2."],
+          alternative: "candésartan (Atacand/Kenzen), irbésartan (Aprovel), losartan (Cozaar), valsartan (Tareg/Nisis) selon profil.",
+          labs: "Créatinine/DFG/kaliémie si passage à ARA2.",
+          urgency: "Non urgent sauf dyspnée, angioœdème ou signes respiratoires graves."
+        },
+        oedemes: {
+          label: "Œdèmes",
+          suspect: "Inhibiteur calcique dihydropyridinique : amlodipine (Amlor), lercanidipine (Lercapress/Zanidip).",
+          action: ["Rechercher insuffisance cardiaque, veineuse, rénale ou hépatique.", "Réduire dose, associer IEC/ARA2 si compatible, ou changer de classe."],
+          alternative: "IEC/ARA2 ou thiazidique selon contexte ; ne pas ajouter seulement un diurétique par réflexe.",
+          labs: "Créatinine/DFG, ionogramme selon contexte.",
+          urgency: "Urgent si dyspnée, OAP, douleur thoracique ou asymétrie douloureuse."
+        },
+        hypokaliemie: {
+          label: "Hypokaliémie",
+          suspect: "Thiazidique/apparenté ou diurétique de l'anse ; hyperaldostéronisme à rechercher si HTA + hypokaliémie.",
+          action: ["Contrôler K et magnésium si besoin.", "Réduire/arrêter diurétique en cause selon gravité.", "Rechercher hyperaldostéronisme si évocateur."],
+          alternative: "IEC/ARA2 si compatible ; spironolactone (Aldactone) ou amiloride (Modamide) seulement selon DFG/kaliémie et contexte.",
+          labs: "Ionogramme, créatinine/DFG, éventuellement aldostérone/rénine selon contexte.",
+          urgency: "Urgent si K très basse, troubles ECG, faiblesse majeure ou trouble du rythme."
+        },
+        hyperkaliemie: {
+          label: "Hyperkaliémie",
+          suspect: "IEC/ARA2, spironolactone/éplérénone, amiloride, DFG bas, AINS, suppléments potassiques.",
+          action: ["Vérifier résultat, ECG si hyperkaliémie significative.", "Suspendre ou réduire médicaments hyperkaliémiants selon gravité.", "Chercher AINS, déshydratation, insuffisance rénale."],
+          alternative: "Inhibiteur calcique DHP ou autre classe non hyperkaliémiante selon profil.",
+          labs: "Kaliémie, créatinine/DFG rapprochés.",
+          urgency: "Urgent si K élevée significative, anomalies ECG, faiblesse, malaise ou insuffisance rénale aiguë."
+        },
+        hyponatremie: {
+          label: "Hyponatrémie",
+          suspect: "Diurétique thiazidique/apparenté, surtout sujet âgé.",
+          action: ["Réévaluer thiazidique, hydratation et autres causes.", "Éviter réintroduction non cadrée si épisode sévère."],
+          alternative: "IEC/ARA2 ou inhibiteur calcique DHP selon contexte.",
+          labs: "Na, K, créatinine/DFG ; osmolarité/urines si besoin.",
+          urgency: "Urgent si confusion, convulsions, chute, Na très basse ou installation aiguë."
+        },
+        bradycardie: {
+          label: "Bradycardie",
+          suspect: "Bêtabloquant, diltiazem (Tildiem), vérapamil (Isoptine), association bêtabloquant + non DHP.",
+          action: ["Mesurer FC, PA, rechercher malaise/syncope.", "Éviter association bêtabloquant + vérapamil/diltiazem.", "ECG si symptôme ou BAV possible."],
+          alternative: "Inhibiteur calcique DHP, IEC/ARA2 ou diurétique selon contexte.",
+          labs: "ECG ; ionogramme/TSH selon contexte clinique.",
+          urgency: "Urgent si syncope, malaise, douleur thoracique, BAV, FC très basse symptomatique."
+        },
+        orthostatique: {
+          label: "Hypotension orthostatique",
+          suspect: "Alphabloquant, central, diurétiques, associations vasodilatatrices, surtraitement.",
+          action: ["Mesurer PA couché/debout.", "Réduire simplifier traitement si possible.", "Évaluer chutes, déshydratation, polymédication."],
+          alternative: "Stratégie plus progressive, horaires adaptés, classes mieux tolérées selon profil.",
+          labs: "Créatinine/DFG, Na/K si diurétique ou déshydratation possible.",
+          urgency: "Urgent si chute traumatique, syncope, déficit neurologique ou douleur thoracique."
+        },
+        fatigue: {
+          label: "Fatigue",
+          suspect: "Bêtabloquant, central, hypotension, bradycardie, hyponatrémie.",
+          action: ["Vérifier FC, PA debout/couché, biologie récente.", "Rechercher temporalité avec introduction ou augmentation."],
+          alternative: "Classe moins bradycardisante si indication bêtabloquant faible.",
+          labs: "NFS, TSH, ionogramme, créatinine selon contexte.",
+          urgency: "Urgent si malaise, syncope, douleur thoracique ou dyspnée."
+        },
+        sexuelle: {
+          label: "Dysfonction sexuelle",
+          suspect: "Bêtabloquant, diurétique, facteurs cardiovasculaires et psychogènes associés.",
+          action: ["Évaluer temporalité, risque cardiovasculaire, autres traitements.", "Ne pas arrêter brutalement un bêtabloquant."],
+          alternative: "Discuter ARA2, inhibiteur calcique ou adaptation selon indication cardiaque.",
+          labs: "Bilan selon contexte : diabète, lipides, testostérone si indication.",
+          urgency: "Non urgent, mais important pour observance et qualité de vie."
+        },
+        renal: {
+          label: "Insuffisance rénale aiguë",
+          suspect: "IEC/ARA2, AINS + diurétique + IEC/ARA2, déshydratation, sténose artère rénale.",
+          action: ["Évaluer urgence, volume, médicaments néphrotoxiques.", "Suspendre AINS ; adapter RAAS/diurétiques selon gravité et avis."],
+          alternative: "Inhibiteur calcique DHP transitoirement possible selon PA et contexte.",
+          labs: "Créatinine/DFG, K, Na, bandelette urinaire, protéinurie/hématurie selon contexte.",
+          urgency: "Souvent urgent si hausse rapide créatinine, hyperkaliémie, oligurie, OAP ou contexte sévère."
+        },
+        crampes: {
+          label: "Crampes",
+          suspect: "Diurétique avec troubles ioniques, déshydratation, hypotension.",
+          action: ["Vérifier Na/K/Mg, hydratation, fonction rénale.", "Réévaluer diurétique et autres causes."],
+          alternative: "Selon bilan : réduire diurétique, changer classe, corriger trouble ionique.",
+          labs: "Ionogramme, magnésium si besoin, créatinine/DFG.",
+          urgency: "Urgent si faiblesse majeure, trouble du rythme, K très anormal."
+        },
+        gynecomastie: {
+          label: "Gynécomastie",
+          suspect: "Spironolactone (Aldactone).",
+          action: ["Confirmer temporalité et gêne.", "Discuter éplérénone (Inspra) si indication maintenue et compatible."],
+          alternative: "Éplérénone ou autre stratégie d'HTA résistante selon DFG/kaliémie et avis.",
+          labs: "Kaliémie, créatinine/DFG.",
+          urgency: "Non urgent sauf douleur ou masse suspecte à explorer."
+        },
+        olmesartan: {
+          label: "Diarrhée chronique sous olmésartan",
+          suspect: "Entéropathie liée à olmésartan (Olmetec/Alteis) possible.",
+          action: ["Évoquer si diarrhée chronique, amaigrissement, malabsorption.", "Arrêter/substituer sous contrôle médical et rechercher diagnostics différentiels."],
+          alternative: "Autre ARA2 ou autre classe selon contexte.",
+          labs: "Ionogramme, créatinine, bilan nutritionnel selon gravité.",
+          urgency: "Rapide si déshydratation, perte de poids importante, insuffisance rénale ou troubles ioniques."
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", init);
+
+      function init() {
+        bindNavigation();
+        bindGlobalActions();
+        renderClassFilter();
+        renderDrugCards();
+        renderProfileCards();
+        renderMonitoringRows();
+        renderRedAssociations();
+        renderEffectOptions();
+        bindForms();
+        bindMatrix();
+      }
+
+      function bindNavigation() {
+        $$("[data-target]").forEach((button) => {
+          button.addEventListener("click", () => showSection(button.dataset.target));
+        });
+      }
+
+      function showSection(id) {
+        if (!id || !$("#" + id)) return;
+        $$(".section").forEach((section) => section.classList.toggle("active", section.id === id));
+        $$(".nav-btn").forEach((button) => button.classList.toggle("active", button.dataset.target === id));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function bindGlobalActions() {
+        $("#themeBtn").addEventListener("click", () => {
+          const shell = $(".app-shell");
+          shell.dataset.theme = shell.dataset.theme === "dark" ? "light" : "dark";
+        });
+        $("#printBtn").addEventListener("click", () => window.print());
+        $("#copyBtn").addEventListener("click", copySummary);
+        $("#resetBtn").addEventListener("click", () => {
+          $$("form").forEach((form) => form.reset());
+          latestSummary = "";
+          $("#homeSummary").innerHTML = '<p class="empty-state">Aucun profil calculé pour le moment.</p>';
+          $("#profileOutput").innerHTML = '<p class="empty-state">Le résultat apparaîtra ici après calcul.</p>';
+        });
+      }
+
+      function bindForms() {
+        $("#evaluateBtn").addEventListener("click", () => {
+          const result = evaluateProfile();
+          renderProfileResult(result);
+          showSection("profil");
+        });
+        $("#buildPrescriptionBtn").addEventListener("click", () => {
+          const result = evaluateProfile();
+          renderProfileResult(result, true);
+        });
+        $("#profileForm").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const result = evaluateProfile();
+          renderProfileResult(result);
+        });
+        $("#confirmBtn").addEventListener("click", renderConfirmation);
+        $("#adaptBtn").addEventListener("click", renderAdaptation);
+        $("#effectBtn").addEventListener("click", renderEffect);
+        $("#urgentBtn").addEventListener("click", renderUrgency);
+        $("#drugSearch").addEventListener("input", renderDrugCards);
+        $("#classFilter").addEventListener("change", renderDrugCards);
+      }
+
+      function getGrade(sbp, dbp) {
+        if (sbp == null || dbp == null) return { label: "PA non renseignée", level: 0, color: "orange" };
+        if (sbp >= 180 || dbp >= 110) return { label: "HTA grade 3", level: 3, color: "red" };
+        if (sbp >= 160 || dbp >= 100) return { label: "HTA grade 2", level: 2, color: "orange" };
+        if (sbp >= 140 || dbp >= 90) return { label: "HTA grade 1", level: 1, color: "orange" };
+        if (sbp >= 130 || dbp >= 85) return { label: "PA haute / à confirmer selon contexte", level: 0, color: "orange" };
+        return { label: "PA cabinet non hypertensive", level: 0, color: "green" };
+      }
+
+      function readProfile() {
+        const current = value("currentTreatment").toLowerCase();
+        return {
+          age: num("age"),
+          sex: value("sex"),
+          pregnancy: value("pregnancy"),
+          adherence: value("adherence"),
+          sbp: num("sbp"),
+          dbp: num("dbp"),
+          hr: num("hr"),
+          bmi: num("bmi"),
+          egfr: num("egfr"),
+          creatinine: num("creatinine"),
+          potassium: num("potassium"),
+          sodium: num("sodium"),
+          current,
+          smoking: has("smoking"),
+          diabetes: has("diabetes"),
+          albuminuria: has("albuminuria"),
+          stroke: has("stroke"),
+          ischemic: has("ischemic"),
+          hfref: has("hfref"),
+          afib: has("afib"),
+          block: has("block"),
+          asthma: has("asthma"),
+          gout: has("gout"),
+          edema: has("edema"),
+          orthostasis: has("orthostasis"),
+          bph: has("bph"),
+          migraine: has("migraine"),
+          raynaud: has("raynaud"),
+          nsaids: has("nsaids"),
+          lithium: has("lithium"),
+          diureticsTaken: has("diureticsTaken"),
+          aeCough: has("aeCough"),
+          aeEdema: has("aeEdema"),
+          aeHypokalemia: has("aeHypokalemia"),
+          aeHyperkalemia: has("aeHyperkalemia"),
+          aeSexual: has("aeSexual"),
+          aeBradycardia: has("aeBradycardia"),
+          aeHyponatremia: has("aeHyponatremia"),
+          aeRenal: has("aeRenal"),
+          aeOrthostasis: has("aeOrthostasis")
+        };
+      }
+
+      function addUnique(list, ...items) {
+        items.flat().filter(Boolean).forEach((item) => {
+          if (!list.includes(item)) list.push(item);
+        });
+      }
+
+      function removeWhere(list, predicate) {
+        for (let i = list.length - 1; i >= 0; i -= 1) {
+          if (predicate(list[i])) list.splice(i, 1);
+        }
+      }
+
+      function evaluateProfile() {
+        const p = readProfile();
+        const grade = getGrade(p.sbp, p.dbp);
+        const preferred = [];
+        const acceptable = [];
+        const avoid = [];
+        const associations = [];
+        const monitoring = [];
+        const alerts = [];
+        const rationale = [];
+        const alternatives = [];
+
+        addUnique(monitoring, "Confirmer la PA hors cabinet si contexte non urgent : automesure ou MAPA.", "Évaluer observance, sel, alcool, AINS, apnée du sommeil et interactions.");
+
+        if (grade.level >= 1) {
+          addUnique(rationale, `${grade.label} au cabinet : confirmation et prise en charge structurée nécessaires hors urgence.`);
+        } else {
+          addUnique(rationale, `${grade.label} : vérifier contexte, automesure/MAPA et risque cardiovasculaire avant traitement chronique.`);
+        }
+
+        if (grade.level === 3) {
+          addUnique(alerts, "PA ≥ 180/110 mmHg : rechercher immédiatement signes de souffrance viscérale et contexte d'urgence.");
+        }
+
+        if (p.pregnancy === "current" || p.pregnancy === "project" || p.pregnancy === "possible") {
+          addUnique(preferred, "labétalol (Trandate)", "nifédipine LP (Adalate)", "méthyldopa (Aldomet)");
+          addUnique(avoid, "IEC", "ARA2", "aliskiren");
+          addUnique(alerts, "Grossesse/projet possible : IEC et ARA2 contre-indiqués ; conduite obstétricale à vérifier.");
+          addUnique(monitoring, "HTA gravidique : vérifier protéinurie, symptômes de prééclampsie et avis obstétrical.");
+        } else {
+          addUnique(preferred, "IEC : ramipril (Triatec) ou périndopril (Coversyl)", "ARA2 : candésartan (Atacand/Kenzen) ou irbésartan (Aprovel)", "inhibiteur calcique DHP : amlodipine (Amlor) ou lercanidipine (Lercapress/Zanidip)", "diurétique thiazidique/apparenté : indapamide (Fludex) ou hydrochlorothiazide (Esidrex)");
+        }
+
+        if (p.diabetes && p.albuminuria) {
+          addUnique(preferred, "IEC ou ARA2 privilégié si DFG/kaliémie compatibles");
+          addUnique(rationale, "Diabète avec albuminurie : protection rénale recherchée avec IEC ou ARA2, sans double blocage.");
+          addUnique(avoid, "association IEC + ARA2");
+          addUnique(monitoring, "Créatinine/DFG/kaliémie 7-15 jours après introduction ou augmentation d'IEC/ARA2 si patient à risque.");
+          addUnique(associations, "Si PA non contrôlée : ajouter inhibiteur calcique DHP, puis diurétique thiazidique/apparenté si compatible.");
+        } else if (p.diabetes) {
+          addUnique(rationale, "Diabète sans albuminurie : stratégie globale proche de l'HTA non compliquée, avec vigilance rénale et cardiovasculaire.");
+          addUnique(monitoring, "Surveiller DFG, kaliémie et albuminurie.");
+        }
+
+        if (p.albuminuria && !p.diabetes) {
+          addUnique(preferred, "IEC ou ARA2 privilégié si grossesse exclue et kaliémie/DFG compatibles");
+          addUnique(monitoring, "Rapport albuminurie/créatininurie et suivi DFG/kaliémie.");
+        }
+
+        if (p.egfr != null && p.egfr < 30) {
+          addUnique(alerts, "DFG < 30 : avis néphrologique ou vérification spécialisée conseillé avant intensification complexe.");
+          addUnique(avoid, "spironolactone/éplérénone/amiloride sans avis spécialisé", "thiazidique comme seul diurétique si efficacité douteuse");
+          addUnique(alternatives, "diurétique de l'anse comme furosémide (Lasilix) si congestion ou DFG bas, selon contexte.");
+        } else if (p.egfr != null && p.egfr < 45) {
+          addUnique(alerts, "DFG altéré : RAAS possible si indiqué, mais contrôle créatinine/kaliémie rapproché.");
+          addUnique(monitoring, "Adapter surveillance rénale et ionique après toute modification.");
+        }
+
+        if (p.potassium != null && p.potassium >= 5.0 || p.aeHyperkalemia) {
+          addUnique(alerts, "Hyperkaliémie actuelle ou antérieure : prudence majeure avec IEC/ARA2/MRA/amiloride.");
+          addUnique(avoid, "spironolactone (Aldactone)", "éplérénone (Inspra)", "amiloride (Modamide)", "suppléments potassiques non justifiés");
+          addUnique(monitoring, "Contrôler kaliémie et fonction rénale avant toute décision RAAS/MRA.");
+        }
+
+        if (p.potassium != null && p.potassium < 3.5 || p.aeHypokalemia) {
+          addUnique(alerts, "Hypokaliémie : rechercher diurétique en cause ou hyperaldostéronisme si HTA + hypokaliémie.");
+          addUnique(avoid, "majoration thiazidique non réévaluée");
+          addUnique(alternatives, "losartan (Cozaar), IEC/ARA2 ou stratégie anti-aldostérone uniquement si DFG/kaliémie compatibles.");
+        }
+
+        if (p.sodium != null && p.sodium < 135 || p.aeHyponatremia) {
+          addUnique(alerts, "Hyponatrémie actuelle ou antérieure : prudence avec thiazidiques, surtout sujet âgé.");
+          addUnique(avoid, "thiazidique/apparenté sans correction ni plan de contrôle");
+        }
+
+        if (p.ischemic) {
+          addUnique(preferred, "bêtabloquant si pas de contre-indication : bisoprolol (Cardensiel/Bisoce), nébivolol (Temerit/Nebilox), métoprolol (Lopressor/Seloken)");
+          addUnique(rationale, "Cardiopathie ischémique/angor/post-infarctus : bêtabloquant et IEC/ARA2 souvent utiles si tolérés.");
+          addUnique(associations, "Bêtabloquant + IEC/ARA2, ou bêtabloquant + inhibiteur calcique DHP si angor/HTA sans bradycardie.");
+        }
+
+        if (p.hfref) {
+          addUnique(preferred, "IEC/ARA2/ARNI selon cardiologie", "bêtabloquant validé : bisoprolol, carvédilol, métoprolol succinate, nébivolol", "spironolactone/éplérénone si DFG/kaliémie compatibles");
+          addUnique(avoid, "vérapamil (Isoptine)", "diltiazem (Tildiem)");
+          addUnique(alerts, "FEVG réduite : éviter vérapamil/diltiazem ; coordonner avec prise en charge cardiologique.");
+        }
+
+        if (p.afib) {
+          addUnique(preferred, "bêtabloquant si contrôle de fréquence nécessaire");
+          addUnique(acceptable, "diltiazem (Tildiem) ou vérapamil (Isoptine) seulement si FEVG conservée et absence de BAV/bradycardie");
+          addUnique(avoid, "bêtabloquant + diltiazem/vérapamil");
+        }
+
+        if ((p.hr != null && p.hr < 55) || p.block || p.aeBradycardia) {
+          addUnique(alerts, "Bradycardie/BAV : éviter bêtabloquants et inhibiteurs calciques non DHP sans avis.");
+          addUnique(avoid, "bêtabloquant", "diltiazem (Tildiem)", "vérapamil (Isoptine)");
+        }
+
+        if (p.asthma) {
+          addUnique(avoid, "bêtabloquant non sélectif : propranolol (Avlocardyl), nadolol (Corgard) sauf avis très spécialisé");
+          addUnique(alerts, "Asthme/BPCO : bêtabloquant cardiosélectif seulement si indication forte et introduction prudente.");
+        }
+
+        if (p.gout) {
+          addUnique(avoid, "thiazidique/apparenté si alternative possible en goutte active");
+          addUnique(preferred, "losartan (Cozaar) si ARA2 compatible", "inhibiteur calcique DHP");
+          addUnique(rationale, "Goutte/hyperuricémie : limiter thiazidiques, losartan peut être intéressant.");
+        }
+
+        if (p.edema || p.aeEdema) {
+          addUnique(alerts, "Œdèmes sous inhibiteur calcique : réévaluer dose, association IEC/ARA2 ou changement de classe.");
+          addUnique(avoid, "augmentation d'inhibiteur calcique DHP malgré œdèmes gênants");
+        }
+
+        if (p.orthostasis || p.aeOrthostasis || (p.age != null && p.age >= 80)) {
+          addUnique(alerts, "Risque orthostatique/chute : débuter bas, augmenter lentement, mesurer PA debout/couché.");
+          addUnique(avoid, "alphabloquant", "antihypertenseur central", "polymédication excessive");
+        } else if (p.bph) {
+          addUnique(acceptable, "alphabloquant en complément si HBP symptomatique et orthostatisme toléré");
+        }
+
+        if (p.migraine) {
+          addUnique(acceptable, "propranolol (Avlocardyl) ou métoprolol selon profil, si pas d'asthme/bradycardie/BAV");
+        }
+
+        if (p.raynaud) {
+          addUnique(preferred, "inhibiteur calcique DHP : nifédipine LP (Adalate) ou amlodipine (Amlor) selon contexte");
+        }
+
+        if (p.nsaids || p.current.includes("ains") || p.current.includes("ibuprof") || p.current.includes("ketoprof") || p.current.includes("naprox")) {
+          addUnique(alerts, "AINS fréquents : risque perte d'efficacité antihypertensive et IRA, surtout avec IEC/ARA2 + diurétique.");
+          addUnique(avoid, "triple association AINS + diurétique + IEC/ARA2");
+        }
+
+        if (p.lithium || p.current.includes("lithium")) {
+          addUnique(alerts, "Lithium : éviter IEC/ARA2 ou thiazidique sans surveillance spécialisée de la lithémie.");
+          addUnique(avoid, "thiazidique + lithium", "IEC/ARA2 + lithium");
+        }
+
+        if (p.aeCough) {
+          addUnique(avoid, "IEC si toux sèche clairement imputable");
+          addUnique(preferred, "ARA2 si indication RAAS maintenue : candésartan (Atacand/Kenzen), irbésartan (Aprovel)");
+        }
+
+        if (p.adherence === "partial" || p.adherence === "poor") {
+          addUnique(alerts, "Observance partielle : simplifier schéma, rechercher effets indésirables et privilégier association fixe si indiquée/disponible.");
+        }
+
+        if (grade.level >= 2 && p.adherence !== "poor") {
+          addUnique(associations, "Si confirmation hors cabinet et tolérance compatible : discuter bithérapie initiale ou rapide selon risque et recommandations locales.");
+        }
+        addUnique(associations, "IEC/ARA2 + inhibiteur calcique DHP", "IEC/ARA2 + thiazidique/apparenté", "Trithérapie : IEC/ARA2 + DHP + thiazidique/apparenté si bithérapie optimisée insuffisante.");
+
+        addUnique(monitoring, "Ne pas associer IEC + ARA2.", "Toujours vérifier disponibilité, dosages et contre-indications dans VIDAL/Base publique du médicament.");
+
+        removeWhere(preferred, (item) => avoid.some((bad) => item.toLowerCase().includes(bad.toLowerCase())));
+        removeWhere(acceptable, (item) => avoid.some((bad) => item.toLowerCase().includes(bad.toLowerCase())));
+
+        return { p, grade, preferred, acceptable, avoid, associations, monitoring, alerts, rationale, alternatives };
+      }
+
+      function renderProfileResult(result, includePrescription = false) {
+        const html = buildResultHtml(result, includePrescription);
+        $("#profileOutput").innerHTML = html;
+        $("#homeSummary").innerHTML = html;
+        latestSummary = buildPlainSummary(result, includePrescription);
+      }
+
+      function buildResultHtml(result, includePrescription) {
+        const { grade, preferred, acceptable, avoid, associations, monitoring, alerts, rationale, alternatives } = result;
+        return `
+          <div class="pill-row">
+            <span class="pill ${grade.color}">${escapeHtml(grade.label)}</span>
+            <span class="pill">PAS ${escapeHtml(result.p.sbp ?? "-")} / PAD ${escapeHtml(result.p.dbp ?? "-")}</span>
+            <span class="pill">DFG ${escapeHtml(result.p.egfr ?? "-")}</span>
+            <span class="pill">K ${escapeHtml(result.p.potassium ?? "-")}</span>
+          </div>
+          ${alerts.length ? `<div class="alert-list">${alerts.map((a) => `<div class="alert red">${escapeHtml(a)}</div>`).join("")}</div>` : ""}
+          <div class="output-grid">
+            ${outputCard("Classes préférées", preferred, "green")}
+            ${outputCard("Classes acceptables", acceptable.length ? acceptable : ["Selon contexte clinique après vérification des contre-indications."], "orange")}
+            ${outputCard("Classes / associations à éviter", avoid.length ? avoid : ["Aucune alerte spécifique saisie, mais vérifier VIDAL et terrain."], "red")}
+            ${outputCard("Associations conseillées", associations, "green")}
+            ${outputCard("Surveillance recommandée", monitoring, "orange")}
+            ${outputCard("Justification clinique", rationale.concat(alternatives), "green")}
+          </div>
+          ${includePrescription ? buildPrescriptionHtml(result) : ""}
+        `;
+      }
+
+      function outputCard(title, items, color) {
+        return `
+          <div class="output-card">
+            <h4>${escapeHtml(title)}</h4>
+            <ul class="compact-list">
+              ${items.map((item) => `<li><span class="pill ${color}">${escapeHtml(item)}</span></li>`).join("")}
+            </ul>
+          </div>
+        `;
+      }
+
+      function buildPrescriptionHtml(result) {
+        const possible = result.preferred.slice(0, 5);
+        const avoid = result.avoid.slice(0, 5);
+        const monitor = result.monitoring.slice(0, 5);
+        return `
+          <div class="panel" style="margin-top:16px;">
+            <h3>Proposition à vérifier avant prescription</h3>
+            <p><strong>Classes compatibles :</strong> ${escapeHtml(possible.join(" ; ") || "à déterminer selon profil complet")}.</p>
+            <p><strong>Molécules possibles :</strong> choisir une DCI avec nom commercial courant, vérifier disponibilité, dosages, DFG, kaliémie, grossesse, interactions et AMM.</p>
+            <p><strong>Surveillance à prévoir :</strong> ${escapeHtml(monitor.join(" ; "))}.</p>
+            <p><strong>Points VIDAL/Base publique à contrôler :</strong> contre-indications, interactions, adaptation rénale, grossesse/allaitement, associations fixes, effets indésirables et disponibilité.</p>
+            <p><strong>À éviter :</strong> ${escapeHtml(avoid.join(" ; ") || "pas d'alerte spécifique saisie")}.</p>
+          </div>
+        `;
+      }
+
+      function buildPlainSummary(result, includePrescription) {
+        const lines = [
+          "HTA-MG Assistant - synthèse à vérifier",
+          `PA : ${result.p.sbp || "-"} / ${result.p.dbp || "-"} mmHg - ${result.grade.label}`,
+          `Classes préférées : ${result.preferred.join("; ") || "-"}`,
+          `Acceptables : ${result.acceptable.join("; ") || "-"}`,
+          `À éviter : ${result.avoid.join("; ") || "-"}`,
+          `Associations : ${result.associations.join("; ") || "-"}`,
+          `Surveillance : ${result.monitoring.join("; ") || "-"}`,
+          `Alertes : ${result.alerts.join("; ") || "-"}`
+        ];
+        if (includePrescription) {
+          lines.push("Prescription prudente : proposition à vérifier, aucune ordonnance définitive générée.");
+        }
+        return lines.join("\n");
+      }
+
+      function copySummary() {
+        const text = latestSummary || "Aucune synthèse calculée.";
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).catch(fallbackCopy);
+        } else {
+          fallbackCopy();
+        }
+        function fallbackCopy() {
+          const area = document.createElement("textarea");
+          area.value = text;
+          area.style.position = "fixed";
+          area.style.left = "-9999px";
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+      }
+
+      function renderConfirmation() {
+        const sbp = num("confirmSbp");
+        const dbp = num("confirmDbp");
+        const grade = getGrade(sbp, dbp);
+        const urgentSymptoms = ["symChest", "symNeuro", "symDyspnea", "symConfusion", "symVisual", "symRenal", "symDissection", "symPreeclampsia"].some(has);
+        const pregnancyRisk = value("confirmPregnancy") === "current" && has("symPreeclampsia");
+        const rows = [];
+        if (urgentSymptoms || pregnancyRisk) {
+          rows.push(`<div class="alert red">Signes d'alarme : ne pas gérer comme HTA chronique. Orientation urgente selon contexte clinique.</div>`);
+        } else if (grade.level === 3 || value("confirmContext") === "target") {
+          rows.push(`<div class="alert red">${escapeHtml(grade.label)} ou atteinte d'organe cible : évaluer rapidement le retentissement et ne pas retarder la prise en charge si contexte sévère.</div>`);
+        } else if (grade.level >= 1) {
+          rows.push(`<div class="alert orange">${escapeHtml(grade.label)} : confirmer par automesure, MAPA 24 h ou mesures répétées au cabinet.</div>`);
+        } else {
+          rows.push(`<div class="alert green">${escapeHtml(grade.label)} : poursuivre surveillance et confirmer si discordance clinique ou haut risque.</div>`);
+        }
+        rows.push(`<div class="output-grid">
+          ${outputCard("Confirmation possible", ["Automesure : 3 mesures par prise, matin et soir, pendant 3 jours.", "MAPA 24 h si disponible.", "Au moins 2 visites espacées au cabinet si ambulatoire impossible."], "green")}
+          ${outputCard("Exceptions", ["PA ≥ 180/110 mmHg.", "Symptômes ou atteinte d'organe cible.", "Grossesse avec signes de prééclampsie.", "Douleur thoracique, déficit neurologique, OAP, confusion, trouble visuel aigu, IRA, dissection suspectée."], "red")}
+        </div>`);
+        $("#confirmOutput").innerHTML = rows.join("");
+      }
+
+      function renderAdaptation() {
+        const stage = value("stageSelect");
+        const time = value("timeSelect");
+        const outOffice = value("outOfficeSelect");
+        const tolerance = value("toleranceSelect");
+        const factors = ["factorSalt", "factorAlcohol", "factorNsaid", "factorSteroids", "factorDecongest", "factorSleepApnea", "factorKidney", "factorAldo", "factorInteractions"].filter(has);
+        const alerts = [];
+        const plan = [];
+        if (time === "short") alerts.push("Moins de 4 semaines : vérifier urgence, tolérance et niveau tensionnel avant intensification systématique.");
+        if (outOffice === "unknown") alerts.push("Contrôle hors cabinet non vérifié : automesure/MAPA utile avant escalade si situation non urgente.");
+        if (outOffice === "white") alerts.push("Effet blouse blanche possible : éviter escalade non nécessaire sans confirmation ambulatoire.");
+        if (tolerance === "issue") alerts.push("Effet indésirable : adapter la classe en cause avant d'empiler les traitements.");
+        if (factors.length) alerts.push("Facteurs de résistance cochés : les corriger ou les explorer avant de conclure à un échec pharmacologique.");
+
+        if (stage === "none") {
+          addUnique(plan, "Après confirmation, choisir une classe initiale compatible avec profil : IEC/ARA2, inhibiteur calcique DHP ou thiazidique/apparenté.", "Si PA très élevée ou risque élevé, discuter bithérapie initiale selon recommandations locales.");
+        } else if (stage === "mono") {
+          addUnique(plan, "Si PA non contrôlée après 4-6 semaines et vérifications faites : proposer une bithérapie.", "Préférer IEC/ARA2 + inhibiteur calcique DHP ou IEC/ARA2 + thiazidique/apparenté.", "Option : inhibiteur calcique DHP + thiazidique si IEC/ARA2 contre-indiqué ou mal toléré.");
+        } else if (stage === "bi") {
+          addUnique(plan, "Si bithérapie optimisée insuffisante : trithérapie standard.", "IEC ou ARA2 + inhibiteur calcique DHP + diurétique thiazidique/apparenté.", "Privilégier association fixe disponible si elle améliore l'observance.");
+        } else {
+          addUnique(plan, "Si trithérapie bien conduite incluant diurétique et HTA confirmée hors cabinet : évoquer HTA résistante.", "Vérifier observance, AINS, sel, alcool, apnée du sommeil, MRC, hyperaldostéronisme.", "4e ligne possible : spironolactone (Aldactone) si DFG/kaliémie compatibles ; avis spécialisé recommandé.");
+        }
+
+        $("#adaptOutput").innerHTML = `
+          ${alerts.map((item) => `<div class="alert orange">${escapeHtml(item)}</div>`).join("")}
+          <div class="output-grid">
+            ${outputCard("Proposition", plan, "green")}
+            ${outputCard("Avant association", ["Observance", "Automesure correcte", "Effet blouse blanche", "Excès de sel", "Alcool", "AINS/corticoïdes/décongestionnants", "Apnée du sommeil", "Insuffisance rénale", "Hyperaldostéronisme", "Interactions"], "orange")}
+          </div>
+        `;
+      }
+
+      function bindMatrix() {
+        $$(".edge").forEach((edge) => {
+          edge.addEventListener("click", () => showAssociation(edge.dataset.assoc));
+        });
+        $$(".map-node").forEach((node) => {
+          node.addEventListener("click", () => showClassDetail(node.dataset.class));
+          node.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              showClassDetail(node.dataset.class);
+            }
+          });
+        });
+      }
+
+      function showAssociation(id) {
+        const item = associationData[id];
+        if (!item) return;
+        $("#relationDetail").innerHTML = `
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="pill ${item.status}">${item.status === "green" ? "Utile" : item.status === "orange" ? "Surveillance" : "À éviter"}</span>
+          <p>${escapeHtml(item.detail)}</p>
+        `;
+      }
+
+      function showClassDetail(id) {
+        const item = classMap[id];
+        if (!item) return;
+        $("#relationDetail").innerHTML = `
+          <h3>${escapeHtml(item.label)}</h3>
+          <p>${escapeHtml(item.mechanism)}</p>
+          <div class="pill-row">${item.drugs.slice(0, 6).map((drug) => `<span class="pill">${escapeHtml(drug)}</span>`).join("")}</div>
+          <h4 style="margin-top:12px;">À retenir</h4>
+          <ul class="compact-list">${item.practical.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+        `;
+      }
+
+      function renderRedAssociations() {
+        const red = Object.values(associationData).filter((item) => item.status === "red");
+        $("#redAssociationList").innerHTML = red.map((item) => `<div class="alert red"><strong>${escapeHtml(item.title)}.</strong> ${escapeHtml(item.detail)}</div>`).join("");
+      }
+
+      function renderClassFilter() {
+        const select = $("#classFilter");
+        classData.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item.id;
+          option.textContent = item.label;
+          select.appendChild(option);
+        });
+      }
+
+      function renderDrugCards() {
+        const query = value("drugSearch").trim().toLowerCase();
+        const filter = value("classFilter");
+        const cards = classData.filter((item) => {
+          const haystack = [item.label, item.mechanism, item.drugs.join(" "), item.preferred.join(" "), item.contraindications.join(" "), item.adverse.join(" "), item.monitoring.join(" "), item.practical.join(" ")].join(" ").toLowerCase();
+          return (filter === "all" || item.id === filter) && (!query || haystack.includes(query));
+        });
+        $("#drugList").innerHTML = cards.map((item) => `
+          <article class="drug-card">
+            <h3>${escapeHtml(item.label)}</h3>
+            <p>${escapeHtml(item.mechanism)}</p>
+            <div class="tabs">
+              <span class="pill green">Favorable : ${escapeHtml(item.favorable.join(" ; ") || "selon contexte")}</span>
+              <span class="pill red">Éviter : ${escapeHtml(item.avoid.join(" ; ") || "selon contre-indications")}</span>
+            </div>
+            <h4>DCI + noms commerciaux</h4>
+            <ul>${item.drugs.map((drug) => `<li>${escapeHtml(drug)}</li>`).join("")}</ul>
+            <h4>Indications préférentielles</h4>
+            <ul>${item.preferred.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            <h4>Contre-indications / prudence</h4>
+            <ul>${item.contraindications.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            <h4>Effets indésirables fréquents</h4>
+            <ul>${item.adverse.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            <h4>Surveillance et points MG</h4>
+            <ul>${item.monitoring.concat(item.practical).map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+          </article>
+        `).join("") || '<p class="empty-state">Aucune fiche ne correspond à la recherche.</p>';
+      }
+
+      function renderProfileCards() {
+        $("#profileCards").innerHTML = profileCards.map((item) => `
+          <article class="panel tight">
+            <h3>${escapeHtml(item.title)}</h3>
+            <ul class="compact-list">${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+          </article>
+        `).join("");
+      }
+
+      function renderMonitoringRows() {
+        $("#monitoringRows").innerHTML = monitoringData.map((row) => `
+          <tr>
+            <td><strong>${escapeHtml(row[0])}</strong></td>
+            <td>${escapeHtml(row[1])}</td>
+            <td>${escapeHtml(row[2])}</td>
+            <td>${escapeHtml(row[3])}</td>
+          </tr>
+        `).join("");
+      }
+
+      function renderEffectOptions() {
+        const select = $("#effectSelect");
+        Object.entries(effectData).forEach(([key, item]) => {
+          const option = document.createElement("option");
+          option.value = key;
+          option.textContent = item.label;
+          select.appendChild(option);
+        });
+      }
+
+      function renderEffect() {
+        const item = effectData[value("effectSelect")];
+        if (!item) return;
+        $("#effectOutput").innerHTML = `
+          <div class="output-grid">
+            ${outputCard("Classe suspecte", [item.suspect], "orange")}
+            ${outputCard("Conduite pratique", item.action, "green")}
+            ${outputCard("Alternative thérapeutique", [item.alternative], "green")}
+            ${outputCard("Bilan à demander", [item.labs], "orange")}
+          </div>
+          <div class="alert ${item.urgency.toLowerCase().includes("urgent") ? "red" : "orange"}">${escapeHtml(item.urgency)}</div>
+        `;
+      }
+
+      function renderUrgency() {
+        const sbp = num("urgentSbp");
+        const dbp = num("urgentDbp");
+        const grade = getGrade(sbp, dbp);
+        const symptoms = ["uChest", "uNeuro", "uDyspnea", "uConfusion", "uVision", "uRenal", "uDissection", "uPregSigns"].filter(has);
+        const pregnant = value("urgentPregnancy") === "current" || value("urgentPregnancy") === "possible";
+        const red = symptoms.length > 0 || (pregnant && has("uPregSigns"));
+        if (red) {
+          $("#urgentOutput").innerHTML = `
+            <div class="alert red">Urgence hypertensive possible : souffrance viscérale ou alerte obstétricale. Orientation urgente ; ne pas gérer comme HTA chronique.</div>
+            ${outputCard("Éléments cochés", symptoms.map((id) => $("#" + id).parentElement.textContent.trim()), "red")}
+          `;
+        } else if (grade.level === 3) {
+          $("#urgentOutput").innerHTML = `
+            <div class="alert orange">HTA grade 3 sans signe de souffrance viscérale coché : repos, recontrôle rapproché, recherche active d'atteinte d'organe cible et conduite selon recommandations locales.</div>
+            ${outputCard("À vérifier", ["Douleur thoracique", "déficit neurologique", "dyspnée/OAP", "confusion", "trouble visuel aigu", "IRA", "dissection", "grossesse/prééclampsie"], "orange")}
+          `;
+        } else {
+          $("#urgentOutput").innerHTML = `
+            <div class="alert green">${escapeHtml(grade.label)} sans signe rouge coché : parcours HTA chronique possible si confirmation et contexte clinique compatible.</div>
+          `;
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
