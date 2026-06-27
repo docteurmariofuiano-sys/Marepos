@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas clinique interactif — Main · Poignet · Coude</title>
+<style>
+:root{
+  --bg:#eef6fa;--panel:#ffffff;--ink:#11243a;--muted:#52697c;--navy:#12375a;--blue:#2369a7;
+  --cyan:#1e9fb6;--green:#26805c;--orange:#b86616;--red:#ba2d2d;--line:#d8e6ef;--soft:#f6fbfd;
+  --shadow:0 16px 42px rgba(23,54,78,.12);--radius:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#e7f3f8,#f7fbfd 42%,#eef6fa);color:var(--ink);
+  font-family:"Segoe UI","Trebuchet MS",system-ui,sans-serif;font-size:16px;line-height:1.5}
+body.dark{--bg:#0d1722;--panel:#142536;--ink:#edf6fb;--muted:#adc0cf;--navy:#d8ecfa;--blue:#7db8f0;
+  --cyan:#61d4e5;--green:#6fd1a8;--orange:#f0b56d;--red:#ff8b8b;--line:#284156;--soft:#102033;
+  --shadow:0 20px 52px rgba(0,0,0,.35);background:#0d1722}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+a{color:var(--blue)}
+
+/* ---------- Header ---------- */
+.app-header{position:sticky;top:0;z-index:30;background:rgba(244,250,253,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+body.dark .app-header{background:rgba(13,23,34,.94)}
+.header-inner{max-width:1480px;margin:0 auto;padding:12px 18px 8px}
+.title-row{display:flex;gap:16px;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:12px;align-items:center;min-width:0}
+.mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:var(--shadow);flex:0 0 auto}
+h1{font-size:1.3rem;margin:0;color:var(--navy);line-height:1.18}
+.subtitle{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.icon-btn,.tab-btn,.shortcut,.chipbtn,.print-btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:9px 11px;box-shadow:0 3px 12px rgba(20,45,65,.06)}
+.icon-btn:hover,.tab-btn:hover,.shortcut:hover,.chipbtn:hover{border-color:#a9ccdc;transform:translateY(-1px)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:10px 0 2px;scrollbar-width:thin}
+.tab-btn{white-space:nowrap;font-size:.9rem}
+.tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.search-row{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:10px;margin-top:10px}
+.search-box{position:relative}
+.search-box input{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px 14px 12px 42px;background:var(--panel);color:var(--ink)}
+.search-box:before{content:"⌕";position:absolute;left:15px;top:7px;font-size:1.5rem;color:var(--blue)}
+#searchCount{align-self:center;color:var(--muted);font-size:.9rem;white-space:nowrap}
+
+/* ---------- Layout ---------- */
+main{max-width:1480px;margin:0 auto;padding:22px 18px 80px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.panel-title{font-size:1.9rem;line-height:1.12;margin:4px 0 16px;color:var(--navy)}
+.notice{border-left:5px solid var(--blue);background:var(--panel);padding:13px 16px;border-radius:8px;box-shadow:var(--shadow);margin:14px 0}
+.notice.urgent{border-color:var(--red);background:linear-gradient(90deg,rgba(186,45,45,.10),var(--panel))}
+.notice.ok{border-color:var(--green)}
+.section-head{margin:22px 0 12px}
+.section-head h2{margin:0;color:var(--navy);font-size:1.4rem}
+.section-head p{margin:4px 0 0;color:var(--muted)}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px;color:var(--navy);font-size:1.05rem}
+.card p{margin:0 0 6px;color:var(--muted)}
+.lead{font-size:1.05rem;color:var(--muted);max-width:74ch}
+.eyebrow{color:var(--cyan);font-weight:800;text-transform:uppercase;font-size:.8rem;letter-spacing:.04em}
+
+/* ---------- Hero / dashboard ---------- */
+.hero h2{font-size:2rem;line-height:1.12;margin:8px 0 12px;color:var(--navy)}
+.shortcut-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.shortcut{display:flex;align-items:center;justify-content:space-between;text-align:left;gap:10px;min-height:60px}
+.shortcut strong{display:block;font-size:.98rem}
+.shortcut small{color:var(--muted)}
+.shortcut .glyph{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:var(--soft);color:var(--blue);font-weight:800;flex:0 0 auto}
+.stat-band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:1.7rem;color:var(--navy)}
+.stat span{color:var(--muted);font-size:.9rem}
+
+/* ---------- Badges ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:.76rem;font-weight:800;white-space:nowrap}
+.b-blue{background:#e2f1ff;color:#11558d}
+.b-green{background:#def8ed;color:#155f44}
+.b-orange{background:#fff0dc;color:#8c4a0e}
+.b-red{background:#ffe1e1;color:#8c1515}
+.b-grey{background:#eef2f6;color:#3a536a}
+body.dark .badge{background:rgba(255,255,255,.08);color:var(--ink)}
+.u-aucun{background:#def8ed;color:#155f44}
+.u-modere{background:#fff0dc;color:#8c4a0e}
+.u-urgent{background:#ffe1e1;color:#8c1515}
+body.dark .u-aucun,body.dark .u-modere,body.dark .u-urgent{background:rgba(255,255,255,.08);color:var(--ink)}
+
+/* ---------- Filters ---------- */
+.filterbar{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:16px}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-weight:800;color:var(--navy);font-size:.85rem;margin-right:4px;min-width:74px}
+.chipbtn{font-size:.84rem;padding:7px 12px;border-radius:999px}
+.chipbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chipbtn.quick{border-color:var(--cyan);color:var(--blue);font-weight:700}
+.chipbtn.quick.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+
+/* ---------- Test cards ---------- */
+.test-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,border-color .15s}
+.tcard:hover{transform:translateY(-3px);border-color:#a9ccdc}
+.tcard .shot{aspect-ratio:16/10}
+.tcard-body{padding:12px 14px 14px}
+.tcard-body h3{margin:0 0 6px;color:var(--navy);font-size:1.02rem}
+.tcard-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tcard-body p{margin:0;color:var(--muted);font-size:.9rem}
+
+/* ---------- Image placeholder system ---------- */
+.shot{position:relative;background:var(--soft);border-bottom:1px solid var(--line);overflow:hidden}
+.shot img{display:block;width:100%;height:100%;object-fit:cover}
+.shot .shot-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:14px;color:var(--muted);background:
+   repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(35,105,167,.05) 12px,rgba(35,105,167,.05) 24px),var(--soft)}
+.shot .shot-ph .cam{font-size:1.7rem}
+.shot .shot-ph code{font-size:.78rem;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--blue);word-break:break-all}
+.shot .shot-ph small{font-size:.76rem;max-width:30ch;line-height:1.35}
+.shot.loaded .shot-ph{display:none}
+.shot.loaded img{display:block}
+.shot:not(.loaded) img{visibility:hidden}
+
+/* ---------- Modal fiche ---------- */
+.modal-back{position:fixed;inset:0;z-index:60;background:rgba(10,24,38,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto}
+.modal-back.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:900px;width:100%;overflow:hidden}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.modal-head h2{margin:0;color:var(--navy);font-size:1.35rem}
+.modal-head .sub{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.modal-close{font-size:1.4rem;line-height:1;width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--soft);color:var(--ink);flex:0 0 auto}
+.modal-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:0}
+.modal-img{position:relative}
+.modal-img .shot{height:100%;min-height:280px;border-bottom:0;border-right:1px solid var(--line)}
+.modal-body{padding:18px 20px;max-height:70vh;overflow:auto}
+.fiche-row{margin:0 0 11px}
+.fiche-row dt{font-weight:800;color:var(--navy);font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.fiche-row dd{margin:0;color:var(--ink)}
+.fiche-row.warn dd{color:var(--red)}
+.fiche-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+
+/* ---------- Decision engine ---------- */
+.engine{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:18px;align-items:start}
+.engine-controls{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px}
+.fgroup{margin-bottom:14px}
+.fgroup h4{margin:0 0 8px;color:var(--navy);font-size:.92rem;display:flex;align-items:center;gap:8px}
+.fgroup h4 .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan)}
+.fchips{display:flex;flex-wrap:wrap;gap:7px}
+.fchip{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:.85rem}
+.fchip:hover{border-color:#a9ccdc}
+.fchip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.fchip.flag.on{background:var(--red);border-color:var(--red)}
+.engine-results{position:sticky;top:170px;display:flex;flex-direction:column;gap:14px}
+.res-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:15px}
+.res-card h3{margin:0 0 10px;color:var(--navy);font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.res-card.flags{border-color:var(--red)}
+.res-card.flags h3{color:var(--red)}
+.dx{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:9px;background:var(--soft)}
+.dx.strong{border-color:var(--green);background:rgba(38,128,92,.08)}
+.dx-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dx-top b{color:var(--navy)}
+.dx .meter{height:6px;border-radius:4px;background:#dfe9f0;overflow:hidden;margin:7px 0}
+.dx .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--green))}
+.dx ul{margin:6px 0 0;padding-left:18px}
+.dx li{color:var(--muted);font-size:.88rem;margin:2px 0}
+.dx .linkrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.minilink{font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--panel);color:var(--blue)}
+.flag-item{display:flex;gap:8px;align-items:flex-start;color:var(--red);font-weight:600;margin:6px 0;font-size:.9rem}
+.empty-res{color:var(--muted);font-style:italic}
+.engine-actions{display:flex;gap:8px;margin-top:10px}
+
+/* ---------- Lists / tables ---------- */
+ul.clean{margin:6px 0 0;padding-left:20px}
+ul.clean li{margin:3px 0;color:var(--ink)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--soft);color:var(--navy)}
+.seq{counter-reset:step;list-style:none;margin:0;padding:0}
+.seq li{position:relative;padding:10px 10px 10px 44px;border:1px solid var(--line);border-radius:10px;background:var(--panel);margin-bottom:8px;box-shadow:var(--shadow)}
+.seq li:before{counter-increment:step;content:counter(step);position:absolute;left:10px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem}
+
+/* ---------- Patient form ---------- */
+.field-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-weight:700;color:var(--navy);font-size:.88rem}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:var(--soft);color:var(--ink)}
+.field textarea{min-height:80px;resize:vertical}
+.wide{grid-column:1/-1}
+.patient-section{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.patient-section h3{margin:0 0 10px;color:var(--navy)}
+.print-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.print-btn{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+.hidden-by-search{display:none!important}
+.hidden-by-filter{display:none!important}
+.empty-note{display:none;margin:18px 0;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:18px;text-align:center}
+
+@media (max-width:1100px){
+  .shortcut-grid,.stat-band,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .test-grid,.grid-3,.field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .engine{grid-template-columns:1fr}
+  .engine-results{position:static}
+  .modal-grid{grid-template-columns:1fr}
+  .modal-img .shot{border-right:0;border-bottom:1px solid var(--line);min-height:220px}
+}
+@media (max-width:720px){
+  body{font-size:15px}
+  .title-row{flex-direction:column;align-items:flex-start}
+  .search-row{grid-template-columns:1fr}
+  .shortcut-grid,.stat-band,.grid-2,.grid-3,.grid-4,.test-grid,.field-grid{grid-template-columns:1fr}
+  .panel-title{font-size:1.5rem}
+}
+@media print{
+  .app-header,.no-print,.filterbar{display:none!important}
+  main{max-width:none;padding:0}
+  .tab-panel{display:none!important}
+  .tab-panel.active{display:block!important}
+  .card,.table-wrap{box-shadow:none;border-color:#bbb}
+}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="title-row">
+      <div class="brand">
+        <div class="mark">MPC</div>
+        <div>
+          <h1>Main · Poignet · Coude</h1>
+          <p class="subtitle">Atlas clinique interactif — examen, tests, orientation, conduite à tenir</p>
+        </div>
+      </div>
+      <div class="header-actions no-print">
+        <button class="icon-btn" id="themeBtn" type="button" title="Mode sombre">◐</button>
+        <button class="icon-btn" id="printBtn" type="button" title="Imprimer">⎙</button>
+        <button class="icon-btn" id="resetBtn" type="button" title="Réinitialiser">↺</button>
+      </div>
+    </div>
+    <nav class="tabs no-print" id="tabs"></nav>
+    <div class="search-row no-print">
+      <div class="search-box"><input id="searchInput" type="search" placeholder="Rechercher un test, une pathologie, une zone douloureuse, une imagerie…"></div>
+      <div id="searchCount">Recherche inactive</div>
+    </div>
+  </div>
+</header>
+<main id="app"></main>
+<div class="modal-back" id="modalBack"><div class="modal" id="modal"></div></div>
+<script>
+/* =====================================================================
+   ATLAS CLINIQUE MAIN · POIGNET · COUDE
+   Application locale, hors-ligne, fichier unique.
+   Images attendues dans le dossier ./images/ (voir LISTE_IMAGES.md).
+   ===================================================================== */
+const STORE="atlasmpc:";
+const app=document.getElementById("app");
+const tabsEl=document.getElementById("tabs");
+let activeTab=localStorage.getItem(STORE+"tab")||"accueil";
+
+/* ---------- utils ---------- */
+function norm(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
+function urgenceBadge(u){const m={"aucun":["u-aucun","Non urgent"],"modéré":["u-modere","Semi-urgent"],"urgent":["u-urgent","Urgent"]};const x=m[u]||m["aucun"];return '<span class="badge '+x[0]+'">'+x[1]+'</span>';}
+function typeLabel(t){return ({tendineux:"Tendineux",neuro:"Neurologique",ligamentaire:"Ligamentaire",osseux:"Osseux / fracture",vasculaire:"Vasculaire",inflammatoire:"Inflammatoire",inspection:"Inspection",mobilite:"Mobilité"})[t]||t;}
+function regionLabel(r){return ({main:"Main",poignet:"Poignet",coude:"Coude"})[r]||r;}
+
+/* ---------- image figure with placeholder ----------
+   Source de l'image :
+   - si EMBEDDED_IMAGES[file] existe (build autonome base64) → on l'utilise ;
+   - sinon on charge depuis le dossier ./images/.
+   Dans les deux cas, un cadre « Image à fournir » s'affiche tant que rien n'est chargé. */
+function imgSrc(file){
+  return (window.EMBEDDED_IMAGES && window.EMBEDDED_IMAGES[file]) ? window.EMBEDDED_IMAGES[file] : ('images/'+file);
+}
+function shot(file,alt,cls){
+  return '<figure class="shot '+(cls||"")+'">'+
+    '<img alt="'+esc(alt)+'" loading="lazy" src="'+imgSrc(file)+'" '+
+    'onload="this.parentNode.classList.add(\'loaded\')" onerror="this.parentNode.classList.remove(\'loaded\')">'+
+    '<div class="shot-ph"><span class="cam">📷</span><strong>Image à fournir</strong>'+
+    '<code>images/'+esc(file)+'</code><small>'+esc(alt)+'</small></div></figure>';
+}
+
+/* =====================================================================
+   1. ATLAS DES TESTS — chaque fiche est liée à une image dédiée
+   ===================================================================== */
+const TESTS=[
+/* ---------------- MAIN ---------------- */
+{id:"inspection_main",name:"Inspection de la main",region:"main",type:"inspection",urgence:"aucun",
+ image:"inspection_main.webp",alt:"Inspection comparative des deux mains paume et dos : trophicité, déformations, coloration",
+ objectif:"Repérer amyotrophie, déformation, attitude vicieuse, troubles trophiques, coloration et lésions cutanées.",
+ patient:"Assis, mains posées paume puis dos sur la table, comparaison bilatérale.",
+ medecin:"Face au patient, observe symétrie, reliefs musculaires (éminences thénar/hypothénar), ongles, plis.",
+ manoeuvre:"Inspection statique paume/dos, puis en mouvement (poing, extension, écartement des doigts).",
+ positif:"Amyotrophie thénar (médian), griffe ulnaire, doigts en col de cygne/boutonnière, nodules, rougeur, déformation.",
+ diagnostic:"Oriente vers atteinte nerveuse, rhumatismale, tendineuse ou traumatique selon l'aspect.",
+ pieges:"Ne pas négliger la face palmaire ni les espaces interdigitaux ; toujours comparer au côté sain."},
+
+{id:"mobilite_doigts",name:"Mobilité active et passive des doigts",region:"main",type:"mobilite",urgence:"aucun",
+ image:"mobilite_doigts.webp",alt:"Flexion-extension active des doigts, fermeture du poing complet et ouverture",
+ objectif:"Évaluer amplitudes MCP/IPP/IPD, déficit d'extension ou de flexion, comparaison active/passive.",
+ patient:"Avant-bras en pronation, main libre ; fait le poing puis ouvre complètement.",
+ medecin:"Mesure le flessum, recherche un déficit isolé, mobilise passivement si déficit actif.",
+ manoeuvre:"Flexion-extension active globale puis articulation par articulation ; puis passive.",
+ positif:"Déficit actif avec mobilité passive conservée = atteinte tendineuse/nerveuse ; déficit passif = articulaire/rétraction.",
+ diagnostic:"Rupture tendineuse, raideur articulaire, doigt à ressaut, Dupuytren, atteinte nerveuse.",
+ pieges:"Un effet ténodèse (flexion passive des doigts à l'extension du poignet) trompe l'examen d'une section tendineuse."},
+
+{id:"test_fds_main",name:"Testing du fléchisseur superficiel (FDS)",region:"main",type:"tendineux",urgence:"modéré",
+ image:"test_fds_main.webp",alt:"Test FDS : examinateur bloque les autres doigts en extension, le doigt testé fléchit à l'IPP",
+ objectif:"Tester l'intégrité du fléchisseur commun superficiel, fléchisseur de l'IPP.",
+ patient:"Main paume vers le haut posée sur la table.",
+ medecin:"Maintient en extension complète tous les doigts sauf celui testé (neutralise le FDP commun).",
+ manoeuvre:"Demande de fléchir le seul doigt libéré ; la flexion ne peut se faire qu'à l'IPP.",
+ positif:"Flexion active de l'IPP possible = FDS intact ; absence de flexion = section/rupture du FDS.",
+ diagnostic:"Plaie ou rupture du tendon fléchisseur superficiel.",
+ pieges:"L'auriculaire a souvent un FDS hypoplasique (faux positif) ; toujours tester après plaie de la face palmaire."},
+
+{id:"test_fdp_main",name:"Testing du fléchisseur profond (FDP)",region:"main",type:"tendineux",urgence:"modéré",
+ image:"test_fdp_main.webp",alt:"Test FDP : examinateur bloque la phalange moyenne, le patient fléchit l'IPD du doigt",
+ objectif:"Tester le fléchisseur commun profond, seul fléchisseur de l'IPD.",
+ patient:"Main paume vers le haut.",
+ medecin:"Bloque la phalange moyenne (P2) du doigt testé en extension.",
+ manoeuvre:"Demande de fléchir uniquement la dernière phalange (IPD).",
+ positif:"Flexion active de l'IPD = FDP intact ; absence = section du FDP ou avulsion (jersey finger).",
+ diagnostic:"Section du FDP, arrachement de l'insertion distale (jersey finger, surtout 4e doigt).",
+ pieges:"Un jersey finger peut passer inaperçu si on ne bloque pas P2 ; rétraction proximale du tendon possible."},
+
+{id:"test_extenseurs_main",name:"Testing des extenseurs des doigts",region:"main",type:"tendineux",urgence:"modéré",
+ image:"test_extenseurs_main.webp",alt:"Extension active des doigts contre résistance, recherche d'un déficit d'extension MCP",
+ objectif:"Tester l'appareil extenseur (extenseur commun, propres) et dépister un mallet/boutonnière.",
+ patient:"Main posée à plat, puis soulève les doigts.",
+ medecin:"Observe l'extension MCP et IPD ; teste contre résistance.",
+ manoeuvre:"Extension active des doigts ; recherche déficit d'extension MCP (rupture / luxation de la dossière) ou IPD (mallet).",
+ positif:"Déficit d'extension MCP = rupture extenseur/sagittal band ; chute de P3 = mallet finger.",
+ diagnostic:"Rupture appareil extenseur, mallet finger, boutonnière, atteinte du nerf radial si globale.",
+ pieges:"Différencier rupture tendineuse d'une paralysie radiale (déficit global d'extension du poignet et des doigts)."},
+
+{id:"test_fpl_pouce",name:"Long fléchisseur du pouce (FPL)",region:"main",type:"tendineux",urgence:"modéré",
+ image:"test_fpl_pouce.webp",alt:"Flexion active de l'interphalangienne du pouce, examinateur stabilisant la phalange proximale",
+ objectif:"Tester le long fléchisseur du pouce, fléchisseur de l'IP du pouce.",
+ patient:"Pouce libre, main stabilisée.",
+ medecin:"Bloque la phalange proximale du pouce (P1).",
+ manoeuvre:"Demande de fléchir la dernière phalange du pouce (IP).",
+ positif:"Flexion IP impossible = section du FPL.",
+ diagnostic:"Plaie/section du FPL, atteinte du nerf interosseux antérieur (signe du O impossible).",
+ pieges:"Une atteinte du nerf interosseux antérieur (branche médian) mime une rupture : pince O entre pouce-index impossible."},
+
+{id:"test_epl_pouce",name:"Long extenseur du pouce (EPL)",region:"main",type:"tendineux",urgence:"modéré",
+ image:"test_epl_pouce.webp",alt:"Pouce à plat sur la table, le patient décolle le pouce vers le haut (rétropulsion)",
+ objectif:"Tester le long extenseur du pouce (rétropulsion), à risque après fracture du radius distal.",
+ patient:"Paume à plat sur la table, pouce posé.",
+ medecin:"Observe la capacité à décoller le pouce du plan de la table.",
+ manoeuvre:"Demande de lever le pouce verticalement (rétropulsion).",
+ positif:"Rétropulsion impossible = rupture de l'EPL.",
+ diagnostic:"Rupture de l'EPL (classique après fracture non déplacée du radius distal, ressaut du tubercule de Lister).",
+ pieges:"Peut survenir à distance d'une fracture du radius distal apparemment bénigne."},
+
+{id:"test_abd_court_ext_pouce",name:"Premier compartiment dorsal (APL / EPB)",region:"main",type:"tendineux",urgence:"aucun",
+ image:"test_abd_court_ext_pouce.webp",alt:"Abduction et extension du pouce contre résistance, palpation des tendons du 1er compartiment au-dessus de la styloïde radiale",
+ objectif:"Tester long abducteur (APL) et court extenseur (EPB) du pouce, atteints dans la ténosynovite de De Quervain.",
+ patient:"Pouce en abduction-extension.",
+ medecin:"Palpe les tendons au bord radial du poignet, teste contre résistance.",
+ manoeuvre:"Abduction radiale et extension du pouce contre résistance ; palpation de la styloïde radiale.",
+ positif:"Douleur radiale reproduite sur le 1er compartiment.",
+ diagnostic:"Ténosynovite de De Quervain.",
+ pieges:"Ne pas confondre avec une rhizarthrose (douleur plus distale, base du pouce)."},
+
+{id:"test_opposition_pouce",name:"Opposition du pouce",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_opposition_pouce.webp",alt:"Opposition pulpe du pouce contre pulpe de l'auriculaire, évaluation du muscle opposant",
+ objectif:"Tester l'opposant du pouce (nerf médian), fonction clé de la pince.",
+ patient:"Amène la pulpe du pouce au contact de la pulpe de l'auriculaire.",
+ medecin:"Apprécie l'amplitude et la force d'opposition, compare au côté opposé.",
+ manoeuvre:"Opposition pouce-auriculaire, puis maintien contre légère résistance.",
+ positif:"Opposition faible/impossible avec amyotrophie thénar = atteinte du médian (canal carpien évolué).",
+ diagnostic:"Syndrome du canal carpien sévère, atteinte motrice du médian.",
+ pieges:"Une fausse opposition peut être assurée par le long fléchisseur/adducteur ; vérifier l'amyotrophie thénar."},
+
+{id:"test_pince_pouce_index",name:"Pince pouce-index",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_pince_pouce_index.webp",alt:"Pince pulpaire pouce-index en forme de O, test de la force et de la forme de la pince",
+ objectif:"Évaluer la pince fine (médian, interosseux antérieur) et sa force.",
+ patient:"Forme un O en opposant pouce et index.",
+ medecin:"Tente de rompre la pince en tirant ; observe la forme du O.",
+ manoeuvre:"Pince pulpe-pulpe ; le médecin tire pour tester la force.",
+ positif:"Pince en pince grossière (pulpe écrasée, IP en hyperextension) = signe de l'interosseux antérieur.",
+ diagnostic:"Syndrome de l'interosseux antérieur, atteinte du médian, déficit FPL/FDP de l'index.",
+ pieges:"Comparer la forme du O des deux côtés ; un déficit partiel se voit à la forme avant la force."},
+
+{id:"test_froment",name:"Test de Froment",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_froment.webp",alt:"Patient tenant une feuille entre pouce et index, flexion compensatrice de l'IP du pouce signant l'atteinte ulnaire",
+ objectif:"Dépister un déficit de l'adducteur du pouce (nerf ulnaire).",
+ patient:"Tient une feuille de papier entre le pouce et le bord radial de l'index, des deux mains.",
+ medecin:"Tire la feuille et observe le pouce.",
+ manoeuvre:"Le patient retient la feuille ; le médecin tente de l'arracher.",
+ positif:"Flexion de l'IP du pouce (recrutement du FPL/médian pour compenser l'adducteur déficient) = signe de Froment positif.",
+ diagnostic:"Atteinte du nerf ulnaire (coude ou loge de Guyon).",
+ pieges:"Associer au signe de Jeanne (hyperextension MCP) ; rechercher la griffe ulnaire."},
+
+{id:"test_jeanne",name:"Test de Jeanne",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_jeanne.webp",alt:"Hyperextension compensatrice de la MCP du pouce lors de la prise d'une feuille, atteinte ulnaire",
+ objectif:"Complément du Froment : hyperextension MCP du pouce traduisant la compensation d'une atteinte ulnaire.",
+ patient:"Même position que le Froment, tient la feuille.",
+ medecin:"Observe la MCP du pouce pendant la traction.",
+ manoeuvre:"Traction sur la feuille ; observation de la MCP.",
+ positif:"Hyperextension de la MCP du pouce = signe de Jeanne positif.",
+ diagnostic:"Atteinte du nerf ulnaire, souvent associée au Froment.",
+ pieges:"Hyperlaxité MCP physiologique : comparer au côté sain."},
+
+{id:"test_tinel_median_poignet",name:"Tinel médian au poignet",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_tinel_median_poignet.webp",alt:"Percussion du nerf médian à la face palmaire du poignet, recherche de décharges dans les 3 premiers doigts",
+ objectif:"Dépister une irritation du nerf médian dans le canal carpien.",
+ patient:"Poignet en légère extension, paume vers le haut.",
+ medecin:"Percute doucement le trajet du médian à la face palmaire du poignet (pli proximal).",
+ manoeuvre:"Percussion répétée au-dessus du canal carpien.",
+ positif:"Paresthésies/décharges électriques dans le territoire médian (pouce, index, majeur, moitié radiale de l'annulaire).",
+ diagnostic:"Syndrome du canal carpien.",
+ pieges:"Sensibilité modérée ; un Tinel négatif n'exclut pas le diagnostic. À coupler à Phalen et Durkan."},
+
+{id:"test_phalen",name:"Test de Phalen",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_phalen.webp",alt:"Dos des mains accolés, poignets en flexion forcée maintenue 60 secondes, canal carpien",
+ objectif:"Reproduire les paresthésies du canal carpien par flexion soutenue du poignet.",
+ patient:"Accole le dos des deux mains, poignets en flexion maximale.",
+ medecin:"Chronomètre jusqu'à 60 secondes.",
+ manoeuvre:"Maintien de la flexion des poignets pendant 30-60 s.",
+ positif:"Apparition de paresthésies dans le territoire médian.",
+ diagnostic:"Syndrome du canal carpien.",
+ pieges:"Délai variable ; noter le temps d'apparition. Phalen inversé (extension) possible."},
+
+{id:"test_durkan",name:"Test de Durkan (compression directe)",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_durkan.webp",alt:"Compression au pouce du canal carpien à la face palmaire pendant 30 secondes",
+ objectif:"Test le plus sensible/spécifique du canal carpien par compression directe.",
+ patient:"Paume vers le haut, poignet neutre.",
+ medecin:"Applique une pression ferme avec les pouces sur le canal carpien.",
+ manoeuvre:"Compression maintenue 30 secondes.",
+ positif:"Paresthésies du territoire médian en moins de 30 s.",
+ diagnostic:"Syndrome du canal carpien (souvent considéré comme le plus fiable).",
+ pieges:"Pression trop distale (sur le nerf hors canal) = faux positif ; bien localiser sur le rétinaculum."},
+
+{id:"test_nerf_ulnaire_main",name:"Atteinte du nerf ulnaire (loge de Guyon / griffe)",region:"main",type:"neuro",urgence:"modéré",
+ image:"test_nerf_ulnaire_main.webp",alt:"Griffe ulnaire des 4e et 5e doigts, amyotrophie des interosseux, recherche du signe de Wartenberg",
+ objectif:"Dépister une atteinte ulnaire : griffe, déficit interosseux, Wartenberg, Froment.",
+ patient:"Main à plat puis écarte/rapproche les doigts.",
+ medecin:"Recherche griffe ulnaire, amyotrophie 1er interosseux, abduction du 5e (Wartenberg).",
+ manoeuvre:"Écartement des doigts contre résistance, croisement index/majeur, Froment.",
+ positif:"Griffe des 4e-5e doigts, déficit d'écartement, signe de Wartenberg, Froment positif.",
+ diagnostic:"Compression ulnaire au coude (gouttière épitrochléo-olécrânienne) ou au poignet (Guyon).",
+ pieges:"Localiser le niveau : atteinte au poignet épargne souvent le FDP des 4e/5e doigts (griffe plus marquée = paradoxe ulnaire)."},
+
+{id:"test_allen",name:"Test d'Allen",region:"main",type:"vasculaire",urgence:"modéré",
+ image:"test_allen.webp",alt:"Compression simultanée des artères radiale et ulnaire, ouverture de la main pâle puis recoloration au relâchement",
+ objectif:"Évaluer la perméabilité des artères radiale et ulnaire et de l'arcade palmaire.",
+ patient:"Serre le poing, main surélevée.",
+ medecin:"Comprime les deux artères au poignet ; le patient ouvre la main (paume pâle) ; relâche une artère à la fois.",
+ manoeuvre:"Relâchement d'une artère, mesure du temps de recoloration palmaire.",
+ positif:"Recoloration retardée (>5-10 s) après relâchement d'une artère = mauvaise suppléance de cette artère.",
+ diagnostic:"Évaluation avant geste sur l'artère radiale, suspicion de lésion/thrombose artérielle.",
+ pieges:"Faux positifs si compression incomplète ou main trop fermée ; toujours bilatéral."},
+
+{id:"test_doigt_ressaut",name:"Doigt à ressaut (ténosynovite sténosante)",region:"main",type:"inflammatoire",urgence:"aucun",
+ image:"test_doigt_ressaut.webp",alt:"Blocage et ressaut douloureux à la flexion-extension du doigt, nodule palpé en regard de la poulie A1",
+ objectif:"Mettre en évidence le ressaut/blocage du fléchisseur sur la poulie A1.",
+ patient:"Fléchit et étend lentement le doigt atteint.",
+ medecin:"Palpe la face palmaire de la MCP (poulie A1), recherche un nodule et le ressaut.",
+ manoeuvre:"Flexion-extension répétée ; le médecin sent le ressaut au passage de la poulie.",
+ positif:"Accrochage/ressaut douloureux, parfois blocage en flexion nécessitant déverrouillage passif.",
+ diagnostic:"Ténosynovite sténosante des fléchisseurs (doigt à ressaut).",
+ pieges:"Forme bloquée à différencier d'une raideur articulaire IPP ; fréquent chez le diabétique."},
+
+{id:"examen_dupuytren",name:"Maladie de Dupuytren",region:"main",type:"inflammatoire",urgence:"aucun",
+ image:"examen_dupuytren.webp",alt:"Nodule et cordon palmaire rétractant l'annulaire et l'auriculaire, table-top test positif",
+ objectif:"Repérer nodules/cordes de l'aponévrose palmaire et le flessum digital.",
+ patient:"Pose la main à plat sur la table (table-top test).",
+ medecin:"Palpe nodules et cordes palmaires, mesure le déficit d'extension MCP/IPP.",
+ manoeuvre:"Table-top test : tenter de poser la paume et les doigts à plat.",
+ positif:"Impossibilité de poser la main à plat (table-top positif), cordes palmaires rétractiles.",
+ diagnostic:"Maladie de Dupuytren (atteinte préférentielle 4e-5e rayons).",
+ pieges:"Différencier d'un nodule isolé non rétractile ; rechercher atteinte plantaire (Ledderhose) associée."},
+
+{id:"examen_plaie_main",name:"Examen d'une plaie de la main",region:"main",type:"tendineux",urgence:"urgent",
+ image:"examen_plaie_main.webp",alt:"Exploration d'une plaie palmaire, testing tendineux et sensitif de part et d'autre de la plaie",
+ objectif:"Rechercher systématiquement une lésion tendineuse, nerveuse, artérielle ou articulaire sous-jacente.",
+ patient:"Main au repos puis mobilisation guidée doigt par doigt.",
+ medecin:"Examen avant anesthésie : testing FDS/FDP/extenseurs, sensibilité pulpaire (discrimination 2 points), recoloration, mobilité.",
+ manoeuvre:"Tester chaque tendon et chaque territoire nerveux en aval de la plaie ; explorer au bloc si doute.",
+ positif:"Tout déficit moteur, sensitif ou vasculaire en aval signe une lésion à explorer chirurgicalement.",
+ diagnostic:"Plaie tendineuse, nerveuse ou artérielle ; arthrotomie ; morsure.",
+ pieges:"Un tendon partiellement sectionné garde une mobilité : tester contre résistance. Une plaie sèche n'exclut pas la lésion."},
+
+{id:"territoires_sensitifs_main",name:"Examen sensitif par territoire",region:"main",type:"neuro",urgence:"modéré",
+ image:"territoires_sensitifs_main.webp",alt:"Cartographie des territoires sensitifs médian, ulnaire et radial sur la paume et le dos de la main",
+ objectif:"Localiser le déficit sensitif selon les territoires médian, ulnaire, radial.",
+ patient:"Main détendue, yeux fermés.",
+ medecin:"Teste tact, piqûre et discrimination de 2 points dans chaque territoire.",
+ manoeuvre:"Comparer pulpe de l'index (médian), pulpe du 5e (ulnaire), première commissure dorsale (radial).",
+ positif:"Hypoesthésie systématisée à un territoire nerveux.",
+ diagnostic:"Compression ou section nerveuse selon le territoire atteint.",
+ pieges:"Chevauchements individuels possibles ; la discrimination de 2 points (>6 mm pathologique) est plus sensible que le tact grossier."},
+
+{id:"examen_vasculaire_main",name:"Examen vasculaire de la main",region:"main",type:"vasculaire",urgence:"urgent",
+ image:"examen_vasculaire_main.webp",alt:"Prise des pouls radial et ulnaire, mesure du temps de recoloration capillaire pulpaire",
+ objectif:"Apprécier la perfusion : pouls, coloration, chaleur, temps de recoloration capillaire.",
+ patient:"Mains posées, comparaison bilatérale.",
+ medecin:"Palpe pouls radial/ulnaire, apprécie chaleur et coloration, comprime la pulpe.",
+ manoeuvre:"Temps de recoloration capillaire pulpaire (<2 s normal), test d'Allen si besoin.",
+ positif:"Main froide, pâle ou cyanosée, recoloration >2-3 s, pouls aboli = urgence vasculaire.",
+ diagnostic:"Ischémie aiguë, lésion artérielle, syndrome de Raynaud, thrombose.",
+ pieges:"Une main rose mais froide n'élimine pas l'ischémie ; toujours comparer et rechercher un déficit neuro associé."},
+
+/* ---------------- POIGNET ---------------- */
+{id:"inspection_poignet",name:"Inspection du poignet",region:"poignet",type:"inspection",urgence:"aucun",
+ image:"inspection_poignet.webp",alt:"Inspection comparative des poignets : déformation en dos de fourchette, tuméfactions, kyste dorsal",
+ objectif:"Rechercher déformation, tuméfaction, kyste, saillie osseuse, signes inflammatoires.",
+ patient:"Poignets posés dos puis paume, comparaison bilatérale.",
+ medecin:"Observe alignement, dos de fourchette (fracture radius), saillie de la tête ulnaire, kyste dorsal.",
+ manoeuvre:"Inspection statique et dynamique en flexion-extension.",
+ positif:"Déformation en dos de fourchette, kyste synovial, saillie ulnaire (instabilité ARUD).",
+ diagnostic:"Fracture du radius distal, kyste synovial, instabilité radio-ulnaire, arthrose.",
+ pieges:"Un kyste peut être intermittent ; une déformation discrète impose une radio après traumatisme."},
+
+{id:"mobilite_flexion_extension_poignet",name:"Mobilité flexion-extension du poignet",region:"poignet",type:"mobilite",urgence:"aucun",
+ image:"mobilite_flexion_extension_poignet.webp",alt:"Mesure des amplitudes de flexion et d'extension du poignet comparées au côté opposé",
+ objectif:"Mesurer les amplitudes (flexion ~80°, extension ~70°) et la douleur provoquée.",
+ patient:"Coude fléchi, avant-bras stabilisé.",
+ medecin:"Évalue actif puis passif, localise la douleur en fin de course.",
+ manoeuvre:"Flexion et extension maximales, comparaison bilatérale.",
+ positif:"Limitation douloureuse ou asymétrique selon la pathologie.",
+ diagnostic:"Arthrose, séquelle de fracture, synovite, conflit.",
+ pieges:"Distinguer limitation antalgique d'une raideur structurelle (passive)."},
+
+{id:"inclinaisons_poignet",name:"Inclinaisons radiale et ulnaire",region:"poignet",type:"mobilite",urgence:"aucun",
+ image:"inclinaisons_poignet.webp",alt:"Inclinaison radiale et ulnaire du poignet, recherche de douleur radiale ou ulnaire",
+ objectif:"Évaluer les inclinaisons (radiale ~20°, ulnaire ~35°) et reproduire une douleur localisée.",
+ patient:"Avant-bras en pronation, main dans l'axe.",
+ medecin:"Mesure l'amplitude et note la douleur radiale (De Quervain) ou ulnaire (TFCC/conflit).",
+ manoeuvre:"Inclinaison radiale puis ulnaire, active et passive.",
+ positif:"Douleur ulnaire en inclinaison ulnaire = conflit ulno-carpien/TFCC ; douleur radiale = De Quervain.",
+ diagnostic:"Conflit ulno-carpien, TFCC, De Quervain.",
+ pieges:"La douleur dépend de la position de l'avant-bras (pronation aggrave le conflit ulno-carpien)."},
+
+{id:"pronosupination",name:"Prono-supination",region:"poignet",type:"mobilite",urgence:"aucun",
+ image:"pronosupination.webp",alt:"Coude au corps fléchi à 90°, rotation de l'avant-bras en pronation et supination",
+ objectif:"Évaluer la rotation de l'avant-bras (ARUD + radio-ulnaire proximale).",
+ patient:"Coude au corps fléchi à 90° (neutralise l'épaule), paumes tournées.",
+ medecin:"Compare amplitude et douleur en pronation/supination.",
+ manoeuvre:"Pronation et supination maximales, coude collé au tronc.",
+ positif:"Limitation douloureuse = atteinte ARUD, tête radiale, TFCC ou séquelle de fracture.",
+ diagnostic:"Lésion ARUD/TFCC, fracture de la tête radiale, séquelle.",
+ pieges:"Sans bloquer le coude au corps, l'épaule compense et fausse la mesure."},
+
+{id:"palpation_tabatiere",name:"Palpation de la tabatière anatomique",region:"poignet",type:"osseux",urgence:"urgent",
+ image:"palpation_tabatiere.webp",alt:"Palpation de la tabatière anatomique entre les tendons du pouce, repère du scaphoïde après chute",
+ objectif:"Rechercher une douleur du scaphoïde après chute sur la main.",
+ patient:"Pouce en légère extension pour creuser la tabatière.",
+ medecin:"Palpe le fond de la tabatière (entre EPL et APL/EPB), au niveau du scaphoïde.",
+ manoeuvre:"Pression douce dans la tabatière, comparaison bilatérale.",
+ positif:"Douleur élective de la tabatière après chute main tendue.",
+ diagnostic:"Fracture du scaphoïde jusqu'à preuve du contraire.",
+ pieges:"Radio initiale souvent normale : immobiliser et recontrôler. Sensible mais peu spécifique seul."},
+
+{id:"palpation_tubercule_scaphoide",name:"Palpation du tubercule du scaphoïde",region:"poignet",type:"osseux",urgence:"urgent",
+ image:"palpation_tubercule_scaphoide.webp",alt:"Palpation palmaire du tubercule du scaphoïde, poignet en légère extension",
+ objectif:"Compléter la recherche d'une fracture du scaphoïde par sa face palmaire.",
+ patient:"Poignet en légère extension et inclinaison ulnaire.",
+ medecin:"Palpe le tubercule du scaphoïde à la base palmaire radiale.",
+ manoeuvre:"Pression sur le tubercule palmaire.",
+ positif:"Douleur reproduite, renforçant la suspicion avec la tabatière.",
+ diagnostic:"Fracture du scaphoïde.",
+ pieges:"La combinaison tabatière + tubercule + compression axiale douloureux augmente fortement la probabilité."},
+
+{id:"compression_axiale_pouce",name:"Compression axiale du pouce",region:"poignet",type:"osseux",urgence:"urgent",
+ image:"compression_axiale_pouce.webp",alt:"Compression dans l'axe du premier métacarpien transmettant la contrainte au scaphoïde",
+ objectif:"Transmettre une contrainte axiale au scaphoïde pour reproduire la douleur.",
+ patient:"Pouce dans l'axe, main relâchée.",
+ medecin:"Saisit le pouce et exerce une pression axiale (telescoping) vers le scaphoïde.",
+ manoeuvre:"Compression longitudinale du 1er rayon.",
+ positif:"Douleur du scaphoïde reproduite.",
+ diagnostic:"Fracture du scaphoïde (3e signe avec tabatière et tubercule).",
+ pieges:"Douleur de la base du pouce (rhizarthrose) à ne pas confondre ; localiser au scaphoïde."},
+
+{id:"test_watson_scapho_lunaire",name:"Test de Watson (scaphoid shift)",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"test_watson_scapho_lunaire.webp",alt:"Test de Watson : pression sur le tubercule du scaphoïde lors du passage de l'inclinaison ulnaire à radiale",
+ objectif:"Dépister une instabilité scapho-lunaire.",
+ patient:"Poignet en inclinaison ulnaire, avant-bras en pronation.",
+ medecin:"Pose le pouce sur le tubercule du scaphoïde et amène le poignet en inclinaison radiale.",
+ manoeuvre:"Pression maintenue sur le scaphoïde pendant le passage ulnaire→radial.",
+ positif:"Ressaut douloureux dorsal (subluxation du pôle proximal) au relâchement.",
+ diagnostic:"Instabilité/dissociation scapho-lunaire.",
+ pieges:"Hyperlaxité bilatérale possible : comparer ; un ressaut indolore peut être physiologique."},
+
+{id:"ballottement_scapho_lunaire",name:"Ballottement scapho-lunaire (Reagan/shuck)",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"ballottement_scapho_lunaire.webp",alt:"Mobilisation antéro-postérieure entre scaphoïde et lunatum tenus entre pouce et index",
+ objectif:"Apprécier la mobilité anormale entre scaphoïde et lunatum (et luno-triquétral).",
+ patient:"Poignet neutre, relâché.",
+ medecin:"Tient le scaphoïde d'une main, le lunatum de l'autre, et imprime un cisaillement antéro-postérieur.",
+ manoeuvre:"Mobilisation dorso-palmaire comparée au côté opposé.",
+ positif:"Mobilité excessive, douleur ou ressaut = laxité scapho-lunaire ou luno-triquétrale.",
+ diagnostic:"Dissociation scapho-lunaire, instabilité luno-triquétrale.",
+ pieges:"Technique fine ; nécessite de bien isoler chaque os. Comparer impérativement."},
+
+{id:"test_finkelstein",name:"Test de Finkelstein",region:"poignet",type:"inflammatoire",urgence:"aucun",
+ image:"test_finkelstein.webp",alt:"Pouce tenu, poignet amené en inclinaison ulnaire par l'examinateur, douleur du 1er compartiment",
+ objectif:"Confirmer une ténosynovite de De Quervain (1er compartiment dorsal).",
+ patient:"Pouce le long de la main.",
+ medecin:"Saisit le pouce et imprime une déviation ulnaire du poignet.",
+ manoeuvre:"Traction-déviation ulnaire passive avec le pouce tenu par l'examinateur.",
+ positif:"Douleur vive sur la styloïde radiale / 1er compartiment.",
+ diagnostic:"Ténosynovite de De Quervain.",
+ pieges:"Souvent confondu avec l'Eichhoff. Éliminer une rhizarthrose (douleur plus distale et grind positif)."},
+
+{id:"test_eichhoff",name:"Test d'Eichhoff",region:"poignet",type:"inflammatoire",urgence:"aucun",
+ image:"test_eichhoff.webp",alt:"Pouce enfermé dans le poing, déviation ulnaire active du poignet, De Quervain",
+ objectif:"Variante du Finkelstein : pouce empaumé puis déviation ulnaire.",
+ patient:"Empaume son pouce dans le poing fermé.",
+ medecin:"Amène le poignet en inclinaison ulnaire.",
+ manoeuvre:"Déviation ulnaire poing fermé sur le pouce.",
+ positif:"Douleur radiale du 1er compartiment.",
+ diagnostic:"Ténosynovite de De Quervain.",
+ pieges:"Plus sensible mais moins spécifique que le Finkelstein (faux positifs fréquents)."},
+
+{id:"grind_test_trapezo_metacarpien",name:"Grind test trapézo-métacarpien",region:"poignet",type:"inflammatoire",urgence:"aucun",
+ image:"grind_test_trapezo_metacarpien.webp",alt:"Compression axiale et rotation du métacarpien sur le trapèze, recherche de douleur et crépitation",
+ objectif:"Dépister une arthrose de l'articulation trapézo-métacarpienne (rhizarthrose).",
+ patient:"Pouce détendu.",
+ medecin:"Saisit le métacarpien, applique compression axiale + rotation sur le trapèze.",
+ manoeuvre:"Grind : compression-rotation de la base du pouce.",
+ positif:"Douleur et/ou crépitation à la base du pouce.",
+ diagnostic:"Rhizarthrose (arthrose trapézo-métacarpienne).",
+ pieges:"Ne pas confondre avec De Quervain (douleur plus proximale et Finkelstein positif)."},
+
+{id:"test_tfcc_fovea",name:"Test du TFCC / fovea sign",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"test_tfcc_fovea.webp",alt:"Pression au point fovéal entre styloïde ulnaire et tendon FCU, douleur ulnaire du TFCC",
+ objectif:"Rechercher une lésion du complexe fibro-cartilagineux triangulaire (TFCC).",
+ patient:"Coude fléchi, avant-bras neutre.",
+ medecin:"Presse au point fovéal (entre styloïde ulnaire, pisiforme et tendon FCU).",
+ manoeuvre:"Pression fovéale + test de compression ulno-carpienne en inclinaison ulnaire.",
+ positif:"Douleur fovéale exquise (fovea sign), reproduite à la charge ulnaire.",
+ diagnostic:"Lésion du TFCC, conflit ulno-carpien.",
+ pieges:"Différencier d'une instabilité ARUD (piano key) et d'une fracture de la styloïde ulnaire."},
+
+{id:"piano_key_test_arud",name:"Piano key test (ARUD)",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"piano_key_test_arud.webp",alt:"Appui sur la tête ulnaire saillante qui s'enfonce puis ressort comme une touche de piano",
+ objectif:"Dépister une instabilité de l'articulation radio-ulnaire distale (ARUD).",
+ patient:"Avant-bras en pronation, posé sur la table.",
+ medecin:"Appuie sur la tête ulnaire saillante puis relâche.",
+ manoeuvre:"Pression dorso-palmaire de la tête ulnaire (touche de piano).",
+ positif:"Enfoncement puis rebond (touche de piano), parfois douloureux = instabilité ARUD.",
+ diagnostic:"Instabilité radio-ulnaire distale.",
+ pieges:"Comparer au côté opposé (laxité physiologique) ; tester en pronation et supination."},
+
+{id:"compression_radio_ulnaire_distale",name:"Compression / ballottement radio-ulnaire distal",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"compression_radio_ulnaire_distale.webp",alt:"Tiroir antéro-postérieur de la tête ulnaire par rapport au radius, avant-bras neutre",
+ objectif:"Apprécier la stabilité antéro-postérieure de l'ARUD.",
+ patient:"Avant-bras en position neutre, coude fléchi.",
+ medecin:"Stabilise le radius, mobilise la tête ulnaire en tiroir antéro-postérieur.",
+ manoeuvre:"Tiroir AP comparé en pronation, neutre et supination.",
+ positif:"Tiroir augmenté et/ou douloureux par rapport au côté sain.",
+ diagnostic:"Instabilité ARUD, lésion TFCC associée.",
+ pieges:"Tester dans les 3 positions ; l'instabilité peut n'apparaître que dans une position."},
+
+{id:"immobilisation_scaphoide",name:"Immobilisation pouce-poignet (suspicion scaphoïde)",region:"poignet",type:"osseux",urgence:"urgent",
+ image:"immobilisation_scaphoide.webp",alt:"Attelle ou manchette scaphoïde immobilisant poignet et colonne du pouce après chute",
+ objectif:"Conduite à tenir devant une suspicion de fracture du scaphoïde à radio normale.",
+ patient:"Poignet en légère extension, pouce en position de fonction.",
+ medecin:"Met en place une manchette scaphoïde (poignet + colonne du pouce).",
+ manoeuvre:"Immobilisation puis réévaluation clinique/imagerie à 10-15 jours.",
+ positif:"Indication : douleur tabatière persistante malgré radio initiale normale.",
+ diagnostic:"Fracture du scaphoïde (immobiliser même si radio normale).",
+ pieges:"Ne pas lever l'immobilisation sans imagerie de contrôle (IRM/TDM) si la douleur persiste."},
+
+/* ---------------- COUDE ---------------- */
+{id:"inspection_coude",name:"Inspection du coude",region:"coude",type:"inspection",urgence:"aucun",
+ image:"inspection_coude.webp",alt:"Inspection du coude de profil : triangle de Nélaton, tuméfaction olécrânienne, angle de portage",
+ objectif:"Apprécier axe, angle de portage, tuméfactions, repères osseux (triangle de Nélaton).",
+ patient:"Coude en extension puis flexion, comparaison bilatérale.",
+ medecin:"Observe valgus physiologique, tuméfaction olécrânienne, épanchement du méplat para-olécrânien.",
+ manoeuvre:"Inspection statique et en flexion 90° (triangle épicondyles-olécrâne).",
+ positif:"Comblement du méplat (épanchement), bursite, déformation, rupture du triangle de Nélaton (luxation).",
+ diagnostic:"Épanchement articulaire, bursite, luxation, séquelle de fracture.",
+ pieges:"Un épanchement se voit mieux de profil ; comparer l'angle de portage."},
+
+{id:"mobilite_flexion_extension_coude",name:"Flexion-extension du coude",region:"coude",type:"mobilite",urgence:"aucun",
+ image:"mobilite_flexion_extension_coude.webp",alt:"Mesure de la flexion et de l'extension du coude, recherche d'un flessum",
+ objectif:"Mesurer flexion (~145°) et extension (0°), dépister un flessum ou un déficit douloureux.",
+ patient:"Bras le long du corps, flexion-extension active.",
+ medecin:"Note amplitudes, flessum, douleur, blocage.",
+ manoeuvre:"Flexion-extension active puis passive comparée.",
+ positif:"Flessum, limitation douloureuse, blocage mécanique (corps étranger, fracture).",
+ diagnostic:"Épanchement, fracture, arthrose, ostéochondrite, séquelle.",
+ pieges:"Un blocage net évoque un fragment libre ; toute perte d'extension post-traumatique impose une radio."},
+
+{id:"palpation_epicondyle_lateral",name:"Palpation de l'épicondyle latéral",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"palpation_epicondyle_lateral.webp",alt:"Palpation de l'épicondyle latéral et de l'origine des extenseurs, tennis elbow",
+ objectif:"Localiser la douleur de l'enthèse des extenseurs (épicondylite latérale).",
+ patient:"Coude fléchi, avant-bras en pronation.",
+ medecin:"Palpe l'épicondyle latéral et l'origine du court extenseur radial du carpe (ECRB).",
+ manoeuvre:"Pression sur l'enthèse latérale.",
+ positif:"Douleur élective sur l'épicondyle latéral.",
+ diagnostic:"Épicondylite latérale (tennis elbow).",
+ pieges:"Éliminer une atteinte de la tête radiale ou un syndrome du nerf interosseux postérieur (douleur plus distale)."},
+
+{id:"palpation_epicondyle_medial",name:"Palpation de l'épicondyle médial",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"palpation_epicondyle_medial.webp",alt:"Palpation de l'épicondyle médial et de l'origine des fléchisseurs, golfer's elbow",
+ objectif:"Localiser la douleur de l'enthèse des fléchisseurs-pronateurs (épitrochléite).",
+ patient:"Coude fléchi, avant-bras en supination.",
+ medecin:"Palpe l'épicondyle médial et l'origine commune des fléchisseurs.",
+ manoeuvre:"Pression sur l'enthèse médiale ; repérer le trajet du nerf ulnaire en arrière.",
+ positif:"Douleur élective sur l'épicondyle médial.",
+ diagnostic:"Épitrochléite (golfer's elbow).",
+ pieges:"Le nerf ulnaire passe juste en arrière : rechercher des paresthésies ulnaires associées."},
+
+{id:"palpation_olecrane",name:"Palpation de l'olécrâne",region:"coude",type:"osseux",urgence:"modéré",
+ image:"palpation_olecrane.webp",alt:"Palpation de la pointe de l'olécrâne et de la bourse olécrânienne en flexion",
+ objectif:"Rechercher douleur osseuse, bursite, solution de continuité (fracture).",
+ patient:"Coude fléchi à 90°.",
+ medecin:"Palpe la pointe de l'olécrâne, la bourse, le tendon tricipital.",
+ manoeuvre:"Pression et palpation de la bourse ; tester l'extension active contre résistance.",
+ positif:"Douleur exquise / dépression palpable (fracture), tuméfaction fluctuante (bursite).",
+ diagnostic:"Fracture de l'olécrâne, bursite, rupture tricipitale.",
+ pieges:"Un déficit d'extension active contre résistance évoque une rupture du triceps ou une fracture déplacée."},
+
+{id:"palpation_tete_radiale",name:"Palpation de la tête radiale",region:"coude",type:"osseux",urgence:"modéré",
+ image:"palpation_tete_radiale.webp",alt:"Palpation de la tête radiale en prono-supination, repère latéral postérieur du coude",
+ objectif:"Dépister une fracture/contusion de la tête radiale après chute.",
+ patient:"Coude fléchi, avant-bras mobilisé en prono-supination.",
+ medecin:"Palpe la tête radiale en arrière de l'épicondyle latéral pendant la rotation.",
+ manoeuvre:"Palpation dynamique en prono-supination.",
+ positif:"Douleur localisée + limitation/crépitation de la prono-supination.",
+ diagnostic:"Fracture de la tête radiale (classique après chute sur la main).",
+ pieges:"Une fracture peu déplacée passe sur une radio standard : incidence tête radiale, signe du coussinet graisseux (fat pad)."},
+
+{id:"test_cozen",name:"Test de Cozen",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_cozen.webp",alt:"Extension résistée du poignet poing fermé, coude en extension, douleur épicondylienne latérale",
+ objectif:"Reproduire la douleur d'épicondylite latérale par extension résistée du poignet.",
+ patient:"Coude en extension, poing fermé, poignet en extension.",
+ medecin:"Stabilise le coude, s'oppose à l'extension du poignet.",
+ manoeuvre:"Extension contrariée du poignet (et/ou du majeur).",
+ positif:"Douleur reproduite sur l'épicondyle latéral.",
+ diagnostic:"Épicondylite latérale.",
+ pieges:"Sensible mais peu spécifique ; associer Mill et Maudsley."},
+
+{id:"test_mill",name:"Test de Mill",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_mill.webp",alt:"Étirement passif des extenseurs : poignet et doigts fléchis, avant-bras en pronation, coude étendu",
+ objectif:"Reproduire la douleur d'épicondylite latérale par étirement passif des extenseurs.",
+ patient:"Avant-bras en pronation.",
+ medecin:"Fléchit passivement le poignet et les doigts, puis étend le coude.",
+ manoeuvre:"Étirement passif de la chaîne des extenseurs.",
+ positif:"Douleur sur l'épicondyle latéral.",
+ diagnostic:"Épicondylite latérale.",
+ pieges:"Différencier d'une radiculopathie C6-C7 et d'une atteinte du nerf interosseux postérieur."},
+
+{id:"test_maudsley",name:"Maudsley test (extension résistée du majeur)",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_maudsley.webp",alt:"Extension résistée du 3e doigt sollicitant l'ECRB, douleur épicondylienne latérale",
+ objectif:"Solliciter sélectivement l'ECRB par extension résistée du majeur.",
+ patient:"Coude en extension, majeur tendu.",
+ medecin:"S'oppose à l'extension du 3e doigt.",
+ manoeuvre:"Extension contrariée du majeur.",
+ positif:"Douleur épicondylienne latérale.",
+ diagnostic:"Épicondylite latérale (atteinte ECRB).",
+ pieges:"Une douleur dorsale de l'avant-bras plutôt qu'épicondylienne évoque le nerf interosseux postérieur."},
+
+{id:"test_epitrochleite",name:"Épitrochléite — flexion-pronation résistée",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_epitrochleite.webp",alt:"Flexion et pronation résistées du poignet, douleur sur l'épicondyle médial",
+ objectif:"Reproduire la douleur d'épitrochléite par flexion-pronation résistée.",
+ patient:"Coude en extension, avant-bras en supination.",
+ medecin:"S'oppose à la flexion du poignet et à la pronation.",
+ manoeuvre:"Flexion + pronation contrariées du poignet.",
+ positif:"Douleur sur l'épicondyle médial.",
+ diagnostic:"Épitrochléite (golfer's elbow).",
+ pieges:"Rechercher une atteinte ulnaire associée (épitrochléite et compression ulnaire coexistent souvent)."},
+
+{id:"test_valgus_stress_coude",name:"Valgus stress test",region:"coude",type:"ligamentaire",urgence:"modéré",
+ image:"test_valgus_stress_coude.webp",alt:"Coude fléchi à 30°, contrainte en valgus testant le ligament collatéral médial",
+ objectif:"Tester le ligament collatéral médial (LCM/UCL).",
+ patient:"Coude fléchi à 20-30° (déverrouille l'olécrâne), avant-bras en supination.",
+ medecin:"Stabilise le bras, applique une contrainte en valgus.",
+ manoeuvre:"Stress valgus comparé au côté opposé.",
+ positif:"Bâillement médial / douleur du LCM = laxité ou lésion.",
+ diagnostic:"Lésion du ligament collatéral médial (lanceurs, luxation).",
+ pieges:"Tester à 20-30° de flexion (extension complète masque la laxité par verrouillage osseux)."},
+
+{id:"test_varus_stress_coude",name:"Varus stress test",region:"coude",type:"ligamentaire",urgence:"modéré",
+ image:"test_varus_stress_coude.webp",alt:"Coude fléchi à 30°, contrainte en varus testant le ligament collatéral latéral",
+ objectif:"Tester le ligament collatéral latéral (LCL/LUCL).",
+ patient:"Coude fléchi à 20-30°, avant-bras en pronation.",
+ medecin:"Stabilise le bras, applique une contrainte en varus.",
+ manoeuvre:"Stress varus comparé au côté opposé.",
+ positif:"Bâillement latéral / douleur = laxité du LCL.",
+ diagnostic:"Lésion du ligament collatéral latéral, instabilité postéro-latérale débutante.",
+ pieges:"Atteinte plus rare ; souvent liée à une instabilité postéro-latérale (rechercher l'apprehension test)."},
+
+{id:"test_moving_valgus",name:"Moving valgus stress test",region:"coude",type:"ligamentaire",urgence:"modéré",
+ image:"test_moving_valgus.webp",alt:"Stress valgus maintenu pendant la flexion-extension du coude, douleur entre 70 et 120°",
+ objectif:"Test dynamique sensible du LCM, surtout chez le lanceur.",
+ patient:"Épaule en abduction, coude fléchi.",
+ medecin:"Maintient une contrainte valgus constante et mobilise le coude en flexion-extension.",
+ manoeuvre:"Flexion-extension sous stress valgus continu.",
+ positif:"Douleur médiale reproduite dans l'arc 70°-120° (shear angle).",
+ diagnostic:"Insuffisance du LCM (microtraumatismes du lanceur).",
+ pieges:"Bien maintenir le valgus constant ; localiser la douleur sur le trajet du LCM, pas en arrière (ulnaire)."},
+
+{id:"test_tinel_ulnaire_coude",name:"Tinel du nerf ulnaire au coude",region:"coude",type:"neuro",urgence:"modéré",
+ image:"test_tinel_ulnaire_coude.webp",alt:"Percussion du nerf ulnaire dans la gouttière épitrochléo-olécrânienne, décharges vers les 4e-5e doigts",
+ objectif:"Dépister une compression/irritation du nerf ulnaire au coude.",
+ patient:"Coude légèrement fléchi, avant-bras en supination.",
+ medecin:"Percute la gouttière épitrochléo-olécrânienne (entre épicondyle médial et olécrâne).",
+ manoeuvre:"Percussion + test de flexion maintenue du coude (elbow flexion test).",
+ positif:"Paresthésies/décharges vers l'annulaire et l'auriculaire.",
+ diagnostic:"Syndrome du tunnel cubital (compression ulnaire au coude).",
+ pieges:"Rechercher une subluxation du nerf à la flexion ; coupler au Froment et à l'examen sensitif ulnaire."},
+
+{id:"test_hook_biceps_distal",name:"Hook test (biceps distal)",region:"coude",type:"tendineux",urgence:"urgent",
+ image:"test_hook_biceps_distal.webp",alt:"Index de l'examinateur crocheté sous le tendon distal du biceps, coude fléchi à 90° et supiné",
+ objectif:"Confirmer l'intégrité du tendon distal du biceps.",
+ patient:"Coude fléchi à 90°, avant-bras en supination active.",
+ medecin:"Tente de crocheter le tendon du biceps par le bord latéral du pli du coude.",
+ manoeuvre:"Le doigt cherche à passer sous le tendon (hook).",
+ positif:"Impossibilité de crocheter un tendon tendu = rupture distale du biceps.",
+ diagnostic:"Rupture du tendon distal du biceps (avis chirurgical rapide).",
+ pieges:"Un lacertus fibrosus intact peut maintenir une force de flexion : le hook test reste la clé. Ecchymose/déformation (Popeye)."},
+
+{id:"bursite_olecranienne",name:"Bursite olécrânienne",region:"coude",type:"inflammatoire",urgence:"modéré",
+ image:"bursite_olecranienne.webp",alt:"Tuméfaction fluctuante en regard de l'olécrâne, recherche de signes inflammatoires et de porte d'entrée",
+ objectif:"Caractériser une tuméfaction olécrânienne (mécanique vs septique).",
+ patient:"Coude fléchi, olécrâne exposé.",
+ medecin:"Palpe la bourse (fluctuation), recherche chaleur, rougeur, porte d'entrée, fièvre.",
+ manoeuvre:"Inspection + palpation ; évaluer mobilité (souvent conservée si bursite isolée).",
+ positif:"Tuméfaction fluctuante ; si chaleur/rougeur/fièvre = bursite septique probable.",
+ diagnostic:"Bursite olécrânienne mécanique ou septique.",
+ pieges:"Toute bursite chaude, rouge, fébrile = ponction/avis urgent (arthrite/bursite septique). Ne pas infiltrer à l'aveugle."},
+
+{id:"test_instabilite_posterolaterale",name:"Instabilité postéro-latérale (pivot shift)",region:"coude",type:"ligamentaire",urgence:"modéré",
+ image:"test_instabilite_posterolaterale.webp",alt:"Lateral pivot shift du coude : supination, valgus et compression axiale en flexion, appréhension",
+ objectif:"Dépister une instabilité rotatoire postéro-latérale (LCL/LUCL).",
+ patient:"Décubitus, bras au-dessus de la tête, coude étendu.",
+ medecin:"Applique supination + valgus + compression axiale tout en fléchissant le coude.",
+ manoeuvre:"Lateral pivot shift : ressaut/subluxation radio-huméral vers 40° de flexion.",
+ positif:"Appréhension, ressaut ou subluxation = instabilité postéro-latérale.",
+ diagnostic:"Instabilité postéro-latérale (séquelle de luxation, insuffisance LUCL).",
+ pieges:"Souvent réveillé seulement par l'appréhension chez le patient éveillé ; examen sous AG parfois nécessaire."},
+
+/* ---------------- AJOUTS (lots d'images fournis) ---------------- */
+{id:"test_bunnell_littler",name:"Test de Bunnell-Littler (Finochietto)",region:"main",type:"mobilite",urgence:"aucun",
+ image:"test_bunnell_littler.webp",alt:"Comparaison de la flexion passive de l'IPP selon la position de la MCP (extension puis flexion), rôle des structures intrinsèques",
+ objectif:"Différencier une raideur intrinsèque (rétraction des muscles intrinsèques) d'une raideur capsulaire de l'IPP.",
+ patient:"Doigt examiné détendu.",
+ medecin:"Compare la flexion passive de l'IPP avec la MCP d'abord en extension, puis en flexion.",
+ manoeuvre:"Mesurer la flexion passive de l'IPP, MCP en extension puis MCP en flexion.",
+ positif:"Flexion de l'IPP faible MCP en extension mais augmentée MCP en flexion = rétraction des intrinsèques ; flexion identique dans les deux positions = raideur capsulaire (articulaire).",
+ diagnostic:"Raideur intrinsèque versus capsulaire de l'IPP.",
+ pieges:"Bien relâcher le doigt ; une douleur ou une rétraction tendineuse extrinsèque peut fausser l'interprétation."},
+
+{id:"test_what_dequervain",name:"WHAT test (De Quervain)",region:"poignet",type:"inflammatoire",urgence:"aucun",
+ image:"test_what_dequervain.webp",alt:"Wrist Hyperflexion and Abduction of the Thumb test : poignet en hyperflexion, abduction-extension résistée du pouce, douleur radiale du 1er compartiment",
+ objectif:"Confirmer une ténosynovite de De Quervain (Wrist Hyperflexion and Abduction of the Thumb test).",
+ patient:"Poignet en hyperflexion, pouce en abduction-extension.",
+ medecin:"Applique une résistance sur le pouce en abduction-extension pendant que le poignet reste en hyperflexion.",
+ manoeuvre:"Abduction-extension résistée du pouce, poignet maintenu en hyperflexion.",
+ positif:"Douleur radiale au niveau du premier compartiment dorsal.",
+ diagnostic:"Ténosynovite de De Quervain.",
+ pieges:"Alternative spécifique au Finkelstein/Eichhoff ; éliminer une rhizarthrose (douleur plus distale, grind positif)."},
+
+{id:"test_compression_ulnocarpienne",name:"Test de compression ulno-carpienne",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"test_compression_ulnocarpienne.webp",alt:"Poignet en inclinaison ulnaire, compression axiale et rotation douce reproduisant une douleur ulnaire du TFCC",
+ objectif:"Reproduire une douleur du conflit ulno-carpien / TFCC par charge ulnaire.",
+ patient:"Poignet en inclinaison ulnaire.",
+ medecin:"Applique une compression axiale et une rotation douce du poignet maintenu en inclinaison ulnaire.",
+ manoeuvre:"Compression axiale + rotation (prono-supination) en inclinaison ulnaire (ulnocarpal stress test).",
+ positif:"Douleur ulnaire reproduite.",
+ diagnostic:"Conflit ulno-carpien / lésion du TFCC.",
+ pieges:"Peu spécifique (positif dans plusieurs pathologies ulnaires) ; coupler au fovea sign et à la recherche d'instabilité ARUD."},
+
+{id:"test_ecu_synergy",name:"ECU synergy test",region:"poignet",type:"tendineux",urgence:"aucun",
+ image:"test_ecu_synergy.webp",alt:"Extension et inclinaison ulnaire du poignet contre résistance, douleur localisée sur le tendon extenseur ulnaire du carpe (ECU)",
+ objectif:"Identifier une tendinopathie ou une instabilité de l'extenseur ulnaire du carpe (ECU).",
+ patient:"Poignet en position neutre ou légère extension, avant-bras en supination.",
+ medecin:"Demande une extension et une inclinaison ulnaire du poignet contre résistance.",
+ manoeuvre:"Extension + inclinaison ulnaire résistées (sollicitation isométrique de l'ECU).",
+ positif:"Douleur localisée sur le trajet de l'ECU (bord ulnaire dorsal).",
+ diagnostic:"Tendinopathie ou instabilité de l'extenseur ulnaire du carpe.",
+ pieges:"Différencier d'une lésion du TFCC (douleur plus profonde, fovéa) ; rechercher une subluxation de l'ECU en prono-supination."},
+
+{id:"test_kleinman_reagan_lunotriquetral",name:"Test de Kleinman / Reagan (luno-triquétral)",region:"poignet",type:"ligamentaire",urgence:"modéré",
+ image:"test_kleinman_reagan_lunotriquetral.webp",alt:"Cisaillement antéro-postérieur entre lunatum et triquetrum tenus entre pouce et index, recherche d'instabilité luno-triquétrale",
+ objectif:"Dépister une instabilité luno-triquétrale (ballottement LT).",
+ patient:"Poignet neutre, relâché.",
+ medecin:"Stabilise le lunatum d'une main et mobilise le triquetrum de l'autre en cisaillement antéro-postérieur.",
+ manoeuvre:"Cisaillement dorso-palmaire entre lunatum et triquetrum, comparé au côté opposé.",
+ positif:"Douleur, laxité ou ressaut.",
+ diagnostic:"Instabilité luno-triquétrale.",
+ pieges:"Comparer au côté sain (laxité physiologique) ; à distinguer du ballottement scapho-lunaire (versant radial)."},
+
+{id:"murphy_poignet",name:"Signe de Murphy (luxation du lunatum)",region:"poignet",type:"osseux",urgence:"urgent",
+ image:"murphy_poignet.webp",alt:"Poing serré, alignement des têtes métacarpiennes : abaissement anormal de la 3e tête évoquant une luxation du lunatum",
+ objectif:"Dépister une luxation du lunatum / instabilité carpienne par l'alignement des têtes métacarpiennes.",
+ patient:"Le patient serre le poing.",
+ medecin:"Observe l'alignement des têtes métacarpiennes au niveau des articulations métacarpo-phalangiennes.",
+ manoeuvre:"Observation de la saillie des têtes métacarpiennes, poing fermé.",
+ positif:"Disparition ou abaissement anormal d'une tête métacarpienne (classiquement la 3e).",
+ diagnostic:"Luxation du lunatum / instabilité carpienne.",
+ pieges:"Une luxation du lunatum peut donner un syndrome du canal carpien aigu ; radiographies face/profil indispensables (urgence)."},
+
+{id:"test_cozen_inverse",name:"Test de Cozen inversé",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_cozen_inverse.webp",alt:"Flexion contrariée du poignet, coude fléchi avant-bras en pronation, douleur sur l'épicondyle médial",
+ objectif:"Reproduire la douleur d'épicondylalgie médiale (épitrochléite) par flexion résistée du poignet.",
+ patient:"Coude fléchi à 90°, avant-bras en pronation, poignet en légère extension.",
+ medecin:"S'oppose à la flexion du poignet.",
+ manoeuvre:"Flexion contrariée du poignet.",
+ positif:"Douleur sur l'épicondyle médial.",
+ diagnostic:"Épitrochléite (épicondylalgie médiale).",
+ pieges:"Rechercher une atteinte du nerf ulnaire associée ; comparer au Cozen latéral."},
+
+{id:"test_mill_inverse",name:"Test de Mill inversé",region:"coude",type:"inflammatoire",urgence:"aucun",
+ image:"test_mill_inverse.webp",alt:"Étirement passif des fléchisseurs-pronateurs par extension du coude et du poignet, avant-bras en supination, douleur médiale",
+ objectif:"Reproduire la douleur d'épitrochléite par étirement passif des fléchisseurs-pronateurs.",
+ patient:"Avant-bras en supination (position adaptée à l'étirement).",
+ medecin:"Étire passivement les fléchisseurs-pronateurs par extension du coude et du poignet.",
+ manoeuvre:"Extension passive du coude et du poignet (étirement de la chaîne fléchisseur-pronateur).",
+ positif:"Douleur médiale (épicondyle médial).",
+ diagnostic:"Épitrochléite (atteinte du groupe fléchisseur-pronateur).",
+ pieges:"Différencier d'une atteinte du ligament collatéral médial et d'une compression du nerf ulnaire."}
+];
+const TESTBYID={};TESTS.forEach(t=>TESTBYID[t.id]=t);
+
+/* =====================================================================
+   2. EXAMEN RAPIDE — moteur décisionnel
+   ===================================================================== */
+/* Catalogue de signes cliquables (id, libellé, redFlag?) groupés */
+const FINDINGS=[
+ {group:"Région douloureuse",items:[
+   ["main","Douleur de la main"],["poignet","Douleur du poignet"],["coude","Douleur du coude"]]},
+ {group:"Localisation",items:[
+   ["d_radiale","Versant radial"],["d_ulnaire","Versant ulnaire"],["d_dorsale","Versant dorsal"],
+   ["d_palmaire","Versant palmaire"],["d_lat_coude","Épicondyle latéral"],["d_med_coude","Épicondyle médial"]]},
+ {group:"Contexte",items:[
+   ["traumatique","Traumatique"],["non_traumatique","Non traumatique"],["chute_main","Chute sur la main"],
+   ["torsion","Torsion / entorse"],["sportif","Sportif / lanceur"],["effort","Douleur à l'effort"],
+   ["nocturne","Douleur nocturne"]]},
+ {group:"Signes généraux",items:[
+   ["paresth_median","Paresthésies pouce-index-majeur"],["paresth_ulnaire","Paresthésies 4e-5e doigts"],
+   ["deficit_moteur","Déficit moteur",true],["perte_mobilite","Perte de mobilité"],
+   ["gonflement","Gonflement"],["rougeur_chaleur","Rougeur / chaleur"],["fievre","Fièvre",true],
+   ["deformation","Déformation",true],["plaie","Plaie",true],["morsure","Morsure",true],
+   ["ressaut","Ressaut / blocage"],["masse_palmaire","Nodule / corde palmaire"],
+   ["main_froide","Main froide / pâle / pouls aboli",true],["douleur_disproportionnee","Douleur disproportionnée",true]]},
+ {group:"Tests positifs",items:[
+   ["tabatiere_pos","Tabatière douloureuse"],["compression_axiale_pos","Compression axiale du pouce +"],
+   ["phalen_pos","Phalen +"],["tinel_median_pos","Tinel médian +"],["durkan_pos","Durkan +"],
+   ["tinel_ulnaire_pos","Tinel ulnaire (coude) +"],["froment_pos","Froment +"],
+   ["finkelstein_pos","Finkelstein +"],["watson_pos","Watson +"],["grind_pos","Grind test +"],
+   ["fovea_pos","Fovea sign +"],["piano_key_pos","Piano key +"],
+   ["cozen_pos","Cozen / Mill +"],["valgus_pos","Valgus stress +"],["hook_absent","Hook test absent"]]}
+];
+/* tous les ids red flag */
+const FLAGIDS=new Set();FINDINGS.forEach(g=>g.items.forEach(it=>{if(it[2])FLAGIDS.add(it[0]);}));
+const FINDLABEL={};FINDINGS.forEach(g=>g.items.forEach(it=>FINDLABEL[it[0]]=it[1]));
+
+/* Règles cliniques : conditions -> diagnostic, tests, imagerie, conduite, red flags, fiches liées */
+const RULES=[
+ {id:"canal_carpien",dx:"Syndrome du canal carpien",region:"main",
+  conditions:["paresth_median","nocturne","phalen_pos","tinel_median_pos","durkan_pos","main","poignet"],
+  tests:["Phalen","Tinel médian","Durkan","Opposition / amyotrophie thénar"],
+  imaging:["EMG si forme atypique, sévère ou préopératoire","Échographie du nerf médian en option"],
+  mgmt:"Attelle nocturne de poignet en position neutre ; infiltration si échec ; avis chirurgical si déficit moteur, amyotrophie thénar ou échec du traitement médical.",
+  flags:["Amyotrophie thénar ou déficit moteur = forme sévère à adresser"],
+  fiches:["test_phalen","test_tinel_median_poignet","test_durkan","test_opposition_pouce"]},
+
+ {id:"fracture_scaphoide",dx:"Suspicion de fracture du scaphoïde",region:"poignet",
+  conditions:["poignet","traumatique","chute_main","tabatiere_pos","compression_axiale_pos","d_radiale"],
+  tests:["Palpation tabatière","Tubercule du scaphoïde","Compression axiale du pouce"],
+  imaging:["Radiographie poignet face/profil + incidences scaphoïde","IRM ou TDM si radio normale mais suspicion forte"],
+  mgmt:"Immobilisation pouce-poignet (manchette scaphoïde) même si radio normale ; réévaluation clinique et imagerie de contrôle à 10-15 jours ; avis spécialisé si confirmation.",
+  flags:["Douleur persistante malgré radiographie normale","Trouble vasculo-nerveux ou déformation associés"],
+  fiches:["palpation_tabatiere","palpation_tubercule_scaphoide","compression_axiale_pouce","immobilisation_scaphoide"]},
+
+ {id:"fracture_radius",dx:"Fracture du radius distal",region:"poignet",
+  conditions:["poignet","traumatique","chute_main","deformation","gonflement","perte_mobilite"],
+  tests:["Inspection (dos de fourchette)","Examen neurovasculaire (médian +++)"],
+  imaging:["Radiographie poignet face/profil","TDM si comminution ou atteinte articulaire"],
+  mgmt:"Immobilisation antalgique, réduction si déplacement, recherche d'un syndrome du canal carpien aigu ; avis orthopédique.",
+  flags:["Paresthésies médian aiguës = canal carpien aigu (urgence)","Déformation majeure, ouverture cutanée"],
+  fiches:["inspection_poignet","examen_vasculaire_main","territoires_sensitifs_main"]},
+
+ {id:"entorse_scapholunaire",dx:"Entorse / dissociation scapho-lunaire",region:"poignet",
+  conditions:["poignet","traumatique","chute_main","d_dorsale","watson_pos"],
+  tests:["Test de Watson","Ballottement scapho-lunaire"],
+  imaging:["Radiographies (cliché dynamique, poing serré)","IRM/arthro-scanner si doute"],
+  mgmt:"Immobilisation, avis spécialisé (lésion ligamentaire pouvant évoluer vers une instabilité) ; ne pas méconnaître.",
+  flags:["Diastasis scapho-lunaire (signe de Terry-Thomas) sur la radio"],
+  fiches:["test_watson_scapho_lunaire","ballottement_scapho_lunaire"]},
+
+ {id:"de_quervain",dx:"Ténosynovite de De Quervain",region:"poignet",
+  conditions:["poignet","non_traumatique","d_radiale","finkelstein_pos","effort"],
+  tests:["Finkelstein","Eichhoff","WHAT test","Palpation 1er compartiment"],
+  imaging:["Échographie si doute ou avant infiltration"],
+  mgmt:"Repos, orthèse du pouce, AINS, infiltration si échec ; chirurgie de décompression du 1er compartiment en dernier recours.",
+  flags:[],
+  fiches:["test_finkelstein","test_eichhoff","test_what_dequervain","test_abd_court_ext_pouce"]},
+
+ {id:"rhizarthrose",dx:"Rhizarthrose (arthrose trapézo-métacarpienne)",region:"poignet",
+  conditions:["poignet","main","non_traumatique","d_radiale","grind_pos"],
+  tests:["Grind test","Palpation de la base du pouce"],
+  imaging:["Radiographie de la colonne du pouce (incidence de Kapandji)"],
+  mgmt:"Orthèse de repos de la colonne du pouce, antalgiques/AINS, infiltration ; avis chirurgical si gêne fonctionnelle majeure.",
+  flags:[],
+  fiches:["grind_test_trapezo_metacarpien"]},
+
+ {id:"tfcc",dx:"Lésion du TFCC / conflit ulno-carpien",region:"poignet",
+  conditions:["poignet","d_ulnaire","torsion","fovea_pos","traumatique"],
+  tests:["Fovea sign","Compression ulno-carpienne","Prono-supination"],
+  imaging:["IRM (voire arthro-IRM)","Radiographie pour variance ulnaire"],
+  mgmt:"Immobilisation/orthèse, AINS ; avis spécialisé (arthroscopie) si persistance ou instabilité associée.",
+  flags:[],
+  fiches:["test_tfcc_fovea","test_compression_ulnocarpienne","compression_radio_ulnaire_distale","pronosupination"]},
+
+ {id:"instab_arud",dx:"Instabilité radio-ulnaire distale (ARUD)",region:"poignet",
+  conditions:["poignet","d_ulnaire","piano_key_pos","perte_mobilite"],
+  tests:["Piano key test","Ballottement radio-ulnaire distal","Prono-supination"],
+  imaging:["Radiographies comparatives","TDM des deux poignets en pronation/supination"],
+  mgmt:"Avis spécialisé ; immobilisation selon contexte. Souvent associée à une lésion du TFCC.",
+  flags:[],
+  fiches:["piano_key_test_arud","compression_radio_ulnaire_distale"]},
+
+ {id:"compression_ulnaire",dx:"Compression du nerf ulnaire (coude / Guyon)",region:"coude",
+  conditions:["coude","main","paresth_ulnaire","froment_pos","tinel_ulnaire_pos","deficit_moteur"],
+  tests:["Tinel ulnaire au coude","Elbow flexion test","Froment","Examen sensitif ulnaire"],
+  imaging:["EMG pour localiser et quantifier","Échographie du nerf ulnaire"],
+  mgmt:"Éviter l'appui et la flexion prolongée du coude, orthèse nocturne d'extension ; avis chirurgical si déficit moteur, amyotrophie ou échec.",
+  flags:["Amyotrophie du 1er interosseux ou griffe = atteinte sévère à adresser"],
+  fiches:["test_tinel_ulnaire_coude","test_froment","test_nerf_ulnaire_main"]},
+
+ {id:"doigt_ressaut",dx:"Doigt à ressaut (ténosynovite sténosante)",region:"main",
+  conditions:["main","non_traumatique","ressaut","d_palmaire"],
+  tests:["Recherche du ressaut et du nodule sur la poulie A1"],
+  imaging:["Échographie en option (diagnostic surtout clinique)"],
+  mgmt:"Attelle, AINS, infiltration de la gaine (souvent efficace) ; chirurgie de la poulie A1 si échec ou blocage permanent.",
+  flags:[],
+  fiches:["test_doigt_ressaut"]},
+
+ {id:"dupuytren",dx:"Maladie de Dupuytren",region:"main",
+  conditions:["main","non_traumatique","masse_palmaire","deformation","d_palmaire"],
+  tests:["Table-top test","Palpation des cordes palmaires"],
+  imaging:["Diagnostic clinique ; pas d'imagerie en routine"],
+  mgmt:"Surveillance si gêne minime ; avis chirurgical (aponévrotomie/aponévrectomie) si flessum MCP > 30° ou table-top positif.",
+  flags:[],
+  fiches:["examen_dupuytren"]},
+
+ {id:"plaie_tendineuse",dx:"Plaie tendineuse / nerveuse de la main",region:"main",
+  conditions:["main","plaie","deficit_moteur","perte_mobilite"],
+  tests:["Testing FDS/FDP/extenseurs","Examen sensitif distal","Exploration de la plaie"],
+  imaging:["Radiographie si suspicion de corps étranger ou d'atteinte osseuse"],
+  mgmt:"Parage, exploration chirurgicale au bloc (un tendon partiellement sectionné garde une mobilité), prophylaxie antitétanique et antibiotique selon plaie ; avis chirurgie de la main.",
+  flags:["Tout déficit moteur ou sensitif en aval d'une plaie","Plaie articulaire ou avec corps étranger"],
+  fiches:["examen_plaie_main","test_fds_main","test_fdp_main","territoires_sensitifs_main"]},
+
+ {id:"infection_gaine",dx:"Infection de gaine / ténosynovite infectieuse",region:"main",
+  conditions:["main","rougeur_chaleur","d_palmaire","fievre","plaie","morsure"],
+  tests:["Signes de Kanavel (doigt en crochet, douleur à l'extension, tuméfaction, douleur sur le trajet de la gaine)"],
+  imaging:["Échographie/IRM selon contexte ; bilan biologique inflammatoire"],
+  mgmt:"URGENCE chirurgicale : avis chirurgie de la main sans délai, antibiothérapie ; ne pas temporiser.",
+  flags:["Signes de Kanavel = urgence chirurgicale","Morsure (Pasteurella, anaérobies) = haut risque"],
+  fiches:["examen_plaie_main"]},
+
+ {id:"epicondylite_laterale",dx:"Épicondylite latérale (tennis elbow)",region:"coude",
+  conditions:["coude","d_lat_coude","non_traumatique","effort","sportif","cozen_pos"],
+  tests:["Cozen","Mill","Maudsley","Palpation de l'épicondyle latéral"],
+  imaging:["Échographie/IRM si forme résistante ou doute","Radiographie pour éliminer une cause osseuse"],
+  mgmt:"Repos relatif, adaptation du geste, AINS, kinésithérapie excentrique, orthèse ; infiltration ou autres options si échec prolongé.",
+  flags:["Douleur dorsale de l'avant-bras = penser au nerf interosseux postérieur"],
+  fiches:["test_cozen","test_mill","test_maudsley","palpation_epicondyle_lateral"]},
+
+ {id:"epitrochleite",dx:"Épitrochléite (golfer's elbow)",region:"coude",
+  conditions:["coude","d_med_coude","non_traumatique","effort","sportif"],
+  tests:["Flexion-pronation résistée","Cozen inversé","Mill inversé","Palpation de l'épicondyle médial"],
+  imaging:["Échographie si doute ; radiographie pour éliminer une cause osseuse"],
+  mgmt:"Repos, AINS, kinésithérapie, orthèse ; rechercher et traiter une atteinte ulnaire associée.",
+  flags:["Paresthésies ulnaires associées (atteinte du nerf ulnaire)"],
+  fiches:["test_epitrochleite","test_cozen_inverse","test_mill_inverse","palpation_epicondyle_medial"]},
+
+ {id:"bursite_olecranienne",dx:"Bursite olécrânienne",region:"coude",
+  conditions:["coude","gonflement","d_dorsale"],
+  tests:["Palpation de la bourse (fluctuation)","Recherche de signes inflammatoires et de porte d'entrée"],
+  imaging:["Ponction si doute septique (analyse cytobactériologique)","Échographie en option"],
+  mgmt:"Forme mécanique : protection, AINS, éviction de l'appui. Forme chaude/rouge/fébrile : ponction et avis (bursite septique), antibiothérapie.",
+  flags:["Bursite chaude, rouge, fébrile = bursite septique (urgence, ne pas infiltrer)"],
+  fiches:["bursite_olecranienne","palpation_olecrane"]},
+
+ {id:"rupture_biceps",dx:"Rupture du tendon distal du biceps",region:"coude",
+  conditions:["coude","traumatique","hook_absent","deformation","effort"],
+  tests:["Hook test","Inspection (signe de Popeye, ecchymose)","Force de supination"],
+  imaging:["IRM ou échographie pour confirmer et évaluer la rétraction"],
+  mgmt:"Avis chirurgical RAPIDE : la réinsertion précoce (< 2-3 semaines) donne les meilleurs résultats sur la force de supination.",
+  flags:["Hook test absent = rupture jusqu'à preuve du contraire, adresser sans délai"],
+  fiches:["test_hook_biceps_distal"]},
+
+ {id:"fracture_tete_radiale",dx:"Fracture de la tête radiale",region:"coude",
+  conditions:["coude","traumatique","chute_main","d_lat_coude","perte_mobilite"],
+  tests:["Palpation de la tête radiale","Prono-supination (limitation/blocage)"],
+  imaging:["Radiographie face/profil (signe du fat pad)","Incidence tête radiale (Greenspan), TDM si doute"],
+  mgmt:"Immobilisation antalgique courte puis mobilisation précoce si non déplacée ; avis orthopédique si déplacement ou blocage mécanique.",
+  flags:["Blocage de la prono-supination (fragment intra-articulaire)"],
+  fiches:["palpation_tete_radiale","pronosupination"]},
+
+ {id:"entorse_lcm",dx:"Lésion du ligament collatéral médial du coude",region:"coude",
+  conditions:["coude","d_med_coude","sportif","valgus_pos","traumatique"],
+  tests:["Valgus stress test","Moving valgus stress test"],
+  imaging:["IRM (arthro-IRM) pour les lanceurs","Radiographies de stress en option"],
+  mgmt:"Repos sportif, rééducation ; avis spécialisé (reconstruction UCL chez le lanceur de haut niveau si instabilité).",
+  flags:[],
+  fiches:["test_valgus_stress_coude","test_moving_valgus"]},
+
+ {id:"instab_posterolaterale",dx:"Instabilité postéro-latérale du coude",region:"coude",
+  conditions:["coude","traumatique","deformation","perte_mobilite"],
+  tests:["Lateral pivot shift","Varus stress test","Test d'appréhension"],
+  imaging:["IRM ; radiographies (séquelle de luxation)"],
+  mgmt:"Avis spécialisé ; souvent séquelle de luxation du coude. Rééducation prudente, chirurgie si instabilité fonctionnelle.",
+  flags:[],
+  fiches:["test_instabilite_posterolaterale","test_varus_stress_coude"]},
+
+ {id:"arthrite_septique",dx:"Arthrite septique (urgence)",region:"coude",
+  conditions:["coude","poignet","rougeur_chaleur","fievre","perte_mobilite"],
+  tests:["Articulation chaude, douloureuse, mobilisation impossible","Recherche de porte d'entrée"],
+  imaging:["Ponction articulaire en urgence","Bilan inflammatoire, hémocultures, radiographie"],
+  mgmt:"URGENCE : avis chirurgical/rhumatologique immédiat, ponction avant antibiothérapie, hospitalisation. Ne pas infiltrer.",
+  flags:["Articulation chaude + fièvre + impotence = arthrite septique jusqu'à preuve du contraire"],
+  fiches:["bursite_olecranienne"]}
+];
+
+/* =====================================================================
+   3. RED FLAGS (référence) — situations imposant une orientation urgente
+   ===================================================================== */
+const REDFLAGS=[
+ ["Urgence neurologique",["Déficit moteur aigu","Anesthésie complète d'un territoire nerveux","Paresthésies médian aiguës après fracture du radius (canal carpien aigu)"]],
+ ["Urgence vasculaire",["Main froide, pâle ou cyanosée","Pouls aboli, recoloration capillaire allongée","Suspicion de lésion artérielle"]],
+ ["Urgence infectieuse",["Plaie profonde ou souillée","Morsure (animale ou humaine)","Signes de Kanavel (ténosynovite infectieuse)","Articulation/bourse chaude, rouge, fébrile","Fièvre avec atteinte articulaire (arthrite septique)"]],
+ ["Urgence traumatique",["Déformation post-traumatique","Suspicion de fracture (scaphoïde, radius, tête radiale, olécrâne)","Plaie avec déficit tendineux ou nerveux","Impossibilité d'utiliser la main","Douleur intense disproportionnée (syndrome des loges)"]],
+ ["Tendineux / spécifique",["Rupture du tendon distal du biceps (hook test absent)","Mallet finger / rupture de l'appareil extenseur","Jersey finger (avulsion du FDP)"]],
+ ["Terrain à risque",["Enfant avec traumatisme et impotence fonctionnelle","Immunodéprimé / diabétique avec signes infectieux","Douleur scaphoïde persistante malgré radio normale"]]
+];
+
+/* =====================================================================
+   4. IMAGERIE par région
+   ===================================================================== */
+const IMAGING=[
+ {region:"Main",rows:[
+   ["Radiographie","Fracture/luxation phalange ou métacarpe, corps étranger, arthrose, calcifications."],
+   ["Échographie","Tendons (ressaut, ruptures), nodule, épanchement de gaine, nerfs, corps étranger radio-transparent."],
+   ["IRM","Lésions ligamentaires fines, atteinte tendineuse complexe, tumeur, infection profonde."]]},
+ {region:"Poignet",rows:[
+   ["Radiographie F/P + incidences","Scaphoïde (incidences dédiées), radius distal, arthrose, variance ulnaire."],
+   ["IRM","Scaphoïde occulte, TFCC, ligaments scapho-lunaires, œdème osseux, Kienböck."],
+   ["TDM","Bilan précis d'une fracture, ARUD, consolidation, comminution."],
+   ["Échographie","De Quervain, kyste, ténosynovites, dynamique ARUD."]]},
+ {region:"Coude",rows:[
+   ["Radiographie F/P","Tête radiale (fat pad sign), olécrâne, arthrose, corps étranger, luxation."],
+   ["Échographie","Épicondylites, bursite, tendon distal du biceps, nerf ulnaire."],
+   ["IRM","Ligament collatéral médial (lanceur), biceps distal, ostéochondrite, instabilité."],
+   ["EMG","Compression du nerf ulnaire : localisation et sévérité."]]}
+];
+
+/* =====================================================================
+   5. CONDUITES À TENIR (synthèse pratique)
+   ===================================================================== */
+const CONDUITES=[
+ {t:"Adresser aux urgences sans délai",c:"b-red",items:[
+   "Ischémie / trouble vasculaire de la main","Déficit neurologique aigu ou anesthésie complète",
+   "Plaie avec déficit tendineux/nerveux, plaie articulaire, morsure","Ténosynovite infectieuse (Kanavel), arthrite/bursite septique",
+   "Fracture déplacée, luxation, ouverture cutanée, douleur disproportionnée"]},
+ {t:"Avis orthopédique / chirurgie de la main",c:"b-orange",items:[
+   "Suspicion de fracture du scaphoïde confirmée ou persistante","Rupture du tendon distal du biceps (rapide)",
+   "Instabilité scapho-lunaire, ARUD, lésion TFCC symptomatique","Canal carpien sévère (déficit/amyotrophie) ou résistant",
+   "Dupuytren évolué (flessum), doigt à ressaut bloqué/résistant"]},
+ {t:"Prise en charge en médecine générale",c:"b-green",items:[
+   "Épicondylite/épitrochléite non compliquée : repos, AINS, kiné, orthèse","De Quervain, rhizarthrose : orthèse, AINS, infiltration",
+   "Canal carpien débutant : attelle nocturne","Bursite olécrânienne mécanique : protection, éviction de l'appui",
+   "Réévaluation systématique et orientation si aggravation ou red flag"]}
+];
+
+/* Onglets de navigation */
+const TABS=[
+ ["accueil","Tableau de bord"],["rapide","Examen rapide"],["atlas","Atlas des tests"],
+ ["main","Main"],["poignet","Poignet"],["coude","Coude"],
+ ["diagnostics","Diagnostics"],["redflags","Red flags"],["imagerie","Imagerie"],
+ ["conduites","Conduites à tenir"],["fiche","Fiche patient"]];
+
+/* =====================================================================
+   6. RENDU
+   ===================================================================== */
+function panel(id,title,content){return '<section class="tab-panel" data-tab-panel="'+id+'"><h2 class="panel-title">'+esc(title)+'</h2>'+content+'</section>';}
+
+function renderTabs(){tabsEl.innerHTML=TABS.map(t=>'<button class="tab-btn" type="button" data-tab="'+t[0]+'">'+esc(t[1])+'</button>').join("");}
+
+/* ----- Tableau de bord ----- */
+function renderAccueil(){
+ const shortcuts=[
+  ["rapide","Examen rapide interactif","Moteur décisionnel : je clique mes signes","◈"],
+  ["atlas","Atlas des tests","63 fiches : geste, positivité, pièges","✋"],
+  ["main","Examen de la main","Tendons, nerfs, vaisseaux, plaies","✋"],
+  ["poignet","Examen du poignet","Scaphoïde, TFCC, De Quervain…","◌"],
+  ["coude","Examen du coude","Épicondyles, ligaments, biceps","◣"],
+  ["diagnostics","Diagnostics","Par région et par pathologie","⊞"],
+  ["redflags","Red flags","Situations urgentes à reconnaître","⚠"],
+  ["fiche","Fiche patient","Compte rendu imprimable","⎙"]];
+ const counts={main:0,poignet:0,coude:0};TESTS.forEach(t=>counts[t.region]++);
+ return panel("accueil","Atlas clinique interactif — Main · Poignet · Coude",
+  '<div class="card searchable"><div class="eyebrow">Outil d\'aide à l\'examen clinique</div>'+
+  '<h2 style="color:var(--navy);margin:6px 0 10px">Examiner vite, juste, et sans oublier les urgences.</h2>'+
+  '<p class="lead">Application locale destinée au médecin généraliste, urgentiste, rhumatologue, orthopédiste et interne. '+
+  'Chaque test possède une fiche complète (objectif, position, manœuvre, positivité, diagnostic, pièges, urgence) et un emplacement d\'image dédié. '+
+  'L\'examen rapide est un véritable moteur décisionnel : les signes cliqués mettent à jour diagnostics, tests, imagerie, conduite et red flags.</p>'+
+  '<div class="notice urgent"><strong>Limite clinique :</strong> cet outil ne remplace pas le jugement médical, l\'examen complet ni l\'avis spécialisé. '+
+  'Les propositions sont des orientations à confirmer selon le contexte et l\'évolution.</div></div>'+
+  '<div class="stat-band">'+
+   '<div class="stat"><b>'+TESTS.length+'</b><span>fiches de tests</span></div>'+
+   '<div class="stat"><b>'+RULES.length+'</b><span>règles décisionnelles</span></div>'+
+   '<div class="stat"><b>'+counts.main+'/'+counts.poignet+'/'+counts.coude+'</b><span>Main / Poignet / Coude</span></div>'+
+   '<div class="stat"><b>'+REDFLAGS.reduce((n,g)=>n+g[1].length,0)+'</b><span>red flags référencés</span></div>'+
+  '</div>'+
+  '<div class="section-head"><h2>Accès rapide</h2></div>'+
+  '<div class="shortcut-grid">'+shortcuts.map(s=>'<button class="shortcut" type="button" data-go="'+s[0]+'"><span><strong>'+esc(s[1])+'</strong><small>'+esc(s[2])+'</small></span><span class="glyph">'+s[3]+'</span></button>').join("")+'</div>'
+ );
+}
+
+/* ----- Examen rapide (moteur) ----- */
+let selected=new Set(JSON.parse(localStorage.getItem(STORE+"sel")||"[]"));
+function renderRapide(){
+ const ctrls=FINDINGS.map(g=>
+   '<div class="fgroup"><h4><span class="dot"></span>'+esc(g.group)+'</h4><div class="fchips">'+
+   g.items.map(it=>'<button type="button" class="fchip'+(it[2]?' flag':'')+(selected.has(it[0])?' on':'')+'" data-find="'+it[0]+'">'+esc(it[1])+'</button>').join("")+
+   '</div></div>').join("");
+ return panel("rapide","Examen rapide interactif",
+  '<div class="notice"><strong>Mode d\'emploi :</strong> cliquez les signes présents. Les diagnostics probables, les tests à réaliser, '+
+  'l\'imagerie, la conduite à tenir et les red flags se mettent à jour en temps réel. Cliquez un test proposé pour ouvrir sa fiche.</div>'+
+  '<div class="engine"><div class="engine-controls searchable">'+ctrls+
+   '<div class="engine-actions"><button class="chipbtn" id="clearFindings" type="button">Tout effacer</button></div></div>'+
+   '<div class="engine-results" id="engineResults"></div></div>');
+}
+function renderEngineResults(){
+ const box=document.getElementById("engineResults");if(!box)return;
+ const sel=selected;
+ // diagnostics
+ const scored=RULES.map(r=>{
+   const matched=r.conditions.filter(c=>sel.has(c));
+   return {r,matched,ratio:matched.length/r.conditions.length};
+ }).filter(x=>x.matched.length>0)
+   .sort((a,b)=>b.matched.length-a.matched.length||b.ratio-a.ratio);
+ // red flags actifs
+ const flagSel=[...sel].filter(id=>FLAGIDS.has(id)).map(id=>FINDLABEL[id]);
+ const flagRules=[];scored.forEach(x=>{if(x.matched.length>=2&&x.ratio>=0.5){(x.r.flags||[]).forEach(f=>flagRules.push(f));}});
+ const allFlags=[...new Set([...flagSel,...flagRules])];
+ // tests + imagerie agrégés (des diagnostics forts)
+ let dxHtml,testsHtml,imgHtml,mgmtHtml;
+ if(scored.length===0){
+   dxHtml='<p class="empty-res">Sélectionnez des signes pour afficher les diagnostics compatibles.</p>';
+   testsHtml=imgHtml=mgmtHtml='';
+ } else {
+   const strongCut=Math.max(2,scored[0].matched.length);
+   dxHtml=scored.slice(0,6).map(x=>{
+     const strong=x.matched.length>=2&&x.ratio>=0.5;
+     const pct=Math.round(x.ratio*100);
+     return '<div class="dx'+(strong?' strong':'')+'"><div class="dx-top"><b>'+esc(x.r.dx)+'</b>'+
+       '<span class="badge '+(strong?'b-green':'b-grey')+'">'+x.matched.length+' signe(s)</span></div>'+
+       '<div class="meter"><i style="width:'+pct+'%"></i></div>'+
+       '<ul><li><strong>Tests :</strong> '+esc((x.r.tests||[]).join(" · "))+'</li>'+
+       '<li><strong>Imagerie :</strong> '+esc((x.r.imaging||[]).join(" · "))+'</li>'+
+       '<li><strong>Conduite :</strong> '+esc(x.r.mgmt)+'</li></ul>'+
+       ((x.r.fiches&&x.r.fiches.length)?'<div class="linkrow">'+x.r.fiches.map(f=>TESTBYID[f]?'<button class="minilink" type="button" data-fiche="'+f+'">'+esc(TESTBYID[f].name)+'</button>':'').join("")+'</div>':'')+
+       '</div>';
+   }).join("");
+ }
+ const flagsCard='<div class="res-card flags"><h3>⚠ Red flags actifs</h3>'+
+   (allFlags.length?allFlags.map(f=>'<div class="flag-item">▸ '+esc(f)+'</div>').join(""):'<p class="empty-res">Aucun red flag détecté pour cette sélection.</p>')+'</div>';
+ box.innerHTML=
+   '<div class="res-card"><h3>◈ Diagnostics probables</h3>'+dxHtml+'</div>'+flagsCard+
+   '<div class="res-card"><h3>Sélection en cours ('+sel.size+')</h3>'+
+     (sel.size?'<div class="fchips">'+[...sel].map(id=>'<span class="fchip on">'+esc(FINDLABEL[id]||id)+'</span>').join("")+'</div>':'<p class="empty-res">Aucun signe sélectionné.</p>')+'</div>';
+ box.querySelectorAll("[data-fiche]").forEach(b=>b.addEventListener("click",()=>openFiche(b.dataset.fiche)));
+}
+
+/* ----- Atlas des tests (filtres + grille) ----- */
+let filterRegion="all",filterType="all",filterQuick="all";
+function renderAtlas(){
+ const regions=[["all","Toutes régions"],["main","Main"],["poignet","Poignet"],["coude","Coude"]];
+ const types=[["all","Tous types"],["tendineux","Tendineux"],["neuro","Neurologique"],["ligamentaire","Ligamentaire"],["osseux","Osseux"],["vasculaire","Vasculaire"],["inflammatoire","Inflammatoire"]];
+ const quicks=[["all","Tous"],["mg","Tests fréquents en MG"],["trauma","Traumatisme"],["neuro","Neurologique"],["tendineux","Tendineux"],["ligamentaire","Ligamentaire"]];
+ const bar='<div class="filterbar no-print">'+
+   '<div class="filter-row"><span class="filter-label">Région</span>'+regions.map(r=>'<button class="chipbtn" data-fr="'+r[0]+'" type="button">'+esc(r[1])+'</button>').join("")+'</div>'+
+   '<div class="filter-row"><span class="filter-label">Type</span>'+types.map(t=>'<button class="chipbtn" data-ft="'+t[0]+'" type="button">'+esc(t[1])+'</button>').join("")+'</div>'+
+   '<div class="filter-row"><span class="filter-label">Filtres</span>'+quicks.map(q=>'<button class="chipbtn quick" data-fq="'+q[0]+'" type="button">'+esc(q[1])+'</button>').join("")+'</div>'+
+ '</div>';
+ const grid='<div class="test-grid" id="atlasGrid">'+TESTS.map(t=>tcard(t)).join("")+'</div>'+
+   '<div class="empty-note" id="atlasEmpty">Aucun test ne correspond à ces filtres.</div>';
+ return panel("atlas","Atlas des tests cliniques",
+   '<div class="notice"><strong>'+TESTS.length+' fiches.</strong> Filtrez par région, par type ou par usage, ou cliquez une carte pour ouvrir la fiche détaillée (objectif, position, manœuvre, positivité, diagnostic, pièges, urgence).</div>'+bar+grid);
+}
+const QUICKSETS={
+ mg:new Set(["test_phalen","test_tinel_median_poignet","test_durkan","test_finkelstein","grind_test_trapezo_metacarpien","test_cozen","test_doigt_ressaut","palpation_tabatiere","test_froment","examen_dupuytren","bursite_olecranienne","test_mill"]),
+ trauma:null,neuro:null,tendineux:null,ligamentaire:null
+};
+function matchQuick(t){
+ if(filterQuick==="all")return true;
+ if(filterQuick==="mg")return QUICKSETS.mg.has(t.id);
+ if(filterQuick==="trauma")return t.urgence!=="aucun"||["osseux","ligamentaire"].includes(t.type);
+ if(filterQuick==="neuro")return t.type==="neuro";
+ if(filterQuick==="tendineux")return t.type==="tendineux";
+ if(filterQuick==="ligamentaire")return t.type==="ligamentaire";
+ return true;
+}
+function tcard(t){
+ return '<article class="tcard searchable" data-test="'+t.id+'" data-region="'+t.region+'" data-type="'+t.type+'">'+
+   shot(t.image,t.alt)+
+   '<div class="tcard-body"><div class="tcard-meta"><span class="badge b-grey">'+regionLabel(t.region)+'</span>'+
+   '<span class="badge b-blue">'+typeLabel(t.type)+'</span>'+urgenceBadge(t.urgence)+'</div>'+
+   '<h3>'+esc(t.name)+'</h3><p>'+esc(t.objectif)+'</p></div></article>';
+}
+function applyAtlasFilters(){
+ const grid=document.getElementById("atlasGrid");if(!grid)return;let visible=0;
+ grid.querySelectorAll(".tcard").forEach(c=>{
+   const t=TESTBYID[c.dataset.test];
+   const ok=(filterRegion==="all"||t.region===filterRegion)&&(filterType==="all"||t.type===filterType)&&matchQuick(t);
+   c.classList.toggle("hidden-by-filter",!ok);if(ok)visible++;
+ });
+ const empty=document.getElementById("atlasEmpty");if(empty)empty.style.display=visible?"none":"block";
+}
+
+/* ----- Modal fiche détaillée ----- */
+function fiche(t){
+ const rows=[
+  ["Région / type",regionLabel(t.region)+" — "+typeLabel(t.type)],
+  ["Objectif",t.objectif],["Position du patient",t.patient],["Position du médecin",t.medecin],
+  ["Manœuvre",t.manoeuvre],["Test positif",t.positif],["Diagnostic évoqué",t.diagnostic],
+  ["Pièges / faux positifs",t.pieges,true]];
+ return '<div class="modal-head"><div><h2>'+esc(t.name)+'</h2><p class="sub">'+regionLabel(t.region)+' · '+typeLabel(t.type)+'</p></div>'+
+   '<button class="modal-close" id="modalClose" type="button" aria-label="Fermer">×</button></div>'+
+   '<div class="modal-grid"><div class="modal-img">'+shot(t.image,t.alt)+'</div>'+
+   '<div class="modal-body"><div class="fiche-meta">'+urgenceBadge(t.urgence)+'<span class="badge b-blue">'+typeLabel(t.type)+'</span><span class="badge b-grey">'+regionLabel(t.region)+'</span></div>'+
+   '<dl>'+rows.map(r=>'<div class="fiche-row'+(r[2]?' warn':'')+'"><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>').join("")+'</dl>'+
+   '<p style="color:var(--muted);font-size:.82rem;margin-top:10px">Image attendue : <code style="background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:1px 6px">images/'+esc(t.image)+'</code></p>'+
+   '</div></div>';
+}
+const modalBack=document.getElementById("modalBack"),modalEl=document.getElementById("modal");
+function openFiche(id){const t=TESTBYID[id];if(!t)return;modalEl.innerHTML=fiche(t);modalBack.classList.add("open");
+ document.getElementById("modalClose").addEventListener("click",closeFiche);
+ modalEl.querySelectorAll("img").forEach(im=>{im.onload=function(){this.parentNode.classList.add("loaded");};});
+}
+function closeFiche(){modalBack.classList.remove("open");modalEl.innerHTML="";}
+modalBack.addEventListener("click",e=>{if(e.target===modalBack)closeFiche();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeFiche();});
+
+/* ----- Modules région ----- */
+const REGIONSEQ={
+ main:["Inspection comparative (trophicité, déformation, coloration)","Mobilité active puis passive des doigts","Testing tendineux (FDS, FDP, extenseurs, pouce)","Examen neurologique : médian, ulnaire, radial (moteur + sensitif)","Examen vasculaire (pouls, recoloration, Allen)","Tests ciblés selon la zone douloureuse"],
+ poignet:["Inspection (déformation, kyste, saillie ulnaire)","Mobilité : flexion/extension, inclinaisons, prono-supination","Palpation ciblée (tabatière, scaphoïde, fovéa, ARUD)","Tests radiaux (De Quervain, rhizarthrose)","Tests ulnaires (TFCC, ARUD) et scapho-lunaires","Canal carpien si paresthésies"],
+ coude:["Inspection (épanchement, triangle de Nélaton, angle de portage)","Mobilité : flexion-extension, prono-supination","Palpation des repères (épicondyles, olécrâne, tête radiale)","Tests d'épicondylite / épitrochléite","Tests ligamentaires (valgus, varus, pivot shift)","Nerf ulnaire et tendon distal du biceps"]
+};
+function renderRegion(id){
+ const list=TESTS.filter(t=>t.region===id);
+ const seq=REGIONSEQ[id].map(s=>'<li>'+esc(s)+'</li>').join("");
+ return panel(id,"Examen clinique — "+regionLabel(id),
+   '<div class="notice"><strong>Principe :</strong> examen bilatéral et comparatif, du général au spécifique. Comparez toujours au côté sain.</div>'+
+   '<div class="section-head"><h2>Séquence d\'examen</h2></div><ol class="seq searchable">'+seq+'</ol>'+
+   '<div class="section-head"><h2>Tests de la région ('+list.length+')</h2><p>Cliquez une carte pour la fiche complète.</p></div>'+
+   '<div class="test-grid">'+list.map(t=>tcard(t)).join("")+'</div>');
+}
+
+/* ----- Diagnostics ----- */
+function renderDiagnostics(){
+ const byRegion={main:[],poignet:[],coude:[]};
+ RULES.forEach(r=>{const reg=r.region;byRegion[reg]?byRegion[reg].push(r):(byRegion.main.push(r));});
+ const block=(reg,label)=>'<div class="section-head"><h2>'+esc(label)+'</h2></div><div class="grid-2">'+
+   RULES.filter(r=>r.region===reg).map(r=>
+    '<article class="card searchable"><h3>'+esc(r.dx)+'</h3>'+
+    '<p><strong>Tests :</strong> '+esc((r.tests||[]).join(" · "))+'</p>'+
+    '<p><strong>Imagerie :</strong> '+esc((r.imaging||[]).join(" · "))+'</p>'+
+    '<p><strong>Conduite :</strong> '+esc(r.mgmt)+'</p>'+
+    ((r.flags&&r.flags.length)?'<p style="color:var(--red)"><strong>Red flag :</strong> '+esc(r.flags.join(" · "))+'</p>':'')+
+    ((r.fiches&&r.fiches.length)?'<div class="linkrow" style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">'+r.fiches.map(f=>TESTBYID[f]?'<button class="minilink" type="button" data-fiche="'+f+'">'+esc(TESTBYID[f].name)+'</button>':'').join("")+'</div>':'')+
+    '</article>').join("")+'</div>';
+ return panel("diagnostics","Diagnostics par région",
+   '<div class="notice">Les diagnostics sont reliés à leurs tests, leur imagerie, leur conduite et leurs red flags. Cliquez un test pour ouvrir sa fiche.</div>'+
+   block("main","Main")+block("poignet","Poignet")+block("coude","Coude"));
+}
+
+/* ----- Red flags ----- */
+function renderRedFlags(){
+ return panel("redflags","Red flags — orientation urgente",
+  '<div class="notice urgent"><strong>Tout signe ci-dessous accélère la prise en charge.</strong> En cas de doute, sécuriser d\'abord (neurovasculaire, infection, fracture) avant les tests fins.</div>'+
+  '<div class="grid-2">'+REDFLAGS.map(g=>
+    '<article class="card searchable" style="border-left:5px solid var(--red)"><h3 style="color:var(--red)">'+esc(g[0])+'</h3><ul class="clean">'+g[1].map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></article>').join("")+'</div>');
+}
+
+/* ----- Imagerie ----- */
+function renderImagerie(){
+ return panel("imagerie","Imagerie utile",
+  '<div class="notice">Indications synthétiques. L\'imagerie confirme une orientation clinique, elle ne la remplace pas (ex. scaphoïde : immobiliser malgré une radio normale).</div>'+
+  IMAGING.map(b=>'<div class="section-head"><h2>'+esc(b.region)+'</h2></div>'+
+   '<div class="table-wrap searchable"><table><thead><tr><th>Examen</th><th>Apport principal</th></tr></thead><tbody>'+
+   b.rows.map(r=>'<tr><td><strong>'+esc(r[0])+'</strong></td><td>'+esc(r[1])+'</td></tr>').join("")+'</tbody></table></div>').join(""));
+}
+
+/* ----- Conduites ----- */
+function renderConduites(){
+ return panel("conduites","Conduites à tenir",
+  '<div class="notice">Synthèse pratique pour orienter : médecine générale, avis spécialisé ou urgences.</div>'+
+  '<div class="grid-3">'+CONDUITES.map(c=>
+   '<article class="card searchable" style="border-top:5px solid var(--'+(c.c==="b-red"?"red":c.c==="b-orange"?"orange":"green")+')"><h3><span class="badge '+c.c+'">'+esc(c.t)+'</span></h3><ul class="clean">'+c.items.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></article>').join("")+'</div>');
+}
+
+/* ----- Fiche patient ----- */
+const PATIENT=[
+ ["Contexte",["Date","Côté (D/G)","Traumatisme (oui/non)","Mécanisme","Profession / sport","Délai d'évolution"]],
+ ["Symptômes",["Douleur (localisation)","Paresthésies","Déficit moteur","Perte de mobilité","Gonflement","Douleur nocturne","Fièvre"]],
+ ["Examen",["Inspection","Palpation","Mobilité / amplitudes","Force / pince","Examen neurovasculaire","Tests réalisés"]],
+ ["Synthèse",["Orientation diagnostique","Imagerie demandée","Traitement / immobilisation","Consignes et réévaluation","Adressé à"]]
+];
+function renderFiche(){
+ return panel("fiche","Fiche patient imprimable",
+  '<div class="print-actions no-print"><button class="print-btn" id="printPatient" type="button">Imprimer la fiche</button>'+
+  '<button class="chipbtn" id="clearPatient" type="button">Effacer la fiche</button></div>'+
+  '<form class="card searchable" id="patientForm">'+PATIENT.map((sec,si)=>
+   '<section class="patient-section"><h3>'+esc(sec[0])+'</h3><div class="field-grid">'+
+   sec[1].map((name,i)=>{const key=STORE+"p:"+si+":"+i;const lo=norm(name);
+     const isSel=/(oui\/non|traumatisme|paresthesies|deficit|fievre)/.test(lo);
+     const isArea=/(inspection|palpation|mobilite|force|examen|tests|orientation|imagerie|traitement|consignes|adresse|mecanisme)/.test(lo);
+     if(isSel)return '<label class="field"><span>'+esc(name)+'</span><select data-store="'+key+'"><option value=""></option><option>non</option><option>oui</option><option>à préciser</option></select></label>';
+     if(isArea)return '<label class="field wide"><span>'+esc(name)+'</span><textarea data-store="'+key+'"></textarea></label>';
+     return '<label class="field"><span>'+esc(name)+'</span><input type="text" data-store="'+key+'"></label>';
+   }).join("")+'</div></section>').join("")+
+   '<div class="notice"><strong>Formulation prudente :</strong> « éléments compatibles avec… », « orientation à confirmer… », « réévaluation si aggravation ».</div></form>');
+}
+
+function renderAll(){
+ renderTabs();
+ app.innerHTML=[renderAccueil(),renderRapide(),renderAtlas(),
+   renderRegion("main"),renderRegion("poignet"),renderRegion("coude"),
+   renderDiagnostics(),renderRedFlags(),renderImagerie(),renderConduites(),renderFiche()].join("");
+ bind();
+}
+
+/* =====================================================================
+   7. INTERACTIONS
+   ===================================================================== */
+function activate(tab){
+ if(!TABS.some(t=>t[0]===tab))tab="accueil";
+ activeTab=tab;
+ document.querySelectorAll(".tab-panel").forEach(p=>p.classList.toggle("active",p.dataset.tabPanel===tab));
+ document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ localStorage.setItem(STORE+"tab",tab);
+ if(tab==="rapide")renderEngineResults();
+ if(tab==="atlas")applyAtlasFilters();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function bindStore(){
+ document.querySelectorAll("[data-store]").forEach(el=>{
+  const s=localStorage.getItem(el.dataset.store);
+  if(s!==null){if(el.type==="checkbox")el.checked=s==="1";else el.value=s;}
+  el.addEventListener("input",()=>{localStorage.setItem(el.dataset.store,el.type==="checkbox"?(el.checked?"1":"0"):el.value);});
+ });
+}
+function bindFindings(){
+ document.querySelectorAll("[data-find]").forEach(b=>b.addEventListener("click",()=>{
+   const id=b.dataset.find;
+   if(selected.has(id)){selected.delete(id);b.classList.remove("on");}
+   else{selected.add(id);b.classList.add("on");}
+   localStorage.setItem(STORE+"sel",JSON.stringify([...selected]));
+   renderEngineResults();
+ }));
+ const clr=document.getElementById("clearFindings");
+ if(clr)clr.addEventListener("click",()=>{selected.clear();localStorage.setItem(STORE+"sel","[]");
+   document.querySelectorAll("[data-find]").forEach(b=>b.classList.remove("on"));renderEngineResults();});
+}
+function bindAtlas(){
+ document.querySelectorAll(".tcard").forEach(c=>c.addEventListener("click",()=>openFiche(c.dataset.test)));
+ document.querySelectorAll("[data-fr]").forEach(b=>b.addEventListener("click",()=>{filterRegion=b.dataset.fr;syncFilterBtns();applyAtlasFilters();}));
+ document.querySelectorAll("[data-ft]").forEach(b=>b.addEventListener("click",()=>{filterType=b.dataset.ft;syncFilterBtns();applyAtlasFilters();}));
+ document.querySelectorAll("[data-fq]").forEach(b=>b.addEventListener("click",()=>{filterQuick=b.dataset.fq;syncFilterBtns();applyAtlasFilters();}));
+ syncFilterBtns();
+ document.querySelectorAll("[data-fiche]").forEach(b=>b.addEventListener("click",()=>openFiche(b.dataset.fiche)));
+}
+function syncFilterBtns(){
+ document.querySelectorAll("[data-fr]").forEach(b=>b.classList.toggle("active",b.dataset.fr===filterRegion));
+ document.querySelectorAll("[data-ft]").forEach(b=>b.classList.toggle("active",b.dataset.ft===filterType));
+ document.querySelectorAll("[data-fq]").forEach(b=>b.classList.toggle("active",b.dataset.fq===filterQuick));
+}
+function bindSearch(){
+ const input=document.getElementById("searchInput"),count=document.getElementById("searchCount");
+ function run(){
+   const q=norm(input.value.trim());let vis=0,tot=0;
+   document.querySelectorAll(".searchable").forEach(el=>{tot++;const ok=!q||norm(el.textContent).includes(q);
+     el.classList.toggle("hidden-by-search",!ok);if(ok)vis++;});
+   count.textContent=q?vis+" résultat(s) sur "+tot:"Recherche inactive";
+ }
+ input.addEventListener("input",run);run();
+}
+function bind(){
+ document.querySelectorAll(".tab-btn").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.tab)));
+ document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.go)));
+ document.getElementById("themeBtn").addEventListener("click",()=>{document.body.classList.toggle("dark");
+   localStorage.setItem(STORE+"theme",document.body.classList.contains("dark")?"dark":"light");});
+ document.getElementById("printBtn").addEventListener("click",()=>window.print());
+ document.getElementById("resetBtn").addEventListener("click",()=>{
+   if(confirm("Réinitialiser la sélection de l'examen rapide et la fiche patient ?")){
+     Object.keys(localStorage).filter(k=>k.startsWith(STORE)).forEach(k=>localStorage.removeItem(k));location.reload();}});
+ const pp=document.getElementById("printPatient");if(pp)pp.addEventListener("click",()=>{activate("fiche");setTimeout(()=>window.print(),120);});
+ const cp=document.getElementById("clearPatient");if(cp)cp.addEventListener("click",()=>{
+   document.querySelectorAll("#patientForm [data-store]").forEach(el=>{localStorage.removeItem(el.dataset.store);el.value="";});});
+ bindStore();bindFindings();bindAtlas();bindSearch();
+ renderEngineResults();
+ activate(activeTab);
+}
+if(localStorage.getItem(STORE+"theme")==="dark")document.body.classList.add("dark");
+renderAll();
+</script>
+</body>
+</html>
