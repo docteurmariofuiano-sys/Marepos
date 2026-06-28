@@ -1,0 +1,1944 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LipidMG - Choix pratique des hypolipemiants</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f5f8fb;
+  --surface: #ffffff;
+  --surface-strong: #eef5f8;
+  --text: #18222f;
+  --muted: #607080;
+  --line: #d9e4ea;
+  --blue: #0b5d91;
+  --blue-dark: #08476f;
+  --green: #147b5a;
+  --orange: #b86b00;
+  --red: #bd2538;
+  --shadow: 0 18px 45px rgba(23, 41, 54, 0.12);
+  --radius: 8px;
+  font-family: "Segoe UI", "Aptos", "Helvetica Neue", Arial, sans-serif;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --bg: #111820;
+  --surface: #17222c;
+  --surface-strong: #1e303b;
+  --text: #edf4f7;
+  --muted: #a8b9c3;
+  --line: #314653;
+  --blue: #5ab3e5;
+  --blue-dark: #8bc9ed;
+  --green: #42c293;
+  --orange: #e0a13a;
+  --red: #ff6b7e;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(11, 93, 145, 0.08), transparent 300px),
+    var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--blue);
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  transform: translateY(-150%);
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  z-index: 20;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px clamp(16px, 4vw, 48px) 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+:root.dark .app-header {
+  background: rgba(17, 24, 32, 0.78);
+}
+
+.app-header h1,
+.intro-panel h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 2.8vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  color: var(--blue);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.header-actions,
+.section-heading,
+.unit-row,
+.app-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-actions {
+  flex-shrink: 0;
+}
+
+.icon-button,
+.outline-button,
+.ghost-button,
+.primary-button,
+.home-actions button,
+.quick-nav button,
+.scenario-list button,
+.app-footer button {
+  min-height: 42px;
+  border-radius: var(--radius);
+  padding: 10px 13px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.icon-button {
+  width: 42px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.2rem;
+}
+
+.primary-button,
+.quick-nav button.active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  font-weight: 800;
+}
+
+.outline-button,
+.ghost-button {
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+
+.full {
+  width: 100%;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  border-color: var(--blue);
+}
+
+.quick-nav {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px clamp(16px, 4vw, 48px);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: sticky;
+  top: 91px;
+  z-index: 9;
+}
+
+.quick-nav button {
+  white-space: nowrap;
+  min-height: 38px;
+}
+
+.layout-shell {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px clamp(16px, 4vw, 48px) 32px;
+  align-items: start;
+}
+
+.status-panel {
+  position: sticky;
+  top: 154px;
+  display: grid;
+  gap: 12px;
+}
+
+.result-card,
+.micro-card,
+.section-panel,
+.output-card,
+.cards article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.result-card,
+.micro-card {
+  padding: 16px;
+}
+
+.result-card h2 {
+  margin: 0 0 14px;
+  font-size: 1.42rem;
+}
+
+.result-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.result-metrics div {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+}
+
+.result-metrics span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.result-metrics strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1rem;
+}
+
+.primary-advice {
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.alert-stack {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.alert {
+  border-radius: var(--radius);
+  padding: 10px;
+  border: 1px solid var(--line);
+  line-height: 1.35;
+  font-size: 0.92rem;
+}
+
+.alert.warning {
+  border-color: rgba(184, 107, 0, 0.42);
+  background: rgba(184, 107, 0, 0.12);
+  color: var(--orange);
+}
+
+.alert.danger {
+  border-color: rgba(189, 37, 56, 0.45);
+  background: rgba(189, 37, 56, 0.12);
+  color: var(--red);
+}
+
+.micro-card h3,
+.output-card h3,
+.cards h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.micro-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.42;
+}
+
+.scenario-list {
+  display: grid;
+  gap: 7px;
+}
+
+.scenario-list button {
+  min-height: 34px;
+  text-align: left;
+  font-size: 0.86rem;
+  padding: 8px;
+}
+
+.content-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.section-panel {
+  display: none;
+  padding: clamp(16px, 2.4vw, 24px);
+}
+
+.section-panel.active-section,
+.intro-panel {
+  display: block;
+}
+
+.intro-panel {
+  background:
+    linear-gradient(120deg, rgba(11, 93, 145, 0.12), rgba(20, 123, 90, 0.08)),
+    var(--surface);
+}
+
+.intro-panel p:not(.eyebrow) {
+  max-width: 72ch;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.section-heading {
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2vw, 2rem);
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+}
+
+.decision-form {
+  display: grid;
+  gap: 14px;
+}
+
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin: 0;
+  background: var(--surface-strong);
+}
+
+legend {
+  padding: 0 6px;
+  font-weight: 800;
+  color: var(--blue-dark);
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea,
+output {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 11px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 160px;
+  line-height: 1.45;
+}
+
+.unit-row {
+  align-items: stretch;
+}
+
+.unit-row input {
+  min-width: 0;
+}
+
+.unit-row select,
+.unit-row span {
+  width: 92px;
+  flex: 0 0 92px;
+}
+
+.unit-row span {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.compact-checks label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.compact-checks input {
+  width: auto;
+}
+
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.output-card {
+  padding: 14px;
+  box-shadow: none;
+}
+
+.output-card ul,
+.cards ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.45;
+}
+
+.output-card li + li,
+.cards li + li {
+  margin-top: 7px;
+}
+
+.cards {
+  display: grid;
+  gap: 12px;
+}
+
+.cards.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cards.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cards article {
+  padding: 15px;
+  box-shadow: none;
+}
+
+.cards p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.timeline {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline article {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+}
+
+.timeline span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.timeline h3,
+.timeline p {
+  margin: 0;
+}
+
+.timeline p {
+  margin-top: 5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tg-banner {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+}
+
+.tg-banner.critical {
+  border-color: rgba(189, 37, 56, 0.5);
+  background: rgba(189, 37, 56, 0.12);
+}
+
+.tg-banner.high,
+.tg-banner.moderate {
+  border-color: rgba(184, 107, 0, 0.42);
+  background: rgba(184, 107, 0, 0.11);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  background: var(--surface);
+}
+
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  background: var(--surface-strong);
+  color: var(--blue-dark);
+}
+
+.safety-line {
+  margin: 14px 0 0;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(20, 123, 90, 0.35);
+  background: rgba(20, 123, 90, 0.10);
+  color: var(--green);
+  font-weight: 800;
+}
+
+.patient-sheet {
+  max-width: 760px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.patient-sheet h2 {
+  margin-top: 0;
+}
+
+.patient-sheet h3 {
+  margin: 18px 0 6px;
+}
+
+.patient-sheet p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.source-list {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.7;
+}
+
+.app-footer {
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 18px clamp(16px, 4vw, 48px) 28px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+.app-footer button {
+  min-height: 34px;
+  padding: 7px 10px;
+}
+
+@media (max-width: 1100px) {
+  .layout-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .status-panel {
+    position: static;
+  }
+
+  .cards.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .app-header {
+    position: static;
+    flex-direction: column;
+  }
+
+  .quick-nav {
+    top: 0;
+  }
+
+  .home-actions,
+  .grid.two,
+  .grid.three,
+  .output-grid,
+  .cards.three,
+  .cards.four {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tg-banner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  .app-header,
+  .quick-nav,
+  .status-panel,
+  .intro-panel,
+  .section-panel:not(#fiche),
+  .app-footer {
+    display: none !important;
+  }
+
+  .layout-shell {
+    display: block;
+    padding: 0;
+  }
+
+  #fiche {
+    display: block !important;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .patient-sheet {
+    border: 0;
+    padding: 0;
+    color: #111111;
+  }
+}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Assistant de consultation locale - aucune donnee envoyee</p>
+      <h1>LipidMG - Hypolipemiants en 30 secondes</h1>
+      <p class="subtitle">Statine, ezetimibe, NILEMDO, fibrate : que choisir selon le risque CV ?</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-button" id="themeToggle" type="button" title="Basculer le mode sombre" aria-label="Basculer le mode sombre">
+        <span aria-hidden="true">â—</span>
+      </button>
+      <button class="outline-button" type="button" data-print="patient">Imprimer fiche patient</button>
+    </div>
+  </header>
+
+  <nav class="quick-nav" aria-label="Modules principaux">
+    <button type="button" data-section="decision" class="active">Choisir un traitement</button>
+    <button type="button" data-section="refus">Patient refuse les statines</button>
+    <button type="button" data-section="muscles">Douleurs musculaires</button>
+    <button type="button" data-section="triglycerides">Triglycerides eleves</button>
+    <button type="button" data-section="efficacite">Tableau d'efficacite</button>
+    <button type="button" data-section="fiche">Fiche patient</button>
+  </nav>
+
+  <main id="main" class="layout-shell">
+    <aside class="status-panel" aria-label="Conclusion rapide">
+      <section class="result-card">
+        <p class="eyebrow">Conclusion MG</p>
+        <h2 id="riskLabel">Saisie a completer</h2>
+        <div class="result-metrics">
+          <div>
+            <span>LDL actuel</span>
+            <strong id="metricLdl">-</strong>
+          </div>
+          <div>
+            <span>Cible</span>
+            <strong id="metricTarget">-</strong>
+          </div>
+          <div>
+            <span>Reduction</span>
+            <strong id="metricReduction">-</strong>
+          </div>
+        </div>
+        <p id="primaryAdvice" class="primary-advice">Renseigner le contexte CV et la biologie pour obtenir une proposition.</p>
+        <div id="alertStack" class="alert-stack" aria-live="polite"></div>
+        <button type="button" class="primary-button full" id="copySummary">Copier la note dossier</button>
+      </section>
+
+      <section class="micro-card">
+        <h3>Phrase a garder</h3>
+        <p>On ne traite pas seulement un chiffre de LDL, on traite un risque cardiovasculaire global.</p>
+      </section>
+
+      <section class="micro-card">
+        <h3>Cas tests</h3>
+        <div class="scenario-list" id="scenarioList"></div>
+      </section>
+    </aside>
+
+    <div class="content-stack">
+      <section class="section-panel intro-panel" data-view="accueil">
+        <div>
+          <p class="eyebrow">Accueil</p>
+          <h2>Decision lipidique courte, traçable, partagee.</h2>
+          <p>L'outil classe le risque, calcule la cible LDL, estime la reduction necessaire, puis propose une conduite a tenir prudente : statine, ezetimibe, acide bempedoique/NILEMDO, fibrate, avis specialise ou hygiene de vie.</p>
+        </div>
+        <div class="home-actions">
+          <button type="button" class="primary-button" data-section="decision">Choisir un traitement</button>
+          <button type="button" data-section="refus">Patient refuse les statines</button>
+          <button type="button" data-section="muscles">Douleurs musculaires sous statine</button>
+          <button type="button" data-section="triglycerides">Triglycerides eleves</button>
+          <button type="button" data-section="efficacite">Tableau d'efficacite</button>
+          <button type="button" data-section="fiche">Fiche patient imprimable</button>
+        </div>
+      </section>
+
+      <section class="section-panel active-section" id="decision" data-view="decision">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Module 1</p>
+            <h2>Choisir un traitement</h2>
+          </div>
+          <button type="button" class="ghost-button" id="resetForm">Reinitialiser</button>
+        </div>
+
+        <form id="decisionForm" class="decision-form" autocomplete="off">
+          <fieldset>
+            <legend>Contexte cardiovasculaire</legend>
+            <div class="grid two">
+              <label>Antecedent CV avere
+                <select name="secondary">
+                  <option value="no">Non</option>
+                  <option value="yes">IDM, AVC/AIT, AOMI, revascularisation, angor ou plaque significative</option>
+                </select>
+              </label>
+              <label>Evenement recidivant sous traitement maximal
+                <select name="recurrentEvent">
+                  <option value="no">Non</option>
+                  <option value="yes">Oui - cible specialisee a discuter</option>
+                </select>
+              </label>
+              <label>Diabete
+                <select name="diabetes">
+                  <option value="none">Non</option>
+                  <option value="type1">Type 1</option>
+                  <option value="type2">Type 2</option>
+                </select>
+              </label>
+              <label>Maladie renale chronique
+                <select name="ckd">
+                  <option value="none">Non</option>
+                  <option value="mild">DFG 30-59</option>
+                  <option value="severe">DFG &lt; 30</option>
+                  <option value="albuminuria">Albuminurie significative</option>
+                </select>
+              </label>
+              <label>Hypercholesterolemie familiale suspectee
+                <select name="familial">
+                  <option value="no">Non</option>
+                  <option value="yes">Oui</option>
+                </select>
+              </label>
+              <label>Age
+                <input type="number" name="age" min="18" max="105" step="1" value="58">
+              </label>
+              <label>Sexe
+                <select name="sex">
+                  <option value="male">Homme</option>
+                  <option value="female">Femme</option>
+                  <option value="other">Autre / non precise</option>
+                </select>
+              </label>
+              <label>Facteurs de risque
+                <select name="riskFactors" multiple size="4">
+                  <option value="smoking">Tabac actuel</option>
+                  <option value="hta">HTA</option>
+                  <option value="familyHistory">ATCD familial CV precoce</option>
+                  <option value="obesity">Obesite / syndrome metabolique</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Biologie</legend>
+            <div class="grid three">
+              <label>LDL-c
+                <div class="unit-row">
+                  <input type="number" name="ldl" min="0" step="0.01" value="1.85">
+                  <select name="ldlUnit" aria-label="Unite LDL">
+                    <option value="gL">g/L</option>
+                    <option value="mmolL">mmol/L</option>
+                  </select>
+                </div>
+              </label>
+              <label>HDL-c
+                <div class="unit-row">
+                  <input type="number" name="hdl" min="0" step="0.01" value="0.45">
+                  <span>g/L</span>
+                </div>
+              </label>
+              <label>Cholesterol total
+                <div class="unit-row">
+                  <input type="number" name="totalChol" min="0" step="0.01" value="2.45">
+                  <span>g/L</span>
+                </div>
+              </label>
+              <label>Triglycerides
+                <div class="unit-row">
+                  <input type="number" name="tg" min="0" step="0.01" value="1.50">
+                  <select name="tgUnit" aria-label="Unite triglycerides">
+                    <option value="gL">g/L</option>
+                    <option value="mmolL">mmol/L</option>
+                  </select>
+                </div>
+              </label>
+              <label>CPK si symptomes
+                <select name="cpkRatio">
+                  <option value="unknown">Non disponible</option>
+                  <option value="normal">Normale ou &lt; 4 x N</option>
+                  <option value="mid">4-10 x N</option>
+                  <option value="high">&gt; 10 x N</option>
+                </select>
+              </label>
+              <label>ASAT/ALAT
+                <select name="liver">
+                  <option value="normal">Normales ou non connues</option>
+                  <option value="elevated">Elevees</option>
+                  <option value="activeDisease">Maladie hepatique active</option>
+                </select>
+              </label>
+              <label>TSH / hypothyroidie
+                <select name="thyroid">
+                  <option value="none">Pas d'argument connu</option>
+                  <option value="suspected">A verifier</option>
+                  <option value="hypothyroid">Hypothyroidie non equilibree</option>
+                </select>
+              </label>
+              <label>Douleur abdominale avec TG eleves
+                <select name="abdominalPain">
+                  <option value="no">Non</option>
+                  <option value="yes">Oui</option>
+                </select>
+              </label>
+              <label>Non-HDL calcule
+                <output id="nonHdlOutput">-</output>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Traitement actuel</legend>
+            <div class="grid three">
+              <label>Traitement lipidique
+                <select name="currentTherapy">
+                  <option value="none">Aucun</option>
+                  <option value="atorvastatin">Atorvastatine</option>
+                  <option value="rosuvastatin">Rosuvastatine</option>
+                  <option value="simvastatin">Simvastatine</option>
+                  <option value="pravastatin">Pravastatine</option>
+                  <option value="fluvastatin">Fluvastatine</option>
+                  <option value="ezetimibe">Ezetimibe</option>
+                  <option value="nilemdo">NILEMDO / acide bempedoique</option>
+                  <option value="fibrate">Fibrate</option>
+                  <option value="pcsk9">PCSK9 deja prescrit</option>
+                </select>
+              </label>
+              <label>Dose / precision
+                <input type="text" name="dose" placeholder="ex. atorvastatine 20 mg">
+              </label>
+              <label>Tolerance actuelle
+                <select name="tolerance">
+                  <option value="ok">Bonne / non evaluee</option>
+                  <option value="muscle">Douleurs musculaires</option>
+                  <option value="trueIntolerance">Intolerance averee a deux statines</option>
+                  <option value="contraindication">Contre-indication statine</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Situation patient et securite</legend>
+            <div class="grid three compact-checks">
+              <label><input type="checkbox" name="acceptsStatin" checked> Accepte une statine</label>
+              <label><input type="checkbox" name="refusesStatin"> Refuse les statines</label>
+              <label><input type="checkbox" name="muscleHistory"> Douleurs musculaires anterieures</label>
+              <label><input type="checkbox" name="pregnancy"> Grossesse, allaitement ou projet</label>
+              <label><input type="checkbox" name="polypharmacy"> Polymedication / interactions possibles</label>
+              <label><input type="checkbox" name="macrolide"> Macrolide, azole, protease, ciclosporine</label>
+              <label><input type="checkbox" name="diltiazem"> Diltiazem, verapamil ou pamplemousse</label>
+              <label><input type="checkbox" name="gemfibrozil"> Gemfibrozil ou fibrate associe</label>
+              <label><input type="checkbox" name="gout"> Goutte / hyperuricemie connue</label>
+            </div>
+          </fieldset>
+        </form>
+
+        <div class="output-grid">
+          <article class="output-card">
+            <h3>Traitement propose</h3>
+            <ul id="treatmentPlan"></ul>
+          </article>
+          <article class="output-card">
+            <h3>Si objectif non atteint</h3>
+            <ul id="nextSteps"></ul>
+          </article>
+          <article class="output-card">
+            <h3>Surveillance</h3>
+            <ul id="monitoringPlan"></ul>
+          </article>
+          <article class="output-card">
+            <h3>Note medicale copiable</h3>
+            <textarea id="medicalNote" rows="9" spellcheck="false"></textarea>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-panel" id="refus" data-view="refus">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Dialogue pratique</p>
+            <h2>Patient dit : je ne veux pas de statine</h2>
+          </div>
+          <button type="button" class="ghost-button" data-copy-template="refusal">Copier la trace</button>
+        </div>
+        <div class="cards four">
+          <article>
+            <h3>Explorer</h3>
+            <p>Qu'est-ce qui vous inquiete le plus avec les statines ? Est-ce une experience personnelle ou une information entendue ? Preferez-vous eviter toute statine ou essayer une dose faible ?</p>
+          </article>
+          <article>
+            <h3>Expliquer simplement</h3>
+            <p>Le but n'est pas de traiter un chiffre, mais de reduire votre risque d'infarctus ou d'AVC. La statine est le traitement dont le benefice est le mieux etabli lorsque le risque cardiovasculaire est eleve.</p>
+          </article>
+          <article>
+            <h3>Options</h3>
+            <p>Essai faible dose, pravastatine ou rosuvastatine faible dose, prise un jour sur deux, ezetimibe si refus maintenu, puis ezetimibe + NILEMDO seulement si haut/tres haut risque et criteres d'intolerance/contre-indication.</p>
+          </article>
+          <article>
+            <h3>Decision partagee</h3>
+            <p>Information donnee sur le risque CV, benefices/risques et alternatives. Preference patient notee. Plan de suivi propose avec recontrole biologique et possibilite de revenir sur la decision.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-panel" id="muscles" data-view="muscles">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Algorithme intolerance</p>
+            <h2>Patient dit : j'ai mal aux jambes avec la statine</h2>
+          </div>
+          <button type="button" class="ghost-button" data-copy-template="muscle">Copier conduite</button>
+        </div>
+        <div class="timeline">
+          <article>
+            <span>1</span>
+            <div>
+              <h3>Caracteriser</h3>
+              <p>Douleur symetrique ? cuisses, epaules, mollets ? debut apres introduction ou hausse de dose ? disparition a l'arret puis reapparition a la reprise ? effort intense, alcool, IRC, age eleve, fragilite ?</p>
+            </div>
+          </article>
+          <article>
+            <span>2</span>
+            <div>
+              <h3>Biologie utile</h3>
+              <p>CPK, creatinine/DFG, ASAT/ALAT, TSH. Urines foncees, faiblesse importante ou CPK tres elevee : rechercher rhabdomyolyse.</p>
+            </div>
+          </article>
+          <article>
+            <span>3</span>
+            <div>
+              <h3>Selon CPK</h3>
+              <p>&lt; 4 x N : pause courte si genant puis rechallenge. 4-10 x N : arret, controle, reprise prudente apres normalisation. &gt; 10 x N, faiblesse ou urines foncees : arret immediat, bilan renal, urgence/avis specialise.</p>
+            </div>
+          </article>
+          <article>
+            <span>4</span>
+            <div>
+              <h3>Rechallenge intelligent</h3>
+              <p>Autre statine, dose plus faible, rosuvastatine alternee, ajout d'ezetimibe. Si intolerance vraie a au moins deux statines dont une faible dose : documenter et discuter ezetimibe +/- NILEMDO selon risque.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-panel" id="triglycerides" data-view="triglycerides">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Module TG</p>
+            <h2>Triglycerides eleves</h2>
+          </div>
+          <button type="button" class="ghost-button" data-section="decision">Retour saisie</button>
+        </div>
+        <div id="tgDecision" class="tg-banner"></div>
+        <div class="cards three" id="tgCards"></div>
+      </section>
+
+      <section class="section-panel" id="efficacite" data-view="efficacite">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Repere rapide</p>
+            <h2>Baisse attendue LDL-c / TG</h2>
+          </div>
+          <p class="muted">Les pourcentages sont des ordres de grandeur utiles pour choisir une intensite, pas une garantie individuelle.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Classe / option</th>
+                <th>Effet attendu</th>
+                <th>Place pratique</th>
+              </tr>
+            </thead>
+            <tbody id="efficacyRows"></tbody>
+          </table>
+        </div>
+        <p class="safety-line">Baisse de LDL ne signifie pas benefice clinique identique selon les classes. Les statines ont le niveau de preuve le plus robuste en prevention cardiovasculaire.</p>
+      </section>
+
+      <section class="section-panel" id="fiche" data-view="fiche">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Document patient</p>
+            <h2>Fiche patient imprimable</h2>
+          </div>
+          <button type="button" class="primary-button" data-print="patient">Imprimer / PDF</button>
+        </div>
+        <article class="patient-sheet" id="patientSheet">
+          <h2>Comprendre le traitement du cholesterol</h2>
+          <h3>Pourquoi traiter ?</h3>
+          <p>Le cholesterol LDL participe a la formation de plaques dans les arteres. Chez certaines personnes, surtout quand le risque cardiovasculaire est eleve, le faire baisser diminue le risque d'infarctus ou d'AVC.</p>
+          <h3>Ce que fait une statine</h3>
+          <p>Une statine baisse la production de cholesterol par le foie. C'est la famille de medicaments dont le benefice cardiovasculaire est le mieux demontre quand l'indication est bien posee.</p>
+          <h3>Douleur musculaire</h3>
+          <p>Ne pas arreter seul durablement. Contactez votre medecin, surtout si faiblesse importante, urines foncees, fievre ou douleur intense. Une autre dose ou une autre statine peut parfois etre mieux toleree.</p>
+          <h3>Hygiene de vie utile</h3>
+          <p>Alimentation mediterraneenne, activite physique reguliere, arret du tabac, perte de poids si necessaire, reduction de l'alcool surtout si triglycerides eleves.</p>
+          <h3>Recontrole</h3>
+          <p>Une prise de sang est souvent proposee apres 6 a 8 semaines lors d'une introduction ou modification, puis selon le contexte clinique.</p>
+        </article>
+      </section>
+
+      <section class="section-panel" id="securite" data-view="securite">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Securite</p>
+            <h2>A verifier avant prescription</h2>
+          </div>
+        </div>
+        <div class="cards four" id="safetyCards"></div>
+      </section>
+
+      <section class="section-panel" id="sources" data-view="sources">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Transparence</p>
+            <h2>Sources synthetisees</h2>
+          </div>
+          <p class="muted">Les recommandations et conditions de remboursement changent : verifier les monographies et avis actualises si decision complexe.</p>
+        </div>
+        <ul class="source-list" id="sourceList"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>Outil d'aide a la decision. Ne remplace pas le jugement clinique, les recommandations locales, ni la decision partagee avec le patient.</p>
+    <button type="button" data-section="securite">Securite</button>
+    <button type="button" data-section="sources">Sources</button>
+  </footer>
+
+  <script>
+window.LIPIDMG_DATA = {
+  conversion: {
+    cholesterolGLToMmol: 2.586,
+    tgGLToMmol: 1.129
+  },
+  targets: {
+    low: {
+      label: "Faible risque",
+      ldlMmol: 3.0,
+      ldlGL: 1.16,
+      reduction: "Objectif LDL < 3,0 mmol/L (< 1,16 g/L). Pas de baisse imposee si le risque global reste faible."
+    },
+    moderate: {
+      label: "Risque modere",
+      ldlMmol: 2.6,
+      ldlGL: 1.0,
+      reduction: "Objectif LDL < 2,6 mmol/L (< 1,00 g/L). Intensifier selon facteurs de risque et preference patient."
+    },
+    high: {
+      label: "Haut risque",
+      ldlMmol: 1.8,
+      ldlGL: 0.70,
+      reduction: "Objectif LDL < 1,8 mmol/L (< 0,70 g/L) et reduction >= 50 % si possible."
+    },
+    veryHigh: {
+      label: "Tres haut risque",
+      ldlMmol: 1.4,
+      ldlGL: 0.55,
+      reduction: "Objectif LDL < 1,4 mmol/L (< 0,55 g/L) et reduction >= 50 %."
+    },
+    secondary: {
+      label: "Prevention secondaire",
+      ldlMmol: 1.4,
+      ldlGL: 0.55,
+      reduction: "Objectif LDL < 1,4 mmol/L (< 0,55 g/L) et reduction >= 50 %."
+    },
+    recurrent: {
+      label: "Evenement CV recidivant",
+      ldlMmol: 1.0,
+      ldlGL: 0.40,
+      reduction: "Cible < 1,0 mmol/L (< 0,40 g/L) a envisager avec avis specialise si recidive sous traitement maximal."
+    }
+  },
+  efficacy: [
+    {
+      option: "Statine faible intensite",
+      effect: "LDL < -30 %",
+      place: "Rarement suffisante si haut risque ; utile en rechallenge tres prudent ou fragilite."
+    },
+    {
+      option: "Statine intensite moderee",
+      effect: "LDL -30 a -49 %",
+      place: "Atorvastatine 10-20 mg, rosuvastatine 5-10 mg, simvastatine 20-40 mg selon contexte."
+    },
+    {
+      option: "Statine forte intensite",
+      effect: "LDL >= -50 %",
+      place: "Atorvastatine 40-80 mg ou rosuvastatine 20-40 mg si prevention secondaire, tres haut risque ou besoin de baisse importante."
+    },
+    {
+      option: "Atorvastatine 10 mg",
+      effect: "LDL -35 a -40 %",
+      place: "Depart possible si risque modere/haut avec adaptation a 6-8 semaines."
+    },
+    {
+      option: "Atorvastatine 20 mg",
+      effect: "LDL -40 a -45 %",
+      place: "Intermediaire utile si reduction importante sans viser d'emblee forte intensite."
+    },
+    {
+      option: "Atorvastatine 40-80 mg",
+      effect: "LDL -50 a -55 %",
+      place: "Forte intensite ; surveiller interactions CYP3A4."
+    },
+    {
+      option: "Rosuvastatine 5 mg",
+      effect: "LDL -35 a -40 %",
+      place: "Option hydrophile en reprise prudente."
+    },
+    {
+      option: "Rosuvastatine 10 mg",
+      effect: "LDL -40 a -45 %",
+      place: "Intensite moderee, parfois utile en prise alternee si intolerance."
+    },
+    {
+      option: "Rosuvastatine 20-40 mg",
+      effect: "LDL -50 a -55 %",
+      place: "Forte intensite ; adapter si insuffisance renale."
+    },
+    {
+      option: "Pravastatine / fluvastatine",
+      effect: "LDL -20 a -35 %",
+      place: "Moins puissantes, parfois mieux tolerees en rechallenge."
+    },
+    {
+      option: "Ezetimibe 10 mg",
+      effect: "LDL -15 a -22 % seul ; -15 a -25 % en plus d'une statine",
+      place: "Ajout si cible non atteinte ou alternative si statine refusee/mal toleree."
+    },
+    {
+      option: "Acide bempedoique / NILEMDO 180 mg",
+      effect: "LDL -15 a -25 % ; association ezetimibe environ -35 a -40 %",
+      place: "Surtout haut/tres haut risque avec intolerance averee ou contre-indication statine, LDL non a l'objectif, selon AMM/remboursement."
+    },
+    {
+      option: "Fibrate",
+      effect: "TG -30 a -50 %, HDL hausse moderee, LDL variable",
+      place: "Hypertriglyceridemie significative/severe ; prevention pancreatite. Pas traitement principal du LDL."
+    }
+  ],
+  tgCategories: [
+    {
+      id: "normal",
+      title: "TG < 2 g/L",
+      text: "Prise en charge cardiovasculaire globale. La decision de statine depend surtout du risque global et du LDL."
+    },
+    {
+      id: "moderate",
+      title: "TG 2-4 g/L",
+      text: "Dietique stricte, alcool et sucres rapides, poids, activite physique, controle du diabete. Statine si risque CV eleve."
+    },
+    {
+      id: "high",
+      title: "TG > 4-5 g/L persistants",
+      text: "Discuter fibrate pour reduire le risque pancreatique si echec des mesures etiologiques/dietetiques ; verifier DFG, foie, lithiase biliaire."
+    },
+    {
+      id: "critical",
+      title: "TG > 10 g/L",
+      text: "Alerte pancreatite aigue. Avis urgent ou hospitalisation si douleur abdominale ou contexte evocateur."
+    }
+  ],
+  safety: [
+    {
+      title: "Statines",
+      items: [
+        "Eviter/contre-indiquer en grossesse, allaitement ou projet selon cadre reglementaire.",
+        "Ne pas initier si maladie hepatique active sans avis.",
+        "Interactions CYP3A4 : macrolides, azoles, inhibiteurs de protease, ciclosporine, diltiazem, verapamil, pamplemousse surtout simvastatine/atorvastatine.",
+        "Risque musculaire accru : age eleve, IRC, hypothyroidie, fibrate associe, antecedent myopathie."
+      ]
+    },
+    {
+      title: "Ezetimibe",
+      items: [
+        "Bonne tolerance globale.",
+        "Prudence si atteinte hepatique severe.",
+        "Surveiller les transaminases si association statine."
+      ]
+    },
+    {
+      title: "NILEMDO / acide bempedoique",
+      items: [
+        "Verifier AMM et remboursement actuels.",
+        "Place principale : haut/tres haut risque avec intolerance averee ou contre-indication statine.",
+        "Surveiller goutte/hyperuricemie, tendinopathie et fonction renale selon contexte.",
+        "Ne pas presenter comme une statine naturelle ni comme remplacement automatique."
+      ]
+    },
+    {
+      title: "Fibrates",
+      items: [
+        "Adapter ou eviter selon DFG.",
+        "Prudence si lithiase biliaire ou atteinte hepatique.",
+        "Association statine + fibrate : prudence musculaire.",
+        "Gemfibrozil + statine : a eviter."
+      ]
+    }
+  ],
+  templates: {
+    refusal: "Information donnee sur le risque cardiovasculaire global, le role du LDL et les benefices/risques des statines. Inquietudes du patient explorees sans culpabilisation. Alternatives discutees : essai faible dose, autre statine, prise alternee, ezetimibe, et avis specialise selon risque. Patient accepte/refuse a ce stade. Plan de suivi et recontrole biologique proposes.",
+    muscle: "Douleurs musculaires sous statine : caracterisation temporelle et topographique, recherche facteurs favorisants/interactions, CPK/creatinine/DFG/ASAT-ALAT/TSH selon contexte. Si CPK normale ou < 4 x N : pause courte si symptomes genants puis rechallenge dose plus faible/autre statine. Si CPK 4-10 x N : arret et controle. Si CPK > 10 x N, faiblesse importante ou urines foncees : arret immediat, bilan renal, urgence/avis specialise."
+  },
+  scenarios: [
+    {
+      title: "Homme 58 ans, tabac + HTA, LDL 1,85",
+      values: { age: 58, sex: "male", secondary: "no", diabetes: "none", ckd: "none", familial: "no", riskFactors: ["smoking", "hta"], ldl: 1.85, tg: 1.5, hdl: 0.45, totalChol: 2.45, acceptsStatin: true }
+    },
+    {
+      title: "Femme 66 ans, AVC ancien, LDL 1,20",
+      values: { age: 66, sex: "female", secondary: "yes", diabetes: "none", ckd: "none", ldl: 1.20, tg: 1.2, hdl: 0.55, totalChol: 1.95, acceptsStatin: true }
+    },
+    {
+      title: "Homme 72 ans, coronarien, myalgies CPK normale",
+      values: { age: 72, sex: "male", secondary: "yes", currentTherapy: "atorvastatin", dose: "atorvastatine 40 mg", tolerance: "muscle", muscleHistory: true, cpkRatio: "normal", ldl: 1.05, tg: 1.4, hdl: 0.44, totalChol: 1.85 }
+    },
+    {
+      title: "Femme 55 ans, refuse statine, LDL 1,75",
+      values: { age: 55, sex: "female", secondary: "no", diabetes: "none", ckd: "none", riskFactors: [], ldl: 1.75, tg: 1.1, hdl: 0.60, totalChol: 2.50, acceptsStatin: false, refusesStatin: true }
+    },
+    {
+      title: "Diabete type 2 + MRC, LDL 1,10",
+      values: { age: 64, sex: "male", diabetes: "type2", ckd: "mild", ldl: 1.10, tg: 1.8, hdl: 0.42, totalChol: 1.95, acceptsStatin: true }
+    },
+    {
+      title: "TG 11 g/L + douleur abdominale",
+      values: { age: 48, sex: "male", ldl: 1.20, tg: 11, hdl: 0.35, totalChol: 3.2, abdominalPain: "yes", riskFactors: ["obesity"] }
+    },
+    {
+      title: "TG 4,5 g/L, alcool + diabete desequilibre",
+      values: { age: 59, sex: "male", diabetes: "type2", ldl: 1.00, tg: 4.5, hdl: 0.32, totalChol: 2.2, riskFactors: ["obesity"], acceptsStatin: true }
+    },
+    {
+      title: "Simvastatine + macrolide",
+      values: { age: 62, sex: "female", currentTherapy: "simvastatin", dose: "simvastatine 40 mg", macrolide: true, ldl: 0.95, tg: 1.2, hdl: 0.52, totalChol: 1.75 }
+    },
+    {
+      title: "Haut risque, intolerance a deux statines",
+      values: { age: 67, sex: "male", diabetes: "type2", ckd: "none", riskFactors: ["hta"], tolerance: "trueIntolerance", acceptsStatin: false, ldl: 1.35, tg: 1.4, hdl: 0.43, totalChol: 2.1 }
+    },
+    {
+      title: "Faible risque, LDL 1,45",
+      values: { age: 38, sex: "female", secondary: "no", diabetes: "none", ckd: "none", familial: "no", riskFactors: [], ldl: 1.45, tg: 0.9, hdl: 0.64, totalChol: 2.15, acceptsStatin: true }
+    }
+  ],
+  sources: [
+    {
+      label: "ESC/EAS 2019 - dyslipidemies, cibles LDL par risque",
+      url: "https://academic.oup.com/eurheartj/article/41/1/111/5556353"
+    },
+    {
+      label: "RisqueCV.fr - estimation SCORE2/SCORE2-OP en pratique",
+      url: "https://risquecv.fr/"
+    },
+    {
+      label: "VIDAL - medicaments du cholesterol",
+      url: "https://www.vidal.fr/maladies/coeur-circulation-veines/cholesterol/medicaments.html"
+    },
+    {
+      label: "VIDAL - NILEMDO, option en cas de contre-indication ou intolerance aux statines",
+      url: "https://www.vidal.fr/actualites/37300-nilemdo-nouvelle-option-therapeutique-en-cas-de-contre-indication-ou-d-intolerance-aux-statines.html"
+    },
+    {
+      label: "VIDAL - ezetimibe",
+      url: "https://www.vidal.fr/medicaments/substances/ezetimibe-22496.html"
+    },
+    {
+      label: "HAS - ezetimibe / Ezetrol, avis de transparence",
+      url: "https://www.has-sante.fr/upload/docs/application/pdf/ezetrol0604.pdf"
+    },
+    {
+      label: "Inserm - statines apres 75 ans, arret et prevention",
+      url: "https://www.inserm.fr/actualite/cholesterol-faut-il-arreter-prise-preventive-statines-apres-75-ans/"
+    },
+    {
+      label: "VIDAL - fenofibrate",
+      url: "https://www.vidal.fr/medicaments/gammes/fenofibrate-eg-17620.html"
+    },
+    {
+      label: "AFMPS - fibrates et reduction du risque CV",
+      url: "https://www.afmps.be/fr/news/news_fibrates"
+    },
+    {
+      label: "SFPT - place des fibrates, analyse pharmacologique",
+      url: "https://sfpt-fr.org/pharmacofact-blog/1746-f004-int%C3%A9r%C3%AAt-des-fibrates-dans-la-r%C3%A9duction-des-risques-cardiovasculaires"
+    },
+    {
+      label: "Medicalement Geek - support de dialogue autour des statines",
+      url: "https://www.medicalement-geek.com/2023/02/les-statines-sont-mes-copines.html"
+    }
+  ]
+};
+
+</script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA = window.LIPIDMG_DATA;
+  const qs = (selector, root = document) => root.querySelector(selector);
+  const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+  function toNumber(value) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function ldlToGL(value, unit) {
+    return unit === "mmolL" ? value / DATA.conversion.cholesterolGLToMmol : value;
+  }
+
+  function ldlToMmol(value, unit) {
+    return unit === "gL" ? value * DATA.conversion.cholesterolGLToMmol : value;
+  }
+
+  function tgToGL(value, unit) {
+    return unit === "mmolL" ? value / DATA.conversion.tgGLToMmol : value;
+  }
+
+  function tgToMmol(value, unit) {
+    return unit === "gL" ? value * DATA.conversion.tgGLToMmol : value;
+  }
+
+  function formatGL(value) {
+    return Number.isFinite(value) && value > 0 ? `${value.toFixed(2)} g/L` : "-";
+  }
+
+  function formatMmol(value) {
+    return Number.isFinite(value) && value > 0 ? `${value.toFixed(2)} mmol/L` : "-";
+  }
+
+  function getSelectedValues(select) {
+    return Array.from(select.selectedOptions).map((option) => option.value);
+  }
+
+  function collectForm(form) {
+    const fd = new FormData(form);
+    const riskFactorsSelect = form.elements.riskFactors;
+    return {
+      secondary: fd.get("secondary") || "no",
+      recurrentEvent: fd.get("recurrentEvent") || "no",
+      diabetes: fd.get("diabetes") || "none",
+      ckd: fd.get("ckd") || "none",
+      familial: fd.get("familial") || "no",
+      age: toNumber(fd.get("age")),
+      sex: fd.get("sex") || "other",
+      riskFactors: getSelectedValues(riskFactorsSelect),
+      ldlRaw: toNumber(fd.get("ldl")),
+      ldlUnit: fd.get("ldlUnit") || "gL",
+      hdl: toNumber(fd.get("hdl")),
+      totalChol: toNumber(fd.get("totalChol")),
+      tgRaw: toNumber(fd.get("tg")),
+      tgUnit: fd.get("tgUnit") || "gL",
+      cpkRatio: fd.get("cpkRatio") || "unknown",
+      liver: fd.get("liver") || "normal",
+      thyroid: fd.get("thyroid") || "none",
+      abdominalPain: fd.get("abdominalPain") || "no",
+      currentTherapy: fd.get("currentTherapy") || "none",
+      dose: (fd.get("dose") || "").trim(),
+      tolerance: fd.get("tolerance") || "ok",
+      acceptsStatin: fd.get("acceptsStatin") === "on",
+      refusesStatin: fd.get("refusesStatin") === "on",
+      muscleHistory: fd.get("muscleHistory") === "on",
+      pregnancy: fd.get("pregnancy") === "on",
+      polypharmacy: fd.get("polypharmacy") === "on",
+      macrolide: fd.get("macrolide") === "on",
+      diltiazem: fd.get("diltiazem") === "on",
+      gemfibrozil: fd.get("gemfibrozil") === "on",
+      gout: fd.get("gout") === "on"
+    };
+  }
+
+  function classifyRisk(input) {
+    const majorFactors = input.riskFactors.length;
+    const hasDiabetes = input.diabetes !== "none";
+    const hasCkd = input.ckd !== "none";
+    const ldlGL = ldlToGL(input.ldlRaw, input.ldlUnit);
+
+    if (input.recurrentEvent === "yes") {
+      return { key: "recurrent", reason: "Evenement cardiovasculaire recidivant malgre traitement maximal signale." };
+    }
+    if (input.secondary === "yes") {
+      return { key: "secondary", reason: "Antecedent cardiovasculaire avere : prevention secondaire." };
+    }
+    if (input.ckd === "severe" || (hasDiabetes && (input.ckd === "albuminuria" || input.ckd === "mild"))) {
+      return { key: "veryHigh", reason: "MRC severe ou diabete avec atteinte renale : tres haut risque simplifie." };
+    }
+    if ((input.familial === "yes" && majorFactors >= 1) || (hasDiabetes && majorFactors >= 2)) {
+      return { key: "veryHigh", reason: "Association de facteurs majeurs : tres haut risque simplifie." };
+    }
+    if (input.familial === "yes" || input.ckd === "mild" || input.ckd === "albuminuria" || ldlGL >= 1.9 || hasDiabetes) {
+      return { key: "high", reason: "Diabete, MRC moderee, LDL tres eleve ou hypercholesterolemie familiale suspectee." };
+    }
+    if (majorFactors >= 2 || (input.age >= 60 && majorFactors >= 1) || ldlGL >= 1.6) {
+      return { key: "moderate", reason: "Facteurs de risque multiples ou LDL au-dessus des seuils usuels." };
+    }
+    return { key: "low", reason: "Pas d'argument majeur de haut risque dans cette classification simplifiee." };
+  }
+
+  function getTarget(riskKey) {
+    return DATA.targets[riskKey] || DATA.targets.low;
+  }
+
+  function reductionNeeded(ldlGL, targetGL) {
+    if (!ldlGL || ldlGL <= targetGL) return 0;
+    return ((ldlGL - targetGL) / ldlGL) * 100;
+  }
+
+  function tgCategory(tgGL, abdominalPain) {
+    if (tgGL >= 10) {
+      return {
+        key: "critical",
+        label: "Alerte TG > 10 g/L",
+        advice: abdominalPain === "yes"
+          ? "Risque de pancreatite aigue : douleur abdominale associee, avis urgent/hospitalisation."
+          : "Risque de pancreatite aigue : avis rapide, recherche causes secondaires, regime strict et traitement specialise."
+      };
+    }
+    if (tgGL >= 4) {
+      return {
+        key: "high",
+        label: "TG severes/persistants",
+        advice: "Corriger causes secondaires. Discuter fibrate si persistance > 4-5 g/L pour reduire le risque pancreatique."
+      };
+    }
+    if (tgGL >= 2) {
+      return {
+        key: "moderate",
+        label: "TG 2-4 g/L",
+        advice: "Mesures dietetiques strictes, alcool/sucres rapides, poids, activite physique, controle du diabete ; statine si risque CV eleve."
+      };
+    }
+    return {
+      key: "normal",
+      label: "TG < 2 g/L",
+      advice: "Priorite a la strategie LDL et au risque cardiovasculaire global."
+    };
+  }
+
+  function buildSafetyAlerts(input) {
+    const alerts = [];
+    if (input.pregnancy) alerts.push({ level: "danger", text: "Grossesse/allaitement/projet : eviter statine et demander avis specialise." });
+    if (input.liver === "activeDisease") alerts.push({ level: "danger", text: "Maladie hepatique active : ne pas initier statine sans avis." });
+    if (input.currentTherapy === "simvastatin" && (input.macrolide || input.diltiazem)) {
+      alerts.push({ level: "danger", text: "Simvastatine + macrolide/azole/diltiazem/verapamil/pamplemousse : interaction musculaire importante." });
+    }
+    if (input.currentTherapy === "atorvastatin" && input.macrolide) {
+      alerts.push({ level: "warning", text: "Atorvastatine + inhibiteur CYP3A4 : verifier interaction, suspendre/adapter si besoin." });
+    }
+    if (input.gemfibrozil) alerts.push({ level: "danger", text: "Gemfibrozil ou fibrate avec statine : eviter gemfibrozil, prudence/avis specialise." });
+    if (input.thyroid === "hypothyroid" || input.thyroid === "suspected") alerts.push({ level: "warning", text: "Hypothyroidie possible : corriger/rechercher avant de conclure a une intolerance musculaire." });
+    if (input.cpkRatio === "high") alerts.push({ level: "danger", text: "CPK > 10 x N ou signes graves : arret statine, bilan renal, urgence/avis specialise." });
+    if (input.gout) alerts.push({ level: "warning", text: "Goutte/hyperuricemie : prudence avec acide bempedoique, surveiller uricemie." });
+    return alerts;
+  }
+
+  function statinIsDifficult(input) {
+    return input.pregnancy ||
+      input.tolerance === "contraindication" ||
+      input.tolerance === "trueIntolerance" ||
+      input.refusesStatin ||
+      !input.acceptsStatin;
+  }
+
+  // Moteur volontairement lisible : il classe le risque, calcule la cible,
+  // puis formule une proposition de conduite a tenir sans prescription automatique.
+  function computeDecision(input) {
+    const ldlGL = ldlToGL(input.ldlRaw, input.ldlUnit);
+    const ldlMmol = ldlToMmol(input.ldlRaw, input.ldlUnit);
+    const tgGL = tgToGL(input.tgRaw, input.tgUnit);
+    const tgMmol = tgToMmol(input.tgRaw, input.tgUnit);
+    const nonHdl = input.totalChol > 0 && input.hdl > 0 ? input.totalChol - input.hdl : 0;
+    const risk = classifyRisk(input);
+    const target = getTarget(risk.key);
+    const reduction = reductionNeeded(ldlGL, target.ldlGL);
+    const tg = tgCategory(tgGL, input.abdominalPain);
+    const alerts = buildSafetyAlerts(input);
+    const plan = [];
+    const next = [];
+    const monitoring = [];
+    const difficultStatin = statinIsDifficult(input);
+    const activeMuscleIssue = input.tolerance === "muscle" || input.muscleHistory || input.cpkRatio !== "unknown";
+    const aboveTarget = ldlGL > target.ldlGL;
+    const highLike = ["high", "veryHigh", "secondary", "recurrent"].includes(risk.key);
+
+    if (tg.key === "critical") {
+      plan.push("Priorite immediate aux triglycerides : risque de pancreatite aigue, avis urgent si douleur abdominale ou contexte evocateur.");
+      next.push("Rechercher causes secondaires : alcool, diabete desequilibre, hypothyroidie, medicaments hyperTG, grossesse, nephropathie.");
+      monitoring.push("Controle clinique rapproche, lipides a jeun, glycemie/HbA1c, TSH, bilan renal/hepatique.");
+    }
+
+    if (!aboveTarget && risk.key !== "recurrent") {
+      plan.push("LDL deja dans la cible calculee : poursuivre strategie actuelle, renforcer hygiene de vie et adherence.");
+      next.push("Recontroler selon contexte clinique, surtout apres modification therapeutique ou changement de risque.");
+    } else if (input.cpkRatio === "high") {
+      plan.push("Symptomes musculaires avec CPK > 10 x N ou signe grave : arret immediat, bilan renal, urgence/avis specialise.");
+      next.push("Reprendre une strategie lipidique seulement apres clarification et avis adapte au niveau de risque.");
+    } else if (activeMuscleIssue && highLike) {
+      plan.push("Myalgies sous statine sans signe grave : ne pas conclure trop vite a une intolerance definitive ; pause courte si genant puis rechallenge prudent.");
+      next.push("Reprendre avec autre statine ou dose plus faible, souvent pravastatine ou rosuvastatine, eventuellement prise alternee.");
+      next.push("Ajouter ezetimibe pour atteindre la cible avec une dose de statine mieux toleree.");
+      next.push("Si intolerance vraie a au moins deux statines dont une faible dose : documenter puis discuter ezetimibe +/- NILEMDO selon risque et criteres actuels.");
+    } else if (difficultStatin) {
+      if (input.pregnancy) {
+        plan.push("Ne pas initier de statine dans ce contexte ; hygiene de vie et avis specialise si risque eleve.");
+      } else if (highLike) {
+        plan.push("Statine non possible ou refusee : documenter le motif, proposer ezetimibe 10 mg apres decision partagee.");
+        next.push("Si haut/tres haut risque avec LDL encore au-dessus de la cible malgre ezetimibe : discuter acide bempedoique/NILEMDO 180 mg selon AMM/remboursement.");
+        next.push("Avis cardiologue/endocrinologue/nutrition si LDL tres eleve, prevention secondaire ou echec des options orales.");
+      } else {
+        plan.push("Risque faible/modere avec statine refusee ou mal toleree : hygiene de vie, decision partagee, recontrole ; ezetimibe possible si LDL persistant au-dessus cible.");
+        next.push("Revenir sur un essai faible dose ou une statine hydrophile si le patient l'accepte plus tard.");
+      }
+    } else if (risk.key === "secondary" || risk.key === "veryHigh" || risk.key === "recurrent") {
+      plan.push("Proposition : statine forte intensite si possible, atorvastatine 40-80 mg ou rosuvastatine 20-40 mg.");
+      next.push("Si cible non atteinte a 6-8 semaines : ajouter ezetimibe 10 mg.");
+      next.push("Si echec malgre statine maximale + ezetimibe +/- NILEMDO : avis specialise pour PCSK9/inclisiran selon contexte.");
+    } else if (risk.key === "high") {
+      const intensity = reduction >= 50 ? "forte intensite" : "intensite moderee a forte";
+      plan.push(`Proposition : statine ${intensity} selon LDL et reduction necessaire.`);
+      next.push("Ajouter ezetimibe si cible non atteinte malgre statine optimisee.");
+      next.push("NILEMDO seulement si intolerance averee ou contre-indication statine, et criteres actuels remplis.");
+    } else if (risk.key === "moderate") {
+      plan.push("Mesures hygieno-dietetiques d'abord si contexte stable ; discuter statine d'intensite moderee si LDL persiste au-dessus de la cible ou facteurs de risque multiples.");
+      next.push("Ezetimibe si statine non toleree ou refus persistant apres decision partagee.");
+    } else {
+      plan.push("Faible risque : hygiene de vie prioritaire, pas de traitement automatique.");
+      if (ldlGL >= 1.9 || input.familial === "yes") {
+        next.push("LDL tres eleve ou suspicion familiale : confirmer, rechercher causes secondaires et discuter avis specialise/traitement.");
+      } else {
+        next.push("Recontrole biologique selon contexte, eviter la surmedicalisation.");
+      }
+    }
+
+    if (input.tolerance === "muscle" || input.muscleHistory || input.cpkRatio !== "unknown") {
+      if (input.cpkRatio === "mid") {
+        next.push("Myalgies avec CPK 4-10 x N : arret temporaire, recherche cause, reprise apres normalisation a dose plus faible/autre statine.");
+      } else if (input.cpkRatio === "high") {
+        next.push("CPK > 10 x N, faiblesse ou urines foncees : urgence/avis specialise.");
+      } else {
+        next.push("Myalgies avec CPK normale ou < 4 x N : pause courte si genant, puis rechallenge dose plus faible, autre statine ou prise alternee.");
+      }
+    }
+
+    if (tg.key === "high") {
+      next.push("TG > 4-5 g/L persistants : discuter fibrate, surtout si echec dietetique ou risque pancreatique ; ne pas le positionner comme traitement principal du LDL.");
+    }
+    if (tg.key === "moderate") {
+      next.push("TG 2-4 g/L : cibler alcool, sucres rapides, poids, diabete et activite physique.");
+    }
+
+    monitoring.push("EAL de controle 6-8 semaines apres introduction ou adaptation, puis selon stabilite.");
+    monitoring.push("Transaminases avant traitement si contexte a risque ; CPK si symptomes musculaires.");
+    monitoring.push("Verifier interactions, DFG, grossesse/projet et preference patient avant prescription.");
+    if (input.currentTherapy === "nilemdo" || plan.join(" ").includes("NILEMDO")) {
+      monitoring.push("Si NILEMDO : verifier AMM/remboursement actuel, uricemie/goutte, tendinopathie et fonction renale selon contexte.");
+    }
+    if (input.currentTherapy === "fibrate" || tg.key === "high") {
+      monitoring.push("Si fibrate : creatinine/DFG, transaminases, CPK si douleurs ; eviter gemfibrozil avec statine.");
+    }
+
+    const message = highLike
+      ? "Le but est de reduire le risque d'infarctus ou d'AVC, pas seulement de corriger un chiffre."
+      : "On avance par hygiene de vie, decision partagee et recontrole, sans traitement automatique si le risque reste faible.";
+
+    return {
+      input,
+      risk,
+      target,
+      ldlGL,
+      ldlMmol,
+      tgGL,
+      tgMmol,
+      nonHdl,
+      reduction,
+      tg,
+      alerts,
+      plan,
+      next,
+      monitoring,
+      message
+    };
+  }
+
+  function buildMedicalNote(decision) {
+    const target = `${decision.target.label}, cible LDL < ${decision.target.ldlGL.toFixed(2)} g/L (${decision.target.ldlMmol.toFixed(1)} mmol/L)`;
+    const reduction = decision.reduction > 0 ? `${Math.ceil(decision.reduction)} %` : "objectif atteint ou reduction non requise";
+    return [
+      `LipidMG - aide a la decision (ne remplace pas le jugement clinique).`,
+      `Risque : ${decision.target.label}. Motif : ${decision.risk.reason}`,
+      `LDL actuel : ${formatGL(decision.ldlGL)} (${formatMmol(decision.ldlMmol)}). ${target}. Reduction necessaire : ${reduction}.`,
+      `Triglycerides : ${formatGL(decision.tgGL)} (${formatMmol(decision.tgMmol)}). ${decision.tg.label} - ${decision.tg.advice}`,
+      `Proposition initiale : ${decision.plan.join(" ")}`,
+      `Si objectif non atteint / alternative : ${decision.next.join(" ")}`,
+      `Surveillance : ${decision.monitoring.join(" ")}`,
+      `Message patient : ${decision.message}`,
+      `Decision partagee et preference patient a tracer. Verifier interactions, contre-indications, AMM/remboursement et avis specialise si situation complexe.`
+    ].join("\n");
+  }
+
+  function setList(element, items) {
+    element.innerHTML = "";
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      element.appendChild(li);
+    });
+  }
+
+  function renderAlerts(alerts) {
+    const stack = qs("#alertStack");
+    stack.innerHTML = "";
+    alerts.forEach((alert) => {
+      const div = document.createElement("div");
+      div.className = `alert ${alert.level}`;
+      div.textContent = alert.text;
+      stack.appendChild(div);
+    });
+  }
+
+  function renderDecision(decision) {
+    qs("#riskLabel").textContent = decision.target.label;
+    qs("#metricLdl").textContent = formatGL(decision.ldlGL);
+    qs("#metricTarget").textContent = `< ${decision.target.ldlGL.toFixed(2)} g/L`;
+    qs("#metricReduction").textContent = decision.reduction > 0 ? `${Math.ceil(decision.reduction)} %` : "0 %";
+    qs("#primaryAdvice").textContent = decision.plan[0] || "Saisie a completer.";
+    qs("#nonHdlOutput").textContent = decision.nonHdl > 0 ? `${decision.nonHdl.toFixed(2)} g/L` : "-";
+    renderAlerts(decision.alerts);
+    setList(qs("#treatmentPlan"), decision.plan);
+    setList(qs("#nextSteps"), decision.next);
+    setList(qs("#monitoringPlan"), decision.monitoring);
+    qs("#medicalNote").value = buildMedicalNote(decision);
+    renderTgDecision(decision);
+  }
+
+  function renderTgDecision(decision) {
+    const banner = qs("#tgDecision");
+    banner.className = `tg-banner ${decision.tg.key}`;
+    banner.innerHTML = `<strong>${decision.tg.label}</strong><span>${formatGL(decision.tgGL)} (${formatMmol(decision.tgMmol)}) - ${decision.tg.advice}</span>`;
+  }
+
+  function renderStaticData() {
+    const efficacyRows = qs("#efficacyRows");
+    DATA.efficacy.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${row.option}</td><td>${row.effect}</td><td>${row.place}</td>`;
+      efficacyRows.appendChild(tr);
+    });
+
+    const tgCards = qs("#tgCards");
+    DATA.tgCategories.forEach((cat) => {
+      const article = document.createElement("article");
+      article.className = cat.id;
+      article.innerHTML = `<h3>${cat.title}</h3><p>${cat.text}</p>`;
+      tgCards.appendChild(article);
+    });
+
+    const safetyCards = qs("#safetyCards");
+    DATA.safety.forEach((section) => {
+      const article = document.createElement("article");
+      const list = section.items.map((item) => `<li>${item}</li>`).join("");
+      article.innerHTML = `<h3>${section.title}</h3><ul>${list}</ul>`;
+      safetyCards.appendChild(article);
+    });
+
+    const sourceList = qs("#sourceList");
+    DATA.sources.forEach((source) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${source.url}" target="_blank" rel="noreferrer">${source.label}</a>`;
+      sourceList.appendChild(li);
+    });
+  }
+
+  function setSection(sectionId) {
+    qsa("[data-view]").forEach((section) => {
+      const active = section.dataset.view === sectionId;
+      section.classList.toggle("active-section", active);
+      if (active) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    qsa(".quick-nav button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.section === sectionId);
+    });
+  }
+
+  function applyScenario(form, scenario) {
+    form.reset();
+    qsa("select[multiple] option", form).forEach((option) => {
+      option.selected = false;
+    });
+    Object.entries(scenario.values).forEach(([name, value]) => {
+      const field = form.elements[name];
+      if (!field) return;
+      if (field instanceof RadioNodeList) return;
+      if (field.type === "checkbox") {
+        field.checked = Boolean(value);
+      } else if (field.multiple && Array.isArray(value)) {
+        qsa("option", field).forEach((option) => {
+          option.selected = value.includes(option.value);
+        });
+      } else {
+        field.value = value;
+      }
+    });
+    if (scenario.values.acceptsStatin === false) {
+      form.elements.acceptsStatin.checked = false;
+    }
+    update(form);
+    setSection("decision");
+  }
+
+  function renderScenarios(form) {
+    const list = qs("#scenarioList");
+    DATA.scenarios.forEach((scenario, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = `${index + 1}. ${scenario.title}`;
+      button.addEventListener("click", () => applyScenario(form, scenario));
+      list.appendChild(button);
+    });
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.left = "-999px";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    return Promise.resolve();
+  }
+
+  function update(form) {
+    const input = collectForm(form);
+    const decision = computeDecision(input);
+    renderDecision(decision);
+    return decision;
+  }
+
+  function initTheme() {
+    const stored = localStorage.getItem("lipidmg-theme");
+    if (stored === "dark") document.documentElement.classList.add("dark");
+    qs("#themeToggle").addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      localStorage.setItem("lipidmg-theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+    });
+  }
+
+  function init() {
+    const form = qs("#decisionForm");
+    renderStaticData();
+    renderScenarios(form);
+    initTheme();
+    update(form);
+
+    form.addEventListener("input", () => update(form));
+    form.addEventListener("change", () => update(form));
+    qs("#resetForm").addEventListener("click", () => {
+      form.reset();
+      qsa("select[multiple] option", form).forEach((option) => {
+        option.selected = false;
+      });
+      update(form);
+    });
+    qs("#copySummary").addEventListener("click", () => copyText(qs("#medicalNote").value));
+
+    qsa("[data-section]").forEach((button) => {
+      button.addEventListener("click", () => setSection(button.dataset.section));
+    });
+    qsa("[data-print='patient']").forEach((button) => {
+      button.addEventListener("click", () => window.print());
+    });
+    qsa("[data-copy-template]").forEach((button) => {
+      button.addEventListener("click", () => copyText(DATA.templates[button.dataset.copyTemplate]));
+    });
+  }
+
+  window.LIPIDMG_ENGINE = {
+    collectForm,
+    computeDecision,
+    classifyRisk,
+    ldlToGL,
+    tgToGL,
+    buildMedicalNote
+  };
+
+  if (typeof window !== "undefined" && typeof document !== "undefined") {
+    window.addEventListener("DOMContentLoaded", init);
+  }
+})();
+
+</script>
+</body>
+</html>
+
