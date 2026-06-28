@@ -16,6 +16,7 @@ const DOMAINES = {
   "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
   "Pneumologie":  {c:"var(--d-pneumo)", cb:"#e0f5fa"},
   "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
+  "Endocrinologie": {c:"var(--d-endoc)", cb:"#eef7da"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
@@ -114,7 +115,9 @@ const APPS = [
    href:"pneumo/spiro.html"},
   {t:"Douleur MG", e:"🩹", dom:"Médecine de la douleur",
    d:"Aide au choix antalgique en médecine générale : paliers OMS, douleurs nociceptives/neuropathiques, équivalences opioïdes, précautions et situations particulières.",
-   href:"douleur-mg/index.html"}
+   href:"douleur-mg/index.html"},
+  {t:"Endocrinologie", e:"🦋", dom:"Endocrinologie", soon:true,
+   d:"Aide endocrinologique en médecine générale (thyroïde, diabète, surrénales…) — application à fournir."}
 ];
 
 /* ---------- utilitaires ---------- */
