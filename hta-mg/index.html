@@ -551,6 +551,12 @@
       color: var(--orange);
     }
 
+    .alert.red .after-colon { color: var(--ink); font-weight: 600; }
+
+    details.bio-rideau { margin-top: 12px; border: 1px solid #d8e0e6; border-radius: var(--radius); padding: 6px 12px; }
+    details.bio-rideau > summary { cursor: pointer; font-weight: 700; color: var(--blue); padding: 4px 0; }
+    details.bio-rideau[open] > .form-grid { margin-top: 10px; }
+
     .alert.green {
       border: 1px solid var(--green);
       background: var(--green-bg);
@@ -1102,19 +1108,25 @@
               <label class="field">IMC
                 <input id="bmi" type="number" min="12" max="70" step="0.1" value="28">
               </label>
-              <label class="field">DFG ml/min/1,73 m²
-                <input id="egfr" type="number" min="3" max="160" value="58">
-              </label>
-              <label class="field">Créatinine µmol/L
-                <input id="creatinine" type="number" min="20" max="900" value="92">
-              </label>
-              <label class="field">Kaliémie mmol/L
-                <input id="potassium" type="number" min="1.5" max="8" step="0.1" value="4.4">
-              </label>
-              <label class="field">Natrémie mmol/L
-                <input id="sodium" type="number" min="110" max="165" step="1" value="140">
-              </label>
             </div>
+
+            <details class="bio-rideau">
+              <summary>Biologie récente — déplier si disponible (laisser vide si non connue au moment de l'introduction)</summary>
+              <div class="form-grid">
+                <label class="field">DFG ml/min/1,73 m²
+                  <input id="egfr" type="number" min="3" max="160" placeholder="si disponible">
+                </label>
+                <label class="field">Créatinine µmol/L
+                  <input id="creatinine" type="number" min="20" max="900" placeholder="si disponible">
+                </label>
+                <label class="field">Kaliémie mmol/L
+                  <input id="potassium" type="number" min="1.5" max="8" step="0.1" placeholder="si disponible">
+                </label>
+                <label class="field">Natrémie mmol/L
+                  <input id="sodium" type="number" min="110" max="165" step="1" placeholder="si disponible">
+                </label>
+              </div>
+            </details>
 
             <h3 style="margin-top:18px;">Comorbidités et facteurs</h3>
             <div class="checks">
@@ -1188,10 +1200,10 @@
             <div class="panel">
               <h3>Classes initiales possibles</h3>
               <ul class="compact-list">
-                <li>Diurétique thiazidique ou apparenté : indapamide (Fludex), hydrochlorothiazide (Esidrex), chlortalidone (nom commercial à vérifier dans VIDAL/Base publique du médicament).</li>
-                <li>Inhibiteur calcique dihydropyridinique : amlodipine (Amlor), lercanidipine (Lercapress/Zanidip), nifédipine LP (Adalate), nicardipine LP (Loxen).</li>
-                <li>IEC : périndopril (Coversyl), ramipril (Triatec), énalapril (Renitec), lisinopril (Zestril), trandolapril (Odrik), captopril (Lopril).</li>
-                <li>ARA2 : candésartan (Atacand/Kenzen), irbésartan (Aprovel), losartan (Cozaar), telmisartan (Micardis/Pritor), valsartan (Tareg/Nisis), olmésartan (Olmetec/Alteis).</li>
+                <li><strong>IEC</strong> : périndopril (Coversyl), ramipril (Triatec), énalapril (Renitec), lisinopril (Zestril), trandolapril (Odrik), captopril (Lopril).</li>
+                <li><strong>ARA2</strong> : candésartan (Atacand/Kenzen), irbésartan (Aprovel), losartan (Cozaar), telmisartan (Micardis/Pritor), valsartan (Tareg/Nisis), olmésartan (Olmetec/Alteis).</li>
+                <li><strong>Inhibiteur calcique dihydropyridinique</strong> : amlodipine (Amlor), lercanidipine (Lercapress/Zanidip), nifédipine LP (Adalate), nicardipine LP (Loxen).</li>
+                <li><strong>Diurétique thiazidique ou apparenté</strong> : indapamide (Fludex), hydrochlorothiazide (Esidrex).</li>
               </ul>
             </div>
           </div>
@@ -1327,19 +1339,22 @@
           <div class="grid grid-2">
             <div class="panel">
               <h3>Avant le 4e traitement</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox">Observance</label>
-                <label class="check"><input type="checkbox">Mesure correcte</label>
-                <label class="check"><input type="checkbox">Effet blouse blanche</label>
-                <label class="check"><input type="checkbox">Excès de sel / alcool</label>
-                <label class="check"><input type="checkbox">AINS / corticoïdes / réglisse</label>
-                <label class="check"><input type="checkbox">Décongestionnants</label>
-                <label class="check"><input type="checkbox">Apnée du sommeil</label>
-                <label class="check"><input type="checkbox">Hyperaldostéronisme primaire</label>
-                <label class="check"><input type="checkbox">Sténose artère rénale</label>
-                <label class="check"><input type="checkbox">Maladie rénale chronique</label>
-                <label class="check"><input type="checkbox">Phéochromocytome si évocateur</label>
-                <label class="check"><input type="checkbox">Syndrome de Cushing si évocateur</label>
+              <div class="checks" id="resistChecks">
+                <label class="check"><input type="checkbox" data-group="reversible">Observance</label>
+                <label class="check"><input type="checkbox" data-group="reversible">Mesure correcte</label>
+                <label class="check"><input type="checkbox" data-group="reversible">Effet blouse blanche</label>
+                <label class="check"><input type="checkbox" data-group="reversible">Excès de sel / alcool</label>
+                <label class="check"><input type="checkbox" data-group="reversible">AINS / corticoïdes / réglisse</label>
+                <label class="check"><input type="checkbox" data-group="reversible">Décongestionnants</label>
+                <label class="check"><input type="checkbox" data-group="reversible">Apnée du sommeil</label>
+                <label class="check"><input type="checkbox" data-group="secondary">Hyperaldostéronisme primaire</label>
+                <label class="check"><input type="checkbox" data-group="secondary">Sténose artère rénale</label>
+                <label class="check"><input type="checkbox" data-group="secondary">Maladie rénale chronique</label>
+                <label class="check"><input type="checkbox" data-group="secondary">Phéochromocytome si évocateur</label>
+                <label class="check"><input type="checkbox" data-group="secondary">Syndrome de Cushing si évocateur</label>
+              </div>
+              <div id="resistOutput" class="decision-output" style="margin-top:12px;">
+                <p class="empty-state">Cocher les éléments vérifiés ou suspectés.</p>
               </div>
             </div>
             <div class="panel">
@@ -1505,9 +1520,6 @@
                 <select id="effectSelect"></select>
               </label>
             </div>
-            <div class="form-actions">
-              <button class="btn btn-primary" id="effectBtn" type="button">Analyser</button>
-            </div>
             <div id="effectOutput" class="decision-output">
               <p class="empty-state">Choisir un effet indésirable.</p>
             </div>
@@ -1653,7 +1665,7 @@
           id: "thiazide",
           label: "Diurétiques thiazidiques et apparentés",
           mechanism: "Natriurèse distale, réduction volémique initiale puis effet vasculaire.",
-          drugs: ["hydrochlorothiazide (Esidrex)", "indapamide (Fludex)", "chlortalidone (nom commercial à vérifier dans VIDAL/Base publique du médicament)", "altizide (souvent en association)"],
+          drugs: ["hydrochlorothiazide (Esidrex)", "indapamide (Fludex)", "altizide (souvent en association)"],
           preferred: ["HTA non compliquée", "association IEC/ARA2", "sujet âgé selon tolérance"],
           contraindications: ["Hyponatrémie importante non corrigée", "hypokaliémie importante non corrigée", "goutte active : prudence forte"],
           adverse: ["Hypokaliémie", "hyponatrémie", "hyperuricémie", "photosensibilité", "hyperglycémie modérée possible"],
@@ -2002,6 +2014,7 @@
         renderMonitoringRows();
         renderRedAssociations();
         renderEffectOptions();
+        renderEffect();
         bindForms();
         bindMatrix();
       }
@@ -2051,7 +2064,8 @@
         });
         $("#confirmBtn").addEventListener("click", renderConfirmation);
         $("#adaptBtn").addEventListener("click", renderAdaptation);
-        $("#effectBtn").addEventListener("click", renderEffect);
+        $("#effectSelect").addEventListener("change", renderEffect);
+        $("#resistChecks").addEventListener("change", renderResist);
         $("#urgentBtn").addEventListener("click", renderUrgency);
         $("#drugSearch").addEventListener("input", renderDrugCards);
         $("#classFilter").addEventListener("change", renderDrugCards);
@@ -2473,7 +2487,7 @@
 
       function renderRedAssociations() {
         const red = Object.values(associationData).filter((item) => item.status === "red");
-        $("#redAssociationList").innerHTML = red.map((item) => `<div class="alert red"><strong>${escapeHtml(item.title)}.</strong> ${escapeHtml(item.detail)}</div>`).join("");
+        $("#redAssociationList").innerHTML = red.map((item) => `<div class="alert red"><strong>${escapeHtml(item.title)} :</strong> <span class="after-colon">${escapeHtml(item.detail)}</span></div>`).join("");
       }
 
       function renderClassFilter() {
@@ -2557,6 +2571,29 @@
           </div>
           <div class="alert ${item.urgency.toLowerCase().includes("urgent") ? "red" : "orange"}">${escapeHtml(item.urgency)}</div>
         `;
+      }
+
+      function renderResist() {
+        const boxes = Array.from(document.querySelectorAll('#resistChecks input[type="checkbox"]'));
+        const checked = boxes.filter((b) => b.checked);
+        const out = $("#resistOutput");
+        if (!checked.length) {
+          out.innerHTML = '<p class="empty-state">Cocher les éléments vérifiés ou suspectés.</p>';
+          return;
+        }
+        const label = (b) => b.parentElement.textContent.trim();
+        const rev = checked.filter((b) => b.dataset.group === "reversible").map(label);
+        const sec = checked.filter((b) => b.dataset.group === "secondary").map(label);
+        let html = '<div class="output-grid">';
+        if (rev.length) html += outputCard("Pseudo-résistance à corriger d'abord", rev, "orange");
+        if (sec.length) html += outputCard("Causes secondaires à explorer (avis spécialisé)", sec, "red");
+        html += "</div>";
+        const notes = [];
+        if (rev.length) notes.push("Corriger ces facteurs puis reconfirmer la PA (automesure/MAPA) avant d'ajouter une 4e ligne.");
+        if (sec.length) notes.push("Orientation spécialisée (cardiologue, néphrologue ou endocrinologue) pour le bilan de cause secondaire.");
+        notes.push("Si HTA résistante confirmée : spironolactone en 1er choix de 4e ligne si DFG et kaliémie compatibles.");
+        html += `<div class="alert ${sec.length ? "red" : "orange"}">${escapeHtml(notes.join(" "))}</div>`;
+        out.innerHTML = html;
       }
 
       function renderUrgency() {
