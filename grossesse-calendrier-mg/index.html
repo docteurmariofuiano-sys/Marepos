@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GrossesseCalendrier MG</title>
+  <style>
+    :root {
+      --bg: #f6f8f6;
+      --panel: #ffffff;
+      --soft: #edf4f1;
+      --ink: #1e2c2c;
+      --muted: #647170;
+      --line: #d8e2de;
+      --teal: #14786f;
+      --green: #2b8a57;
+      --amber: #b56a10;
+      --red: #b91c1c;
+      --blue: #2e6f9e;
+      --violet: #7559a6;
+      --patient: #c06562;
+      --shadow: 0 18px 44px rgba(29, 48, 55, .11);
+    }
+    .dark {
+      --bg: #111817;
+      --panel: #182321;
+      --soft: #20312e;
+      --ink: #eef6f3;
+      --muted: #a8b8b3;
+      --line: #31433f;
+      --teal: #58c7b7;
+      --green: #7ccf9b;
+      --amber: #f3b35c;
+      --red: #f07676;
+      --blue: #80b9e4;
+      --violet: #bca5e7;
+      --patient: #f19a95;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Aptos, "Segoe UI", Arial, sans-serif; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1480px, 100%); margin: auto; padding: 18px; }
+    header { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; margin-bottom: 16px; }
+    .eyebrow { margin: 0 0 4px; color: var(--teal); font-size: .78rem; font-weight: 850; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.75rem); line-height: 1.02; }
+    h2 { margin: 0 0 10px; font-size: 1.08rem; }
+    h3 { margin: 0 0 8px; font-size: .96rem; }
+    p { margin-top: 0; }
+    .layout { display: grid; grid-template-columns: minmax(310px, 380px) 1fr; gap: 14px; align-items: start; }
+    .stack { display: grid; gap: 14px; }
+    .panel, .hero, .empty { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+    .panel { padding: 16px; }
+    .top-actions, .seg, .tabs, .choices, .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .seg { padding: 4px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+    .seg button, .tabs button, .choice, .icon, .ghost, .primary, .secondary { min-height: 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font-weight: 800; }
+    .seg button { border: 0; padding: 0 12px; background: transparent; }
+    .seg button.active, .tabs button.active, .choice.active { background: var(--teal); color: #fff; }
+    .icon { width: 42px; }
+    .ghost, .secondary, .tabs button { padding: 0 12px; background: var(--soft); }
+    .primary { padding: 0 14px; color: #fff; background: var(--teal); border-color: var(--teal); }
+    .primary.patient { background: var(--patient); border-color: var(--patient); }
+    .choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .choice { width: 100%; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; font-weight: 800; }
+    input, select, textarea { width: 100%; min-height: 40px; padding: 8px 10px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+    textarea { resize: vertical; }
+    .grid2, .metrics, .dash, .cards, .calendar, .detail-grid, .exports { display: grid; gap: 12px; }
+    .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .muted { color: var(--muted); }
+    .privacy, .warning-footer, .note { padding: 10px; border-radius: 8px; font-weight: 760; }
+    .privacy { color: var(--teal); background: color-mix(in srgb, var(--teal) 12%, var(--panel)); }
+    .warning-footer { margin-top: 18px; color: var(--amber); background: color-mix(in srgb, var(--amber) 12%, var(--panel)); border: 1px solid color-mix(in srgb, var(--amber) 25%, var(--line)); }
+    .hero { display: grid; grid-template-columns: minmax(260px, 1.2fr) minmax(320px, 1fr); gap: 18px; padding: 18px; }
+    .hero h2 { margin: 8px 0; font-size: clamp(2rem, 5vw, 4rem); line-height: .95; }
+    .pill { display: inline-flex; gap: 8px; align-items: center; width: fit-content; padding: 7px 10px; color: var(--teal); background: color-mix(in srgb, var(--teal) 12%, var(--panel)); border-radius: 999px; font-weight: 850; }
+    .progress { height: 12px; margin-top: 14px; overflow: hidden; background: var(--soft); border-radius: 999px; }
+    .progress div { height: 100%; background: linear-gradient(90deg, var(--teal), var(--green)); }
+    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric, .mini { min-height: 86px; padding: 12px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+    .metric span { display: block; color: var(--muted); font-size: .78rem; font-weight: 850; }
+    .metric strong { display: block; margin-top: 5px; line-height: 1.1; }
+    .tabs { position: sticky; top: 0; z-index: 5; padding: 8px; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 8px; }
+    .dash { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .timeline { display: grid; grid-template-columns: minmax(260px, 360px) 1fr; gap: 14px; }
+    .timeline-list { display: grid; gap: 8px; }
+    .step { display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center; min-height: 62px; padding: 10px; text-align: left; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+    .step.selected { border-color: var(--teal); box-shadow: inset 3px 0 0 var(--teal); }
+    .step small { display: block; margin-top: 3px; color: var(--muted); }
+    .dot { width: 10px; height: 10px; border-radius: 99px; background: var(--green); }
+    .echo .dot, .tag.echo { background: var(--violet); }
+    .admin .dot, .tag.admin { background: var(--blue); }
+    .urgent .dot, .late .dot, .tag.urgent { background: var(--red); }
+    .soon .dot, .tag.soon { background: var(--amber); }
+    .patient .dot, .tag.patient { background: var(--muted); }
+    ul { margin: 8px 0 0; padding-left: 18px; }
+    pre { white-space: pre-wrap; max-height: 290px; overflow: auto; margin: 0 0 12px; padding: 12px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; line-height: 1.45; }
+    .alert { color: var(--red); background: color-mix(in srgb, var(--red) 9%, var(--panel)); border-color: color-mix(in srgb, var(--red) 25%, var(--line)); }
+    .cards, .exports { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .calendar-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+    .pregnancy-months { display: grid; grid-template-columns: repeat(9, minmax(118px, 1fr)); gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
+    .month-card { min-width: 118px; min-height: 154px; padding: 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+    .month-card.current { border-color: var(--teal); box-shadow: inset 0 3px 0 var(--teal); }
+    .month-card span, .month-card small { display: block; color: var(--muted); font-size: .75rem; font-weight: 850; }
+    .month-card strong { display: block; margin: 6px 0; font-size: .82rem; line-height: 1.25; }
+    .month-card ul { margin-top: 8px; padding-left: 15px; font-size: .74rem; }
+    .calendar { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+    .day { min-height: 96px; padding: 8px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+    .day b { display: block; }
+    .day.today { background: color-mix(in srgb, var(--teal) 13%, var(--panel)); border-color: var(--teal); box-shadow: inset 0 3px 0 var(--teal); }
+    .day em { display: inline-block; margin-top: 4px; padding: 3px 6px; color: var(--teal); background: color-mix(in srgb, var(--teal) 12%, var(--panel)); border-radius: 999px; font-size: .68rem; font-style: normal; font-weight: 850; }
+    .tag { display: block; margin-top: 5px; padding: 4px 6px; color: #fff; border-radius: 6px; font-size: .72rem; font-weight: 850; background: var(--green); }
+    .check { display: flex; gap: 8px; align-items: center; min-height: 33px; color: var(--ink); }
+    .check input { width: 16px; min-height: 16px; accent-color: var(--teal); }
+    .empty { min-height: 420px; display: grid; place-items: center; text-align: center; padding: 32px; }
+    @media (max-width: 1060px) { .layout, .hero, .timeline { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) { .shell { padding: 10px; } header, .dash, .metrics, .grid2, .detail-grid { grid-template-columns: 1fr; } .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } .day { min-height: 74px; padding: 5px; } }
+    @media print { aside, .tabs, .top-actions, .exports button { display: none !important; } .layout, .hero, .dash { display: block; } .panel, .hero { box-shadow: none; break-inside: avoid; margin-bottom: 12px; } }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const DAY = 86400000;
+    const STORE = "grossesse-calendrier-mg-standalone:v1";
+    const methods = [
+      ["lmp", "DDR"], ["dpa", "DPA"], ["conception", "Conception"], ["start", "DDG"], ["echo", "Écho"], ["pma", "PMA/FIV"]
+    ];
+    const warningChoices = [
+      ["bleeding", "Saignements"], ["pain", "Douleurs intenses"], ["fever", "Fièvre"], ["vomiting", "Vomissements incoercibles"],
+      ["headache", "Céphalées inhabituelles"], ["visual", "Troubles visuels"], ["edema", "Œdèmes brutaux"], ["epigastric", "Douleur épigastrique"],
+      ["bp", "Tension élevée"], ["fluid", "Perte de liquide"], ["movements", "Mouvements diminués"], ["contractions", "Contractions avant terme"],
+      ["pruritus", "Prurit généralisé"], ["dyspnea", "Dyspnée importante"], ["chest", "Douleur thoracique"], ["fainting", "Malaise"], ["violence", "Violence / vulnérabilité"]
+    ];
+    const defaultState = {
+      method: "lmp", cycle: 28, multiple: "singleton", children: 0, rh: "unknown", toxo: "unknown", age: "", bmi: "",
+      prevPrematurity: false, prevPreeclampsia: false, prevDiabetes: false, prevCesarean: false, conditions: "", warnings: {},
+      tab: "dashboard", mode: "pro", dark: false, selected: "before10", calendarSa: null
+    };
+    const milestones = [
+      ["before10", "Première consultation / consultation précoce", "Consultation précoce", 0, 70, "normal", "Confirmation, datation, repérage des facteurs de risque et orientation si nécessaire.", ["Confirmer la grossesse et la datation retenue.", "Rechercher antécédents obstétricaux, traitements, toxiques, symptômes, vulnérabilités.", "Mesurer poids, taille, IMC et tension artérielle.", "Informer sur acide folique, alimentation, médicaments et automédication.", "Orienter vers sage-femme, gynécologue, maternité ou urgences si situation à risque."], ["ABO Rh, RAI.", "Sérologies toxoplasmose, rubéole si statut inconnu, VIH, syphilis, hépatite B.", "NFS, glycémie à jeun, BU, ECBU, hépatite C ou frottis selon contexte."], ["Préparer les informations médicales utiles.", "Avis rapide en cas de saignement, douleur importante ou fièvre."]],
+      ["before15", "Déclaration de grossesse et échographie T1", "Déclaration + T1", 77, 105, "echo", "Échographie du 1er trimestre, datation officielle et déclaration avant la fin du 3e mois.", ["Échographie T1 entre 11 SA et 13 SA + 6 j.", "Nombre de fœtus, vitalité, datation, clarté nucale.", "Information et consentement pour le dépistage combiné de la trisomie 21.", "Déclaration de grossesse avant la fin du 3e mois."], ["Dépistage combiné T21 si souhaité et conforme au contexte clinique."], ["Programmer l'échographie du 1er trimestre.", "Finaliser la déclaration de grossesse."]],
+      ["m4", "Consultation du 4e mois", "4e mois", 105, 133, "normal", "Consultation mensuelle avec surveillance tensionnelle, symptômes et examens adaptés.", ["Tension artérielle, poids, symptômes, douleurs ou saignements.", "BU : protéinurie/glycosurie.", "Mouvements fœtaux selon le terme.", "Orientation si anomalie."], ["Toxoplasmose mensuelle si non immunisée.", "RAI selon Rhésus et protocole local."], ["Prévoir la consultation mensuelle.", "Signaler tout symptôme inhabituel."]],
+      ["m5t2", "Consultation du 5e mois et échographie T2", "5e mois + T2", 133, 161, "echo", "Échographie morphologique, croissance fœtale et consultation mensuelle.", ["Échographie morphologique entre 20 et 25 SA.", "Croissance fœtale, morphologie, placenta, liquide amniotique.", "Col si indication.", "Tension, poids, BU."], ["Toxoplasmose mensuelle si non immunisée."], ["Programmer l'échographie morphologique.", "Conserver le compte rendu."]],
+      ["m6", "Consultation du 6e mois", "6e mois", 161, 196, "soon", "Surveillance mensuelle, bilan biologique et dépistage du diabète gestationnel selon facteurs de risque.", ["Tension, poids, BU et signes fonctionnels.", "Préparer entretien prénatal précoce et bilan prénatal de prévention si non réalisés.", "Vaccinations grippe, Covid et coqueluche selon recommandations en vigueur et contexte."], ["NFS.", "RAI selon Rhésus.", "Dépistage diabète gestationnel selon facteurs de risque ou protocole local.", "Toxoplasmose mensuelle si non immunisée."], ["Prévoir le bilan biologique demandé.", "Aborder préparation à la naissance et soutien social si besoin."]],
+      ["m7", "Consultation du 7e mois", "7e mois", 196, 224, "normal", "Surveillance de fin de deuxième trimestre et programmation de l'échographie T3.", ["Tension, poids, BU, mouvements actifs fœtaux.", "Hauteur utérine si utilisée.", "RAI.", "Injection anti-D si Rh négatif selon protocole."], ["Programmer l'échographie T3."], ["Surveiller les mouvements actifs fœtaux.", "Programmer l'échographie du 3e trimestre."]],
+      ["t3", "Échographie T3", "Échographie T3", 210, 245, "echo", "Croissance, présentation, placenta, liquide amniotique et orientation si anomalie.", ["Croissance fœtale, présentation, placenta, liquide amniotique.", "Estimation pondérale.", "Doppler si indication.", "Orientation si RCIU, macrosomie, présentation anormale ou placenta bas inséré."], [], ["Conserver le compte rendu et vérifier les prochains rendez-vous de maternité."]],
+      ["m8", "Consultation du 8e mois", "8e mois", 224, 259, "admin", "Organisation de la naissance, consultation d'anesthésie et dépistage streptocoque B.", ["Consultation mensuelle, tension, BU, toxoplasmose si non immunisée.", "Consultation anesthésie à prévoir.", "Recherche streptocoque B entre 35 et 38 SA.", "Inscription maternité, projet de naissance, valise maternité."], ["Streptocoque B 35-38 SA.", "Toxoplasmose mensuelle si non immunisée."], ["Prévoir la consultation d'anesthésie.", "Vérifier inscription maternité et documents administratifs."]],
+      ["m9", "Consultation du 9e mois", "9e mois", 259, 287, "urgent", "Fin de grossesse, signes de départ maternité et surveillance des situations à risque.", ["Présentation fœtale, mouvements actifs fœtaux, contractions, pertes de liquide, saignements.", "Tension, BU, recherche de signes de prééclampsie.", "Conduite à tenir si terme dépassé selon protocole de maternité.", "Consignes départ maternité."], [], ["Consulter rapidement en cas de perte de liquide, saignement, diminution des mouvements ou céphalée inhabituelle.", "Suivre les consignes de la maternité pour le terme."]],
+      ["post", "Post-partum", "Post-partum", 287, 329, "patient", "Consultation postnatale, soutien, contraception, allaitement et suivi du nourrisson.", ["Consultation postnatale.", "Contraception du post-partum.", "Allaitement, saignements, cicatrice si césarienne ou épisiotomie.", "Moral et dépistage dépression post-partum.", "Rééducation périnéale, suivi nourrisson, vaccination si nécessaire."], [], ["Demander de l'aide en cas de tristesse persistante, douleurs, fièvre ou saignements abondants."]]
+    ];
+    const guides = [
+      ["Alimentation générale", "Alimentation variée, régulière et équilibrée : mieux manger, sans doubler les portions.", ["3 repas par jour, 1 à 2 collations si besoin.", "5 portions de fruits et légumes bien lavés par jour.", "Féculents complets, protéines quotidiennes, produits laitiers pasteurisés.", "Eau à volonté, environ 1,5 L/jour."]],
+      ["À limiter", "Limiter les produits qui déséquilibrent l'apport nutritionnel ou augmentent les risques métaboliques.", ["Produits ultra-transformés, sodas, confiseries, viennoiseries.", "Excès de charcuteries, fritures, beurre, crème, sel.", "Graisses trans ou hydrogénées des préparations industrielles."]],
+      ["Prise de poids", "La prise de poids dépend de l'IMC avant grossesse ; la règle 1 kg par mois est trop approximative.", ["IMC < 18,5 : repère 12,5 à 18 kg.", "IMC 18,5-24,9 : repère 11,5 à 16 kg.", "IMC 25-29,9 : repère 7 à 11,5 kg.", "IMC >= 30 : repère 5 à 9 kg, à individualiser."]],
+      ["Supplémentations", "Les compléments doivent être adaptés au terme, aux bilans et au terrain.", ["Acide folique 0,4 mg/j si possible avant conception et jusqu'à 12 SA, sauf situation à risque sur prescription.", "Fer selon NFS, ferritine, symptômes et contexte ; pas systématique.", "Calcium et vitamine D à discuter selon apports et risque de carence.", "Régime végétalien : supplémentation B12 indispensable à discuter."]],
+      ["Poisson et oméga-3", "Le poisson apporte protéines, iode, vitamine D et oméga-3.", ["Environ 2 portions de poisson par semaine, dont une de poisson gras, en variant les espèces.", "Éviter poissons crus, fumés non recuits et coquillages crus.", "Éviter les grands prédateurs à risque de méthylmercure : espadon, requin, marlin, lamproie, siki."]],
+      ["Nausées et reflux", "Mesures simples, avec avis rapide si vomissements incoercibles ou perte de poids.", ["Fractionner les prises, éviter repas gras, lourds ou très odorants.", "Boire par petites quantités régulières.", "Reflux : petits repas, éviter l'allongement post-prandial, dîner léger, surélever la tête du lit si besoin."]],
+      ["Constipation", "Fréquente pendant la grossesse ; privilégier les mesures hygiéno-diététiques.", ["Boire environ 1,5 L d'eau/jour.", "Augmenter progressivement fibres, légumes, fruits, céréales complètes, légumineuses.", "Marcher régulièrement.", "Éviter les laxatifs sans avis médical."]],
+      ["Listériose", "Prévention par éviction des aliments à risque et hygiène du réfrigérateur.", ["Éviter lait cru, fromages à pâte molle au lait cru, croûtes, râpé industriel cru.", "Éviter charcuterie à la coupe, rillettes, pâtés, foie gras, produits en gelée.", "Éviter poissons fumés, poissons crus, coquillages crus, surimi, tarama, graines germées crues.", "Réfrigérateur 3-4 °C, séparation cru/cuit, restes bien réchauffés."]],
+      ["Toxoplasmose", "Surtout si la patiente n'est pas immunisée.", ["Bien cuire les viandes.", "Laver soigneusement fruits, légumes et herbes aromatiques.", "Éviter viandes crues, fumées ou marinées.", "Gants pour jardinage ; éviter la litière du chat ou porter des gants puis lavage des mains."]],
+      ["Salmonellose", "Prévention par cuisson complète des œufs, volailles et viandes.", ["Éviter œufs crus ou peu cuits.", "Éviter mayonnaise maison, mousses, tiramisu ou crèmes maison avec œufs crus non pasteurisés.", "Toujours bien cuire volailles et viandes."]],
+      ["Hygiène et environnement", "Mesures simples pour réduire les expositions et améliorer le confort.", ["Lavage des mains avant repas/cuisine, après toilettes, animaux, terre, couches ou jeunes enfants.", "Hygiène bucco-dentaire et contrôle dentaire si besoin.", "Toilette intime douce, éviter produits parfumés ou irritants.", "Limiter peintures, solvants, pesticides, sprays, huiles essentielles et produits ménagers agressifs ; aérer."]],
+      ["Alcool, tabac, cannabis", "Message clair : zéro alcool pendant la grossesse ; accompagnement sans culpabilisation pour les autres substances.", ["Alcool totalement contre-indiqué.", "Tabac, cannabis et drogues : proposer aide au sevrage, substituts nicotiniques ou addictologie selon contexte.", "Caféine : viser au plus 200 mg/j, éviter boissons énergisantes."]],
+      ["Médicaments", "Pas d'automédication pendant la grossesse, y compris produits sans ordonnance.", ["Demander avis pour anti-inflammatoires, huiles essentielles, plantes, compléments, produits minceur ou détox.", "AINS à éviter et à considérer comme contre-indiqués en fin de grossesse ; vérifier CRAT/avis médical en cas de doute.", "Douleur ou fièvre : demander conseil au médecin, sage-femme ou pharmacien."]],
+      ["Soleil, jambes lourdes, sommeil", "Conseils de confort, à adapter à la situation clinique.", ["Protection solaire élevée sur le visage pour limiter le masque de grossesse.", "Bas de contention si jambes lourdes, œdèmes, varices, station debout ou voyage long.", "Sommeil : horaires réguliers, limiter écrans/caféine le soir, éviter automédication et phytothérapie."]],
+      ["Activité, sexualité, voyages", "Possible si grossesse simple, avec adaptation au terme et au terrain.", ["Objectif simple : marche ou activité douce régulière, environ 30 min/j selon tolérance.", "Éviter sports de contact, chute, plongée, chaleur excessive, efforts intenses non habituels.", "Sexualité généralement possible si grossesse normale ; avis si métrorragies, placenta prævia, MAP, fissuration ou douleurs.", "Voyages : bouger, s'hydrater, bas de contention si risque veineux, dossier obstétrical accessible."]],
+      ["Travail", "Poursuite possible si grossesse normale ; adaptation si contraintes importantes.", ["Vigilance si travail physique, station debout prolongée, port de charges.", "Réévaluer si exposition à des toxiques, horaires de nuit, trajets longs ou grossesse pathologique."]],
+      ["Signes d'alerte", "Contacter rapidement la maternité ou consulter en urgence selon contexte.", ["Saignements, perte de liquide, douleurs abdominales sévères.", "Fièvre >= 38 °C, vomissements importants ou impossibilité de boire.", "Céphalées intenses, troubles visuels, douleur épigastrique, œdèmes brutaux.", "Essoufflement soudain, douleur thoracique, malaise, contractions régulières avant 37 SA.", "Diminution ou absence de mouvements fœtaux après le terme habituel de perception."]],
+      ["Congé pathologique", "Non automatique : il nécessite une justification médicale et dépend du statut.", ["Régime général : jusqu'à 14 jours de congé pathologique prénatal selon indication médicale.", "Certains statuts, notamment fonction publique, peuvent avoir des règles différentes ; à confirmer selon situation."]],
+      ["Exemple de journée", "Exemple simple à adapter aux habitudes et au terrain.", ["Petit-déjeuner : laitage pasteurisé, pain complet ou céréales peu sucrées, fruit, boisson peu caféinée.", "Déjeuner : légumes, protéine bien cuite ou légumineuses, féculent, laitage, eau.", "Collation : fruit, laitage, pain complet ou quelques noix/amandes si besoin.", "Dîner : soupe ou légumes cuits, féculent léger, protéine si besoin, laitage, fruit."]],
+      ["À retenir", "Alimentation variée, zéro alcool, pas d'automédication, éviter aliments crus ou à risque, bien cuire viandes/œufs/poissons, laver fruits et légumes, limiter caféine, maintenir une activité douce, consulter rapidement en cas de symptôme d'alerte."]
+    ];
+    let state = load();
+    function parse(v) { const [y, m, d] = v.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); }
+    function iso(date) { return date.toISOString().slice(0, 10); }
+    function today() { const n = new Date(); return iso(new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()))); }
+    function add(v, days) { return iso(new Date(parse(v).getTime() + days * DAY)); }
+    function diff(a, b) { return Math.round((parse(b).getTime() - parse(a).getTime()) / DAY); }
+    function fmt(v) { return v ? new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(parse(v)) : "date non renseignée"; }
+    function term(days, suffix) { return days < 0 ? "datation à vérifier" : `${Math.floor(days / 7)} ${suffix} + ${days % 7} j`; }
+    function calcBase(s) {
+      if (s.method === "lmp" && s.lmp) {
+        if (!lmpYearOk(s.lmp)) return null;
+        const ddg = add(s.lmp, 14 + ((Number(s.cycle) || 28) - 28));
+        return makeBase(ddg, "DDR corrigée par la durée du cycle");
+      }
+      if (s.method === "dpa" && s.dpa) return { ddg: add(s.dpa, -273), lmp: add(s.dpa, -287), dpa: s.dpa, methodLabel: "DPA déjà connue", notes: ["DPA retenue comme point de départ ; datation clinique à confirmer si discordance."] };
+      if (s.method === "conception" && s.conception) return makeBase(s.conception, "date de conception déclarée");
+      if (s.method === "start" && s.start) return makeBase(s.start, "date de début de grossesse déclarée");
+      if (s.method === "echo" && s.echoDate && s.echoWeeks !== "") { const lmp = add(s.echoDate, -((Number(s.echoWeeks) || 0) * 7 + (Number(s.echoDays) || 0))); return { ddg: add(lmp, 14), lmp, dpa: add(add(lmp, 14), 273), methodLabel: "datation échographique", notes: [`Terme mesuré : ${Number(s.echoWeeks) || 0} SA + ${Number(s.echoDays) || 0} j.`] }; }
+      if (s.method === "pma" && s.transfer) return makeBase(add(s.transfer, -(Number(s.embryoAge) || 5)), `PMA/FIV transfert J${Number(s.embryoAge) || 5}`);
+      return null;
+    }
+    function lmpYearOk(value) { const year = Number(String(value).slice(0, 4)); return year >= 1960 && year <= 2200; }
+    function makeBase(ddg, label) { return { ddg, lmp: add(ddg, -14), dpa: add(ddg, 273), methodLabel: label, notes: [] }; }
+    function calculate(s = state, now = today()) {
+      const base = calcBase(s);
+      if (!base) return null;
+      const saDays = diff(base.lmp, now);
+      const sgDays = saDays - 14;
+      const month = sgDays < 0 ? 0 : Math.min(9, Math.floor(sgDays / 30.44) + 1);
+      const trimester = saDays < 98 ? 1 : saDays < 196 ? 2 : 3;
+      const progress = Math.max(0, Math.min(100, Math.round(saDays / 287 * 100)));
+      return { ...base, today: now, saDays, sgDays, month, trimester, progress };
+    }
+    function timeline(calc) {
+      return milestones.map(m => {
+        const start = add(calc.lmp, m[3]), end = add(calc.lmp, m[4]);
+        const daysToStart = diff(calc.today, start), daysToEnd = diff(calc.today, end);
+        const status = daysToStart <= 0 && daysToEnd >= 0 ? "current" : daysToStart > 0 && daysToStart <= 21 ? "soon" : daysToStart > 21 ? "future" : ["before15", "m5t2", "m6", "t3", "m8", "m9"].includes(m[0]) ? "late" : "past";
+        return { id: m[0], title: m[1], short: m[2], start, end, tone: m[5], desc: m[6], clinical: m[7], exams: m[8], patient: m[9], status };
+      });
+    }
+    function alerts(s = state) {
+      return warningChoices.filter(([key]) => s.warnings[key]).map(([, label]) => ({ label, msg: "Avis médical urgent / maternité / urgences selon contexte." }));
+    }
+    function risk(s = state, calc = calculate()) {
+      const factors = []; let score = 0;
+      const addFactor = (cond, pts, label) => { if (cond) { score += pts; factors.push(label); } };
+      addFactor(Number(s.age) < 18, 2, "âge maternel < 18 ans");
+      addFactor(Number(s.age) > 40, 2, "âge maternel > 40 ans");
+      addFactor(Number(s.bmi) >= 30, 1, "IMC pré-grossesse élevé");
+      addFactor(s.prevPrematurity, 2, "antécédent de prématurité");
+      addFactor(s.prevPreeclampsia, 2, "antécédent de prééclampsie");
+      addFactor(s.prevDiabetes, 1, "antécédent de diabète gestationnel");
+      addFactor(s.prevCesarean, 1, "antécédent de césarienne");
+      addFactor(s.multiple === "twins", 2, "grossesse gémellaire");
+      addFactor(s.multiple === "triplets", 3, "grossesse triple ou plus");
+      addFactor(Boolean((s.conditions || "").trim()), 2, "pathologie maternelle renseignée");
+      addFactor(alerts(s).length > 0, 3, "symptôme d'alerte déclaré");
+      addFactor(calc && calc.saDays > 287, 2, "terme dépassé");
+      const level = score >= 4 || alerts(s).length ? "haut risque" : score >= 2 ? "risque intermédiaire" : "bas risque";
+      return { score, factors, level, rec: level === "bas risque" ? "Suivi compatible avec un parcours de grossesse à bas risque, à réévaluer à chaque consultation." : "Suivi spécialisé recommandé ; ne remplace pas l'avis gynécologique, sage-femme référente ou maternité." };
+    }
+    function maternity(dpa, s = state) {
+      let pre = 6, post = 10, label = "Grossesse simple, 1er ou 2e enfant";
+      if (s.multiple === "twins") { pre = 12; post = 22; label = "Grossesse gémellaire"; }
+      else if (s.multiple === "triplets") { pre = 24; post = 22; label = "Grossesse triple ou plus"; }
+      else if (Number(s.children) >= 2) { pre = 8; post = 18; label = "Grossesse simple à partir du 3e enfant"; }
+      return { pre, post, start: add(dpa, -pre * 7), end: add(dpa, post * 7), label };
+    }
+    function next(items, kind) { return items.find(i => (!kind || i.tone === kind) && ["current", "soon", "future"].includes(i.status) && i.id !== "post"); }
+    function medicalSummary(calc, items, r) {
+      const nx = next(items), pending = items.filter(i => ["current", "soon", "late"].includes(i.status)).flatMap(i => i.exams).slice(0, 5);
+      const mult = state.multiple === "twins" ? "gémellaire" : state.multiple === "triplets" ? "triple ou plus" : "simple";
+      return [`Grossesse suivie à ${term(calc.saDays, "SA")}.`, `DDG retenue : ${fmt(calc.ddg)}.`, `DPA : ${fmt(calc.dpa)}.`, `Méthode de datation : ${calc.methodLabel}.`, `Grossesse : ${mult}.`, `Prochaine étape : ${nx ? `${nx.short} (${fmt(nx.start)} - ${fmt(nx.end)})` : "à confirmer"}.`, `Points de vigilance : ${r.factors.length ? r.factors.join(", ") : "aucun facteur majeur renseigné"}.`, `Examens en attente : ${pending.length ? pending.join(" ; ") : "à adapter au contexte clinique"}.`].join("\n");
+    }
+    function patientSummary(calc, items) {
+      const nx = next(items), echo = next(items, "echo");
+      return [`Vous êtes actuellement à ${term(calc.saDays, "SA")}.`, `Votre date présumée d'accouchement est le ${fmt(calc.dpa)}.`, `Votre prochain rendez-vous important est : ${nx ? `${nx.short}, entre le ${fmt(nx.start)} et le ${fmt(nx.end)}` : "à confirmer avec votre professionnel de santé"}.`, `Votre prochaine échographie est prévue entre ${echo ? `${fmt(echo.start)} et ${fmt(echo.end)}` : "des dates à confirmer"}.`, "Consultez rapidement en cas de saignements, pertes de liquide, douleurs importantes, fièvre, maux de tête inhabituels, troubles visuels, diminution des mouvements du bébé ou essoufflement important."].join("\n");
+    }
+    function render() {
+      document.body.className = state.dark ? "dark" : "";
+      const calc = calculate(), items = calc ? timeline(calc) : [], r = risk(state, calc), al = alerts();
+      document.getElementById("app").innerHTML = `
+        <div class="shell">
+          <header>
+            <div><p class="eyebrow">GrossesseCalendrier MG</p><h1>Calendrier de suivi de grossesse</h1></div>
+            <div class="top-actions">
+              <div class="seg"><button data-mode="pro" class="${state.mode === "pro" ? "active" : ""}">Pro</button><button data-mode="patient" class="${state.mode === "patient" ? "active" : ""}">Patiente</button></div>
+              <button class="icon" data-dark="1" title="Mode sombre">${state.dark ? "☀" : "☾"}</button>
+            </div>
+          </header>
+          <main class="layout">
+            <aside class="stack">${formHtml()}</aside>
+            <section class="stack">${calc ? resultHtml(calc, items, r, al) : `<div class="empty"><div><h2>Une DDR ou une DPA suffit pour générer le calendrier.</h2><p class="muted">Les champs complémentaires affinent les alertes, les examens et l'administratif.</p></div></div>`}</section>
+          </main>
+          <footer class="warning-footer">Cet outil est une aide au suivi de grossesse à bas risque. Il ne remplace pas l'avis d'un médecin, d'une sage-femme, d'un gynécologue-obstétricien ou d'une maternité. Toute situation à risque ou tout symptôme inhabituel nécessite un avis médical.</footer>
+        </div>`;
+    }
+    function formHtml() {
+      const field = (key, label, type = "date", extra = "") => `<label>${label}<input data-field="${key}" type="${type}" value="${esc(state[key] ?? "")}" ${extra}></label>`;
+      return `
+        <section class="panel"><div class="row" style="justify-content:space-between"><h2>Datation</h2><button class="ghost" data-reset="1">Effacer</button></div>
+          <div class="choices">${methods.map(([v, l]) => `<button class="choice ${state.method === v ? "active" : ""}" data-method="${v}">${l}</button>`).join("")}</div>
+          <div class="stack" style="margin-top:12px">${datingFields(field)}</div>
+          <p class="privacy">Les données restent sur cet appareil sauf export volontaire. Pas de tracking, pas de publicité, aucun envoi automatique.</p>
+        </section>
+        <section class="panel"><h2>Données utiles</h2><div class="grid2">
+          <label>Grossesse<select data-field="multiple"><option value="singleton" ${sel("multiple", "singleton")}>Simple</option><option value="twins" ${sel("multiple", "twins")}>Gémellaire</option><option value="triplets" ${sel("multiple", "triplets")}>Triple ou plus</option></select></label>
+          ${field("children", "Enfants à charge", "number", 'min="0"')}
+          ${field("age", "Âge maternel", "number", 'min="10" max="55"')}
+          ${field("bmi", "IMC pré-grossesse", "number", 'min="10" max="70" step="0.1"')}
+          <label>Rhésus<select data-field="rh"><option value="unknown" ${sel("rh", "unknown")}>Inconnu</option><option value="positive" ${sel("rh", "positive")}>Positif</option><option value="negative" ${sel("rh", "negative")}>Négatif</option></select></label>
+          <label>Toxoplasmose<select data-field="toxo"><option value="unknown" ${sel("toxo", "unknown")}>Inconnue</option><option value="yes" ${sel("toxo", "yes")}>Immunisée</option><option value="no" ${sel("toxo", "no")}>Non immunisée</option></select></label>
+          </div>
+          <div class="grid2" style="margin-top:10px">${check("prevPrematurity", "Prématurité")}${check("prevPreeclampsia", "Prééclampsie")}${check("prevDiabetes", "Diabète gestationnel")}${check("prevCesarean", "Césarienne")}</div>
+          <label style="margin-top:10px">Pathologies maternelles importantes<textarea data-field="conditions" rows="3">${esc(state.conditions || "")}</textarea></label>
+        </section>
+        <section class="panel"><h2>Points de vigilance</h2><div class="grid2">${warningChoices.map(([key, label]) => `<label class="check"><input data-warning="${key}" type="checkbox" ${state.warnings[key] ? "checked" : ""}><span>${label}</span></label>`).join("")}</div></section>`;
+    }
+    function datingFields(field) {
+      if (state.method === "lmp") return `${field("lmp", "Date des dernières règles", "date", 'min="1960-01-01" max="2200-12-31"')}<p class="muted">Année sélectionnable : 1960 à 2200.</p>${field("cycle", "Durée du cycle", "number", 'min="21" max="45"')}`;
+      if (state.method === "dpa") return field("dpa", "DPA connue");
+      if (state.method === "conception") return field("conception", "Date de conception");
+      if (state.method === "start") return field("start", "Date de début de grossesse");
+      if (state.method === "echo") return `${field("echoDate", "Date de l'échographie")}<div class="grid2">${field("echoWeeks", "SA mesurées", "number", 'min="4" max="41"')}${field("echoDays", "Jours", "number", 'min="0" max="6"')}</div>${field("crl", "LCC facultative", "number", 'step="0.1"')}`;
+      return `${field("transfer", "Date de transfert")}<label>Âge embryonnaire<select data-field="embryoAge"><option value="3" ${sel("embryoAge", "3")}>J3</option><option value="5" ${state.embryoAge !== "3" ? "selected" : ""}>J5</option></select></label>`;
+    }
+    function resultHtml(calc, items, r, al) {
+      const nx = next(items), echo = next(items, "echo"), late = items.filter(i => i.status === "late");
+      return `
+        <section class="hero"><div><span class="pill">${calc.sgDays < 0 ? "Grossesse très précoce ou datation à vérifier" : term(calc.saDays, "SA")}</span><h2>${term(calc.sgDays, "SG")}</h2><p class="muted">DPA estimée le <b>${fmt(calc.dpa)}</b> · DDG retenue le <b>${fmt(calc.ddg)}</b></p><div class="progress"><div style="width:${calc.progress}%"></div></div><p class="muted">${calc.progress}% d'avancement théorique</p></div>
+          <div class="metrics">${metric("Mois", calc.month ? `${calc.month}e mois` : "à vérifier")}${metric("Trimestre", `T${calc.trimester}`)}${metric("Prochaine étape", nx ? nx.short : "à confirmer")}${metric("Prochaine écho", echo ? echo.short : "aucune")}${metric("Retards visibles", late.length ? `${late.length} à vérifier` : "aucun")}${metric("Risque", r.level)}</div></section>
+        <nav class="tabs">${["dashboard", "timeline", "calendar", "biology", "ultrasounds", "admin", "alerts", "advice", "exports"].map(t => `<button class="${state.tab === t ? "active" : ""}" data-tab="${t}">${tabLabel(t)}</button>`).join("")}</nav>
+        ${tabHtml(calc, items, r, al)}`;
+    }
+    function tabHtml(calc, items, r, al) {
+      if (state.tab === "timeline") return timelineHtml(items);
+      if (state.tab === "calendar") return calendarHtml(calc, items);
+      if (state.tab === "biology") return biologyHtml(items);
+      if (state.tab === "ultrasounds") return ultrasoundHtml(calc, items);
+      if (state.tab === "admin") return adminHtml(calc);
+      if (state.tab === "alerts") return alertsHtml(r, al);
+      if (state.tab === "advice") return adviceHtml();
+      if (state.tab === "exports") return exportsHtml(calc, items, r);
+      return dashboardHtml(calc, items, r, al);
+    }
+    function dashboardHtml(calc, items, r, al) {
+      return `<div class="dash">${riskHtml(r)}${alertHtml(al)}${summaryPanel("Résumé médical", medicalSummary(calc, items, r), "medical")}${summaryPanel("Consignes patiente", patientSummary(calc, items), "patient")}</div>`;
+    }
+    function timelineHtml(items) {
+      const selected = items.find(i => i.id === state.selected) || items.find(i => i.status === "current") || items[0];
+      return `<section class="timeline"><div class="timeline-list">${items.map(i => `<button class="step ${i.tone} ${i.status} ${selected.id === i.id ? "selected" : ""}" data-selected="${i.id}"><span class="dot"></span><span><b>${i.short}</b><small>${fmt(i.start)} - ${fmt(i.end)}</small></span><span>›</span></button>`).join("")}</div><article class="panel"><span class="pill">${statusLabel(selected.status)}</span><h2 style="margin-top:12px">${selected.title}</h2><p>${selected.desc}</p><div class="detail-grid"><div><h3>${state.mode === "patient" ? "À retenir" : "Suivi médical"}</h3><ul>${(state.mode === "patient" ? selected.patient : selected.clinical).map(li).join("")}</ul></div>${state.mode === "pro" && selected.exams.length ? `<div><h3>Examens</h3><ul>${selected.exams.map(li).join("")}</ul></div>` : ""}</div></article></section>`;
+    }
+    function calendarHtml(calc, items) {
+      const maxSa = 44 * 7;
+      const visibleSa = Math.max(0, Math.min(maxSa, state.calendarSa ?? calc.saDays));
+      const anchor = add(calc.lmp, visibleSa);
+      const d = parse(anchor), monthStart = iso(new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)));
+      const visibleWeeks = Math.floor(visibleSa / 7), visibleDays = visibleSa % 7;
+      const offset = (parse(monthStart).getUTCDay() + 6) % 7, start = add(monthStart, -offset);
+      const cells = Array.from({ length: 42 }, (_, i) => add(start, i));
+      return `<section class="panel"><h2>Calendrier</h2><p class="muted">Vue centrée sur la date actuelle, avec vision des 9 mois de grossesse.</p>${pregnancyMonthsHtml(calc, items)}<div class="calendar-toolbar"><button class="secondary" data-calnav="-28">− 4 sem</button><button class="secondary" data-calnav="-7">− 1 sem</button><button class="secondary" data-calset="current">Aujourd'hui</button><button class="secondary" data-calnav="7">+ 1 sem</button><button class="secondary" data-calnav="28">+ 4 sem</button><button class="primary" data-calset="44">44 SA</button></div><p class="muted">Mois affiché : ${fmt(monthStart)} · repère ${visibleWeeks} SA + ${visibleDays} j.</p><div class="calendar">${["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d => `<b class="muted">${d}</b>`).join("")}${cells.map(day => { const list = items.filter(i => diff(i.start, day) >= 0 && diff(day, i.end) >= 0); return `<article class="day ${day === calc.today ? "today" : ""}"><b>${parse(day).getUTCDate()}</b>${day === calc.today ? "<em>Aujourd'hui</em>" : ""}${list.slice(0, 2).map(i => `<span class="tag ${i.tone}">${i.short}</span>`).join("")}</article>`; }).join("")}</div></section>`;
+    }
+    function pregnancyMonthsHtml(calc, items) {
+      const total = 39 * 7;
+      const cards = Array.from({ length: 9 }, (_, index) => {
+        const m = index + 1;
+        const startSg = Math.round(index * total / 9);
+        const endSg = Math.round((index + 1) * total / 9) - 1;
+        const start = add(calc.ddg, startSg), end = add(calc.ddg, endSg);
+        const startSa = startSg + 14, endSa = endSg + 14;
+        const current = diff(start, calc.today) >= 0 && diff(calc.today, end) >= 0;
+        const names = items.filter(i => diff(start, i.end) >= 0 && diff(i.start, end) >= 0).map(i => i.short).slice(0, 3);
+        return `<article class="month-card ${current ? "current" : ""}"><span>Mois ${m}</span><strong>${fmt(start)} - ${fmt(end)}</strong><small>${Math.floor(startSa / 7)}-${Math.floor(endSa / 7)} SA</small>${names.length ? `<ul>${names.map(li).join("")}</ul>` : ""}</article>`;
+      }).join("");
+      return `<div class="pregnancy-months">${cards}</div>`;
+    }
+    function biologyHtml(items) {
+      const computed = [...new Set(items.flatMap(i => i.exams).concat(state.toxo !== "yes" ? ["Toxoplasmose mensuelle tant que l'immunité n'est pas documentée."] : [], state.rh === "negative" ? ["RAI et prévention anti-D selon protocole local."] : []))];
+      return `<section class="panel"><h2>Examens biologiques</h2><div class="cards">${["Début de grossesse|ABO Rh et RAI.|Sérologies toxoplasmose, rubéole si statut inconnu, VIH, syphilis, hépatite B.|NFS, glycémie à jeun, BU, ECBU selon contexte.", "Suivi mensuel|BU protéinurie/glycosurie.|Toxoplasmose mensuelle si non immunisée.|RAI selon Rhésus.", "Fin de grossesse|Streptocoque B entre 35 et 38 SA.|Examens selon situation clinique ou protocole maternité."].map(group => { const [title, ...pts] = group.split("|"); return `<article class="mini"><h3>${title}</h3><ul>${pts.map(li).join("")}</ul></article>`; }).join("")}</div><div class="note"><h3>À surveiller pour cette grossesse</h3><ul>${computed.slice(0, 10).map(li).join("")}</ul></div></section>`;
+    }
+    function ultrasoundHtml(calc, items) {
+      const win = [["Échographie T1", add(calc.lmp, 77), add(calc.lmp, 97)], ["Échographie T2", add(calc.lmp, 140), add(calc.lmp, 175)], ["Échographie T3", add(calc.lmp, 210), add(calc.lmp, 245)], ["Dépistage T21 T1", add(calc.lmp, 77), add(calc.lmp, 97)]];
+      return `<section class="panel"><h2>Échographies</h2><div class="cards">${win.map(w => `<article class="mini"><h3>${w[0]}</h3><p>${fmt(w[1])} - ${fmt(w[2])}</p></article>`).join("")}</div><div class="cards" style="margin-top:12px">${items.filter(i => i.tone === "echo").map(i => `<article class="mini"><h3>${i.title}</h3><p>${i.desc}</p><ul>${i.clinical.map(li).join("")}</ul></article>`).join("")}</div></section>`;
+    }
+    function adminHtml(calc) {
+      const leave = maternity(calc.dpa), deadline = add(calc.lmp, 105);
+      return `<section class="panel"><h2>Administratif</h2><div class="cards">${[["Déclaration de grossesse", `Avant le ${fmt(deadline)}`], ["Début congé prénatal", `${fmt(leave.start)} · ${leave.pre} semaines`], ["Fin congé postnatal", `${fmt(leave.end)} · ${leave.post} semaines`]].map(([a,b]) => `<article class="mini"><h3>${a}</h3><p>${b}</p></article>`).join("")}</div><div class="note"><h3>${leave.label}</h3><p>À confirmer selon statut professionnel et Assurance Maladie. Les cas complexes nécessitent une vérification dédiée.</p></div><div class="cards">${["Déclaration de grossesse avant la fin du 3e mois.", "Inscription maternité selon disponibilité locale.", "Consultation anesthésie en fin de grossesse.", "Préparation des documents : carte Vitale, mutuelle, groupe sanguin, comptes rendus échographiques."].map(x => `<article class="mini"><p>${x}</p></article>`).join("")}</div></section>`;
+    }
+    function alertsHtml(r, al) { return `<div class="dash">${alertHtml(al)}${riskHtml(r)}</div>`; }
+    function adviceHtml() { return `<section class="panel"><h2>Conseils pendant la grossesse</h2><p class="muted">Fiches courtes pour consultation MG, à adapter au contexte clinique.</p><div class="cards">${guides.map(([t, p, bullets]) => `<article class="mini"><h3>${t}</h3><p>${p}</p>${bullets ? `<ul>${bullets.map(li).join("")}</ul>` : ""}</article>`).join("")}</div></section>`; }
+    function exportsHtml(calc, items, r) { const med = medicalSummary(calc, items, r), pat = patientSummary(calc, items); return `<section class="panel"><h2>Export / impression</h2><p class="muted">Aucun envoi automatique. Les fichiers sont générés localement par le navigateur.</p><div class="exports"><button class="primary" data-pdf="pro">PDF professionnel</button><button class="primary patient" data-pdf="patient">PDF patiente</button><button class="secondary" data-print="1">Imprimer</button></div><div class="dash" style="margin-top:12px">${summaryPanel("Résumé dossier", med, "medical")}${summaryPanel("Consignes patiente", pat, "patient")}</div></section>`; }
+    function riskHtml(r) { return `<section class="panel"><h2>Complexité du suivi</h2><h3>${r.level} · score ${r.score}</h3><p>${r.rec}</p>${r.factors.length ? `<ul>${r.factors.map(li).join("")}</ul>` : ""}</section>`; }
+    function alertHtml(al) { return `<section class="panel ${al.length ? "alert" : ""}"><h2>Alertes médicales</h2>${al.length ? al.map(a => `<article><b>${a.label}</b><p>${a.msg}</p></article>`).join("") : `<p class="muted">Aucun signe d'alerte coché. Réévaluation clinique à chaque contact.</p>`}</section>`; }
+    function summaryPanel(title, text, kind) { return `<section class="panel"><div class="row" style="justify-content:space-between"><h2>${title}</h2><button class="ghost" data-copy="${kind}">Copier</button></div><pre>${esc(text)}</pre></section>`; }
+    function metric(label, value) { return `<article class="metric"><span>${label}</span><strong>${value}</strong></article>`; }
+    function check(key, label) { return `<label class="check"><input data-check="${key}" type="checkbox" ${state[key] ? "checked" : ""}><span>${label}</span></label>`; }
+    function li(text) { return `<li>${esc(text)}</li>`; }
+    function sel(key, value) { return String(state[key] ?? "") === value ? "selected" : ""; }
+    function esc(v) { return String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
+    function tabLabel(t) { return ({ dashboard: "Tableau de bord", timeline: "Timeline", calendar: "Calendrier", biology: "Biologie", ultrasounds: "Échographies", admin: "Administratif", alerts: "Alertes", advice: "Conseils", exports: "Export" })[t]; }
+    function statusLabel(s) { return ({ current: "période actuelle", soon: "à prévoir bientôt", future: "à venir", late: "à vérifier si non réalisé", past: "passé" })[s] || "information"; }
+    function save() { localStorage.setItem(STORE, JSON.stringify(state)); }
+    function load() { try { return { ...defaultState, ...(JSON.parse(localStorage.getItem(STORE) || "null") || {}) }; } catch { return { ...defaultState }; } }
+    function download(name, content, type) { const blob = new Blob([content], { type }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url); }
+    function printExport(kind) { state.tab = "exports"; save(); render(); setTimeout(() => window.print(), 80); }
+    document.getElementById("app").addEventListener("input", e => {
+      const t = e.target;
+      if (t.dataset.field) state[t.dataset.field] = t.type === "checkbox" ? t.checked : t.value;
+      if (["lmp", "dpa", "conception", "start", "echoDate", "echoWeeks", "echoDays", "transfer"].includes(t.dataset.field)) state.calendarSa = null;
+      if (t.dataset.warning) state.warnings[t.dataset.warning] = t.checked;
+      if (t.dataset.check) state[t.dataset.check] = t.checked;
+      save(); render();
+    });
+    document.getElementById("app").addEventListener("click", async e => {
+      const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.method) { state.method = b.dataset.method; state.calendarSa = null; }
+      if (b.dataset.mode) state.mode = b.dataset.mode;
+      if (b.dataset.tab) state.tab = b.dataset.tab;
+      if (b.dataset.dark) state.dark = !state.dark;
+      if (b.dataset.selected) state.selected = b.dataset.selected;
+      if (b.dataset.reset) { localStorage.removeItem(STORE); state = { ...defaultState }; }
+      const calc = calculate(), items = calc ? timeline(calc) : [], r = risk(state, calc);
+      if (calc && b.dataset.calnav) state.calendarSa = Math.max(0, Math.min(44 * 7, (state.calendarSa ?? calc.saDays) + Number(b.dataset.calnav)));
+      if (calc && b.dataset.calset === "current") state.calendarSa = Math.max(0, Math.min(44 * 7, calc.saDays));
+      if (calc && b.dataset.calset === "44") state.calendarSa = 44 * 7;
+      if (b.dataset.copy && calc) await navigator.clipboard.writeText(b.dataset.copy === "patient" ? patientSummary(calc, items) : medicalSummary(calc, items, r));
+      if (b.dataset.print) window.print();
+      if (b.dataset.pdf) printExport(b.dataset.pdf);
+      save(); render();
+    });
+    window.__GC_TEST__ = { add, diff, calculate, calcBase, timeline, risk, maternity, lmpYearOk, pregnancyMonthsHtml, calendarHtml, defaultState };
+    render();
+  </script>
+</body>
+</html>
