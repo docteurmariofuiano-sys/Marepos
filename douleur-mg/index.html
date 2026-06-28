@@ -1,0 +1,2471 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Douleur MG - Aide au choix antalgique</title>
+  <style>
+    :root {
+      --bg: #f4f7f5;
+      --surface: #ffffff;
+      --surface-2: #eef3f1;
+      --ink: #182523;
+      --muted: #5c6c68;
+      --line: #d9e3df;
+      --green: #187a55;
+      --green-soft: #e4f4ed;
+      --orange: #a75b10;
+      --orange-soft: #fff0dd;
+      --red: #b5272f;
+      --red-soft: #ffe8ea;
+      --blue: #2468a8;
+      --blue-soft: #e7f0fb;
+      --grey-soft: #edf0f2;
+      --shadow: 0 14px 35px rgba(24, 37, 35, 0.08);
+      --radius: 8px;
+      --focus: 0 0 0 3px rgba(36, 104, 168, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", Tahoma, sans-serif;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(244, 247, 245, 0.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 14px 18px 10px;
+      display: grid;
+      grid-template-columns: 280px 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-mark, .icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(24, 37, 35, 0.12);
+      background: #fefefe;
+      color: var(--green);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .safety-strip {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid #f0c0c5;
+      background: var(--red-soft);
+      border-radius: var(--radius);
+      color: #6d161d;
+      font-size: 0.86rem;
+    }
+
+    .safety-strip strong {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .navrow {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 18px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .nav-btn, .small-btn, .primary-btn, .ghost-btn, .danger-btn {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 9px 12px;
+      min-height: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .nav-btn:hover, .small-btn:hover, .primary-btn:hover, .ghost-btn:hover, .danger-btn:hover {
+      transform: translateY(-1px);
+      border-color: #b6c8c1;
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .primary-btn {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .ghost-btn {
+      background: transparent;
+    }
+
+    .danger-btn {
+      background: var(--red-soft);
+      border-color: #f0c0c5;
+      color: #7a1c23;
+    }
+
+    .icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(24, 37, 35, 0.07);
+      font-size: 0.76rem;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    main {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .intro-band {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 18px;
+    }
+
+    .intro-band h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3.1rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      max-width: 850px;
+    }
+
+    .intro-band p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 860px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .action-tile {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      min-height: 118px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .action-tile:hover {
+      border-color: #b1c7be;
+      box-shadow: var(--shadow);
+    }
+
+    .action-tile strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .action-tile span:last-child {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .design-logic {
+      display: grid;
+      gap: 10px;
+    }
+
+    .logic-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .logic-row strong {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .logic-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: minmax(290px, 0.85fr) minmax(340px, 1fr) minmax(360px, 1.1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 22px rgba(24, 37, 35, 0.05);
+    }
+
+    .panel h2, .panel h3, .section-title {
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+      letter-spacing: 0;
+    }
+
+    .panel-lead {
+      margin: -4px 0 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    label.field {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: .84rem;
+      font-weight: 650;
+    }
+
+    input[type="number"], select, textarea, input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 11px;
+      background: #fff;
+      color: var(--ink);
+      min-height: 42px;
+    }
+
+    textarea {
+      min-height: 260px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--green);
+    }
+
+    .range-line {
+      display: grid;
+      grid-template-columns: 1fr 48px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .value-pill {
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      font-weight: 800;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .chip-check {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: .86rem;
+      user-select: none;
+    }
+
+    .chip-check input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+      margin: 0;
+    }
+
+    .chip-check:has(input:checked) {
+      border-color: #74b292;
+      background: var(--green-soft);
+    }
+
+    .accordion {
+      display: grid;
+      gap: 8px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 11px 12px;
+      font-weight: 750;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    details[open] summary {
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .detail-body {
+      padding: 12px;
+    }
+
+    .result-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .alert-box, .info-box, .ok-box, .warn-box {
+      border-radius: var(--radius);
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .alert-box { background: var(--red-soft); border-color: #f0c0c5; color: #6d161d; }
+    .warn-box { background: var(--orange-soft); border-color: #f2c98d; color: #68400a; }
+    .ok-box { background: var(--green-soft); border-color: #b7dfca; color: #164d39; }
+    .info-box { background: var(--blue-soft); border-color: #bfd4ef; color: #173e67; }
+
+    .result-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fff;
+    }
+
+    .result-card h4 {
+      margin: 0 0 8px;
+      font-size: .95rem;
+    }
+
+    .result-card ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .result-card li + li { margin-top: 4px; }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: #fff;
+      min-height: 72px;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      display: block;
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .kpi strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.05rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: .78rem;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      background: var(--grey-soft);
+    }
+
+    .badge.green { background: var(--green-soft); color: var(--green); border-color: #b7dfca; }
+    .badge.orange { background: var(--orange-soft); color: var(--orange); border-color: #f2c98d; }
+    .badge.red { background: var(--red-soft); color: var(--red); border-color: #f0c0c5; }
+    .badge.blue { background: var(--blue-soft); color: var(--blue); border-color: #bfd4ef; }
+
+    .tabs-line {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .med-card, .sheet-card, .source-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: var(--surface);
+      display: grid;
+      gap: 9px;
+    }
+
+    .med-card h3, .sheet-card h3, .source-card h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .compact-list {
+      margin: 0;
+      padding-left: 1.05rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .compact-list li + li { margin-top: 3px; }
+
+    .summary-box {
+      white-space: pre-wrap;
+      border: 1px dashed #b9c9c3;
+      border-radius: var(--radius);
+      background: #fbfdfc;
+      padding: 12px;
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: .86rem;
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .print-only { display: none; }
+
+    @media (max-width: 1180px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .home-grid, .decision-grid, .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .library-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      main, .topbar, .navrow { padding-left: 12px; padding-right: 12px; }
+      .quick-actions, .kpi-row, .library-grid { grid-template-columns: 1fr; }
+      .logic-row { grid-template-columns: 1fr; }
+      .brand h1 { font-size: .98rem; }
+      .safety-strip { grid-template-columns: 1fr; }
+      .panel { padding: 13px; }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      header, .no-print, .navrow, .toolbar, .tabs-line, .action-tile, .primary-btn, .small-btn, .ghost-btn, .danger-btn { display: none !important; }
+      main { padding: 0; max-width: none; }
+      .view { display: block !important; }
+      .view:not(.active) { display: none !important; }
+      .panel, .result-card, .alert-box, .warn-box, .info-box, .ok-box {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+      .print-only { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="topbar">
+        <div class="brand">
+          <span class="brand-mark">Rx</span>
+          <div>
+            <h1>Douleur MG - Aide au choix antalgique</h1>
+            <p>Assistant local pour consultation de médecine générale</p>
+          </div>
+        </div>
+        <div class="safety-strip" role="note">
+          <strong>Vigilance</strong>
+          <span>Ne remplace pas le jugement médical. Vérifier RCP, Vidal, ANSM et CRAT avant prescription. Les ordonnances restent modifiables et non automatiques.</span>
+        </div>
+        <div class="toolbar no-print">
+          <button class="small-btn" id="copySummaryTop" title="Copier la synthèse"><span class="icon">CP</span>Copier</button>
+          <button class="small-btn" id="printTop" title="Imprimer ou exporter en PDF"><span class="icon">PDF</span>PDF</button>
+        </div>
+      </div>
+      <nav class="navrow no-print" aria-label="Navigation principale">
+        <button class="nav-btn active" data-view="home"><span class="icon">MG</span>Accueil</button>
+        <button class="nav-btn" data-view="evaluate"><span class="icon">EN</span>Évaluer une douleur</button>
+        <button class="nav-btn" data-view="dn4"><span class="icon">DN4</span>Neuropathique</button>
+        <button class="nav-btn" data-view="orders"><span class="icon">OR</span>Ordonnances types</button>
+        <button class="nav-btn" data-view="sheets"><span class="icon">FC</span>Fiches cliniques</button>
+        <button class="nav-btn" data-view="meds"><span class="icon">SEC</span>Sécurité médicaments</button>
+        <button class="nav-btn" data-view="sources"><span class="icon">SRC</span>Sources</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="view active">
+        <div class="home-grid">
+          <div class="intro-band">
+            <div>
+              <h2>Choisir vite, prescrire prudemment, réévaluer tôt.</h2>
+              <p>Le moteur croise l'intensité, le mécanisme, le terrain, les red flags, les traitements déjà pris et les limites raisonnables de prescription en médecine générale.</p>
+            </div>
+            <div class="quick-actions">
+              <button class="action-tile" data-go="evaluate"><span class="icon-badge">EN</span><strong>Évaluer une douleur</strong><span>Entrée consultation avec red flags, terrain et synthèse imprimable.</span></button>
+              <button class="action-tile" data-go="dn4"><span class="icon-badge">DN4</span><strong>Douleur neuropathique</strong><span>Score DN4 simplifié, orientation thérapeutique et messages patient.</span></button>
+              <button class="action-tile" data-go="orders"><span class="icon-badge">OR</span><strong>Ordonnances types</strong><span>Modèles éditables avec précautions principales visibles.</span></button>
+              <button class="action-tile" data-go="sheets"><span class="icon-badge">FC</span><strong>Fiches cliniques</strong><span>Situations fréquentes en MG, courtes et actionnables.</span></button>
+              <button class="action-tile" data-go="meds"><span class="icon-badge">SEC</span><strong>Sécurité médicaments</strong><span>Base structurée par classe, niveau MG et interactions majeures.</span></button>
+              <button class="action-tile" data-go="sources"><span class="icon-badge">SRC</span><strong>Sources utilisées</strong><span>Référentiel interne consulté le 28/06/2026.</span></button>
+            </div>
+          </div>
+
+          <div class="design-logic">
+            <div class="logic-row">
+              <strong>Types</strong>
+              <p>Nociceptive mécanique, inflammatoire, neuropathique, nociplastique, mixte, cancéreuse/palliative et douleurs topographiques fréquentes.</p>
+            </div>
+            <div class="logic-row">
+              <strong>Vert MG</strong>
+              <p>Paracétamol, AINS si terrain compatible, AINS local, traitements neuropathiques usuels selon profil, mesures physiques et réévaluation.</p>
+            </div>
+            <div class="logic-row">
+              <strong>Orange</strong>
+              <p>Opioïdes faibles, prégabaline, néfopam, corticoïdes ciblés, associations sédatives, douleur chronique ou sujet fragile.</p>
+            </div>
+            <div class="logic-row">
+              <strong>Rouge</strong>
+              <p>Red flags, douleur thoracique/abdominale/céphalée/rachis inquiétante, opioïdes forts au long cours hors cancer, fentanyl chez naïf, carbamazépine hors indication spécifique.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="evaluate" class="view">
+        <div class="decision-grid">
+          <div class="panel">
+            <h2>Données patient</h2>
+            <p class="panel-lead">Saisie rapide. Les alertes de sécurité priment sur toute proposition médicamenteuse.</p>
+            <div class="form-grid">
+              <label class="field">Intensité EN / EVA
+                <div class="range-line">
+                  <input type="range" min="0" max="10" value="6" id="painScore">
+                  <span class="value-pill" id="painScoreLabel">6</span>
+                </div>
+              </label>
+              <label class="field">Durée
+                <select id="duration">
+                  <option value="aigue">Aiguë &lt; 6 semaines</option>
+                  <option value="subaigue">Subaiguë 6 semaines - 3 mois</option>
+                  <option value="chronique">Chronique &gt; 3 mois</option>
+                </select>
+              </label>
+              <label class="field">Type probable
+                <select id="painType"></select>
+              </label>
+              <label class="field">Âge
+                <input type="number" min="0" max="110" value="54" id="age">
+              </label>
+
+              <details open>
+                <summary>Terrain / comorbidités</summary>
+                <div class="detail-body chips" id="terrainChips"></div>
+              </details>
+
+              <details>
+                <summary>Médicaments déjà pris ou associés</summary>
+                <div class="detail-body chips" id="medTakenChips"></div>
+              </details>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Type de douleur et red flags</h2>
+            <p class="panel-lead">Cochez d'abord les signaux d'alerte. Un red flag force l'orientation avant simple traitement symptomatique.</p>
+            <div class="accordion" id="redFlagGroups"></div>
+
+            <details open style="margin-top:12px">
+              <summary>Signes neuropathiques rapides</summary>
+              <div class="detail-body">
+                <div class="chips" id="dn4EvalChips"></div>
+                <div class="info-box" style="margin-top:10px" id="dn4InlineResult">DN4 : 0/10. Positif si score ≥ 4/10.</div>
+              </div>
+            </details>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px" class="no-print">
+              <button class="primary-btn" id="runDecision"><span class="icon">OK</span>Générer la synthèse</button>
+              <button class="ghost-btn" id="resetForm"><span class="icon">RAZ</span>Réinitialiser</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Proposition thérapeutique</h2>
+            <p class="panel-lead">Résultat orientatif, à adapter au diagnostic, au patient et aux données actualisées du médicament.</p>
+            <div class="result-stack" id="decisionResult"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dn4" class="view">
+        <div class="two-col">
+          <div class="panel">
+            <h2>Questionnaire DN4 simplifié</h2>
+            <p class="panel-lead">Score positif si 4 items ou plus. À interpréter avec l'examen clinique et la topographie neurologique.</p>
+            <div class="chips" id="dn4StandaloneChips"></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px" class="no-print">
+              <button class="primary-btn" id="scoreDn4"><span class="icon">DN4</span>Calculer</button>
+              <button class="ghost-btn" id="clearDn4"><span class="icon">RAZ</span>Effacer</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Interprétation</h2>
+            <div id="dn4StandaloneResult" class="result-stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="orders" class="view">
+        <div class="two-col">
+          <div class="panel">
+            <h2>Ordonnances types MG</h2>
+            <p class="panel-lead">Modèles modifiables. Aucune ordonnance ne doit être utilisée sans vérification clinique et médicamenteuse.</p>
+            <label class="field">Situation
+              <select id="orderSelect"></select>
+            </label>
+            <div class="warn-box" style="margin-top:12px">
+              Ordonnance proposée à adapter par le médecin selon le patient, les contre-indications et les données actualisées du médicament.
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px" class="no-print">
+              <button class="primary-btn" id="loadOrder"><span class="icon">OR</span>Charger</button>
+              <button class="small-btn" id="copyOrder"><span class="icon">CP</span>Copier</button>
+              <button class="small-btn" id="printOrder"><span class="icon">PDF</span>Imprimer</button>
+            </div>
+            <div class="result-card" style="margin-top:12px">
+              <h3>Lignes rapides à copier</h3>
+              <label class="field">Rechercher
+                <input type="search" id="quickOrderSearch" placeholder="Doliprane, ibuprofène, tramadol, morphine, gabapentine...">
+              </label>
+              <label class="field">Type d'ordonnance
+                <select id="quickOrderSelect"></select>
+              </label>
+              <label class="field" id="quickOrderDurationWrap" style="margin-top:10px">Durée
+                <select id="quickOrderDuration"></select>
+              </label>
+              <div class="summary-box" id="quickOrderText" style="margin-top:10px; max-height:160px"></div>
+              <div class="warn-box" id="quickOrderWarning" style="margin-top:10px"></div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px" class="no-print">
+                <button class="small-btn" id="copyQuickOrder"><span class="icon">CP</span>Copier la ligne</button>
+                <button class="small-btn" id="addQuickOrder"><span class="icon">+</span>Ajouter au modèle</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Modèle éditable</h2>
+            <textarea id="orderText" spellcheck="true"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section id="sheets" class="view">
+        <div class="panel">
+          <h2>Fiches cliniques pratiques</h2>
+          <p class="panel-lead">Format court : reconnaître, ne pas manquer, traitement MG possible, à éviter, revoir/adresser, ordonnance type et conseils patient.</p>
+          <div class="tabs-line no-print">
+            <input type="search" id="sheetSearch" placeholder="Rechercher : lombalgie, zona, goutte, anticoagulants...">
+            <button class="small-btn" id="clearSheetSearch"><span class="icon">RAZ</span>Effacer</button>
+          </div>
+          <div class="library-grid" id="sheetGrid"></div>
+        </div>
+      </section>
+
+      <section id="meds" class="view">
+        <div class="two-col">
+          <div class="panel">
+            <h2>Sécurité médicaments</h2>
+            <p class="panel-lead">Base structurée par classe. Les posologies sont des repères usuels à vérifier dans le RCP/Vidal avant prescription.</p>
+            <label class="field">Recherche
+              <input type="search" id="medSearch" placeholder="paracétamol, tramadol, pregabaline, AINS...">
+            </label>
+            <label class="field" style="margin-top:10px">Niveau MG
+              <select id="medLevelFilter">
+                <option value="all">Tous</option>
+                <option value="MG possible">MG possible</option>
+                <option value="MG avec prudence">MG avec prudence</option>
+                <option value="Avis spécialisé recommandé">Avis spécialisé recommandé</option>
+                <option value="Urgence">Urgence</option>
+              </select>
+            </label>
+            <div class="alert-box" style="margin-top:12px">
+              Toujours vérifier : DFG, grossesse/allaitement sur CRAT, interactions sédatives/sérotoninergiques, risque de chute/confusion et durée prévue.
+            </div>
+            <div class="result-card" style="margin-top:12px">
+              <h3>Limites MG</h3>
+              <div id="limitsMg"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Base médicamenteuse</h2>
+            <div class="library-grid" id="medGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sources" class="view">
+        <div class="panel">
+          <h2>Base de connaissances et sources</h2>
+          <p class="panel-lead">Sources consultées ou tentées le 28/06/2026. Le PDF local nommé dans le prompt n'était pas présent dans le dossier de travail.</p>
+          <div class="library-grid" id="sourceGrid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const CONSULT_DATE = "28/06/2026";
+
+    const painTypes = [
+      ["mecanique", "Nociceptive mécanique"],
+      ["inflammatoire", "Nociceptive inflammatoire"],
+      ["neuropathique", "Neuropathique"],
+      ["nociplastique", "Nociplastique / sensibilisation centrale"],
+      ["mixte", "Mixte"],
+      ["cancer", "Douleur cancéreuse ou palliative"],
+      ["posttrauma", "Post-traumatique"],
+      ["postop", "Post-opératoire"],
+      ["cephalee", "Céphalée / migraine"],
+      ["lombalgie", "Lombalgie / radiculalgie"],
+      ["abdominale", "Douleur abdominale"],
+      ["thoracique", "Douleur thoracique"],
+      ["pelvienne", "Douleur pelvienne"],
+      ["dentaire", "Douleur dentaire"],
+      ["orl", "Douleur ORL"],
+      ["dermato", "Dermatologique / zona"],
+      ["rhumato", "Rhumatologique"],
+      ["iatrogene", "Iatrogène ou médicamenteuse"]
+    ];
+
+    const terrainItems = [
+      ["grossesse", "Grossesse / allaitement"],
+      ["renal", "Insuffisance rénale"],
+      ["hepatic", "Insuffisance hépatique"],
+      ["ulcer", "Ulcère / hémorragie digestive"],
+      ["anticoag", "Anticoagulants / antiagrégants"],
+      ["cardio", "HTA / IC / coronaropathie"],
+      ["asthmaNsaid", "Asthme ou allergie AINS"],
+      ["bpco", "BPCO / apnées du sommeil"],
+      ["cognitive", "Troubles cognitifs / chute"],
+      ["addiction", "Addiction / mésusage opioïdes"],
+      ["depression", "Dépression / anxiété"],
+      ["epilepsy", "Épilepsie"],
+      ["glaucoma", "Glaucome"],
+      ["hbp", "HBP / rétention urinaire"],
+      ["polypharmacy", "Polymédication"],
+      ["frail", "Personne âgée fragile"]
+    ];
+
+    const medTakenItems = [
+      ["paracetamol", "Paracétamol"],
+      ["nsaid", "AINS"],
+      ["codeine", "Codéine"],
+      ["tramadol", "Tramadol"],
+      ["strongOpioid", "Morphine / oxycodone"],
+      ["steroid", "Corticoïdes"],
+      ["pregabalin", "Prégabaline"],
+      ["gabapentin", "Gabapentine"],
+      ["duloxetine", "Duloxétine"],
+      ["amitriptyline", "Amitriptyline"],
+      ["carbamazepine", "Carbamazépine"],
+      ["benzo", "Benzodiazépines / Z-drugs"],
+      ["serotonergic", "ISRS / IRSNa / IMAO"],
+      ["other", "Autres"]
+    ];
+
+    const dn4Items = [
+      ["burning", "Brûlure"],
+      ["coldPain", "Froid douloureux"],
+      ["electric", "Décharges électriques"],
+      ["tingling", "Fourmillements"],
+      ["pins", "Picotements"],
+      ["numbness", "Engourdissement"],
+      ["itching", "Démangeaisons"],
+      ["hypoTouch", "Hypoesthésie au tact"],
+      ["hypoPin", "Hypoesthésie à la piqûre"],
+      ["allodynia", "Allodynie au frottement"]
+    ];
+
+    const redFlagGroups = [
+      ["thorax", "Douleur thoracique", ["Douleur constrictive", "Irradiation bras gauche / mâchoire", "Dyspnée", "Malaise", "Sueurs", "ECG anormal", "Risque cardiovasculaire important"]],
+      ["abdomen", "Douleur abdominale", ["Défense / contracture", "Fièvre élevée", "Vomissements incoercibles", "Rectorragie / méléna", "Grossesse", "Douleur brutale intense", "Altération de l'état général"]],
+      ["cephalee", "Céphalée", ["Coup de tonnerre", "Déficit neurologique", "Fièvre / raideur méningée", "Trouble de conscience", "Nouvelle après 50 ans", "Immunodépression", "Cancer connu"]],
+      ["rachis", "Rachis", ["Queue de cheval", "Déficit moteur progressif", "Anesthésie en selle", "Troubles sphinctériens", "Fièvre", "Cancer connu", "Traumatisme", "Corticothérapie prolongée", "Douleur nocturne inexpliquée"]],
+      ["os", "Os / articulation", ["Suspicion fracture", "Articulation rouge chaude fébrile", "Immunodépression", "Douleur + fièvre", "Impotence brutale"]],
+      ["fragile", "Terrain fragile", ["Grossesse", "Enfant", "Personne âgée fragile", "Insuffisance rénale sévère", "Insuffisance hépatique", "Anticoagulant", "Confusion", "Risque suicidaire"]]
+    ];
+
+    const sources = [
+      {
+        source: "Vidal.fr - Recherche et fiches médicaments",
+        date: CONSULT_DATE,
+        confidence: "À vérifier au moment de prescrire",
+        url: "https://www.vidal.fr/",
+        use: "Référence de vérification des spécialités, formes, RCP, contre-indications, interactions et conditions de prescription. Les lignes rapides de l'application restent des modèles à adapter."
+      },
+      {
+        source: "HAS - Bon usage des médicaments opioïdes : antalgie, prévention, trouble de l'usage et surdoses",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://www.has-sante.fr/jcms/p_3215131/fr/bon-usage-des-medicaments-opioides-antalgie-prevention-et-prise-en-charge-du-trouble-de-l-usage-et-des-surdoses",
+        use: "Opioïdes, objectifs fonctionnels, constipation, co-prescriptions à risque, naloxone, douleur chronique non cancéreuse."
+      },
+      {
+        source: "HAS / SFETD / CMG - Parcours de santé d'une personne présentant une douleur chronique, janvier 2023",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://www.sfetd-douleur.org/wp-content/uploads/2023/02/2023-Recos-HAS-parcours.pdf",
+        use: "Parcours gradué, rôle du médecin traitant, articulation avec structures douleur et critères d'adressage."
+      },
+      {
+        source: "SFETD - Traitements pharmacologiques et non pharmacologiques de la douleur neuropathique, synthèse française 2020",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://www.sfetd-douleur.org/wp-content/uploads/2021/02/synth%C3%A8se-RECOS-DN-langue-fran%C3%A7aise1.pdf",
+        use: "DN4, lignes thérapeutiques neuropathiques, topiques, place limitée opioïdes forts."
+      },
+      {
+        source: "ANSM - Tramadol et codéine : règles de prescription et délivrance entrant en vigueur le 1er mars 2025",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://ansm.sante.fr/actualites/tramadol-et-codeine-les-nouvelles-regles-de-prescription-et-delivrance-entrent-en-vigueur-le-1er-mars-2025",
+        use: "Ordonnance sécurisée tramadol/codéine/dihydrocodéine, durée maximale de 12 semaines pour codéine/dihydrocodéine."
+      },
+      {
+        source: "ANSM - Prégabaline : conditions de prescription et délivrance pour limiter le mésusage",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://ansm.sante.fr/informations-de-securite/nouvelles-conditions-de-prescription-et-de-delivrance-des-specialites-a-base-de-pregabaline-lyrica-et-ses-generiques",
+        use: "Ordonnance sécurisée obligatoire, durée maximale 6 mois, délivrance mensuelle renouvelable selon mention."
+      },
+      {
+        source: "SFETD - Outils d'évaluation de la douleur",
+        date: CONSULT_DATE,
+        confidence: "Fort",
+        url: "https://www.sfetd-douleur.org/ressources/outils/",
+        use: "Échelle numérique/EVA, auto-évaluation, multidimensionnel surtout en douleur chronique."
+      },
+      {
+        source: "SFETD - Livre blanc douleur 2017",
+        date: CONSULT_DATE,
+        confidence: "Moyen",
+        url: "https://www.sfetd-douleur.org/wp-content/uploads/2019/09/livre_blanc-2017-10-24.pdf",
+        use: "Contexte douleur chronique, DN4, structures douleur, enjeux de coordination."
+      },
+      {
+        source: "JNI 2018 - Stratégies de prise en charge de la douleur",
+        date: CONSULT_DATE,
+        confidence: "Moyen",
+        url: "https://www.infectiologie.com/UserFiles/File/jni/2018/ide/jni2018-2strategies-de-pec-de-la-douleur-gautier.pdf",
+        use: "Classification pratique : douleur aiguë, chronique, nociceptive, neuropathique, dysfonctionnelle, mixte."
+      },
+      {
+        source: "IFSI Troyes - Traitement de la douleur, cours 2015-2016",
+        date: CONSULT_DATE,
+        confidence: "Moyen",
+        url: "https://www.ifsi-troyes.fr/sites/default/files/cours_douleur_ifsi_2015-16_mode_de_compatibilite_0.pdf",
+        use: "Évaluation EN/EVA, paliers OMS, surveillance, distinction excès de nociception/neurogène."
+      },
+      {
+        source: "Faculté de médecine Oran - Physiologie de la douleur",
+        date: CONSULT_DATE,
+        confidence: "Complément",
+        url: "https://www.facmed-univ-oran.dz/ressources/fichiers_produits/fichier_produit_2337.pdf",
+        use: "Physiopathologie générale, nociception, douleur neuropathique et allodynie."
+      },
+      {
+        source: "Douleur et souffrance_Partie1_ORenard.pdf",
+        date: CONSULT_DATE,
+        confidence: "Non exploité",
+        url: "Fichier local non trouvé dans l'environnement",
+        use: "À importer dans le dossier de travail pour intégration exacte."
+      },
+      {
+        source: "Vidal / RCP / CRAT",
+        date: CONSULT_DATE,
+        confidence: "À vérifier au moment de prescrire",
+        url: "Consultation externe requise",
+        use: "AMM, posologies exactes, contre-indications, interactions et grossesse/allaitement."
+      }
+    ];
+
+    const medDb = [
+      {
+        id: "paracetamol",
+        dci: "Paracétamol",
+        brands: "Doliprane, Dafalgan, Efferalgan",
+        class: "Palier 1",
+        pain: "Nociceptive légère à modérée, fièvre, association possible.",
+        start: "Adulte : 500 mg à 1 g par prise selon poids et contexte.",
+        titration: "Espacer les prises ; adapter au poids, au foie, à l'alcool et à la dénutrition.",
+        max: "Repère usuel : 3 g/j chez l'adulte, moins si facteur de risque ; vérifier RCP.",
+        onset: "30 à 60 minutes.",
+        contra: ["Insuffisance hépatocellulaire sévère", "Hypersensibilité"],
+        precautions: ["Foie, alcool, dénutrition, poids bas", "Doublons dans associations codéine/tramadol"],
+        interactions: ["Antivitamines K : prudence si prises répétées"],
+        renal: "Adapter selon contexte et RCP ; surtout surveiller cumul et fragilité.",
+        elderly: "Dose maximale souvent réduite selon poids/fragilité.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "Dose totale quotidienne, automédication, alcool.",
+        patient: "Ne pas cumuler plusieurs médicaments contenant du paracétamol.",
+        level: "MG possible"
+      },
+      {
+        id: "nsaidOral",
+        dci: "AINS oraux",
+        brands: "Ibuprofène, kétoprofène, naproxène, diclofénac",
+        class: "AINS",
+        pain: "Inflammatoire ou mécanique aiguë, douleur ostéo-articulaire si terrain compatible.",
+        start: "Dose minimale efficace, durée la plus courte.",
+        titration: "Réévaluer rapidement ; éviter la prolongation réflexe.",
+        max: "Vérifier RCP/Vidal selon molécule.",
+        onset: "Quelques heures.",
+        contra: ["Grossesse à partir de 24 SA", "Ulcère évolutif ou hémorragie digestive", "Insuffisance rénale", "Insuffisance cardiaque", "Allergie/asthme AINS"],
+        precautions: ["Anticoagulants/antiagrégants", "HTA ou coronaropathie", "Âge avancé", "Déshydratation"],
+        interactions: ["Anticoagulants", "IEC/ARA2/diurétiques", "Corticoïdes", "Lithium, méthotrexate selon doses"],
+        renal: "Éviter si insuffisance rénale ou risque de déshydratation.",
+        elderly: "Éviter si fragile ; sinon très court et surveillance.",
+        pregnancy: "Vérifier CRAT ; contre-indication formelle dès 24 SA.",
+        monitoring: "TA, fonction rénale, signes digestifs, durée.",
+        patient: "Arrêter et consulter si douleur abdominale, méléna, dyspnée, œdèmes ou éruption.",
+        level: "MG possible"
+      },
+      {
+        id: "nsaidTopical",
+        dci: "AINS locaux",
+        brands: "Diclofénac gel, emplâtre selon spécialité",
+        class: "AINS local",
+        pain: "Douleur ostéo-articulaire localisée, entorse, tendinite superficielle.",
+        start: "Application locale selon RCP.",
+        titration: "Courte durée, éviter peau lésée.",
+        max: "Vérifier RCP.",
+        onset: "Progressif sur quelques jours.",
+        contra: ["Allergie AINS", "Peau lésée", "Grossesse selon terme et RCP"],
+        precautions: ["Moins de risque systémique mais prudence chez terrain fragile"],
+        interactions: ["Risque systémique faible mais non nul"],
+        renal: "Prudence si usage étendu/prolongé.",
+        elderly: "Option utile si douleur localisée et peau saine.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "Réaction cutanée, efficacité.",
+        patient: "Ne pas appliquer sous pansement occlusif sans avis.",
+        level: "MG possible"
+      },
+      {
+        id: "codeine",
+        dci: "Codéine",
+        brands: "Codoliprane, Klipal, Dafalgan codéine",
+        class: "Opioïde faible",
+        pain: "Douleur aiguë nociceptive modérée à sévère non contrôlée par palier 1.",
+        start: "Courte durée, dose minimale ; tenir compte du paracétamol associé.",
+        titration: "Réévaluation en 24-72 h ; arrêt dès amélioration.",
+        max: "Vérifier RCP ; depuis 01/03/2025 ordonnance sécurisée, durée max 12 semaines pour codéine/dihydrocodéine.",
+        onset: "Environ 30 à 60 minutes.",
+        contra: ["Insuffisance respiratoire", "Allaitement selon contexte", "Enfant selon RCP", "Hypersensibilité"],
+        precautions: ["Somnolence", "Constipation", "BPCO/SAS", "Sujet âgé", "Addiction", "Benzodiazépines"],
+        interactions: ["Alcool", "Benzodiazépines et sédatifs", "Autres opioïdes"],
+        renal: "Prudence, adapter/éviter selon degré.",
+        elderly: "Éviter si fragile ; sinon dose faible, court, surveillance chute/confusion.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "Somnolence, constipation, respiration, efficacité fonctionnelle.",
+        patient: "Éviter alcool et conduite si somnolence ; ne pas dépasser la durée convenue.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "tramadol",
+        dci: "Tramadol",
+        brands: "Topalgic, Contramal, Zamudol, Ixprim",
+        class: "Opioïde faible",
+        pain: "Douleur aiguë modérée à sévère ; deuxième ligne neuropathique avec prudence selon SFETD.",
+        start: "Dose minimale efficace, courte durée.",
+        titration: "Réévaluation 24-72 h ; éviter prolongation.",
+        max: "Durée maximale 3 mois ; ordonnance sécurisée depuis 01/03/2025 ; vérifier RCP.",
+        onset: "Selon forme immédiate ou LP.",
+        contra: ["Épilepsie non contrôlée", "IMAO", "Intoxication alcool/sédatifs", "Insuffisance respiratoire sévère"],
+        precautions: ["Confusion/chute", "Syndrome sérotoninergique", "Dépendance", "Convulsions", "Sujet âgé"],
+        interactions: ["ISRS/IRSNa/IMAO", "Triptans", "Benzodiazépines", "Alcool", "Autres opioïdes"],
+        renal: "Adapter/éviter selon DFG ; vérifier RCP.",
+        elderly: "Éviter si fragile ; risque confusion, chute, hyponatrémie.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "Somnolence, confusion, constipation, nausées, signes sérotoninergiques.",
+        patient: "Ne pas arrêter brutalement si prise prolongée ; prévenir en cas d'agitation, fièvre, tremblements.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "morphine",
+        dci: "Morphine",
+        brands: "Actiskenan, Sevredol, Oramorph, Skénan, Moscontin",
+        class: "Opioïde fort",
+        pain: "Douleur aiguë sévère sélectionnée, douleur cancéreuse/palliative structurée.",
+        start: "À initier avec protocole clair, dose faible, objectif fonctionnel.",
+        titration: "Titration prudente, réévaluation rapprochée.",
+        max: "Pas de dose standard sans contexte ; vérifier RCP et recommandations.",
+        onset: "Selon forme immédiate ou LP.",
+        contra: ["Insuffisance respiratoire non contrôlée", "Iléus paralytique", "Hypersensibilité"],
+        precautions: ["Constipation", "Dépression respiratoire", "Confusion", "BPCO/SAS", "IR", "Sédatifs", "Addiction"],
+        interactions: ["Benzodiazépines", "Alcool", "Gabapentinoïdes", "Autres dépresseurs SNC"],
+        renal: "Prudence majeure ; métabolites actifs, adapter ou discuter alternative.",
+        elderly: "Réduction de dose, surveillance rapprochée chute/confusion.",
+        pregnancy: "Vérifier CRAT ; HAS mentionne usage possible sous cadre spécialisé selon contexte.",
+        monitoring: "Fréquence respiratoire, vigilance, transit, douleur, fonction.",
+        patient: "Laxatif souvent nécessaire ; ne pas associer alcool/sédatifs sans avis.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "oxycodone",
+        dci: "Oxycodone",
+        brands: "OxyNorm, OxyContin",
+        class: "Opioïde fort",
+        pain: "Douleur sévère, souvent cancer/palliatif ou stratégie spécialisée.",
+        start: "Cadre structuré ; éviter initiation banalisée hors indication claire.",
+        titration: "Réévaluation rapprochée, prévention constipation.",
+        max: "Vérifier RCP ; pas de prolongation sans stratégie.",
+        onset: "Selon forme.",
+        contra: ["Insuffisance respiratoire sévère", "Iléus paralytique"],
+        precautions: ["Dépression respiratoire", "QT/interactions selon contexte", "Trouble usage"],
+        interactions: ["Sédatifs", "Alcool", "Inhibiteurs/inducteurs CYP3A4"],
+        renal: "Adapter/éviter selon DFG.",
+        elderly: "Dose basse et surveillance.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "Vigilance, respiration, transit, mésusage.",
+        patient: "Ne pas écraser les formes LP ; prévenir somnolence importante.",
+        level: "Avis spécialisé recommandé"
+      },
+      {
+        id: "fentanylPatch",
+        dci: "Fentanyl transdermique",
+        brands: "Durogésic et génériques",
+        class: "Opioïde fort",
+        pain: "Douleur chronique stable chez patient déjà opioïde-tolérant.",
+        start: "Ne pas initier chez patient naïf en MG.",
+        titration: "Rotation opioïde spécialisée ; délai d'action et persistance après retrait.",
+        max: "Vérifier RCP.",
+        onset: "Lent ; non adapté à douleur aiguë.",
+        contra: ["Patient naïf aux opioïdes", "Douleur aiguë", "Insuffisance respiratoire sévère"],
+        precautions: ["Fièvre/chaleur augmente absorption", "Surdose retardée", "Interactions CYP3A4"],
+        interactions: ["Sédatifs", "Alcool", "Inhibiteurs CYP3A4"],
+        renal: "Avis spécialisé selon contexte.",
+        elderly: "Très prudent.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Somnolence, respiration, application, élimination sécurisée.",
+        patient: "Éviter source de chaleur ; ne pas découper le patch.",
+        level: "Avis spécialisé recommandé"
+      },
+      {
+        id: "nefopam",
+        dci: "Néfopam",
+        brands: "Acupan",
+        class: "Non opioïde central",
+        pain: "Douleur aiguë, plutôt contexte court et sélectionné.",
+        start: "Selon voie et RCP ; éviter banalisation per os hors cadre.",
+        titration: "Courte durée, surveillance tolérance.",
+        max: "Vérifier RCP.",
+        onset: "Rapide selon voie.",
+        contra: ["Glaucome à angle fermé", "Rétention urinaire", "Antécédents convulsifs selon RCP"],
+        precautions: ["Tachycardie", "Effets atropiniques", "Confusion", "Mésusage"],
+        interactions: ["Sédatifs", "Anticholinergiques"],
+        renal: "Prudence.",
+        elderly: "Éviter si fragile, confusion, HBP, glaucome.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Pouls, confusion, rétention urinaire.",
+        patient: "Signaler palpitations, confusion, rétention.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "corticoids",
+        dci: "Corticoïdes",
+        brands: "Prednisone, prednisolone",
+        class: "Anti-inflammatoire stéroïdien",
+        pain: "Seulement si indication inflammatoire spécifique.",
+        start: "Pas antalgique banal ; dose/durée selon diagnostic.",
+        titration: "Courte durée si indication claire, plan d'arrêt.",
+        max: "Vérifier RCP et protocole.",
+        onset: "24-72 h selon indication.",
+        contra: ["Infection non contrôlée", "Ulcère compliqué selon contexte", "Psychose non contrôlée selon contexte"],
+        precautions: ["Diabète", "HTA", "Infection", "Humeur", "Os", "Ulcère"],
+        interactions: ["AINS", "Anticoagulants", "Vaccins vivants selon durée/dose"],
+        renal: "Surveillance tension/œdèmes.",
+        elderly: "Risque confusion, déséquilibre diabète/HTA.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "TA, glycémie, infection, durée.",
+        patient: "Prendre le matin ; ne pas prolonger sans avis.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "duloxetine",
+        dci: "Duloxétine",
+        brands: "Cymbalta et génériques",
+        class: "IRSNa douleur",
+        pain: "Douleur neuropathique, diabétique, douleur chronique avec anxiété/dépression selon profil.",
+        start: "Souvent 30 mg/j puis 60 mg/j ; vérifier AMM/RCP.",
+        titration: "Augmentation progressive, réévaluer 2-4 semaines.",
+        max: "Vérifier RCP selon indication.",
+        onset: "Progressif, souvent 1-4 semaines.",
+        contra: ["Insuffisance hépatique", "IMAO", "HTA non contrôlée selon contexte"],
+        precautions: ["Nausées", "Somnolence/insomnie", "HTA", "Foie", "Risque suicidaire initial"],
+        interactions: ["Tramadol", "IMAO", "ISRS/IRSNa", "Anticoagulants/antiagrégants prudence"],
+        renal: "Éviter si IR sévère selon RCP.",
+        elderly: "Démarrer bas, surveiller hyponatrémie/chute.",
+        pregnancy: "Vérifier CRAT avant prescription.",
+        monitoring: "TA, humeur, tolérance digestive, interactions.",
+        patient: "Effet progressif ; ne pas arrêter brutalement.",
+        level: "MG possible"
+      },
+      {
+        id: "amitriptyline",
+        dci: "Amitriptyline",
+        brands: "Laroxyl",
+        class: "Tricyclique douleur",
+        pain: "Douleur neuropathique, céphalée de tension/migraine prophylaxie selon profil.",
+        start: "Faible dose le soir, augmentation lente ; vérifier RCP.",
+        titration: "Par paliers, selon tolérance et somnolence.",
+        max: "Pour douleur, faibles doses souvent suffisantes ; vérifier RCP.",
+        onset: "1-4 semaines.",
+        contra: ["Glaucome angle fermé", "Rétention urinaire/HBP sévère", "Troubles du rythme", "IDM récent"],
+        precautions: ["Somnolence", "Effets anticholinergiques", "Hypotension orthostatique", "Risque suicidaire initial"],
+        interactions: ["Alcool", "Sédatifs", "Tramadol/IRSNa prudence", "Médicaments QT"],
+        renal: "Prudence.",
+        elderly: "Éviter si fragile ; dose très basse si retenu.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Somnolence, chute, sécheresse buccale, constipation, ECG si risque.",
+        patient: "Prendre le soir ; effet progressif, bouche sèche possible.",
+        level: "MG possible"
+      },
+      {
+        id: "pregabalin",
+        dci: "Prégabaline",
+        brands: "Lyrica et génériques",
+        class: "Gabapentinoïde",
+        pain: "Douleur neuropathique ; prudence mésusage.",
+        start: "Démarrer bas, surtout sujet âgé/IR ; vérifier RCP.",
+        titration: "Augmentation progressive ; réévaluer efficacité et tolérance.",
+        max: "Ordonnance sécurisée obligatoire ; durée max 6 mois ; délivrance mensuelle renouvelable selon mention.",
+        onset: "Quelques jours à semaines.",
+        contra: ["Hypersensibilité"],
+        precautions: ["Somnolence", "Vertiges", "Œdèmes", "Prise de poids", "Mésusage", "Association opioïdes"],
+        interactions: ["Opioïdes", "Benzodiazépines", "Alcool", "Autres sédatifs"],
+        renal: "Adaptation obligatoire au DFG.",
+        elderly: "Démarrer très bas ; chute/confusion/œdèmes.",
+        pregnancy: "Vérifier CRAT ; ANSM signale risques d'exposition pendant grossesse.",
+        monitoring: "DFG, somnolence, œdèmes, mésusage, objectif fonctionnel.",
+        patient: "Effet progressif ; prudence conduite ; ne pas arrêter brutalement.",
+        level: "MG avec prudence"
+      },
+      {
+        id: "gabapentin",
+        dci: "Gabapentine",
+        brands: "Neurontin et génériques",
+        class: "Gabapentinoïde",
+        pain: "Douleur neuropathique périphérique ; première ligne SFETD pour DN.",
+        start: "Démarrer bas, augmentation progressive ; vérifier RCP.",
+        titration: "Titration lente selon efficacité/tolérance.",
+        max: "Vérifier RCP et DFG.",
+        onset: "Quelques jours à semaines.",
+        contra: ["Hypersensibilité"],
+        precautions: ["Somnolence", "Vertiges", "Ataxie", "Œdèmes", "Mésusage possible"],
+        interactions: ["Opioïdes", "Benzodiazépines", "Alcool", "Anti-acides espacés selon RCP"],
+        renal: "Adaptation obligatoire au DFG.",
+        elderly: "Démarrer bas, chute/confusion.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "DFG, somnolence, équilibre, efficacité à 2-4 semaines.",
+        patient: "Ne pas arrêter brutalement ; effet progressif.",
+        level: "MG possible"
+      },
+      {
+        id: "carbamazepine",
+        dci: "Carbamazépine",
+        brands: "Tégrétol",
+        class: "Antiépileptique",
+        pain: "Névralgie du trijumeau clairement identifiée ou avis spécialisé.",
+        start: "Ne pas proposer en premier choix standard MG hors indication spécifique.",
+        titration: "Titration et surveillance biologique nécessaires.",
+        max: "Vérifier RCP et interactions.",
+        onset: "Progressif.",
+        contra: ["Bloc auriculo-ventriculaire", "Antécédent aplasie médullaire", "Porphyrie hépatique", "IMAO"],
+        precautions: ["Toxidermie", "Hyponatrémie", "NFS/foie", "Interactions nombreuses"],
+        interactions: ["Inducteur enzymatique majeur", "AVK/AOD, contraceptifs, psychotropes, macrolides, azolés"],
+        renal: "Prudence.",
+        elderly: "Prudence hyponatrémie/interactions.",
+        pregnancy: "Vérifier CRAT ; risque tératogène.",
+        monitoring: "NFS, bilan hépatique, sodium, peau, interactions.",
+        patient: "Consulter immédiatement si éruption, fièvre, angine, hématomes.",
+        level: "Avis spécialisé recommandé"
+      },
+      {
+        id: "lidocainePatch",
+        dci: "Lidocaïne patch",
+        brands: "Versatis selon indication",
+        class: "Topique neuropathique",
+        pain: "Douleur neuropathique périphérique localisée, notamment post-zostérienne selon indication.",
+        start: "Application locale selon RCP.",
+        titration: "Réévaluer surface, bénéfice et peau.",
+        max: "Vérifier RCP.",
+        onset: "Variable, souvent jours.",
+        contra: ["Hypersensibilité anesthésiques locaux", "Peau lésée"],
+        precautions: ["Surface étendue", "Foie sévère", "Peau fragile"],
+        interactions: ["Risque systémique faible si usage conforme"],
+        renal: "Peu systémique, prudence selon contexte.",
+        elderly: "Option utile si douleur localisée.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Réaction cutanée, zone douloureuse, efficacité.",
+        patient: "Appliquer sur peau saine ; respecter durée d'application.",
+        level: "MG possible"
+      },
+      {
+        id: "capsaicin",
+        dci: "Capsaïcine haute concentration",
+        brands: "Qutenza",
+        class: "Topique neuropathique spécialisé",
+        pain: "Douleur neuropathique périphérique localisée.",
+        start: "Protocole spécialisé.",
+        titration: "Application encadrée, anesthésie locale selon protocole.",
+        max: "Vérifier protocole.",
+        onset: "Semaines.",
+        contra: ["Peau lésée", "Hypersensibilité"],
+        precautions: ["Brûlure locale", "HTA douloureuse transitoire"],
+        interactions: ["Peu systémique"],
+        renal: "Pas d'adaptation habituelle, vérifier RCP.",
+        elderly: "Possible en centre/protocole.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Tolérance locale, bénéfice fonctionnel.",
+        patient: "Traitement local en structure/protocole, effet non immédiat.",
+        level: "Avis spécialisé recommandé"
+      },
+      {
+        id: "triptans",
+        dci: "Triptans",
+        brands: "Sumatriptan, zolmitriptan, rizatriptan...",
+        class: "Migraine",
+        pain: "Crise migraineuse sans red flag, diagnostic compatible.",
+        start: "Une prise précoce selon molécule et RCP.",
+        titration: "Limiter fréquence ; rechercher abus médicamenteux si répétition.",
+        max: "Vérifier RCP.",
+        onset: "30 min à 2 h selon voie.",
+        contra: ["Coronaropathie", "AVC/AIT", "HTA non contrôlée", "Migraine basilaire/hémiplégique selon RCP"],
+        precautions: ["Facteurs de risque CV", "Céphalée nouvelle/atypique"],
+        interactions: ["ISRS/IRSNa prudence", "Ergotés", "IMAO selon triptan"],
+        renal: "Vérifier RCP.",
+        elderly: "Prudence CV.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Fréquence crises, réponse, abus antalgiques.",
+        patient: "Ne pas utiliser pour céphalée inhabituelle ou brutale.",
+        level: "MG possible"
+      },
+      {
+        id: "colchicine",
+        dci: "Colchicine",
+        brands: "Colchicine Opocalcium",
+        class: "Goutte",
+        pain: "Crise de goutte selon diagnostic.",
+        start: "Démarrer tôt, schéma actualisé à vérifier RCP.",
+        titration: "Dose basse et arrêt si diarrhée/vomissements.",
+        max: "Vérifier RCP, DFG et interactions.",
+        onset: "24-48 h.",
+        contra: ["Insuffisance rénale/hépatique sévère", "Interactions fortes CYP3A4/P-gp"],
+        precautions: ["Âge", "IR", "Diarrhée", "Toxicité hématologique/neuromusculaire"],
+        interactions: ["Macrolides", "Azolés", "Ciclosporine", "Vérapamil/diltiazem", "Statines prudence"],
+        renal: "Adapter strictement ; éviter si sévère.",
+        elderly: "Dose réduite, surveiller interactions.",
+        pregnancy: "Vérifier CRAT.",
+        monitoring: "Digestif, NFS si prolongé/risque, interactions.",
+        patient: "Stopper et consulter si diarrhée importante, vomissements, faiblesse.",
+        level: "MG possible"
+      }
+    ];
+
+    const limitsMg = {
+      green: ["Paracétamol", "AINS local", "AINS oral court si pas de contre-indication", "Duloxétine selon indication", "Gabapentine", "Amitriptyline faible dose selon profil", "Triptan si migraine typique sans red flag", "Colchicine si goutte typique et terrain compatible"],
+      orange: ["Codéine/tramadol courte durée avec ordonnance sécurisée", "Prégabaline avec ordonnance sécurisée et risque mésusage", "Néfopam", "Corticoïdes si indication précise", "Morphine courte douleur aiguë sévère sélectionnée", "Douleur chronique > 3 mois"],
+      red: ["Red flag ou diagnostic incertain grave", "Carbamazépine hors névralgie du trijumeau évidente", "Opioïdes forts au long cours hors cancer", "Fentanyl chez patient naïf", "Kétamine/méthadone antalgique", "Capsaïcine haute concentration", "Douleur complexe/réfractaire, SDRC suspect, cancer évolutif"]
+    };
+
+    const orderTemplates = [
+      {
+        id: "nociceptiveLight",
+        label: "Douleur nociceptive légère",
+        text: `Ordonnance type - douleur nociceptive légère
+
+Paracétamol ... mg : 1 prise si douleur, à espacer selon RCP, sans dépasser la dose maximale adaptée au poids et au terrain.
+
+Mesures associées : repos relatif, glace/chaleur selon contexte, mobilisation douce, information sur signes d'alerte.
+
+Précautions à vérifier :
+- Dose totale de paracétamol, foie, alcool, dénutrition, poids bas.
+- Réévaluation si persistance ou aggravation.
+- Vérifier RCP/Vidal avant prescription.`
+      },
+      {
+        id: "inflammatoryNsaid",
+        label: "Douleur inflammatoire sans contre-indication AINS",
+        text: `Ordonnance type - douleur inflammatoire compatible AINS
+
+AINS oral : molécule, dose et durée minimale selon RCP, idéalement courte.
+Paracétamol possible en association si besoin et si pas de contre-indication.
+
+Précautions :
+- Pas d'AINS si grossesse à partir de 24 SA, insuffisance rénale, ulcère/hémorragie digestive, insuffisance cardiaque, allergie/asthme AINS.
+- Prudence anticoagulants/antiagrégants, HTA/coronaropathie, personne âgée fragile.
+- Vérifier DFG, TA, interactions et RCP/Vidal.`
+      },
+      {
+        id: "lombalgie",
+        label: "Lombalgie aiguë commune",
+        text: `Ordonnance type - lombalgie aiguë commune
+
+Paracétamol selon poids/terrain.
+Si douleur inflammatoire/mécanique importante et terrain compatible : AINS court selon RCP.
+Kinésithérapie / maintien d'activité selon évolution.
+
+Conseils :
+- Éviter repos strict prolongé.
+- Revoir si déficit neurologique, fièvre, douleur nocturne inexpliquée, traumatisme, cancer, troubles sphinctériens.
+- Réévaluation 48-72 h si douleur sévère ou arrêt fonctionnel.`
+      },
+      {
+        id: "sciaticaNeuropathic",
+        label: "Sciatique avec composante neuropathique",
+        text: `Ordonnance type - radiculalgie avec composante neuropathique
+
+Traitement nociceptif : paracétamol +/- AINS court si terrain compatible.
+Si DN4 positif ou signes neuropathiques francs : discuter gabapentine, duloxétine ou amitriptyline faible dose selon profil et contre-indications.
+
+À éviter :
+- Carbamazépine/Tégrétol en première intention standard.
+- Opioïdes au long cours sans stratégie claire.
+
+Revoir/adresser :
+- Déficit moteur progressif, queue de cheval, troubles sphinctériens, fièvre, cancer, douleur incontrôlée.`
+      },
+      {
+        id: "neuropathyDiabetic",
+        label: "Douleur neuropathique diabétique",
+        text: `Ordonnance type - douleur neuropathique diabétique probable
+
+Option selon profil : duloxétine OU gabapentine.
+Alternative : amitriptyline faible dose le soir si pas de contre-indication.
+Prégabaline : possible avec prudence, ordonnance sécurisée, adaptation DFG, risque somnolence/mésusage.
+
+Précautions :
+- Vérifier DFG, HbA1c/contexte diabète, interactions, conduite, risque chute.
+- Effet progressif, réévaluation 2 à 4 semaines.`
+      },
+      {
+        id: "zona",
+        label: "Zona aigu",
+        text: `Ordonnance type - zona aigu douloureux
+
+Antalgie : paracétamol selon terrain +/- traitement plus fort court si douleur sévère et pas de red flag.
+Antiviral si indication et délai compatible selon RCP/recommandations.
+Si douleur neuropathique intense : discuter traitement neuropathique selon profil.
+
+Précautions :
+- Sujet âgé, immunodépression, atteinte ophtalmique : avis/prise en charge adaptée.
+- Revoir si extension, fièvre, douleur oculaire, déficit neurologique.`
+      },
+      {
+        id: "postZoster",
+        label: "Douleur post-zostérienne",
+        text: `Ordonnance type - douleur post-zostérienne
+
+Douleur neuropathique localisée : lidocaïne patch selon indication/RCP.
+Option systémique : gabapentine, duloxétine ou amitriptyline faible dose selon profil.
+Prégabaline avec prudence et ordonnance sécurisée.
+
+Précautions :
+- DFG, somnolence, chute, interactions sédatives.
+- Réévaluer à 2-4 semaines ; avis douleur si réfractaire.`
+      },
+      {
+        id: "arthrosis",
+        label: "Douleur arthrosique",
+        text: `Ordonnance type - arthrose douloureuse
+
+Mesures : activité adaptée, perte pondérale si pertinente, kinésithérapie, aides techniques.
+Paracétamol selon terrain.
+AINS local privilégié si douleur localisée.
+AINS oral court seulement si poussée et terrain compatible.
+
+À éviter :
+- AINS prolongés.
+- Opioïdes au long cours.
+- Escalade sans objectif fonctionnel.`
+      },
+      {
+        id: "gout",
+        label: "Crise de goutte",
+        text: `Ordonnance type - crise de goutte probable
+
+Option selon terrain : colchicine schéma actualisé à vérifier RCP OU AINS court si pas de contre-indication.
+Paracétamol possible en association.
+
+Précautions :
+- DFG, interactions colchicine (macrolides, azolés, ciclosporine, vérapamil/diltiazem...), diarrhée.
+- Articulation fébrile rouge chaude : ne pas manquer arthrite septique.`
+      },
+      {
+        id: "nociplastic",
+        label: "Douleur chronique nociplastique",
+        text: `Ordonnance type - douleur nociplastique / fibromyalgie
+
+Priorité : éducation, activité physique adaptée progressive, sommeil, prise en charge anxiété/dépression, kinésithérapie active.
+Option médicamenteuse selon profil : duloxétine ou amitriptyline faible dose.
+
+À éviter :
+- Opioïdes au long cours.
+- Escalade antalgique non réévaluée.
+- Examens répétés sans signe nouveau.
+
+Réévaluation : objectif fonctionnel, qualité de vie, sommeil.`
+      },
+      {
+        id: "cancerConstipation",
+        label: "Douleur cancéreuse avec constipation à prévenir",
+        text: `Ordonnance type - douleur cancéreuse / palliative
+
+Antalgie opioïde forte possible si indication, protocole et coordination.
+Prévention constipation : laxatif systématique si opioïde fort ou traitement prolongé.
+Prévention/traitement nausées selon contexte.
+
+Surveillance :
+- Somnolence, confusion, fréquence respiratoire, transit, douleur de fond et accès paroxystiques.
+- Coordination oncologie/soins palliatifs/structure douleur si douleur complexe.`
+      }
+    ];
+
+    const quickOrderDurations = [
+      { id: "3d", label: "3 jours", text: "trois jours" },
+      { id: "5d", label: "5 jours", text: "cinq jours" },
+      { id: "7d", label: "7 jours", text: "sept jours" },
+      { id: "10d", label: "10 jours", text: "dix jours" },
+      { id: "14d", label: "14 jours", text: "quatorze jours" },
+      { id: "21d", label: "21 jours", text: "vingt-et-un jours" },
+      { id: "28d", label: "28 jours", text: "vingt-huit jours" },
+      { id: "1m", label: "1 mois", text: "un mois" },
+      { id: "2m", label: "2 mois", text: "deux mois" },
+      { id: "3m", label: "3 mois", text: "trois mois" }
+    ];
+
+    const quickOrderLines = [
+      {
+        id: "paracetamol-500",
+        label: "Paracétamol 500 mg",
+        aliases: "Doliprane Dafalgan Efferalgan douleur fièvre palier 1",
+        level: "MG possible",
+        durationIds: ["3d", "5d", "7d", "10d"],
+        warning: "Vérifier poids, foie, alcool, dénutrition et cumul avec associations contenant du paracétamol.",
+        template: "Paracétamol 500 mg : 1 à 2 comprimés par prise si douleur, à espacer selon RCP, pendant {duration}. Ne pas dépasser la dose maximale adaptée au poids et au terrain."
+      },
+      {
+        id: "paracetamol-1000",
+        label: "Paracétamol 1 g",
+        aliases: "Doliprane Dafalgan Efferalgan douleur fièvre palier 1",
+        level: "MG possible",
+        durationIds: ["3d", "5d", "7d", "10d"],
+        warning: "Réserver à l'adulte avec poids compatible ; vérifier dose maximale quotidienne, foie, alcool et doublons.",
+        template: "Paracétamol 1 g : 1 comprimé si douleur, à espacer selon RCP, pendant {duration}. Ne pas dépasser la dose maximale adaptée au poids et au terrain."
+      },
+      {
+        id: "ibuprofen-400",
+        label: "Ibuprofène 400 mg",
+        aliases: "Advil Nurofen Spedifen Antarène AINS inflammation",
+        level: "MG possible si pas de CI",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "AINS : vérifier DFG, grossesse, ulcère/hémorragie digestive, anticoagulants, HTA/IC/coronaropathie, allergie/asthme AINS.",
+        template: "Ibuprofène 400 mg : 1 comprimé matin, midi et soir si douleur, au cours des repas, pendant {duration}."
+      },
+      {
+        id: "ketoprofen-100",
+        label: "Kétoprofène 100 mg",
+        aliases: "Profénid Bi-Profénid kétoprofène AINS",
+        level: "MG possible si pas de CI",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "AINS plus à risque digestif/rénal : vérifier RCP/Vidal, DFG, anticoagulants, grossesse et facteurs CV.",
+        template: "Kétoprofène 100 mg : 1 comprimé matin et soir au cours des repas pendant {duration}."
+      },
+      {
+        id: "naproxen-250",
+        label: "Naproxène 250 mg",
+        aliases: "Apranax Naprosyne naproxène AINS",
+        level: "MG possible si pas de CI",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "AINS : vérifier les contre-indications et interactions, durée la plus courte.",
+        template: "Naproxène 250 mg : 1 comprimé matin et soir au cours des repas pendant {duration}."
+      },
+      {
+        id: "diclofenac-50",
+        label: "Diclofénac 50 mg",
+        aliases: "Voltarène diclofénac AINS",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "Diclofénac : prudence cardiovasculaire et digestive ; vérifier RCP/Vidal, DFG, anticoagulants, HTA/IC/coronaropathie.",
+        template: "Diclofénac 50 mg : 1 comprimé matin et soir au cours des repas pendant {duration}."
+      },
+      {
+        id: "diclofenac-gel",
+        label: "Diclofénac gel",
+        aliases: "Voltarène Emulgel Flector gel AINS local entorse tendinite arthrose",
+        level: "MG possible",
+        durationIds: ["5d", "7d", "10d", "14d"],
+        warning: "AINS local : éviter peau lésée, allergie AINS, usage étendu/prolongé ; vérifier grossesse/CRAT.",
+        template: "Diclofénac gel : appliquer localement sur la zone douloureuse 3 fois par jour pendant {duration}."
+      },
+      {
+        id: "codeine-paracetamol",
+        label: "Paracétamol + codéine",
+        aliases: "Codoliprane Klipal Dafalgan codéine codéine opioïde faible",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d", "10d", "14d"],
+        warning: "Codéine : ordonnance sécurisée depuis 01/03/2025, durée courte, prudence sujet âgé/BPCO/SAS/sédatifs/addiction ; vérifier cumul paracétamol.",
+        template: "Paracétamol/codéine 500 mg/30 mg : 1 comprimé toutes les six heures si douleur pendant {duration}. Ordonnance sécurisée."
+      },
+      {
+        id: "tramadol-50",
+        label: "Tramadol 50 mg",
+        aliases: "Topalgic Contramal tramadol opioïde faible",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d", "10d", "14d"],
+        warning: "Tramadol : ordonnance sécurisée depuis 01/03/2025, max 3 mois ; éviter ISRS/IRSNa/IMAO si possible, épilepsie, sédatifs, sujet âgé fragile.",
+        template: "Tramadol 50 mg : 1 gélule toutes les six heures si douleur pendant {duration}. Ordonnance sécurisée."
+      },
+      {
+        id: "tramadol-paracetamol",
+        label: "Tramadol + paracétamol",
+        aliases: "Ixprim Zaldiar tramadol paracétamol opioïde faible",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d", "10d"],
+        warning: "Vérifier cumul paracétamol, interactions sérotoninergiques, risque chute/confusion et ordonnance sécurisée.",
+        template: "Tramadol/paracétamol 37,5 mg/325 mg : 1 comprimé toutes les six heures si douleur pendant {duration}. Ordonnance sécurisée."
+      },
+      {
+        id: "opium-paracetamol",
+        label: "Paracétamol + poudre d'opium",
+        aliases: "Izalgi Lamaline opium caféine opioïde faible",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "Opioïde faible : prudence sédatifs, sujet âgé, constipation, addiction ; vérifier paracétamol total et RCP/Vidal.",
+        template: "Paracétamol/poudre d'opium : 1 gélule toutes les six heures si douleur pendant {duration}, selon spécialité et RCP."
+      },
+      {
+        id: "actiskenan-5",
+        label: "Actiskenan 5 mg",
+        aliases: "morphine Actiskenan opioïde fort palier 3",
+        level: "MG avec prudence",
+        durationIds: ["7d", "14d", "21d", "28d"],
+        warning: "Morphine immédiate : douleur aiguë sévère sélectionnée ou cancer/palliatif structuré. Prévoir laxatif si traitement prolongé, surveiller respiration, somnolence, confusion, DFG et sédatifs.",
+        template: "Actiskenan® 5 mg : 1 gélule toutes les quatre heures si douleur pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "actiskenan-10",
+        label: "Actiskenan 10 mg",
+        aliases: "morphine Actiskenan opioïde fort palier 3",
+        level: "MG avec prudence",
+        durationIds: ["7d", "14d", "21d", "28d"],
+        warning: "Morphine immédiate : vérifier indication, équianalgésie, tolérance opioïde, DFG et co-prescriptions sédatives ; réévaluation rapprochée.",
+        template: "Actiskenan® 10 mg : 1 gélule toutes les quatre heures si douleur pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "oramorph",
+        label: "Oramorph solution",
+        aliases: "morphine orale solution Oramorph opioïde fort",
+        level: "MG avec prudence",
+        durationIds: ["7d", "14d", "21d", "28d"],
+        warning: "Morphine solution : préciser concentration et dose en mg ; vérifier calcul, DFG, respiration, sédatifs et constipation.",
+        template: "Oramorph® solution buvable : dose en mg à préciser selon concentration, toutes les quatre heures si douleur pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "skenan-lp-10",
+        label: "Skénan LP 10 mg",
+        aliases: "morphine LP Skénan Moscontin opioïde fort",
+        level: "Avis spécialisé si chronique non cancéreuse",
+        durationIds: ["7d", "14d", "28d", "1m"],
+        warning: "Morphine LP : uniquement avec stratégie claire, titration/équivalence vérifiées, laxatif, surveillance et objectif fonctionnel.",
+        template: "Skénan® LP 10 mg : 1 gélule matin et soir pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "oxynorm-5",
+        label: "OxyNorm 5 mg",
+        aliases: "oxycodone Oxynorm opioïde fort",
+        level: "Avis spécialisé recommandé",
+        durationIds: ["7d", "14d", "21d", "28d"],
+        warning: "Oxycodone : prudence opioïde fort, avis si douleur chronique non cancéreuse ; surveiller sédation, respiration, constipation, interactions CYP3A4.",
+        template: "OxyNorm® 5 mg : 1 gélule toutes les quatre à six heures si douleur pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "oxycontin-10",
+        label: "OxyContin LP 10 mg",
+        aliases: "oxycodone LP oxycontin opioïde fort",
+        level: "Avis spécialisé recommandé",
+        durationIds: ["7d", "14d", "28d", "1m"],
+        warning: "Oxycodone LP : stratégie structurée, équivalence/titration vérifiées, prévention constipation, surveillance respiratoire.",
+        template: "OxyContin® LP 10 mg : 1 comprimé matin et soir pendant {duration}. À délivrer par la pharmacie."
+      },
+      {
+        id: "fentanyl-patch",
+        label: "Fentanyl transdermique",
+        aliases: "Durogésic fentanyl patch opioïde fort",
+        level: "Avis spécialisé recommandé",
+        durationIds: ["14d", "28d", "1m"],
+        warning: "Ne pas initier chez patient naïf aux opioïdes. Réservé à douleur chronique stable et patient opioïde-tolérant ; danger chaleur/fièvre.",
+        template: "Fentanyl transdermique : dosage à préciser selon équivalence opioïde, 1 patch toutes les 72 heures pendant {duration}. Prescription réservée à un patient déjà opioïde-tolérant."
+      },
+      {
+        id: "nefopam",
+        label: "Néfopam",
+        aliases: "Acupan néfopam douleur aiguë",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "Néfopam : prudence tachycardie, effets atropiniques, confusion, glaucome, HBP/rétention, sujet âgé et mésusage.",
+        template: "Néfopam : posologie et voie à préciser selon RCP, pendant {duration}. Vérifier tolérance cardiovasculaire et anticholinergique."
+      },
+      {
+        id: "prednisone-20",
+        label: "Prednisone / prednisolone 20 mg",
+        aliases: "Cortancyl Solupred corticoïde inflammation",
+        level: "MG avec prudence",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "Corticoïde : pas antalgique banal. À utiliser seulement si indication inflammatoire claire ; vérifier infection, diabète, HTA, ulcère, humeur.",
+        template: "Prednisone/prednisolone 20 mg : 1 comprimé le matin pendant {duration}, uniquement si indication inflammatoire clairement retenue."
+      },
+      {
+        id: "duloxetine-30",
+        label: "Duloxétine 30 mg",
+        aliases: "Cymbalta duloxétine neuropathique diabétique IRSNa",
+        level: "MG possible",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Duloxétine : vérifier foie, HTA, interactions sérotoninergiques, risque suicidaire initial ; effet progressif.",
+        template: "Duloxétine 30 mg : 1 gélule le matin pendant {duration}. Réévaluer efficacité et tolérance avant adaptation."
+      },
+      {
+        id: "duloxetine-60",
+        label: "Duloxétine 60 mg",
+        aliases: "Cymbalta duloxétine neuropathique diabétique IRSNa",
+        level: "MG possible",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Dose d'entretien à vérifier selon indication et tolérance ; ne pas arrêter brutalement.",
+        template: "Duloxétine 60 mg : 1 gélule le matin pendant {duration}. Réévaluer efficacité, tolérance, TA et humeur."
+      },
+      {
+        id: "amitriptyline-10",
+        label: "Amitriptyline 10 mg",
+        aliases: "Laroxyl amitriptyline neuropathique migraine tension",
+        level: "MG possible selon profil",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Amitriptyline : éviter sujet âgé fragile, glaucome, HBP/rétention, troubles du rythme ; somnolence/chute.",
+        template: "Amitriptyline 10 mg : 1 comprimé le soir au coucher pendant {duration}. Réévaluer somnolence, bouche sèche, constipation et efficacité."
+      },
+      {
+        id: "pregabalin-25",
+        label: "Prégabaline / Lyrica 25 mg",
+        aliases: "Lyrica prégabaline pregabaline neuropathique gabapentinoïde",
+        level: "MG avec prudence",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Prégabaline : ordonnance sécurisée obligatoire, durée maximale 6 mois, délivrance mensuelle. Adapter au DFG, surveiller somnolence, chute, œdèmes et mésusage.",
+        template: "Prégabaline (Lyrica® ou générique) 25 mg : 1 gélule le matin pendant {duration}. À délivrer mensuellement par la pharmacie. Ordonnance sécurisée."
+      },
+      {
+        id: "pregabalin-75",
+        label: "Prégabaline / Lyrica 75 mg",
+        aliases: "Lyrica prégabaline pregabaline neuropathique gabapentinoïde",
+        level: "MG avec prudence",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Prégabaline : vérifier indication, DFG, sédatifs/opioïdes, conduite, risque chute et mésusage ; ordonnance sécurisée.",
+        template: "Prégabaline (Lyrica® ou générique) 75 mg : 1 gélule le soir pendant {duration}. À délivrer mensuellement par la pharmacie. Ordonnance sécurisée."
+      },
+      {
+        id: "gabapentin-100",
+        label: "Gabapentine 100 mg",
+        aliases: "Neurontin gabapentine neuropathique gabapentinoïde",
+        level: "MG possible",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Gabapentine : adapter au DFG, démarrer bas, surveiller somnolence, vertiges, chute, sédatifs/opioïdes.",
+        template: "Gabapentine 100 mg : 1 gélule le soir pendant {duration}. Réévaluer tolérance avant augmentation progressive."
+      },
+      {
+        id: "gabapentin-300",
+        label: "Gabapentine 300 mg",
+        aliases: "Neurontin gabapentine neuropathique gabapentinoïde",
+        level: "MG possible",
+        durationIds: ["1m", "2m", "3m"],
+        warning: "Dose à adapter au DFG et à la titration ; prudence sujet âgé, somnolence/chute.",
+        template: "Gabapentine 300 mg : 1 gélule le soir pendant {duration}. Réévaluer efficacité et tolérance avant adaptation."
+      },
+      {
+        id: "carbamazepine",
+        label: "Carbamazépine / Tégrétol",
+        aliases: "Tégrétol carbamazépine trijumeau névralgie",
+        level: "Avis spécialisé recommandé",
+        durationIds: ["1m"],
+        warning: "Carbamazépine : à réserver à névralgie du trijumeau clairement identifiée ou avis spécialisé ; interactions nombreuses, NFS/foie/sodium, risque cutané.",
+        template: "Carbamazépine (Tégrétol®) : posologie à préciser après vérification Vidal/RCP et stratégie de surveillance biologique. Avis spécialisé recommandé hors névralgie du trijumeau typique."
+      },
+      {
+        id: "lidocaine-patch",
+        label: "Lidocaïne patch",
+        aliases: "Versatis lidocaïne patch post-zostérienne neuropathique localisée",
+        level: "MG possible selon indication",
+        durationIds: ["14d", "28d", "1m"],
+        warning: "Vérifier indication, peau saine, surface, durée d'application et RCP.",
+        template: "Lidocaïne emplâtre médicamenteux : appliquer 1 emplâtre sur la zone douloureuse 12 heures par jour, puis retirer 12 heures, pendant {duration}."
+      },
+      {
+        id: "capsaicin-patch",
+        label: "Capsaïcine haute concentration",
+        aliases: "Qutenza capsaïcine neuropathique localisée",
+        level: "Avis spécialisé recommandé",
+        durationIds: ["1m"],
+        warning: "Capsaïcine haute concentration : protocole spécialisé, non adaptée à une prescription MG simple.",
+        template: "Capsaïcine haute concentration : traitement à réaliser selon protocole spécialisé. Ne pas initier comme ordonnance MG simple."
+      },
+      {
+        id: "sumatriptan-50",
+        label: "Sumatriptan 50 mg",
+        aliases: "Imigrane sumatriptan triptan migraine",
+        level: "MG possible si migraine typique",
+        durationIds: ["1m"],
+        warning: "Triptan : ne pas utiliser si céphalée inhabituelle/red flag, coronaropathie, AVC/AIT, HTA non contrôlée ; vérifier interactions.",
+        template: "Sumatriptan 50 mg : 1 comprimé dès le début de la crise migraineuse, renouvelable une fois selon RCP si besoin. Ne pas dépasser la dose maximale du RCP."
+      },
+      {
+        id: "zolmitriptan-2-5",
+        label: "Zolmitriptan 2,5 mg",
+        aliases: "Zomig zolmitriptan triptan migraine",
+        level: "MG possible si migraine typique",
+        durationIds: ["1m"],
+        warning: "Triptan : vérifier contre-indications cardiovasculaires et céphalée non atypique.",
+        template: "Zolmitriptan 2,5 mg : 1 comprimé dès le début de la crise migraineuse, renouvelable une fois selon RCP si besoin. Ne pas dépasser la dose maximale du RCP."
+      },
+      {
+        id: "colchicine",
+        label: "Colchicine",
+        aliases: "Colchicine Opocalcium goutte crise microcristalline",
+        level: "MG possible si terrain compatible",
+        durationIds: ["3d", "5d"],
+        warning: "Colchicine : marge thérapeutique étroite. Vérifier DFG, foie, âge, diarrhée, macrolides/azolés/ciclosporine/vérapamil/diltiazem/statines et schéma RCP actualisé.",
+        template: "Colchicine : schéma de crise de goutte à préciser selon RCP/Vidal, DFG et interactions, pendant {duration}. Stopper et consulter si diarrhée ou vomissements."
+      },
+      {
+        id: "phloroglucinol",
+        label: "Phloroglucinol",
+        aliases: "Spasfon phloroglucinol antispasmodique douleur abdominale pelvienne",
+        level: "MG possible",
+        durationIds: ["3d", "5d", "7d"],
+        warning: "Antispasmodique : ne pas masquer une urgence abdominale/pelvienne ; rechercher red flags.",
+        template: "Phloroglucinol 80 mg : 2 comprimés trois fois par jour si spasmes douloureux pendant {duration}."
+      }
+    ];
+
+    const sheets = [
+      ["Lombalgie aiguë commune", "Douleur lombaire mécanique, sans signe neurologique grave.", "Queue de cheval, fièvre, cancer, trauma, douleur nocturne inexpliquée.", "Rassurer, maintien activité, paracétamol, AINS court si possible, kiné si persistance.", "Repos strict prolongé, imagerie précoce sans red flag, opioïdes prolongés.", "48-72 h si sévère, 2-4 semaines si persiste.", "Déficit, fièvre, trauma, échec avec altération fonctionnelle.", "Lombalgie aiguë commune."],
+      ["Lombosciatique", "Douleur radiculaire, irradiation, Lasègue possible, DN4 parfois positif.", "Déficit moteur progressif, queue de cheval, troubles sphinctériens.", "Paracétamol +/- AINS court si terrain, traitement neuropathique si DN4 positif.", "Carbamazépine en routine, opioïdes prolongés.", "24-72 h si sévère, 2-4 semaines.", "Déficit, douleur incontrôlée, red flags rachis.", "Sciatique avec composante neuropathique."],
+      ["Cervicalgie", "Douleur cervicale mécanique, contracture, contexte postural ou faux mouvement.", "Trauma, fièvre, déficit neurologique, céphalée brutale.", "Paracétamol, AINS local/oral si terrain, mobilisation douce, kiné.", "Collier prolongé, benzodiazépines systématiques.", "7-10 jours si persistance.", "Déficit, trauma, suspicion infection/tumeur.", "Cervicalgie commune."],
+      ["Névralgie cervico-brachiale", "Douleur radiculaire membre supérieur, paresthésies, territoire nerveux.", "Déficit moteur, myélopathie, fièvre, trauma.", "Antalgie palier 1, AINS si possible, traitement neuropathique selon profil.", "Escalade opioïde, carbamazépine hors indication.", "1-2 semaines ou plus tôt si déficit.", "Déficit, douleur rebelle, myélopathie.", "Névralgie cervico-brachiale."],
+      ["Arthrose douloureuse", "Douleur mécanique, raideur courte, poussée possible.", "Articulation rouge chaude fébrile, fracture, impotence brutale.", "Activité adaptée, perte pondérale, AINS local, paracétamol, AINS oral court si possible.", "AINS chronique, opioïdes au long cours.", "Selon retentissement.", "Échec, déformation évolutive, indication infiltration/chirurgie.", "Arthrose douloureuse."],
+      ["Gonarthrose", "Douleur genou mécanique, marche/escaliers, épanchement parfois.", "Genou chaud fébrile, blocage aigu, fracture.", "Renforcement, kiné, canne si besoin, AINS local, paracétamol.", "Immobilisation prolongée, AINS long.", "2-4 semaines.", "Échec fonctionnel, épanchement atypique, chirurgie à discuter.", "Gonarthrose."],
+      ["Coxarthrose", "Douleur aine/fesse, boiterie, limitation rotation interne.", "Fracture, nécrose, infection, douleur nocturne inexpliquée.", "Paracétamol, AINS court si possible, activité adaptée, kiné.", "Opioïdes prolongés, infiltration non cadrée.", "Selon fonction.", "Boiterie majeure, échec, chirurgie.", "Coxarthrose."],
+      ["Tendinite / bursite", "Douleur provoquée par geste, point local, surcharge.", "Rupture tendineuse, fièvre, rougeur chaude, traumatisme.", "Repos relatif, glace, AINS local, kiné progressive, AINS oral court si compatible.", "Corticoïdes réflexes, immobilisation longue.", "7-14 jours.", "Rupture, échec, infiltration spécialisée.", "Tendinite/bursite."],
+      ["Entorse", "Trauma, douleur ligamentaire, œdème, appui variable.", "Fracture, déformation, impotence complète, douleur osseuse précise.", "RICE, contention, paracétamol, AINS local/oral court si possible.", "Reprise trop rapide, opioïdes prolongés.", "48-72 h si douleur forte.", "Critères fracture, instabilité, échec.", "Entorse."],
+      ["Fracture suspectée", "Trauma, douleur osseuse, impotence, déformation.", "Ouverture, trouble vasculo-nerveux, douleur incontrôlée.", "Immobiliser, antalgie, imagerie/orientation.", "Simple traitement symptomatique sans diagnostic.", "Immédiat.", "Urgences/orthopédie.", "Fracture suspectée."],
+      ["Crise de goutte", "Articulation très douloureuse, rouge, gonflée, souvent MTP1.", "Arthrite septique, fièvre, immunodépression.", "Colchicine ou AINS selon terrain, glace, repos.", "Colchicine sans vérifier DFG/interactions, AINS si CI.", "24-72 h.", "Doute septique, IR sévère, échec.", "Crise de goutte."],
+      ["Zona aigu", "Éruption vésiculeuse dermatome, brûlures.", "Ophtalmique, immunodépression, atteinte neurologique.", "Antalgie, antiviral si indication/délai, traitement neuropathique si sévère.", "Sous-traiter sujet âgé, corticoïdes isolés.", "48-72 h.", "Œil, immunodépression, douleur rebelle.", "Zona aigu."],
+      ["Douleur post-zostérienne", "Douleur neuropathique persistante après zona.", "Récidive, déficit, immunodépression.", "Lidocaïne patch si localisée, gabapentine/duloxétine/amitriptyline selon profil.", "AINS seuls, opioïdes prolongés.", "2-4 semaines.", "Réfractaire, retentissement majeur.", "Douleur post-zostérienne."],
+      ["Neuropathie diabétique", "Brûlures pieds, paresthésies, allodynie, DN4 positif.", "Plaie, ischémie, infection, déficit aigu.", "Optimiser diabète, gabapentine/duloxétine, soins pieds.", "AINS seuls, opioïdes au long cours.", "2-4 semaines.", "Déficit, plaie, douleur réfractaire.", "Douleur neuropathique diabétique."],
+      ["Canal carpien douloureux", "Paresthésies nocturnes pouce-index-majeur, douleur main.", "Déficit moteur thénar, amyotrophie.", "Attelle nocturne, antalgie simple, avis EMG/infiltration selon gêne.", "Opioïdes, carbamazépine.", "2-6 semaines.", "Déficit, échec, forme sévère.", "Canal carpien."],
+      ["Fibromyalgie", "Douleurs diffuses chroniques, fatigue, sommeil non réparateur.", "Inflammatoire, cancer, infection, endocrino selon contexte.", "Éducation, activité adaptée, sommeil, prise en charge psycho, duloxétine/amitriptyline possible.", "Opioïdes, examens répétés non orientés.", "Suivi programmé.", "Diagnostic incertain, comorbidité sévère.", "Douleur nociplastique."],
+      ["Douleur chronique diffuse", "Douleur > 3 mois, retentissement multidimensionnel.", "Altération état général, fièvre, neuro, cancer.", "Objectifs fonctionnels, approche multimodale, coordination.", "Escalade moléculaire sans objectif.", "Mensuel initial puis adapté.", "Complexité, échec, demande SDC.", "Douleur chronique."],
+      ["Migraine", "Crises pulsatives, nausées, photophobie, antécédents typiques.", "Coup de tonnerre, déficit, fièvre, >50 ans nouvelle.", "AINS/paracétamol si possible, triptan si indication.", "Opioïdes, surconsommation antalgiques.", "Si changement de profil.", "Red flags, abus, échec.", "Migraine."],
+      ["Céphalée de tension", "Bilatérale, étau, non pulsatile, légère/modérée.", "Céphalée brutale, neuro, fièvre, cancer.", "Paracétamol/AINS ponctuel, relaxation, sommeil, kiné cervicale.", "Opioïdes, prises fréquentes.", "Si fréquente.", "CCQ, abus, atypie.", "Céphalée de tension."],
+      ["Algie vasculaire de la face", "Douleur orbitotemporale intense, autonome, crises courtes.", "Diagnostic différentiel neurologique, première crise atypique.", "Avis/neuro, oxygène/triptan selon protocole.", "Opioïdes peu utiles.", "Rapide.", "Neurologie/urgence si atypique.", "AVF."],
+      ["Douleur dentaire", "Carie/abcès, douleur provoquée, gingivale.", "Cellulite, trismus, fièvre, dysphagie.", "Paracétamol, AINS si possible et pas infection sévère, soins dentaires.", "Antibiotique sans indication, opioïdes prolongés.", "24-48 h si infection.", "Dentiste/urgence si cellulite.", "Douleur dentaire."],
+      ["Otalgie", "Douleur oreille, fièvre ou contexte ORL.", "Mastoïdite, otite externe maligne, immunodépression.", "Antalgie, traitement cause ORL.", "AINS si infection sévère sans avis, opioïdes.", "48 h.", "Complication, immunodépression.", "Otalgie."],
+      ["Douleur abdominale", "Localisation, transit, fièvre, contexte.", "Défense, méléna, grossesse, douleur brutale, vomissements incoercibles.", "Antalgie non retardante, diagnostic étiologique.", "Masquer une urgence par simple ordonnance.", "Selon cause, souvent rapide.", "Urgences si red flag.", "Douleur abdominale."],
+      ["Colique néphrétique", "Douleur lombaire irradiant aine, agitation, hématurie.", "Fièvre, rein unique, grossesse, anurie, douleur rebelle.", "AINS si pas CI, antalgie, hydratation normale, imagerie selon contexte.", "AINS si IR/grossesse, retarder urgence si fièvre.", "24-48 h.", "Urologie/urgence si compliqué.", "Colique néphrétique."],
+      ["Dysménorrhée", "Douleur pelvienne cyclique.", "Grossesse, fièvre, douleur brutale, métrorragies, défense.", "AINS si pas CI, chaleur, contraception selon contexte.", "AINS grossesse/CI, négliger endométriose.", "Si récurrente invalidante.", "Gynéco si atypique/échec.", "Dysménorrhée."],
+      ["Douleur cancéreuse", "Fond douloureux, accès paroxystiques, mécanisme mixte.", "Compression médullaire, fracture, occlusion, infection.", "Opioïdes structurés, laxatif, antiémétique, coordination.", "Sous-doser ou prolonger sans suivi.", "Rapproché.", "Oncologie/palliatif/douleur.", "Douleur cancéreuse."],
+      ["Douleur en soins palliatifs", "Objectif confort, souffrance globale, symptômes associés.", "Détresse respiratoire, delirium, occlusion, souffrance réfractaire.", "Opioïdes selon protocole, anticipation, équipe palliative.", "Attendre crise sans prescription anticipée.", "Très rapproché.", "Équipe mobile/palliatif.", "Palliatif."],
+      ["Douleur du sujet âgé", "Présentation atypique, chute, confusion possible.", "Fracture, infection, iatrogénie, delirium.", "Paracétamol adapté, AINS local, doses faibles, réévaluation.", "Tramadol/codéine/prégabaline/amitriptyline/néfopam si fragile.", "24-72 h si nouveau traitement.", "Chute, confusion, douleur inexpliquée.", "Sujet âgé."],
+      ["Douleur chez insuffisant rénal", "DFG réduit, risque iatrogène.", "IRA, obstruction, hyperkaliémie, infection.", "Paracétamol adapté, éviter AINS, adapter gabapentinoïdes/opioïdes.", "AINS, doses standard gabapentine/prégabaline.", "Rapproché.", "IR sévère, douleur rebelle.", "Insuffisant rénal."],
+      ["Douleur sous anticoagulants", "Risque hémorragique et interactions.", "Hématome profond, méléna, trauma crânien, douleur brutale.", "Paracétamol, AINS local prudent, chercher cause.", "AINS oral, automédication.", "Selon contexte.", "Saignement, trauma, douleur brutale.", "Anticoagulants."]
+    ];
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    function chipHtml(name, value, label, extraClass = "") {
+      return `<label class="chip-check ${extraClass}"><input type="checkbox" name="${name}" value="${value}"><span>${label}</span></label>`;
+    }
+
+    function selectedValues(name) {
+      return $$(`input[name="${name}"]:checked`).map(el => el.value);
+    }
+
+    function severityFromScore(score) {
+      if (score <= 0) return ["absente", "Douleur absente", "blue"];
+      if (score <= 3) return ["legere", "Douleur légère", "green"];
+      if (score <= 6) return ["moderee", "Douleur modérée", "orange"];
+      return ["severe", "Douleur sévère", "red"];
+    }
+
+    function levelClass(level) {
+      if (level === "MG possible") return "green";
+      if (level === "MG avec prudence") return "orange";
+      if (level === "Urgence") return "red";
+      return "red";
+    }
+
+    function escapeText(text) {
+      return String(text).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[ch]));
+    }
+
+    function renderList(items) {
+      if (!items.length) return "<p style='margin:0;color:var(--muted)'>Aucun élément.</p>";
+      return `<ul>${items.map(item => `<li>${escapeText(item)}</li>`).join("")}</ul>`;
+    }
+
+    function calculateDn4(scope = document) {
+      return Array.from(scope.querySelectorAll('input[data-dn4]:checked')).length;
+    }
+
+    function getActiveDn4Score() {
+      return selectedValues("dn4Eval").length;
+    }
+
+    function buildSafetyAlerts(terrain, meds, age) {
+      const alerts = [];
+      if (terrain.includes("renal")) alerts.push("Insuffisance rénale : éviter AINS, adapter gabapentine/prégabaline, prudence opioïdes et morphine selon DFG.");
+      if (terrain.includes("hepatic")) alerts.push("Insuffisance hépatique : réduire/éviter paracétamol selon contexte, éviter duloxétine si atteinte hépatique, vérifier RCP.");
+      if (terrain.includes("ulcer") || terrain.includes("anticoag")) alerts.push("Risque digestif/hémorragique : éviter AINS oraux ou demander avis selon balance bénéfice/risque.");
+      if (terrain.includes("cardio")) alerts.push("HTA/IC/coronaropathie : prudence AINS, contrôle TA et durée courte.");
+      if (terrain.includes("asthmaNsaid")) alerts.push("Asthme/allergie AINS : ne pas proposer AINS sans clarification.");
+      if (terrain.includes("grossesse")) alerts.push("Grossesse/allaitement : vérifier CRAT ; AINS contre-indiqués à partir de 24 SA ; éviter automatiques opioïdes/antiépileptiques.");
+      if (terrain.includes("bpco")) alerts.push("BPCO/apnées : prudence opioïdes, benzodiazépines et gabapentinoïdes, risque dépression respiratoire.");
+      if (terrain.includes("cognitive") || terrain.includes("frail") || age >= 75) alerts.push("Sujet âgé/f fragile : risque chute/confusion avec tramadol, codéine, prégabaline, gabapentine, amitriptyline, néfopam.");
+      if (terrain.includes("addiction")) alerts.push("Antécédent addiction/mésusage : prudence opioïdes, tramadol, prégabaline ; définir durée courte et objectif fonctionnel.");
+      if (terrain.includes("epilepsy")) alerts.push("Épilepsie : éviter/prudence tramadol ; vérifier interactions.");
+      if (terrain.includes("glaucoma") || terrain.includes("hbp")) alerts.push("Glaucome/HBP : éviter ou discuter amitriptyline et néfopam.");
+      if (meds.includes("serotonergic") || meds.includes("duloxetine")) alerts.push("ISRS/IRSNa/IMAO ou duloxétine : éviter tramadol si possible, risque syndrome sérotoninergique.");
+      if (meds.includes("benzo")) alerts.push("Benzodiazépines/Z-drugs : éviter association avec opioïdes et gabapentinoïdes sans justification forte.");
+      if (meds.includes("strongOpioid")) alerts.push("Opioïde fort déjà pris : vérifier équivalences, observance, constipation, somnolence, accès douloureux, avis si complexe.");
+      if (meds.includes("pregabalin") || meds.includes("gabapentin")) alerts.push("Gabapentinoïde déjà pris : surveiller sédation, DFG, œdèmes, mésusage ; éviter cumul sédatif.");
+      return alerts;
+    }
+
+    function hasNsaidContra(terrain) {
+      return ["renal", "ulcer", "anticoag", "cardio", "asthmaNsaid", "grossesse", "frail"].some(id => terrain.includes(id));
+    }
+
+    function decidePainMechanism(type, dn4Score) {
+      if (dn4Score >= 4 || type === "neuropathique") return ["neuropathique", "Douleur neuropathique probable", "DN4 positif ou type neuropathique : brûlures, décharges, allodynie, territoire nerveux."];
+      if (type === "nociplastique") return ["nociplastique", "Douleur nociplastique probable", "Douleur chronique diffuse, hypersensibilisation, retentissement sommeil/humeur, pas d'escalade opioïde."];
+      if (type === "inflammatoire") return ["inflammatoire", "Douleur nociceptive inflammatoire", "Réveil nocturne, dérouillage, chaleur/gonflement, poussée inflammatoire possible."];
+      if (type === "mixte" || type === "lombalgie" || type === "dermato" || type === "postop") return ["mixte", "Douleur mixte possible", "Composantes nociceptives et neuropathiques à traiter avec objectifs séparés."];
+      if (type === "cancer") return ["cancer", "Douleur cancéreuse / palliative", "Évaluer douleur de fond, accès paroxystiques, mécanismes mixtes et coordination."];
+      return ["nociceptive", "Douleur nociceptive probable", "Douleur liée au mouvement, lésion/inflammation locale, réponse attendue aux antalgiques usuels si diagnostic compatible."];
+    }
+
+    function collectRedFlags() {
+      return $$('input[name="redflag"]:checked').map(el => el.dataset.label);
+    }
+
+    function buildDecision() {
+      const score = Number($("#painScore").value);
+      const [sevKey, sevLabel, sevClass] = severityFromScore(score);
+      const duration = $("#duration").value;
+      const type = $("#painType").value;
+      const age = Number($("#age").value || 0);
+      const terrain = selectedValues("terrain");
+      const meds = selectedValues("medTaken");
+      const dn4Score = getActiveDn4Score();
+      const redFlags = collectRedFlags();
+      const [mechanismKey, mechanismLabel, mechanismExplain] = decidePainMechanism(type, dn4Score);
+      const safetyAlerts = buildSafetyAlerts(terrain, meds, age);
+      const nsaidContra = hasNsaidContra(terrain);
+
+      const first = [];
+      const alternatives = [];
+      const avoid = [];
+      const monitor = [];
+      const orientation = [];
+      const patientMessages = [];
+
+      if (redFlags.length) {
+        orientation.push("Évaluation urgente ou spécialisée avant simple traitement symptomatique.");
+        orientation.push("Antalgie non retardante possible selon contexte, sans masquer le diagnostic ni retarder ECG/imagerie/biologie/avis.");
+      }
+
+      if (sevKey === "legere") {
+        first.push("Mesures non médicamenteuses ciblées : repos relatif, mobilisation douce, glace/chaleur selon cause, information patient.");
+        first.push("Paracétamol si pas de contre-indication, dose adaptée au poids et au foie.");
+      } else if (sevKey === "moderee") {
+        first.push("Paracétamol optimisé si compatible, avec vérification dose totale quotidienne.");
+        if (!nsaidContra && ["nociceptive", "inflammatoire", "mixte"].includes(mechanismKey)) first.push("AINS oral court ou AINS local si douleur ostéo-articulaire/inflammatoire et absence de contre-indication.");
+      } else if (sevKey === "severe") {
+        first.push("Rechercher et traiter les red flags en priorité.");
+        first.push("Antalgie rapide adaptée au mécanisme, avec réévaluation 24-72 h.");
+        if (!redFlags.length && ["nociceptive", "inflammatoire", "mixte"].includes(mechanismKey)) alternatives.push("Opioïde faible court possible si douleur aiguë nociceptive sévère non contrôlée, ordonnance sécurisée et durée limitée.");
+      }
+
+      if (mechanismKey === "neuropathique") {
+        first.push("Traitement neuropathique possible : gabapentine ou duloxétine selon profil ; amitriptyline faible dose le soir si pas de contre-indication.");
+        alternatives.push("Prégabaline possible avec prudence : ordonnance sécurisée, DFG, somnolence, chute et risque de mésusage.");
+        alternatives.push("Lidocaïne patch si douleur neuropathique périphérique localisée et indication compatible.");
+        avoid.push("AINS seuls : souvent peu efficaces sur douleur neuropathique pure.");
+        avoid.push("Carbamazépine/Tégrétol non proposé en première intention standard, sauf névralgie du trijumeau clairement identifiée ou avis spécialisé.");
+        monitor.push("Réévaluer efficacité/tolérance dans 2 à 4 semaines ; effet progressif, conduite automobile et somnolence.");
+        patientMessages.push("Ce traitement agit progressivement sur le nerf irrité ; l'effet n'est pas immédiat comme un antalgique classique.");
+      }
+
+      if (mechanismKey === "inflammatoire") {
+        if (!nsaidContra) first.push("AINS courte durée à dose minimale efficace, si diagnostic inflammatoire compatible.");
+        alternatives.push("Paracétamol en association possible ; colchicine si goutte selon protocole et DFG/interactions ; corticoïde court seulement si indication claire.");
+        avoid.push("Corticoïdes réflexes sans diagnostic inflammatoire précis.");
+        monitor.push("Réévaluer à 48-72 h si douleur sévère, fièvre, impotence ou diagnostic incertain.");
+      }
+
+      if (mechanismKey === "nociceptive") {
+        if (!nsaidContra) alternatives.push("AINS local ou oral court si douleur ostéo-articulaire localisée/inflammatoire et pas de contre-indication.");
+        alternatives.push("Kinésithérapie, activité adaptée, contention/immobilisation courte selon lésion.");
+        monitor.push("Réévaluation si persistance, aggravation, fièvre, impotence, traumatisme ou altération de l'état général.");
+      }
+
+      if (mechanismKey === "nociplastique") {
+        first.push("Éducation, activité physique adaptée, sommeil, prise en charge anxiété/dépression, approche multimodale.");
+        alternatives.push("Duloxétine ou amitriptyline faible dose possible selon profil ; prégabaline seulement profils sélectionnés avec prudence.");
+        avoid.push("Opioïdes au long cours et escalade antalgique non réévaluée.");
+        avoid.push("Examens répétés sans signe nouveau ni hypothèse diagnostique.");
+        monitor.push("Objectif fonctionnel, sommeil, qualité de vie ; suivi programmé plutôt que prescription isolée.");
+      }
+
+      if (mechanismKey === "mixte") {
+        first.push("Combiner prudemment traitement nociceptif et neuropathique si les deux composantes sont présentes.");
+        alternatives.push("Ne pas multiplier les molécules sans objectif mesurable ; choisir une cible prioritaire.");
+        monitor.push("Réévaluer efficacité, tolérance et fonction à court terme.");
+      }
+
+      if (mechanismKey === "cancer") {
+        first.push("Évaluer douleur de fond, accès douloureux paroxystiques, constipation, nausées, somnolence et objectifs de confort/fonction.");
+        alternatives.push("Opioïde fort possible avec protocole structuré, laxatif systématique si traitement fort/prolongé, coordination oncologie/soins palliatifs.");
+        orientation.push("Avis oncologie/soins palliatifs/structure douleur si douleur complexe, instable ou réfractaire.");
+        monitor.push("Surveillance somnolence, confusion, fréquence respiratoire, transit et efficacité.");
+      }
+
+      if (duration === "chronique") {
+        monitor.push("Douleur chronique : définir un objectif fonctionnel, pas seulement une baisse de l'EVA.");
+        orientation.push("Adressage structure douleur si douleur rebelle, complexité diagnostique, retentissement majeur ou escalade médicamenteuse.");
+        avoid.push("Opioïdes au long cours sans stratégie multimodale et contrat de suivi.");
+      }
+
+      if (nsaidContra) avoid.push("AINS oraux à éviter ou à discuter : terrain à risque identifié.");
+      if (terrain.includes("grossesse")) avoid.push("Grossesse/allaitement : ne pas proposer AINS ou traitements à risque sans vérification CRAT.");
+      if (terrain.includes("bpco") || meds.includes("benzo")) avoid.push("Éviter association opioïdes + benzodiazépines/sédatifs sans justification forte.");
+      if (terrain.includes("addiction")) avoid.push("Éviter prescription opioïde/gabapentinoïde banalisée ; durée courte, suivi et objectif explicites.");
+
+      if (sevKey === "severe" && !redFlags.length) monitor.push("Douleur sévère sans red flag : réévaluation rapprochée 24-72 h et orientation si échec.");
+      if (!first.length) first.push("Mesures non médicamenteuses et traitement symptomatique prudent selon diagnostic, après vérification des contre-indications.");
+      monitor.push("Vérifier RCP/Vidal/ANSM avant prescription et DFG si gabapentine, prégabaline, AINS ou opioïdes.");
+      monitor.push("Informer le patient des signes d'alerte et de la durée prévue du traitement.");
+
+      return {
+        score, sevLabel, sevClass, duration, typeLabel: painTypes.find(p => p[0] === type)?.[1] || type,
+        mechanismLabel, mechanismExplain, dn4Score, redFlags, first, alternatives, avoid, monitor,
+        orientation, safetyAlerts, patientMessages
+      };
+    }
+
+    function renderDecision() {
+      const d = buildDecision();
+      const priority = d.redFlags.length ? "red" : d.sevClass;
+      const result = $("#decisionResult");
+      const redFlagHtml = d.redFlags.length
+        ? `<div class="alert-box"><strong>Attention : cette situation nécessite une évaluation urgente ou spécialisée avant simple traitement symptomatique.</strong>${renderList(d.redFlags)}</div>`
+        : `<div class="ok-box"><strong>Aucun red flag coché.</strong><br>Continuer l'évaluation clinique ; l'absence de case cochée ne remplace pas l'examen.</div>`;
+      result.innerHTML = `
+        <div class="kpi-row">
+          <div class="kpi"><span>Intensité</span><strong>EN ${d.score}/10</strong><span class="badge ${d.sevClass}">${d.sevLabel}</span></div>
+          <div class="kpi"><span>Type probable</span><strong>${escapeText(d.typeLabel)}</strong></div>
+          <div class="kpi"><span>DN4</span><strong>${d.dn4Score}/10</strong><span class="badge ${d.dn4Score >= 4 ? "orange" : "blue"}">${d.dn4Score >= 4 ? "positif" : "non positif"}</span></div>
+        </div>
+        ${redFlagHtml}
+        <div class="result-card"><h4>Mécanisme dominant</h4><p style="margin:0"><span class="badge ${priority}">${escapeText(d.mechanismLabel)}</span></p><p style="margin:8px 0 0;color:var(--muted)">${escapeText(d.mechanismExplain)}</p></div>
+        <div class="result-card"><h4>Traitement de première intention</h4>${renderList(d.first)}</div>
+        <div class="result-card"><h4>Alternatives / compléments</h4>${renderList(d.alternatives)}</div>
+        <div class="result-card"><h4>À éviter</h4>${renderList([...new Set(d.avoid)])}</div>
+        <div class="result-card"><h4>Sécurité / surveillance</h4>${renderList([...new Set([...d.safetyAlerts, ...d.monitor])])}</div>
+        <div class="result-card"><h4>Orientation</h4>${renderList([...new Set(d.orientation.length ? d.orientation : ["Avis spécialisé si échec, diagnostic incertain, douleur chronique complexe ou retentissement majeur."])])}</div>
+        <div class="info-box"><strong>Message patient</strong><br>${escapeText((d.patientMessages[0] || "Le traitement est choisi pour soulager la douleur tout en limitant les risques. Il doit être réévalué si inefficace ou mal toléré."))}</div>
+        <div class="result-card"><h4>Synthèse imprimable</h4><div class="summary-box" id="summaryText">${escapeText(buildSummaryText(d))}</div></div>
+      `;
+    }
+
+    function buildSummaryText(d) {
+      const lines = [];
+      lines.push("Douleur MG - Synthèse antalgique");
+      lines.push(`Date : ${new Date().toLocaleDateString("fr-FR")}`);
+      lines.push("");
+      lines.push(`Intensité : EN ${d.score}/10 - ${d.sevLabel}`);
+      lines.push(`Type probable : ${d.typeLabel}`);
+      lines.push(`Mécanisme dominant : ${d.mechanismLabel}`);
+      lines.push(`DN4 : ${d.dn4Score}/10 (${d.dn4Score >= 4 ? "positif" : "non positif"})`);
+      if (d.redFlags.length) {
+        lines.push("");
+        lines.push("Red flags cochés :");
+        d.redFlags.forEach(x => lines.push(`- ${x}`));
+        lines.push("Attention : évaluation urgente ou spécialisée avant simple traitement symptomatique.");
+      }
+      lines.push("");
+      lines.push("Traitement de première intention possible :");
+      d.first.forEach(x => lines.push(`- ${x}`));
+      lines.push("");
+      lines.push("Alternatives / compléments :");
+      d.alternatives.forEach(x => lines.push(`- ${x}`));
+      lines.push("");
+      lines.push("À éviter :");
+      [...new Set(d.avoid)].forEach(x => lines.push(`- ${x}`));
+      lines.push("");
+      lines.push("Sécurité / surveillance :");
+      [...new Set([...d.safetyAlerts, ...d.monitor])].forEach(x => lines.push(`- ${x}`));
+      lines.push("");
+      lines.push("Orientation :");
+      [...new Set(d.orientation.length ? d.orientation : ["Avis spécialisé si échec, diagnostic incertain, douleur chronique complexe ou retentissement majeur."])].forEach(x => lines.push(`- ${x}`));
+      lines.push("");
+      lines.push("Avertissement : ne remplace pas le jugement médical. Vérifier RCP/Vidal/ANSM et CRAT avant prescription.");
+      return lines.join("\n");
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+      return Promise.resolve();
+    }
+
+    function setView(viewId) {
+      $$(".view").forEach(v => v.classList.toggle("active", v.id === viewId));
+      $$(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.view === viewId));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderDn4Inline() {
+      const score = getActiveDn4Score();
+      $("#dn4InlineResult").innerHTML = `DN4 : <strong>${score}/10</strong>. ${score >= 4 ? "Profil compatible avec une douleur neuropathique probable." : "Non positif ; rester clinique si territoire nerveux évocateur."}`;
+    }
+
+    function renderStandaloneDn4() {
+      const score = selectedValues("dn4Standalone").length;
+      const positive = score >= 4;
+      $("#dn4StandaloneResult").innerHTML = `
+        <div class="${positive ? "warn-box" : "info-box"}"><strong>Score DN4 : ${score}/10</strong><br>${positive ? "DN4 positif : douleur neuropathique probable si contexte compatible." : "DN4 non positif : ne suffit pas à exclure une composante neuropathique si l'examen est évocateur."}</div>
+        <div class="result-card"><h4>Si DN4 positif</h4>${renderList(["Rechercher territoire nerveux, allodynie, hypoesthésie et cause.", "Options MG : gabapentine ou duloxétine selon profil ; amitriptyline faible dose le soir si pas de contre-indication.", "Prégabaline avec prudence : ordonnance sécurisée, DFG, somnolence, mésusage.", "Lidocaïne patch si douleur localisée selon indication."])}</div>
+        <div class="result-card"><h4>À ne pas banaliser</h4>${renderList(["Carbamazépine/Tégrétol : interactions nombreuses, surveillance biologique, risque cutané et hématologique ; réserver aux indications spécifiques ou avis spécialisé.", "Opioïdes au long cours non recommandés sans stratégie claire.", "Réévaluer efficacité/tolérance à 2-4 semaines."])}</div>
+      `;
+    }
+
+    function renderMeds() {
+      const q = ($("#medSearch").value || "").toLowerCase();
+      const level = $("#medLevelFilter").value;
+      const filtered = medDb.filter(m => {
+        const hay = [m.dci, m.brands, m.class, m.pain, m.level].join(" ").toLowerCase();
+        return hay.includes(q) && (level === "all" || m.level === level);
+      });
+      $("#medGrid").innerHTML = filtered.map(m => `
+        <article class="med-card">
+          <div class="meta-line">
+            <span class="badge ${levelClass(m.level)}">${escapeText(m.level)}</span>
+            <span class="badge blue">${escapeText(m.class)}</span>
+          </div>
+          <h3>${escapeText(m.dci)}</h3>
+          <p style="margin:0;color:var(--muted)">${escapeText(m.brands)}</p>
+          <details>
+            <summary>Indication et doses</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li><strong>MG :</strong> ${escapeText(m.pain)}</li>
+                <li><strong>Départ :</strong> ${escapeText(m.start)}</li>
+                <li><strong>Titration :</strong> ${escapeText(m.titration)}</li>
+                <li><strong>Max :</strong> ${escapeText(m.max)}</li>
+                <li><strong>Délai :</strong> ${escapeText(m.onset)}</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Sécurité</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li><strong>CI :</strong> ${escapeText(m.contra.join("; "))}</li>
+                <li><strong>Précautions :</strong> ${escapeText(m.precautions.join("; "))}</li>
+                <li><strong>Interactions :</strong> ${escapeText(m.interactions.join("; "))}</li>
+                <li><strong>Rein :</strong> ${escapeText(m.renal)}</li>
+                <li><strong>Âgé :</strong> ${escapeText(m.elderly)}</li>
+                <li><strong>Grossesse/allaitement :</strong> ${escapeText(m.pregnancy)}</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Surveillance / message patient</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li>${escapeText(m.monitoring)}</li>
+                <li>${escapeText(m.patient)}</li>
+              </ul>
+            </div>
+          </details>
+        </article>
+      `).join("") || "<div class='info-box'>Aucun médicament trouvé.</div>";
+    }
+
+    function renderLimits() {
+      $("#limitsMg").innerHTML = `
+        <p><span class="badge green">Vert</span></p>${renderList(limitsMg.green)}
+        <p><span class="badge orange">Orange</span></p>${renderList(limitsMg.orange)}
+        <p><span class="badge red">Rouge</span></p>${renderList(limitsMg.red)}
+      `;
+    }
+
+    function renderSheets() {
+      const q = ($("#sheetSearch").value || "").toLowerCase();
+      const filtered = sheets.filter(s => s.join(" ").toLowerCase().includes(q));
+      $("#sheetGrid").innerHTML = filtered.map(s => `
+        <article class="sheet-card">
+          <h3>${escapeText(s[0])}</h3>
+          <details open>
+            <summary>Reconnaître / ne pas manquer</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li><strong>Reconnaître :</strong> ${escapeText(s[1])}</li>
+                <li><strong>Ne pas manquer :</strong> ${escapeText(s[2])}</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Conduite MG</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li><strong>Possible :</strong> ${escapeText(s[3])}</li>
+                <li><strong>À éviter :</strong> ${escapeText(s[4])}</li>
+                <li><strong>Revoir :</strong> ${escapeText(s[5])}</li>
+                <li><strong>Adresser :</strong> ${escapeText(s[6])}</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Ordonnance / conseil patient</summary>
+            <div class="detail-body">
+              <ul class="compact-list">
+                <li><strong>Ordonnance type :</strong> ${escapeText(s[7])}</li>
+                <li><strong>Conseil :</strong> traitement court, signes d'alerte expliqués, réévaluation si inefficace ou mal toléré.</li>
+              </ul>
+            </div>
+          </details>
+        </article>
+      `).join("") || "<div class='info-box'>Aucune fiche trouvée.</div>";
+    }
+
+    function renderSources() {
+      $("#sourceGrid").innerHTML = sources.map(s => `
+        <article class="source-card">
+          <div class="meta-line"><span class="badge ${s.confidence === "Fort" ? "green" : s.confidence === "Non exploité" ? "red" : "orange"}">${escapeText(s.confidence)}</span><span class="badge blue">${escapeText(s.date)}</span></div>
+          <h3>${escapeText(s.source)}</h3>
+          <p style="margin:0;color:var(--muted)">${escapeText(s.use)}</p>
+          <p style="margin:0;font-size:.84rem;word-break:break-word">${escapeText(s.url)}</p>
+        </article>
+      `).join("");
+    }
+
+    function loadOrderTemplate() {
+      const tpl = orderTemplates.find(o => o.id === $("#orderSelect").value) || orderTemplates[0];
+      $("#orderText").value = tpl.text;
+    }
+
+    function getQuickOrderDurationOptions(item) {
+      const ids = item.durationIds && item.durationIds.length ? item.durationIds : ["7d"];
+      return ids.map(id => quickOrderDurations.find(d => d.id === id)).filter(Boolean);
+    }
+
+    function renderQuickOrderOptions() {
+      const q = ($("#quickOrderSearch").value || "").toLowerCase().trim();
+      const current = $("#quickOrderSelect").value;
+      const filtered = quickOrderLines.filter(item => {
+        const hay = [item.label, item.aliases, item.level, item.warning].join(" ").toLowerCase();
+        return !q || hay.includes(q);
+      });
+      const list = filtered.length ? filtered : quickOrderLines;
+      $("#quickOrderSelect").innerHTML = list.map(o => `<option value="${o.id}">${escapeText(o.label)} - ${escapeText(o.level)}</option>`).join("");
+      if (list.some(item => item.id === current)) $("#quickOrderSelect").value = current;
+      else $("#quickOrderSelect").value = list[0]?.id || "";
+      renderQuickOrder();
+    }
+
+    function getQuickOrderLine() {
+      const item = quickOrderLines.find(o => o.id === $("#quickOrderSelect").value) || quickOrderLines[0];
+      const options = getQuickOrderDurationOptions(item);
+      const currentDuration = options.find(d => d.id === $("#quickOrderDuration").value) || options[0] || quickOrderDurations[0];
+      const text = item.template.replaceAll("{duration}", currentDuration.text);
+      return { item, text, duration: currentDuration, options };
+    }
+
+    function renderQuickOrder() {
+      const item = quickOrderLines.find(o => o.id === $("#quickOrderSelect").value) || quickOrderLines[0];
+      const options = getQuickOrderDurationOptions(item);
+      const previous = $("#quickOrderDuration").value;
+      $("#quickOrderDuration").innerHTML = options.map(d => `<option value="${d.id}">${escapeText(d.label)}</option>`).join("");
+      if (options.some(d => d.id === previous)) $("#quickOrderDuration").value = previous;
+      else $("#quickOrderDuration").value = item.defaultDuration || options[0]?.id || "7d";
+      const { text } = getQuickOrderLine();
+      $("#quickOrderDurationWrap").style.display = options.length > 1 ? "grid" : "none";
+      $("#quickOrderText").textContent = text;
+      $("#quickOrderWarning").innerHTML = `<strong>${escapeText(item.level)}</strong> - ${escapeText(item.warning)} Vérifier Vidal/RCP/ANSM et CRAT avant prescription.`;
+    }
+
+    function addQuickOrderToTemplate() {
+      const { text } = getQuickOrderLine();
+      const current = $("#orderText").value.trim();
+      const addition = `\n\nLigne rapide à adapter :\n${text}`;
+      $("#orderText").value = current ? current + addition : text;
+    }
+
+    function hydrate() {
+      $("#painType").innerHTML = painTypes.map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+      $("#terrainChips").innerHTML = terrainItems.map(([id, label]) => chipHtml("terrain", id, label)).join("");
+      $("#medTakenChips").innerHTML = medTakenItems.map(([id, label]) => chipHtml("medTaken", id, label)).join("");
+      $("#dn4EvalChips").innerHTML = dn4Items.map(([id, label]) => `<label class="chip-check"><input type="checkbox" name="dn4Eval" value="${id}" data-dn4><span>${label}</span></label>`).join("");
+      $("#dn4StandaloneChips").innerHTML = dn4Items.map(([id, label]) => `<label class="chip-check"><input type="checkbox" name="dn4Standalone" value="${id}" data-dn4><span>${label}</span></label>`).join("");
+      $("#redFlagGroups").innerHTML = redFlagGroups.map(([id, title, items]) => `
+        <details>
+          <summary>${escapeText(title)}</summary>
+          <div class="detail-body chips">
+            ${items.map(label => `<label class="chip-check"><input type="checkbox" name="redflag" value="${id}" data-label="${escapeText(title + " - " + label)}"><span>${escapeText(label)}</span></label>`).join("")}
+          </div>
+        </details>
+      `).join("");
+      $("#orderSelect").innerHTML = orderTemplates.map(o => `<option value="${o.id}">${escapeText(o.label)}</option>`).join("");
+      renderLimits();
+      renderMeds();
+      renderSheets();
+      renderSources();
+      loadOrderTemplate();
+      renderQuickOrderOptions();
+      renderDecision();
+      renderStandaloneDn4();
+    }
+
+    function bindEvents() {
+      $$(".nav-btn").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
+      $$(".action-tile").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.go)));
+      $("#painScore").addEventListener("input", () => {
+        $("#painScoreLabel").textContent = $("#painScore").value;
+      });
+      $("#runDecision").addEventListener("click", renderDecision);
+      $("#resetForm").addEventListener("click", () => {
+        $$('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        $("#painScore").value = 6;
+        $("#painScoreLabel").textContent = "6";
+        $("#duration").value = "aigue";
+        $("#painType").value = "mecanique";
+        $("#age").value = 54;
+        renderDn4Inline();
+        renderDecision();
+      });
+      document.addEventListener("change", (event) => {
+        if (event.target.matches('input[name="dn4Eval"]')) renderDn4Inline();
+      });
+      $("#scoreDn4").addEventListener("click", renderStandaloneDn4);
+      $("#clearDn4").addEventListener("click", () => {
+        $$('input[name="dn4Standalone"]').forEach(cb => cb.checked = false);
+        renderStandaloneDn4();
+      });
+      $("#loadOrder").addEventListener("click", loadOrderTemplate);
+      $("#orderSelect").addEventListener("change", loadOrderTemplate);
+      $("#copyOrder").addEventListener("click", () => copyText($("#orderText").value));
+      $("#printOrder").addEventListener("click", () => window.print());
+      $("#quickOrderSearch").addEventListener("input", renderQuickOrderOptions);
+      $("#quickOrderSelect").addEventListener("change", renderQuickOrder);
+      $("#quickOrderDuration").addEventListener("change", renderQuickOrder);
+      $("#copyQuickOrder").addEventListener("click", () => copyText($("#quickOrderText").textContent));
+      $("#addQuickOrder").addEventListener("click", addQuickOrderToTemplate);
+      $("#copySummaryTop").addEventListener("click", () => {
+        const text = $("#summaryText")?.textContent || buildSummaryText(buildDecision());
+        copyText(text);
+      });
+      $("#printTop").addEventListener("click", () => window.print());
+      $("#medSearch").addEventListener("input", renderMeds);
+      $("#medLevelFilter").addEventListener("change", renderMeds);
+      $("#sheetSearch").addEventListener("input", renderSheets);
+      $("#clearSheetSearch").addEventListener("click", () => {
+        $("#sheetSearch").value = "";
+        renderSheets();
+      });
+    }
+
+    hydrate();
+    bindEvents();
+  </script>
+</body>
+</html>

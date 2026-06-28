@@ -28,6 +28,7 @@
   --d-trans:#64748b;
   --d-rhumato:#b45309;
   --d-pneumo:#0891b2;
+  --d-douleur:#c026d3;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
