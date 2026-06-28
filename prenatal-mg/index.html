@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prenatal MG - Synthese medecin generaliste</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --paper: #fffefa;
+      --ink: #1f2933;
+      --muted: #5d6875;
+      --line: #d9ded8;
+      --soft: #eef2ed;
+      --green: #0f766e;
+      --green-dark: #115e59;
+      --blue: #304c89;
+      --amber: #9a5d00;
+      --red: #9b1c31;
+      --white: #ffffff;
+      --shadow: 0 12px 28px rgba(30, 41, 51, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 254, 250, 0.82), rgba(246, 244, 239, 1) 320px),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(360px, 1fr) minmax(320px, 430px);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(238, 242, 237, 0.65);
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .panel-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel-body {
+      padding: 14px 16px 16px;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .two-cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label.field {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #c8d0cc;
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--white);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 4px;
+      border-radius: 8px;
+      background: #e9eee8;
+      border: 1px solid var(--line);
+    }
+
+    .segmented button {
+      min-height: 38px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .segmented button.active {
+      background: var(--green);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.24);
+    }
+
+    .section-title {
+      margin: 18px 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+
+    .check-row input {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+    }
+
+    .check-row strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .check-row span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .danger {
+      border-color: #e8b6bf;
+      background: #fff7f8;
+    }
+
+    .warning-box {
+      border-left: 4px solid var(--amber);
+      background: #fff8ea;
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: #5d3900;
+      font-size: 13px;
+    }
+
+    .btn {
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 6px;
+      font-weight: 700;
+      color: var(--ink);
+      background: #e9eee8;
+      border: 1px solid #d2dad4;
+    }
+
+    .btn.primary {
+      color: var(--white);
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .btn.primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn.blue {
+      color: var(--white);
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .btn.red {
+      color: var(--white);
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .summary-box {
+      min-height: 510px;
+      white-space: pre-wrap;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status-line {
+      min-height: 20px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .print-sheet {
+      display: none;
+    }
+
+    @media (max-width: 1180px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell {
+        padding: 12px;
+      }
+
+      .two-cols {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 24px;
+      }
+
+      .top-actions .btn,
+      .toolbar .btn {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      @page {
+        margin: 14mm;
+      }
+
+      body {
+        background: #fff;
+        color: #111;
+      }
+
+      .screen-only {
+        display: none !important;
+      }
+
+      .print-sheet {
+        display: block;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .print-sheet h1 {
+        margin: 0 0 4px;
+        font-size: 20px;
+      }
+
+      .print-sheet .meta {
+        color: #444;
+        font-size: 12px;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+      }
+
+      .print-sheet h2 {
+        margin: 16px 0 6px;
+        font-size: 14px;
+      }
+
+      .print-sheet p,
+      .print-sheet li {
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .print-sheet ul {
+        margin: 4px 0 0 18px;
+        padding: 0;
+      }
+
+      .print-sheet .alert {
+        border: 1px solid #9b1c31;
+        padding: 8px;
+        color: #7a1023;
+        margin: 10px 0;
+      }
+
+      .print-sheet .legal {
+        margin-top: 18px;
+        border-top: 1px solid #aaa;
+        padding-top: 8px;
+        color: #444;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell screen-only">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Prenatal MG</h1>
+        <p>Consultation preconceptionnelle, EPP et EPG - synthese imprimable en PDF.</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="saveDraftBtn" type="button">Sauver brouillon</button>
+        <button class="btn" id="clearBtn" type="button">Effacer</button>
+        <button class="btn primary" id="pdfTopBtn" type="button">Sauver PDF 10 min</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel">
+        <div class="panel-header">
+          <h2>Cadre</h2>
+          <p>Choisir le format de consultation et renseigner l'identification.</p>
+        </div>
+        <div class="panel-body field-grid">
+          <div>
+            <div class="section-title">Format</div>
+            <div class="segmented" aria-label="Duree de synthese">
+              <button id="mode10" class="active" type="button" data-mode="10">10 min</button>
+              <button id="mode45" type="button" data-mode="45">45 min</button>
+            </div>
+          </div>
+
+          <label class="field" for="moduleSelect">
+            Type de consultation
+            <select id="moduleSelect">
+              <option value="preconception">Consultation preconceptionnelle</option>
+              <option value="epp">Entretien prenatal precoce / EPG</option>
+            </select>
+          </label>
+
+          <div class="field-grid two-cols">
+            <label class="field" for="patientName">
+              Patiente
+              <input id="patientName" autocomplete="off" placeholder="Nom, prenom">
+            </label>
+            <label class="field" for="patientAge">
+              Age
+              <input id="patientAge" inputmode="numeric" placeholder="ans">
+            </label>
+          </div>
+
+          <div class="field-grid two-cols">
+            <label class="field" for="doctorName">
+              Medecin
+              <input id="doctorName" autocomplete="off" placeholder="Dr ...">
+            </label>
+            <label class="field" for="visitDate">
+              Date
+              <input id="visitDate" type="date">
+            </label>
+          </div>
+
+          <div class="field-grid two-cols">
+            <label class="field" for="pregnancyTerm">
+              Terme / projet
+              <input id="pregnancyTerm" placeholder="ex. projet, 8 SA, non date">
+            </label>
+            <label class="field" for="parity">
+              Gestite / parite
+              <input id="parity" placeholder="ex. G2P1">
+            </label>
+          </div>
+
+          <div class="warning-box">
+            Outil d'aide a la synthese. Il ne remplace pas le jugement clinique, les recommandations actualisees ni les avis specialises.
+          </div>
+
+          <div class="section-title">Situation clinique</div>
+          <div class="check-list">
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Projet de grossesse ou grossesse debutante: reprendre prevention, traitements et calendrier de suivi.">
+              <span><strong>Projet / grossesse debutante</strong>Prevention, traitement, calendrier de suivi.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Antecedents obstetricaux a reprendre: fausse couche repetee, prematurite, preeclampsie, RCIU, cesarienne ou hemorragie.">
+              <span><strong>Antecedents obstetricaux</strong>FC repetees, prematurite, preeclampsie, RCIU, cesarienne.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Pathologie chronique ou facteur de risque: organiser bilan cible et coordination avec specialiste si besoin.">
+              <span><strong>Pathologie chronique</strong>HTA, diabete, thyroidie, epilepsie, cardiopathie, maladie auto-immune.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Traitement ou exposition a verifier: compatibilite grossesse/allaitement a controler via CRAT ou avis specialise.">
+              <span><strong>Traitement / exposition</strong>Medicaments, toxiques, radiologie, exposition professionnelle.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Besoin de prevention nutritionnelle: folates, iode selon contexte, vitamine D/fer selon facteurs et biologie.">
+              <span><strong>Nutrition / supplementation</strong>Folates, iode selon contexte, vitamine D, fer.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Vaccinations ou immunites a verifier: rubéole, varicelle, grippe, coqueluche, Covid selon calendrier vaccinal.">
+              <span><strong>Vaccinations / immunites</strong>Rubeole, varicelle, grippe, coqueluche, Covid.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="flag" data-text="Situation psycho-sociale a explorer: anxiete, depression, isolement, precarite, violences, addictions.">
+              <span><strong>Psycho-social</strong>Anxiete, depression, isolement, precarite, violences, addictions.</span>
+            </label>
+            <label class="check-row danger">
+              <input type="checkbox" class="flag urgent" data-text="Signal d'alerte: douleur, saignement, fievre, HTA, idees suicidaires, violence immediate ou autre urgence. Evaluation et orientation sans delai.">
+              <span><strong>Signal d'alerte</strong>Douleur, saignement, fievre, HTA, danger psychique ou violence.</span>
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <main class="panel">
+        <div class="panel-header">
+          <h2>Recueil clinique</h2>
+          <p>Notes libres et points utiles pour la synthese du dossier.</p>
+        </div>
+        <div class="panel-body field-grid">
+          <label class="field" for="reason">
+            Motif / demande
+            <textarea id="reason" placeholder="Demande de la patiente, contexte, attentes, priorites exprimees."></textarea>
+          </label>
+
+          <label class="field" for="history">
+            Antecedents et traitements
+            <textarea id="history" placeholder="Antecedents medicaux, chirurgicaux, obstetricaux, familiaux, allergies, traitements, automedication."></textarea>
+          </label>
+
+          <label class="field" for="exam">
+            Examen / donnees disponibles
+            <textarea id="exam" placeholder="TA, poids/IMC, examen clinique utile, biologie, serologies, groupe, vaccinations connues."></textarea>
+          </label>
+
+          <label class="field" for="psychosocial">
+            Contexte psycho-social
+            <textarea id="psychosocial" placeholder="Soutien, logement, travail, violences, sante mentale, addictions, besoins sociaux."></textarea>
+          </label>
+
+          <label class="field" for="plan">
+            Decisions partagees / plan
+            <textarea id="plan" placeholder="Examens, prescriptions, conseils, orientations, rendez-vous, coordination sage-femme/obstetrique/specialistes."></textarea>
+          </label>
+        </div>
+      </main>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <h2>Synthese</h2>
+          <p>Generer, copier ou imprimer la synthese au format choisi.</p>
+        </div>
+        <div class="panel-body">
+          <div class="toolbar">
+            <button class="btn blue" id="generateBtn" type="button">Generer synthese</button>
+            <button class="btn" id="copyBtn" type="button">Copier dossier</button>
+            <button class="btn primary" id="pdfBtn" type="button">Sauver PDF 10 min</button>
+          </div>
+          <textarea id="summary" class="summary-box" readonly placeholder="La synthese apparaitra ici."></textarea>
+          <div class="status-line" id="statusLine" aria-live="polite"></div>
+          <p class="footer-note">
+            Verification recommandee: CRAT pour les traitements, calendrier vaccinal, HAS/CNGOF selon le contexte et les facteurs de risque.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <section id="printSheet" class="print-sheet"></section>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "prenatal-mg-standalone-v2";
+      var currentMode = "10";
+      var modeButtons = Array.prototype.slice.call(document.querySelectorAll("[data-mode]"));
+      var inputs = Array.prototype.slice.call(document.querySelectorAll("input, textarea, select"));
+      var summary = document.getElementById("summary");
+      var printSheet = document.getElementById("printSheet");
+      var statusLine = document.getElementById("statusLine");
+      var pdfBtn = document.getElementById("pdfBtn");
+      var pdfTopBtn = document.getElementById("pdfTopBtn");
+      var visitDate = document.getElementById("visitDate");
+
+      if (!visitDate.value) {
+        visitDate.value = new Date().toISOString().slice(0, 10);
+      }
+
+      function value(id) {
+        var el = document.getElementById(id);
+        return el ? String(el.value || "").trim() : "";
+      }
+
+      function checkedFlags(selector) {
+        return Array.prototype.slice.call(document.querySelectorAll(selector || ".flag"))
+          .filter(function (item) { return item.checked; })
+          .map(function (item) { return item.getAttribute("data-text") || ""; })
+          .filter(Boolean);
+      }
+
+      function moduleLabel() {
+        return value("moduleSelect") === "epp"
+          ? "Entretien prenatal precoce / EPG"
+          : "Consultation preconceptionnelle";
+      }
+
+      function setMode(mode) {
+        currentMode = mode === "45" ? "45" : "10";
+        modeButtons.forEach(function (button) {
+          button.classList.toggle("active", button.getAttribute("data-mode") === currentMode);
+        });
+        pdfBtn.textContent = "Sauver PDF " + currentMode + " min";
+        pdfTopBtn.textContent = "Sauver PDF " + currentMode + " min";
+        generateSummary(false);
+      }
+
+      function line(label, text) {
+        return text ? label + " : " + text : "";
+      }
+
+      function bulletList(items, fallback) {
+        if (!items.length) return "- " + fallback;
+        return items.map(function (item) { return "- " + item; }).join("\n");
+      }
+
+      function todayFr() {
+        return new Date().toLocaleDateString("fr-FR");
+      }
+
+      function generateSummary(showStatus) {
+        var flags = checkedFlags(".flag");
+        var urgentFlags = checkedFlags(".urgent");
+        var patientBits = [
+          value("patientName") || "Patiente non renseignee",
+          value("patientAge") ? value("patientAge") + " ans" : "",
+          value("parity"),
+          value("pregnancyTerm")
+        ].filter(Boolean).join(" - ");
+
+        var lines = [];
+        lines.push("PRENATAL MG - SYNTHESE " + currentMode + " MIN");
+        lines.push(moduleLabel());
+        lines.push(line("Date", value("visitDate") || todayFr()));
+        lines.push(line("Medecin", value("doctorName")));
+        lines.push(line("Patiente", patientBits));
+        lines.push("");
+
+        if (urgentFlags.length) {
+          lines.push("ALERTE / ORIENTATION RAPIDE");
+          lines.push(bulletList(urgentFlags, "Aucun signal d'alerte coche."));
+          lines.push("");
+        }
+
+        lines.push("MOTIF ET CONTEXTE");
+        lines.push(value("reason") || "A completer.");
+        lines.push("");
+
+        lines.push("POINTS A RETENIR");
+        lines.push(bulletList(flags, "Aucun point structure coche. Reprendre les elements cliniques utiles."));
+        lines.push("");
+
+        if (currentMode === "10") {
+          lines.push("CONDUITE PRATIQUE IMMEDIATE");
+          lines.push("- Prioriser les risques maternels, traitements, immunites et situation psycho-sociale.");
+          lines.push("- Verifier les medicaments/expositions avec le CRAT ou un avis specialise si doute.");
+          lines.push("- Programmer les bilans, prescriptions et orientations indispensables.");
+          lines.push("");
+        } else {
+          lines.push("ANALYSE CLINIQUE DETAILLEE");
+          lines.push(line("Antecedents / traitements", value("history")) || "Antecedents et traitements a completer.");
+          lines.push(line("Examen / donnees", value("exam")) || "Donnees cliniques et biologiques a completer.");
+          lines.push(line("Psycho-social", value("psychosocial")) || "Contexte psycho-social a explorer ou a documenter.");
+          lines.push("");
+          lines.push("PREVENTION ET COORDINATION");
+          lines.push("- Prevention: folates, nutrition, addictions, activite, risques professionnels et environnementaux selon contexte.");
+          lines.push("- Vaccinations/immunites: verifier calendrier vaccinal et serologies selon recommandations.");
+          lines.push("- Coordination: sage-femme, obstetrique, specialiste, PMI/social selon les besoins identifies.");
+          lines.push("");
+        }
+
+        lines.push("PLAN PARTAGE");
+        lines.push(value("plan") || "Plan a completer: examens, prescriptions, orientation, rendez-vous et consignes.");
+        lines.push("");
+        lines.push("LIMITES");
+        lines.push("Synthese d'aide au dossier. A relire par le medecin. Ne remplace pas le jugement clinique ni les recommandations actualisees.");
+
+        summary.value = lines.filter(function (item, index, list) {
+          return !(item === "" && list[index - 1] === "");
+        }).join("\n");
+        updatePrintSheet(urgentFlags, flags);
+        if (showStatus !== false) {
+          showStatusMessage("Synthese mise a jour.");
+        }
+      }
+
+      function escapeHtml(text) {
+        return String(text || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function paragraph(text) {
+        return "<p>" + escapeHtml(text || "A completer.").replace(/\n/g, "<br>") + "</p>";
+      }
+
+      function listHtml(items, fallback) {
+        var source = items.length ? items : [fallback];
+        return "<ul>" + source.map(function (item) {
+          return "<li>" + escapeHtml(item) + "</li>";
+        }).join("") + "</ul>";
+      }
+
+      function updatePrintSheet(urgentFlags, flags) {
+        var patientBits = [
+          value("patientName") || "Patiente non renseignee",
+          value("patientAge") ? value("patientAge") + " ans" : "",
+          value("parity"),
+          value("pregnancyTerm")
+        ].filter(Boolean).join(" - ");
+        var html = "";
+        html += "<h1>Prenatal MG - Synthese " + escapeHtml(currentMode) + " min</h1>";
+        html += "<div class='meta'>";
+        html += escapeHtml(moduleLabel()) + "<br>";
+        html += "Date: " + escapeHtml(value("visitDate") || todayFr()) + " | ";
+        html += "Medecin: " + escapeHtml(value("doctorName") || "Non renseigne") + " | ";
+        html += "Patiente: " + escapeHtml(patientBits);
+        html += "</div>";
+        if (urgentFlags.length) {
+          html += "<div class='alert'><strong>Alerte / orientation rapide</strong>";
+          html += listHtml(urgentFlags, "Aucun signal d'alerte coche.");
+          html += "</div>";
+        }
+        html += "<h2>Motif et contexte</h2>" + paragraph(value("reason"));
+        html += "<h2>Points a retenir</h2>" + listHtml(flags, "Aucun point structure coche. Reprendre les elements cliniques utiles.");
+        if (currentMode === "45") {
+          html += "<h2>Antecedents et traitements</h2>" + paragraph(value("history"));
+          html += "<h2>Examen / donnees disponibles</h2>" + paragraph(value("exam"));
+          html += "<h2>Contexte psycho-social</h2>" + paragraph(value("psychosocial"));
+        }
+        html += "<h2>Plan partage</h2>" + paragraph(value("plan"));
+        html += "<p class='legal'>Synthese d'aide au dossier. A relire par le medecin. Ne remplace pas le jugement clinique, les recommandations actualisees, le CRAT ou les avis specialises lorsque necessaires.</p>";
+        printSheet.innerHTML = html;
+      }
+
+      function showStatusMessage(text) {
+        statusLine.textContent = text;
+        window.clearTimeout(showStatusMessage.timer);
+        showStatusMessage.timer = window.setTimeout(function () {
+          statusLine.textContent = "";
+        }, 3200);
+      }
+
+      function saveDraft() {
+        var data = {};
+        inputs.forEach(function (el) {
+          if (!el.id) return;
+          data[el.id] = el.type === "checkbox" ? el.checked : el.value;
+        });
+        data.currentMode = currentMode;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        showStatusMessage("Brouillon sauvegarde sur cet ordinateur.");
+      }
+
+      function loadDraft() {
+        try {
+          var data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          inputs.forEach(function (el) {
+            if (!el.id || data[el.id] === undefined) return;
+            if (el.type === "checkbox") {
+              el.checked = Boolean(data[el.id]);
+            } else {
+              el.value = data[el.id];
+            }
+          });
+          if (data.currentMode) setMode(data.currentMode);
+        } catch (err) {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+
+      function clearAll() {
+        if (!window.confirm("Effacer le formulaire et le brouillon local ?")) return;
+        inputs.forEach(function (el) {
+          if (el.type === "checkbox") {
+            el.checked = false;
+          } else if (el.id !== "visitDate") {
+            el.value = "";
+          }
+        });
+        visitDate.value = new Date().toISOString().slice(0, 10);
+        localStorage.removeItem(STORAGE_KEY);
+        setMode("10");
+        summary.value = "";
+        updatePrintSheet([], []);
+        showStatusMessage("Formulaire efface.");
+      }
+
+      function copySummary() {
+        generateSummary(false);
+        if (!summary.value) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(summary.value).then(function () {
+            showStatusMessage("Synthese copiee.");
+          }).catch(function () {
+            fallbackCopy();
+          });
+        } else {
+          fallbackCopy();
+        }
+      }
+
+      function fallbackCopy() {
+        summary.focus();
+        summary.select();
+        document.execCommand("copy");
+        showStatusMessage("Synthese copiee.");
+      }
+
+      function printPdf() {
+        generateSummary(false);
+        window.setTimeout(function () {
+          window.print();
+        }, 50);
+      }
+
+      modeButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          setMode(button.getAttribute("data-mode"));
+        });
+      });
+
+      document.getElementById("generateBtn").addEventListener("click", function () {
+        generateSummary(true);
+      });
+      document.getElementById("copyBtn").addEventListener("click", copySummary);
+      document.getElementById("pdfBtn").addEventListener("click", printPdf);
+      document.getElementById("pdfTopBtn").addEventListener("click", printPdf);
+      document.getElementById("saveDraftBtn").addEventListener("click", saveDraft);
+      document.getElementById("clearBtn").addEventListener("click", clearAll);
+      window.addEventListener("beforeprint", function () {
+        generateSummary(false);
+      });
+
+      inputs.forEach(function (el) {
+        el.addEventListener("change", function () {
+          generateSummary(false);
+        });
+      });
+
+      loadDraft();
+      generateSummary(false);
+    }());
+  </script>
+</body>
+</html>
