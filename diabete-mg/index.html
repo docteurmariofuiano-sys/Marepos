@@ -1,0 +1,3513 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diabète MG - Aide rapide à la décision</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7f4;
+      --panel: #ffffff;
+      --panel-2: #eef5f2;
+      --ink: #17211c;
+      --muted: #5b6861;
+      --line: #cfdad4;
+      --brand: #16615a;
+      --brand-2: #0f766e;
+      --blue: #244c88;
+      --green: #1d7d4f;
+      --green-bg: #e7f5ec;
+      --orange: #a45b13;
+      --orange-bg: #fff1df;
+      --red: #b42318;
+      --red-bg: #fde8e5;
+      --violet: #5946a8;
+      --shadow: 0 18px 45px rgba(33, 48, 40, .10);
+      --radius: 8px;
+      --mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      --sans: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(245,247,244,.94)),
+        repeating-linear-gradient(90deg, rgba(22,97,90,.035) 0, rgba(22,97,90,.035) 1px, transparent 1px, transparent 36px);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    a { color: var(--brand); }
+    .app {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 20px 16px;
+      background: #fcfdfb;
+      border-right: 1px solid var(--line);
+    }
+
+    .brand-block {
+      padding: 14px 12px 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+    .brand-block h1 {
+      margin: 0;
+      font-size: 1.28rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+      color: #102d2a;
+    }
+    .brand-block .sub {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .guardrail {
+      margin: 14px 0;
+      padding: 12px;
+      border: 1px solid #e4c044;
+      background: #fff8df;
+      border-radius: var(--radius);
+      color: #5a4102;
+      font-size: .88rem;
+    }
+
+    .tabs {
+      display: grid;
+      gap: 6px;
+    }
+    .tab-btn {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #2d3a34;
+      text-align: left;
+      cursor: pointer;
+    }
+    .tab-btn:hover { background: #eef5f2; }
+    .tab-btn.active {
+      background: #e2f0ec;
+      border-color: #b7d6ce;
+      color: #073f39;
+      font-weight: 700;
+    }
+    .tab-btn .num {
+      width: 24px;
+      height: 24px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #dce8e4;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+    .tab-btn.active .num { background: var(--brand); color: white; }
+
+    .mobile-tabs {
+      display: none;
+      padding: 10px 12px;
+      background: #fcfdfb;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .mobile-tabs select { width: 100%; }
+
+    main {
+      min-width: 0;
+      padding: 22px 28px 44px;
+    }
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .title h2 {
+      margin: 0;
+      font-size: clamp(1.38rem, 2vw, 2.05rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    .title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 920px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .grid { display: grid; gap: 14px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .card.compact { padding: 12px; box-shadow: none; }
+    .card h3, .card h4 {
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    .card h3 { font-size: 1.06rem; }
+    .card h4 { font-size: .98rem; }
+    .muted { color: var(--muted); }
+    .small { font-size: .86rem; }
+    .mono { font-family: var(--mono); }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: .89rem;
+      color: #27342e;
+      min-width: 0;
+    }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%;
+      border: 1px solid #bfcac4;
+      background: white;
+      color: var(--ink);
+      border-radius: var(--radius);
+      padding: 9px 10px;
+      min-height: 40px;
+      outline: none;
+    }
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      font-family: var(--sans);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(22, 97, 90, .15);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid #dbe3de;
+      border-radius: var(--radius);
+      background: #fbfcfb;
+      font-size: .88rem;
+    }
+    .check input { margin-top: 2px; }
+
+    .btn {
+      min-height: 40px;
+      border: 1px solid #b7c5be;
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      background: white;
+      color: #15312e;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn:hover { border-color: var(--brand); background: #f3faf7; }
+    .btn.primary {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+    .btn.primary:hover { background: #0f4e48; }
+    .btn.danger {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+    }
+    .btn.ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--brand);
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 12px;
+      min-height: 86px;
+    }
+    .metric .label { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+    .metric .value { margin-top: 6px; font-size: 1.35rem; font-weight: 800; }
+    .metric .hint { margin-top: 4px; color: var(--muted); font-size: .82rem; }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid #c9d7d1;
+      background: #f7faf8;
+      font-size: .82rem;
+      color: #283832;
+    }
+    .pill.green { border-color: #a6d8b9; background: var(--green-bg); color: #0e5130; }
+    .pill.orange { border-color: #f0c084; background: var(--orange-bg); color: #75400b; }
+    .pill.red { border-color: #f2aaa4; background: var(--red-bg); color: #7c1b12; }
+    .pill.blue { border-color: #b9cae8; background: #edf3ff; color: #183b70; }
+
+    .notice {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: #f9fbfa;
+      margin: 10px 0;
+    }
+    .notice.good { border-color: #a6d8b9; background: var(--green-bg); }
+    .notice.warn { border-color: #f0c084; background: var(--orange-bg); }
+    .notice.danger { border-color: #f2aaa4; background: var(--red-bg); }
+    .notice.info { border-color: #b9cae8; background: #edf3ff; }
+
+    .therapy-head {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+    .therapy-output {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .therapy-section {
+      border: 1px solid #d3ded8;
+      border-radius: var(--radius);
+      background: #fbfdfc;
+      padding: 12px;
+      min-width: 0;
+    }
+    .therapy-section.full { grid-column: 1 / -1; }
+    .therapy-section h4 {
+      margin: 0 0 8px;
+      color: #143c37;
+      font-size: .95rem;
+    }
+    .therapy-copy {
+      width: 100%;
+      min-height: 170px;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: .84rem;
+    }
+
+    .protocol-builder {
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+    .protocol-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .protocol-paper {
+      background: white;
+      border: 1px solid #cfdad4;
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .protocol-paper h2,
+    .protocol-paper h3 {
+      margin: 0 0 10px;
+      color: #102d2a;
+      letter-spacing: 0;
+    }
+    .protocol-paper h2 { font-size: 1.55rem; }
+    .protocol-paper h3 {
+      font-size: 1.05rem;
+      border-top: 1px solid #dbe4df;
+      padding-top: 12px;
+      margin-top: 14px;
+    }
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .protocol-line {
+      border: 1px solid #dbe4df;
+      background: #fbfdfc;
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+    .protocol-line strong { display: block; color: #153d37; }
+    .protocol-alert {
+      border: 2px solid var(--red);
+      background: var(--red-bg);
+      color: #74170f;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-weight: 800;
+      margin: 12px 0;
+    }
+    .protocol-note {
+      border: 1px solid #e4c044;
+      background: #fff8df;
+      border-radius: var(--radius);
+      padding: 10px;
+      color: #5a4102;
+      margin: 10px 0;
+    }
+    .protocol-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: .9rem;
+    }
+    .protocol-table th,
+    .protocol-table td {
+      border: 1px solid #cfdad4;
+      padding: 7px;
+      vertical-align: top;
+    }
+    .protocol-table th {
+      background: #edf5f1;
+      color: #143c37;
+    }
+    .week-table td {
+      height: 34px;
+    }
+    .protocol-copy {
+      width: 100%;
+      min-height: 190px;
+      font-family: var(--mono);
+      font-size: .84rem;
+    }
+
+    .list {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+    .list li { margin: 5px 0; }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+    }
+    summary {
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 800;
+      color: #19332f;
+      background: #f7faf8;
+    }
+    details .inside { padding: 14px; border-top: 1px solid var(--line); }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: .86rem;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #edf5f1;
+      color: #173b36;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .table-wrap { max-height: 520px; overflow: auto; border-radius: var(--radius); }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .source-list a {
+      display: inline-block;
+      margin: 2px 8px 2px 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      .side { display: none; }
+      .mobile-tabs { display: block; }
+      main { padding: 18px 14px 36px; }
+      .grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+      .status-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { display: grid; }
+      .actions { justify-content: stretch; }
+      .actions .btn { flex: 1 1 130px; }
+      .grid.two, .grid.three, .grid.four, .check-grid, .status-row { grid-template-columns: 1fr; }
+      .card { padding: 13px; }
+      table { min-width: 780px; }
+    }
+
+    @media print {
+      .side, .mobile-tabs, .actions, .tab-btn { display: none !important; }
+      .app { display: block; }
+      main { padding: 0; }
+      .tab-panel { display: block; page-break-inside: avoid; }
+      .card, .metric { box-shadow: none; }
+      body { background: white; }
+      body.protocol-printing main > *:not(.protocol-print-host),
+      body.protocol-printing .topbar,
+      body.protocol-printing .status-row,
+      body.protocol-printing .footer-note,
+      body.protocol-printing .tab-panel { display: none !important; }
+      body.protocol-printing .protocol-print-host {
+        display: block !important;
+        padding: 0;
+      }
+      body.protocol-printing .protocol-paper {
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+      }
+      body.protocol-printing .protocol-toolbar,
+      body.protocol-printing .protocol-builder details,
+      body.protocol-printing .protocol-copy { display: none !important; }
+      .protocol-table { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="side">
+      <div class="brand-block">
+        <h1>Diabète MG<br>Aide rapide à la décision</h1>
+        <p class="sub">Outil local pour consultation de médecine générale.</p>
+      </div>
+      <div class="guardrail">
+        Outil d’aide à la décision médicale. Ne remplace pas les recommandations officielles, le RCP, le Vidal, l’ANSM, la HAS, l’avis diabétologique ni le jugement clinique du médecin.
+      </div>
+      <nav class="tabs" id="tabs"></nav>
+    </aside>
+
+    <div>
+      <div class="mobile-tabs">
+        <select id="mobileTab"></select>
+      </div>
+
+      <main>
+        <div class="topbar">
+          <div class="title">
+            <h2 id="panelTitle">Accueil / Profil patient</h2>
+            <p id="panelLead">Profil clinique, objectifs personnalisés, risques et contexte de décision.</p>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="generateBtn">Générer synthèse</button>
+            <button class="btn" id="copySummaryBtn">Copier synthèse</button>
+            <button class="btn" id="printBtn">Imprimer</button>
+            <button class="btn danger" id="clearBtn">Effacer toutes les données</button>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <div class="metric">
+            <div class="label">IMC</div>
+            <div class="value" id="metricBmi">--</div>
+            <div class="hint" id="metricBmiHint">Poids et taille requis</div>
+          </div>
+          <div class="metric">
+            <div class="label">Objectif HbA1c</div>
+            <div class="value" id="metricTarget">--</div>
+            <div class="hint">à valider selon contexte</div>
+          </div>
+          <div class="metric">
+            <div class="label">Risque dominant</div>
+            <div class="value" id="metricRisk">--</div>
+            <div class="hint" id="metricRiskHint">Analyse en attente</div>
+          </div>
+          <div class="metric">
+            <div class="label">Traitements détectés</div>
+            <div class="value" id="metricMeds">0</div>
+            <div class="hint" id="metricMedsHint">Ordonnance non analysée</div>
+          </div>
+        </div>
+
+        <section class="tab-panel active" data-panel="profile">
+          <div class="grid">
+            <details open>
+              <summary>Identité clinique</summary>
+              <div class="inside grid four">
+                <label>Âge <input id="age" type="number" min="0" max="120" placeholder="ex. 64"></label>
+                <label>Sexe
+                  <select id="sex">
+                    <option value="">Non précisé</option>
+                    <option>Femme</option>
+                    <option>Homme</option>
+                    <option>Autre / non binaire</option>
+                  </select>
+                </label>
+                <label>Poids (kg) <input id="weight" type="number" min="0" step="0.1" placeholder="ex. 92"></label>
+                <label>Taille (cm) <input id="height" type="number" min="0" step="1" placeholder="ex. 171"></label>
+                <label>IMC calculé <input id="bmi" type="text" readonly></label>
+                <label>Tour de taille (cm) <input id="waist" type="number" min="0" step="1"></label>
+                <label>Fragilité
+                  <select id="fragility">
+                    <option value="vigoureux">Vigoureux</option>
+                    <option value="fragile">Fragile</option>
+                    <option value="tres-fragile">Très fragile</option>
+                    <option value="dependant">Dépendant</option>
+                  </select>
+                </label>
+                <label>Vie en institution
+                  <select id="institution"><option value="non">Non</option><option value="oui">Oui</option></select>
+                </label>
+                <label>Grossesse <select id="pregnancy"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Projet de grossesse <select id="pregnancyPlan"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Allaitement <select id="breastfeeding"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Profession à risque hypoglycémique
+                  <select id="riskJob"><option value="non">Non</option><option value="oui">Oui</option></select>
+                </label>
+              </div>
+            </details>
+
+            <details open>
+              <summary>Données diabétologiques</summary>
+              <div class="inside grid four">
+                <label>Type de diabète
+                  <select id="diabetesType">
+                    <option value="dt2">Type 2</option>
+                    <option value="dt1">Type 1</option>
+                    <option value="lada">LADA suspect</option>
+                    <option value="cortico">Diabète cortico-induit</option>
+                    <option value="secondaire">Diabète secondaire</option>
+                    <option value="incertain">Incertain</option>
+                  </select>
+                </label>
+                <label>Ancienneté du diabète <input id="duration" type="text" placeholder="ex. 7 ans"></label>
+                <label>HbA1c actuelle (%) <input id="hba1c" type="number" min="3" max="18" step="0.1"></label>
+                <label>HbA1c précédente (%) <input id="hba1cPrev" type="number" min="3" max="18" step="0.1"></label>
+                <label>Objectif HbA1c actuel (%) <input id="targetUser" type="number" min="5" max="12" step="0.1"></label>
+                <label>Glycémie à jeun moyenne (g/L) <input id="fastingGlucose" type="number" min="0" step="0.01"></label>
+                <label>Glycémies avant repas (g/L) <input id="preMeal" type="text" placeholder="ex. 1.25, 1.48, 1.32"></label>
+                <label>Glycémies 2h après repas (g/L) <input id="postMeal" type="text" placeholder="ex. 1.90, 2.10"></label>
+                <label>Glycémie au coucher (g/L) <input id="bedGlucose" type="number" min="0" step="0.01"></label>
+                <label>Variabilité glycémique
+                  <select id="variability">
+                    <option value="">Non précisée</option>
+                    <option>Faible</option>
+                    <option>Modérée</option>
+                    <option>Importante</option>
+                  </select>
+                </label>
+                <label>Hypoglycémies <select id="hypo"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Hypoglycémies sévères <select id="severeHypo"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Hypoglycémies nocturnes <select id="nightHypo"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Cétonémie ou cétonurie
+                  <select id="ketones"><option value="non-faite">Non faite</option><option value="negative">Négative</option><option value="positive">Positive</option></select>
+                </label>
+              </div>
+              <div class="inside">
+                <h4>Symptômes</h4>
+                <div class="check-grid" id="symptomChecks"></div>
+              </div>
+            </details>
+
+            <details>
+              <summary>Rein, cardiovasculaire, complications</summary>
+              <div class="inside grid four">
+                <label>Créatinine <input id="creatinine" type="text" placeholder="µmol/L ou mg/L"></label>
+                <label>DFG CKD-EPI (mL/min/1,73 m²) <input id="egfr" type="number" min="0" max="160" step="1"></label>
+                <label>Albuminurie <input id="albuminuria" type="text" placeholder="ex. 120 mg/g"></label>
+                <label>Ratio albumine/créatinine urinaire <input id="acr" type="text"></label>
+                <label>Stade IRC
+                  <select id="ckdStage">
+                    <option value="">Non précisé</option>
+                    <option value="normale">Normale</option>
+                    <option value="legere">Légère</option>
+                    <option value="moderee">Modérée</option>
+                    <option value="severe">Sévère</option>
+                    <option value="terminale">Terminale / dialyse</option>
+                  </select>
+                </label>
+                <label>Progression du DFG
+                  <select id="egfrTrend"><option value="">Non précisée</option><option>Stable</option><option>Dégradation rapide</option></select>
+                </label>
+              </div>
+              <div class="inside grid two">
+                <div>
+                  <h4>Cardiovasculaire</h4>
+                  <div class="check-grid" id="cvChecks"></div>
+                </div>
+                <div>
+                  <h4>Complications diabétiques</h4>
+                  <div class="check-grid" id="complicationChecks"></div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="order">
+          <div class="split">
+            <div class="card">
+              <h3>Copier-coller ordonnance</h3>
+              <label>Collez ici l’ordonnance actuelle du patient
+                <textarea id="orderText" placeholder="Ex. Metformine 1000 mg matin et soir&#10;Diamicron 60 mg le matin&#10;Ozempic 0,5 mg 1 injection / semaine"></textarea>
+              </label>
+              <div class="pill-row" style="margin-top: 12px;">
+                <button class="btn primary" id="analyzeOrderBtn">Analyser ordonnance</button>
+                <button class="btn" id="clearOrderBtn">Vider ordonnance</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Traitements détectés</h3>
+              <div id="detectedMeds" class="grid"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top: 14px;">
+            <h3>Conseil thérapeutique personnalisé diabète</h3>
+            <div class="therapy-head">
+              <label>Demande principale du médecin
+                <select id="therapyRequest">
+                  <option value="introduire">Introduire un traitement</option>
+                  <option value="augmenter">Augmenter un traitement</option>
+                  <option value="diminuer">Diminuer un traitement</option>
+                  <option value="remplacer">Arrêter ou remplacer un traitement</option>
+                  <option value="corriger">Corriger une ordonnance incohérente</option>
+                  <option value="renouveler">Vérifier une ordonnance avant renouvellement</option>
+                  <option value="hba1c">Optimiser le traitement selon HbA1c</option>
+                  <option value="gaj">Optimiser le traitement selon glycémie à jeun</option>
+                  <option value="postprandial">Optimiser le traitement selon glycémies post-prandiales</option>
+                  <option value="basale">Adapter l’insuline lente</option>
+                  <option value="rapide">Adapter l’insuline rapide</option>
+                  <option value="glp">Évaluer l’intérêt d’un GLP-1 / tirzépatide / Mounjaro / Wegovy</option>
+                  <option value="sglt2">Évaluer l’intérêt d’un SGLT2</option>
+                  <option value="fragile">Sécuriser le traitement chez sujet âgé ou insuffisant rénal</option>
+                  <option value="avis">Savoir s’il faut demander un avis diabétologique</option>
+                  <option value="urgence">Situation urgente ou doute clinique</option>
+                </select>
+              </label>
+              <div class="pill-row">
+                <button class="btn primary" id="therapyAdviceBtn">Générer conseil</button>
+                <button class="btn" id="copyTherapyAdviceBtn">Copier conseil</button>
+              </div>
+            </div>
+            <div class="notice warn">
+              Conseil indicatif d’aide à la décision. À valider par le médecin selon le contexte clinique, le RCP, le DFG, les contre-indications, les recommandations actualisées et les préférences du patient.
+            </div>
+            <div id="therapyAdviceOutput" class="therapy-output"></div>
+            <div class="protocol-builder">
+              <h3>Générateur de protocole d’insuline patient / infirmière</h3>
+              <div class="notice warn">
+                Protocole personnalisé d’aide à l’administration de l’insuline. À appliquer uniquement selon prescription médicale. En cas de doute, contacter le médecin prescripteur.
+              </div>
+              <div class="protocol-toolbar">
+                <button class="btn primary" id="generateInsulinProtocolBtn">Générer protocole insuline patient / infirmière</button>
+                <button class="btn" id="copyInsulinPatientBtn">Copier version patient</button>
+                <button class="btn" id="copyInsulinNurseBtn">Copier version infirmière</button>
+                <button class="btn" id="copyInsulinRecordBtn">Copier dossier</button>
+                <button class="btn" id="printInsulinProtocolBtn">Imprimer / PDF</button>
+              </div>
+              <details open>
+                <summary>Données du protocole à vérifier</summary>
+                <div class="inside grid">
+                  <div>
+                    <h4>Patient et contacts</h4>
+                    <div class="grid four">
+                      <label>Nom <input id="protoLastName" type="text"></label>
+                      <label>Prénom <input id="protoFirstName" type="text"></label>
+                      <label>Date de naissance <input id="protoBirthDate" type="date"></label>
+                      <label>Date du protocole <input id="protoDate" type="date"></label>
+                      <label>Médecin prescripteur <input id="protoDoctor" type="text"></label>
+                      <label>Téléphone cabinet <input id="protoDoctorPhone" type="text"></label>
+                      <label>Téléphone infirmière <input id="protoNursePhone" type="text"></label>
+                      <label>Personne à prévenir <input id="protoEmergencyContact" type="text"></label>
+                      <label>Objectif glycémie à jeun <input id="protoTargetFasting" type="text" value="0,80 à 1,30 g/L"></label>
+                      <label>Objectif avant repas <input id="protoTargetPreMeal" type="text" value="0,80 à 1,30 g/L"></label>
+                      <label>Objectif au coucher <input id="protoTargetBed" type="text" value="1,00 à 1,80 g/L"></label>
+                      <label>Type de diabète
+                        <select id="protoDiabetesType"><option>DT2</option><option>DT1</option><option>Autre</option></select>
+                      </label>
+                      <label>Autonomie
+                        <select id="protoAutonomy"><option>Autonome</option><option>Infirmière</option><option>Aidant</option><option>EHPAD</option></select>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Insuline basale</h4>
+                    <div class="grid four">
+                      <label>Insuline lente
+                        <select id="protoBasalName"><option value="">Non précisée</option><option>Lantus</option><option>Abasaglar</option><option>Toujeo</option><option>Tresiba</option><option>Levemir</option><option>Insulatard</option><option>Autre</option></select>
+                      </label>
+                      <label>Autre insuline lente <input id="protoBasalOther" type="text"></label>
+                      <label>Dose actuelle (UI) <input id="protoBasalDose" type="number" min="0" step="1"></label>
+                      <label>Horaire d’injection <input id="protoBasalTime" type="text" placeholder="ex. 20h"></label>
+                      <label>Injection le soir <select id="protoBasalEvening"><option>Oui</option><option>Non</option></select></label>
+                      <label>Dose de la semaine <input id="protoBasalWeekDose" type="text" placeholder="ex. 18 UI chaque soir"></label>
+                      <label>Règle d’adaptation
+                        <select id="protoBasalRule"><option value="standard">Standard +2 / -2 UI</option><option value="prudente">Prudente sujet fragile</option><option value="fixe">Dose fixe sans adaptation autonome</option><option value="personnalisee">Personnalisée</option></select>
+                      </label>
+                      <label>Glycémies à jeun semaine <input id="protoFastingWeek" type="text" placeholder="ex. 1.42, 1.56, 1.61"></label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Insuline rapide</h4>
+                    <div class="grid four">
+                      <label>Insuline rapide
+                        <select id="protoRapidName"><option value="">Non précisée</option><option>NovoRapid</option><option>Fiasp</option><option>Humalog</option><option>Lyumjev</option><option>Apidra</option><option>Actrapid</option><option>Autre</option></select>
+                      </label>
+                      <label>Autre insuline rapide <input id="protoRapidOther" type="text"></label>
+                      <label>Dose matin (UI) <input id="protoRapidMorning" type="number" min="0" step="1"></label>
+                      <label>Dose midi (UI) <input id="protoRapidNoon" type="number" min="0" step="1"></label>
+                      <label>Dose soir (UI) <input id="protoRapidEvening" type="number" min="0" step="1"></label>
+                      <label>Correction glycémie <select id="protoGlyCorrection"><option>Oui</option><option>Non</option></select></label>
+                      <label>Correction repas <select id="protoMealCorrection"><option>Oui</option><option>Non</option></select></label>
+                      <label>Correction max autorisée (UI) <input id="protoMaxCorrection" type="number" min="0" step="1" value="4"></label>
+                      <label>Consigne si repas sauté <input id="protoSkippedMeal" type="text" value="Ne pas faire l’insuline rapide, sauf correction spécifique prescrite."></label>
+                      <label>Consigne si sport prévu <input id="protoSportAdvice" type="text" value="Prévenir l’infirmière/médecin, contrôler la glycémie et prévoir collation selon protocole."></label>
+                      <label>Glycémies avant midi <input id="protoBeforeNoonWeek" type="text" placeholder="ex. 1.45, 1.62"></label>
+                      <label>Glycémies avant dîner <input id="protoBeforeDinnerWeek" type="text"></label>
+                      <label>Glycémies au coucher <input id="protoBedWeek" type="text"></label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Seuils et corrections personnalisables</h4>
+                    <div class="grid four">
+                      <label>Hypoglycémie si &lt; <input id="protoLowThreshold" type="number" min="0" step="0.01" value="0.70"></label>
+                      <label>Dose identique jusqu’à <input id="protoNoCorrectionHigh" type="number" min="0" step="0.01" value="1.80"></label>
+                      <label>Correction haute si &gt; <input id="protoHighCorrectionThreshold" type="number" min="0" step="0.01" value="1.80"></label>
+                      <label>Contrôle cétones si &gt; <input id="protoKetoneThreshold" type="number" min="0" step="0.01" value="2.50"></label>
+                      <label>Hyperglycémie persistante si &gt; <input id="protoPersistentHyper" type="number" min="0" step="0.01" value="3.00"></label>
+                      <label>Correction glycémie haute (UI) <input id="protoHighCorrectionDose" type="number" step="1" value="2"></label>
+                      <label>Repas léger (UI) <input id="protoLightMealCorrection" type="number" step="1" value="-2"></label>
+                      <label>Repas copieux (UI) <input id="protoLargeMealCorrection" type="number" step="1" value="2"></label>
+                      <label>Seuil hebdo basale haut <input id="protoBasalHighThreshold" type="number" min="0" step="0.01" value="1.50"></label>
+                      <label>Nb valeurs hautes basale <input id="protoBasalHighCount" type="number" min="1" step="1" value="3"></label>
+                      <label>Variation basale + (UI) <input id="protoBasalIncrease" type="number" step="1" value="2"></label>
+                      <label>Variation basale - (UI) <input id="protoBasalDecrease" type="number" step="1" value="2"></label>
+                      <label>Seuil rapide haut <input id="protoRapidHighThreshold" type="number" min="0" step="0.01" value="1.30"></label>
+                      <label>Variation rapide (UI) <input id="protoRapidStep" type="number" step="1" value="2"></label>
+                      <label>Objectif hebdo
+                        <select id="protoGoalProfile"><option value="standard">Standard</option><option value="strict">Strict</option><option value="fragile">Sujet âgé/fragile</option><option value="grossesse">Grossesse</option><option value="personnalise">Personnalisé</option></select>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Sécurité</h4>
+                    <div class="grid four">
+                      <label>Hypoglycémies récentes <select id="protoRecentHypo"><option>Non</option><option>Oui</option></select></label>
+                      <label>Hypoglycémies nocturnes <select id="protoNightHypo"><option>Non</option><option>Oui</option></select></label>
+                      <label>Cétones disponibles <select id="protoKetonesAvailable"><option>Oui</option><option>Non</option></select></label>
+                      <label>Glucagon disponible <select id="protoGlucagon"><option>Non</option><option>Oui</option></select></label>
+                      <label>Patient formé au resucrage <select id="protoPatientTrained"><option>Oui</option><option>Non</option></select></label>
+                      <label>Infirmière formée <select id="protoNurseTrained"><option>Oui</option><option>Non</option></select></label>
+                      <label>Troubles cognitifs <select id="protoCognitive"><option>Non</option><option>Oui</option></select></label>
+                      <label>Vit seul <select id="protoLivesAlone"><option>Non</option><option>Oui</option></select></label>
+                    </div>
+                  </div>
+                </div>
+              </details>
+              <div id="insulinProtocolOutput" class="grid"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="dt2">
+          <div class="grid two">
+            <div class="card">
+              <h3>Diabète type 2 - Décision thérapeutique</h3>
+              <div id="dt2Analysis"></div>
+            </div>
+            <div class="card">
+              <h3>Objectif HbA1c personnalisé</h3>
+              <div id="hba1cGoalCard"></div>
+              <div class="notice info">
+                Objectif proposé : HbA1c autour de <strong id="goalInline">...</strong>, à valider selon le contexte clinique.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="dt1">
+          <div class="grid two">
+            <div class="card">
+              <h3>Diabète type 1 - Renouvellement sécurisé</h3>
+              <div class="check-grid" id="dt1Checks"></div>
+            </div>
+            <div class="card">
+              <h3>Analyse DT1</h3>
+              <div id="dt1Analysis"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="basal">
+          <div class="grid two">
+            <div class="card">
+              <h3>Insuline basale</h3>
+              <div class="grid three">
+                <label>Insuline lente <input id="basalType" type="text" placeholder="glargine, dégludec..."></label>
+                <label>Dose actuelle (UI/j) <input id="basalDose" type="number" min="0" step="1"></label>
+                <label>Horaire <input id="basalTime" type="text" placeholder="soir, matin..."></label>
+                <label>GAJ 3 à 7 derniers jours <input id="basalFastingList" type="text" placeholder="1.42, 1.51, 1.58"></label>
+                <label>Objectif GAJ bas (g/L) <input id="fastingTargetLow" type="number" min="0" step="0.01" value="0.80"></label>
+                <label>Objectif GAJ haut (g/L) <input id="fastingTargetHigh" type="number" min="0" step="0.01" value="1.30"></label>
+              </div>
+              <div class="pill-row" style="margin-top: 12px;">
+                <button class="btn primary" id="basalBtn">Générer conduite à tenir</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Conduite à tenir basale</h3>
+              <div id="basalAnalysis"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="rapid">
+          <div class="grid two">
+            <div class="card">
+              <h3>Insuline rapide / prandiale</h3>
+              <div class="grid three">
+                <label>Insuline rapide utilisée <input id="rapidType" type="text" placeholder="aspart, lispro..."></label>
+                <label>Dose matin (UI) <input id="rapidMorning" type="number" min="0" step="1"></label>
+                <label>Dose midi (UI) <input id="rapidNoon" type="number" min="0" step="1"></label>
+                <label>Dose soir (UI) <input id="rapidEvening" type="number" min="0" step="1"></label>
+                <label>Glycémie avant repas (g/L) <input id="rapidBefore" type="number" min="0" step="0.01"></label>
+                <label>Glycémie 2h après repas (g/L) <input id="rapidAfter" type="number" min="0" step="0.01"></label>
+                <label>Glycémie avant repas suivant (g/L) <input id="rapidNext" type="number" min="0" step="0.01"></label>
+                <label>Repas
+                  <select id="mealSize"><option value="normal">Normal</option><option value="absent">Absent</option><option value="leger">Léger</option><option value="copieux">Copieux</option></select>
+                </label>
+                <label>Sport prévu <select id="sportPlanned"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Alcool <select id="alcohol"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Autonomie patient <select id="autonomy"><option value="bonne">Bonne</option><option value="limitee">Limitée</option><option value="absente">Absente</option></select></label>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Conduite à tenir rapide</h3>
+              <div id="rapidAnalysis"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="glp">
+          <div class="grid two">
+            <div class="card">
+              <h3>aGLP-1 / GIP-GLP-1 : diabète, obésité, Mounjaro, Wegovy</h3>
+              <div class="notice warn">
+                Depuis le 23 juin 2025, Wegovy, Mounjaro et Saxenda peuvent être prescrits en initiation et renouvellement par tout médecin, dans le respect strict de leur AMM. Ces traitements restent des traitements de seconde intention, après échec d’une prise en charge nutritionnelle bien conduite, en association à un régime hypocalorique et à une activité physique. Ils ne doivent pas être utilisés à visée esthétique.
+              </div>
+              <div class="notice info">Vérifier systématiquement RCP, ANSM, HAS, Ameli, Vidal, statut de remboursement et conditions actualisées avant prescription.</div>
+              <div class="grid three">
+                <label>Indication recherchée
+                  <select id="glpIndication"><option value="dt2">DT2</option><option value="obesite">Obésité / contrôle pondéral</option><option value="mixte">DT2 + obésité</option></select>
+                </label>
+                <label>Perte de poids déjà obtenue (%) <input id="weightLoss" type="number" min="0" step="0.1"></label>
+                <label>Durée prise en charge nutritionnelle <input id="nutritionDuration" type="text" placeholder="ex. 6 mois"></label>
+                <label>Activité physique actuelle <input id="physicalActivity" type="text" placeholder="ex. marche 30 min x4/semaine"></label>
+                <label>Suivi nutritionnel mis en place <select id="nutritionFollow"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Échec documenté MHD <select id="nutritionFailure"><option value="non">Non</option><option value="oui">Oui</option></select></label>
+                <label>Dose actuelle <input id="glpDose" type="text" placeholder="ex. Mounjaro 5 mg"></label>
+                <label>Date dernière injection <input id="glpLastInjection" type="date"></label>
+                <label>Date dernière augmentation <input id="glpLastIncrease" type="date"></label>
+              </div>
+              <h4 style="margin-top: 14px;">Questions de sécurité</h4>
+              <div class="check-grid" id="glpChecks"></div>
+            </div>
+            <div class="card">
+              <h3>Analyse aGLP-1 / Mounjaro / Wegovy</h3>
+              <div id="glpAnalysis"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="comorb">
+          <div class="grid two">
+            <div class="card">
+              <h3>Comorbidités</h3>
+              <div id="comorbCards" class="grid"></div>
+            </div>
+            <div class="card">
+              <h3>Points cardio-réno-métaboliques</h3>
+              <div id="comorbAnalysis"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="alerts">
+          <div class="grid two">
+            <div class="card">
+              <h3>Alertes / contre-indications</h3>
+              <div id="alertList"></div>
+            </div>
+            <div class="card">
+              <h3>Protocole hypoglycémie visible partout</h3>
+              <div class="notice danger">
+                Hypoglycémie &lt; 0,70 g/L : arrêter l’activité, prendre 15 g de glucides rapides, recontrôler à 15 minutes, répéter si besoin, puis glucides lents si repas éloigné. Trouble de conscience : appel 15, glucagon si disponible et entourage formé, ne rien donner par la bouche.
+              </div>
+              <ul class="list">
+                <li>Rechercher repas sauté, dose trop forte, sulfamide, sport, alcool, perte de poids, IRC, erreur d’injection.</li>
+                <li>Confusion insuline rapide/lente : alerte de sécurité et vérification immédiate du schéma.</li>
+                <li>Hyperglycémie + cétones positives ou vomissements : situation urgente, surtout DT1.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="summary">
+          <div class="grid">
+            <div class="card">
+              <h3>Synthèse médicale copiable</h3>
+              <textarea id="summaryText" class="mono" style="min-height: 420px;"></textarea>
+              <div class="pill-row" style="margin-top: 12px;">
+                <button class="btn primary" id="refreshSummaryBtn">Générer synthèse</button>
+                <button class="btn" id="copySummaryBtn2">Copier dans le dossier</button>
+                <button class="btn" id="downloadTxtBtn">Exporter texte</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Documentation courte</h3>
+              <ol class="list">
+                <li>Renseigner le profil patient, puis coller l’ordonnance si disponible.</li>
+                <li>Lire d’abord les alertes rouges, puis les options DT2/DT1/insuline/aGLP-1.</li>
+                <li>Copier uniquement une synthèse validée médicalement dans le dossier patient.</li>
+                <li>Aucune donnée n’est stockée par défaut ni envoyée à un serveur externe.</li>
+              </ol>
+              <div class="notice warn">
+                Les règles intégrées sont des garde-fous d’aide au raisonnement. Toute modification de prescription nécessite validation par le médecin et vérification des sources officielles actualisées.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="meds">
+          <div class="grid">
+            <div class="card">
+              <h3>Base médicaments modifiable</h3>
+              <div class="grid three">
+                <label>Recherche <input id="medSearch" type="text" placeholder="DCI, marque, classe..."></label>
+                <label>Filtre classe
+                  <select id="classFilter"><option value="">Toutes classes</option></select>
+                </label>
+                <div style="align-self: end;" class="pill-row">
+                  <button class="btn" id="showJsonBtn">Afficher JSON</button>
+                  <button class="btn" id="downloadJsonBtn">Exporter JSON</button>
+                </div>
+              </div>
+              <div class="table-wrap" style="margin-top: 14px;">
+                <table id="medTable"></table>
+              </div>
+            </div>
+            <div class="card" id="jsonEditorCard" style="display:none;">
+              <h3>Édition JSON temporaire</h3>
+              <textarea id="medJson" class="mono" style="min-height: 340px;"></textarea>
+              <div class="pill-row" style="margin-top: 12px;">
+                <button class="btn primary" id="loadJsonBtn">Charger cette base</button>
+                <button class="btn" id="resetJsonBtn">Restaurer base intégrée</button>
+              </div>
+              <p class="small muted">Modification en mémoire uniquement. Export volontaire possible.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="tests">
+          <div class="grid two">
+            <div class="card">
+              <h3>Cas tests intégrés</h3>
+              <div id="testCases" class="grid"></div>
+            </div>
+            <div class="card">
+              <h3>Règles, sources et points à valider</h3>
+              <div id="rulesDoc"></div>
+            </div>
+          </div>
+        </section>
+
+        <p class="footer-note">RGPD : outil local, sans stockage persistant par défaut. Effacer toutes les données avant de changer de patient. Export texte uniquement sur action volontaire.</p>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const PANELS = [
+      ["profile", "Accueil / Profil patient", "Profil clinique, objectifs personnalisés, risques et contexte de décision."],
+      ["order", "Copier-coller ordonnance", "Analyse locale des traitements antidiabétiques et des associations à risque."],
+      ["dt2", "Diabète type 2 - Décision thérapeutique", "Options d’optimisation selon HbA1c, poids, rein, cœur et sécurité."],
+      ["dt1", "Diabète type 1 - Renouvellement sécurisé", "Check-list de cohérence et repérage des situations dangereuses."],
+      ["basal", "Insuline lente", "Introduction prudente et titration simple de l’insuline basale."],
+      ["rapid", "Insuline rapide", "Aide à l’adaptation prandiale et aux corrections prudentes."],
+      ["glp", "aGLP-1 / Obésité / Mounjaro / Wegovy", "Éligibilité prudente, alertes rouges et suivi."],
+      ["comorb", "Comorbidités", "Cartes de décision cardio-rénales, obésité, fragilité et complications."],
+      ["alerts", "Alertes / contre-indications", "Situations rouges, associations inutiles et protocoles de sécurité."],
+      ["summary", "Synthèse copiable", "Résumé court pour dossier patient après validation médicale."],
+      ["meds", "Base médicaments", "Base interne JSON modifiable et exportable."],
+      ["tests", "Cas tests", "Douze profils de validation intégrés."],
+    ];
+
+    const SYMPTOMS = [
+      ["polyurie", "Polyurie"],
+      ["polydipsie", "Polydipsie"],
+      ["weightLossSymptom", "Amaigrissement"],
+      ["asthenia", "Asthénie"],
+      ["recurrentInfections", "Infections répétées"],
+      ["vomiting", "Vomissements"],
+      ["dehydration", "Déshydratation"],
+      ["confusion", "Confusion"],
+      ["severeInfection", "Infection sévère"],
+      ["chestPain", "Douleur thoracique"],
+      ["strokeSigns", "AVC / déficit neurologique"],
+      ["sepsis", "Sepsis suspect"],
+      ["acuteKidney", "Insuffisance rénale aiguë suspecte"],
+    ];
+
+    const CV_ITEMS = [
+      ["mi", "Infarctus du myocarde"],
+      ["cad", "Coronaropathie"],
+      ["angina", "Angor"],
+      ["stent", "Stent / pontage"],
+      ["stroke", "AVC / AIT"],
+      ["pad", "Artériopathie des membres inférieurs"],
+      ["heartFailure", "Insuffisance cardiaque"],
+      ["hypertension", "HTA"],
+      ["dyslipidemia", "Dyslipidémie"],
+      ["smoking", "Tabagisme actif"],
+      ["formerSmoking", "Ancien tabagisme"],
+      ["obesity", "Obésité"],
+      ["sleepApnea", "Apnée du sommeil"],
+      ["nafld", "NAFLD / MASH"],
+      ["highCvRisk", "Haut risque cardiovasculaire"],
+      ["veryHighCvRisk", "Très haut risque cardiovasculaire"],
+    ];
+
+    const COMPLICATION_ITEMS = [
+      ["retinopathy", "Rétinopathie"],
+      ["neuropathy", "Neuropathie"],
+      ["diabeticFoot", "Pied diabétique"],
+      ["footUlcer", "Antécédent d’ulcère du pied"],
+      ["amputation", "Antécédent d’amputation"],
+      ["microalbuminuria", "Microalbuminurie"],
+      ["macroalbuminuria", "Macroalbuminurie"],
+      ["gastroparesis", "Gastroparésie"],
+      ["cognitive", "Troubles cognitifs"],
+      ["ed", "Dysfonction érectile"],
+      ["recurrentUti", "Infections urinaires récidivantes"],
+      ["recurrentGenital", "Infections génitales récidivantes"],
+    ];
+
+    const DT1_CHECKS = [
+      ["dt1BasalPresent", "Insuline basale présente"],
+      ["dt1RapidPresent", "Insuline rapide présente si basal-bolus"],
+      ["dt1DosesCoherent", "Doses cohérentes"],
+      ["dt1PensEnough", "Nombre de stylos suffisant"],
+      ["dt1Needles", "Aiguilles"],
+      ["dt1Sensor", "Capteur ou bandelettes"],
+      ["dt1Meter", "Lecteur"],
+      ["dt1Glucagon", "Glucagon"],
+      ["dt1KetoneStrips", "Bandelettes cétones"],
+      ["dt1HypoPlan", "Protocole hypo"],
+      ["dt1HyperPlan", "Protocole hyperglycémie"],
+      ["dt1Diabeto", "Suivi diabétologue"],
+      ["dt1Eyes", "Fond d’œil"],
+      ["dt1Kidney", "Rein"],
+      ["dt1Feet", "Pieds"],
+      ["dt1Bp", "Tension"],
+      ["dt1Lipids", "Lipides"],
+      ["dt1Pregnancy", "Contraception/grossesse si concernée"],
+    ];
+
+    const GLP_CHECKS = [
+      ["glpPancreatitis", "Antécédent pancréatite"],
+      ["glpGallstones", "Lithiase biliaire / cholécystite"],
+      ["glpAbdominalPain", "Douleurs abdominales"],
+      ["glpVomiting", "Vomissements"],
+      ["glpGastroparesis", "Gastroparésie"],
+      ["glpSevereIbd", "MICI sévère"],
+      ["glpMedullaryCancer", "Cancer médullaire thyroïdien personnel ou familial"],
+      ["glpMen2", "NEM2"],
+      ["glpEatingDisorder", "TCA actif"],
+      ["glpAesthetic", "Demande esthétique"],
+      ["glpBariatric", "Antécédent chirurgie bariatrique"],
+      ["glpRenalFailure", "Insuffisance rénale"],
+      ["glpDehydration", "Déshydratation"],
+      ["glpSulfonylurea", "Sulfamide associé"],
+      ["glpInsulin", "Insuline associée"],
+      ["glpSevereDiarrhea", "Diarrhée sévère"],
+      ["glpSevereConstipation", "Constipation sévère"],
+      ["glpExcessWeightLoss", "Perte de poids excessive"],
+      ["glpRepeatedHypos", "Hypoglycémies répétées"],
+    ];
+
+    const DEFAULT_MEDS = [
+      {
+        id: "metformine",
+        dci: "Metformine",
+        marques: ["Glucophage", "Stagid", "génériques"],
+        classe: "Biguanide",
+        indication: "DT2 si tolérée et DFG compatible",
+        doseUsuelle: "500 mg à 1000 mg, 1 à 3 prises/j selon tolérance",
+        doseMax: "Dose maximale selon RCP et tolérance",
+        renal: "Contre-indiquée si DFG < 30 ; adaptation et prudence si DFG 30-45 ; surveiller DFG",
+        ci: "Acidose, déshydratation, hypoxie, DFG incompatible, produit de contraste/chirurgie selon contexte",
+        adverse: "Troubles digestifs, déficit B12 possible, acidose lactique rare",
+        hypo: "Faible",
+        poids: "Neutre ou modeste baisse",
+        cv: "Bénéfice indirect, référence historique",
+        renalBenefit: "Nephroprotection indirecte par contrôle métabolique",
+        remboursement: "Selon spécialité et conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, tolérance digestive, B12 si usage prolongé ou signes évocateurs",
+        conseils: "Prendre pendant ou après repas ; suspendre si déshydratation/vomissements ou situation aiguë",
+        aliases: ["metformine", "glucophage", "stagid"]
+      },
+      {
+        id: "gliclazide",
+        dci: "Gliclazide",
+        marques: ["Diamicron", "génériques"],
+        classe: "Sulfamide hypoglycémiant",
+        indication: "DT2, à discuter si autre option non adaptée",
+        doseUsuelle: "Selon libération immédiate ou modifiée, prise avec repas",
+        doseMax: "Selon RCP",
+        renal: "Prudence IRC ; risque hypo augmenté",
+        ci: "DT1, acidocétose, hypoglycémies, situations de repas irréguliers",
+        adverse: "Hypoglycémies, prise de poids",
+        hypo: "Élevé",
+        poids: "Prise de poids",
+        cv: "Pas de bénéfice cardio-rénal spécifique",
+        renalBenefit: "Aucun bénéfice rénal spécifique",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, hypoglycémies, repas, conduite, DFG",
+        conseils: "Ne pas prendre si repas sauté ; prévenir hypo",
+        aliases: ["gliclazide", "diamicron"]
+      },
+      {
+        id: "glimepiride",
+        dci: "Glimépiride",
+        marques: ["Amarel", "génériques"],
+        classe: "Sulfamide hypoglycémiant",
+        indication: "DT2, prudence si risque hypo",
+        doseUsuelle: "Selon RCP, habituellement prise quotidienne",
+        doseMax: "Selon RCP",
+        renal: "Prudence IRC ; éviter si risque hypo important",
+        ci: "DT1, acidocétose, hypoglycémies",
+        adverse: "Hypoglycémies, prise de poids",
+        hypo: "Élevé",
+        poids: "Prise de poids",
+        cv: "Pas de bénéfice cardio-rénal spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, hypoglycémies, DFG",
+        conseils: "Adapter aux repas, conduite prudente",
+        aliases: ["glimepiride", "glimépiride", "amarel"]
+      },
+      {
+        id: "glibenclamide",
+        dci: "Glibenclamide",
+        marques: ["Daonil", "Hémi-Daonil", "génériques"],
+        classe: "Sulfamide hypoglycémiant",
+        indication: "DT2, rarement option de sécurité en MG",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "À éviter si sujet âgé, fragile ou IRC",
+        ci: "Risque hypo élevé, sujet âgé/fragile, IRC",
+        adverse: "Hypoglycémies prolongées, prise de poids",
+        hypo: "Très élevé",
+        poids: "Prise de poids",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Hypoglycémies, DFG, repas",
+        conseils: "Éviter chez sujet âgé/fragile ; revoir l’indication",
+        aliases: ["glibenclamide", "daonil", "hemi-daonil", "hémi-daonil"]
+      },
+      {
+        id: "repaglinide",
+        dci: "Répaglinide",
+        marques: ["Novonorm", "génériques"],
+        classe: "Glinide",
+        indication: "DT2 si hyperglycémies prandiales, prise avec repas",
+        doseUsuelle: "Avant les repas selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence IRC et sujet âgé",
+        ci: "Repas absents/irréguliers, hypoglycémies",
+        adverse: "Hypoglycémies, prise de poids",
+        hypo: "Modéré à élevé",
+        poids: "Prise de poids",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, repas, hypos",
+        conseils: "Pas de repas = pas de prise sauf consigne médicale",
+        aliases: ["repaglinide", "répaglinide", "novonorm"]
+      },
+      {
+        id: "sitagliptine",
+        dci: "Sitagliptine",
+        marques: ["Januvia", "Xelevia", "Janumet", "Velmetia"],
+        classe: "Inhibiteur DPP-4 / gliptine",
+        indication: "DT2, effet modéré, poids neutre",
+        doseUsuelle: "Selon RCP, adaptation rénale",
+        doseMax: "Selon RCP",
+        renal: "Adapter au DFG",
+        ci: "Association inutile avec GLP-1 ou tirzépatide",
+        adverse: "Rares réactions, pancréatite à évoquer si douleurs abdominales",
+        hypo: "Faible sauf association sulfamide/insuline",
+        poids: "Neutre",
+        cv: "Pas de bénéfice cardio-rénal majeur démontré",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon avis et conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, tolérance",
+        conseils: "Ne pas associer à aGLP-1/tirzépatide",
+        aliases: ["sitagliptine", "januvia", "xelevia", "janumet", "velmetia"]
+      },
+      {
+        id: "vildagliptine",
+        dci: "Vildagliptine",
+        marques: ["Galvus", "Eucreas"],
+        classe: "Inhibiteur DPP-4 / gliptine",
+        indication: "DT2, effet modéré",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Adapter au DFG selon RCP",
+        ci: "Association inutile avec GLP-1/tirzépatide ; prudence hépatique",
+        adverse: "Tolérance généralement bonne, surveillance hépatique selon contexte",
+        hypo: "Faible sauf association",
+        poids: "Neutre",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, bilan hépatique selon RCP",
+        conseils: "Vérifier associations",
+        aliases: ["vildagliptine", "galvus", "eucreas"]
+      },
+      {
+        id: "saxagliptine",
+        dci: "Saxagliptine",
+        marques: ["Onglyza", "Komboglyze"],
+        classe: "Inhibiteur DPP-4 / gliptine",
+        indication: "DT2, effet modéré",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Adapter au DFG",
+        ci: "Association inutile avec GLP-1/tirzépatide",
+        adverse: "Tolérance généralement bonne ; prudence selon contexte cardiaque",
+        hypo: "Faible sauf association",
+        poids: "Neutre",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, tolérance",
+        conseils: "Vérifier associations",
+        aliases: ["saxagliptine", "onglyza", "komboglyze"]
+      },
+      {
+        id: "linagliptine",
+        dci: "Linagliptine",
+        marques: ["Trajenta"],
+        classe: "Inhibiteur DPP-4 / gliptine",
+        indication: "DT2, effet modéré",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Particularités selon RCP ; vérifier",
+        ci: "Association inutile avec GLP-1/tirzépatide",
+        adverse: "Tolérance généralement bonne",
+        hypo: "Faible sauf association",
+        poids: "Neutre",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Tolérance, interactions",
+        conseils: "Ne pas associer à aGLP-1/tirzépatide",
+        aliases: ["linagliptine", "trajenta"]
+      },
+      {
+        id: "empagliflozine",
+        dci: "Empagliflozine",
+        marques: ["Jardiance", "Synjardy"],
+        classe: "Inhibiteur SGLT2 / gliflozine",
+        indication: "DT2, insuffisance cardiaque, IRC/albuminurie selon AMM et remboursement",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier seuil DFG selon indication ; bénéfice cardio-rénal possible",
+        ci: "DT1 hors avis spécialisé, cétones, acidocétose, déshydratation, jeûne/chirurgie aiguë",
+        adverse: "Infections génitales/urinaires, déshydratation, hypotension, acidocétose euglycémique rare",
+        hypo: "Faible sauf association",
+        poids: "Baisse modérée",
+        cv: "Bénéfice cardiovasculaire/IC selon données et indication",
+        renalBenefit: "Bénéfice rénal selon indication",
+        remboursement: "Vérifier statut actualisé",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, hydratation, infections, cétones si symptômes",
+        conseils: "Suspendre si jeûne, chirurgie, vomissements, infection sévère, déshydratation, régime cétogène",
+        aliases: ["empagliflozine", "jardiance", "synjardy"]
+      },
+      {
+        id: "dapagliflozine",
+        dci: "Dapagliflozine",
+        marques: ["Forxiga", "Xigduo"],
+        classe: "Inhibiteur SGLT2 / gliflozine",
+        indication: "DT2, insuffisance cardiaque, IRC/albuminurie selon AMM et remboursement",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier seuil DFG selon indication",
+        ci: "DT1 hors avis spécialisé, cétones, acidocétose, déshydratation, jeûne/chirurgie aiguë",
+        adverse: "Infections génitales/urinaires, déshydratation, acidocétose euglycémique rare",
+        hypo: "Faible sauf association",
+        poids: "Baisse modérée",
+        cv: "Bénéfice IC/cardio-rénal selon indication",
+        renalBenefit: "Bénéfice rénal selon indication",
+        remboursement: "Vérifier statut actualisé",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, hydratation, infections, cétones si symptômes",
+        conseils: "Suspendre en situation aiguë, jeûne ou chirurgie selon protocole",
+        aliases: ["dapagliflozine", "forxiga", "xigduo"]
+      },
+      {
+        id: "canagliflozine",
+        dci: "Canagliflozine",
+        marques: ["Invokana"],
+        classe: "Inhibiteur SGLT2 / gliflozine",
+        indication: "DT2 selon disponibilité et conditions actualisées",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier DFG et disponibilité",
+        ci: "Cétones, déshydratation, DT1 hors avis spécialisé",
+        adverse: "Effets de classe SGLT2",
+        hypo: "Faible sauf association",
+        poids: "Baisse modérée",
+        cv: "À vérifier selon indication",
+        renalBenefit: "À vérifier selon indication",
+        remboursement: "Vérifier statut France",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, hydratation, infections",
+        conseils: "Vérifier disponibilité et RCP",
+        aliases: ["canagliflozine", "invokana"]
+      },
+      {
+        id: "ertugliflozine",
+        dci: "Ertugliflozine",
+        marques: ["Steglatro"],
+        classe: "Inhibiteur SGLT2 / gliflozine",
+        indication: "DT2 selon disponibilité et conditions actualisées",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier DFG et disponibilité",
+        ci: "Cétones, déshydratation, DT1 hors avis spécialisé",
+        adverse: "Effets de classe SGLT2",
+        hypo: "Faible sauf association",
+        poids: "Baisse modérée",
+        cv: "À vérifier selon indication",
+        renalBenefit: "À vérifier selon indication",
+        remboursement: "Vérifier statut France",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "DFG, hydratation, infections",
+        conseils: "Vérifier disponibilité et RCP",
+        aliases: ["ertugliflozine", "steglatro"]
+      },
+      {
+        id: "liraglutide-dt2",
+        dci: "Liraglutide",
+        marques: ["Victoza"],
+        classe: "Analogue GLP-1",
+        indication: "DT2",
+        doseUsuelle: "Titration progressive selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si déshydratation/IRC ; vérifier RCP",
+        ci: "Pancréatite non clarifiée, gastroparésie sévère, grossesse/allaitement selon RCP, NEM2/CMT selon RCP",
+        adverse: "Nausées, vomissements, diarrhée/constipation, douleurs abdominales, lithiase/pancréatite à évoquer",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "Bénéfice CV selon molécule et données",
+        renalBenefit: "Possible bénéfice indirect/albuminurie selon données",
+        remboursement: "Vérifier conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Poids, HbA1c, tolérance digestive, douleurs abdominales, hydratation",
+        conseils: "Ne pas associer à DPP-4 ; titration prudente",
+        aliases: ["liraglutide", "victoza"]
+      },
+      {
+        id: "liraglutide-obesite",
+        dci: "Liraglutide",
+        marques: ["Saxenda"],
+        classe: "Analogue GLP-1",
+        indication: "Contrôle pondéral / obésité selon AMM",
+        doseUsuelle: "Titration selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si vomissements/déshydratation",
+        ci: "Demande esthétique, grossesse/allaitement, pancréatite non clarifiée, CMT/NEM2 selon RCP",
+        adverse: "Effets digestifs, risque biliaire, pancréatite à évoquer",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "À vérifier selon indication",
+        renalBenefit: "À vérifier",
+        remboursement: "Vérifier statut actualisé",
+        ammDiabete: false,
+        ammObesite: true,
+        surveillance: "Poids, tour de taille, apports protéiques, activité physique, tolérance",
+        conseils: "Second recours après prise en charge nutritionnelle ; pas d’usage esthétique",
+        aliases: ["saxenda"]
+      },
+      {
+        id: "dulaglutide",
+        dci: "Dulaglutide",
+        marques: ["Trulicity"],
+        classe: "Analogue GLP-1",
+        indication: "DT2",
+        doseUsuelle: "Injection hebdomadaire selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si déshydratation/IRC",
+        ci: "Pancréatite non clarifiée, gastroparésie sévère, grossesse/allaitement selon RCP",
+        adverse: "Nausées, vomissements, troubles digestifs, douleurs abdominales",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "Bénéfice CV selon données et profil",
+        renalBenefit: "À vérifier selon données",
+        remboursement: "Vérifier conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "HbA1c, poids, digestif, hydratation",
+        conseils: "Ne pas associer à DPP-4 ; réduire risque hypo si insuline/sulfamide",
+        aliases: ["dulaglutide", "trulicity"]
+      },
+      {
+        id: "semaglutide-dt2",
+        dci: "Sémaglutide",
+        marques: ["Ozempic", "Rybelsus"],
+        classe: "Analogue GLP-1",
+        indication: "DT2",
+        doseUsuelle: "Titration selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si déshydratation ; vérifier RCP",
+        ci: "Ne pas utiliser comme simple traitement esthétique ; CI/précautions selon RCP",
+        adverse: "Digestifs, risque biliaire, pancréatite à évoquer, déshydratation",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "Bénéfice CV selon données et profil",
+        renalBenefit: "À vérifier selon données",
+        remboursement: "Vérifier conditions actualisées",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "HbA1c, poids, tolérance digestive, hypoglycémies si association",
+        conseils: "Ne pas confondre Ozempic et Wegovy ; vérifier RCP",
+        aliases: ["semaglutide", "sémaglutide", "ozempic", "rybelsus"]
+      },
+      {
+        id: "semaglutide-obesite",
+        dci: "Sémaglutide",
+        marques: ["Wegovy"],
+        classe: "Analogue GLP-1",
+        indication: "Contrôle pondéral / obésité selon AMM",
+        doseUsuelle: "Titration selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si vomissements/déshydratation",
+        ci: "Demande esthétique, grossesse/allaitement, pancréatite non clarifiée, CMT/NEM2 selon RCP",
+        adverse: "Troubles digestifs, douleurs abdominales, risque biliaire/pancréatite",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse importante possible",
+        cv: "À vérifier selon indication",
+        renalBenefit: "À vérifier",
+        remboursement: "Vérifier statut actualisé",
+        ammDiabete: false,
+        ammObesite: true,
+        surveillance: "Poids, IMC, tour de taille, digestif, apports protéiques, dénutrition",
+        conseils: "Second recours après échec nutritionnel documenté ; pas d’usage esthétique",
+        aliases: ["wegovy"]
+      },
+      {
+        id: "exenatide",
+        dci: "Exénatide",
+        marques: ["Byetta", "Bydureon"],
+        classe: "Analogue GLP-1",
+        indication: "DT2 selon disponibilité",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier DFG/RCP",
+        ci: "Pancréatite, gastroparésie sévère selon RCP",
+        adverse: "Digestifs",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "À vérifier",
+        renalBenefit: "À vérifier",
+        remboursement: "Vérifier statut",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Tolérance, DFG",
+        conseils: "Ne pas associer à DPP-4",
+        aliases: ["exenatide", "exénatide", "byetta", "bydureon"]
+      },
+      {
+        id: "lixisenatide",
+        dci: "Lixisénatide",
+        marques: ["Lyxumia", "Suliqua"],
+        classe: "Analogue GLP-1",
+        indication: "DT2, association fixe possible avec glargine",
+        doseUsuelle: "Selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Vérifier DFG/RCP",
+        ci: "Pancréatite, gastroparésie sévère selon RCP",
+        adverse: "Digestifs",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse",
+        cv: "À vérifier",
+        renalBenefit: "À vérifier",
+        remboursement: "Vérifier statut",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Tolérance, hypoglycémies si insuline",
+        conseils: "Suliqua contient insuline glargine + lixisénatide",
+        aliases: ["lixisenatide", "lixisénatide", "lyxumia", "suliqua"]
+      },
+      {
+        id: "tirzepatide",
+        dci: "Tirzépatide",
+        marques: ["Mounjaro"],
+        classe: "Double agoniste GIP/GLP-1",
+        indication: "DT2 et/ou contrôle pondéral selon AMM actualisée",
+        doseUsuelle: "Stylo prérempli KwikPen 2,5 ; 5 ; 7,5 ; 10 ; 12,5 ; 15 mg/dose, titration selon RCP",
+        doseMax: "Selon RCP",
+        renal: "Prudence si vomissements/déshydratation ; vérifier RCP",
+        ci: "Demande esthétique, grossesse/allaitement, pancréatite non clarifiée, CMT/NEM2 selon RCP, DT1/acidocétose",
+        adverse: "Digestifs, douleurs abdominales, risque biliaire/pancréatite, hypoglycémie si association",
+        hypo: "Faible seul ; augmenté avec insuline/sulfamide",
+        poids: "Baisse importante possible",
+        cv: "Données à vérifier selon indication et recommandations actualisées",
+        renalBenefit: "Données à vérifier selon indication",
+        remboursement: "Vérifier statut actualisé et indication",
+        ammDiabete: true,
+        ammObesite: true,
+        surveillance: "Poids, IMC, HbA1c si DT2, digestif, hydratation, hypoglycémies si association",
+        conseils: "Vérifier RCP/AMM/remboursement avant toute décision ; pas d’usage esthétique",
+        aliases: ["tirzepatide", "tirzépatide", "mounjaro"]
+      },
+      {
+        id: "glargine",
+        dci: "Insuline glargine",
+        marques: ["Lantus", "Abasaglar", "Toujeo", "Suliqua"],
+        classe: "Insuline lente / basale",
+        indication: "DT1/DT2 selon contexte",
+        doseUsuelle: "Individualisée ; initiation DT2 prudente 6-10 UI/j ou 0,1-0,2 UI/kg/j",
+        doseMax: "Individualisée",
+        renal: "Besoins souvent diminués si IRC ; risque hypo",
+        ci: "Hypoglycémie en cours, absence d’autosurveillance/éducation",
+        adverse: "Hypoglycémies, prise de poids",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "GAJ, hypoglycémies nocturnes, injection, matériel",
+        conseils: "Ne jamais arrêter la basale dans DT1 ; horaire fixe",
+        aliases: ["glargine", "lantus", "abasaglar", "toujeo", "suliqua"]
+      },
+      {
+        id: "degludec",
+        dci: "Insuline dégludec",
+        marques: ["Tresiba", "Xultophy"],
+        classe: "Insuline lente / basale",
+        indication: "DT1/DT2 selon contexte",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Risque hypo si IRC ; adaptation individualisée",
+        ci: "Hypoglycémie en cours, absence d’éducation",
+        adverse: "Hypoglycémies, prise de poids",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun spécifique",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "GAJ, hypos, injection",
+        conseils: "Xultophy contient liraglutide + dégludec",
+        aliases: ["degludec", "dégludec", "tresiba", "xultophy"]
+      },
+      {
+        id: "detemir",
+        dci: "Insuline détémir",
+        marques: ["Levemir"],
+        classe: "Insuline lente / basale",
+        indication: "DT1/DT2 selon contexte",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Adaptation individualisée si IRC",
+        ci: "Hypoglycémie en cours",
+        adverse: "Hypoglycémies, prise de poids possible",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, hypos",
+        conseils: "Vérifier disponibilité et schéma",
+        aliases: ["detemir", "détémir", "levemir"]
+      },
+      {
+        id: "nph",
+        dci: "Insuline NPH",
+        marques: ["Insulatard", "Humulin NPH"],
+        classe: "Insuline lente / NPH",
+        indication: "DT1/DT2 selon contexte",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Adaptation individualisée si IRC",
+        ci: "Hypoglycémie en cours",
+        adverse: "Hypoglycémies, variabilité",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Pas de bénéfice spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, hypos nocturnes",
+        conseils: "Risque hypo nocturne selon horaire et cinétique",
+        aliases: ["nph", "insulatard", "humulin nph"]
+      },
+      {
+        id: "aspart",
+        dci: "Insuline aspart",
+        marques: ["NovoRapid", "Fiasp"],
+        classe: "Insuline rapide / prandiale",
+        indication: "DT1/DT2 basal-bolus ou correction selon protocole",
+        doseUsuelle: "Individualisée selon repas/glycémie",
+        doseMax: "Individualisée",
+        renal: "Besoins diminués si IRC possible",
+        ci: "Repas absent sans protocole, hypoglycémie, absence d’autosurveillance",
+        adverse: "Hypoglycémies",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Aucun spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Avant repas, post-prandial, hypos, cétones si DT1",
+        conseils: "Adapter au repas, sport, alcool ; pas de dose prandiale si pas de repas sauf protocole",
+        aliases: ["aspart", "novorapid", "novo rapid", "fiasp"]
+      },
+      {
+        id: "lispro",
+        dci: "Insuline lispro",
+        marques: ["Humalog", "Lyumjev"],
+        classe: "Insuline rapide / prandiale",
+        indication: "DT1/DT2 basal-bolus ou correction",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Besoins diminués si IRC possible",
+        ci: "Repas absent sans protocole, hypoglycémie",
+        adverse: "Hypoglycémies",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Aucun spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Avant repas, post-prandial, hypos",
+        conseils: "Adapter repas/sport/alcool",
+        aliases: ["lispro", "humalog", "lyumjev"]
+      },
+      {
+        id: "glulisine",
+        dci: "Insuline glulisine",
+        marques: ["Apidra"],
+        classe: "Insuline rapide / prandiale",
+        indication: "DT1/DT2 basal-bolus ou correction",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Besoins diminués si IRC possible",
+        ci: "Repas absent sans protocole, hypoglycémie",
+        adverse: "Hypoglycémies",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Aucun spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Avant repas, post-prandial, hypos",
+        conseils: "Adapter repas/sport/alcool",
+        aliases: ["glulisine", "apidra"]
+      },
+      {
+        id: "actrapid",
+        dci: "Insuline humaine rapide",
+        marques: ["Actrapid"],
+        classe: "Insuline rapide / prandiale",
+        indication: "DT1/DT2 selon protocole",
+        doseUsuelle: "Individualisée",
+        doseMax: "Individualisée",
+        renal: "Besoins diminués si IRC possible",
+        ci: "Hypoglycémie, repas absent sans protocole",
+        adverse: "Hypoglycémies",
+        hypo: "Élevé",
+        poids: "Prise de poids possible",
+        cv: "Aucun spécifique",
+        renalBenefit: "Aucun",
+        remboursement: "Selon spécialité",
+        ammDiabete: true,
+        ammObesite: false,
+        surveillance: "Glycémies, hypos",
+        conseils: "Respect délai repas selon protocole/RCP",
+        aliases: ["actrapid", "insuline humaine rapide"]
+      }
+    ];
+
+    const FIXED_ASSOCIATIONS = [
+      { name: "Xultophy", note: "liraglutide + insuline dégludec", classes: ["Analogue GLP-1", "Insuline lente / basale"] },
+      { name: "Suliqua", note: "lixisénatide + insuline glargine", classes: ["Analogue GLP-1", "Insuline lente / basale"] },
+      { name: "Janumet", note: "sitagliptine + metformine", classes: ["Inhibiteur DPP-4 / gliptine", "Biguanide"] },
+      { name: "Velmetia", note: "sitagliptine + metformine", classes: ["Inhibiteur DPP-4 / gliptine", "Biguanide"] },
+      { name: "Synjardy", note: "empagliflozine + metformine", classes: ["Inhibiteur SGLT2 / gliflozine", "Biguanide"] },
+      { name: "Xigduo", note: "dapagliflozine + metformine", classes: ["Inhibiteur SGLT2 / gliflozine", "Biguanide"] },
+      { name: "Komboglyze", note: "saxagliptine + metformine", classes: ["Inhibiteur DPP-4 / gliptine", "Biguanide"] },
+    ];
+
+    const TEST_CASES = [
+      {
+        label: "1. DT2 metformine seule, HbA1c 8,2 %, sans comorbidité",
+        patient: { diabetesType: "dt2", age: 54, weight: 83, height: 174, hba1c: 8.2, egfr: 92, fastingGlucose: 1.55 },
+        order: "Metformine 1000 mg matin et soir"
+      },
+      {
+        label: "2. DT2 + infarctus ancien + HbA1c 8,5 %",
+        patient: { diabetesType: "dt2", age: 66, weight: 88, height: 170, hba1c: 8.5, egfr: 72 },
+        checks: ["mi", "cad", "dyslipidemia"],
+        order: "Glucophage 1000 mg x2\nDiamicron 60 mg le matin"
+      },
+      {
+        label: "3. DT2 + insuffisance cardiaque",
+        patient: { diabetesType: "dt2", age: 72, weight: 91, height: 169, hba1c: 7.9, egfr: 58 },
+        checks: ["heartFailure", "hypertension"],
+        order: "Metformine 850 mg matin et soir"
+      },
+      {
+        label: "4. DT2 + DFG 38 + albuminurie",
+        patient: { diabetesType: "dt2", age: 69, weight: 78, height: 168, hba1c: 8.1, egfr: 38, albuminuria: "300 mg/g", ckdStage: "moderee" },
+        checks: ["microalbuminuria"],
+        order: "Metformine 1000 mg x2\nDaonil 5 mg"
+      },
+      {
+        label: "5. DT2 âgé fragile sous sulfamide avec hypoglycémies",
+        patient: { diabetesType: "dt2", age: 84, weight: 64, height: 166, hba1c: 6.8, egfr: 42, fragility: "fragile", hypo: "oui", severeHypo: "oui" },
+        order: "Gliclazide 60 mg le matin"
+      },
+      {
+        label: "6. DT2 obèse IMC 38, HbA1c 9 %, demande Mounjaro",
+        patient: { diabetesType: "dt2", age: 58, weight: 112, height: 171, hba1c: 9, egfr: 78 },
+        checks: ["obesity"],
+        glp: { glpIndication: "mixte", nutritionFollow: "oui", nutritionFailure: "oui" },
+        order: "Metformine 1000 mg x2\nDemande Mounjaro"
+      },
+      {
+        label: "7. Non diabétique IMC 24 demandant Wegovy esthétique",
+        patient: { diabetesType: "incertain", age: 36, weight: 70, height: 171, hba1c: 5.4, egfr: 100 },
+        glpChecks: ["glpAesthetic"],
+        glp: { glpIndication: "obesite" },
+        order: "Demande Wegovy pour perdre 4 kg avant vacances"
+      },
+      {
+        label: "8. IMC 35 avec échec nutritionnel documenté, demande Wegovy",
+        patient: { diabetesType: "dt2", age: 49, weight: 103, height: 171, hba1c: 7.4, egfr: 83 },
+        checks: ["obesity", "sleepApnea"],
+        glp: { glpIndication: "obesite", nutritionFollow: "oui", nutritionFailure: "oui", nutritionDuration: "9 mois" },
+        order: "Demande Wegovy après suivi diététique"
+      },
+      {
+        label: "9. DT2 sous basale, GAJ correcte mais HbA1c élevée",
+        patient: { diabetesType: "dt2", age: 63, weight: 94, height: 172, hba1c: 8.8, egfr: 68, fastingGlucose: 1.12 },
+        basal: { basalType: "glargine", basalDose: 38, basalFastingList: "1.08, 1.12, 1.16, 1.10" },
+        order: "Metformine 1000 mg x2\nLantus 38 UI le soir"
+      },
+      {
+        label: "10. DT2 sous basale avec hypoglycémie nocturne",
+        patient: { diabetesType: "dt2", age: 76, weight: 71, height: 168, hba1c: 7.2, egfr: 47, nightHypo: "oui", hypo: "oui" },
+        basal: { basalType: "Toujeo", basalDose: 30, basalFastingList: "0.62, 0.78, 0.91, 0.69" },
+        order: "Toujeo 30 UI le soir"
+      },
+      {
+        label: "11. DT1 renouvellement basal-bolus stable",
+        patient: { diabetesType: "dt1", age: 32, weight: 74, height: 178, hba1c: 7.1, egfr: 105, ketones: "negative" },
+        dt1Checks: ["dt1BasalPresent", "dt1RapidPresent", "dt1DosesCoherent", "dt1PensEnough", "dt1Needles", "dt1Sensor", "dt1Glucagon", "dt1KetoneStrips", "dt1HypoPlan", "dt1HyperPlan", "dt1Diabeto"],
+        order: "Tresiba 22 UI le soir\nNovoRapid 6 UI matin, 8 UI midi, 8 UI soir\nGlucagon nasal"
+      },
+      {
+        label: "12. DT1 hyperglycémie + cétones : alerte urgence",
+        patient: { diabetesType: "dt1", age: 24, weight: 67, height: 174, hba1c: 10.2, fastingGlucose: 3.1, ketones: "positive" },
+        symptoms: ["vomiting", "dehydration", "polydipsie"],
+        order: "Lantus 18 UI le soir\nHumalog selon repas"
+      },
+    ];
+
+    let medDb = structuredClone(DEFAULT_MEDS);
+    let lastDetected = [];
+    let lastInsulinProtocol = null;
+
+    const $ = (id) => document.getElementById(id);
+    const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
+    const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const val = (id) => $(id)?.value ?? "";
+    const num = (id) => {
+      const raw = String(val(id)).trim();
+      if (raw === "") return null;
+      const n = Number(raw.replace(",", "."));
+      return Number.isFinite(n) ? n : null;
+    };
+    const yes = (id) => val(id) === "oui" || $(id)?.checked === true;
+    const checked = (id) => !!$(id)?.checked;
+    const setVal = (id, value) => { if ($(id)) $(id).value = value ?? ""; };
+    const setChecked = (id, value) => { if ($(id)) $(id).checked = !!value; };
+
+    function renderCheckGrid(containerId, items) {
+      $(containerId).innerHTML = items.map(([id, label]) => `
+        <label class="check"><input type="checkbox" id="${id}"><span>${esc(label)}</span></label>
+      `).join("");
+    }
+
+    function initTabs() {
+      $("tabs").innerHTML = PANELS.map((p, i) => `
+        <button class="tab-btn ${i === 0 ? "active" : ""}" data-tab="${p[0]}">
+          <span class="num">${i + 1}</span><span>${esc(p[1])}</span>
+        </button>
+      `).join("");
+      $("mobileTab").innerHTML = PANELS.map((p, i) => `<option value="${p[0]}">${i + 1}. ${esc(p[1])}</option>`).join("");
+      qsa(".tab-btn").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
+      $("mobileTab").addEventListener("change", () => activateTab($("mobileTab").value));
+    }
+
+    function activateTab(id) {
+      qsa(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === id));
+      qsa(".tab-panel").forEach(panel => panel.classList.toggle("active", panel.dataset.panel === id));
+      const meta = PANELS.find(p => p[0] === id);
+      if (meta) {
+        $("panelTitle").textContent = meta[1];
+        $("panelLead").textContent = meta[2];
+        $("mobileTab").value = id;
+      }
+      if (id === "summary") generateSummary();
+      if (id === "meds") renderMedTable();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getPatient() {
+      const p = {
+        age: num("age"),
+        sex: val("sex"),
+        weight: num("weight"),
+        height: num("height"),
+        bmi: num("bmi"),
+        waist: num("waist"),
+        fragility: val("fragility"),
+        institution: yes("institution"),
+        pregnancy: yes("pregnancy"),
+        pregnancyPlan: yes("pregnancyPlan"),
+        breastfeeding: yes("breastfeeding"),
+        riskJob: yes("riskJob"),
+        diabetesType: val("diabetesType"),
+        duration: val("duration"),
+        hba1c: num("hba1c"),
+        hba1cPrev: num("hba1cPrev"),
+        targetUser: num("targetUser"),
+        fastingGlucose: num("fastingGlucose"),
+        preMeal: val("preMeal"),
+        postMeal: val("postMeal"),
+        bedGlucose: num("bedGlucose"),
+        variability: val("variability"),
+        hypo: yes("hypo"),
+        severeHypo: yes("severeHypo"),
+        nightHypo: yes("nightHypo"),
+        ketones: val("ketones"),
+        egfr: num("egfr"),
+        ckdStage: val("ckdStage"),
+        egfrTrend: val("egfrTrend"),
+        albuminuria: val("albuminuria"),
+        acr: val("acr"),
+      };
+      p.symptoms = SYMPTOMS.filter(([id]) => checked(id)).map(([, label]) => label);
+      p.cv = CV_ITEMS.filter(([id]) => checked(id)).map(([, label]) => label);
+      p.complications = COMPLICATION_ITEMS.filter(([id]) => checked(id)).map(([, label]) => label);
+      p.hasCvDisease = ["mi", "cad", "angina", "stent", "stroke", "pad"].some(checked);
+      p.hasHeartFailure = checked("heartFailure");
+      p.hasCkd = (p.egfr !== null && p.egfr < 60) || ["moderee", "severe", "terminale"].includes(p.ckdStage) || checked("microalbuminuria") || checked("macroalbuminuria") || /[1-9]/.test(p.albuminuria || "");
+      p.hasObesity = (p.bmi !== null && p.bmi >= 30) || checked("obesity");
+      p.highHypoRisk = p.hypo || p.severeHypo || p.nightHypo || ["fragile", "tres-fragile", "dependant"].includes(p.fragility) || p.riskJob || (p.egfr !== null && p.egfr < 45);
+      return p;
+    }
+
+    function computeBmi() {
+      const weight = num("weight");
+      const height = num("height");
+      if (weight && height) {
+        const bmi = weight / Math.pow(height / 100, 2);
+        setVal("bmi", bmi.toFixed(1));
+        $("metricBmi").textContent = bmi.toFixed(1);
+        $("metricBmiHint").textContent = bmi >= 35 ? "Obésité sévère possible" : bmi >= 30 ? "Obésité" : bmi >= 25 ? "Surpoids" : "IMC non élevé";
+      } else {
+        setVal("bmi", "");
+        $("metricBmi").textContent = "--";
+        $("metricBmiHint").textContent = "Poids et taille requis";
+      }
+    }
+
+    function parseNumbersList(text) {
+      return String(text || "")
+        .split(/[;,\s]+/)
+        .map(x => Number(x.replace(",", ".")))
+        .filter(Number.isFinite);
+    }
+
+    function classifyTreatment(detected = lastDetected) {
+      const classes = detected.map(d => d.med.classe);
+      const has = (fragment) => classes.some(c => normalize(c).includes(normalize(fragment)));
+      const count = (fragment) => classes.filter(c => normalize(c).includes(normalize(fragment))).length;
+      return {
+        none: detected.length === 0,
+        metformin: has("Biguanide"),
+        dpp4: has("DPP-4"),
+        sglt2: has("SGLT2"),
+        glp: has("Analogue GLP-1"),
+        gipGlp: has("Double agoniste"),
+        sulfonylurea: has("Sulfamide"),
+        glinide: has("Glinide"),
+        basal: has("Insuline lente") || has("NPH"),
+        rapid: has("Insuline rapide"),
+        insulin: has("Insuline"),
+        glpCount: count("Analogue GLP-1") + count("Double agoniste"),
+        dpp4Count: count("DPP-4"),
+        sglt2Count: count("SGLT2"),
+        classCounts: classes.reduce((acc, c) => (acc[c] = (acc[c] || 0) + 1, acc), {})
+      };
+    }
+
+    function extractDose(line) {
+      const match = line.match(/(\d+[,.]?\d*)\s*(mg|g|ui|u|unit[eé]s?|mcg|µg)/i);
+      return match ? `${match[1].replace(".", ",")} ${match[2]}` : "Dose non lue";
+    }
+
+    function extractTiming(line) {
+      const n = normalize(line);
+      const times = [];
+      if (n.includes("matin")) times.push("matin");
+      if (n.includes("midi")) times.push("midi");
+      if (n.includes("soir")) times.push("soir");
+      if (n.includes("coucher")) times.push("coucher");
+      if (n.includes("semaine") || n.includes("hebdo")) times.push("hebdomadaire");
+      if (n.includes("repas")) times.push("repas");
+      return times.length ? times.join(", ") : "Moment non lu";
+    }
+
+    function parseOrder() {
+      const raw = val("orderText");
+      const lines = raw.split(/\n+/).map(l => l.trim()).filter(Boolean);
+      const hay = normalize(raw);
+      const detected = [];
+      const seen = new Set();
+      medDb.forEach(med => {
+        const aliases = [...(med.aliases || []), med.dci, ...(med.marques || [])].filter(Boolean);
+        const hitAlias = aliases.find(alias => {
+          const a = normalize(alias);
+          return a && new RegExp(`(^|[^a-z0-9])${a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^a-z0-9]|$)`, "i").test(hay);
+        });
+        if (hitAlias) {
+          const line = lines.find(l => normalize(l).includes(normalize(hitAlias))) || raw;
+          const key = med.id;
+          if (!seen.has(key)) {
+            detected.push({
+              med,
+              alias: hitAlias,
+              line,
+              dose: extractDose(line),
+              timing: extractTiming(line)
+            });
+            seen.add(key);
+          }
+        }
+      });
+      lastDetected = detected;
+      renderDetected();
+      updateAll();
+      return detected;
+    }
+
+    function renderDetected() {
+      const box = $("detectedMeds");
+      const tx = classifyTreatment(lastDetected);
+      $("metricMeds").textContent = String(lastDetected.length);
+      $("metricMedsHint").textContent = lastDetected.length ? Object.keys(tx.classCounts).length + " classe(s)" : "Ordonnance non analysée";
+      if (!lastDetected.length) {
+        box.innerHTML = `<div class="notice info">Aucun traitement antidiabétique reconnu dans le texte collé.</div>`;
+        return;
+      }
+      const rows = lastDetected.map(d => `
+        <div class="card compact">
+          <div class="pill-row">
+            <span class="pill blue">${esc(d.med.classe)}</span>
+            <span class="pill ${d.med.hypo.includes("Élevé") || d.med.hypo.includes("Très") ? "red" : d.med.hypo.includes("Modéré") ? "orange" : "green"}">Risque hypo : ${esc(d.med.hypo)}</span>
+            <span class="pill">${esc(d.med.poids)}</span>
+          </div>
+          <h4 style="margin-top:10px;">${esc(d.med.dci)} <span class="muted">(${esc((d.med.marques || []).join(", "))})</span></h4>
+          <div class="grid two small">
+            <div><strong>Dose lue :</strong> ${esc(d.dose)}<br><strong>Moment :</strong> ${esc(d.timing)}</div>
+            <div><strong>Adaptation rénale :</strong> ${esc(d.med.renal)}<br><strong>Intérêt cardio-rénal :</strong> ${esc(d.med.cv)} / ${esc(d.med.renalBenefit)}</div>
+          </div>
+          <div class="small muted" style="margin-top:8px;">Ligne source : ${esc(d.line)}</div>
+        </div>
+      `).join("");
+      box.innerHTML = rows + renderTreatmentAssociationWarnings(tx);
+    }
+
+    function renderTreatmentAssociationWarnings(tx = classifyTreatment()) {
+      const warnings = [];
+      if (tx.glp && tx.dpp4) warnings.push("Association GLP-1/tirzépatide + DPP-4 : association généralement inutile, à réévaluer.");
+      if (tx.glpCount > 1) warnings.push("Double GLP-1/GIP-GLP-1 détecté : risque de doublon ou confusion d’indication.");
+      Object.entries(tx.classCounts).forEach(([classe, n]) => {
+        if (n > 1 && !normalize(classe).includes("insuline")) warnings.push(`Doublon possible dans la classe ${classe}.`);
+      });
+      return warnings.length ? `<div class="notice warn"><strong>Associations à vérifier</strong><ul class="list">${warnings.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>` : "";
+    }
+
+    function proposeHbA1c(p = getPatient()) {
+      if (p.targetUser) return { value: `${p.targetUser.toFixed(1)} %`, rationale: ["Objectif déjà défini par le médecin : conserver comme repère prioritaire si cohérent."] };
+      const reasons = [];
+      let low = 7.0, high = 7.0;
+      if (p.diabetesType === "dt1") {
+        low = 7.0; high = 7.5;
+        reasons.push("DT1 : objectif individualisé selon autonomie, hypoglycémies, capteur, grossesse et profession.");
+        if (p.pregnancy || p.pregnancyPlan) { low = 6.0; high = 6.5; reasons.push("Grossesse/projet : objectif plus strict uniquement sous suivi spécialisé, avec prévention des hypos."); }
+        if (p.highHypoRisk || (p.age && p.age >= 75)) { low = 7.5; high = 8.5; reasons.push("Risque hypoglycémique/fragilité : éviter un objectif trop strict."); }
+      } else {
+        low = 7.0; high = 7.5;
+        if ((p.age && p.age < 65) && !p.hasCvDisease && !p.hasCkd && !p.highHypoRisk) { low = 6.5; high = 7.0; reasons.push("Patient plutôt jeune, peu comorbide : objectif potentiellement plus strict si atteignable sans hypoglycémie."); }
+        if (p.hasCvDisease || p.hasCkd) { low = 7.0; high = 7.5; reasons.push("Atteinte cardio-rénale : éviter hypoglycémies et privilégier bénéfice cardio-rénal."); }
+        if (p.highHypoRisk || ["fragile", "tres-fragile"].includes(p.fragility) || (p.age && p.age >= 75)) { low = 7.5; high = 8.0; reasons.push("Âge, IRC, fragilité ou hypoglycémies : objectif moins strict."); }
+        if (p.fragility === "dependant" || p.institution) { low = 8.0; high = 8.5; reasons.push("Dépendance/institution : priorité à la sécurité et à la simplification."); }
+      }
+      const value = low === high ? `${low.toFixed(1)} %` : `${low.toFixed(1)}-${high.toFixed(1)} %`;
+      return { value, low, high, rationale: reasons };
+    }
+
+    function detectUrgencies(p = getPatient()) {
+      const urgencies = [];
+      const symptomaticHyper = (p.fastingGlucose && p.fastingGlucose >= 2.5) && (checked("polyurie") || checked("polydipsie") || checked("weightLossSymptom"));
+      if (symptomaticHyper) urgencies.push("Hyperglycémie majeure symptomatique.");
+      if (p.ketones === "positive") urgencies.push("Cétones positives.");
+      if (checked("vomiting")) urgencies.push("Vomissements.");
+      if (checked("dehydration")) urgencies.push("Déshydratation.");
+      if (checked("confusion")) urgencies.push("Confusion.");
+      if (checked("severeInfection")) urgencies.push("Infection sévère.");
+      if (p.pregnancy) urgencies.push("Grossesse.");
+      if (p.diabetesType === "dt1" && (p.ketones === "positive" || checked("vomiting"))) urgencies.push("DT1 avec risque d’acidocétose.");
+      if (checked("chestPain")) urgencies.push("Douleur thoracique.");
+      if (checked("strokeSigns")) urgencies.push("Signes neurologiques / AVC.");
+      if (checked("sepsis")) urgencies.push("Sepsis suspect.");
+      if (checked("acuteKidney")) urgencies.push("Insuffisance rénale aiguë suspecte.");
+      if (p.diabetesType === "lada" || p.diabetesType === "incertain") {
+        if (checked("weightLossSymptom") || p.ketones === "positive") urgencies.push("Diabète insulinopénique possible à ne pas traiter comme DT2 simple.");
+      }
+      return urgencies;
+    }
+
+    function renderHbGoal() {
+      const p = getPatient();
+      const goal = proposeHbA1c(p);
+      $("metricTarget").textContent = goal.value;
+      $("goalInline").textContent = goal.value;
+      $("hba1cGoalCard").innerHTML = `
+        <div class="notice good"><strong>Objectif proposé : HbA1c autour de ${esc(goal.value)}</strong>, à valider selon le contexte clinique.</div>
+        <ul class="list">${goal.rationale.map(r => `<li>${esc(r)}</li>`).join("") || "<li>Objectif à individualiser selon bénéfice, risque hypoglycémique et préférences patient.</li>"}</ul>
+      `;
+    }
+
+    function renderDt2Analysis() {
+      const p = getPatient();
+      const tx = classifyTreatment();
+      const urg = detectUrgencies(p);
+      const goal = proposeHbA1c(p);
+      const hbaAbove = p.hba1c && goal.high && p.hba1c > goal.high + 0.2;
+      const notices = [];
+      const options = [];
+      const safety = [];
+
+      if (urg.length) {
+        $("dt2Analysis").innerHTML = `
+          <div class="notice danger"><strong>Situation potentiellement urgente.</strong> Ne pas optimiser simplement le traitement en ville. Évaluer cétones, hydratation, état général, biologie urgente et adresser aux urgences ou en diabétologie selon contexte.</div>
+          <ul class="list">${urg.map(u => `<li>${esc(u)}</li>`).join("")}</ul>
+        `;
+        return;
+      }
+
+      notices.push(tx.none ? "Aucun traitement antidiabétique reconnu." : `${lastDetected.length} traitement(s) antidiabétique(s) reconnu(s).`);
+      if (tx.metformin) notices.push("Metformine présente : vérifier tolérance digestive, observance, DFG et situations de suspension.");
+      if (tx.sulfonylurea || tx.glinide) safety.push("Sulfamide/glinide : risque hypoglycémique et prise de poids, surtout si âge, IRC, repas irréguliers ou conduite.");
+      if (tx.dpp4) notices.push("DPP-4 : effet généralement modéré, poids neutre ; association inutile avec GLP-1/tirzépatide.");
+      if (tx.sglt2) notices.push("SGLT2 présent : vérifier DFG, hydratation et règles de suspension.");
+      if (tx.glp || tx.gipGlp) notices.push("GLP-1/GIP-GLP-1 présent : vérifier indication exacte, RCP, tolérance digestive, remboursement et association.");
+      if (tx.basal && tx.rapid) notices.push("Schéma basal-bolus détecté : vérifier autonomie, autosurveillance, hypoglycémies et cétones si DT1.");
+
+      if (p.egfr === null) safety.push("DFG non renseigné : indispensable avant adaptation metformine/SGLT2 et sécurisation des traitements hypoglycémiants.");
+      if (p.egfr !== null && p.egfr < 30 && tx.metformin) safety.push("Metformine avec DFG < 30 : contre-indication potentielle à vérifier immédiatement.");
+      if (p.egfr !== null && p.egfr < 45 && (tx.sulfonylurea || tx.glinide)) safety.push("IRC avec sulfamide/glinide : risque hypo majoré, réévaluer.");
+
+      if (p.diabetesType !== "dt2") {
+        safety.push("Le type de diabète n’est pas DT2 certain : ne pas appliquer l’algorithme DT2 sans clarification.");
+      } else if (hbaAbove) {
+        if (!tx.metformin && (!p.egfr || p.egfr >= 30)) options.push("Vérifier possibilité de metformine si tolérée et DFG compatible.");
+        if (p.hasObesity && !tx.glp && !tx.gipGlp) options.push("Obésité/IMC élevé : discuter GLP-1 ou tirzépatide si AMM compatible, RCP/remboursement vérifiés, et après prise en charge nutritionnelle.");
+        if ((p.hasCvDisease || p.hasHeartFailure || p.hasCkd) && !tx.sglt2) options.push("Profil cardio-rénal : discuter SGLT2 si indication et DFG compatibles.");
+        if (p.hasCvDisease && !tx.glp && !tx.gipGlp) options.push("Prévention cardiovasculaire : discuter GLP-1 à bénéfice cardiovasculaire selon données actualisées et profil.");
+        if (tx.sulfonylurea && (p.highHypoRisk || p.hasObesity)) options.push("Réévaluer sulfamide si hypoglycémies, poids élevé ou introduction d’un traitement à bénéfice cardio-métabolique.");
+        if (tx.basal && p.fastingGlucose && p.fastingGlucose <= 1.3) options.push("GAJ correcte avec HbA1c élevée : éviter d’augmenter indéfiniment la basale, rechercher hyperglycémie post-prandiale.");
+        if (!options.length) options.push("Vérifier observance, tolérance, RHD, accès au traitement, objectifs et préférences patient avant escalade.");
+      } else {
+        options.push("HbA1c proche de l’objectif proposé : privilégier sécurité, prévention des hypoglycémies et optimisation cardio-rénale.");
+      }
+
+      if (p.hasHeartFailure) options.push("Insuffisance cardiaque : SGLT2 prioritaire si compatible ; prudence déshydratation.");
+      if (p.hasCkd) options.push("IRC/albuminurie : renseigner DFG, albuminurie, évolution du DFG, potassium et traitements néphroprotecteurs.");
+      if (["fragile", "tres-fragile", "dependant"].includes(p.fragility)) options.push("Sujet fragile : simplifier, éviter hypoglycémies, déprescrire si nécessaire.");
+
+      $("dt2Analysis").innerHTML = `
+        <div class="notice ${safety.length ? "warn" : "good"}"><strong>Analyse rapide</strong><ul class="list">${notices.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>
+        ${safety.length ? `<div class="notice danger"><strong>Points de sécurité</strong><ul class="list">${safety.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
+        <div class="notice info"><strong>Options cohérentes à discuter</strong><ol class="list">${options.map(o => `<li>${esc(o)}</li>`).join("")}</ol></div>
+      `;
+    }
+
+    function renderDt1Analysis() {
+      const p = getPatient();
+      const tx = classifyTreatment();
+      const missing = DT1_CHECKS.filter(([id]) => !checked(id)).map(([, label]) => label);
+      const red = [];
+      if (p.diabetesType === "dt1" && !tx.basal && !checked("dt1BasalPresent")) red.push("DT1 sans insuline basale documentée : ne jamais arrêter l’insuline basale.");
+      if (p.ketones === "positive") red.push("Cétones positives.");
+      if (p.fastingGlucose && p.fastingGlucose > 2.5) red.push("Hyperglycémie élevée persistante possible.");
+      if (checked("vomiting")) red.push("Vomissements.");
+      if (checked("severeInfection")) red.push("Fièvre/infection sévère possible.");
+      if (p.pregnancy) red.push("Grossesse.");
+      if (p.severeHypo) red.push("Hypoglycémies sévères.");
+      if (checked("weightLossSymptom")) red.push("Perte de poids.");
+      if (checked("confusion")) red.push("Troubles de conscience.");
+
+      $("dt1Analysis").innerHTML = `
+        <div class="notice danger"><strong>DT1 : ne jamais arrêter l’insuline basale.</strong> Hyperglycémie + cétones/vomissements = urgence.</div>
+        ${red.length ? `<div class="notice danger"><strong>Alertes rouges DT1</strong><ul class="list">${red.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div>` : `<div class="notice good">Aucune alerte rouge DT1 renseignée.</div>`}
+        ${missing.length ? `<div class="notice warn"><strong>Éléments à vérifier au renouvellement</strong><ul class="list">${missing.slice(0, 12).map(m => `<li>${esc(m)}</li>`).join("")}</ul></div>` : `<div class="notice good">Check-list de renouvellement renseignée comme complète.</div>`}
+      `;
+    }
+
+    function renderBasal() {
+      const p = getPatient();
+      const dose = num("basalDose");
+      const values = parseNumbersList(val("basalFastingList"));
+      const low = num("fastingTargetLow") ?? 0.8;
+      const high = num("fastingTargetHigh") ?? 1.3;
+      const avg = values.length ? values.reduce((a,b) => a + b, 0) / values.length : null;
+      const last3 = values.slice(-3);
+      const last3High = last3.length >= 3 && last3.every(v => v > high);
+      const hypo = values.some(v => v < 0.70) || p.nightHypo;
+      const lines = [];
+
+      if (!dose) {
+        const w = p.weight || 70;
+        const conservative = Math.max(4, Math.round(w * 0.1));
+        const standard = Math.round(w * 0.2);
+        lines.push(`Initiation indicative DT2 si nécessaire : dose prudente 6 à 10 UI/j ou environ 0,1-0,2 UI/kg/j (${conservative}-${standard} UI pour ce poids), plus basse si âgé, fragile, DFG bas ou hypoglycémies.`);
+      } else if (hypo) {
+        lines.push("Glycémie < 0,70 g/L ou hypoglycémie nocturne : réduire la basale de 2 UI ou 10-20 % selon dose et contexte, rechercher cause.");
+      } else if (last3High) {
+        lines.push("Trois GAJ consécutives au-dessus de l’objectif sans hypoglycémie : augmentation prudente de +2 UI possible selon protocole personnalisé.");
+      } else if (avg !== null && avg >= low && avg <= high && p.hba1c && p.hba1c > (proposeHbA1c(p).high || 7.5)) {
+        lines.push("GAJ dans l’objectif mais HbA1c élevée : ne pas augmenter indéfiniment la basale ; penser post-prandial, repas, observance, GLP-1, SGLT2 ou rapide selon profil.");
+      } else if (avg !== null) {
+        lines.push("GAJ moyenne analysée : adaptation à décider selon tendance, hypos et objectif personnalisé.");
+      } else {
+        lines.push("Renseigner 3 à 7 glycémies à jeun pour une titration utile.");
+      }
+
+      $("basalAnalysis").innerHTML = `
+        <div class="notice info"><strong>Données</strong><br>GAJ moyenne : ${avg === null ? "non calculée" : avg.toFixed(2) + " g/L"} ; objectif ${low.toFixed(2)}-${high.toFixed(2)} g/L.</div>
+        <ul class="list">${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>
+        <div class="notice warn">Basale trop augmentée avec glycémie à jeun correcte = risque d’hypoglycémie nocturne. Penser hyperglycémie post-prandiale, repas, observance, GLP-1, SGLT2 ou insuline rapide selon profil.</div>
+      `;
+    }
+
+    function renderRapid() {
+      const before = num("rapidBefore");
+      const after = num("rapidAfter");
+      const next = num("rapidNext");
+      const meal = val("mealSize");
+      const lines = [];
+      const warn = [];
+      if (before !== null) {
+        if (before < 0.70) lines.push("Glycémie < 0,70 g/L : ne pas injecter immédiatement, resucrer, recontrôler.");
+        else if (before <= 1.80) lines.push("Glycémie 0,70 à 1,80 g/L : dose habituelle si repas prévu et protocole connu.");
+        else if (before <= 2.50) lines.push("Glycémie > 1,80 g/L : correction prudente selon protocole personnalisé.");
+        else lines.push("Glycémie > 2,50 g/L : vérifier contexte, cétones si DT1 ou symptômes.");
+      }
+      if (val("ketones") === "positive") warn.push("Cétones positives : alerte urgence, ne pas gérer seul.");
+      if (meal === "absent") warn.push("Pas de repas : pas d’insuline rapide prandiale sauf protocole spécifique de correction.");
+      if (meal === "leger") lines.push("Repas léger : dose prandiale habituellement réduite selon protocole.");
+      if (meal === "copieux") lines.push("Repas copieux : augmentation possible uniquement selon protocole personnalisé.");
+      if (yes("sportPlanned")) lines.push("Sport prévu : anticiper réduction/collation selon protocole et risque hypo.");
+      if (yes("alcohol")) lines.push("Alcool : risque hypoglycémique retardé, prudence et surveillance.");
+      if (val("autonomy") !== "bonne") warn.push("Autonomie limitée : éviter adaptation complexe sans éducation thérapeutique fiable.");
+      if (after && before && after - before > 0.8) lines.push("Hyperglycémie post-prandiale marquée : revoir glucides, dose rapide du repas, horaire d’injection et protocole.");
+      if (next && next < 0.8) warn.push("Glycémie avant repas suivant basse : réduire la dose rapide précédente.");
+
+      $("rapidAnalysis").innerHTML = `
+        ${warn.length ? `<div class="notice danger"><strong>Alertes rapides</strong><ul class="list">${warn.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+        <div class="notice info"><strong>Adaptation proposée à titre d’aide</strong><ul class="list">${(lines.length ? lines : ["Renseigner glycémie et repas pour une analyse."]).map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
+        <div class="notice warn">Adaptation à valider selon l’éducation thérapeutique, l’autonomie du patient, les objectifs glycémiques et le risque hypoglycémique.</div>
+      `;
+    }
+
+    function renderGlpAnalysis() {
+      const p = getPatient();
+      const tx = classifyTreatment();
+      const red = [];
+      const checks = GLP_CHECKS.filter(([id]) => checked(id)).map(([, label]) => label);
+      if (checked("glpAesthetic")) red.push("Demande esthétique.");
+      if (p.diabetesType === "dt1") red.push("DT1 : pas d’indication de gestion MG simple par aGLP-1/tirzépatide.");
+      if (p.ketones === "positive") red.push("Cétones positives / acidocétose à exclure.");
+      if (p.pregnancy || p.pregnancyPlan || p.breastfeeding) red.push("Grossesse, projet de grossesse ou allaitement.");
+      ["glpMedullaryCancer", "glpMen2", "glpPancreatitis", "glpAbdominalPain", "glpVomiting", "glpDehydration", "glpGastroparesis", "glpEatingDisorder"].forEach(id => {
+        if (checked(id)) red.push(GLP_CHECKS.find(([x]) => x === id)[1]);
+      });
+      if (tx.glpCount > 1) red.push("Association avec autre GLP-1/GIP-GLP-1.");
+      if (tx.glp && tx.dpp4) red.push("Association GLP-1 + DPP-4 inutile/à éviter.");
+      if ((checked("glpSulfonylurea") || tx.sulfonylurea || checked("glpInsulin") || tx.insulin) && (p.hypo || checked("glpRepeatedHypos"))) red.push("Hypoglycémies sous insuline/sulfamide non anticipées.");
+
+      const nutritionOk = yes("nutritionFollow") && yes("nutritionFailure");
+      const bmiOk = p.bmi !== null && (p.bmi >= 30 || (p.bmi >= 27 && (p.hasCvDisease || p.hasCkd || p.hasObesity || checked("sleepApnea") || checked("hypertension"))));
+      const indication = val("glpIndication");
+      const candidate = !red.length && (indication === "dt2" || ((indication === "obesite" || indication === "mixte") && bmiOk && nutritionOk));
+      const follow = [
+        "poids, IMC, tour de taille",
+        "HbA1c si DT2, glycémies si insuline/sulfamide",
+        "tension artérielle, hydratation, transit",
+        "tolérance digestive, douleurs abdominales, symptômes biliaires",
+        "apports protéiques, activité physique, fonte musculaire, risque de dénutrition",
+        "fonction rénale si vomissements/déshydratation, bilan hépatique selon contexte"
+      ];
+      const titrationBlock = ["glpVomiting", "glpSevereDiarrhea", "glpSevereConstipation", "glpAbdominalPain", "glpDehydration", "glpExcessWeightLoss", "glpRepeatedHypos"].some(checked);
+
+      $("glpAnalysis").innerHTML = `
+        ${red.length ? `<div class="notice danger"><strong>Prescription non appropriée actuellement ou à suspendre en attente d’avis</strong><ul class="list">${red.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div>` : ""}
+        ${candidate ? `<div class="notice good"><strong>Patient potentiellement éligible</strong><br>Patient potentiellement éligible à un traitement par aGLP-1 / tirzépatide selon AMM, sous réserve de vérification du RCP, du statut de remboursement, des contre-indications, et de l’inscription dans une prise en charge nutritionnelle et physique structurée.</div>` : ""}
+        ${!candidate && !red.length ? `<div class="notice warn">Prescription non appropriée actuellement : indication insuffisante, absence de prise en charge nutritionnelle préalable documentée, critères pondéraux non établis, ou données manquantes.</div>` : ""}
+        <div class="notice ${titrationBlock ? "danger" : "info"}"><strong>Titration</strong><br>${titrationBlock ? "Ne pas proposer d’augmentation de dose actuellement : tolérance ou sécurité défavorable renseignée." : "Vérifier tolérance, date de dernière injection et date de dernière augmentation. Ne jamais augmenter si symptômes digestifs importants, déshydratation, perte excessive ou hypoglycémies répétées."}<br><strong>Vérifier le RCP avant toute modification de dose.</strong></div>
+        <div class="notice info"><strong>Suivi</strong><ul class="list">${follow.map(f => `<li>${esc(f)}</li>`).join("")}</ul></div>
+        ${checks.length ? `<p class="small muted">Questions cochées : ${esc(checks.join(", "))}</p>` : ""}
+      `;
+    }
+
+    function renderComorbid() {
+      const p = getPatient();
+      const cards = [
+        ["Infarctus / coronaropathie", checked("mi") || checked("cad") || checked("angina") || checked("stent"), ["Éviter hypoglycémies.", "Privilégier bénéfice cardiovasculaire selon recommandations.", "Vérifier statine, LDL, antiagrégant, IEC/ARA2, PA, tabac."]],
+        ["AVC / AIT", checked("stroke"), ["Éviter hypoglycémies.", "Contrôler PA, LDL, tabac.", "Discuter molécules à bénéfice cardio-métabolique selon profil."]],
+        ["Insuffisance cardiaque", checked("heartFailure"), ["SGLT2 prioritaire si compatible.", "Prudence déshydratation.", "Éviter hypoglycémies."]],
+        ["IRC", p.hasCkd, ["Adapter metformine.", "Privilégier néphroprotection ; SGLT2 si compatible.", "Éviter glibenclamide ; avis néphro si DFG sévère ou albuminurie importante."]],
+        ["Obésité", p.hasObesity, ["Prise en charge nutritionnelle et activité physique.", "GLP-1/tirzépatide si critères compatibles.", "Surveiller dénutrition/fonte musculaire."]],
+        ["Sujet âgé fragile", ["fragile", "tres-fragile", "dependant"].includes(p.fragility) || (p.age && p.age >= 75), ["Simplifier.", "Sécuriser.", "Éviter objectifs trop stricts et hypoglycémies."]]
+      ];
+      $("comorbCards").innerHTML = cards.map(([title, active, bullets]) => `
+        <div class="notice ${active ? "good" : "info"}">
+          <strong>${esc(title)}</strong>
+          <ul class="list">${bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>
+        </div>
+      `).join("");
+      const active = cards.filter(c => c[1]).map(c => c[0]);
+      $("comorbAnalysis").innerHTML = active.length
+        ? `<div class="notice warn"><strong>Priorités détectées</strong><ul class="list">${active.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>`
+        : `<div class="notice info">Aucune comorbidité prioritaire cochée. Vérifier tout de même PA, LDL, tabac, rein, œil et pieds.</div>`;
+    }
+
+    function collectAlerts() {
+      const p = getPatient();
+      const tx = classifyTreatment();
+      const alerts = [];
+      detectUrgencies(p).forEach(a => alerts.push(["danger", a]));
+      if (tx.glp && tx.dpp4) alerts.push(["warn", "Association GLP-1/GIP-GLP-1 + DPP-4 : association généralement inutile."]);
+      if (tx.glpCount > 1) alerts.push(["danger", "Double GLP-1/GIP-GLP-1 ou Mounjaro + Wegovy/Saxenda/Ozempic possible."]);
+      if ((tx.sulfonylurea || tx.glinide) && (p.highHypoRisk || p.hasCkd)) alerts.push(["danger", "Sulfamide/glinide chez patient fragile, à risque hypo ou IRC."]);
+      if (lastDetected.some(d => d.med.id === "glibenclamide") && ((p.age && p.age >= 75) || p.hasCkd || p.fragility !== "vigoureux")) alerts.push(["danger", "Glibenclamide chez sujet âgé/fragile/IRC : risque d’hypoglycémie prolongée."]);
+      if (tx.sglt2 && (p.ketones === "positive" || checked("dehydration") || checked("vomiting") || checked("severeInfection"))) alerts.push(["danger", "SGLT2 avec cétones/déshydratation/vomissements/infection sévère : suspendre et évaluer urgence selon contexte."]);
+      if (tx.metformin && p.egfr !== null && p.egfr < 30) alerts.push(["danger", "Metformine avec DFG < 30 : contre-indication potentielle."]);
+      if (tx.insulin && !checked("dt1Sensor") && !checked("dt1Meter")) alerts.push(["warn", "Insuline sans autosurveillance documentée."]);
+      if (tx.rapid && val("mealSize") === "absent") alerts.push(["danger", "Insuline rapide alors que repas absent : ne pas injecter hors protocole de correction."]);
+      if (p.diabetesType === "dt1" && !tx.basal && !checked("dt1BasalPresent")) alerts.push(["danger", "DT1 sans insuline basale documentée."]);
+      if (p.hypo || p.severeHypo || p.nightHypo) alerts.push(["danger", "Hypoglycémies répétées ou sévères renseignées."]);
+      if (checked("glpAesthetic")) alerts.push(["danger", "Demande Mounjaro/Wegovy/Saxenda à visée esthétique."]);
+      if ((val("glpIndication") === "obesite" || val("glpIndication") === "mixte") && (!yes("nutritionFollow") || !yes("nutritionFailure"))) alerts.push(["warn", "Absence de prise en charge nutritionnelle préalable documentée avant aGLP-1 obésité."]);
+      if (p.pregnancy || p.pregnancyPlan || p.breastfeeding) alerts.push(["danger", "Grossesse/projet grossesse/allaitement : vérifier toutes molécules, avis spécialisé."]);
+      if (checked("glpPancreatitis") || checked("glpAbdominalPain")) alerts.push(["danger", "Pancréatite suspecte ou antécédent non clarifié avant GLP-1/tirzépatide."]);
+      return alerts;
+    }
+
+    function renderAlerts() {
+      const alerts = collectAlerts();
+      if (!alerts.length) {
+        $("alertList").innerHTML = `<div class="notice good">Aucune alerte majeure détectée avec les données saisies. Vérification médicale toujours nécessaire.</div>`;
+        $("metricRisk").textContent = "Bas";
+        $("metricRiskHint").textContent = "Aucune alerte majeure";
+        return;
+      }
+      const hasDanger = alerts.some(([level]) => level === "danger");
+      $("metricRisk").textContent = hasDanger ? "Élevé" : "Prudence";
+      $("metricRiskHint").textContent = `${alerts.length} alerte(s)`;
+      $("alertList").innerHTML = alerts.map(([level, text]) => `<div class="notice ${level}">${esc(text)}</div>`).join("");
+    }
+
+    function patientLine(p) {
+      const type = ({ dt1: "DT1", dt2: "DT2", lada: "LADA suspect", cortico: "diabète cortico-induit", secondaire: "diabète secondaire", incertain: "diabète incertain" })[p.diabetesType] || "diabète";
+      const parts = [type];
+      if (p.hba1c) parts.push(`HbA1c ${p.hba1c.toFixed(1)} %`);
+      if (p.fastingGlucose) parts.push(`GAJ ${p.fastingGlucose.toFixed(2)} g/L`);
+      if (p.bmi) parts.push(`IMC ${p.bmi.toFixed(1)}`);
+      if (p.egfr !== null) parts.push(`DFG ${p.egfr}`);
+      if (p.cv.length) parts.push(p.cv.slice(0, 3).join(", "));
+      return parts.join(", ");
+    }
+
+    function medDisplay(d) {
+      const brand = d.med.marques?.length ? ` / ${d.med.marques.join(", ")}` : "";
+      return `${d.med.dci}${brand}`;
+    }
+
+    function medRoute(med) {
+      const cls = normalize(med.classe);
+      if (cls.includes("insuline") || cls.includes("glp") || cls.includes("gip")) return "injectable probable";
+      return "oral probable";
+    }
+
+    function extractFrequency(line) {
+      const n = normalize(line);
+      const patterns = [
+        [/x\s*([1-4])/, "x$1/j"],
+        [/([1-4])\s*fois/, "$1 fois/j"],
+        [/matin.*soir|soir.*matin/, "2 prises/j"],
+        [/hebdo|semaine/, "hebdomadaire"],
+        [/tous les jours|quotidien/, "quotidien"]
+      ];
+      for (const [re, label] of patterns) {
+        const match = n.match(re);
+        if (match) return label.replace("$1", match[1] || "");
+      }
+      return "fréquence non lue";
+    }
+
+    function detectedMedsText() {
+      if (!lastDetected.length) return "Aucun traitement antidiabétique détecté dans l’ordonnance collée.";
+      return lastDetected.map(d => `${medDisplay(d)} (${d.dose}, ${extractFrequency(d.line)}, ${d.timing})`).join(" + ");
+    }
+
+    function treatmentProblems(p, tx, alerts = collectAlerts()) {
+      const goal = proposeHbA1c(p);
+      const hbaAbove = p.hba1c && goal.high && p.hba1c > goal.high + 0.2;
+      const hbaBelow = p.hba1c && goal.low && p.hba1c < goal.low - 0.3;
+      const problems = alerts.map(([, a]) => a);
+
+      if (tx.metformin && lastDetected.length === 1 && hbaAbove) problems.push("Metformine seule avec HbA1c au-dessus de l’objectif proposé : traitement probablement insuffisant si observance et tolérance correctes.");
+      if ((tx.sulfonylurea || tx.glinide) && ((p.age && p.age >= 75) || p.hasCkd || p.fragility !== "vigoureux")) problems.push("Sulfamide/glinide chez sujet âgé, fragile ou insuffisant rénal : sécurisation nécessaire.");
+      if (lastDetected.some(d => d.med.id === "glibenclamide") && (p.fragility !== "vigoureux" || p.hasCkd || (p.age && p.age >= 75))) problems.push("Glibenclamide chez patient fragile/IRC/âgé : option à haut risque hypoglycémique.");
+      if (tx.glp && tx.dpp4) problems.push("GLP-1/tirzépatide associé à DPP-4 : association généralement inutile.");
+      if (tx.glpCount > 1) problems.push("Double GLP-1/GIP-GLP-1 détecté : corriger le doublon ou vérifier l’intention.");
+      if (tx.sglt2 && (p.ketones === "positive" || checked("dehydration") || checked("vomiting"))) problems.push("SGLT2 dans un contexte de cétones, vomissements ou déshydratation : situation à risque.");
+      if (tx.rapid && val("mealSize") === "absent") problems.push("Insuline rapide avec repas absent : risque d’hypoglycémie hors protocole de correction.");
+      if (tx.insulin && !checked("dt1Sensor") && !checked("dt1Meter")) problems.push("Insuline sans autosurveillance documentée.");
+      if (p.diabetesType === "dt1" && !tx.basal && !checked("dt1BasalPresent")) problems.push("DT1 sans insuline basale documentée.");
+      if (tx.basal && p.fastingGlucose && p.fastingGlucose <= 1.3 && hbaAbove) problems.push("Insuline basale probablement déjà suffisante sur la glycémie à jeun : ne pas augmenter indéfiniment, rechercher le post-prandial.");
+      if (hbaBelow || p.hypo || p.severeHypo || p.nightHypo) problems.push("Traitement potentiellement trop intensif ou à sécuriser du fait d’une HbA1c basse et/ou d’hypoglycémies.");
+      return [...new Set(problems)];
+    }
+
+    function missingTreatments(p, tx) {
+      const goal = proposeHbA1c(p);
+      const hbaAbove = p.hba1c && goal.high && p.hba1c > goal.high + 0.2;
+      const missing = [];
+      if (p.diabetesType === "dt2" && hbaAbove && !tx.metformin && (p.egfr === null || p.egfr >= 30)) missing.push("Metformine si DFG compatible et tolérance attendue.");
+      if (p.diabetesType === "dt2" && (p.hasHeartFailure || p.hasCkd || checked("macroalbuminuria") || checked("microalbuminuria")) && !tx.sglt2) missing.push("SGLT2 si AMM, DFG et remboursement compatibles.");
+      if (p.diabetesType === "dt2" && (p.hasObesity || (p.bmi !== null && p.bmi >= 30)) && !tx.glp && !tx.gipGlp) missing.push("GLP-1 ou tirzépatide si AMM compatible, contre-indications absentes et objectif pondéral/métabolique pertinent.");
+      if (p.diabetesType === "dt2" && p.hasCvDisease && !tx.glp && !tx.gipGlp) missing.push("Molécule à bénéfice cardiovasculaire selon recommandations actualisées.");
+      if (p.diabetesType === "dt1" && !tx.basal && !checked("dt1BasalPresent")) missing.push("Insuline basale indispensable en DT1.");
+      if (p.diabetesType === "dt1" && !tx.rapid && !checked("dt1RapidPresent")) missing.push("Insuline rapide/prandiale à vérifier si schéma basal-bolus.");
+      return missing;
+    }
+
+    function glycemicPattern(p) {
+      const goal = proposeHbA1c(p);
+      const post = parseNumbersList(p.postMeal);
+      const pre = parseNumbersList(p.preMeal);
+      const postAvg = post.length ? post.reduce((a, b) => a + b, 0) / post.length : null;
+      const preAvg = pre.length ? pre.reduce((a, b) => a + b, 0) / pre.length : null;
+      return {
+        hbaAbove: p.hba1c && goal.high && p.hba1c > goal.high + 0.2,
+        hbaBelow: p.hba1c && goal.low && p.hba1c < goal.low - 0.3,
+        fastingHigh: p.fastingGlucose !== null && p.fastingGlucose > 1.3,
+        fastingLow: p.fastingGlucose !== null && p.fastingGlucose < 0.8,
+        fastingCorrect: p.fastingGlucose !== null && p.fastingGlucose >= 0.8 && p.fastingGlucose <= 1.3,
+        postHigh: postAvg !== null && postAvg > 1.8,
+        preHigh: preAvg !== null && preAvg > 1.3,
+        postAvg,
+        preAvg
+      };
+    }
+
+    function interpretTreatment(p, tx, problems, missing) {
+      const g = glycemicPattern(p);
+      const labels = [];
+      if (problems.some(x => /cétone|vomissement|déshydratation|DT1 avec risque|douleur thoracique|AVC|sepsis/i.test(x))) labels.push("dangereux ou urgent à évaluer");
+      if (!lastDetected.length) labels.push("incomplet : aucun traitement reconnu");
+      if (g.hbaAbove) labels.push("insuffisant par rapport à l’objectif HbA1c proposé");
+      if (g.hbaBelow || p.hypo || p.severeHypo || p.nightHypo) labels.push("potentiellement trop intensif");
+      if (tx.glpCount > 1 || (tx.glp && tx.dpp4)) labels.push("incohérent par association inutile ou doublon");
+      if (missing.length) labels.push("à optimiser selon les comorbidités");
+      if (!labels.length) labels.push("globalement compatible avec les données saisies, sous réserve de tolérance et d’observance");
+
+      const reasons = [];
+      if (g.hbaAbove) reasons.push("HbA1c au-dessus de l’objectif proposé : vérifier observance, tolérance, hygiène de vie, dose réellement prise et délai depuis la dernière modification.");
+      if (g.fastingHigh) reasons.push("Glycémie à jeun élevée : évoquer insuffisance basale ou optimisation de fond, sans corriger uniquement par rapide.");
+      if (g.hbaAbove && g.fastingCorrect) reasons.push("HbA1c élevée avec glycémie à jeun correcte : profil compatible avec hyperglycémies post-prandiales.");
+      if (g.postHigh) reasons.push("Glycémies post-prandiales élevées : discuter repas, GLP-1/tirzépatide, SGLT2 ou adaptation prandiale selon contexte.");
+      if (p.hasObesity) reasons.push("Obésité/IMC élevé : privilégier si possible une stratégie à effet pondéral favorable.");
+      if (p.hasCvDisease) reasons.push("Antécédent cardiovasculaire : éviter hypoglycémies et discuter bénéfice cardio-métabolique.");
+      if (p.hasHeartFailure || p.hasCkd) reasons.push("Insuffisance cardiaque/IRC/albuminurie : intérêt potentiel des SGLT2 si DFG et AMM compatibles.");
+      if (["fragile", "tres-fragile", "dependant"].includes(p.fragility) || (p.age && p.age >= 75)) reasons.push("Sujet âgé ou fragile : objectif moins strict, simplification et prévention des hypoglycémies.");
+      if (!reasons.length) reasons.push("Interprétation limitée par les données disponibles : compléter DFG, albuminurie, glycémies et tolérance.");
+      return { labels, reasons };
+    }
+
+    function mainTherapyAdvice(p, tx, problems, missing) {
+      const request = val("therapyRequest");
+      const g = glycemicPattern(p);
+      const advice = [
+        "Conseil indicatif d’aide à la décision. À valider par le médecin selon le contexte clinique, le RCP, le DFG, les contre-indications, les recommandations actualisées et les préférences du patient."
+      ];
+
+      if (problems.some(x => /cétone|vomissement|déshydratation|confusion|douleur thoracique|AVC|sepsis|acidocétose/i.test(x)) || request === "urgence") {
+        advice.push("Ne pas optimiser simplement l’ordonnance en ville tant qu’une situation urgente ou instable n’est pas exclue : évaluer cétones, hydratation, état général, biologie urgente et orientation selon contexte.");
+      }
+
+      if (request === "introduire" || (!lastDetected.length && p.diabetesType === "dt2")) {
+        if (p.diabetesType === "dt2" && !tx.metformin && (p.egfr === null || p.egfr >= 30)) advice.push("Introduction possible de metformine si DFG compatible, absence de contre-indication et tolérance digestive acceptable.");
+        if ((p.hasHeartFailure || p.hasCkd || p.hasCvDisease) && !tx.sglt2) advice.push("Discuter SGLT2 si insuffisance cardiaque, IRC, albuminurie ou haut risque cardio-rénal, sous réserve du DFG, de l’AMM et du risque cétonique/déshydratation.");
+        if ((p.hasObesity || g.hbaAbove) && !tx.glp && !tx.gipGlp) advice.push("Discuter GLP-1 ou tirzépatide si besoin de perte pondérale ou bénéfice métabolique attendu, avec vérification RCP/AMM/remboursement.");
+        if (p.highHypoRisk) advice.push("Si priorité sécurité chez patient fragile, une DPP4 peut se discuter malgré une efficacité modérée, si absence de GLP-1/tirzépatide.");
+        if (p.hba1c && p.hba1c >= 10) advice.push("HbA1c très élevée : discuter insulinothérapie basale ou avis diabétologique, surtout si symptômes cataboliques ou cétones.");
+      }
+
+      if (request === "augmenter" || request === "hba1c") {
+        advice.push("Avant augmentation : vérifier observance, tolérance, doses maximales tolérées, DFG, hypoglycémies, poids, interactions, erreurs de prise, alimentation et délai suffisant depuis la dernière modification.");
+        if (g.hbaAbove) advice.push("Si le traitement actuel est bien toléré mais insuffisant, discuter augmentation progressive ou ajout d’une classe avec bénéfice cardio-rénal ou pondéral selon profil.");
+        if (tx.sulfonylurea && p.highHypoRisk) advice.push("Éviter une escalade du sulfamide si risque hypoglycémique : préférer remplacement/simplification ou autre classe plus sûre selon profil.");
+      }
+
+      if (request === "diminuer") {
+        if (p.hypo || p.severeHypo || p.nightHypo || g.hbaBelow) advice.push("Diminution/déprescription à discuter en priorité : hypoglycémies ou HbA1c sous objectif.");
+        if (tx.sulfonylurea || tx.glinide) advice.push("Réduire ou arrêter sulfamide/glinide si hypoglycémies, repas irréguliers, DFG bas, sujet âgé ou introduction GLP-1/tirzépatide.");
+        if (tx.insulin) advice.push("Réduire insuline si hypoglycémies, perte de poids importante ou baisse glycémique après ajout d’un traitement non insulinique.");
+      }
+
+      if (request === "remplacer" || request === "corriger") {
+        if (tx.glp && tx.dpp4) advice.push("Remplacer/corriger : arrêter l’association inutile GLP-1/tirzépatide + DPP4 selon validation médicale.");
+        if (tx.glpCount > 1) advice.push("Corriger le doublon GLP-1/GIP-GLP-1 : ne conserver qu’une stratégie compatible avec l’AMM et l’objectif clinique.");
+        if (tx.sulfonylurea && (p.highHypoRisk || p.hasObesity)) advice.push("Remplacement possible du sulfamide si hypoglycémies, prise de poids ou besoin cardio-métabolique.");
+        if (tx.metformin && p.egfr !== null && p.egfr < 30) advice.push("Metformine avec DFG incompatible : arrêt/remplacement à discuter immédiatement selon RCP.");
+      }
+
+      if (request === "renouveler") {
+        advice.push("Renouvellement : confirmer type de diabète, DFG, albuminurie, hypoglycémies, observance, tolérance, autosurveillance si insuline, matériel et éducation thérapeutique.");
+        if (p.diabetesType === "dt1") advice.push("DT1 : vérifier basale, rapide, aiguilles, capteur/bandelettes, lecteur, glucagon, cétones, protocole hypo/hyper et suivi diabétologue.");
+      }
+
+      if (request === "gaj" || g.fastingHigh) {
+        advice.push("Glycémie à jeun élevée : vérifier autosurveillance, horaire d’injection, observance, hypoglycémie nocturne et discuter titration prudente de la basale si indiquée.");
+      }
+
+      if (request === "postprandial" || (g.hbaAbove && g.fastingCorrect) || g.postHigh) {
+        advice.push("HbA1c élevée avec glycémie à jeun correcte ou post-prandiales hautes : ne pas augmenter indéfiniment la basale ; discuter analyse post-repas, adaptation alimentaire, GLP-1/tirzépatide, SGLT2 ou insuline rapide selon contexte.");
+      }
+
+      if (request === "basale") advice.push("Adapter l’insuline lente selon 3 à 7 glycémies à jeun, sans hypoglycémie nocturne, avec contrôle rapproché.");
+      if (request === "rapide") advice.push("Adapter l’insuline rapide selon repas, activité physique, alcool, DFG, autonomie et protocole personnalisé.");
+
+      if (request === "glp") {
+        advice.push("GLP-1/tirzépatide : intérêt si DT2 avec obésité ou besoin métabolique, mais vérifier AMM, RCP, remboursement, contre-indications, tolérance digestive, pancréatite, grossesse/projet et absence d’association DPP4/double GLP-1.");
+      }
+
+      if (request === "sglt2") {
+        advice.push("SGLT2 : intérêt à discuter si insuffisance cardiaque, IRC, albuminurie ou haut risque cardio-rénal. Éviter DT1 hors avis spécialisé et suspendre en cas de jeûne, chirurgie, vomissements, déshydratation, infection sévère ou cétones.");
+      }
+
+      if (request === "fragile") {
+        advice.push("Sujet âgé/fragile/IRC : simplifier, éviter hypoglycémies, alléger sulfamides/insuline si possible, privilégier schémas simples et objectifs HbA1c moins stricts.");
+      }
+
+      if (request === "avis") {
+        advice.push("Avis diabétologique si DT1 instable, cétones, HbA1c très élevée persistante, insulinothérapie complexe, DFG sévère/albuminurie importante, grossesse/projet, hypoglycémies sévères ou ordonnance incohérente persistante.");
+      }
+
+      missing.forEach(m => advice.push(`Traitement ou axe manquant à discuter : ${m}`));
+      return [...new Set(advice)];
+    }
+
+    function insulinAdvice(p, tx) {
+      const g = glycemicPattern(p);
+      const basalValues = parseNumbersList(val("basalFastingList"));
+      const basalAvg = basalValues.length ? basalValues.reduce((a, b) => a + b, 0) / basalValues.length : p.fastingGlucose;
+      const lines = [];
+
+      if (p.diabetesType === "dt1") {
+        lines.push("DT1 : ne jamais proposer l’arrêt de la basale ; vérifier cétones si hyperglycémie importante ; avis diabétologique si déséquilibre ; urgence si hyperglycémie + cétones/vomissements.");
+      }
+      if (basalAvg !== null && basalAvg > 1.3 && !p.nightHypo) {
+        lines.push("Glycémie à jeun moyenne au-dessus de l’objectif. Si absence d’hypoglycémie nocturne et injection correcte, une augmentation prudente de la basale peut être discutée, par exemple +2 UI après 3 GAJ consécutives au-dessus de l’objectif.");
+      }
+      if ((basalAvg !== null && basalAvg < 0.8) || p.nightHypo) {
+        lines.push("Risque de surdosage basal. Discuter diminution de la basale, par exemple -2 UI ou -10 à -20 % selon dose totale et contexte.");
+      }
+      if (g.hbaAbove && g.fastingCorrect) {
+        lines.push("Ne pas augmenter indéfiniment la basale : profil compatible avec hyperglycémies post-prandiales.");
+      }
+      lines.push("Insuline rapide : glycémie élevée avant midi = problème probable du petit-déjeuner ou dose rapide du matin ; avant dîner = déjeuner ou dose du midi ; au coucher = dîner ou dose du soir ; hypoglycémie avant repas = réduire la dose rapide précédente.");
+      lines.push("L’adaptation de l’insuline rapide doit tenir compte du repas, de l’activité physique, de l’alcool, du DFG, de l’autonomie du patient et du protocole personnalisé.");
+      if (!tx.insulin) lines.push("Aucune insuline détectée dans l’ordonnance collée ; ne pas initier sans indication claire, éducation, autosurveillance et suivi.");
+      return lines;
+    }
+
+    function safetyChecklist(p, tx) {
+      const highGlucose = p.fastingGlucose !== null && p.fastingGlucose >= 2.5;
+      const checklist = [
+        ["Type de diabète confirmé ?", !["incertain", "lada"].includes(p.diabetesType), "À clarifier si diabète incertain/LADA suspect."],
+        ["DT1 exclu avant SGLT2 ?", !(tx.sglt2 && p.diabetesType !== "dt2"), "Alerte si SGLT2 hors DT2 clair ou sans avis spécialisé."],
+        ["Cétones recherchées si hyperglycémie importante ?", !highGlucose || p.ketones !== "non-faite", "À faire si GAJ très élevée, symptômes ou DT1."],
+        ["DFG connu ?", p.egfr !== null, "Indispensable avant metformine/SGLT2/sulfamide/insuline."],
+        ["Albuminurie connue ?", Boolean(p.albuminuria || p.acr || checked("microalbuminuria") || checked("macroalbuminuria")), "Utile pour décision cardio-rénale."],
+        ["Hypoglycémies recherchées ?", true, p.hypo || p.severeHypo || p.nightHypo ? "Hypoglycémies renseignées : sécuriser." : "Non signalées dans le formulaire."],
+        ["Âge et fragilité pris en compte ?", true, p.fragility !== "vigoureux" || (p.age && p.age >= 75) ? "Profil fragile/âgé : objectif moins strict." : "Pas de fragilité majeure saisie."],
+        ["Grossesse ou projet grossesse ?", !(p.pregnancy || p.pregnancyPlan || p.breastfeeding), "Avis spécialisé et vérification stricte des traitements."],
+        ["Poids/IMC pris en compte ?", p.bmi !== null, "À renseigner pour GLP-1/tirzépatide et stratégie pondérale."],
+        ["Antécédent CV/IC/IRC pris en compte ?", true, p.hasCvDisease || p.hasHeartFailure || p.hasCkd ? "Profil cardio-rénal détecté." : "Aucun antécédent prioritaire coché."],
+        ["Traitement à risque hypoglycémique identifié ?", true, tx.sulfonylurea || tx.glinide || tx.insulin ? "Risque hypo présent." : "Pas de traitement hypo majeur détecté."],
+        ["Association GLP-1 + DPP4 exclue ?", !(tx.glp && tx.dpp4), "Association inutile à corriger."],
+        ["Double GLP-1 exclu ?", tx.glpCount <= 1, "Doublon GLP-1/GIP-GLP-1 à corriger."],
+        ["Observance vérifiée ?", false, "À vérifier avant toute escalade."],
+        ["Tolérance vérifiée ?", false, "Digestive, urinaire, génitale, hypoglycémique."],
+        ["Avis diabétologique nécessaire ?", !needsSpecialistAdvice(p, tx), specialistReason(p, tx)]
+      ];
+      return checklist;
+    }
+
+    function needsSpecialistAdvice(p, tx) {
+      return p.diabetesType === "dt1" && (p.ketones === "positive" || p.hba1c >= 9)
+        || p.diabetesType === "lada"
+        || p.diabetesType === "incertain"
+        || p.ketones === "positive"
+        || (p.egfr !== null && p.egfr < 30)
+        || checked("macroalbuminuria")
+        || p.severeHypo
+        || p.pregnancy
+        || tx.glpCount > 1
+        || (tx.glp && tx.dpp4)
+        || (p.hba1c && p.hba1c >= 10);
+    }
+
+    function specialistReason(p, tx) {
+      const reasons = [];
+      if (p.diabetesType === "dt1" && (p.ketones === "positive" || p.hba1c >= 9)) reasons.push("DT1 instable ou déséquilibré");
+      if (p.diabetesType === "lada" || p.diabetesType === "incertain") reasons.push("type de diabète à clarifier");
+      if (p.ketones === "positive") reasons.push("cétones positives");
+      if (p.egfr !== null && p.egfr < 30) reasons.push("DFG sévèrement diminué");
+      if (checked("macroalbuminuria")) reasons.push("albuminurie importante");
+      if (p.severeHypo) reasons.push("hypoglycémies sévères");
+      if (p.pregnancy) reasons.push("grossesse");
+      if (tx.glpCount > 1 || (tx.glp && tx.dpp4)) reasons.push("ordonnance incohérente à sécuriser");
+      if (p.hba1c && p.hba1c >= 10) reasons.push("HbA1c très élevée");
+      return reasons.length ? reasons.join(", ") : "non systématique avec les données saisies";
+    }
+
+    function buildTherapyAdvice() {
+      const p = getPatient();
+      const tx = classifyTreatment();
+      const alerts = collectAlerts();
+      const problems = treatmentProblems(p, tx, alerts);
+      const missing = missingTreatments(p, tx);
+      const interpretation = interpretTreatment(p, tx, problems, missing);
+      const advice = mainTherapyAdvice(p, tx, problems, missing);
+      const insulin = insulinAdvice(p, tx);
+      const checklist = safetyChecklist(p, tx);
+      const requestLabel = $("therapyRequest")?.selectedOptions?.[0]?.textContent || "Demande non précisée";
+      const g = glycemicPattern(p);
+      const comorbid = [...p.cv, ...p.complications].slice(0, 8);
+      const surveillance = [
+        "HbA1c à 3 mois selon modification",
+        "poids, IMC et tour de taille si stratégie pondérale",
+        "DFG et albuminurie",
+        "hypoglycémies et autosurveillance si insuline/sulfamide",
+        "tolérance digestive si GLP-1/tirzépatide",
+        "tolérance génito-urinaire, hydratation et cétones si SGLT2"
+      ];
+      const copy = [
+        "Conseil thérapeutique personnalisé diabète",
+        `Demande principale : ${requestLabel}.`,
+        `Ordonnance analysée : ${detectedMedsText()}`,
+        `Profil patient : ${patientLine(p) || "profil non renseigné"}.`,
+        `HbA1c / glycémies : HbA1c ${p.hba1c !== null ? p.hba1c.toFixed(1) + " %" : "non renseignée"} ; GAJ ${p.fastingGlucose !== null ? p.fastingGlucose.toFixed(2) + " g/L" : "non renseignée"} ; préprandiales ${p.preMeal || "non renseignées"} ; post-prandiales ${p.postMeal || "non renseignées"}.`,
+        `Comorbidités : ${comorbid.length ? comorbid.join(", ") : "non renseignées"}.`,
+        `Interprétation : ${interpretation.labels.join("; ")}.`,
+        `Conseil thérapeutique : ${advice.slice(0, 4).join(" ")}`,
+        `Points de sécurité : ${problems.length ? problems.slice(0, 5).join(" ; ") : "pas d’alerte majeure détectée avec les données saisies"}.`,
+        `Surveillance : ${surveillance.join(", ")}.`,
+        `Avis spécialisé : ${needsSpecialistAdvice(p, tx) ? "oui" : "non systématique"}, motif : ${specialistReason(p, tx)}.`
+      ].join("\n");
+
+      return {
+        p, tx, alerts, problems, missing, interpretation, advice, insulin, checklist, requestLabel, g, surveillance, copy
+      };
+    }
+
+    function renderTherapyAdvice() {
+      const out = $("therapyAdviceOutput");
+      if (!out) return;
+      const data = buildTherapyAdvice();
+      const medLines = lastDetected.length ? lastDetected.map(d => {
+        const tags = [
+          `${medRoute(d.med)}`,
+          d.med.hypo && `risque hypo : ${d.med.hypo}`,
+          d.med.cv && `CV : ${d.med.cv}`,
+          d.med.renalBenefit && `rein : ${d.med.renalBenefit}`,
+          d.med.poids && `poids : ${d.med.poids}`
+        ].filter(Boolean).join(" ; ");
+        return `<li><strong>${esc(medDisplay(d))}</strong> - ${esc(d.med.classe)} ; dose ${esc(d.dose)} ; fréquence ${esc(extractFrequency(d.line))} ; horaire ${esc(d.timing)}. <span class="muted">${esc(tags)}. DFG : ${esc(d.med.renal)}</span></li>`;
+      }).join("") : "<li>Aucun traitement reconnu. Coller l’ordonnance puis cliquer sur analyser.</li>";
+      const problemLines = data.problems.length ? data.problems.map(x => `<li>${esc(x)}</li>`).join("") : "<li>Pas de doublon ou association dangereuse détectée avec les données saisies.</li>";
+      const missingLines = data.missing.length ? data.missing.map(x => `<li>${esc(x)}</li>`).join("") : "<li>Aucun traitement manquant évident avec les données saisies, sous réserve de validation médicale.</li>";
+      const checklistLines = data.checklist.map(([label, ok, note]) => `<li><strong>${esc(label)}</strong> ${ok ? "OK / renseigné" : "À vérifier"} - ${esc(note)}</li>`).join("");
+
+      out.innerHTML = `
+        <div class="therapy-section full">
+          <h4>1. Analyse de l’ordonnance actuelle</h4>
+          <ul class="list">${medLines}</ul>
+          <div class="notice ${data.problems.some(p => /urgence|cétone|dangereux|surdosage|DT1/i.test(p)) ? "danger" : data.problems.length ? "warn" : "good"}">
+            <strong>Ce qui pose problème</strong>
+            <ul class="list">${problemLines}</ul>
+          </div>
+          <div class="notice info"><strong>Traitements ou axes manquants selon profil</strong><ul class="list">${missingLines}</ul></div>
+        </div>
+        <div class="therapy-section">
+          <h4>2. Interprétation selon le patient</h4>
+          <p><strong>Lecture globale :</strong> ${esc(data.interpretation.labels.join("; "))}.</p>
+          <ul class="list">${data.interpretation.reasons.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        </div>
+        <div class="therapy-section">
+          <h4>3. Conseil d’introduction ou de correction</h4>
+          <p><strong>Demande :</strong> ${esc(data.requestLabel)}</p>
+          <ul class="list">${data.advice.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        </div>
+        <div class="therapy-section">
+          <h4>4. Conseils spécifiques insuline</h4>
+          <ul class="list">${data.insulin.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        </div>
+        <div class="therapy-section">
+          <h4>5. Points de sécurité avant validation</h4>
+          <ul class="list">${checklistLines}</ul>
+        </div>
+        <div class="therapy-section full">
+          <h4>6. Synthèse copiable</h4>
+          <textarea id="therapyAdviceText" class="therapy-copy">${esc(data.copy)}</textarea>
+        </div>
+      `;
+      return data.copy;
+    }
+
+    function isOui(value) {
+      return normalize(value) === "oui";
+    }
+
+    function doseNumber(text) {
+      const match = String(text || "").match(/(\d+[,.]?\d*)\s*(?:ui|u|unit[eé]s?)/i);
+      return match ? Number(match[1].replace(",", ".")) : null;
+    }
+
+    function setIfEmpty(id, value) {
+      if (!$(id) || val(id)) return;
+      if (value !== null && value !== undefined && value !== "") setVal(id, value);
+    }
+
+    function setSelectIfPossible(id, value, otherId) {
+      const el = $(id);
+      if (!el || !value || val(id)) return;
+      const clean = normalize(value);
+      const options = Array.from(el.options || []);
+      const found = options.find(opt => {
+        const label = normalize(opt.value || opt.textContent);
+        return label && (label === clean || clean.includes(label));
+      });
+      if (found) {
+        el.value = found.value || found.textContent;
+      } else {
+        el.value = "Autre";
+        if (otherId) setIfEmpty(otherId, value);
+      }
+    }
+
+    function detectMealDose(raw, meal) {
+      const text = String(raw || "");
+      const patterns = [
+        new RegExp(`(\\d+)\\s*(?:ui|u|unit[eé]s?)\\s*(?:le\\s*)?${meal}`, "i"),
+        new RegExp(`${meal}[^\\d]{0,18}(\\d+)\\s*(?:ui|u|unit[eé]s?)`, "i")
+      ];
+      for (const re of patterns) {
+        const match = text.match(re);
+        if (match) return Number(match[1]);
+      }
+      return null;
+    }
+
+    function firstDetectedByClass(fragment) {
+      return lastDetected.find(d => normalize(d.med.classe).includes(normalize(fragment)));
+    }
+
+    function syncInsulinProtocolDefaults() {
+      const p = getPatient();
+      const raw = val("orderText");
+      parseOrder();
+      setIfEmpty("protoDate", new Date().toISOString().slice(0, 10));
+      const typeMap = { dt1: "DT1", dt2: "DT2", lada: "Autre", cortico: "Autre", secondaire: "Autre", incertain: "Autre" };
+      if ($("protoDiabetesType")) $("protoDiabetesType").value = typeMap[p.diabetesType] || "Autre";
+      if (p.fastingGlucose !== null) setIfEmpty("protoTargetFasting", `${val("fastingTargetLow") || "0,80"} à ${val("fastingTargetHigh") || "1,30"} g/L`);
+      if (yes("hypo")) setVal("protoRecentHypo", "Oui");
+      if (yes("nightHypo")) setVal("protoNightHypo", "Oui");
+      if (p.ketones !== "non-faite") setVal("protoKetonesAvailable", "Oui");
+      if (checked("cognitive")) setVal("protoCognitive", "Oui");
+
+      const basalDetected = firstDetectedByClass("Insuline lente") || firstDetectedByClass("NPH");
+      const rapidDetected = firstDetectedByClass("Insuline rapide");
+      const basalName = val("basalType") || basalDetected?.med.marques?.[0] || basalDetected?.med.dci;
+      const rapidName = val("rapidType") || rapidDetected?.med.marques?.[0] || rapidDetected?.med.dci;
+      setSelectIfPossible("protoBasalName", basalName, "protoBasalOther");
+      setSelectIfPossible("protoRapidName", rapidName, "protoRapidOther");
+
+      const basalDose = num("basalDose") ?? doseNumber(basalDetected?.dose);
+      setIfEmpty("protoBasalDose", basalDose);
+      setIfEmpty("protoBasalTime", val("basalTime") || basalDetected?.timing);
+      if (basalDose) setIfEmpty("protoBasalWeekDose", `${basalDose} UI ${val("protoBasalTime") || "à horaire fixe"}`);
+
+      const rapidSource = rapidDetected?.line || raw;
+      setIfEmpty("protoRapidMorning", num("rapidMorning") ?? detectMealDose(rapidSource, "matin"));
+      setIfEmpty("protoRapidNoon", num("rapidNoon") ?? detectMealDose(rapidSource, "midi"));
+      setIfEmpty("protoRapidEvening", num("rapidEvening") ?? detectMealDose(rapidSource, "soir"));
+      setIfEmpty("protoFastingWeek", val("basalFastingList"));
+      setIfEmpty("protoBeforeNoonWeek", val("preMeal"));
+      setIfEmpty("protoBedWeek", val("bedGlucose"));
+      if (["fragile", "tres-fragile", "dependant"].includes(p.fragility) || (p.age && p.age >= 75)) setVal("protoGoalProfile", "fragile");
+      if (p.pregnancy || p.pregnancyPlan) setVal("protoGoalProfile", "grossesse");
+    }
+
+    function protoNum(id, fallback = null) {
+      const n = num(id);
+      return n === null ? fallback : n;
+    }
+
+    function protoName(selectId, otherId) {
+      const selected = val(selectId);
+      if (!selected) return "non précisée";
+      if (selected === "Autre") return val(otherId) || "autre insuline à préciser";
+      return selected;
+    }
+
+    function signedUi(value) {
+      const n = Number(value || 0);
+      if (n > 0) return `+${n} UI`;
+      if (n < 0) return `${n} UI`;
+      return "même dose";
+    }
+
+    function uiDose(value) {
+      const n = Number(value);
+      return Number.isFinite(n) && n > 0 ? `${n} UI` : "dose à préciser";
+    }
+
+    function analyzeBasalWeek(data) {
+      const values = parseNumbersList(data.fastingWeek);
+      const highCount = values.filter(v => v > data.basalHighThreshold).length;
+      const lowCount = values.filter(v => v < data.lowThreshold).length;
+      const veryHigh = values.some(v => v > data.ketoneThreshold);
+      const variable = values.length >= 4 && Math.max(...values) - Math.min(...values) > 1.0;
+      let action = "Garder la même dose si les glycémies sont dans l’objectif.";
+      if (lowCount > 0) action = `Diminuer l’insuline lente de -${data.basalDecrease} UI ou selon consigne médicale.`;
+      else if (veryHigh) action = "Hyperglycémie persistante élevée : vérifier cétones si DT1 ou symptômes, contacter médecin.";
+      else if (variable) action = "Glycémies très variables : ne pas modifier seul, contacter médecin/infirmière.";
+      else if (highCount > data.basalHighCount) action = `Augmenter l’insuline lente de +${data.basalIncrease} UI.`;
+      return { values, highCount, lowCount, veryHigh, variable, action };
+    }
+
+    function analyzeRapidSlot(valuesText, label, previousDoseLabel, data) {
+      const values = parseNumbersList(valuesText);
+      const low = values.some(v => v < data.lowThreshold);
+      const highCount = values.filter(v => v > data.rapidHighThreshold).length;
+      const variable = values.length >= 4 && Math.max(...values) - Math.min(...values) > 1.0;
+      let action = `Garder la dose rapide ${previousDoseLabel}.`;
+      if (low) action = `Diminuer la dose rapide ${previousDoseLabel} de -${data.rapidStep} UI.`;
+      else if (variable) action = "Glycémies très variables : ne pas modifier seul, contacter médecin/infirmière.";
+      else if (highCount > 3) action = `Augmenter la dose rapide ${previousDoseLabel} de +${data.rapidStep} UI.`;
+      return { label, previousDoseLabel, values, low, highCount, variable, action };
+    }
+
+    function getInsulinProtocolData() {
+      syncInsulinProtocolDefaults();
+      const p = getPatient();
+      const basalName = protoName("protoBasalName", "protoBasalOther");
+      const rapidName = protoName("protoRapidName", "protoRapidOther");
+      const data = {
+        patientName: val("protoLastName") || "à compléter",
+        firstName: val("protoFirstName") || "à compléter",
+        birthDate: val("protoBirthDate") || "à compléter",
+        date: val("protoDate") || new Date().toISOString().slice(0, 10),
+        doctor: val("protoDoctor") || "à compléter",
+        doctorPhone: val("protoDoctorPhone") || "à compléter",
+        nursePhone: val("protoNursePhone") || "à compléter",
+        emergencyContact: val("protoEmergencyContact") || "à compléter",
+        targetFasting: val("protoTargetFasting") || "à préciser",
+        targetPreMeal: val("protoTargetPreMeal") || "à préciser",
+        targetBed: val("protoTargetBed") || "à préciser",
+        diabetesType: val("protoDiabetesType") || ({ dt1: "DT1", dt2: "DT2" }[p.diabetesType] || "Autre"),
+        autonomy: val("protoAutonomy") || "à préciser",
+        basalName,
+        basalDose: protoNum("protoBasalDose", 0),
+        basalTime: val("protoBasalTime") || "horaire à préciser",
+        basalEvening: isOui(val("protoBasalEvening")),
+        basalWeekDose: val("protoBasalWeekDose") || `${uiDose(protoNum("protoBasalDose", 0))} ${val("protoBasalTime") || ""}`.trim(),
+        basalRule: val("protoBasalRule"),
+        rapidName,
+        rapidMorning: protoNum("protoRapidMorning", 0),
+        rapidNoon: protoNum("protoRapidNoon", 0),
+        rapidEvening: protoNum("protoRapidEvening", 0),
+        glyCorrection: isOui(val("protoGlyCorrection")),
+        mealCorrection: isOui(val("protoMealCorrection")),
+        maxCorrection: protoNum("protoMaxCorrection", 4),
+        skippedMeal: val("protoSkippedMeal"),
+        sportAdvice: val("protoSportAdvice"),
+        lowThreshold: protoNum("protoLowThreshold", 0.70),
+        noCorrectionHigh: protoNum("protoNoCorrectionHigh", 1.80),
+        highCorrectionThreshold: protoNum("protoHighCorrectionThreshold", 1.80),
+        ketoneThreshold: protoNum("protoKetoneThreshold", 2.50),
+        persistentHyper: protoNum("protoPersistentHyper", 3.00),
+        highCorrectionDose: protoNum("protoHighCorrectionDose", 2),
+        lightMealCorrection: protoNum("protoLightMealCorrection", -2),
+        largeMealCorrection: protoNum("protoLargeMealCorrection", 2),
+        basalHighThreshold: protoNum("protoBasalHighThreshold", 1.50),
+        basalHighCount: protoNum("protoBasalHighCount", 3),
+        basalIncrease: protoNum("protoBasalIncrease", 2),
+        basalDecrease: protoNum("protoBasalDecrease", 2),
+        rapidHighThreshold: protoNum("protoRapidHighThreshold", 1.30),
+        rapidStep: protoNum("protoRapidStep", 2),
+        goalProfile: val("protoGoalProfile"),
+        fastingWeek: val("protoFastingWeek"),
+        beforeNoonWeek: val("protoBeforeNoonWeek"),
+        beforeDinnerWeek: val("protoBeforeDinnerWeek"),
+        bedWeek: val("protoBedWeek"),
+        recentHypo: isOui(val("protoRecentHypo")),
+        nightHypo: isOui(val("protoNightHypo")),
+        ketonesAvailable: isOui(val("protoKetonesAvailable")),
+        glucagon: isOui(val("protoGlucagon")),
+        patientTrained: isOui(val("protoPatientTrained")),
+        nurseTrained: isOui(val("protoNurseTrained")),
+        cognitive: isOui(val("protoCognitive")),
+        livesAlone: isOui(val("protoLivesAlone")),
+      };
+      data.basalAnalysis = analyzeBasalWeek(data);
+      data.rapidAnalyses = [
+        analyzeRapidSlot(data.beforeNoonWeek, "Glycémies avant midi", "du matin", data),
+        analyzeRapidSlot(data.beforeDinnerWeek, "Glycémies avant dîner", "du midi", data),
+        analyzeRapidSlot(data.bedWeek, "Glycémies au coucher", "du soir", data)
+      ];
+      return data;
+    }
+
+    function formatValues(values) {
+      return values.length ? values.map(v => v.toFixed(2).replace(".", ",")).join(" ; ") + " g/L" : "non renseignées";
+    }
+
+    function buildInsulinProtocolTexts(data) {
+      const patientText = [
+        "Mon protocole d’insuline",
+        `Patient : ${data.firstName} ${data.patientName}`,
+        `Date : ${data.date}`,
+        `Insuline lente : ${data.basalName} - ${uiDose(data.basalDose)} - ${data.basalTime}`,
+        `Insuline rapide : ${data.rapidName}`,
+        `Matin : ${uiDose(data.rapidMorning)} ; Midi : ${uiDose(data.rapidNoon)} ; Soir : ${uiDose(data.rapidEvening)}`,
+        "",
+        "Correction glycémie avant repas :",
+        `< ${data.lowThreshold.toFixed(2)} g/L : resucrer, ne pas injecter immédiatement, recontrôler.`,
+        `${data.lowThreshold.toFixed(2)} à ${data.noCorrectionHigh.toFixed(2)} g/L : même dose que prévue.`,
+        `> ${data.highCorrectionThreshold.toFixed(2)} g/L : ajouter ${signedUi(data.highCorrectionDose)} si autorisé.`,
+        `> ${data.ketoneThreshold.toFixed(2)} g/L : vérifier cétones si DT1 ou symptômes, contacter si persistant.`,
+        "Cétones positives : contacter rapidement médecin/urgences selon contexte.",
+        "",
+        "Correction repas : pas de repas = pas de rapide sauf correction prescrite ; repas léger = " + signedUi(data.lightMealCorrection) + " ; repas normal = même dose ; repas copieux = " + signedUi(data.largeMealCorrection) + ".",
+        "",
+        `Adaptation lente hebdomadaire : ${data.basalAnalysis.action}`,
+        "",
+        "Hypoglycémie : 15 g de sucre rapide, contrôle à 15 minutes. Si inconscient : appel 15, glucagon si disponible et personne formée.",
+        "DT1 : hyperglycémie + cétones = urgence potentielle. Ne jamais arrêter l’insuline basale."
+      ].join("\n");
+
+      const nurseText = [
+        "Protocole infirmière - Insuline",
+        `Patient : ${data.firstName} ${data.patientName}, né(e) le ${data.birthDate}, diabète ${data.diabetesType}, autonomie : ${data.autonomy}.`,
+        `Prescripteur : ${data.doctor}, téléphone cabinet : ${data.doctorPhone}, téléphone infirmière : ${data.nursePhone}.`,
+        `Objectifs : à jeun ${data.targetFasting}, avant repas ${data.targetPreMeal}, coucher ${data.targetBed}.`,
+        `Basale : ${data.basalName}, dose semaine ${data.basalWeekDose}, horaire ${data.basalTime}, injection le soir : ${data.basalEvening ? "oui" : "non"}.`,
+        `Rapide : ${data.rapidName}, matin ${uiDose(data.rapidMorning)}, midi ${uiDose(data.rapidNoon)}, soir ${uiDose(data.rapidEvening)}.`,
+        `Correction glycémie activée : ${data.glyCorrection ? "oui" : "non"}, correction repas activée : ${data.mealCorrection ? "oui" : "non"}, correction maximale : ${uiDose(data.maxCorrection)}.`,
+        `Analyse basale semaine : valeurs ${formatValues(data.basalAnalysis.values)} ; décision : ${data.basalAnalysis.action}`,
+        ...data.rapidAnalyses.map(a => `${a.label} (${formatValues(a.values)}) : ${a.action}`),
+        `Sécurité : hypo récentes ${data.recentHypo ? "oui" : "non"}, hypo nocturnes ${data.nightHypo ? "oui" : "non"}, cétones disponibles ${data.ketonesAvailable ? "oui" : "non"}, glucagon ${data.glucagon ? "oui" : "non"}, patient formé ${data.patientTrained ? "oui" : "non"}, infirmière formée ${data.nurseTrained ? "oui" : "non"}, troubles cognitifs ${data.cognitive ? "oui" : "non"}, vit seul ${data.livesAlone ? "oui" : "non"}.`,
+        "Toute modification doit être validée par le médecin prescripteur."
+      ].join("\n");
+
+      const recordText = [
+        "Synthèse dossier :",
+        `Protocole d’insuline patient/infirmière généré le ${data.date} pour ${data.firstName} ${data.patientName}.`,
+        `Basale : ${data.basalName} ${uiDose(data.basalDose)} ${data.basalTime}. Rapide : ${data.rapidName}, matin ${uiDose(data.rapidMorning)}, midi ${uiDose(data.rapidNoon)}, soir ${uiDose(data.rapidEvening)}.`,
+        `Corrections : glycémie avant repas, repas, adaptation hebdomadaire basale/rapide, conduite hypoglycémie et hyperglycémie/cétones.`,
+        `Points sécurité : cétones ${data.ketonesAvailable ? "disponibles" : "non disponibles"}, glucagon ${data.glucagon ? "disponible" : "non disponible"}, formation resucrage ${data.patientTrained ? "oui" : "non"}.`,
+        "Explications remises au patient/infirmière. Protocole à appliquer uniquement selon prescription médicale."
+      ].join("\n");
+
+      return { patientText, nurseText, recordText };
+    }
+
+    function buildInsulinProtocolHtml(data) {
+      const correctionAllowed = data.glyCorrection ? `Ajouter ${signedUi(data.highCorrectionDose)} à la dose prévue, sans dépasser ${uiDose(data.maxCorrection)} de correction totale autorisée.` : "Correction non activée : contacter médecin/infirmière si valeur inhabituelle.";
+      const mealLight = data.mealCorrection ? signedUi(data.lightMealCorrection) : "pas de correction repas activée";
+      const mealLarge = data.mealCorrection ? signedUi(data.largeMealCorrection) : "pas de correction repas activée";
+      const rapidRows = data.rapidAnalyses.map(a => `<tr><td>${esc(a.label)}</td><td>${esc(formatValues(a.values))}</td><td>${esc(a.action)}</td></tr>`).join("");
+      const weekDays = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+      const weekRows = weekDays.map(day => `<tr><td>${day}</td><td>☐</td><td></td><td></td><td></td><td></td><td></td><td>☐</td></tr>`).join("");
+      return `
+        <div class="protocol-paper" id="insulinProtocolPrintArea">
+          <div class="protocol-note">Protocole personnalisé d’aide à l’administration de l’insuline. À appliquer uniquement selon prescription médicale. En cas de doute, contacter le médecin prescripteur.</div>
+          <h2>Mon protocole d’insuline</h2>
+          <div class="protocol-grid">
+            <div class="protocol-line"><strong>Nom</strong>${esc(data.patientName)}</div>
+            <div class="protocol-line"><strong>Prénom</strong>${esc(data.firstName)}</div>
+            <div class="protocol-line"><strong>Date</strong>${esc(data.date)}</div>
+            <div class="protocol-line"><strong>Prescripteur</strong>${esc(data.doctor)} - ${esc(data.doctorPhone)}</div>
+            <div class="protocol-line"><strong>Infirmière</strong>${esc(data.nursePhone)}</div>
+            <div class="protocol-line"><strong>Objectifs glycémiques</strong>À jeun ${esc(data.targetFasting)} ; avant repas ${esc(data.targetPreMeal)} ; coucher ${esc(data.targetBed)}</div>
+          </div>
+
+          <h3>Insuline basale ${data.basalEvening ? "le soir" : ""}</h3>
+          <div class="protocol-grid">
+            <div class="protocol-line"><strong>Nom</strong>${esc(data.basalName)}</div>
+            <div class="protocol-line"><strong>Dose de la semaine</strong>${esc(data.basalWeekDose || uiDose(data.basalDose))}</div>
+            <div class="protocol-line"><strong>Horaire</strong>${esc(data.basalTime)}</div>
+            <div class="protocol-line"><strong>Adaptation</strong>${esc(data.basalAnalysis.action)}</div>
+          </div>
+
+          <h3>Insuline rapide</h3>
+          <div class="protocol-grid">
+            <div class="protocol-line"><strong>Nom</strong>${esc(data.rapidName)}</div>
+            <div class="protocol-line"><strong>Doses de la semaine</strong>Matin ${esc(uiDose(data.rapidMorning))} ; midi ${esc(uiDose(data.rapidNoon))} ; soir ${esc(uiDose(data.rapidEvening))}</div>
+          </div>
+
+          <h3>Tous les jours : adapter l’insuline rapide matin, midi et soir</h3>
+          <table class="protocol-table">
+            <thead><tr><th>Étape 1 - Glycémie avant repas</th><th>Correction</th></tr></thead>
+            <tbody>
+              <tr><td>&lt; ${data.lowThreshold.toFixed(2)} g/L</td><td>Ne pas injecter immédiatement. Resucrer. Recontrôler. Faire l’injection après avis/protocole et après début du repas si nécessaire.</td></tr>
+              <tr><td>${data.lowThreshold.toFixed(2)} à ${data.noCorrectionHigh.toFixed(2)} g/L</td><td>Même dose que prévue.</td></tr>
+              <tr><td>&gt; ${data.highCorrectionThreshold.toFixed(2)} g/L</td><td>${esc(correctionAllowed)}</td></tr>
+              <tr><td>&gt; ${data.ketoneThreshold.toFixed(2)} g/L</td><td>Vérifier cétones si DT1 ou symptômes. Contacter médecin si persistant.</td></tr>
+              <tr><td>Cétones positives</td><td>Alerte : appliquer protocole hyperglycémie/cétones et contacter médecin/urgences selon contexte.</td></tr>
+            </tbody>
+          </table>
+          <table class="protocol-table">
+            <thead><tr><th>Étape 2 - Type de repas</th><th>Correction</th></tr></thead>
+            <tbody>
+              <tr><td>Pas de repas</td><td>${esc(data.skippedMeal)}</td></tr>
+              <tr><td>Repas léger</td><td>${esc(mealLight)}</td></tr>
+              <tr><td>Repas normal</td><td>Même dose.</td></tr>
+              <tr><td>Repas copieux</td><td>${esc(mealLarge)}</td></tr>
+            </tbody>
+          </table>
+          <div class="protocol-note"><strong>Étape 3 - Dose finale du repas</strong><br>Dose rapide du repas = dose habituelle + correction glycémie + correction repas.<br>Exemple : dose prévue midi ${esc(uiDose(data.rapidNoon))}, glycémie &gt; ${data.highCorrectionThreshold.toFixed(2)} g/L → ${signedUi(data.highCorrectionDose)}, repas léger → ${signedUi(data.lightMealCorrection)}, dose finale à calculer selon prescription.</div>
+
+          <h3>Tous les jours : vérifier les hypoglycémies</h3>
+          <div class="protocol-alert">Hypoglycémie = moins de ${data.lowThreshold.toFixed(2)} g/L</div>
+          <p>Si hypoglycémie la nuit précédente ou le matin à jeun &lt; ${data.lowThreshold.toFixed(2)} g/L : prévenir le médecin ou l’infirmière et discuter une baisse de l’insuline lente.</p>
+          <ul class="list">
+            <li>Si hypoglycémie &lt; ${data.lowThreshold.toFixed(2)} g/L la nuit ou au réveil : diminuer l’insuline lente de ${signedUi(-data.basalDecrease)} ou selon consigne médicale.</li>
+            <li>Si hypoglycémies répétées : contacter le médecin.</li>
+            <li>Si hypoglycémie sévère ou malaise : appel 15.</li>
+          </ul>
+
+          <h3>Une fois par semaine : calculer la nouvelle dose d’insuline lente</h3>
+          <table class="protocol-table">
+            <thead><tr><th>Glycémies du matin à jeun</th><th>Nouvelle dose d’insuline lente</th></tr></thead>
+            <tbody>
+              <tr><td>Plus de ${data.basalHighCount} valeurs &gt; ${data.basalHighThreshold.toFixed(2)} g/L ET aucune valeur &lt; ${data.lowThreshold.toFixed(2)} g/L</td><td>Augmenter l’insuline lente de ${signedUi(data.basalIncrease)}</td></tr>
+              <tr><td>Une ou plusieurs valeurs &lt; ${data.lowThreshold.toFixed(2)} g/L</td><td>Diminuer l’insuline lente de ${signedUi(-data.basalDecrease)} ou selon consigne médicale</td></tr>
+              <tr><td>Glycémies dans l’objectif</td><td>Garder la même dose</td></tr>
+              <tr><td>Glycémies très variables</td><td>Ne pas modifier seul, contacter médecin/infirmière</td></tr>
+              <tr><td>Hyperglycémie persistante &gt; ${data.ketoneThreshold.toFixed(2)} g/L</td><td>Vérifier cétones si DT1 ou symptômes, contacter médecin</td></tr>
+            </tbody>
+          </table>
+          <div class="notice info"><strong>Analyse des valeurs saisies :</strong> ${esc(formatValues(data.basalAnalysis.values))} → ${esc(data.basalAnalysis.action)}</div>
+
+          <h3>Une fois par semaine : calculer les nouvelles doses d’insuline rapide</h3>
+          <table class="protocol-table">
+            <thead><tr><th>Créneau analysé</th><th>Valeurs saisies</th><th>Adaptation proposée</th></tr></thead>
+            <tbody>${rapidRows}</tbody>
+          </table>
+          <p class="small muted">Glycémies avant midi souvent hautes → dose rapide du matin ; avant dîner → dose rapide du midi ; au coucher → dose rapide du soir. Hypoglycémie avant un repas → diminuer la dose rapide précédente.</p>
+
+          <h3>Protocole hypoglycémie</h3>
+          <ol class="list">
+            <li>Si la personne est consciente : arrêter l’activité, donner 15 g de sucre rapide, recontrôler après 15 minutes, répéter si glycémie toujours basse.</li>
+            <li>Si le repas est éloigné : donner ensuite un sucre lent, par exemple morceau de pain ou collation prévue.</li>
+            <li>Rechercher la cause : repas sauté, dose trop forte, sport, alcool, erreur rapide/lente, insuffisance rénale, perte de poids, vomissements.</li>
+            <li>Si inconscient ou ne peut pas avaler : ne rien donner par la bouche, appeler le 15, utiliser le glucagon si disponible et entourage/infirmière formé.</li>
+          </ol>
+
+          <h3>Protocole hyperglycémie / cétones</h3>
+          <p>Si glycémie &gt; ${data.ketoneThreshold.toFixed(2)} g/L : boire de l’eau, vérifier oubli d’insuline, erreur d’injection, infection/fièvre/corticoïdes, vérifier cétones si DT1, insulinopénie, vomissements ou malaise, puis recontrôler selon protocole.</p>
+          <div class="protocol-alert">DT1 : hyperglycémie + cétones = urgence potentielle. Ne jamais arrêter l’insuline basale.</div>
+          <p>Appeler rapidement si : cétones positives, vomissements, douleurs abdominales, respiration anormale, somnolence, glycémie &gt; ${data.persistentHyper.toFixed(2)} g/L persistante, fièvre ou infection, doute sur l’insuline.</p>
+
+          <h3>Suivi de la semaine</h3>
+          <table class="protocol-table week-table">
+            <thead><tr><th>Jour</th><th>Basale faite</th><th>GAJ</th><th>Rapide matin</th><th>Avant midi / rapide midi</th><th>Avant dîner / rapide soir</th><th>Coucher</th><th>Hypo ?</th></tr></thead>
+            <tbody>${weekRows}</tbody>
+          </table>
+
+          <div class="protocol-note">Ce protocole est personnalisé et valable uniquement pour ce patient. Il ne doit pas être utilisé pour une autre personne. Toute modification doit être validée par le médecin prescripteur.</div>
+          <div class="protocol-alert">En cas de doute, d’hypoglycémie répétée, d’hyperglycémie persistante, de vomissements, de fièvre, de cétones positives ou de malaise : contacter rapidement le médecin ou le 15 selon gravité.</div>
+        </div>
+      `;
+    }
+
+    function missingInsulinProtocolFields(data) {
+      const missing = [];
+      if (data.patientName === "à compléter") missing.push("nom du patient");
+      if (data.firstName === "à compléter") missing.push("prénom du patient");
+      if (data.birthDate === "à compléter") missing.push("date de naissance");
+      if (data.doctor === "à compléter") missing.push("médecin prescripteur");
+      if (data.doctorPhone === "à compléter") missing.push("téléphone du cabinet");
+      if (data.nursePhone === "à compléter") missing.push("téléphone infirmière");
+      if (data.emergencyContact === "à compléter") missing.push("personne à prévenir");
+      if (data.basalName === "non précisée") missing.push("nom de l’insuline lente");
+      if (!data.basalDose) missing.push("dose d’insuline lente");
+      if (data.rapidName === "non précisée") missing.push("nom de l’insuline rapide");
+      if (!data.rapidMorning && !data.rapidNoon && !data.rapidEvening) missing.push("doses d’insuline rapide");
+      if (!data.ketonesAvailable && data.diabetesType === "DT1") missing.push("cétones disponibles pour DT1");
+      if (!data.patientTrained) missing.push("formation au resucrage");
+      return missing;
+    }
+
+    function generateInsulinProtocol() {
+      const data = getInsulinProtocolData();
+      const texts = buildInsulinProtocolTexts(data);
+      const missing = missingInsulinProtocolFields(data);
+      lastInsulinProtocol = { ...data, ...texts };
+      const out = $("insulinProtocolOutput");
+      if (!out) return lastInsulinProtocol;
+      out.innerHTML = `
+        ${missing.length ? `<div class="notice warn"><strong>Informations à compléter avant remise :</strong> ${esc(missing.join(", "))}.</div>` : `<div class="notice good">Informations principales renseignées. Relire avant remise au patient/infirmière.</div>`}
+        <div class="card compact">
+          <h3>Version patient simplifiée</h3>
+          <textarea id="insulinPatientText" class="protocol-copy">${esc(texts.patientText)}</textarea>
+        </div>
+        <div class="card compact">
+          <h3>Version infirmière détaillée</h3>
+          <textarea id="insulinNurseText" class="protocol-copy">${esc(texts.nurseText)}</textarea>
+        </div>
+        <div class="card compact">
+          <h3>Version dossier médical</h3>
+          <textarea id="insulinRecordText" class="protocol-copy">${esc(texts.recordText)}</textarea>
+        </div>
+        ${buildInsulinProtocolHtml(data)}
+      `;
+      return lastInsulinProtocol;
+    }
+
+    function printInsulinProtocol() {
+      const data = generateInsulinProtocol();
+      const paper = $("insulinProtocolPrintArea");
+      if (!paper) return;
+      let host = $("protocolPrintHost");
+      if (!host) {
+        host = document.createElement("div");
+        host.id = "protocolPrintHost";
+        host.className = "protocol-print-host";
+        document.querySelector("main").appendChild(host);
+      }
+      host.innerHTML = paper.outerHTML;
+      document.body.classList.add("protocol-printing");
+      window.print();
+      setTimeout(() => document.body.classList.remove("protocol-printing"), 500);
+      return data;
+    }
+
+    function generateSummary() {
+      const p = getPatient();
+      const goal = proposeHbA1c(p);
+      const tx = classifyTreatment();
+      const alerts = collectAlerts();
+      const meds = lastDetected.length ? lastDetected.map(d => {
+        const brand = d.med.marques?.length ? ` / ${d.med.marques[0]}` : "";
+        return `${d.med.dci}${brand} (${d.dose}, ${d.timing})`;
+      }).join("; ") : "Aucun traitement antidiabétique détecté dans l’ordonnance collée.";
+      const options = [];
+      if (alerts.some(([l]) => l === "danger")) options.push("Priorité : traiter/évaluer les alertes rouges avant optimisation ambulatoire.");
+      if (p.diabetesType === "dt2") {
+        if (p.hasObesity && !tx.glp && !tx.gipGlp) options.push("Discuter GLP-1/tirzépatide si AMM compatible, RCP/remboursement vérifiés et contre-indications absentes.");
+        if ((p.hasCvDisease || p.hasHeartFailure || p.hasCkd) && !tx.sglt2) options.push("Discuter SGLT2 si indication cardio-rénale et DFG compatibles.");
+        if (tx.sulfonylurea && p.highHypoRisk) options.push("Réévaluer sulfamide compte tenu du risque hypoglycémique.");
+        if (tx.basal && p.fastingGlucose && p.fastingGlucose <= 1.3 && p.hba1c && p.hba1c > 7.5) options.push("GAJ correcte mais HbA1c élevée : rechercher hyperglycémie post-prandiale plutôt que majorer la basale.");
+      }
+      if (p.diabetesType === "dt1") options.push("Renouvellement DT1 : vérifier basale, rapide, matériel, cétones, glucagon, protocole hypo/hyper et suivi diabétologique.");
+      if (!options.length) options.push("Vérifier observance, tolérance, RHD, objectifs, DFG, albuminurie et préférences patient.");
+
+      const summary = [
+        "Diabète MG - Synthèse d’aide à la décision",
+        "",
+        `Profil : ${patientLine(p) || "profil non renseigné"}.`,
+        `Objectif proposé : HbA1c autour de ${goal.value}, à valider selon le contexte clinique.`,
+        "",
+        "Traitement détecté :",
+        meds,
+        "",
+        "Analyse :",
+        alerts.length ? alerts.map(([, a]) => `- ${a}`).join("\n") : "- Pas d’alerte majeure détectée avec les données saisies.",
+        "",
+        "Options :",
+        options.map((o, i) => `${i + 1}. ${o}`).join("\n"),
+        "",
+        "Synthèse dossier :",
+        `Patient ${patientLine(p) || "diabétique"} ; optimisation possible selon profil cardio-réno-métabolique, risque hypoglycémique, DFG, tolérance, AMM, RCP, remboursement et contre-indications. Décision à valider médicalement.`,
+        "",
+        "Mention : outil d’aide à la décision médicale ; ne remplace pas recommandations officielles, RCP, Vidal, ANSM, HAS, avis diabétologique ni jugement clinique."
+      ].join("\n");
+      $("summaryText").value = summary;
+      return summary;
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+    }
+
+    function downloadFile(filename, content, type = "text/plain;charset=utf-8") {
+      const blob = new Blob([content], { type });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+
+    function renderMedTable() {
+      const search = normalize(val("medSearch"));
+      const cls = val("classFilter");
+      const classes = [...new Set(medDb.map(m => m.classe))].sort();
+      const old = val("classFilter");
+      $("classFilter").innerHTML = `<option value="">Toutes classes</option>` + classes.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      $("classFilter").value = old;
+      const data = medDb.filter(m => (!cls || m.classe === cls) && (!search || normalize(JSON.stringify(m)).includes(search)));
+      $("medTable").innerHTML = `
+        <thead><tr><th>DCI / marques</th><th>Classe</th><th>Dose</th><th>Rein / CI</th><th>Effets</th><th>Surveillance / conseils</th></tr></thead>
+        <tbody>${data.map(m => `
+          <tr>
+            <td><strong>${esc(m.dci)}</strong><br>${esc((m.marques || []).join(", "))}<br><span class="small muted">AMM diabète : ${m.ammDiabete ? "oui" : "non"} ; AMM obésité : ${m.ammObesite ? "oui" : "non"}</span></td>
+            <td>${esc(m.classe)}<br><span class="small muted">${esc(m.indication)}</span></td>
+            <td>${esc(m.doseUsuelle)}<br><span class="small muted">Max : ${esc(m.doseMax)}</span></td>
+            <td>${esc(m.renal)}<br><span class="small muted">${esc(m.ci)}</span></td>
+            <td>Hypo : ${esc(m.hypo)}<br>Poids : ${esc(m.poids)}<br>${esc(m.adverse)}</td>
+            <td>${esc(m.surveillance)}<br><span class="small muted">${esc(m.conseils)}</span></td>
+          </tr>
+        `).join("")}</tbody>
+      `;
+      $("medJson").value = JSON.stringify(medDb, null, 2);
+    }
+
+    function renderRulesDoc() {
+      $("rulesDoc").innerHTML = `
+        <div class="notice info">
+          <strong>Règles médicales intégrées</strong>
+          <ul class="list">
+            <li>Objectif HbA1c individualisé selon âge, fragilité, hypoglycémies, cardio-rénal, grossesse/projet et type de diabète.</li>
+            <li>Priorité aux alertes rouges : cétones, vomissements, déshydratation, confusion, infection sévère, grossesse, douleur thoracique, AVC, sepsis, IRA.</li>
+            <li>DT2 : options selon metformine, SGLT2, GLP-1/tirzépatide, obésité, antécédent CV, insuffisance cardiaque, IRC, fragilité.</li>
+            <li>DT1 : renouvellement sécurisé uniquement, ne pas initier seul, ne jamais arrêter la basale.</li>
+            <li>Insuline basale : initiation prudente, +2 UI si 3 GAJ hautes sans hypo, réduction si hypo, ne pas sur-titrer si GAJ correcte.</li>
+            <li>Insuline rapide : correction prudente selon repas, cétones et autonomie ; pas de rapide sans repas hors protocole.</li>
+            <li>aGLP-1/GIP-GLP-1 : indication diabète/obésité séparée, usage esthétique bloquant, titration non inventée sans RCP.</li>
+            <li>Associations à risque : GLP-1 + DPP4, double GLP-1, sulfamide fragile/IRC, glibenclamide âgé/IRC, SGLT2 avec cétones/déshydratation.</li>
+          </ul>
+        </div>
+        <div class="notice warn">
+          <strong>Sources médicales à vérifier avant décision</strong>
+          <p class="source-list">
+            <a href="https://www.diabeclic.com/" target="_blank" rel="noreferrer">DiabeClic</a>
+            <a href="https://www.federationdesdiabetiques.org/" target="_blank" rel="noreferrer">Fédération Française des Diabétiques</a>
+            <a href="https://ansm.sante.fr/" target="_blank" rel="noreferrer">ANSM</a>
+            <a href="https://www.ameli.fr/" target="_blank" rel="noreferrer">Ameli</a>
+            <a href="https://base-donnees-publique.medicaments.gouv.fr/" target="_blank" rel="noreferrer">Base de Données Publique des Médicaments</a>
+            <a href="https://www.has-sante.fr/" target="_blank" rel="noreferrer">HAS</a>
+            <a href="https://www.vidal.fr/" target="_blank" rel="noreferrer">Vidal</a>
+            <a href="https://www.ema.europa.eu/" target="_blank" rel="noreferrer">EMA</a>
+            <a href="https://kdigo.org/" target="_blank" rel="noreferrer">KDIGO</a>
+          </p>
+        </div>
+        <div class="notice danger">
+          <strong>Points nécessitant validation médicale</strong>
+          <ul class="list">
+            <li>AMM, remboursement, disponibilité France et restrictions actualisées de Mounjaro/Wegovy/Saxenda/Ozempic/Trulicity/Victoza.</li>
+            <li>Seuils DFG précis et doses maximales par spécialité selon RCP.</li>
+            <li>Décision d’introduction, arrêt ou titration de traitement hypoglycémiant.</li>
+            <li>Conduite à tenir urgente en cas de cétones, DT1 instable, grossesse, infection sévère ou décompensation cardio-rénale.</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function applyTestCase(index) {
+      const t = TEST_CASES[index];
+      clearAll(false);
+      Object.entries(t.patient || {}).forEach(([id, value]) => setVal(id, value));
+      [...(t.checks || []), ...(t.symptoms || []), ...(t.dt1Checks || []), ...(t.glpChecks || [])].forEach(id => setChecked(id, true));
+      Object.entries(t.glp || {}).forEach(([id, value]) => setVal(id, value));
+      Object.entries(t.basal || {}).forEach(([id, value]) => setVal(id, value));
+      setVal("orderText", t.order || "");
+      computeBmi();
+      parseOrder();
+      updateAll();
+      activateTab(t.patient?.diabetesType === "dt1" ? "dt1" : "summary");
+    }
+
+    function renderTestCases() {
+      $("testCases").innerHTML = TEST_CASES.map((t, i) => `
+        <button class="btn" data-test="${i}" style="text-align:left; justify-content:flex-start;">${esc(t.label)}</button>
+      `).join("");
+      qsa("[data-test]").forEach(btn => btn.addEventListener("click", () => applyTestCase(Number(btn.dataset.test))));
+    }
+
+    function clearAll(confirmFirst = true) {
+      if (confirmFirst && !confirm("Effacer toutes les données saisies pour ce patient ?")) return;
+      qsa("input").forEach(input => {
+        if (input.type === "checkbox") input.checked = false;
+        else if (!["fastingTargetLow", "fastingTargetHigh"].includes(input.id)) input.value = "";
+      });
+      qsa("textarea").forEach(ta => ta.value = "");
+      qsa("select").forEach(sel => {
+        if (sel.id === "mobileTab") return;
+        sel.selectedIndex = 0;
+      });
+      setVal("fastingTargetLow", "0.80");
+      setVal("fastingTargetHigh", "1.30");
+      lastDetected = [];
+      computeBmi();
+      renderDetected();
+      updateAll();
+    }
+
+    function updateAll() {
+      computeBmi();
+      renderHbGoal();
+      renderDt2Analysis();
+      renderDt1Analysis();
+      renderBasal();
+      renderRapid();
+      renderGlpAnalysis();
+      renderComorbid();
+      renderAlerts();
+      renderTherapyAdvice();
+      if (document.activeElement !== $("summaryText")) generateSummary();
+    }
+
+    function bindEvents() {
+      document.addEventListener("input", (e) => {
+        if (e.target.closest("#medJson")) return;
+        if (e.target.id === "orderText") return;
+        updateAll();
+      });
+      document.addEventListener("change", (e) => {
+        if (e.target.id === "mobileTab") return;
+        updateAll();
+      });
+      $("analyzeOrderBtn").addEventListener("click", parseOrder);
+      $("clearOrderBtn").addEventListener("click", () => { setVal("orderText", ""); lastDetected = []; renderDetected(); updateAll(); });
+      $("therapyAdviceBtn").addEventListener("click", () => { parseOrder(); renderTherapyAdvice(); });
+      $("copyTherapyAdviceBtn").addEventListener("click", () => {
+        parseOrder();
+        const text = renderTherapyAdvice() || buildTherapyAdvice().copy;
+        copyText(text);
+      });
+      $("generateInsulinProtocolBtn").addEventListener("click", generateInsulinProtocol);
+      $("copyInsulinPatientBtn").addEventListener("click", () => copyText((generateInsulinProtocol().patientText || "")));
+      $("copyInsulinNurseBtn").addEventListener("click", () => copyText((generateInsulinProtocol().nurseText || "")));
+      $("copyInsulinRecordBtn").addEventListener("click", () => copyText((generateInsulinProtocol().recordText || "")));
+      $("printInsulinProtocolBtn").addEventListener("click", printInsulinProtocol);
+      window.addEventListener("afterprint", () => document.body.classList.remove("protocol-printing"));
+      $("generateBtn").addEventListener("click", () => { generateSummary(); activateTab("summary"); });
+      $("refreshSummaryBtn").addEventListener("click", generateSummary);
+      $("copySummaryBtn").addEventListener("click", () => copyText(generateSummary()));
+      $("copySummaryBtn2").addEventListener("click", () => copyText(generateSummary()));
+      $("printBtn").addEventListener("click", () => window.print());
+      $("clearBtn").addEventListener("click", () => clearAll(true));
+      $("basalBtn").addEventListener("click", renderBasal);
+      $("downloadTxtBtn").addEventListener("click", () => downloadFile("synthese-diabete-mg.txt", generateSummary()));
+      $("medSearch").addEventListener("input", renderMedTable);
+      $("classFilter").addEventListener("change", renderMedTable);
+      $("showJsonBtn").addEventListener("click", () => {
+        const card = $("jsonEditorCard");
+        card.style.display = card.style.display === "none" ? "block" : "none";
+        renderMedTable();
+      });
+      $("downloadJsonBtn").addEventListener("click", () => downloadFile("base-medicaments-diabete-mg.json", JSON.stringify(medDb, null, 2), "application/json;charset=utf-8"));
+      $("loadJsonBtn").addEventListener("click", () => {
+        try {
+          const parsed = JSON.parse($("medJson").value);
+          if (!Array.isArray(parsed)) throw new Error("La base doit être un tableau JSON.");
+          medDb = parsed;
+          parseOrder();
+          renderMedTable();
+          alert("Base chargée en mémoire.");
+        } catch (err) {
+          alert("JSON invalide : " + err.message);
+        }
+      });
+      $("resetJsonBtn").addEventListener("click", () => {
+        medDb = structuredClone(DEFAULT_MEDS);
+        parseOrder();
+        renderMedTable();
+      });
+    }
+
+    function boot() {
+      initTabs();
+      renderCheckGrid("symptomChecks", SYMPTOMS);
+      renderCheckGrid("cvChecks", CV_ITEMS);
+      renderCheckGrid("complicationChecks", COMPLICATION_ITEMS);
+      renderCheckGrid("dt1Checks", DT1_CHECKS);
+      renderCheckGrid("glpChecks", GLP_CHECKS);
+      renderDetected();
+      renderMedTable();
+      renderRulesDoc();
+      renderTestCases();
+      bindEvents();
+      updateAll();
+    }
+
+    boot();
+  </script>
+</body>
+</html>

@@ -116,8 +116,9 @@ const APPS = [
   {t:"Douleur MG", e:"🩹", dom:"Médecine de la douleur",
    d:"Aide au choix antalgique en médecine générale : paliers OMS, douleurs nociceptives/neuropathiques, équivalences opioïdes, précautions et situations particulières.",
    href:"douleur-mg/index.html"},
-  {t:"Endocrinologie", e:"🦋", dom:"Endocrinologie", soon:true,
-   d:"Aide endocrinologique en médecine générale (thyroïde, diabète, surrénales…) — application à fournir."}
+  {t:"Diabète MG", e:"🩸", dom:"Endocrinologie",
+   d:"Aide rapide à la décision dans le diabète en médecine générale : objectifs glycémiques, choix et associations d'antidiabétiques, situations particulières et surveillance.",
+   href:"diabete-mg/index.html"}
 ];
 
 /* ---------- utilitaires ---------- */
