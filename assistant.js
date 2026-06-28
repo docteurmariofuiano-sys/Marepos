@@ -17,6 +17,7 @@ const DOMAINES = {
   "Pneumologie":  {c:"var(--d-pneumo)", cb:"#e0f5fa"},
   "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
   "Endocrinologie": {c:"var(--d-endoc)", cb:"#eef7da"},
+  "Gériatrie":     {c:"var(--d-geriatrie)", cb:"#dcf1ed"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
@@ -124,7 +125,10 @@ const APPS = [
    href:"diabete-mg/index.html"},
   {t:"Thyroïde MG", e:"🦋", dom:"Endocrinologie",
    d:"Aide rapide à la décision devant une anomalie thyroïdienne : hypo/hyperthyroïdie, TSH, nodule, conduite à tenir, traitement et suivi (import PDF de bilan).",
-   href:"thyroide-mg/index.html"}
+   href:"thyroide-mg/index.html"},
+  {t:"MémoMG", e:"🧓", dom:"Gériatrie",
+   d:"Bilan mémoire pratique en médecine générale : scores cognitifs simples, synthèse prudente et documents médicaux copiables/imprimables.",
+   href:"memo-mg/index.html"}
 ];
 
 /* ---------- utilitaires ---------- */

@@ -1,0 +1,2899 @@
+﻿<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MémoMG - Bilan mémoire pratique</title>
+    <style>
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --surface-soft: #eef4f2;
+  --ink: #18242d;
+  --muted: #5b6770;
+  --line: #dbe2de;
+  --teal: #17756b;
+  --teal-dark: #0e514b;
+  --blue: #284f7a;
+  --orange: #b7651e;
+  --amber-bg: #fff4df;
+  --red: #b3261e;
+  --red-bg: #fdecea;
+  --green: #2d7a46;
+  --green-bg: #e9f7ed;
+  --shadow: 0 14px 30px rgba(26, 38, 50, 0.08);
+  --radius: 8px;
+  --font-body: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Constantia", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, rgba(238, 244, 242, 0.72), rgba(247, 248, 246, 0.95) 22rem),
+    var(--bg);
+  font-family: var(--font-body);
+  line-height: 1.45;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--teal-dark);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  background: rgba(247, 248, 246, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.topbar h1,
+.section-heading h2,
+.hero-band h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+
+.topbar h1 {
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+.kicker {
+  margin: 0 0 0.2rem;
+  color: var(--teal-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15rem;
+  padding: 0.18rem;
+  background: #e5ece8;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.mode-button {
+  display: inline-flex;
+  min-width: 5.7rem;
+  min-height: 2.2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+  color: var(--muted);
+  background: transparent;
+  border-radius: 999px;
+  font-weight: 750;
+}
+
+.mode-button:hover {
+  color: var(--teal-dark);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.mode-button.active,
+.mode-button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--teal-dark);
+  box-shadow: 0 6px 12px rgba(23, 117, 107, 0.18);
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.switch input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--teal);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  width: min(1480px, 100%);
+  margin: 0 auto;
+  padding: 1.25rem clamp(1rem, 3vw, 2rem) 4rem;
+}
+
+.side-nav {
+  position: sticky;
+  top: 5.5rem;
+  align-self: start;
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.7rem;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.nav-item {
+  min-height: 2.65rem;
+  padding: 0.6rem 0.8rem;
+  color: var(--ink);
+  background: transparent;
+  border-radius: 6px;
+  text-align: left;
+  font-weight: 780;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: #fff;
+  background: var(--teal-dark);
+}
+
+.progress-wrap {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.8rem 0.6rem 0.3rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 0.55rem;
+  overflow: hidden;
+  background: #e3ebe7;
+  border-radius: 999px;
+}
+
+#progressBar {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), #4f8fca);
+  transition: width 180ms ease;
+}
+
+.workspace {
+  min-width: 0;
+}
+
+.view {
+  display: none;
+  min-height: 34rem;
+}
+
+.view.active {
+  display: block;
+}
+
+.hero-band,
+.section-heading,
+.check-panel,
+.test-block,
+.result-panel,
+.document-panel,
+.legal-strip {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.hero-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: clamp(1.1rem, 3vw, 2rem);
+  border-top: 5px solid var(--teal);
+}
+
+.hero-band h2 {
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  max-width: 13ch;
+}
+
+.clinical-note {
+  max-width: 72ch;
+  color: var(--muted);
+  font-weight: 680;
+}
+
+.status-pill,
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 850;
+  white-space: normal;
+}
+
+.neutral {
+  color: var(--blue);
+  background: #eaf0f8;
+}
+
+.status-green,
+.level-0,
+.level-1 {
+  color: var(--green);
+  background: var(--green-bg);
+}
+
+.status-orange,
+.level-2,
+.level-3 {
+  color: var(--orange);
+  background: var(--amber-bg);
+}
+
+.status-red,
+.level-4 {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.launch-card {
+  display: grid;
+  gap: 0.55rem;
+  min-height: 10rem;
+  padding: 1.1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--teal);
+  border-radius: var(--radius);
+  text-align: left;
+  box-shadow: var(--shadow);
+}
+
+.launch-card:hover {
+  transform: translateY(-1px);
+  border-top-color: var(--orange);
+}
+
+.launch-card strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.1;
+}
+
+.launch-card span {
+  color: var(--muted);
+  font-weight: 620;
+}
+
+.legal-strip {
+  margin-top: 1rem;
+  padding: 1rem;
+  color: #4a3215;
+  background: var(--amber-bg);
+  border-color: #eed2a5;
+}
+
+.rapid-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem 1.2rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--teal-dark), #234b68);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.rapid-hero h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+}
+
+.rapid-hero .kicker,
+.rapid-hero p {
+  color: #eef8f5;
+}
+
+.rapid-hero p {
+  max-width: 68ch;
+  margin: 0.35rem 0 0;
+  font-weight: 680;
+}
+
+.rapid-hero .primary {
+  color: var(--teal-dark);
+  background: #fff;
+}
+
+.time-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.85rem 0;
+}
+
+.time-strip span {
+  min-height: 3.1rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: #edf5f2;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-weight: 720;
+}
+
+.time-strip strong {
+  display: block;
+  color: var(--teal-dark);
+}
+
+.rapid-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.rapid-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--teal);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.rapid-panel h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+}
+
+.rapid-danger {
+  border-left-color: var(--red);
+}
+
+.rapid-wide {
+  grid-column: span 2;
+}
+
+.rapid-result {
+  border-left-color: var(--orange);
+}
+
+.mini-grid.tight,
+.rapid-tests,
+.mini-iadl-fast {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.rapid-tests {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.mini-iadl-fast {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.rapid-panel .check-grid.compact {
+  gap: 0.45rem;
+}
+
+.rapid-panel .check-item {
+  min-height: 2.6rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.rapid-panel input,
+.rapid-panel select,
+.rapid-panel textarea {
+  min-height: 2.45rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.rapid-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rapid-actions button {
+  min-height: 2.4rem;
+  padding: 0.5rem 0.7rem;
+  color: var(--teal-dark);
+  background: #edf5f2;
+  border: 1px solid #c8ddd7;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.rapid-actions button.primary {
+  color: #fff;
+  background: var(--teal-dark);
+}
+
+.section-heading {
+  margin-bottom: 1rem;
+  padding: 1rem 1.2rem;
+  border-left: 5px solid var(--teal);
+}
+
+.section-heading h2 {
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+}
+
+.form-grid,
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid #cbd8d2;
+  border-radius: 6px;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(23, 117, 107, 0.14);
+}
+
+.check-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.check-panel h3 {
+  margin: 0 0 0.85rem;
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.check-grid.wide {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.check-grid.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.check-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.55rem;
+  min-height: 3.1rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.check-item input {
+  width: 1rem;
+  min-height: 1rem;
+  margin-top: 0.16rem;
+  accent-color: var(--teal);
+}
+
+.alert-panel {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  font-weight: 800;
+}
+
+.alert-panel.red {
+  color: var(--red);
+  background: var(--red-bg);
+  border: 1px solid #f0b8b2;
+}
+
+.test-layout {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.test-block {
+  overflow: hidden;
+}
+
+.test-block summary {
+  min-height: 3.3rem;
+  padding: 0.9rem 1rem;
+  color: var(--ink);
+  background: var(--surface-soft);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.test-body {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.test-callout {
+  padding: 0.75rem 0.85rem;
+  color: #314a43;
+  background: #edf5f2;
+  border: 1px solid #d3e4de;
+  border-left: 4px solid var(--teal);
+  border-radius: 6px;
+  font-weight: 680;
+}
+
+.soft-panel {
+  margin-top: 0;
+  background: #fbfcfb;
+  box-shadow: none;
+}
+
+.codex-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.codex-card > div {
+  padding: 0.8rem;
+  background: #fbfcfb;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.codex-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.codex-card p {
+  margin: 0.35rem 0;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.inline-actions button {
+  min-height: 2.25rem;
+  padding: 0.45rem 0.65rem;
+  color: var(--teal-dark);
+  background: #edf5f2;
+  border: 1px solid #c8ddd7;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.score-table {
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1.2fr) repeat(4, minmax(5.5rem, 1fr));
+  align-items: stretch;
+  border-top: 1px solid var(--line);
+}
+
+.score-row:first-child {
+  border-top: 0;
+}
+
+.score-row.header {
+  color: var(--muted);
+  background: #f0f4f1;
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.score-cell {
+  display: flex;
+  align-items: center;
+  min-height: 2.7rem;
+  padding: 0.55rem 0.7rem;
+  border-left: 1px solid var(--line);
+}
+
+.score-cell:first-child {
+  border-left: 0;
+  font-weight: 800;
+}
+
+.score-cell select,
+.score-cell input {
+  min-height: 2.25rem;
+}
+
+.score-hint,
+.small-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 680;
+}
+
+.image-preview {
+  display: none;
+  max-width: 22rem;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.image-preview img {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.synthesis-grid {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.85fr) minmax(0, 1.15fr);
+  gap: 1rem;
+}
+
+.result-panel,
+.document-panel {
+  padding: 1rem;
+}
+
+.result-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.result-panel h3 {
+  margin: 1rem 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+}
+
+.result-panel ul {
+  margin: 0.9rem 0;
+  padding-left: 1.2rem;
+}
+
+.advice {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.advice p {
+  margin: 0;
+  padding: 0.75rem;
+  background: #f3f7f5;
+  border-left: 4px solid var(--teal);
+  border-radius: 4px;
+}
+
+.doc-toolbar,
+.doc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.doc-toolbar button,
+.doc-actions button,
+.primary,
+.import-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.45rem;
+  padding: 0.55rem 0.75rem;
+  color: #fff;
+  background: var(--teal-dark);
+  border-radius: 6px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.doc-toolbar button:hover,
+.doc-actions button:hover,
+.primary:hover,
+.import-button:hover {
+  background: var(--teal);
+}
+
+.danger-button {
+  background: var(--red) !important;
+}
+
+.import-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#documentOutput {
+  min-height: 30rem;
+  white-space: pre-wrap;
+}
+
+.source-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.88rem;
+}
+
+body[data-mode="quick"] .complete-only {
+  display: none !important;
+}
+
+body[data-mode="quick"] .complete-preferred:not([open]) {
+  opacity: 0.68;
+}
+
+@media (max-width: 1120px) {
+  .action-grid,
+  .check-grid.wide,
+  .time-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid,
+  .mini-grid,
+  .check-grid,
+  .word-grid,
+  .synthesis-grid,
+  .mini-grid.tight,
+  .rapid-tests,
+  .mini-iadl-fast {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .score-row {
+    grid-template-columns: minmax(9rem, 1fr) repeat(2, minmax(5.5rem, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .topbar {
+    position: static;
+    align-items: flex-start;
+  }
+
+  .topbar,
+  .topbar-actions {
+    flex-direction: column;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .side-nav {
+    position: static;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .nav-item {
+    text-align: center;
+  }
+
+  .progress-wrap {
+    grid-column: 1 / -1;
+  }
+
+  .hero-band {
+    grid-template-columns: 1fr;
+  }
+
+  .rapid-hero,
+  .rapid-grid,
+  .time-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .rapid-wide {
+    grid-column: auto;
+  }
+
+  .form-grid,
+  .mini-grid,
+  .check-grid,
+  .check-grid.wide,
+  .check-grid.compact,
+  .word-grid,
+  .codex-card,
+  .action-grid,
+  .synthesis-grid,
+  .mini-grid.tight,
+  .rapid-tests,
+  .mini-iadl-fast {
+    grid-template-columns: 1fr;
+  }
+
+  .score-table {
+    display: block;
+    border: 0;
+  }
+
+  .score-row,
+  .score-row.header {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .score-row.header {
+    display: none;
+  }
+
+  .score-cell {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .score-cell:first-child {
+    border-top: 0;
+    background: #f0f4f1;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .topbar,
+  .side-nav,
+  .source-footer,
+  .doc-toolbar,
+  .doc-actions,
+  .primary {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block;
+    padding: 0;
+  }
+
+  .view {
+    display: none !important;
+  }
+
+  #synthesis {
+    display: block !important;
+  }
+
+  .synthesis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-panel,
+  .document-panel {
+    border: 0;
+    box-shadow: none;
+  }
+
+  #documentOutput {
+    min-height: auto;
+    border: 0;
+  }
+}
+
+</style>
+  </head>
+  <body data-mode="quick">
+    <header class="topbar">
+      <div>
+        <p class="kicker">MémoMG</p>
+        <h1>Bilan mémoire pratique pour médecin généraliste</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="segmented" role="group" aria-label="Mode de consultation">
+          <button type="button" class="mode-button active" data-mode-set="quick" onclick="window.MemoMGAppSetMode && window.MemoMGAppSetMode('quick')" aria-pressed="true">15 min</button>
+          <button type="button" class="mode-button" data-mode-set="complete" onclick="window.MemoMGAppSetMode && window.MemoMGAppSetMode('complete')" aria-pressed="false">Complet</button>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="localSave" />
+          <span>Sauvegarde locale consentie</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <nav class="side-nav" aria-label="Étapes du bilan">
+        <button class="nav-item" data-section="home">Accueil</button>
+        <button class="nav-item active" data-section="rapid">15 min</button>
+        <button class="nav-item complete-only" data-section="profile">Profil</button>
+        <button class="nav-item complete-only" data-section="complaint">Plainte</button>
+        <button class="nav-item complete-only" data-section="redflags">Vigilance</button>
+        <button class="nav-item complete-only" data-section="history">Anamnèse</button>
+        <button class="nav-item complete-only" data-section="tests">Tests</button>
+        <button class="nav-item" data-section="synthesis">Synthèse</button>
+        <div class="progress-wrap" aria-label="Progression du bilan">
+          <span id="progressText">0 % complété</span>
+          <div class="progress-track"><div id="progressBar"></div></div>
+        </div>
+      </nav>
+
+      <section class="workspace">
+        <section class="view" id="home" aria-labelledby="home-title">
+          <div class="hero-band">
+            <div>
+              <p class="kicker">Consultation mémoire</p>
+              <h2 id="home-title">Structurer, scorer, orienter, documenter.</h2>
+              <p class="clinical-note">
+                Cet outil aide au repérage des troubles cognitifs. Il ne remplace pas une consultation mémoire ou une évaluation spécialisée.
+              </p>
+            </div>
+            <div id="statusPill" class="status-pill neutral">Aucune synthèse générée</div>
+          </div>
+
+          <div class="action-grid">
+            <button class="launch-card" data-mode-target="quick" data-section-target="rapid">
+              <strong>Mode 15 minutes</strong>
+              <span>Parcours 15 minutes : alertes, plainte, retentissement, CODEX/MMSE-score et synthèse.</span>
+            </button>
+            <button class="launch-card" data-mode-target="complete" data-section-target="profile">
+              <strong>Mode complet</strong>
+              <span>Profil, anamnèse, tests cognitifs, autonomie et documents.</span>
+            </button>
+            <button class="launch-card" data-mode-target="complete" data-section-target="history">
+              <strong>Suivi d’un patient déjà évalué</strong>
+              <span>Actualiser l’évolution, le retentissement et le plan de suivi.</span>
+            </button>
+            <button class="launch-card" data-section-target="synthesis">
+              <strong>Générer courrier / ordonnance / compte rendu</strong>
+              <span>Produire un texte prêt à copier, imprimer ou archiver.</span>
+            </button>
+          </div>
+
+          <div class="legal-strip">
+            <strong>Cadre médico-légal.</strong>
+            Ne pas conclure à une maladie d’Alzheimer uniquement sur un test. Interpréter selon âge, niveau d’études, langue, audition, vision, anxiété, dépression et vigilance. Ne pas stocker de données sensibles sans consentement et chiffrement.
+          </div>
+        </section>
+
+        <section class="view active" id="rapid" aria-labelledby="rapid-title">
+          <div class="rapid-hero">
+            <div>
+              <p class="kicker">Parcours MG réaliste</p>
+              <h2 id="rapid-title">Bilan mémoire en 15 minutes</h2>
+              <p>Une seule page pour décider : urgence, plainte suspecte, retentissement, tests rapides, bilan et orientation.</p>
+            </div>
+            <button class="primary" id="rapidRefresh">Synthèse maintenant</button>
+          </div>
+
+          <div class="time-strip" aria-label="Découpage du temps conseillé">
+            <span><strong>0-3 min</strong> contexte + red flags</span>
+            <span><strong>3-6 min</strong> plainte + aidant</span>
+            <span><strong>6-12 min</strong> CODEX / horloge / IADL</span>
+            <span><strong>12-15 min</strong> synthèse + conduite</span>
+          </div>
+
+          <div class="rapid-grid">
+            <article class="rapid-panel">
+              <h3>1. Terrain utile</h3>
+              <div class="mini-grid tight">
+                <label>Âge
+                  <input data-path="patient.age" type="number" min="18" max="110" placeholder="Âge" />
+                </label>
+                <label>Niveau scolaire
+                  <select data-path="patient.education">
+                    <option value="">Non renseigné</option>
+                    <option>Non scolarisé / faible scolarité</option>
+                    <option>Primaire</option>
+                    <option>Secondaire</option>
+                    <option>Supérieur</option>
+                    <option>Haut niveau socioculturel</option>
+                  </select>
+                </label>
+                <label>Français / langue
+                  <select data-path="patient.frenchLevel">
+                    <option value="">Non renseigné</option>
+                    <option>Bonne</option>
+                    <option>Partielle</option>
+                    <option>Faible</option>
+                  </select>
+                </label>
+                <label>Encore en activité
+                  <select data-path="patient.working">
+                    <option value="">Non renseigné</option>
+                    <option value="yes">Oui</option>
+                    <option value="no">Non</option>
+                  </select>
+                </label>
+                <label>Aidant fiable
+                  <select data-path="patient.caregiver">
+                    <option value="">Non renseigné</option>
+                    <option value="yes">Oui</option>
+                    <option value="no">Non</option>
+                  </select>
+                </label>
+                <label>Autonomie habituelle
+                  <select data-path="patient.baselineAutonomy">
+                    <option value="">Non renseigné</option>
+                    <option>Autonome</option>
+                    <option>Aide ponctuelle</option>
+                    <option>Aide régulière</option>
+                    <option>Dépendance importante</option>
+                  </select>
+                </label>
+              </div>
+            </article>
+
+            <article class="rapid-panel rapid-danger">
+              <h3>2. Stop urgence</h3>
+              <div class="check-grid compact">
+                <label class="check-item"><input type="checkbox" data-path="redFlags.suddenOnset" /><span>Début brutal / très rapide</span></label>
+                <label class="check-item"><input type="checkbox" data-path="redFlags.fluctuatingDelirium" /><span>Confusion fluctuante</span></label>
+                <label class="check-item"><input type="checkbox" data-path="redFlags.focalDeficit" /><span>Déficit neurologique focal</span></label>
+                <label class="check-item"><input type="checkbox" data-path="redFlags.feverInfection" /><span>Fièvre / infection suspectée</span></label>
+                <label class="check-item"><input type="checkbox" data-path="redFlags.immediateDanger" /><span>Danger conduite, gaz, médicaments, finances</span></label>
+                <label class="check-item"><input type="checkbox" data-path="redFlags.suicidalIdeas" /><span>Idées suicidaires</span></label>
+              </div>
+            </article>
+
+            <article class="rapid-panel">
+              <h3>3. Plainte suspecte</h3>
+              <div class="check-grid compact">
+                <label class="check-item"><input type="checkbox" data-path="complaints.patientComplaint" /><span>Plainte du patient</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.caregiverComplaint" /><span>Plainte de l’entourage</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.repetitions" /><span>Répétitions / oublis récents</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.timeDisorientation" /><span>Désorientation temps/espace</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.medicationErrors" /><span>Erreurs de médicaments</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.behaviorChange" /><span>Changement comportemental</span></label>
+              </div>
+              <div class="mini-grid tight">
+                <label>Depuis quand ?
+                  <input data-path="history.duration" placeholder="Ex. 8 mois" />
+                </label>
+                <label>Évolution
+                  <select data-path="history.course">
+                    <option value="">Non renseigné</option>
+                    <option>Stable</option>
+                    <option>Fluctuante</option>
+                    <option>Aggravation progressive</option>
+                    <option>Très rapide</option>
+                  </select>
+                </label>
+                <label>Entourage confirme
+                  <select data-path="history.caregiverConfirm">
+                    <option value="">Non renseigné</option>
+                    <option value="yes">Oui</option>
+                    <option value="no">Non</option>
+                    <option>Pas d’entourage disponible</option>
+                  </select>
+                </label>
+              </div>
+            </article>
+
+            <article class="rapid-panel">
+              <h3>4. Causes aggravantes à ne pas rater</h3>
+              <div class="check-grid compact">
+                <label class="check-item"><input type="checkbox" data-path="risks.iatrogenic.benzodiazepines" /><span>Benzodiazépine / hypnotique</span></label>
+                <label class="check-item"><input type="checkbox" data-path="risks.iatrogenic.anticholinergics" /><span>Anticholinergique / sédatif</span></label>
+                <label class="check-item"><input type="checkbox" data-path="risks.iatrogenic.polypharmacy" /><span>Polymédication</span></label>
+                <label class="check-item"><input type="checkbox" data-path="risks.iatrogenic.alcohol" /><span>Alcool / toxiques</span></label>
+                <label class="check-item"><input type="checkbox" data-path="complaints.depressionSuspicion" /><span>Humeur / dépression</span></label>
+                <label class="check-item"><input type="checkbox" data-path="risks.iatrogenic.sleepApnea" /><span>Sommeil / SAS suspecté</span></label>
+              </div>
+            </article>
+
+            <article class="rapid-panel rapid-wide">
+              <h3>5. Tests utiles en 6 minutes</h3>
+              <div class="rapid-tests">
+                <label>CODEX
+                  <select data-path="tests.codex.conclusion">
+                    <option value="">Non réalisé</option>
+                    <option>Normal</option>
+                    <option>Douteux</option>
+                    <option>Anormal</option>
+                    <option>À compléter</option>
+                  </select>
+                </label>
+                <label>Rappel 3 mots /3
+                  <input data-path="tests.codex.recall" type="number" min="0" max="3" />
+                </label>
+                <label>Horloge rapide /7
+                  <input data-path="tests.clock.quickScore" type="number" min="0" max="7" placeholder="Optionnel" />
+                </label>
+                <label>MMSE/MMS score /30
+                  <input data-path="tests.mmse.total" type="number" min="0" max="30" placeholder="Optionnel" />
+                </label>
+              </div>
+              <div class="mini-iadl-fast">
+                <label>Téléphone<select data-path="tests.iadl.phone"><option value="">?</option><option>Autonome</option><option>Difficulté mais autonome</option><option>Besoin d’aide</option><option>Impossible</option></select></label>
+                <label>Transports<select data-path="tests.iadl.transport"><option value="">?</option><option>Autonome</option><option>Difficulté mais autonome</option><option>Besoin d’aide</option><option>Impossible</option></select></label>
+                <label>Médicaments<select data-path="tests.iadl.medication"><option value="">?</option><option>Autonome</option><option>Difficulté mais autonome</option><option>Besoin d’aide</option><option>Impossible</option></select></label>
+                <label>Budget<select data-path="tests.iadl.budget"><option value="">?</option><option>Autonome</option><option>Difficulté mais autonome</option><option>Besoin d’aide</option><option>Impossible</option></select></label>
+              </div>
+              <p class="small-note">Pour ajouter les tests détaillés, basculer en mode Complet.</p>
+            </article>
+
+            <article class="rapid-panel rapid-result">
+              <h3>Résultat immédiat</h3>
+              <span id="rapidBadge" class="level-badge neutral">Non calculé</span>
+              <p id="rapidSummary">Saisir les éléments disponibles, puis générer la synthèse.</p>
+              <div class="rapid-actions">
+                <button class="primary" data-section-target="synthesis">Documents</button>
+                <button data-mode-target="complete" data-section-target="tests">Compléter les tests</button>
+                <button data-mode-target="complete" data-section-target="profile">Mode complet</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="profile" aria-labelledby="profile-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 1</p>
+            <h2 id="profile-title">Profil patient</h2>
+          </div>
+          <form class="form-grid" id="profileForm">
+            <label>Nom ou initiales
+              <input data-path="patient.identity" autocomplete="off" placeholder="Optionnel" />
+            </label>
+            <label>Âge
+              <input data-path="patient.age" type="number" min="18" max="110" placeholder="Non renseigné" />
+            </label>
+            <label>Sexe
+              <select data-path="patient.sex">
+                <option value="">Non renseigné</option>
+                <option>Femme</option>
+                <option>Homme</option>
+                <option>Autre / non précisé</option>
+              </select>
+            </label>
+            <label>Niveau d’études / socioculturel
+              <select data-path="patient.education">
+                <option value="">Non renseigné</option>
+                <option>Non scolarisé / faible scolarité</option>
+                <option>Primaire</option>
+                <option>Secondaire</option>
+                <option>Supérieur</option>
+                <option>Haut niveau socioculturel</option>
+              </select>
+            </label>
+            <label>Langue maternelle
+              <input data-path="patient.nativeLanguage" placeholder="Non renseigné" />
+            </label>
+            <label>Maîtrise du français
+              <select data-path="patient.frenchLevel">
+                <option value="">Non renseigné</option>
+                <option>Bonne</option>
+                <option>Partielle</option>
+                <option>Faible</option>
+              </select>
+            </label>
+            <label>Profession actuelle ou ancienne
+              <input data-path="patient.job" placeholder="Non renseigné" />
+            </label>
+            <label>Encore en activité professionnelle
+              <select data-path="patient.working">
+                <option value="">Non renseigné</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </label>
+            <label>Vit seul
+              <select data-path="patient.livesAlone">
+                <option value="">Non renseigné</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </label>
+            <label>Aidant fiable présent
+              <select data-path="patient.caregiver">
+                <option value="">Non renseigné</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </label>
+            <label>Troubles visuels
+              <select data-path="patient.vision">
+                <option value="">Non renseigné</option>
+                <option>Aucun connu</option>
+                <option>Présents / à corriger</option>
+                <option>Importants</option>
+              </select>
+            </label>
+            <label>Troubles auditifs
+              <select data-path="patient.hearing">
+                <option value="">Non renseigné</option>
+                <option>Aucun connu</option>
+                <option>Présents / à corriger</option>
+                <option>Importants</option>
+              </select>
+            </label>
+            <label>Autonomie habituelle
+              <select data-path="patient.baselineAutonomy">
+                <option value="">Non renseigné</option>
+                <option>Autonome</option>
+                <option>Aide ponctuelle</option>
+                <option>Aide régulière</option>
+                <option>Dépendance importante</option>
+              </select>
+            </label>
+            <label>Antécédents neurologiques
+              <textarea data-path="patient.neuroHistory" rows="3" placeholder="AVC, épilepsie, Parkinson, trauma..."></textarea>
+            </label>
+            <label>Antécédents psychiatriques
+              <textarea data-path="patient.psyHistory" rows="3" placeholder="Dépression, anxiété, bipolarité..."></textarea>
+            </label>
+            <label>Antécédents familiaux neurocognitifs
+              <textarea data-path="patient.familyHistory" rows="3" placeholder="Premier degré, âge de début si connu"></textarea>
+            </label>
+          </form>
+
+          <div class="check-panel">
+            <h3>Facteurs de risque vasculaire</h3>
+            <div class="check-grid" id="vascularRisks"></div>
+          </div>
+          <div class="check-panel">
+            <h3>Alcool, sommeil, traitements à risque cognitif</h3>
+            <div class="check-grid" id="iatrogenicRisks"></div>
+          </div>
+        </section>
+
+        <section class="view" id="complaint" aria-labelledby="complaint-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 2</p>
+            <h2 id="complaint-title">Motif de consultation</h2>
+          </div>
+          <div class="check-grid wide" id="complaintChecks"></div>
+        </section>
+
+        <section class="view" id="redflags" aria-labelledby="redflags-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 3</p>
+            <h2 id="redflags-title">Urgence / vigilance</h2>
+          </div>
+          <div class="alert-panel red" id="redFlagAlert" hidden>
+            Ce tableau nécessite une évaluation médicale urgente ou spécialisée avant de conclure à un trouble neurocognitif chronique.
+          </div>
+          <div class="check-grid wide" id="redFlagChecks"></div>
+        </section>
+
+        <section class="view" id="history" aria-labelledby="history-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 4</p>
+            <h2 id="history-title">Anamnèse structurée</h2>
+          </div>
+          <form class="form-grid">
+            <label>Depuis quand ?
+              <input data-path="history.duration" placeholder="Ex. 8 mois, 2 ans, depuis l’hospitalisation..." />
+            </label>
+            <label>Mode de début
+              <select data-path="history.onset">
+                <option value="">Non renseigné</option>
+                <option>Progressif</option>
+                <option>Brutal</option>
+                <option>Subaigu</option>
+                <option>Après événement médical</option>
+              </select>
+            </label>
+            <label>Évolution
+              <select data-path="history.course">
+                <option value="">Non renseigné</option>
+                <option>Stable</option>
+                <option>Fluctuante</option>
+                <option>Aggravation progressive</option>
+                <option>Très rapide</option>
+              </select>
+            </label>
+            <label>Le patient s’en plaint-il ?
+              <select data-path="history.patientConcern">
+                <option value="">Non renseigné</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </label>
+            <label>L’entourage confirme-t-il ?
+              <select data-path="history.caregiverConfirm">
+                <option value="">Non renseigné</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+                <option>Pas d’entourage disponible</option>
+              </select>
+            </label>
+            <label>Activités complexes
+              <textarea data-path="history.complexActivities" rows="3" placeholder="Administratif, budget, médicaments, transports, conduite..."></textarea>
+            </label>
+            <label>Activités de base
+              <textarea data-path="history.basicActivities" rows="3" placeholder="Toilette, habillage, alimentation, transferts..."></textarea>
+            </label>
+            <label>Impact professionnel
+              <textarea data-path="history.workImpact" rows="3" placeholder="Erreurs, ralentissement, arrêt, plainte de l’employeur..."></textarea>
+            </label>
+            <label>Impact conduite
+              <textarea data-path="history.drivingImpact" rows="3" placeholder="Accrochages, désorientation, évitement, inquiétude aidant..."></textarea>
+            </label>
+            <label>Médicaments / finances
+              <textarea data-path="history.safetyImpact" rows="3" placeholder="Erreurs de prise, impayés, abus de faiblesse..."></textarea>
+            </label>
+            <label>Facteurs thymiques, sommeil, contexte
+              <textarea data-path="history.context" rows="4" placeholder="Humeur, anxiété, sommeil, douleurs, isolement, deuil, hospitalisation, infection, changement de traitement..."></textarea>
+            </label>
+          </form>
+        </section>
+
+        <section class="view" id="tests" aria-labelledby="tests-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 5</p>
+            <h2 id="tests-title">Tests recommandés en première ligne MG</h2>
+          </div>
+
+          <div class="test-layout">
+            <details open class="test-block">
+              <summary>MMS complet /30 - cotation par domaines</summary>
+              <div class="test-body">
+                <div class="test-callout">
+                  <strong>Support de passation.</strong>
+                  Utiliser le matériel officiel autorisé pour lire les consignes et items. L’application sert ici à coter, calculer et interpréter prudemment le MMS.
+                </div>
+                <div class="score-table" id="mmseDomainTable"></div>
+                <p id="mmseScoreHint" class="score-hint">Score MMS non renseigné.</p>
+                <label>Score total /30, calculé ou saisi
+                  <input data-path="tests.mmse.total" type="number" min="0" max="30" placeholder="Non réalisé" />
+                </label>
+                <label>Contexte d’interprétation
+                  <textarea data-path="tests.mmse.context" rows="3" placeholder="Fatigue, anxiété, audition, langue, niveau d’études..."></textarea>
+                </label>
+                <p class="small-note">Les consignes standardisées et items protégés ne sont pas reproduits. Le score doit toujours être interprété selon âge, scolarité, langue, anxiété, dépression, vigilance, audition et vision.</p>
+              </div>
+            </details>
+
+            <details open class="test-block">
+              <summary>Mini-IADL 4 items</summary>
+              <div class="test-body">
+                <div class="score-table" id="iadlTable"></div>
+              </div>
+            </details>
+
+            <details class="test-block complete-preferred">
+              <summary>Test des 5 mots de Dubois</summary>
+              <div class="test-body">
+                <div class="word-grid" id="fiveWordsGrid"></div>
+                <div class="mini-grid">
+                  <label>Rappel immédiat libre /5
+                    <input data-path="tests.fiveWords.immediateFree" type="number" min="0" max="5" />
+                  </label>
+                  <label>Rappel immédiat indicé /5
+                    <input data-path="tests.fiveWords.immediateCued" type="number" min="0" max="5" />
+                  </label>
+                  <label>Rappel différé libre /5
+                    <input data-path="tests.fiveWords.delayedFree" type="number" min="0" max="5" />
+                  </label>
+                  <label>Rappel différé indicé /5
+                    <input data-path="tests.fiveWords.delayedCued" type="number" min="0" max="5" />
+                  </label>
+                </div>
+                <p id="fiveWordsScore" class="score-hint">Score non renseigné.</p>
+                <p class="small-note">Mots et catégories à renseigner depuis un support autorisé ou local. L’interprétation reste à confirmer.</p>
+              </div>
+            </details>
+
+            <details open class="test-block">
+              <summary>Test de l’horloge</summary>
+              <div class="test-body">
+                <div class="check-grid compact" id="clockChecks"></div>
+                <label>Importer / photographier le dessin
+                  <input id="clockImage" type="file" accept="image/*" capture="environment" />
+                </label>
+                <div class="image-preview" id="clockPreview"></div>
+              </div>
+            </details>
+
+            <details class="test-block complete-preferred">
+              <summary>Fluences verbales</summary>
+              <div class="test-body mini-grid">
+                <label>Animaux en 2 min - mots valides
+                  <input data-path="tests.fluency.animalsValid" type="number" min="0" />
+                </label>
+                <label>Animaux - répétitions / intrusions
+                  <input data-path="tests.fluency.animalsErrors" type="number" min="0" />
+                </label>
+                <label>Lettre donnée
+                  <input data-path="tests.fluency.letter" maxlength="1" />
+                </label>
+                <label>Lettre en 1 min - mots valides
+                  <input data-path="tests.fluency.letterValid" type="number" min="0" />
+                </label>
+                <label>Lettre - répétitions / intrusions
+                  <input data-path="tests.fluency.letterErrors" type="number" min="0" />
+                </label>
+              </div>
+            </details>
+
+            <details open class="test-block">
+              <summary>CODEX complet - consultation courte</summary>
+              <div class="test-body">
+                <div class="test-callout">
+                  <strong>Déroulé.</strong>
+                  3 mots à apprendre, horloge, rappel, puis orientation si nécessaire. Les mots peuvent être adaptés au support local, en évitant de répéter la même série à chaque consultation.
+                </div>
+                <div class="codex-card">
+                  <div>
+                    <h3>Préparation</h3>
+                    <p>Imprimer ce document, lire au patient ce qui est écrit en italique, puis cocher les bonnes réponses. Source indiquée : <a href="http://www.testcodex.org/Pages/default.aspx" target="_blank" rel="noreferrer">testcodex.org</a>.</p>
+                  </div>
+                  <div>
+                    <h3>Apprentissage</h3>
+                    <p><em>Je vais vous dire 3 mots. Je voudrais que vous me les répétiez et que vous essayiez de les retenir car je vous les redemanderai tout à l'heure.</em></p>
+                    <p><strong>Cigare, Fleur, Porte</strong> ou <strong>Clé, Ballon, Citron</strong>.</p>
+                    <p><em>Répétez les 3 mots.</em></p>
+                    <div class="inline-actions">
+                      <button type="button" data-codex-wordset="a">Cigare / Fleur / Porte</button>
+                      <button type="button" data-codex-wordset="b">Clé / Ballon / Citron</button>
+                    </div>
+                  </div>
+                  <div>
+                    <h3>Horloge simplifiée</h3>
+                    <p><em>Voici le cadran d'une horloge, placez les chiffres indiquant les heures dans le cadran, puis indiquez 5h10 par des aiguilles.</em></p>
+                  </div>
+                  <div>
+                    <h3>Rappel</h3>
+                    <p><em>Pouvez-vous me dire quels étaient les 3 mots que je vous ai demandé de répéter et de retenir tout à l'heure ?</em></p>
+                  </div>
+                </div>
+                <div class="mini-grid">
+                  <label>Mot 1
+                    <input data-path="tests.codex.words.0" placeholder="Mot choisi" />
+                  </label>
+                  <label>Mot 2
+                    <input data-path="tests.codex.words.1" placeholder="Mot choisi" />
+                  </label>
+                  <label>Mot 3
+                    <input data-path="tests.codex.words.2" placeholder="Mot choisi" />
+                  </label>
+                  <label>Apprentissage 3 mots
+                    <select data-path="tests.codex.learning">
+                      <option value="">Non renseigné</option>
+                      <option>Correct</option>
+                      <option>Partiel</option>
+                      <option>Impossible / non compris</option>
+                    </select>
+                  </label>
+                  <label>Rappel spontané /3
+                    <input data-path="tests.codex.recall" type="number" min="0" max="3" />
+                  </label>
+                  <label>Les 3 mots correctement rappelés
+                    <select data-path="tests.codex.allWordsRecalled">
+                      <option value="">Non renseigné</option>
+                      <option value="yes">Oui</option>
+                      <option value="no">Non</option>
+                    </select>
+                  </label>
+                  <label>Orientation spatiale /5 si nécessaire
+                    <input data-path="tests.codex.orientationScore" type="number" min="0" max="5" />
+                  </label>
+                </div>
+                <div class="check-panel soft-panel">
+                  <h3>Horloge CODEX</h3>
+                  <div class="check-grid compact" id="codexClockChecks"></div>
+                </div>
+                <div class="mini-grid">
+                  <label>Horloge simplifiée
+                    <select data-path="tests.codex.clock">
+                      <option value="">Auto ou non renseigné</option>
+                      <option>Correcte</option>
+                      <option>Douteuse</option>
+                      <option>Anormale</option>
+                    </select>
+                  </label>
+                  <label>Conclusion CODEX
+                    <select data-path="tests.codex.conclusion">
+                      <option value="">Auto ou non renseigné</option>
+                      <option>Normal</option>
+                      <option>Douteux</option>
+                      <option>Anormal</option>
+                      <option>À compléter</option>
+                    </select>
+                  </label>
+                  <label>Commentaire
+                    <input data-path="tests.codex.note" placeholder="Coopération, anxiété, langue, trouble sensoriel..." />
+                  </label>
+                </div>
+                <p id="codexScoreHint" class="score-hint">CODEX non renseigné.</p>
+              </div>
+            </details>
+
+            <details class="test-block complete-preferred">
+              <summary>BREF / FAB - fonctions frontales</summary>
+              <div class="test-body">
+                <div class="score-table" id="fabTable"></div>
+              </div>
+            </details>
+
+            <details class="test-block complete-preferred">
+              <summary>NPI réduit - comportement</summary>
+              <div class="test-body">
+                <div class="score-table" id="npiTable"></div>
+              </div>
+            </details>
+
+            <details class="test-block complete-preferred">
+              <summary>ADL - autonomie de base</summary>
+              <div class="test-body">
+                <div class="score-table" id="adlTable"></div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="view" id="synthesis" aria-labelledby="synthesis-title">
+          <div class="section-heading">
+            <p class="kicker">Étape 6</p>
+            <h2 id="synthesis-title">Synthèse et documents</h2>
+          </div>
+
+          <div class="synthesis-grid">
+            <article class="result-panel" id="resultPanel">
+              <div class="result-head">
+                <span id="levelBadge" class="level-badge neutral">Niveau non calculé</span>
+                <button class="primary" id="refreshSynthesis">Actualiser la synthèse</button>
+              </div>
+              <h3 id="resultTitle">Aucune synthèse disponible</h3>
+              <p id="resultSummary">Renseigner les éléments utiles puis actualiser.</p>
+              <ul id="resultReasons"></ul>
+              <div id="resultAdvice" class="advice"></div>
+            </article>
+
+            <article class="document-panel">
+              <div class="doc-toolbar">
+                <button data-doc="report">Compte rendu MG</button>
+                <button data-doc="referral">Courrier spécialisé</button>
+                <button data-doc="labs">Ordonnance biologie</button>
+                <button data-doc="imaging">Ordonnance imagerie</button>
+                <button data-doc="patient">Fiche patient / aidant</button>
+              </div>
+              <textarea id="documentOutput" rows="20" spellcheck="true" placeholder="Choisir un document à générer."></textarea>
+              <div class="doc-actions">
+                <button id="copyDocument">Copier</button>
+                <button id="printDocument">Imprimer / PDF</button>
+                <button id="resetAll" class="danger-button">Réinitialiser</button>
+              </div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="source-footer">
+      <span>Sources de cadrage : DemenceClic, SFGG/FCM 2025, HAS. Vérifier les licences des tests avant toute reproduction intégrale.</span>
+      <a href="https://demenceclic.fr/les-tests.html" target="_blank" rel="noreferrer">DemenceClic</a>
+      <a href="https://sfgg.org/recommandations/maladie-alzheimer/" target="_blank" rel="noreferrer">SFGG</a>
+      <a href="https://sfgg.org/media/2025/04/RECOMMANDATIONS-POUR-LE-DIAGNOSTIC-ALZHEIMER-V2-1.pdf" target="_blank" rel="noreferrer">Recommandations 2025</a>
+      <a href="https://www.has-sante.fr/upload/docs/application/pdf/2018-05/fiche_1_troubles_cognitifs_et_trouble_neurocognitifs.pdf" target="_blank" rel="noreferrer">HAS TNC</a>
+    </footer>
+
+    <script>
+(function memoMgModule(global) {
+  "use strict";
+
+  const STORAGE_KEY = "memomg-state-v1";
+
+  const LISTS = {
+    vascularRisks: [
+      ["hta", "HTA"],
+      ["diabetes", "Diabète"],
+      ["dyslipidemia", "Dyslipidémie"],
+      ["tobacco", "Tabac"],
+      ["stroke", "AVC / AIT"],
+      ["af", "Fibrillation atriale"]
+    ],
+    iatrogenicRisks: [
+      ["alcohol", "Alcool ou toxiques"],
+      ["sleepApnea", "Syndrome d’apnées du sommeil connu ou suspecté"],
+      ["benzodiazepines", "Benzodiazépines"],
+      ["hypnotics", "Hypnotiques"],
+      ["anticholinergics", "Anticholinergiques"],
+      ["opioids", "Opioïdes"],
+      ["neuroleptics", "Neuroleptiques"],
+      ["sedativeAntihistamines", "Antihistaminiques sédatifs"],
+      ["sedativeAntidepressants", "Antidépresseurs sédatifs"],
+      ["antiepileptics", "Antiépileptiques"],
+      ["polypharmacy", "Polymédication"]
+    ],
+    complaints: [
+      ["patientComplaint", "Plainte mémoire du patient"],
+      ["caregiverComplaint", "Plainte rapportée par l’entourage"],
+      ["repetitions", "Répétitions fréquentes"],
+      ["recentEvents", "Oublis de rendez-vous ou événements récents"],
+      ["lostObjects", "Perte d’objets"],
+      ["timeDisorientation", "Désorientation temporelle"],
+      ["spaceDisorientation", "Désorientation spatiale"],
+      ["adminDifficulty", "Difficultés administratives"],
+      ["medicationErrors", "Erreurs de médicaments"],
+      ["budgetDifficulty", "Difficultés de gestion du budget"],
+      ["drivingDifficulty", "Difficultés de conduite"],
+      ["behaviorChange", "Changement de comportement"],
+      ["apathy", "Apathie"],
+      ["irritability", "Irritabilité"],
+      ["disinhibition", "Désinhibition"],
+      ["hallucinations", "Hallucinations"],
+      ["delusions", "Idées délirantes"],
+      ["sleepDisorders", "Troubles du sommeil"],
+      ["falls", "Chutes"],
+      ["motorSlowing", "Ralentissement moteur"],
+      ["depressionSuspicion", "Suspicion de dépression"],
+      ["deliriumSuspicion", "Suspicion de confusion aiguë"],
+      ["certificateRequest", "Demande certificat / conduite / protection / aidant"]
+    ],
+    redFlags: [
+      ["suddenOnset", "Installation brutale ou très rapide"],
+      ["fluctuatingDelirium", "Confusion aiguë fluctuante"],
+      ["feverInfection", "Fièvre ou infection suspectée"],
+      ["focalDeficit", "Déficit neurologique focal"],
+      ["unusualHeadache", "Céphalée inhabituelle"],
+      ["recentHeadTrauma", "Traumatisme crânien récent"],
+      ["seizure", "Crise convulsive"],
+      ["recentGaitDisorder", "Trouble de la marche récent"],
+      ["earlyVisualHallucinations", "Hallucinations visuelles précoces importantes"],
+      ["earlyParkinsonism", "Syndrome parkinsonien précoce"],
+      ["severeBehavior", "Troubles du comportement sévères"],
+      ["immediateDanger", "Danger immédiat : conduite, gaz, médicaments, finances, errance"],
+      ["abuse", "Suspicion de maltraitance ou abus de faiblesse"],
+      ["suicidalIdeas", "Idées suicidaires"],
+      ["generalDecline", "Altération rapide de l’état général"]
+    ],
+    iadl: [
+      ["phone", "Téléphone"],
+      ["transport", "Transports"],
+      ["medication", "Médicaments"],
+      ["budget", "Budget / finances"]
+    ],
+    clock: [
+      ["allNumbers", "Chiffres tous présents"],
+      ["correctOrder", "Ordre correct"],
+      ["correctPosition", "Position correcte"],
+      ["twoHands", "Deux aiguilles présentes"],
+      ["hourHand", "Aiguille des heures correcte"],
+      ["minuteHand", "Aiguille des minutes correcte"],
+      ["handSize", "Différence de taille des aiguilles correcte"]
+    ],
+    mmseDomains: [
+      ["orientationTime", "Orientation temporelle", 5],
+      ["orientationPlace", "Orientation spatiale", 5],
+      ["registration", "Encodage / apprentissage immédiat", 3],
+      ["attention", "Attention / calcul", 5],
+      ["recall", "Rappel différé", 3],
+      ["naming", "Dénomination", 2],
+      ["repetition", "Répétition", 1],
+      ["command", "Ordre oral en plusieurs étapes", 3],
+      ["reading", "Lecture / exécution", 1],
+      ["writing", "Écriture spontanée", 1],
+      ["copy", "Copie visuoconstructive", 1]
+    ],
+    codexClock: [
+      ["numbers", "Les nombres sont tous présents"],
+      ["position", "Leur position est correcte"],
+      ["hands", "On reconnaît une grande et une petite aiguille"],
+      ["directions", "Leurs directions sont correctes"]
+    ],
+    fab: [
+      ["similarities", "Similitudes"],
+      ["phonemicFluency", "Fluence phonémique"],
+      ["grasp", "Comportement de préhension"],
+      ["luria", "Séquences motrices de Luria"],
+      ["conflicting", "Consignes conflictuelles"],
+      ["gono", "Go / No-Go"]
+    ],
+    npi: [
+      ["delusion", "Délire"],
+      ["hallucination", "Hallucinations"],
+      ["agitation", "Agitation"],
+      ["depression", "Dépression"],
+      ["anxiety", "Anxiété"],
+      ["apathy", "Apathie"],
+      ["disinhibition", "Désinhibition"],
+      ["irritability", "Irritabilité"],
+      ["motor", "Troubles moteurs aberrants"],
+      ["sleep", "Sommeil"],
+      ["appetite", "Appétit"]
+    ],
+    adl: [
+      ["washing", "Toilette"],
+      ["dressing", "Habillage"],
+      ["feeding", "Alimentation"],
+      ["continence", "Continence"],
+      ["transfers", "Transferts"],
+      ["toilets", "Toilettes"]
+    ]
+  };
+
+  const IADL_OPTIONS = ["", "Autonome", "Difficulté mais autonome", "Besoin d’aide", "Impossible"];
+  const ADL_OPTIONS = ["", "Autonome", "Aide partielle", "Aide importante", "Dépendant"];
+  const SEVERITY_OPTIONS = ["", "Absent", "Léger", "Modéré", "Sévère"];
+  const IMPACT_OPTIONS = ["", "Aucun", "Léger", "Modéré", "Sévère"];
+
+  function defaultState() {
+    return {
+      meta: { mode: "quick", localSave: false, lastDoc: "report" },
+      patient: {},
+      risks: { vascular: {}, iatrogenic: {} },
+      complaints: {},
+      redFlags: {},
+      history: {},
+      tests: {
+        mmse: { domains: {} },
+        iadl: {},
+        fiveWords: {
+          words: Array.from({ length: 5 }, () => ({ word: "", category: "" }))
+        },
+        clock: { items: {} },
+        fluency: {},
+        codex: { words: ["Cigare", "Fleur", "Porte"], clockItems: {} },
+        fab: {},
+        npi: {},
+        adl: {}
+      },
+      attachments: { clockImageName: "", clockImageData: "" },
+      synthesis: null
+    };
+  }
+
+  let state = defaultState();
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function getPath(obj, path) {
+    return path.split(".").reduce((cursor, key) => (cursor == null ? undefined : cursor[key]), obj);
+  }
+
+  function setPath(obj, path, value) {
+    const parts = path.split(".");
+    let cursor = obj;
+    parts.slice(0, -1).forEach((key, index) => {
+      const nextKey = parts[index + 1];
+      if (cursor[key] == null) cursor[key] = /^\d+$/.test(nextKey) ? [] : {};
+      cursor = cursor[key];
+    });
+    cursor[parts[parts.length - 1]] = value;
+  }
+
+  function toNumber(value) {
+    if (value === "" || value == null) return null;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function yes(value) {
+    return value === true || value === "yes" || value === "Oui";
+  }
+
+  function anySelected(map) {
+    return Object.values(map || {}).some(Boolean);
+  }
+
+  function countSelected(map) {
+    return Object.values(map || {}).filter(Boolean).length;
+  }
+
+  function selectedLabels(map, source) {
+    return source.filter(([id]) => map && map[id]).map(([, label]) => label);
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function line(value, fallback = "Non renseigné") {
+    if (value == null || value === "") return fallback;
+    return String(value);
+  }
+
+  function joinOrNone(items) {
+    return items && items.length ? items.join(", ") : "Non renseigné";
+  }
+
+  function scoreStatus(value, threshold, comparator) {
+    const n = toNumber(value);
+    if (n == null) return false;
+    return comparator === "lte" ? n <= threshold : n < threshold;
+  }
+
+  function scoreSum(values) {
+    return values.reduce((sum, value) => sum + (toNumber(value) ?? 0), 0);
+  }
+
+  function computeMmseDetailedTotal(mmse) {
+    const domains = mmse && mmse.domains ? mmse.domains : {};
+    const values = LISTS.mmseDomains.map(([id, , max]) => {
+      const value = toNumber(domains[id]);
+      if (value == null) return null;
+      return Math.max(0, Math.min(max, value));
+    });
+    return values.some((value) => value != null) ? scoreSum(values) : null;
+  }
+
+  function computeCodexClockScore(codex) {
+    const items = codex && codex.clockItems ? codex.clockItems : {};
+    return LISTS.codexClock.filter(([id]) => items[id]).length;
+  }
+
+  function deriveCodexConclusion(codex) {
+    if (!codex) return "";
+    if (codex.conclusion) return codex.conclusion;
+    const recall = codex.allWordsRecalled === "yes" ? 3 : toNumber(codex.recall);
+    const orientationScore = toNumber(codex.orientationScore);
+    const clockScore = computeCodexClockScore(codex);
+    const hasClock = Object.keys(codex.clockItems || {}).length > 0;
+    const clockLabel = codex.clock || "";
+    const clockAbnormal = clockLabel === "Anormale" || (hasClock && clockScore < 3);
+    const clockDoubtful = clockLabel === "Douteuse" || (hasClock && clockScore === 3);
+    if (recall == null && !hasClock && !clockLabel && orientationScore == null) return "";
+    if (clockAbnormal && recall != null && recall < 3) return "Anormal";
+    if (clockAbnormal || recall === 0 || (orientationScore != null && orientationScore < 4)) return "Anormal";
+    if (clockDoubtful || (recall != null && recall < 3) || codex.learning === "Partiel") return "Douteux";
+    if (recall === 3 && (clockLabel === "Correcte" || (hasClock && clockScore === LISTS.codexClock.length))) return "Normal";
+    return "À compléter";
+  }
+
+  function hasHelpOrImpossible(value) {
+    return /Besoin|Impossible|aide/i.test(String(value || ""));
+  }
+
+  function hasMajorAdlLoss(value) {
+    return /Aide importante|Dépendant|Dependant/i.test(String(value || ""));
+  }
+
+  function computeScores(inputState) {
+    const s = inputState || defaultState();
+    const tests = s.tests || {};
+    const complaints = s.complaints || {};
+    const redFlags = s.redFlags || {};
+    const patient = s.patient || {};
+    const history = s.history || {};
+
+    const detailedMmse = computeMmseDetailedTotal(tests.mmse || {});
+    const mmse = detailedMmse != null ? detailedMmse : toNumber(tests.mmse && tests.mmse.total);
+    const iadlValues = Object.values((tests.iadl || {}));
+    const iadlLoss = iadlValues.filter(hasHelpOrImpossible).length;
+    const iadlDifficulty = iadlValues.filter((value) => value === "Difficulté mais autonome").length;
+
+    const fw = tests.fiveWords || {};
+    const immediateFree = toNumber(fw.immediateFree);
+    const immediateCued = toNumber(fw.immediateCued);
+    const delayedFree = toNumber(fw.delayedFree);
+    const delayedCued = toNumber(fw.delayedCued);
+    const fiveWordsFree = scoreSum([immediateFree, delayedFree]);
+    const immediateTotal = Math.min(5, scoreSum([immediateFree, immediateCued]));
+    const delayedTotal = Math.min(5, scoreSum([delayedFree, delayedCued]));
+    const fiveWordsTotal = immediateTotal + delayedTotal;
+    const fiveWordsFilled = [immediateFree, immediateCued, delayedFree, delayedCued].some((value) => value != null);
+
+    const clockItems = tests.clock && tests.clock.items ? tests.clock.items : {};
+    const quickClockScore = toNumber(tests.clock && tests.clock.quickScore);
+    const detailedClockScore = LISTS.clock.filter(([id]) => clockItems[id]).length;
+    const clockScore = quickClockScore != null ? quickClockScore : detailedClockScore;
+    const clockFilled = quickClockScore != null || Object.keys(clockItems).length > 0;
+
+    const fluency = tests.fluency || {};
+    const animalsValid = toNumber(fluency.animalsValid);
+    const letterValid = toNumber(fluency.letterValid);
+    const animalsErrors = toNumber(fluency.animalsErrors) ?? 0;
+    const letterErrors = toNumber(fluency.letterErrors) ?? 0;
+
+    const codex = tests.codex || {};
+    const codexConclusion = deriveCodexConclusion(codex);
+    const codexAbnormal = ["Anormal", "Douteux"].includes(codexConclusion) ||
+      codex.clock === "Anormale" ||
+      codex.orientation === "Anormale" ||
+      scoreStatus(codex.orientationScore, 3, "lte") ||
+      scoreStatus(codex.recall, 1, "lte");
+
+    const fabValues = Object.values(tests.fab || {}).map((item) => toNumber(item && item.score)).filter((value) => value != null);
+    const fabTotal = fabValues.length ? scoreSum(fabValues) : null;
+
+    const npiValues = Object.values(tests.npi || {});
+    const npiModerateSevere = npiValues.filter((item) => item && ["Modéré", "Sévère"].includes(item.severity)).length;
+    const npiCaregiverImpact = npiValues.filter((item) => item && ["Modéré", "Sévère"].includes(item.impact)).length;
+
+    const adlValues = Object.values(tests.adl || {});
+    const adlLoss = adlValues.filter(hasMajorAdlLoss).length;
+    const adlPartial = adlValues.filter((value) => value === "Aide partielle").length;
+
+    const complaintCount = countSelected(complaints);
+    const redFlagCount = countSelected(redFlags);
+    const objectiveFindings = [
+      mmse != null && mmse < 26,
+      fiveWordsFilled && (fiveWordsTotal < 10 || delayedTotal < 5),
+      clockFilled && clockScore < 6,
+      animalsValid != null && animalsValid < 15,
+      letterValid != null && letterValid < 10,
+      codexAbnormal,
+      fabTotal != null && fabTotal < 15,
+      npiModerateSevere > 0
+    ].filter(Boolean).length;
+
+    const functionalLoss = iadlLoss + adlLoss;
+    const functionalDifficulty = iadlDifficulty + adlPartial;
+    const acuteOrFluctuating = ["Brutal", "Subaigu", "Après événement médical"].includes(history.onset) ||
+      ["Fluctuante", "Très rapide"].includes(history.course) ||
+      complaints.deliriumSuspicion;
+    const safetyIssue = complaints.medicationErrors || complaints.budgetDifficulty || complaints.drivingDifficulty ||
+      redFlags.immediateDanger || Boolean(history.safetyImpact) || Boolean(history.drivingImpact);
+    const youngerOrWorking = (toNumber(patient.age) != null && toNumber(patient.age) < 65) || patient.working === "yes";
+    const familyConcern = Boolean(patient.familyHistory);
+    const atypicalConcern = complaints.behaviorChange || complaints.disinhibition || complaints.hallucinations ||
+      complaints.delusions || complaints.motorSlowing || complaints.apathy || complaints.spaceDisorientation;
+    const suspiciousComplaint = complaints.caregiverComplaint || complaints.repetitions || complaints.recentEvents ||
+      complaints.timeDisorientation || complaints.spaceDisorientation || yes(history.caregiverConfirm);
+    const confounderCount = countSelected(s.risks && s.risks.iatrogenic) +
+      (complaints.depressionSuspicion ? 1 : 0) +
+      (complaints.sleepDisorders ? 1 : 0) +
+      (history.context ? 1 : 0);
+
+    return {
+      mmse,
+      detailedMmse,
+      iadlLoss,
+      iadlDifficulty,
+      fiveWordsFree,
+      fiveWordsTotal,
+      fiveWordsFilled,
+      delayedTotal,
+      clockScore,
+      clockFilled,
+      animalsValid,
+      animalsErrors,
+      letterValid,
+      letterErrors,
+      codexAbnormal,
+      codexConclusion,
+      fabTotal,
+      npiModerateSevere,
+      npiCaregiverImpact,
+      adlLoss,
+      adlPartial,
+      complaintCount,
+      redFlagCount,
+      objectiveFindings,
+      functionalLoss,
+      functionalDifficulty,
+      acuteOrFluctuating,
+      safetyIssue,
+      youngerOrWorking,
+      familyConcern,
+      atypicalConcern,
+      suspiciousComplaint,
+      confounderCount
+    };
+  }
+
+  function computeClinicalSynthesis(inputState) {
+    const s = inputState || defaultState();
+    const scores = computeScores(s);
+    const reasons = [];
+    const advice = [];
+    let level = 0;
+    let title = "Pas d’argument objectif actuel";
+    let summary = "Les données renseignées ne montrent pas d’argument objectif net à ce stade.";
+
+    const symptomatic = scores.complaintCount > 0 || yes(s.history && s.history.patientConcern) || scores.suspiciousComplaint;
+    if (scores.redFlagCount > 0 ||
+      scores.acuteOrFluctuating ||
+      (scores.safetyIssue && (scores.objectiveFindings > 0 || symptomatic)) ||
+      (scores.youngerOrWorking && symptomatic) ||
+      (scores.familyConcern && symptomatic) ||
+      (scores.atypicalConcern && symptomatic)) {
+      level = 4;
+      title = "Situation urgente ou complexe";
+      summary = "Tableau compatible avec une situation qui justifie une évaluation urgente ou spécialisée avant de conclure à un trouble neurocognitif chronique.";
+    } else if (scores.objectiveFindings > 0 && scores.functionalLoss > 0) {
+      level = 3;
+      title = "Trouble neurocognitif majeur probable, à confirmer";
+      summary = "Association compatible avec un trouble neurocognitif avec retentissement fonctionnel. Confirmation spécialisée recommandée.";
+    } else if (scores.objectiveFindings > 0) {
+      level = 2;
+      title = "Trouble neurocognitif possible, à confirmer";
+      summary = "Un ou plusieurs éléments objectivent une fragilité cognitive sans retentissement majeur renseigné. Bilan initial et orientation selon contexte.";
+    } else if (scores.complaintCount > 0 || yes(s.history && s.history.patientConcern)) {
+      level = 1;
+      title = "Plainte cognitive subjective persistante";
+      summary = "Plainte réelle sans anomalie objective renseignée. Rechercher facteurs confondants et recontrôler si la plainte persiste.";
+    }
+
+    if (scores.redFlagCount) reasons.push(`${scores.redFlagCount} red flag(s) ou élément(s) d’urgence sélectionné(s).`);
+    if (scores.mmse != null) reasons.push(`MMSE/MMS saisi : ${scores.mmse}/30, à interpréter selon âge, langue, scolarité et contexte sensoriel.`);
+    if (scores.fiveWordsFilled) {
+      reasons.push(`5 mots : score libre ${scores.fiveWordsFree}/10, score total ${scores.fiveWordsTotal}/10, rappel différé total ${scores.delayedTotal}/5.`);
+      if (scores.fiveWordsTotal < 10 || scores.delayedTotal < 5) reasons.push("Rappel total diminué malgré indiçage : profil plus suspect d’un trouble mnésique hippocampique, à confirmer.");
+      else if (scores.fiveWordsFree < 8 && scores.fiveWordsTotal >= 10) reasons.push("Rappel libre diminué avec indiçage utile : compatible avec défaut de récupération attentionnel, anxieux ou dépressif, à confronter au contexte.");
+    }
+    if (scores.clockFilled) reasons.push(`Horloge : ${scores.clockScore}/7 critères simples validés.`);
+    if (scores.codexConclusion) reasons.push(`CODEX : ${scores.codexConclusion}.`);
+    if (scores.fabTotal != null) reasons.push(`BREF/FAB : ${scores.fabTotal}/18.`);
+    if (scores.iadlLoss) reasons.push(`${scores.iadlLoss} item(s) Mini-IADL avec besoin d’aide ou impossibilité.`);
+    if (scores.adlLoss) reasons.push(`${scores.adlLoss} item(s) ADL avec aide importante ou dépendance.`);
+    if (scores.npiModerateSevere) reasons.push(`${scores.npiModerateSevere} domaine(s) comportemental(aux) modéré(s) ou sévère(s).`);
+    if (scores.confounderCount) reasons.push("Facteurs confondants ou réversibles possibles : humeur, sommeil, iatrogénie, toxiques ou contexte médical.");
+
+    if (level === 0) {
+      advice.push("Surveillance clinique, correction des facteurs aggravants et recontrôle à 6-12 mois si plainte persistante.");
+      advice.push("Ne pas écarter une consultation mémoire si l’entourage décrit une plainte suspecte répétée.");
+    }
+    if (level === 1) {
+      advice.push("Explorer anxiété, dépression, sommeil, douleur, isolement, audition, vision et traitements à risque cognitif.");
+      advice.push("Recontrôle programmé ou consultation mémoire si plainte suspecte persistante, entourage inquiet ou contexte médico-légal.");
+    }
+    if (level === 2) {
+      advice.push("Proposer bilan biologique de première intention et imagerie cérébrale, idéalement IRM si pas de contre-indication.");
+      advice.push("Orientation consultation mémoire selon profil, plainte corroborée, âge, activité professionnelle et demande du patient.");
+    }
+    if (level === 3) {
+      advice.push("Organiser consultation mémoire/gériatrie/neurologie, sécurisation du domicile, revue thérapeutique et plan d’aide.");
+      advice.push("Évaluer conduite, médicaments, finances, aidant, droits sociaux et besoin de protection.");
+    }
+    if (level === 4) {
+      advice.push("Évaluer en urgence ou rapidement selon gravité : confusion aiguë, signe neurologique, évolution rapide, danger immédiat ou forme atypique.");
+      advice.push("Orientation CMRR à privilégier si début avant 65 ans, forme familiale possible, DFT/DCL/aphasie progressive/forme visuo-spatiale ou situation complexe.");
+    }
+
+    advice.push("Conclusion non diagnostique : formulation compatible avec, à confirmer, orientation recommandée.");
+
+    return { level, title, summary, reasons, advice, scores };
+  }
+
+  function renderCheckboxList(containerId, items, pathPrefix) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = items.map(([id, label]) => `
+      <label class="check-item">
+        <input type="checkbox" data-path="${pathPrefix}.${id}" />
+        <span>${escapeHtml(label)}</span>
+      </label>
+    `).join("");
+  }
+
+  function optionTags(options, current) {
+    return options.map((option) => `<option value="${escapeHtml(option)}"${option === current ? " selected" : ""}>${escapeHtml(option || "Non renseigné")}</option>`).join("");
+  }
+
+  function renderChoiceTable(containerId, items, pathPrefix, options, extraPathPrefix) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = `
+      <div class="score-row header" style="grid-template-columns:minmax(10rem,1.2fr) minmax(9rem,1fr) minmax(10rem,1.2fr)">
+        <div class="score-cell">Domaine</div><div class="score-cell">Cotation</div><div class="score-cell">Commentaire</div>
+      </div>
+      ${items.map(([id, label]) => `
+        <div class="score-row" style="grid-template-columns:minmax(10rem,1.2fr) minmax(9rem,1fr) minmax(10rem,1.2fr)">
+          <div class="score-cell">${escapeHtml(label)}</div>
+          <div class="score-cell"><select data-path="${pathPrefix}.${id}">${optionTags(options, getPath(state, `${pathPrefix}.${id}`))}</select></div>
+          <div class="score-cell"><input data-path="${extraPathPrefix}.${id}" placeholder="Optionnel" value="${escapeHtml(getPath(state, `${extraPathPrefix}.${id}`) || "")}" /></div>
+        </div>
+      `).join("")}
+    `;
+  }
+
+  function renderMmseTable() {
+    const container = document.getElementById("mmseDomainTable");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="score-row header" style="grid-template-columns:minmax(13rem,1.4fr) minmax(8rem,0.7fr) minmax(11rem,1fr)">
+        <div class="score-cell">Domaine MMS</div><div class="score-cell">Score</div><div class="score-cell">Repère</div>
+      </div>
+      ${LISTS.mmseDomains.map(([id, label, max]) => {
+        const value = getPath(state, `tests.mmse.domains.${id}`) || "";
+        return `
+          <div class="score-row" style="grid-template-columns:minmax(13rem,1.4fr) minmax(8rem,0.7fr) minmax(11rem,1fr)">
+            <div class="score-cell">${escapeHtml(label)}</div>
+            <div class="score-cell"><input data-path="tests.mmse.domains.${id}" type="number" min="0" max="${max}" value="${escapeHtml(value)}" /></div>
+            <div class="score-cell">/${max}</div>
+          </div>
+        `;
+      }).join("")}
+    `;
+  }
+
+  function renderCodexClockChecks() {
+    renderCheckboxList("codexClockChecks", LISTS.codexClock, "tests.codex.clockItems");
+  }
+
+  function renderFabTable() {
+    const container = document.getElementById("fabTable");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="score-row header" style="grid-template-columns:minmax(10rem,1.2fr) minmax(7rem,0.7fr) minmax(10rem,1.4fr)">
+        <div class="score-cell">Sous-test</div><div class="score-cell">Score 0-3</div><div class="score-cell">Commentaire</div>
+      </div>
+      ${LISTS.fab.map(([id, label]) => {
+        const item = (state.tests.fab || {})[id] || {};
+        return `
+          <div class="score-row" style="grid-template-columns:minmax(10rem,1.2fr) minmax(7rem,0.7fr) minmax(10rem,1.4fr)">
+            <div class="score-cell">${escapeHtml(label)}</div>
+            <div class="score-cell"><input data-path="tests.fab.${id}.score" type="number" min="0" max="3" value="${escapeHtml(item.score || "")}" /></div>
+            <div class="score-cell"><input data-path="tests.fab.${id}.note" placeholder="Optionnel" value="${escapeHtml(item.note || "")}" /></div>
+          </div>
+        `;
+      }).join("")}
+    `;
+  }
+
+  function renderNpiTable() {
+    const container = document.getElementById("npiTable");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="score-row header" style="grid-template-columns:minmax(10rem,1.1fr) minmax(8rem,1fr) minmax(8rem,1fr)">
+        <div class="score-cell">Domaine</div><div class="score-cell">Sévérité</div><div class="score-cell">Retentissement aidant</div>
+      </div>
+      ${LISTS.npi.map(([id, label]) => {
+        const item = (state.tests.npi || {})[id] || {};
+        return `
+          <div class="score-row" style="grid-template-columns:minmax(10rem,1.1fr) minmax(8rem,1fr) minmax(8rem,1fr)">
+            <div class="score-cell">${escapeHtml(label)}</div>
+            <div class="score-cell"><select data-path="tests.npi.${id}.severity">${optionTags(SEVERITY_OPTIONS, item.severity)}</select></div>
+            <div class="score-cell"><select data-path="tests.npi.${id}.impact">${optionTags(IMPACT_OPTIONS, item.impact)}</select></div>
+          </div>
+        `;
+      }).join("")}
+    `;
+  }
+
+  function renderFiveWords() {
+    const container = document.getElementById("fiveWordsGrid");
+    if (!container) return;
+    const words = state.tests.fiveWords.words || [];
+    container.innerHTML = Array.from({ length: 5 }, (_, index) => {
+      const item = words[index] || {};
+      return `
+        <div class="word-card">
+          <label>Mot ${index + 1}<input data-path="tests.fiveWords.words.${index}.word" value="${escapeHtml(item.word || "")}" placeholder="Support autorisé" /></label>
+          <label>Catégorie<input data-path="tests.fiveWords.words.${index}.category" value="${escapeHtml(item.category || "")}" placeholder="Indice" /></label>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderDynamicControls() {
+    renderCheckboxList("vascularRisks", LISTS.vascularRisks, "risks.vascular");
+    renderCheckboxList("iatrogenicRisks", LISTS.iatrogenicRisks, "risks.iatrogenic");
+    renderCheckboxList("complaintChecks", LISTS.complaints, "complaints");
+    renderCheckboxList("redFlagChecks", LISTS.redFlags, "redFlags");
+    renderCheckboxList("clockChecks", LISTS.clock, "tests.clock.items");
+    renderMmseTable();
+    renderCodexClockChecks();
+    renderChoiceTable("iadlTable", LISTS.iadl, "tests.iadl", IADL_OPTIONS, "tests.iadlNotes");
+    renderChoiceTable("adlTable", LISTS.adl, "tests.adl", ADL_OPTIONS, "tests.adlNotes");
+    renderFabTable();
+    renderNpiTable();
+    renderFiveWords();
+  }
+
+  function populateFields() {
+    document.querySelectorAll("[data-path]").forEach((input) => {
+      const value = getPath(state, input.dataset.path);
+      if (input.type === "checkbox") input.checked = Boolean(value);
+      else if (value != null) input.value = value;
+      else input.value = "";
+    });
+    syncModeControls();
+    const localSave = document.getElementById("localSave");
+    if (localSave) localSave.checked = Boolean(state.meta.localSave);
+    document.body.dataset.mode = state.meta.mode || "quick";
+    enforceModeNavigation();
+  }
+
+  function saveState() {
+    if (!state.meta.localSave) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) state = Object.assign(defaultState(), JSON.parse(raw));
+    } catch {
+      state = defaultState();
+    }
+  }
+
+  function afterUpdate({ recompute = true } = {}) {
+    updateMmseHint();
+    updateCodexHint();
+    updateFiveWordsHint();
+    updateRedFlagAlert();
+    updateProgress();
+    if (recompute) {
+      state.synthesis = computeClinicalSynthesis(state);
+      renderSynthesis(state.synthesis);
+    }
+    saveState();
+  }
+
+  function updateFiveWordsHint() {
+    const hint = document.getElementById("fiveWordsScore");
+    if (!hint) return;
+    const scores = computeScores(state);
+    hint.textContent = scores.fiveWordsFilled
+      ? `Score libre ${scores.fiveWordsFree}/10 - score total ${scores.fiveWordsTotal}/10 - rappel différé total ${scores.delayedTotal}/5.`
+      : "Score non renseigné.";
+  }
+
+  function updateMmseHint() {
+    const hint = document.getElementById("mmseScoreHint");
+    const detailedTotal = computeMmseDetailedTotal(state.tests.mmse || {});
+    if (detailedTotal != null) {
+      state.tests.mmse.total = detailedTotal;
+      syncPathControls("tests.mmse.total", detailedTotal, null);
+    }
+    if (hint) {
+      const total = detailedTotal != null ? detailedTotal : toNumber(state.tests.mmse && state.tests.mmse.total);
+      hint.textContent = total == null
+        ? "Score MMS non renseigné."
+        : `Score MMS : ${total}/30. Interprétation contextualisée indispensable.`;
+    }
+  }
+
+  function updateCodexHint() {
+    const hint = document.getElementById("codexScoreHint");
+    const codex = state.tests.codex || {};
+    if (codex.allWordsRecalled === "yes" && toNumber(codex.recall) !== 3) {
+      codex.recall = 3;
+      syncPathControls("tests.codex.recall", 3, null);
+    }
+    const clockScore = computeCodexClockScore(codex);
+    const conclusion = deriveCodexConclusion(codex);
+    if (hint) {
+      const recall = toNumber(codex.recall);
+      const orientationScore = toNumber(codex.orientationScore);
+      const parts = [];
+      if (recall != null) parts.push(`rappel ${recall}/3`);
+      if (Object.keys(codex.clockItems || {}).length) parts.push(`horloge ${clockScore}/${LISTS.codexClock.length}`);
+      if (orientationScore != null) parts.push(`orientation ${orientationScore}/5`);
+      hint.textContent = parts.length
+        ? `CODEX : ${parts.join(" - ")}. Conclusion : ${conclusion || "à compléter"}.`
+        : "CODEX non renseigné.";
+    }
+  }
+
+  function updateRedFlagAlert() {
+    const alert = document.getElementById("redFlagAlert");
+    if (alert) alert.hidden = countSelected(state.redFlags) === 0;
+  }
+
+  function updateProgress() {
+    const scope = state.meta.mode === "quick" ? document.getElementById("rapid") : document;
+    const controls = Array.from(scope.querySelectorAll("[data-path]"));
+    const meaningful = controls.filter((input) => {
+      if (input.type === "checkbox") return input.checked;
+      return input.value !== "";
+    }).length;
+    const percent = controls.length ? Math.min(100, Math.round((meaningful / controls.length) * 100)) : 0;
+    const bar = document.getElementById("progressBar");
+    const text = document.getElementById("progressText");
+    if (bar) bar.style.width = `${percent}%`;
+    if (text) text.textContent = `${percent} % complété`;
+  }
+
+  function setActiveSection(sectionId) {
+    if (!isSectionAllowed(sectionId)) sectionId = "rapid";
+    document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === sectionId));
+    document.querySelectorAll(".nav-item").forEach((button) => button.classList.toggle("active", button.dataset.section === sectionId));
+    if (sectionId === "synthesis") {
+      state.synthesis = computeClinicalSynthesis(state);
+      renderSynthesis(state.synthesis);
+      if (!document.getElementById("documentOutput").value) setDocument(state.meta.lastDoc || "report");
+    }
+  }
+
+  function isSectionAllowed(sectionId) {
+    if (state.meta.mode !== "quick") return true;
+    return ["home", "rapid", "synthesis"].includes(sectionId);
+  }
+
+  function currentSectionId() {
+    return document.querySelector(".view.active")?.id || "rapid";
+  }
+
+  function setMode(mode, sectionId) {
+    state.meta.mode = mode === "complete" ? "complete" : "quick";
+    document.body.dataset.mode = state.meta.mode;
+    syncModeControls();
+    const nextSection = sectionId || currentSectionId();
+    setActiveSection(isSectionAllowed(nextSection) ? nextSection : "rapid");
+    updateProgress();
+    saveState();
+  }
+
+  function setModeFromUi(mode) {
+    setMode(mode, mode === "complete" ? "profile" : "rapid");
+    afterUpdate({ recompute: false });
+  }
+
+  function setCodexWordSet(setId) {
+    const words = setId === "b" ? ["Clé", "Ballon", "Citron"] : ["Cigare", "Fleur", "Porte"];
+    words.forEach((word, index) => {
+      setPath(state, `tests.codex.words.${index}`, word);
+      syncPathControls(`tests.codex.words.${index}`, word, null);
+    });
+    afterUpdate();
+  }
+
+  function syncModeControls() {
+    const mode = state.meta.mode || "quick";
+    document.querySelectorAll("input[name='mode']").forEach((radio) => {
+      radio.checked = radio.value === mode;
+    });
+    document.querySelectorAll("[data-mode-set]").forEach((button) => {
+      const active = button.dataset.modeSet === mode;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  function enforceModeNavigation() {
+    if (!isSectionAllowed(currentSectionId())) setActiveSection("rapid");
+  }
+
+  function renderSynthesis(syn) {
+    const synthesis = syn || computeClinicalSynthesis(state);
+    const levelBadge = document.getElementById("levelBadge");
+    const title = document.getElementById("resultTitle");
+    const summary = document.getElementById("resultSummary");
+    const reasons = document.getElementById("resultReasons");
+    const advice = document.getElementById("resultAdvice");
+    const statusPill = document.getElementById("statusPill");
+    const rapidBadge = document.getElementById("rapidBadge");
+    const rapidSummary = document.getElementById("rapidSummary");
+
+    if (levelBadge) {
+      levelBadge.className = `level-badge level-${synthesis.level}`;
+      levelBadge.textContent = `Niveau ${synthesis.level}`;
+    }
+    if (rapidBadge) {
+      rapidBadge.className = `level-badge level-${synthesis.level}`;
+      rapidBadge.textContent = `Niveau ${synthesis.level}`;
+    }
+    if (title) title.textContent = synthesis.title;
+    if (summary) summary.textContent = synthesis.summary;
+    if (rapidSummary) rapidSummary.textContent = `${synthesis.title}. ${synthesis.summary}`;
+    if (reasons) reasons.innerHTML = synthesis.reasons.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    if (advice) advice.innerHTML = synthesis.advice.map((item) => `<p>${escapeHtml(item)}</p>`).join("");
+    if (statusPill) {
+      statusPill.className = `status-pill ${synthesis.level >= 4 ? "status-red" : synthesis.level >= 2 ? "status-orange" : "status-green"}`;
+      statusPill.textContent = `Synthèse : niveau ${synthesis.level}`;
+    }
+  }
+
+  function patientHeader(s) {
+    const p = s.patient || {};
+    const bits = [
+      line(p.identity, "Patient non nommé"),
+      p.age ? `${p.age} ans` : "",
+      p.sex || "",
+      p.education ? `niveau ${p.education}` : "",
+      p.nativeLanguage ? `langue maternelle : ${p.nativeLanguage}` : "",
+      p.frenchLevel ? `français : ${p.frenchLevel}` : ""
+    ].filter(Boolean);
+    return bits.join(" - ");
+  }
+
+  function testsText(s, scores) {
+    const lines = [];
+    if (scores.mmse != null) lines.push(`- MMSE/MMS : ${scores.mmse}/30 (${line(s.tests.mmse.context, "contexte non précisé")}).`);
+    if (scores.fiveWordsFilled) lines.push(`- 5 mots : libre ${scores.fiveWordsFree}/10, total ${scores.fiveWordsTotal}/10, différé total ${scores.delayedTotal}/5.`);
+    if (scores.clockFilled) lines.push(`- Horloge : ${scores.clockScore}/7 critères simples validés${s.attachments.clockImageName ? ` ; dessin importé : ${s.attachments.clockImageName}` : ""}.`);
+    if (scores.animalsValid != null) lines.push(`- Fluence animaux : ${scores.animalsValid} mots valides, erreurs : ${scores.animalsErrors}.`);
+    if (scores.letterValid != null) lines.push(`- Fluence lettre ${line(s.tests.fluency.letter, "?")} : ${scores.letterValid} mots valides, erreurs : ${scores.letterErrors}.`);
+    if (scores.codexConclusion) lines.push(`- CODEX : ${scores.codexConclusion}.`);
+    if (scores.fabTotal != null) lines.push(`- BREF/FAB : ${scores.fabTotal}/18.`);
+    if (scores.iadlLoss || scores.iadlDifficulty) lines.push(`- Mini-IADL : ${scores.iadlLoss} perte(s) d’autonomie, ${scores.iadlDifficulty} difficulté(s) sans aide.`);
+    if (scores.adlLoss || scores.adlPartial) lines.push(`- ADL : ${scores.adlLoss} dépendance(s) importante(s), ${scores.adlPartial} aide(s) partielle(s).`);
+    if (scores.npiModerateSevere) lines.push(`- NPI réduit : ${scores.npiModerateSevere} domaine(s) modéré(s)/sévère(s), retentissement aidant modéré/sévère : ${scores.npiCaregiverImpact}.`);
+    return lines.length ? lines.join("\n") : "- Aucun test renseigné.";
+  }
+
+  function generateReport(s, syn) {
+    const scores = syn.scores;
+    const complaints = selectedLabels(s.complaints, LISTS.complaints);
+    const redFlags = selectedLabels(s.redFlags, LISTS.redFlags);
+    const vascular = selectedLabels(s.risks.vascular, LISTS.vascularRisks);
+    const iatro = selectedLabels(s.risks.iatrogenic, LISTS.iatrogenicRisks);
+    return `COMPTE RENDU DE BILAN MÉMOIRE - MÉDECINE GÉNÉRALE
+
+Motif :
+${joinOrNone(complaints)}
+
+Profil :
+${patientHeader(s)}
+Vie seule : ${line(s.patient.livesAlone)} ; aidant fiable : ${line(s.patient.caregiver)} ; autonomie habituelle : ${line(s.patient.baselineAutonomy)}.
+
+Données de l’entourage :
+Confirmation entourage : ${line(s.history.caregiverConfirm)}.
+
+Mode d’installation et évolution :
+Depuis : ${line(s.history.duration)}.
+Début : ${line(s.history.onset)} ; évolution : ${line(s.history.course)}.
+
+Retentissement :
+Activités complexes : ${line(s.history.complexActivities)}.
+Activités de base : ${line(s.history.basicActivities)}.
+Impact professionnel : ${line(s.history.workImpact)}.
+Conduite : ${line(s.history.drivingImpact)}.
+Médicaments / finances : ${line(s.history.safetyImpact)}.
+
+Facteurs confondants ou réversibles :
+Contexte thymique/sommeil/douleur/social/médical : ${line(s.history.context)}.
+Facteurs vasculaires : ${joinOrNone(vascular)}.
+Traitements ou expositions à risque cognitif : ${joinOrNone(iatro)}.
+Antécédents neurologiques : ${line(s.patient.neuroHistory)}.
+Antécédents psychiatriques : ${line(s.patient.psyHistory)}.
+Antécédents familiaux : ${line(s.patient.familyHistory)}.
+
+Tests réalisés et scores :
+${testsText(s, scores)}
+
+Urgence / vigilance :
+${redFlags.length ? redFlags.map((item) => `- ${item}`).join("\n") : "- Aucun red flag renseigné."}
+
+Interprétation prudente :
+${syn.title}.
+${syn.summary}
+Cette conclusion est compatible avec les éléments saisis et reste à confirmer cliniquement et, si indiqué, en consultation mémoire.
+
+Hypothèses à discuter :
+- Trouble neurocognitif à confirmer selon niveau de suspicion.
+- Causes réversibles ou aggravantes : iatrogénie, dépression/anxiété, sommeil, douleur, trouble sensoriel, trouble métabolique, alcool/toxiques, confusion aiguë si début récent/fluctuant.
+
+Bilan demandé :
+Biologie de première intention et imagerie cérébrale selon contexte, voir ordonnances générées.
+
+Orientation :
+${syn.advice.join("\n")}
+
+Conseils donnés :
+Revoir traitements à risque cognitif, sécuriser médicaments/finances/conduite si nécessaire, informer l’aidant, recontrôle programmé.
+
+Plan de suivi :
+Revoir après résultats du bilan initial ou plus tôt si aggravation, confusion, danger immédiat ou trouble comportemental sévère.`;
+  }
+
+  function generateReferral(s, syn) {
+    return `COURRIER D’ADRESSAGE - CONSULTATION MÉMOIRE / NEUROLOGIE / GÉRIATRIE
+
+Cher confrère, chère consœur,
+
+Je vous adresse ${patientHeader(s)} pour avis spécialisé devant une plainte cognitive et/ou un trouble neurocognitif possible.
+
+Contexte et évolution :
+- Depuis : ${line(s.history.duration)}.
+- Mode de début : ${line(s.history.onset)} ; évolution : ${line(s.history.course)}.
+- Plainte patient : ${line(s.history.patientConcern)} ; confirmation entourage : ${line(s.history.caregiverConfirm)}.
+
+Retentissement rapporté :
+- Activités complexes : ${line(s.history.complexActivities)}.
+- Activités de base : ${line(s.history.basicActivities)}.
+- Travail : ${line(s.history.workImpact)}.
+- Conduite : ${line(s.history.drivingImpact)}.
+- Médicaments / finances : ${line(s.history.safetyImpact)}.
+
+Facteurs de risque et contexte :
+- Vasculaire : ${joinOrNone(selectedLabels(s.risks.vascular, LISTS.vascularRisks))}.
+- Iatrogénie / toxiques / sommeil : ${joinOrNone(selectedLabels(s.risks.iatrogenic, LISTS.iatrogenicRisks))}.
+- Antécédents neurologiques : ${line(s.patient.neuroHistory)}.
+- Antécédents psychiatriques : ${line(s.patient.psyHistory)}.
+- Antécédents familiaux : ${line(s.patient.familyHistory)}.
+
+Tests de première ligne :
+${testsText(s, syn.scores)}
+
+Synthèse :
+${syn.title}. ${syn.summary}
+
+Question posée :
+Pouvez-vous préciser le diagnostic étiologique, confirmer le niveau de trouble neurocognitif, proposer la suite du bilan si nécessaire et aider à définir le plan personnalisé de soins et de sécurisation ?
+
+Bilan demandé ou prévu :
+Biologie de première intention et imagerie cérébrale si pas déjà réalisées.
+
+Avec mes remerciements.`;
+  }
+
+  function generateLabs(s) {
+    const age = toNumber(s.patient.age);
+    const young = age != null && age < 65;
+    const contextual = young || anySelected(s.risks.iatrogenic) || Boolean(s.history.context);
+    const extra = [
+      "Vitamine B12",
+      "Folates",
+      "Bilan hépatique : ASAT, ALAT, GGT, PAL, bilirubine",
+      young ? "Sérologie VIH" : "Sérologie VIH si contexte ou facteur de risque",
+      young ? "Sérologie syphilis" : "Sérologie syphilis si contexte ou facteur de risque",
+      "Sérologie Lyme uniquement selon exposition/contexte clinique",
+      "HbA1c si diabète connu ou suspicion",
+      "Ferritine si asthénie ou contexte évocateur",
+      "Vitamine D si fragilité/chutes, sans en faire un marqueur causal cognitif systématique"
+    ];
+    return `ORDONNANCE - BILAN BIOLOGIQUE INITIAL D’UNE PLAINTE COGNITIVE
+
+NFS
+CRP
+Ionogramme sanguin avec natrémie
+Calcémie
+Glycémie à jeun
+Albuminémie
+Urée
+Créatinine avec estimation du DFG
+TSH
+
+Selon contexte clinique${contextual ? " retenu ici" : ""} :
+${extra.map((item) => `- ${item}`).join("\n")}
+
+Merci de transmettre les résultats au médecin prescripteur.`;
+  }
+
+  function generateImaging() {
+    return `ORDONNANCE - IMAGERIE CÉRÉBRALE POUR PLAINTE COGNITIVE
+
+IRM cérébrale sans injection systématique en première intention, sauf indication radiologique ou clinique.
+
+Séquences souhaitées :
+- T1 volumétrique
+- FLAIR
+- Séquence sensible aux saignements type T2*/SWI/SWAN
+- Diffusion selon protocole local
+
+Indication :
+Bilan initial d’une plainte cognitive / trouble neurocognitif possible, recherche d’argument vasculaire, tumoral, séquellaire, hydrocéphalie, hématome sous-dural, atrophie focale ou autre cause structurale.
+
+Scanner cérébral sans injection si contre-indication à l’IRM ou indisponibilité de l’IRM dans un délai adapté.`;
+  }
+
+  function generatePatientSheet(s, syn) {
+    return `FICHE PATIENT / AIDANT - BILAN MÉMOIRE
+
+Pourquoi ce bilan ?
+Une plainte de mémoire peut avoir de nombreuses causes. Le bilan sert à objectiver les difficultés, rechercher des causes réversibles et décider s’il faut demander un avis spécialisé.
+
+Ce qui peut troubler la mémoire sans maladie d’Alzheimer :
+- Sommeil insuffisant ou apnées du sommeil
+- Dépression, anxiété, deuil, surcharge mentale
+- Douleur chronique, isolement social
+- Troubles auditifs ou visuels
+- Certains médicaments : somnifères, benzodiazépines, anticholinergiques, opioïdes, neuroleptiques, traitements sédatifs
+- Alcool ou toxiques
+- Infection, trouble métabolique, confusion aiguë
+
+Résultat du repérage aujourd’hui :
+${syn.title}. ${syn.summary}
+
+Quand reconsulter rapidement ?
+- Aggravation rapide ou fluctuante
+- Fièvre, confusion, chute, traumatisme crânien, malaise ou crise convulsive
+- Hallucinations importantes, idées suicidaires, danger au domicile
+- Erreurs de médicaments, conduite dangereuse, errance, problème financier urgent
+
+Conseils pratiques :
+- Apporter traitements, résultats biologiques et imagerie aux prochains rendez-vous
+- Vérifier audition, vision, sommeil et humeur
+- Préparer une liste d’exemples concrets observés par l’entourage
+- Sécuriser médicaments, gaz, conduite et finances si doute
+- Identifier un aidant référent et noter les personnes à contacter en cas de problème`;
+  }
+
+  function generateDocument(type, inputState, inputSynthesis) {
+    const s = inputState || state;
+    const syn = inputSynthesis || computeClinicalSynthesis(s);
+    const map = {
+      report: () => generateReport(s, syn),
+      referral: () => generateReferral(s, syn),
+      labs: () => generateLabs(s),
+      imaging: () => generateImaging(s),
+      patient: () => generatePatientSheet(s, syn)
+    };
+    return (map[type] || map.report)();
+  }
+
+  function setDocument(type) {
+    state.meta.lastDoc = type;
+    const output = document.getElementById("documentOutput");
+    if (output) output.value = generateDocument(type, state, state.synthesis || computeClinicalSynthesis(state));
+    saveState();
+  }
+
+  function handleClockImage(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.attachments.clockImageName = file.name;
+      state.attachments.clockImageData = String(reader.result);
+      const preview = document.getElementById("clockPreview");
+      if (preview) {
+        preview.style.display = "block";
+        preview.innerHTML = `<img alt="Dessin de l’horloge importé" src="${state.attachments.clockImageData}" /><p class="small-note">${escapeHtml(file.name)}</p>`;
+      }
+      afterUpdate();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function updateFromDataPathTarget(target) {
+    if (!target || !target.dataset || !target.dataset.path) return false;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    setPath(state, target.dataset.path, value);
+    syncPathControls(target.dataset.path, value, target);
+    afterUpdate();
+    return true;
+  }
+
+  function syncPathControls(path, value, source) {
+    document.querySelectorAll("[data-path]").forEach((input) => {
+      if (input.dataset.path !== path) return;
+      if (input === source) return;
+      if (input.type === "checkbox") input.checked = Boolean(value);
+      else input.value = value == null ? "" : value;
+    });
+  }
+
+  function bindEvents() {
+    document.body.addEventListener("input", (event) => {
+      updateFromDataPathTarget(event.target);
+    });
+
+    document.body.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target && target.dataset && target.dataset.path) {
+        updateFromDataPathTarget(target);
+        return;
+      }
+      if (target && target.matches("input[name='mode']")) {
+        setMode(target.value, target.value === "quick" ? "rapid" : "profile");
+        afterUpdate({ recompute: false });
+      }
+      if (target && target.id === "localSave") {
+        state.meta.localSave = target.checked;
+        if (!target.checked) localStorage.removeItem(STORAGE_KEY);
+        afterUpdate({ recompute: false });
+      }
+      if (target && target.id === "clockImage") handleClockImage(target.files[0]);
+    });
+
+    document.querySelectorAll("[data-mode-set]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setModeFromUi(button.dataset.modeSet);
+      });
+    });
+
+    document.querySelectorAll("[data-codex-wordset]").forEach((button) => {
+      button.addEventListener("click", () => setCodexWordSet(button.dataset.codexWordset));
+    });
+
+    document.querySelectorAll(".nav-item").forEach((button) => {
+      button.addEventListener("click", () => setActiveSection(button.dataset.section));
+    });
+
+    document.querySelectorAll(".launch-card").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.dataset.modeTarget) {
+          setMode(button.dataset.modeTarget, button.dataset.sectionTarget || "rapid");
+        } else {
+          setActiveSection(button.dataset.sectionTarget || "profile");
+        }
+        afterUpdate({ recompute: false });
+      });
+    });
+
+    document.querySelectorAll("[data-section-target]").forEach((button) => {
+      if (button.classList.contains("launch-card")) return;
+      button.addEventListener("click", () => {
+        if (button.dataset.modeTarget) setMode(button.dataset.modeTarget, button.dataset.sectionTarget);
+        else setActiveSection(button.dataset.sectionTarget);
+      });
+    });
+
+    document.getElementById("refreshSynthesis")?.addEventListener("click", () => {
+      state.synthesis = computeClinicalSynthesis(state);
+      renderSynthesis(state.synthesis);
+      setDocument(state.meta.lastDoc || "report");
+      saveState();
+    });
+
+    document.getElementById("rapidRefresh")?.addEventListener("click", () => {
+      state.synthesis = computeClinicalSynthesis(state);
+      renderSynthesis(state.synthesis);
+      saveState();
+    });
+
+    document.querySelectorAll("[data-doc]").forEach((button) => {
+      button.addEventListener("click", () => setDocument(button.dataset.doc));
+    });
+
+    document.getElementById("copyDocument")?.addEventListener("click", async () => {
+      const output = document.getElementById("documentOutput");
+      if (!output || !output.value) return;
+      try {
+        await navigator.clipboard.writeText(output.value);
+      } catch {
+        output.select();
+        document.execCommand("copy");
+      }
+    });
+
+    document.getElementById("printDocument")?.addEventListener("click", () => window.print());
+    document.getElementById("resetAll")?.addEventListener("click", () => {
+      if (!confirm("Réinitialiser ce bilan dans le navigateur ?")) return;
+      const keepLocal = state.meta.localSave;
+      state = defaultState();
+      state.meta.localSave = keepLocal;
+      renderDynamicControls();
+      populateFields();
+      afterUpdate();
+      document.getElementById("documentOutput").value = "";
+    });
+  }
+
+  function init() {
+    loadState();
+    renderDynamicControls();
+    populateFields();
+    bindEvents();
+    if (state.attachments.clockImageData) {
+      const preview = document.getElementById("clockPreview");
+      preview.style.display = "block";
+      preview.innerHTML = `<img alt="Dessin de l’horloge importé" src="${state.attachments.clockImageData}" /><p class="small-note">${escapeHtml(state.attachments.clockImageName)}</p>`;
+    }
+    afterUpdate();
+  }
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", init);
+  }
+
+  const api = {
+    LISTS,
+    defaultState,
+    computeScores,
+    computeClinicalSynthesis,
+    generateDocument,
+    setModeFromUi
+  };
+
+  global.MemoMG = api;
+  global.MemoMGAppSetMode = setModeFromUi;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+  </body>
+</html>
+
