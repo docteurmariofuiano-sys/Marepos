@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spiro MG - interprétation EFR</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./spiro.css">
+  <style id="lipidmg-graphic-refresh">
+:root {
+  color-scheme: light;
+  --bg: #f5f8fb;
+  --bg-panel: #eef5f8;
+  --paper: #ffffff;
+  --paper-soft: #eef5f8;
+  --surface: #ffffff;
+  --surface-strong: #eef5f8;
+  --ink: #18222f;
+  --ink-soft: #344656;
+  --text: #18222f;
+  --muted: #607080;
+  --line: #d9e4ea;
+  --line-strong: #c7d6df;
+  --blue: #0b5d91;
+  --blue-dark: #08476f;
+  --blue-soft: #e9f3f8;
+  --teal: #147b5a;
+  --teal-dark: #0f6247;
+  --teal-soft: #e8f5f0;
+  --green: #147b5a;
+  --green-dark: #0f6247;
+  --green-soft: #e8f5f0;
+  --amber: #b86b00;
+  --amber-dark: #8c5300;
+  --amber-soft: #fff3dd;
+  --orange: #b86b00;
+  --red: #bd2538;
+  --red-dark: #921d2b;
+  --red-soft: #fdecef;
+  --sand: #7b681d;
+  --sand-soft: #f7f1dc;
+  --shadow: 0 18px 45px rgba(23, 41, 54, 0.12);
+  --shadow-card: 0 10px 24px rgba(23, 41, 54, 0.08);
+  --radius: 8px;
+  --radius-sm: 8px;
+  --maxw: 1500px;
+  --pad-x: clamp(16px, 4vw, 48px);
+  font-family: "Segoe UI", "Aptos", "Helvetica Neue", Arial, sans-serif;
+}
+
+.lipidmg-style {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(11, 93, 145, 0.08), transparent 300px),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", "Aptos", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.lipidmg-style * { box-sizing: border-box; }
+.lipidmg-style button,
+.lipidmg-style input,
+.lipidmg-style select,
+.lipidmg-style textarea { font: inherit; }
+
+.lipidmg-style .platform-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px var(--pad-x);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+}
+
+.lipidmg-style .platform-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.lipidmg-style .platform-brand small {
+  display: block;
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.lipidmg-style .logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(11, 93, 145, 0.22);
+}
+
+.lipidmg-style .platform-nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lipidmg-style .platform-nav a,
+.lipidmg-style .tabs .tab,
+.lipidmg-style .shortcut,
+.lipidmg-style .primary-link,
+.lipidmg-style .primary-action,
+.lipidmg-style .secondary-action,
+.lipidmg-style .icon-button {
+  min-height: 38px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--blue-dark);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.lipidmg-style .platform-nav a {
+  padding: 8px 11px;
+}
+
+.lipidmg-style .platform-nav a.is-current,
+.lipidmg-style .tabs .tab.is-active,
+.lipidmg-style .primary-action,
+.lipidmg-style .primary-link {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.lipidmg-style button:hover,
+.lipidmg-style a:hover {
+  border-color: var(--blue);
+}
+
+.lipidmg-style .app-header {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 24px var(--pad-x) 16px;
+}
+
+.lipidmg-style .brand-strip {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 360px);
+  gap: 24px;
+  align-items: center;
+  min-height: 0;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.lipidmg-style .brand-strip::before,
+.lipidmg-style .quick-card::before { display: none; }
+
+.lipidmg-style .brand-strip .kicker,
+.lipidmg-style .kicker {
+  margin: 0 0 7px;
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.lipidmg-style h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.8rem, 3vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.lipidmg-style .subtitle {
+  max-width: 78ch;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+.lipidmg-style .spiro-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.lipidmg-style .safety-banner {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(20, 123, 90, 0.28);
+  border-radius: var(--radius);
+  background: rgba(20, 123, 90, 0.08);
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.lipidmg-style .tabs,
+.lipidmg-style .quick-toolbar,
+.lipidmg-style .action-bar {
+  position: sticky;
+  top: 55px;
+  z-index: 25;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 12px var(--pad-x);
+  border-bottom: 1px solid var(--line);
+  background: rgba(245, 248, 251, 0.96);
+  backdrop-filter: blur(10px);
+}
+
+.lipidmg-style .quick-toolbar { top: 105px; }
+.lipidmg-style .tabs .tab,
+.lipidmg-style .shortcut,
+.lipidmg-style .primary-link,
+.lipidmg-style .secondary-action,
+.lipidmg-style .primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  white-space: nowrap;
+}
+
+.lipidmg-style .shortcut.danger {
+  border-color: rgba(189, 37, 56, 0.35);
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+.lipidmg-style .quick-search,
+.lipidmg-style .search-input,
+.lipidmg-style input,
+.lipidmg-style select,
+.lipidmg-style textarea {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.lipidmg-style .quick-search,
+.lipidmg-style .search-input {
+  min-height: 38px;
+  padding: 9px 11px;
+}
+
+.lipidmg-style main,
+.lipidmg-style .spiro-main {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 18px var(--pad-x) 34px;
+}
+
+.lipidmg-style .section-head,
+.lipidmg-style .section-head.tight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.lipidmg-style h2,
+.lipidmg-style h3 {
+  color: var(--ink);
+  letter-spacing: 0;
+}
+
+.lipidmg-style .spiro-layout {
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.75fr);
+  gap: 16px;
+}
+
+.lipidmg-style .step-stack { gap: 14px; }
+.lipidmg-style .spiro-side { top: 72px; gap: 14px; }
+
+.lipidmg-style .quick-card,
+.lipidmg-style .surface,
+.lipidmg-style .module-block,
+.lipidmg-style .callout {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.lipidmg-style .step-title {
+  border-bottom: 1px solid var(--line);
+}
+
+.lipidmg-style .step-number {
+  border-radius: var(--radius);
+  background: var(--blue);
+  box-shadow: 0 8px 18px rgba(11, 93, 145, 0.22);
+}
+
+.lipidmg-style .quick-card h3,
+.lipidmg-style .surface h3,
+.lipidmg-style .summary-card h2 {
+  margin-top: 0;
+}
+
+.lipidmg-style .quick-card p,
+.lipidmg-style .microcopy,
+.lipidmg-style .surface p {
+  color: var(--muted);
+}
+
+.lipidmg-style .surface {
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.lipidmg-style .badge,
+.lipidmg-style .status-pill,
+.lipidmg-style .keyword-row span,
+.lipidmg-style .result-line {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  color: var(--blue-dark);
+}
+
+.lipidmg-style .status-pill,
+.lipidmg-style .result-line {
+  padding: 10px 12px;
+  font-weight: 800;
+}
+
+.lipidmg-style .field-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.lipidmg-style label {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.lipidmg-style input,
+.lipidmg-style select,
+.lipidmg-style textarea {
+  width: 100%;
+  padding: 10px 11px;
+}
+
+.lipidmg-style textarea {
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.lipidmg-style .checkbox-cloud label {
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.lipidmg-style .checkbox-cloud label:has(input:checked) {
+  border-color: rgba(11, 93, 145, 0.45);
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+}
+
+.lipidmg-style .callout {
+  border-left: 4px solid var(--blue);
+  box-shadow: none;
+}
+
+.lipidmg-style .callout-redflag { border-left-color: var(--red); background: var(--red-soft); }
+.lipidmg-style .callout-watch { border-left-color: var(--amber); background: var(--amber-soft); }
+.lipidmg-style .callout-advice,
+.lipidmg-style .callout-reco { border-left-color: var(--green); background: var(--green-soft); }
+.lipidmg-style .callout-pitfall { border-left-color: var(--sand); background: var(--sand-soft); }
+
+@media (max-width: 1100px) {
+  .lipidmg-style .spiro-layout { grid-template-columns: 1fr; }
+  .lipidmg-style .spiro-side { position: static; }
+}
+
+@media (max-width: 820px) {
+  .lipidmg-style .platform-bar,
+  .lipidmg-style .brand-strip,
+  .lipidmg-style .section-head {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .lipidmg-style .tabs,
+  .lipidmg-style .quick-toolbar,
+  .lipidmg-style .action-bar {
+    position: static;
+    flex-wrap: nowrap;
+  }
+
+  .lipidmg-style .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lipidmg-style .quick-toolbar > *,
+  .lipidmg-style .quick-search,
+  .lipidmg-style .search-input {
+    width: 100%;
+    max-width: none;
+  }
+}
+  </style>
+</head>
+<body class="spiro-app lipidmg-style">
+  <div class="platform-bar">
+    <span class="platform-brand">
+      <span class="logo-mark" aria-hidden="true">✚</span>
+      <span>Suite Clinique MG<small>Assistant médical du cabinet</small></span>
+    </span>
+    <nav class="platform-nav" aria-label="Applications de la suite">
+      <a href="./index.html">Pneumo MG</a>
+      <a href="./spiro.html" class="is-current">Spiro MG</a>
+    </nav>
+  </div>
+
+  <header class="app-header compact-header">
+    <div class="brand-strip spiro-brand">
+      <div>
+        <p class="kicker">EFR / spirométrie en cabinet</p>
+        <h1>Spiro MG</h1>
+        <p class="subtitle">Interprétation prudente : qualité de l'examen, VEMS/CVF, obstruction, restriction suspectée, réversibilité et compte rendu prêt à copier.</p>
+      </div>
+      <div class="spiro-status">
+        <span id="profileBadge" class="status-pill">Données insuffisantes</span>
+      </div>
+    </div>
+    <div class="safety-banner">
+      <strong>Limite.</strong> Outil d'aide à la décision destiné au médecin. Ne remplace pas le jugement clinique.
+    </div>
+  </header>
+
+  <nav class="action-bar" aria-label="Actions Spiro MG">
+    <a class="secondary-action link-action" href="./index.html">Retour Pneumo MG</a>
+    <input id="spiroSearch" class="search-input" type="search" placeholder="Rechercher : qualité, VEMS, restriction, pneumologue...">
+    <button class="secondary-action" id="resetSpiro" type="button">Réinitialiser</button>
+    <button class="secondary-action" id="printSpiro" type="button">Imprimer</button>
+    <button class="primary-action" id="copyReport" type="button">Copier le compte rendu</button>
+  </nav>
+
+  <main class="spiro-main">
+    <section class="spiro-layout">
+      <div class="step-stack">
+        <article class="surface step-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <div>
+              <h2>Données patient</h2>
+              <p>Contexte minimal utile pour interpréter l'EFR.</p>
+            </div>
+          </div>
+          <div class="field-grid cols-3">
+            <label>Âge <input id="age" type="number" min="0" max="120"></label>
+            <label>Sexe
+              <select id="sex">
+                <option value="">Non précisé</option>
+                <option value="f">Femme</option>
+                <option value="m">Homme</option>
+                <option value="x">Autre</option>
+              </select>
+            </label>
+            <label>Taille cm <input id="height" type="number" min="40" step="1"></label>
+            <label>Poids kg <input id="weight" type="number" min="1" step="0.1"></label>
+            <label>Tabac
+              <select id="tobacco">
+                <option value="">Non précisé</option>
+                <option>actif</option>
+                <option>sevré</option>
+                <option>jamais</option>
+              </select>
+            </label>
+            <label>Paquets-années <input id="packYears" type="number" min="0" step="0.5"></label>
+          </div>
+          <label>Indication de l'examen
+            <input id="examContext" type="text" placeholder="dyspnée, toux chronique, BPCO suspectée, asthme, contrôle...">
+          </label>
+        </article>
+
+        <article class="surface step-card">
+          <div class="step-title">
+            <span class="step-number">2</span>
+            <div>
+              <h2>Qualité de l'examen</h2>
+              <p>La conclusion doit rester prudente si la manœuvre est limite.</p>
+            </div>
+          </div>
+          <div class="checkbox-cloud" id="qualityChecks">
+            <label><input type="checkbox" id="qAcceptable" value="effort correct"> effort correct</label>
+            <label><input type="checkbox" id="qStart" value="départ explosif"> départ explosif</label>
+            <label><input type="checkbox" id="qExpiration" value="expiration suffisante"> expiration suffisante</label>
+            <label><input type="checkbox" id="qRepeatable" value="reproductibilité acceptable"> reproductibilité acceptable</label>
+            <label><input type="checkbox" id="qNoLeak" value="absence de fuite évidente"> absence de fuite évidente</label>
+            <label><input type="checkbox" value="toux ou fuite"> toux ou fuite</label>
+          </div>
+          <div class="field-grid cols-3">
+            <label>Manœuvres correctes <input id="maneuvers" type="number" min="0" step="1"></label>
+            <label>TEF s <input id="tef" type="number" step="0.01"></label>
+            <label>Qualité labo <input id="spiroQualityCode" type="text" placeholder="CVF U, VEMS E"></label>
+          </div>
+        </article>
+
+        <article class="surface step-card">
+          <div class="step-title">
+            <span class="step-number">3</span>
+            <div>
+              <h2>Valeurs EFR</h2>
+              <p>Remplissage manuel ou extraction automatique depuis PDF texte.</p>
+            </div>
+          </div>
+          <div class="file-row">
+            <input id="spiroFile" type="file" accept=".pdf,image/*,.txt,.csv">
+            <span id="fileStatus">Aucun fichier chargé.</span>
+          </div>
+          <label>Texte OCR ou compte rendu
+            <textarea id="spiroText" rows="6" placeholder="Coller le texte du compte rendu : CVF, VEMS, VEMS/CVF, LLN, z-score, TEF..."></textarea>
+          </label>
+          <button class="secondary-action" id="extractSpiro" type="button">Extraire les valeurs lisibles</button>
+
+          <div class="field-grid cols-4">
+            <label>VEMS L <input id="fev1" type="number" step="0.01"></label>
+            <label>CVF L <input id="fvc" type="number" step="0.01"></label>
+            <label>VEMS/CVF <input id="ratio" type="number" step="0.01" placeholder="0,70"></label>
+            <label>DEP <input id="pef" type="number" step="0.1"></label>
+            <label>LLN VEMS/CVF <input id="ratioLln" type="number" step="0.01"></label>
+            <label>LLN VEMS <input id="fev1Lln" type="number" step="0.01"></label>
+            <label>LLN CVF <input id="fvcLln" type="number" step="0.01"></label>
+            <label>Conclusion appareil <input id="labSpiroInterpretation" type="text"></label>
+            <label>VEMS % théo <input id="fev1pct" type="number" step="1"></label>
+            <label>CVF % théo <input id="fvcpct" type="number" step="1"></label>
+            <label>z VEMS <input id="fev1Z" type="number" step="0.01"></label>
+            <label>z CVF <input id="fvcZ" type="number" step="0.01"></label>
+            <label>VEMS post-BD L <input id="fev1Post" type="number" step="0.01"></label>
+            <label>CVF post-BD L <input id="fvcPost" type="number" step="0.01"></label>
+            <label>Variation VEMS ml <input id="deltaFev1Ml" type="number" step="10"></label>
+            <label>Variation VEMS % <input id="deltaFev1Pct" type="number" step="1"></label>
+            <label>Variation CVF ml <input id="deltaFvcMl" type="number" step="10"></label>
+            <label>Variation CVF % <input id="deltaFvcPct" type="number" step="1"></label>
+          </div>
+        </article>
+      </div>
+
+      <aside class="spiro-side">
+        <section class="surface summary-card">
+          <h2>Lecture automatique</h2>
+          <ul id="interpretationSummary" class="plain-list">
+            <li>Données insuffisantes.</li>
+          </ul>
+        </section>
+
+        <section class="surface summary-card">
+          <h2>Conclusion prête à copier</h2>
+          <textarea id="spiroOutput" class="output-box" rows="18" readonly></textarea>
+        </section>
+
+        <div class="callout callout-advice summary-card">
+          <p class="callout-title">Quand adresser au pneumologue ?</p>
+          <ul>
+            <li>Doute diagnostique ou discordance clinique/EFR.</li>
+            <li>Suspicion de restriction persistante : CPT/TLC et DLCO nécessaires.</li>
+            <li>Obstruction sévère, désaturation, exacerbations répétées.</li>
+            <li>Qualité d'examen insuffisante malgré répétition.</li>
+          </ul>
+        </div>
+
+        <div class="callout callout-pitfall summary-card">
+          <p class="callout-title">Pièges à éviter</p>
+          <ul>
+            <li>Une CVF basse avec rapport normal ne confirme pas une restriction.</li>
+            <li>Expiration courte ou absence de plateau peut sous-estimer la CVF.</li>
+            <li>Privilégier la LLN quand disponible, surtout chez le sujet âgé.</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="./spiro.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* =====================================================================
+   SPIRO MG — styles spécifiques (hérite du design partagé styles.css)
+   ===================================================================== */
+
+.compact-header .brand-strip { min-height: 138px; }
+
+.spiro-brand {
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 300px);
+}
+
+.spiro-status { display: flex; justify-content: flex-end; }
+
+.action-bar {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 12px var(--pad-x);
+  border-bottom: 1px solid var(--line);
+  background: rgba(247, 250, 254, .94);
+  backdrop-filter: blur(12px);
+}
+
+.link-action { text-decoration: none; display: inline-flex; align-items: center; }
+
+.search-input { min-width: min(420px, 100%); max-width: 520px; }
+
+.spiro-main { padding-top: 22px; }
+
+.spiro-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.step-stack { display: grid; gap: 16px; }
+
+.step-card, .summary-card { margin-bottom: 0; }
+
+.step-title {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.step-title p { margin: 5px 0 0; color: var(--muted); }
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 6px 14px rgba(37, 99, 181, .28);
+}
+
+/* La colonne de synthèse = focus lecture automatique */
+.surface.summary-card { border-left: 4px solid var(--teal); }
+.summary-card h2 { font-size: 19px; }
+.spiro-side .callout { margin-top: 0; }
+
+.spiro-side {
+  position: sticky;
+  top: 76px;
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .spiro-layout { grid-template-columns: 1fr; }
+  .spiro-side { position: static; }
+}
+
+@media (max-width: 760px) {
+  .action-bar, .spiro-brand { align-items: stretch; }
+  .action-bar { flex-direction: column; }
+  .action-bar > *, .search-input { width: 100%; max-width: none; }
+  .spiro-brand { grid-template-columns: 1fr; }
+  .spiro-status { justify-content: stretch; }
+}
+
+@media print {
+  .platform-bar, .action-bar, .file-row, #spiroText, #extractSpiro, .safety-banner {
+    display: none !important;
+  }
+  body { background: #fff !important; }
+  .brand-strip, .surface { box-shadow: none !important; }
+  .spiro-layout { display: block; }
+  .spiro-side { position: static; }
+}

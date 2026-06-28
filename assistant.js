@@ -14,6 +14,7 @@ const DOMAINES = {
   "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
   "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
+  "Pneumologie":  {c:"var(--d-pneumo)", cb:"#e0f5fa"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
@@ -104,9 +105,12 @@ const APPS = [
   {t:"Préparations magistrales", e:"⚗️", dom:"Dermatologie",
    d:"MAGISTRA : aide à la prescription de préparations magistrales (formules, dosages, libellés d'ordonnance).",
    href:"magistrales/index.html"},
-  /* ---- à venir (non encore fournies / volontairement exclues) ---- */
-  {t:"Pneumologie / Spirométrie", e:"🫁", dom:"Transversal", soon:true,
-   d:"Lecture de spirométrie / aide pneumologique — application à fournir."}
+  {t:"Pneumo MG", e:"🫁", dom:"Pneumologie",
+   d:"Aide consultation respiratoire : BPCO, asthme, SAOS, oxygène/aérosols, scores (CAT, mMRC, STOP-Bang, Epworth, CRB-65, Wells), ordonnances et courriers.",
+   href:"pneumo/index.html"},
+  {t:"Spiro MG", e:"🌬️", dom:"Pneumologie",
+   d:"Interprétation de la spirométrie (EFR) : qualité de l'examen, VEMS/CVF, obstruction/restriction, réversibilité, import PDF et compte rendu prêt à copier.",
+   href:"pneumo/spiro.html"}
 ];
 
 /* ---------- utilitaires ---------- */
