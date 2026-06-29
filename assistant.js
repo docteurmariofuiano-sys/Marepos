@@ -6,20 +6,20 @@
 
 /* Domaines : libellé + couleur (var CSS) + fond clair */
 const DOMAINES = {
-  "Neurologie":   {c:"var(--d-neuro)",  cb:"#eef0ff"},
-  "Dermatologie": {c:"var(--d-derm)",   cb:"#fff5e6"},
-  "Cardiologie":  {c:"var(--d-cardio)", cb:"#feecec"},
-  "ORL":          {c:"var(--d-orl)",    cb:"#e6faf6"},
-  "Gynécologie":  {c:"var(--d-gyneco)", cb:"#fdecf5"},
   "Biologie":     {c:"var(--d-bio)",    cb:"#e7f5fe"},
-  "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
-  "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
-  "Pneumologie":  {c:"var(--d-pneumo)", cb:"#e0f5fa"},
-  "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
+  "Cardiologie":  {c:"var(--d-cardio)", cb:"#feecec"},
+  "Dermatologie": {c:"var(--d-derm)",   cb:"#fff5e6"},
   "Endocrinologie": {c:"var(--d-endoc)", cb:"#eef7da"},
   "Gériatrie":     {c:"var(--d-geriatrie)", cb:"#dcf1ed"},
+  "Gynécologie":  {c:"var(--d-gyneco)", cb:"#fdecf5"},
+  "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
+  "Neurologie":   {c:"var(--d-neuro)",  cb:"#eef0ff"},
+  "ORL":          {c:"var(--d-orl)",    cb:"#e6faf6"},
   "Pédiatrie":     {c:"var(--d-pediatrie)", cb:"#ffe9d6"},
+  "Pneumologie":  {c:"var(--d-pneumo)", cb:"#e0f5fa"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
+  "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
+  "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
 
