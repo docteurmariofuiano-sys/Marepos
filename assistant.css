@@ -31,6 +31,7 @@
   --d-douleur:#c026d3;
   --d-endoc:#65a30d;
   --d-geriatrie:#0f766e;
+  --d-pediatrie:#ea580c;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}

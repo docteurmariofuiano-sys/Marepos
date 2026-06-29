@@ -18,6 +18,7 @@ const DOMAINES = {
   "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
   "Endocrinologie": {c:"var(--d-endoc)", cb:"#eef7da"},
   "Gériatrie":     {c:"var(--d-geriatrie)", cb:"#dcf1ed"},
+  "Pédiatrie":     {c:"var(--d-pediatrie)", cb:"#ffe9d6"},
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
@@ -137,7 +138,10 @@ const APPS = [
    href:"thyroide-mg/index.html"},
   {t:"MémoMG", e:"🧓", dom:"Gériatrie",
    d:"Bilan mémoire pratique en médecine générale : scores cognitifs simples, synthèse prudente et documents médicaux copiables/imprimables.",
-   href:"memo-mg/index.html"}
+   href:"memo-mg/index.html"},
+  {t:"Autisme MG", e:"🧒", dom:"Pédiatrie",
+   d:"Repérage et orientation des troubles du spectre de l'autisme (TSA) : signes d'alerte, démarche et adressage en médecine générale.",
+   href:"autisme-mg/index.html"}
 ];
 
 /* ---------- utilitaires ---------- */
