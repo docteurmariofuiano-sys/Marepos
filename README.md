@@ -51,6 +51,7 @@ suite-clinique/       Suite clinique :
 | Biologie | Interprétation biologique, Lecture de bilan | `suite-clinique/` · `bilan-biologique/` |
 | Prévention | Procédures & prévention, Suivi préventif CNAM | `suite-clinique/` |
 | Transversal | Échelles & évaluations | `suite-clinique/apps-externes/` |
+| Médecine vasculaire | ÉCHO-VASC DIU — formation d'ultrasonographie vasculaire | `echo-vasc/` |
 
 ### À venir (non fournies / volontairement exclues)
 - **Cotation NGAP/CCAM** — nécessite une base tarifaire Ameli sourcée + disclaimer.
