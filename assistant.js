@@ -21,7 +21,8 @@ const DOMAINES = {
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
   "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
   "Sommeil":      {c:"var(--d-sommeil)", cb:"#e6e4f7"},
-  "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
+  "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"},
+  "Médecine vasculaire": {c:"var(--d-vasc)", cb:"#d9f5f0"}
 };
 
 /* Catalogue des applications (chemins relatifs à la racine du portail) */
@@ -151,7 +152,10 @@ const APPS = [
    href:"pediadose-mg/index.html"},
   {t:"Sommeil MG", e:"🌙", dom:"Sommeil",
    d:"Aide à la décision devant un trouble du sommeil (adulte et enfant) : insomnie, SAHOS, SJSR, somnolence, sevrage BZD, troubles circadiens — mesures et orientation.",
-   href:"sommeil-mg/index.html"}
+   href:"sommeil-mg/index.html"},
+  {t:"ÉCHO-VASC DIU", e:"🩸", dom:"Médecine vasculaire",
+   d:"Formation complète d'ultrasonographie vasculaire (niveau DIU → expert) : physique & Doppler, hémodynamique, TSA/carotides, vertébrales/sous-clavières, aorte/iliaques, rénales, digestives, membres inférieurs artériels et veineux/TVP, insuffisance veineuse, pontages/stents, FAV, Doppler viscéral et superficiel. 13 sections par chapitre : anatomie, réglages, acquisition, valeurs normales, pathologies, pièges, comptes-rendus, cas cliniques, flashcards, QCM et révisions espacées. Trame inspirée du DIU (Université de Montpellier) et des recommandations SFMV/ESVS.",
+   href:"echo-vasc/index.html"}
 ];
 
 /* ---------- utilitaires ---------- */

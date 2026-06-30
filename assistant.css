@@ -33,6 +33,7 @@
   --d-geriatrie:#0f766e;
   --d-pediatrie:#ea580c;
   --d-sommeil:#4338ca;
+  --d-vasc:#0d9488;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}

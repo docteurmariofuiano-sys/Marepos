@@ -1,0 +1,12 @@
+# ───────────────────────────────────────────────────────────────
+# USAGE LOCAL UNIQUEMENT — NE PAS PUBLIER
+# Cours du DIU (Université de Montpellier) et images qui en sont
+# extraites : œuvres protégées par le droit d'auteur. Conservés en
+# local pour la formation personnelle, jamais poussés sur le dépôt
+# public ni sur GitHub Pages.
+# ───────────────────────────────────────────────────────────────
+*.pdf
+_sources/
+assets/
+manifest.js
+*-standalone.html

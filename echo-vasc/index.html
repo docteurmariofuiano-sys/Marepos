@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCHO-VASC DIU — Formation complète d'ultrasonographie vasculaire</title>
+<meta name="description" content="Formation interactive d'échographie-Doppler vasculaire niveau DIU → expert : physique, hémodynamique, TSA/carotides, aorte, rénales, digestives, membres inférieurs artériels et veineux, TVP, FAV, pontages, Doppler viscéral. Schémas, valeurs normales, pièges, comptes-rendus, cas cliniques, flashcards, QCM, révisions espacées. Hors-ligne.">
+<style>
+:root{
+  --bg:#f4f7fb; --card:#ffffff; --ink:#0f2745; --muted:#5b6f86; --line:#d8e2ee;
+  --navy:#0b2f63; --blue:#2563eb; --blue-d:#1d4ed8; --green:#059669; --amber:#d97706;
+  --red:#dc2626; --violet:#7c3aed; --teal:#0d9488;
+  --shadow:0 14px 35px rgba(15,39,69,.10); --shadow-sm:0 4px 14px rgba(15,39,69,.07);
+  --r:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:linear-gradient(180deg,#e8f1ff 0,#f4f7fb 280px);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink); line-height:1.5;
+}
+a{color:var(--blue-d)}
+header.hero{position:sticky;top:0;z-index:30;background:rgba(244,247,251,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1480px;margin:0 auto;padding:14px 18px}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:260px}
+.logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,#1d4ed8,#0d9488);color:#fff;box-shadow:var(--shadow-sm)}
+h1{margin:0;font-size:clamp(1.15rem,2.1vw,1.7rem);letter-spacing:-.03em}
+.tagline{margin:2px 0 0;color:var(--muted);font-size:.82rem}
+.spacer{flex:1}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:230px;box-shadow:var(--shadow-sm)}
+.search input{border:0;outline:0;font-size:.92rem;width:100%;background:transparent;color:var(--ink)}
+.btn{border:1px solid var(--line);border-radius:12px;padding:9px 13px;background:#fff;color:var(--ink);font-weight:700;cursor:pointer;font-size:.85rem;display:inline-flex;gap:6px;align-items:center;text-decoration:none}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue-d);color:#fff;border-color:var(--blue-d)}
+.btn.ghost{background:transparent}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.badge{display:inline-flex;border-radius:999px;padding:4px 10px;font-weight:700;font-size:.72rem;background:#eef4ff;color:#1d4ed8}
+.badge.green{background:#ecfdf5;color:var(--green)} .badge.amber{background:#fff7ed;color:var(--amber)}
+.badge.violet{background:#f3ecff;color:var(--violet)} .badge.teal{background:#e6fbf7;color:var(--teal)}
+
+.layout{display:grid;grid-template-columns:300px 1fr;gap:18px;max-width:1480px;margin:0 auto;padding:18px;align-items:start}
+aside.side{position:sticky;top:96px;max-height:calc(100vh - 110px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:10px}
+.side h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 8px 6px}
+.side h2:first-child{margin-top:4px}
+.navitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--ink)}
+.navitem:hover{background:#eef4ff}
+.navitem.active{background:var(--navy);color:#fff}
+.navitem .ne{font-size:1.05rem}
+.navitem .nn{flex:1}
+.navitem .srsdot{width:8px;height:8px;border-radius:50%;background:var(--amber);display:none}
+.navitem.due .srsdot{display:inline-block}
+
+main.content{min-height:60vh}
+.chapter-head{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px}
+.chapter-head h2{margin:0 0 4px;font-size:clamp(1.3rem,2.4vw,2rem);letter-spacing:-.03em}
+.chapter-head .meta{color:var(--muted);font-size:.9rem;margin:6px 0}
+.chapter-head .resume{margin:10px 0 0;font-size:.96rem}
+.objgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px;margin-top:14px}
+.objgrid .o{background:#f0f6ff;border:1px solid #d6e6ff;border-radius:11px;padding:9px 12px;font-size:.86rem;display:flex;gap:8px}
+.objgrid .o::before{content:"🎯"}
+
+.tabbar{display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:88px;z-index:20;background:rgba(244,247,251,.92);backdrop-filter:blur(8px);padding:8px 0;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--muted)}
+.tab:hover{border-color:var(--blue)}
+.tab.active{background:var(--blue-d);color:#fff;border-color:var(--blue-d)}
+
+section.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:20px 22px;margin-bottom:14px;scroll-margin-top:150px}
+section.panel>h3{margin:0 0 12px;font-size:1.15rem;display:flex;align-items:center;gap:9px;letter-spacing:-.02em}
+section.panel>h3 .si{font-size:1.3rem}
+.lead{font-size:.96rem;color:var(--ink)}
+.muted{color:var(--muted)}
+ul.clean{margin:8px 0;padding-left:0;list-style:none}
+ul.clean li{padding:6px 0 6px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.92rem}
+ul.clean li:last-child{border-bottom:0}
+ul.clean li::before{content:"▸";position:absolute;left:6px;color:var(--blue);font-weight:900}
+ul.chk li::before{content:"✓";color:var(--green)}
+ul.warn li::before{content:"⚠";color:var(--amber)}
+ul.err li::before{content:"✕";color:var(--red)}
+
+.subh{font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);margin:16px 0 6px;display:flex;align-items:center;gap:7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+.fig{margin:14px 0;background:#fbfdff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.fig svg{max-width:100%;height:auto}
+.fig figcaption{font-size:.8rem;color:var(--muted);margin-top:8px;text-align:left}
+
+table.tbl{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table.tbl th{background:#eef4ff;color:var(--navy);font-weight:800;font-size:.8rem}
+table.tbl tr:nth-child(even) td{background:#fafcff}
+
+.card{border:1px solid var(--line);border-radius:13px;padding:14px;margin:12px 0;background:#fff;box-shadow:var(--shadow-sm)}
+.card.path{border-left:4px solid var(--red)}
+.card h4{margin:0 0 6px;font-size:1.02rem}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:.88rem;margin:6px 0}
+.kv .k{font-weight:700;color:var(--navy)}
+.pill{display:inline-block;border-radius:999px;padding:3px 9px;font-size:.72rem;font-weight:700}
+.pill.g{background:#ecfdf5;color:var(--green)} .pill.a{background:#fff7ed;color:var(--amber)} .pill.r{background:#fee2e2;color:var(--red)}
+
+.cr{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:14px 16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;white-space:pre-wrap;line-height:1.55;position:relative}
+.cr .copy{position:absolute;top:8px;right:8px}
+
+.tree{margin:10px 0}
+.tree .node{border-left:2px solid var(--blue);margin-left:10px;padding:4px 0 4px 14px;position:relative}
+.tree .node::before{content:"";position:absolute;left:-5px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.tree .q{font-weight:700}
+.tree .a{color:var(--muted);font-size:.88rem}
+
+/* flashcards */
+.fcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.fc{perspective:1000px;height:150px;cursor:pointer}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:14px;display:grid;place-items:center;text-align:center;font-size:.9rem;border:1px solid var(--line)}
+.fc-f{background:#eef4ff;font-weight:700}
+.fc-b{background:#0b2f63;color:#fff;transform:rotateY(180deg);font-size:.84rem}
+
+/* QCM */
+.qcm{margin:14px 0}
+.qcm .q{font-weight:700;margin-bottom:8px}
+.qcm .opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;margin:6px 0;cursor:pointer;font-size:.9rem}
+.qcm .opt:hover{border-color:var(--blue)}
+.qcm .opt.good{background:#ecfdf5;border-color:var(--green)}
+.qcm .opt.bad{background:#fee2e2;border-color:var(--red)}
+.qcm .exp{font-size:.85rem;background:#f0f6ff;border-radius:10px;padding:10px;margin-top:6px;display:none}
+.qcm .exp.show{display:block}
+
+/* cas */
+.cas{border:1px solid var(--line);border-radius:13px;padding:14px;margin:12px 0;background:#fbfdff}
+.cas .num{font-weight:800;color:var(--blue-d)}
+.cas .reveal{margin-top:8px}
+.cas details{margin:6px 0}
+.cas summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0}
+
+.hint{background:#fff7ed;border:1px solid #fde6c8;border-radius:11px;padding:10px 12px;font-size:.86rem;margin:10px 0}
+.hint::before{content:"💡 ";}
+.danger{background:#fef2f2;border:1px solid #fbcaca;border-radius:11px;padding:10px 12px;font-size:.86rem;margin:10px 0}
+
+/* simulation */
+.simbar{display:flex;gap:8px;align-items:center;margin:8px 0 12px}
+.step{border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin:8px 0;background:#fff}
+.step .stitle{font-weight:800;color:var(--navy)}
+.step.sim .sdesc{filter:blur(5px);cursor:pointer;user-select:none}
+.step.sim .sdesc.shown{filter:none;cursor:default}
+
+/* SRS modal */
+.overlay{position:fixed;inset:0;background:rgba(8,20,40,.45);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--r);max-width:640px;width:100%;box-shadow:var(--shadow);padding:22px}
+.modal h3{margin:0 0 10px}
+.srsrow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:9px 0;font-size:.9rem}
+.srsrow .tag{font-size:.74rem}
+
+/* iconographie / galerie */
+.icobar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}
+.rubh{font-weight:800;color:var(--navy);margin:16px 0 8px;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.rubh .cnt{font-size:.74rem;font-weight:700;color:var(--muted);background:#eef4ff;border-radius:999px;padding:2px 8px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.gal .gi{border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;position:relative}
+.gal .gi img{width:100%;height:115px;object-fit:cover;display:block;transition:transform .2s}
+.gal .gi:hover img{transform:scale(1.04)}
+.gal .gi .cap{font-size:.68rem;color:var(--muted);padding:4px 6px;border-top:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gal.study .gi img{filter:blur(7px)}
+.gal.study .gi.revealed img{filter:none}
+.gal .gi .badge-rev{position:absolute;top:6px;right:6px;background:rgba(11,47,99,.85);color:#fff;font-size:.62rem;padding:2px 6px;border-radius:6px;display:none}
+.gal.study .gi:not(.revealed) .badge-rev{display:block}
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(8,16,32,.92);z-index:80;display:none;flex-direction:column}
+.lb.open{display:flex}
+.lb-top{display:flex;justify-content:space-between;align-items:center;color:#e2e8f0;padding:10px 16px;font-size:.85rem;gap:10px}
+.lb-stage{flex:1;display:grid;place-items:center;overflow:auto;padding:10px}
+.lb-stage img{max-width:100%;max-height:100%;transition:transform .15s;transform-origin:center;cursor:zoom-in}
+.lb-btn{background:#1e293b;color:#fff;border:1px solid #334155;border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:700;font-size:.85rem}
+.lb-nav{display:flex;gap:8px;align-items:center}
+.disclaimer-ico{background:#fff7ed;border:1px solid #fde6c8;border-radius:11px;padding:10px 12px;font-size:.82rem;margin:6px 0 12px}
+.foot{max-width:1480px;margin:10px auto 40px;padding:0 18px;color:var(--muted);font-size:.82rem}
+.foot a{color:var(--blue-d)}
+.refbox{background:#f0f6ff;border:1px solid #d6e6ff;border-radius:12px;padding:12px 14px;font-size:.84rem;margin:10px 0}
+@media(max-width:980px){.layout{grid-template-columns:1fr}aside.side{position:static;max-height:none}.tabbar{top:0}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🩸</div>
+        <div>
+          <h1>ÉCHO-VASC <span style="color:var(--teal)">DIU</span></h1>
+          <div class="tagline">Formation complète d'ultrasonographie vasculaire — niveau DIU → expert</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <label class="search">🔎 <input id="search" type="search" placeholder="Rechercher un territoire, une pathologie, un mot-clé…" autocomplete="off"></label>
+      <button class="btn" id="btnSrs">📅 Révisions <span id="srsCount" class="badge amber" style="display:none">0</span></button>
+      <a class="btn ghost" href="../index.html">← Portail</a>
+    </div>
+    <div class="badges">
+      <span class="badge teal">🎓 Pédagogie DIU structurée (13 sections)</span>
+      <span class="badge green">📴 100 % hors-ligne</span>
+      <span class="badge violet">🧠 Flashcards · QCM · cas cliniques</span>
+      <span class="badge amber">⚠️ Outil d'apprentissage — ne remplace pas la formation pratique encadrée</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="side" id="side"></aside>
+  <main class="content" id="content"></main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>📅 Révisions espacées (J1 · J7 · J30 · J90)</h3>
+      <button class="btn" onclick="closeSrs()">✕</button>
+    </div>
+    <p class="muted" style="font-size:.86rem">Marquez un chapitre comme « révisé » depuis sa page pour programmer automatiquement les rappels. Les chapitres à revoir aujourd'hui sont signalés par un point orange dans le menu.</p>
+    <div id="srsList"></div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="refbox">
+    <strong>Sources & références.</strong> Trame pédagogique inspirée du <a href="https://ultrasonographie-vasculaire.edu.umontpellier.fr/" target="_blank" rel="noopener">site d'ultrasonographie vasculaire de l'Université de Montpellier</a> (cours du DIU d'échographie). Recommandations intégrées : SFMV, CNEV, HAS, ESVS, SVS, WFUMB, EFSUMB.
+    Les illustrations de ce module sont des <strong>schémas originaux</strong> (les images du site source ne sont pas redistribuées ici) : reportez-vous au site de Montpellier pour les coupes échographiques réelles et galeries d'images.
+  </div>
+  <p>⚠️ <strong>Avertissement.</strong> Support d'<strong>auto-formation</strong> au raisonnement. Il ne remplace ni l'enseignement encadré du DIU, ni la pratique supervisée sur appareil, ni les recommandations en vigueur. Les valeurs seuils sont indicatives et doivent être confrontées aux référentiels et au contexte clinique. Aucune donnée patient n'est stockée — progression de révision conservée localement dans le navigateur.</p>
+</footer>
+
+<script src="data/00-foundations.js"></script>
+<script src="data/10-tsa-carotides.js"></script>
+<script src="data/11-vertebrales-sousclavieres.js"></script>
+<script src="data/20-aorte-iliaques.js"></script>
+<script src="data/21-renales.js"></script>
+<script src="data/22-digestives.js"></script>
+<script src="data/30-mi-arteriel.js"></script>
+<script src="data/40-mi-veineux-tvp.js"></script>
+<script src="data/41-insuffisance-veineuse.js"></script>
+<script src="data/50-pontages-stents.js"></script>
+<script src="data/51-fav.js"></script>
+<script src="data/60-doppler-visceral.js"></script>
+<script src="data/61-autres.js"></script>
+<!-- Iconographie locale (cours DIU) : présent uniquement sur la machine de l'utilisateur,
+     ignoré par Git (jamais publié). Le 404 éventuel en ligne est sans effet. -->
+<script src="assets/manifest.js" onerror="window.__noimg=1"></script>
+<script src="app.js"></script>
+</body>
+</html>
