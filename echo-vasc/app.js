@@ -123,6 +123,7 @@ function selectChapter(id, push = true) {
 }
 
 function renderChapter(c) {
+  if (window.VASC_IMAGES && window.VASC_IMAGES[c.id]) stripSvgs(c); // images réelles → on retire mes schémas
   const present = SECTIONS.filter(s => hasSection(c, s.key));
   let html = headHTML(c);
   html += `<div class="tabbar">` + present.map(s =>
@@ -192,6 +193,11 @@ function subh(t, icon = '') { return `<div class="subh">${icon} ${esc(t)}</div>`
 function sectionTitle(s) { return `<h3><span class="si">${s.icon}</span> ${s.label}</h3>`; }
 
 function sectionHTML(c, s) {
+  const body = sectionBody(c, s);
+  if (s.key === 'iconographie') return body;     // déjà une galerie complète
+  return body + sectionImages(c, s.key);          // figures du cours en ligne
+}
+function sectionBody(c, s) {
   const v = c[s.key];
   const head = sectionTitle(s);
   switch (s.key) {
@@ -373,6 +379,31 @@ function qcmHTML(list) {
 
 /* ---------- iconographie (images locales du cours, jamais publiées) ---------- */
 function deckShort(d) { return String(d || '').replace(/\.pdf$/i, ''); }
+function giHTML(im, idx) {
+  return `<div class="gi" data-idx="${idx}"><span class="badge-rev">👁️ révéler</span>` +
+    `<img loading="lazy" src="${esc(im.src)}" alt="${esc(im.rubrique || '')} p${im.page}">` +
+    `<div class="cap">${esc(deckShort(im.deck))} · p${im.page}</div></div>`;
+}
+/* figures du cours rattachées à une section pédagogique donnée (rendu en ligne) */
+function sectionImages(c, key) {
+  const all = (window.VASC_IMAGES && window.VASC_IMAGES[c.id]) || [];
+  const sub = [];
+  all.forEach((im, idx) => { if ((im.section || '') === key) sub.push({ im, idx }); });
+  if (!sub.length) return '';
+  return `<div class="subh" style="color:var(--teal)">🖼️ Images du cours DIU <span class="cnt">${sub.length}</span></div>` +
+    `<div class="icobar"><button class="btn" data-study>🧠 Mode étude (masquer puis révéler)</button>` +
+    `<span class="muted" style="font-size:.8rem">Clique pour agrandir/zoomer.</span></div>` +
+    `<div class="gal">` + sub.map(({ im, idx }) => giHTML(im, idx)).join('') + `</div>`;
+}
+/* retire les schémas SVG quand le chapitre dispose des images réelles du PDF */
+function stripSvgs(o) {
+  if (!o || typeof o !== 'object') return;
+  if (Array.isArray(o)) { o.forEach(stripSvgs); return; }
+  for (const k of Object.keys(o)) {
+    if (/^svg/i.test(k)) delete o[k];
+    else stripSvgs(o[k]);
+  }
+}
 function icoHTML(c) {
   const imgs = (window.VASC_IMAGES && window.VASC_IMAGES[c.id]) || [];
   const order = []; const byRub = new Map();
@@ -387,7 +418,7 @@ function icoHTML(c) {
   order.forEach(k => {
     const a = byRub.get(k);
     h += `<div class="rubh">📂 ${esc(k)} <span class="cnt">${a.length}</span></div><div class="gal">` +
-      a.map(({ im, idx }) => `<div class="gi" data-idx="${idx}"><span class="badge-rev">👁️ révéler</span><img loading="lazy" src="${esc(im.src)}" alt="${esc(k)} p${im.page}"><div class="cap">${esc(deckShort(im.deck))} · p${im.page}</div></div>`).join('') +
+      a.map(({ im, idx }) => giHTML(im, idx)).join('') +
       `</div>`;
   });
   return h;
