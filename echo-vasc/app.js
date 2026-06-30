@@ -33,6 +33,7 @@ const SECTIONS = [
   { key: 'pieges',        label: 'Pièges',         icon: '⚠️' },
   { key: 'flashcards',    label: 'Flashcards',     icon: '🃏' },
   { key: 'qcm',           label: 'QCM',            icon: '✅' },
+  { key: 'iconographie',  label: 'Iconographie',   icon: '🖼️' },
 ];
 
 /* ---------- état ---------- */
@@ -136,6 +137,10 @@ function renderChapter(c) {
 }
 
 function hasSection(c, key) {
+  if (key === 'iconographie') {
+    const im = window.VASC_IMAGES && window.VASC_IMAGES[c.id];
+    return !!(im && im.length);
+  }
   const v = c[key];
   if (v == null) return false;
   if (Array.isArray(v)) return v.length > 0;
@@ -206,6 +211,7 @@ function sectionHTML(c, s) {
     case 'pieges': return head + piegesHTML(v);
     case 'flashcards': return head + fcHTML(v);
     case 'qcm': return head + qcmHTML(v);
+    case 'iconographie': return head + icoHTML(c);
     default: return head;
   }
 }
@@ -365,6 +371,68 @@ function qcmHTML(list) {
   }).join('');
 }
 
+/* ---------- iconographie (images locales du cours, jamais publiées) ---------- */
+function deckShort(d) { return String(d || '').replace(/\.pdf$/i, ''); }
+function icoHTML(c) {
+  const imgs = (window.VASC_IMAGES && window.VASC_IMAGES[c.id]) || [];
+  const order = []; const byRub = new Map();
+  imgs.forEach((im, idx) => {
+    const k = im.rubrique || 'Figures';
+    if (!byRub.has(k)) { byRub.set(k, []); order.push(k); }
+    byRub.get(k).push({ im, idx });
+  });
+  const nDecks = new Set(imgs.map(i => i.deck)).size;
+  let h = `<div class="disclaimer-ico">🔒 <strong>Iconographie locale — usage personnel de formation.</strong> ${imgs.length} figures issues de ${nDecks} diaporamas du DIU (Université de Montpellier), affichées <strong>depuis ton ordinateur</strong> et <strong>non publiées</strong> (exclues du dépôt par .gitignore). Droits réservés à leurs auteurs.</div>`;
+  h += `<div class="icobar"><button class="btn" data-study>🧠 Mode étude (masquer puis révéler)</button><span class="muted" style="font-size:.82rem">Clique une vignette pour l'agrandir et zoomer. En mode étude, identifie d'abord la structure, puis révèle.</span></div>`;
+  order.forEach(k => {
+    const a = byRub.get(k);
+    h += `<div class="rubh">📂 ${esc(k)} <span class="cnt">${a.length}</span></div><div class="gal">` +
+      a.map(({ im, idx }) => `<div class="gi" data-idx="${idx}"><span class="badge-rev">👁️ révéler</span><img loading="lazy" src="${esc(im.src)}" alt="${esc(k)} p${im.page}"><div class="cap">${esc(deckShort(im.deck))} · p${im.page}</div></div>`).join('') +
+      `</div>`;
+  });
+  return h;
+}
+
+/* ---------- lightbox (zoom plein écran) ---------- */
+let lbList = [], lbIdx = 0, lbZoom = 1;
+function buildLightbox() {
+  if ($('#lb')) return;
+  const d = document.createElement('div');
+  d.className = 'lb'; d.id = 'lb';
+  d.innerHTML = `<div class="lb-top"><span id="lbcap"></span><div class="lb-nav">
+    <button class="lb-btn" id="lbzo">−</button><button class="lb-btn" id="lbzi">+</button>
+    <button class="lb-btn" id="lbprev">◀</button><button class="lb-btn" id="lbnext">▶</button>
+    <button class="lb-btn" id="lbclose">✕ Fermer</button></div></div>
+    <div class="lb-stage"><img id="lbimg" alt=""></div>`;
+  document.body.appendChild(d);
+  $('#lbclose').addEventListener('click', closeLb);
+  $('#lbprev').addEventListener('click', () => stepLb(-1));
+  $('#lbnext').addEventListener('click', () => stepLb(1));
+  $('#lbzi').addEventListener('click', () => setZoom(lbZoom + 0.4));
+  $('#lbzo').addEventListener('click', () => setZoom(lbZoom - 0.4));
+  $('#lbimg').addEventListener('click', () => setZoom(lbZoom > 1 ? 1 : 2));
+  d.addEventListener('click', e => { if (e.target === d) closeLb(); });
+  document.addEventListener('keydown', e => {
+    if (!d.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLb();
+    else if (e.key === 'ArrowLeft') stepLb(-1);
+    else if (e.key === 'ArrowRight') stepLb(1);
+  });
+}
+function openLightbox(chapterId, idx) {
+  lbList = (window.VASC_IMAGES && window.VASC_IMAGES[chapterId]) || [];
+  lbIdx = idx; renderLb(); $('#lb').classList.add('open');
+}
+function renderLb() {
+  const im = lbList[lbIdx]; if (!im) return;
+  setZoom(1);
+  $('#lbimg').src = im.src;
+  $('#lbcap').textContent = `${deckShort(im.deck)} · p${im.page} · ${im.rubrique || ''}  (${lbIdx + 1}/${lbList.length})`;
+}
+function stepLb(n) { lbIdx = (lbIdx + n + lbList.length) % lbList.length; renderLb(); }
+function setZoom(z) { lbZoom = Math.max(1, Math.min(5, z)); const i = $('#lbimg'); if (i) { i.style.transform = `scale(${lbZoom})`; i.style.cursor = lbZoom > 1 ? 'zoom-out' : 'zoom-in'; } }
+function closeLb() { $('#lb').classList.remove('open'); }
+
 /* =====================================================================
    Branchement des interactions après rendu
    ===================================================================== */
@@ -387,6 +455,19 @@ function wireChapter(root, c) {
   }));
   root.addEventListener('click', e => {
     const sd = e.target.closest('.step.sim .sdesc'); if (sd) sd.classList.add('shown');
+  });
+  // iconographie : mode étude + ouverture lightbox
+  $$('[data-study]', root).forEach(b => b.addEventListener('click', () => {
+    const sec = b.closest('section'); const on = !sec.classList.contains('studyon');
+    sec.classList.toggle('studyon', on);
+    $$('.gal', sec).forEach(g => { g.classList.toggle('study', on); $$('.gi.revealed', g).forEach(x => x.classList.remove('revealed')); });
+    b.textContent = on ? '👁️ Quitter le mode étude' : '🧠 Mode étude (masquer puis révéler)';
+  }));
+  root.addEventListener('click', e => {
+    const gi = e.target.closest('.gi'); if (!gi) return;
+    const gal = gi.closest('.gal');
+    if (gal && gal.classList.contains('study') && !gi.classList.contains('revealed')) { gi.classList.add('revealed'); return; }
+    openLightbox(c.id, +gi.dataset.idx);
   });
   // flashcards
   $$('.fc', root).forEach(f => f.addEventListener('click', () => f.classList.toggle('flip')));
@@ -445,6 +526,7 @@ function boot() {
     return;
   }
   CH.sort((a, b) => (a.num || 0) - (b.num || 0));
+  buildLightbox();
   renderSide();
   updateSrsCount();
   $('#search').addEventListener('input', e => { query = e.target.value; renderSide(); });
