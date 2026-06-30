@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sommeil MG – Aide à la décision</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;--card:#ffffff;--ink:#18202f;--muted:#5b6476;--line:#dfe4ee;--accent:#1f6feb;--warn:#b54708;--danger:#b42318;--ok:#027a48;--soft:#eef4ff;
+    }
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    header{background:linear-gradient(135deg,#0f4c81,#1f6feb);color:white;padding:28px 22px}
+    header h1{margin:0;font-size:clamp(24px,4vw,38px)}
+    header p{margin:8px 0 0;max-width:1000px;color:#eaf1ff}
+    main{max-width:1220px;margin:0 auto;padding:22px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .tab{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
+    .tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(24,32,47,.06)}
+    h2{margin:0 0 12px;font-size:22px} h3{margin:18px 0 8px;font-size:17px} h4{margin:14px 0 6px;font-size:15px}
+    label{display:block;font-weight:650;margin:12px 0 6px}
+    select,input[type="number"],input[type="text"],textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px;background:white;color:var(--ink);font-size:14px}
+    textarea{min-height:74px;resize:vertical}
+    .checks{display:grid;gap:8px;margin:8px 0}.check{display:flex;gap:8px;align-items:flex-start}.check input{margin-top:3px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    @media(max-width:650px){.row,.row3{grid-template-columns:1fr}}
+    button{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:white}.ghost{background:#eef2f7;color:var(--ink)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.pill{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800;margin:2px 4px 2px 0}.danger{background:#ffebe9;color:var(--danger)}.warn{background:#fff4e5;color:var(--warn)}.ok{background:#e6f4ee;color:var(--ok)}.info{background:var(--soft);color:#1849a9}
+    .output{display:grid;gap:14px}.box{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}.box h3{margin-top:0}.small{font-size:13px;color:var(--muted)}
+    ul{margin:8px 0 0 20px;padding:0} li{margin:4px 0}.rx{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:12px;white-space:pre-wrap}
+    .hidden{display:none}.notice{background:#fff8eb;border:1px solid #ffd8a8;border-radius:14px;padding:12px;color:#7a3e00}.source{font-size:12px;color:var(--muted);margin-top:18px;border-top:1px solid var(--line);padding-top:12px}.patient{background:#f9fbff;border-left:4px solid var(--accent);padding:12px;border-radius:12px}
+    @media print{header,.tabs,.controls,.actions{display:none!important}body{background:white}.grid{display:block}.card{box-shadow:none;border:0}.source{page-break-before:avoid}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Sommeil MG</h1>
+  <p>Aide à la décision clinique pour médecin généraliste : tri des troubles du sommeil, mesures non médicamenteuses, médicaments possibles, outils patients, et orientation. Application locale sans stockage de données.</p>
+</header>
+<main>
+  <div class="tabs controls">
+    <button class="tab active" data-tab="adult">≥ 18 ans</button>
+    <button class="tab" data-tab="child">&lt; 18 ans</button>
+    <button class="tab" data-tab="about">Sources & limites</button>
+  </div>
+
+  <section id="adult" class="tabpane">
+    <div class="grid">
+      <div class="card controls">
+        <h2>Parcours adulte</h2>
+        <label>Motif principal</label>
+        <select id="aComplaint">
+          <option value="insomnie">Insomnie / demande de somnifère</option>
+          <option value="sahos">Ronflement / suspicion SAHOS</option>
+          <option value="somnolence">Somnolence diurne excessive</option>
+          <option value="sjsr">Impatiences / jambes sans repos</option>
+          <option value="bzd">Renouvellement ou sevrage BZD/Z-drug</option>
+          <option value="rythme">Travail de nuit / trouble circadien</option>
+        </select>
+        <div class="row3">
+          <div><label>Âge</label><input id="aAge" type="number" min="18" value="45"></div>
+          <div><label>Durée</label><select id="aDuration"><option value="acute">&lt; 1 mois</option><option value="subacute">1–3 mois</option><option value="chronic">&gt; 3 mois</option></select></div>
+          <div><label>Retentissement</label><select id="aImpact"><option value="none">Aucun/faible</option><option value="mod">Modéré</option><option value="severe">Important</option></select></div>
+        </div>
+        <div class="row3">
+          <div><label>Fréquence / semaine</label><input id="aFreq" type="number" min="0" max="7" value="3"></div>
+          <div><label>IAH si connu</label><input id="aIAH" type="number" min="0" placeholder="ex 18"></div>
+          <div><label>Ferritine si SJSR</label><input id="aFerritin" type="number" min="0" placeholder="µg/L"></div>
+        </div>
+        <h3>Terrain / contexte</h3>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="aElderly"> Sujet âgé / risque de chute</label>
+          <label class="check"><input type="checkbox" id="aPreg"> Grossesse / allaitement / désir de grossesse</label>
+          <label class="check"><input type="checkbox" id="aPsych"> Dépression, anxiété sévère, bipolarité, idées suicidaires</label>
+          <label class="check"><input type="checkbox" id="aResp"> BPCO sévère, insuffisance respiratoire, obésité-hypoventilation</label>
+          <label class="check"><input type="checkbox" id="aCV"> HTA résistante, FA persistante, AVC, coronaropathie mal contrôlée, IVG sévère</label>
+          <label class="check"><input type="checkbox" id="aDrive"> Conduite professionnelle / machines / travail en hauteur</label>
+          <label class="check"><input type="checkbox" id="aSedatives"> Autres sédatifs, alcool, opioïdes, psychotropes multiples</label>
+          <label class="check"><input type="checkbox" id="aSnore"> Ronflement sévère, apnées observées, céphalées matinales, nycturie</label>
+          <label class="check"><input type="checkbox" id="aCataplexy"> Cataplexie, hallucinations hypnagogiques, paralysies du sommeil</label>
+          <label class="check"><input type="checkbox" id="aBZDLong"> BZD/Z-drug quotidienne &gt; 30 jours</label>
+        </div>
+        <label>Notes cliniques libres</label><textarea id="aNotes" placeholder="Traitements, comorbidités, objectif patient..."></textarea>
+        <div class="actions"><button class="primary" onclick="adultDecision()">Générer conduite</button><button class="ghost" onclick="window.print()">Imprimer</button></div>
+      </div>
+      <div class="card"><h2>Sortie clinique</h2><div id="aOutput" class="output"><div class="notice">Renseigner le formulaire puis cliquer sur “Générer conduite”.</div></div></div>
+    </div>
+  </section>
+
+  <section id="child" class="tabpane hidden">
+    <div class="grid">
+      <div class="card controls">
+        <h2>Parcours &lt; 18 ans</h2>
+        <label>Âge / tranche</label>
+        <select id="cAgeGroup">
+          <option value="0-2m">0 à 2 mois</option>
+          <option value="2-6m">2 à 6 mois</option>
+          <option value="6-24m">6 à 24 mois</option>
+          <option value="2-5y">2 à 5 ans</option>
+          <option value="5-10y">5 à 10 ans</option>
+          <option value="10-18y">10 à 18 ans</option>
+        </select>
+        <label>Difficulté principale</label>
+        <select id="cComplaint">
+          <option value="insomnie">Difficultés d’endormissement / réveils nocturnes</option>
+          <option value="pleurs">Pleurs du nourrisson</option>
+          <option value="sahos">Ronflements / suspicion SAOS</option>
+          <option value="parasomnie">Terreurs nocturnes / somnambulisme / cauchemars</option>
+          <option value="rythme">Retard de phase / adolescent couche-tard</option>
+          <option value="somnolence">Somnolence / hypersomnolence</option>
+          <option value="mouvements">Mouvements nocturnes / rythmies / SJSR</option>
+        </select>
+        <div class="row3">
+          <div><label>Durée</label><select id="cDuration"><option value="acute">&lt; 1 mois</option><option value="subacute">1–3 mois</option><option value="chronic">&gt; 3 mois</option></select></div>
+          <div><label>Fréquence / semaine</label><input id="cFreq" type="number" min="0" max="7" value="3"></div>
+          <div><label>Retentissement</label><select id="cImpact"><option value="none">Faible</option><option value="mod">Modéré</option><option value="severe">Important</option></select></div>
+        </div>
+        <h3>Signes d’alerte / contexte</h3>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="cAgeInf6"> Nourrisson &lt; 6 mois avec plainte d’insomnie/pleurs difficiles</label>
+          <label class="check"><input type="checkbox" id="cFeverPain"> Fièvre, douleur, éveils soudains non consolables</label>
+          <label class="check"><input type="checkbox" id="cGrowth"> Cassure/anomalie de croissance, alimentation insuffisante/excessive</label>
+          <label class="check"><input type="checkbox" id="cDev"> Régression ou anomalie du développement psychomoteur</label>
+          <label class="check"><input type="checkbox" id="cSnore"> Ronflements &gt;3 nuits/sem, pauses, respiration laborieuse, sueurs nocturnes</label>
+          <label class="check"><input type="checkbox" id="cObesity"> Surpoids/obésité ou craniofacial/neuromusculaire/syndromique</label>
+          <label class="check"><input type="checkbox" id="cSeizure"> Épisodes stéréotypés très courts, répétés, fréquents, suspicion épilepsie</label>
+          <label class="check"><input type="checkbox" id="cSleepy"> Somnolence diurne persistante ou hyperactivité inhabituelle</label>
+          <label class="check"><input type="checkbox" id="cMood"> Souffrance psychologique, idées suicidaires, absentéisme/échec scolaire</label>
+          <label class="check"><input type="checkbox" id="cNeurodev"> TSA/TDAH/TND ou syndrome Smith-Magenis/Rett/Angelman/sclérose tubéreuse</label>
+          <label class="check"><input type="checkbox" id="cScreens"> Écrans le soir/chambre, horaires très irréguliers</label>
+        </div>
+        <label>Notes cliniques libres</label><textarea id="cNotes" placeholder="Rythme, siestes, repas nocturnes, contexte familial..."></textarea>
+        <div class="actions"><button class="primary" onclick="childDecision()">Générer conduite</button><button class="ghost" onclick="window.print()">Imprimer</button></div>
+      </div>
+      <div class="card"><h2>Sortie clinique</h2><div id="cOutput" class="output"><div class="notice">Renseigner le formulaire puis cliquer sur “Générer conduite”.</div></div></div>
+    </div>
+  </section>
+
+  <section id="about" class="tabpane hidden">
+    <div class="card">
+      <h2>Sources et limites</h2>
+      <p>Prototype destiné à structurer la consultation de médecine générale. Il ne remplace pas le jugement clinique, les RCP/AMM, Vidal/Base publique du médicament, ni les recommandations actualisées.</p>
+      <ul>
+        <li>DéClic Sommeil : insomnie adulte, SAHOS, SJSR, agenda du sommeil, sevrage BZD.</li>
+        <li>Dodoclic : troubles du sommeil de l’enfant avec tri par âge, symptômes et signes d’alerte.</li>
+        <li>HAS : benzodiazépines dans l’insomnie, arrêt des benzodiazépines, stratégie SAHOS/PPC/OAM, PSG/PG.</li>
+        <li>ANSM/ANSES/Vidal : prudence mélatonine, indications encadrées, intoxications et interactions.</li>
+      </ul>
+      <div class="notice"><strong>Garde-fou :</strong> chez l’enfant, l’application bloque par défaut toute prescription hypnotique hors situations spécialisées/TND. Chez l’adulte, elle impose une étape de tri clinique, puis privilégie TCC-I, agenda et hygiène du sommeil avant médicament.</div>
+    </div>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function activeChecks(prefix){return [...document.querySelectorAll(`input[id^="${prefix}"]:checked`)].map(x=>x.id)}
+function tags(list){return list.map(t=>`<span class="pill ${t[1]}">${t[0]}</span>`).join('')}
+function box(title, html){return `<div class="box"><h3>${title}</h3>${html}</div>`}
+function rx(txt){return `<div class="rx">${txt}</div>`}
+function bullets(arr){return `<ul>${arr.filter(Boolean).map(x=>`<li>${x}</li>`).join('')}</ul>`}
+function red(text){return `<span class="pill danger">${text}</span>`}
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tabpane').forEach(p=>p.classList.add('hidden'));$(b.dataset.tab).classList.remove('hidden')})
+
+function adultDecision(){
+  const comp=$('aComplaint').value, age=+$('aAge').value, dur=$('aDuration').value, impact=$('aImpact').value, freq=+$('aFreq').value||0, iah=+$('aIAH').value||null, ferr=+$('aFerritin').value||null;
+  const c=activeChecks('a');
+  let labels=[]; if(c.includes('aPsych')) labels.push(['Alerte psycho','danger']); if(c.includes('aDrive')) labels.push(['Risque conduite/travail','danger']); if(c.includes('aResp')) labels.push(['Respiratoire fragile','warn']); if(c.includes('aElderly')) labels.push(['Sujet âgé','warn']); if(c.includes('aBZDLong')) labels.push(['BZD chronique','warn']);
+  let out='';
+  let alerts=[];
+  if(c.includes('aPsych')) alerts.push('Dépister épisode dépressif, bipolarité, risque suicidaire, anxiété sévère ; avis psy/urgence si idées suicidaires ou désorganisation.');
+  if(c.includes('aDrive')) alerts.push('Évaluer somnolence et aptitude temporaire à la conduite/poste à risque ; éviter tout hypnotique si vigilance nécessaire le lendemain.');
+  if(c.includes('aCataplexy')) alerts.push('Cataplexie/hallucinations/paralysies du sommeil : suspicion narcolepsie → centre du sommeil/neurologie.');
+  if(c.includes('aResp')) alerts.push('BPCO sévère/obésité-hypoventilation/insuffisance respiratoire : prudence majeure avec sédatifs, privilégier exploration respiratoire du sommeil.');
+  if(c.includes('aPreg')) alerts.push('Grossesse/allaitement : éviter automédication et hypnotiques ; avis spécialisé si trouble sévère.');
+  if(alerts.length) out+=box('Priorités / red flags', tags(labels)+bullets(alerts));
+
+  let tools=['Agenda de sommeil 10–15 jours avec heure coucher/lever, latence, réveils, siestes, alcool/café/écrans.','Revue des médicaments : corticoïdes, bronchodilatateurs, bêtabloquants, ISRS/IRSNA, diurétiques, décongestionnants, psychostimulants, alcool.','Évaluer anxiété/dépression, douleurs, RGO, nycturie, ménopause, pathologie respiratoire/cardiaque.'];
+  if(comp==='sahos'||c.includes('aSnore')) tools.push('EPWORTH ± STOP-Bang/Berlin ; tour de cou, IMC, TA, examen ORL, comorbidités cardio-métaboliques.');
+  if(comp==='sjsr') tools.push('Critères SJSR : besoin impérieux de bouger les jambes, aggravation repos, soulagement mouvement, prédominance soir/nuit, absence de différentiel ; ferritine, NFS, CRP, créatinine.');
+  if(comp==='bzd'||c.includes('aBZDLong')) tools.push('ECAB, inventaire BZD/Z-drugs, dose équivalente, alcool/opioïdes/psychotropes, motivations et capacités de sevrage.');
+  out+=box('Évaluation MG à faire', bullets(tools));
+
+  if(comp==='insomnie'){
+    const chronic = dur==='chronic' && freq>=3 && impact!=='none';
+    let plan=[];
+    plan.push('Expliquer le modèle de l’insomnie : facteur déclenchant + comportements perpétuants + hyperéveil.');
+    plan.push('Première ligne : TCC-I simplifiée MG : contrôle du stimulus, restriction du temps passé au lit si agenda disponible, relaxation, restructuration des croyances, horaires réguliers.');
+    plan.push('Hygiène : lever fixe, lumière matinale, activité physique en journée, chambre sombre/fraîche, pas d’écran avant coucher, éviter caféine/alcool/nicotine le soir, pas de sieste longue/tardive.');
+    if(chronic){plan.push('Insomnie chronique probable : éviter BZD/Z-drug au long cours ; discuter TCC-I structurée et, si échec documenté et impact diurne significatif, daridorexant en seconde intention selon RCP/AMM.');}
+    else {plan.push('Insomnie aiguë/transitoire sévère : un hypnotique peut se discuter uniquement en seconde intention, dose minimale, durée courte, arrêt programmé dès la première prescription.');}
+    out+=box('Conduite insomnie adulte', bullets(plan));
+    let med=[];
+    med.push('Ne pas prescrire de somnifère “automatique” : rechercher cause et comorbidités avant ordonnance.');
+    med.push('BZD/Z-drug : seulement insomnie occasionnelle/transitoire sévère, après mesures non médicamenteuses, ≤ 28 jours réduction comprise, dose minimale, information écrite, 2e consultation programmée.');
+    med.push('Éviter cumul sédatifs, alcool, opioïdes ; prudence sujet âgé, risque chutes, troubles mémoire, conduite, SAHOS/BPCO.');
+    if(chronic) med.push('Daridorexant : adulte, insomnie ≥ 3 mois avec impact diurne, traitement de seconde intention après TCC-I/hygiène ; vérifier interactions CYP3A4, somnolence, conduite, RCP.');
+    out+=box('Médicaments : garde-fous', bullets(med)+rx(`Exemple de note dossier :\nInsomnie ${chronic?'chronique':'aiguë/transitoire'} avec retentissement. Mesures non médicamenteuses expliquées. Agenda sommeil remis. Red flags recherchés. Prescription médicamenteuse ${chronic?'non systématique ; discussion daridorexant seulement si échec TCC-I documenté.':'si nécessaire uniquement courte, dose minimale, arrêt programmé.'}`));
+  }
+
+  if(comp==='sahos'||c.includes('aSnore')){
+    let plan=['Suspecter devant ronflement sévère quotidien, apnées observées, somnolence, fatigue, nycturie, céphalées matinales, obésité/tour de cou, HTA/FA/AVC.','Si SAHOS isolé probable : polygraphie ventilatoire possible ; PSG si trouble associé, hypersomnolence complexe, parasomnie, discordance clinique, comorbidités lourdes.','Toujours associer : perte pondérale si surpoids, alcool/sédatifs à éviter, décubitus dorsal, obstruction nasale/rhinite à traiter, comorbidités.'];
+    if(iah){
+      if(iah>=30 || (iah>=15 && c.includes('aCV'))) plan.push('IAH compatible avec indication PPC de première intention si symptomatologie suffisante/comorbidités ; prescription initiale par médecin formé sommeil/pneumologue selon cadre.');
+      else if(iah>=15 && !c.includes('aCV')) plan.push('IAH 15–30 sans comorbidité CV grave : OAM peut être option de première intention si critères dentaires OK ; PPC si symptômes/comorbidités/choix patient.');
+      else plan.push('IAH <15 : réévaluer symptômes, ronflement simple, autres causes ; prise en charge selon retentissement et diagnostic final.');
+    }
+    out+=box('Conduite suspicion/diagnostic SAHOS adulte', bullets(plan)+rx('À copier : Orientation exploration sommeil / pneumologue\nSuspicion SAHOS : ronflements/apnées/somnolence/fatigue/nycturie/céphalées matinales. Demande PG/PSG selon contexte, avec EPWORTH et comorbidités jointes.'));
+  }
+
+  if(comp==='sjsr'){
+    let plan=['Confirmer les 5 critères cliniques du SJSR et éliminer différentiel : crampes, neuropathie, AOMI/insuffisance veineuse, akathisie iatrogène, douleurs articulaires.','Rechercher facteurs aggravants : ISRS/IRSNA, neuroleptiques, lithium, antihistaminiques, caféine, alcool, dette de sommeil.','Mesures : horaires réguliers, relaxation, éviter alcool/café/nicotine, éviter activité intense le soir, chambre non surchauffée.'];
+    if(ferr && ferr<75) plan.push('Ferritine basse ou insuffisante pour SJSR : supplémentation martiale et recherche cause carentielle ; viser au moins >50–75 µg/L selon contexte.');
+    else plan.push('Bilan martial systématique ; traiter carence martiale avant traitement symptomatique spécifique.');
+    plan.push('Forme sévère, atypique, grossesse, neuropathie, échec ou suspicion augmentation dopaminergique : avis sommeil/neurologie.');
+    out+=box('Conduite SJSR', bullets(plan));
+  }
+
+  if(comp==='somnolence'){
+    out+=box('Conduite hypersomnolence adulte', bullets(['Quantifier somnolence : EPWORTH, accidents/presque accidents, conduite, travail à risque.','Éliminer privation de sommeil, SAHOS, médicaments sédatifs, dépression, hypothyroïdie, insuffisance rénale/hépatique, alcool/substances.','Cataplexie, hallucinations hypnagogiques, paralysie du sommeil, sommeil très allongé ou accès irrépressibles : centre du sommeil/neurologie.','Éviter prescription sédative ; certificat/avis conduite si risque.']));
+  }
+
+  if(comp==='bzd'||c.includes('aBZDLong')){
+    out+=box('Sevrage BZD/Z-drugs', bullets(['Proposer stratégie d’arrêt dès toute consommation quotidienne >30 jours ; décision partagée, rythme choisi avec patient.','Évaluer dépendance/attachement par ECAB, facteurs d’échec, alcool/opioïdes/psychiatrie, soutien social.','Décroissance progressive : souvent 4–10 semaines, parfois plusieurs mois ; ralentir ou revenir au palier antérieur si symptômes importants.','Prévoir calendrier de décroissance, agenda sommeil, consultation dédiée, pharmacien/infirmière si besoin.','Avis spécialisé si doses très élevées, polyconsommation, addiction alcool/drogues, trouble psychiatrique sévère, antécédent échec/sevrage compliqué.'])+rx('À copier : Calendrier de décroissance BZD/Z-drug remis. Objectif arrêt ou réduction significative. Information donnée sur rebond insomnie/anxiété, signes de sevrage, risques chutes/mémoire/conduite. Suivi rapproché programmé.'));
+  }
+
+  if(comp==='rythme'){
+    out+=box('Trouble circadien / travail de nuit', bullets(['Agenda 14 jours incluant jours travaillés/repos ; identifier retard/avance de phase, dette de sommeil et exposition lumineuse.','Ancrer une heure de lever stable quand possible ; lumière forte le matin pour retard de phase, réduction lumière/écrans le soir.','Si travail de nuit : sommeil protégé en journée, lunettes/limitation lumière au retour, caféine en début de poste seulement, siestes stratégiques courtes.','Mélatonine/luminothérapie : à protocoliser selon trouble circadien précis ; éviter automédication prolongée.']));
+  }
+  out+=box('Fiche patient courte', `<div class="patient"><strong>Votre sommeil se rééduque plus qu’il ne se “force”.</strong><br>Objectif cette semaine : heure de lever régulière, lumière du matin, pas d’écran dans l’heure avant le coucher, caféine arrêtée après le début d’après-midi, alcool évité le soir, lit réservé au sommeil. Remplir l’agenda de sommeil tous les matins.</div>`);
+  $('aOutput').innerHTML=out;
+}
+
+function childDecision(){
+  const age=$('cAgeGroup').value, comp=$('cComplaint').value, dur=$('cDuration').value, impact=$('cImpact').value, freq=+$('cFreq').value||0;
+  const c=activeChecks('c');
+  let out='', labels=[]; if(c.includes('cFeverPain')||c.includes('cGrowth')||c.includes('cDev')||c.includes('cSeizure')||c.includes('cMood')) labels.push(['Alerte','danger']); if(c.includes('cSnore')||c.includes('cObesity')) labels.push(['SAOS possible','warn']); if(c.includes('cNeurodev')) labels.push(['TND/TSA','info']);
+  let alerts=[];
+  if(age==='0-2m'||age==='2-6m'||c.includes('cAgeInf6')) alerts.push('Avant 6 mois : privilégier évaluation somatique, alimentation, reflux, douleurs, environnement, soutien parental ; pas de méthode comportementale type extinction ni somnifère.');
+  if(c.includes('cFeverPain')) alerts.push('Fièvre, douleur, pleurs inconsolables, éveils soudains : examen clinique complet et diagnostic somatique avant attribution au sommeil.');
+  if(c.includes('cGrowth')) alerts.push('Cassure de courbe/anomalie alimentaire : rechercher SAOS, endocrino/métabolique, RGO/APLV, pathologie chronique.');
+  if(c.includes('cDev')) alerts.push('Régression/anomalie développementale : orientation neuropédiatrie/pédiatrie selon contexte.');
+  if(c.includes('cSeizure')) alerts.push('Épisodes nocturnes stéréotypés, brefs, répétés, fréquents : suspicion épilepsie nocturne → neuropédiatrie/EEG, vidéo parentale utile.');
+  if(c.includes('cMood')) alerts.push('Adolescent : souffrance psychologique, absentéisme, idées suicidaires → évaluation psycho/urgence si risque.');
+  if(c.includes('cSnore')) alerts.push('Ronflement fréquent >3 nuits/semaine, pauses, sueurs, respiration laborieuse : suspicion SAOS enfant → ORL pédiatrique ± PSG.');
+  if(alerts.length) out+=box('Priorités / signes d’alerte', tags(labels)+bullets(alerts));
+
+  let tools=['Agenda de sommeil 10–15 jours : coucher, lever, siestes, éveils, écrans, repas nocturnes, événements.','Évaluer rythme familial, conditions d’endormissement, présence parentale, biberon/tétée nocturne, écrans, siestes, horaires week-end.','Rechercher diagnostic différentiel : douleurs, RGO/APLV, eczéma/prurit, asthme/toux nocturne, énurésie, TND, anxiété, médicaments psychostimulants.'];
+  if(comp==='sahos'||c.includes('cSnore')) tools.push('Examen ORL : respiration buccale, amygdales, obstruction nasale/rhinite, Mallampati/Friedman si maîtrisé, croissance, IMC, TA.');
+  if(comp==='somnolence') tools.push('Comparer au temps de sommeil attendu : 0–3 mois 14–17h, 4–11 mois 12–15h, 12–24 mois 11–14h, 3–5 ans 10–13h, 6–13 ans 9–11h, 14–17 ans 8–10h.');
+  out+=box('Évaluation pédiatrique MG', bullets(tools));
+
+  if(comp==='insomnie'||comp==='pleurs'){
+    let plan=[];
+    if(age==='0-2m'||age==='2-6m'){
+      plan.push('Informer sur sommeil immature, éveils physiologiques, pleurs, cycles courts ; renforcer sécurité du couchage et soutien parental.');
+      plan.push('Identifier faim, douleurs, reflux, coliques, eczéma, environnement, anxiété parentale ; réévaluer rapidement si doute.');
+    } else {
+      plan.push('Insomnie comportementale probable si >3 mois, ≥3 nuits/sem, endormissement dépendant d’une condition externe ou limites instables, sans cause somatique meilleure.');
+      plan.push('Rituel court 10–15 min, horaires réguliers, coucher/lever stables, chambre fraîche/sombre, absence d’écrans dans chambre, conditions d’endormissement identiques toute la nuit.');
+      plan.push('À partir de 6 mois : apprentissage d’endormissement autonome possible ; intervention parentale neutre et graduée si pleurs, méthode adaptée à l’adhésion familiale.');
+      plan.push('Après 12 mois : éviter siestes tardives ou trop longues si elles entretiennent le trouble ; après 24 mois, réveil lumineux possible pour lever trop précoce.');
+    }
+    out+=box('Conduite insomnie/pleurs enfant', bullets(plan));
+  }
+
+  if(comp==='rythme'){
+    out+=box('Retard de phase enfant/adolescent', bullets(['Définition pratique : endormissement très tardif (>2 h après horaire souhaité), réveil spontané tardif, sommeil de bonne qualité si aucune contrainte.','Agenda 14 jours, échelle de somnolence adolescente si disponible, recherche dépression/anxiété/TDAH/TSA, absentéisme, écrans tardifs.','Traitement de base : lever fixe y compris week-end, lumière matinale, activité physique en journée, écrans coupés le soir, éviter caféine/sodas/boissons énergisantes.','Mélatonine/luminothérapie : uniquement protocole précis et réévalué, idéalement avis sommeil/pédiatrie, surtout si TND.']));
+  }
+
+  if(comp==='sahos'||c.includes('cSnore')){
+    out+=box('Suspicion SAOS enfant', bullets(['Évoquer si ronflement fréquent, respiration laborieuse, apnées/irrégularités, sueurs nocturnes, sommeil agité, énurésie, hyperactivité/troubles attentionnels, céphalées matinales, réveils difficiles.','Adresser ORL formé pédiatrie : nasofibroscopie, indication PSG, discussion adéno-amygdalectomie selon obstacle/comorbidités.','PSG indispensable avant chirurgie si obésité morbide, malformation craniofaciale/VAS, neuromusculaire, absence hypertrophie adéno-amygdalienne, risque opératoire élevé, enfant <3 ans, prématurité, suspicion SAOS sévère.','Seuils PSG enfant : IAH obstructif >1 pathologique ; 1–4 léger, 5–10 modéré, >10 sévère.'])+rx('À copier : Orientation ORL pédiatrique / sommeil\nSuspicion SAOS enfant : ronflements/apnées ou respiration laborieuse, retentissement diurne/nocturne, croissance/IMC, examen ORL. Demande nasofibroscopie ± PSG selon critères.'));
+  }
+
+  if(comp==='parasomnie'){
+    out+=box('Parasomnies', bullets(['Rassurer si terreurs nocturnes/somnambulisme typiques : épisode de réveil incomplet en sommeil lent profond, amnésie, majoré par dette de sommeil.','Sécuriser environnement : barrières, fenêtres, escaliers, objets dangereux ; éviter réveiller brutalement.','Rechercher dette de sommeil, fièvre, stress, SAOS, médicaments.','Atypie, fréquence élevée, épisodes stéréotypés courts et multiples, régression/développement anormal : neuropédiatrie/EEG.']));
+  }
+
+  if(comp==='somnolence'){
+    out+=box('Somnolence / hypersomnolence enfant', bullets(['Chez le jeune enfant, la somnolence peut se manifester par agitation/hyperactivité.','Éliminer dette de sommeil, retard de phase, SAOS, médicaments/sédatifs, dépression, hypothyroïdie, diabète, pathologie neurologique.','Cataplexie, paralysies du sommeil, hallucinations hypnagogiques, sommeil très allongé, accès irrépressibles : centre du sommeil/neuropédiatrie.','Réapparition de siestes régulières après 6 ans ou somnolence persistante >3 mois : bilan spécialisé si non expliqué.']));
+  }
+
+  if(comp==='mouvements'){
+    out+=box('Mouvements nocturnes / rythmies / SJSR', bullets(['Filmer les épisodes si possible ; préciser horaire, durée, stéréotypie, fréquence, conscience/souvenir.','SJSR possible : besoin de bouger, majoré au repos, soulagé par mouvement, soir/nuit ; rechercher carence martiale et causes douloureuses/neurologiques.','Rythmies simples du sommeil souvent bénignes si développement normal et pas de traumatisme ; surveiller et sécuriser.','Stéréotypies très courtes multiples, régression, somnolence importante : avis neuropédiatrie.']));
+  }
+
+  out+=box('Médicaments chez l’enfant : verrou sécurité', bullets(['Pas de prescription d’hypnotique pour une insomnie comportementale simple.','Mélatonine : pas d’automédication ; à réserver aux indications encadrées, notamment TSA/TND spécifiques ou syndrome de Smith-Magenis selon AMM/RTU/RCP, après échec des mesures d’hygiène et avec suivi médical.','Antihistaminiques sédatifs, benzodiazépines, Z-drugs : à proscrire en routine pédiatrique pour “faire dormir”.','En cas d’échec des mesures comportementales ou contexte complexe : orientation pédiatre/centre du sommeil/psychologue selon profil.']));
+
+  out+=box('Fiche parents courte', `<div class="patient"><strong>Le sommeil de l’enfant s’apprend progressivement.</strong><br>Cette semaine : rituel court et identique chaque soir, pas d’écran dans la chambre, horaire de lever stable, siestes adaptées à l’âge, intervention parentale calme et cohérente. Remplir l’agenda du sommeil chaque matin. En cas de ronflements, pauses respiratoires, douleur, fièvre, cassure de croissance ou somnolence importante : recontacter rapidement.</div>`);
+  $('cOutput').innerHTML=out;
+}
+</script>
+</body>
+</html>

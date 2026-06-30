@@ -20,6 +20,7 @@ const DOMAINES = {
   "Prévention":   {c:"var(--d-prev)",   cb:"#e8f9ee"},
   "Raisonnement": {c:"var(--d-rais)",   cb:"#f1ecfe"},
   "Rhumatologie": {c:"var(--d-rhumato)",cb:"#f7ead9"},
+  "Sommeil":      {c:"var(--d-sommeil)", cb:"#e6e4f7"},
   "Transversal":  {c:"var(--d-trans)",  cb:"#eef1f6"}
 };
 
@@ -144,7 +145,10 @@ const APPS = [
    href:"autisme-mg/index.html"},
   {t:"PediaDose MG", e:"⚖️", dom:"Pédiatrie",
    d:"Calcul des posologies pédiatriques au poids : doses, formes et présentations, avec garde-fous de prescription.",
-   href:"pediadose-mg/index.html"}
+   href:"pediadose-mg/index.html"},
+  {t:"Sommeil MG", e:"🌙", dom:"Sommeil",
+   d:"Aide à la décision devant un trouble du sommeil (adulte et enfant) : insomnie, SAHOS, SJSR, somnolence, sevrage BZD, troubles circadiens — mesures et orientation.",
+   href:"sommeil-mg/index.html"}
 ];
 
 /* ---------- utilitaires ---------- */
