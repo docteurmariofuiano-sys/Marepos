@@ -8,10 +8,11 @@
   const saveDone = () => localStorage.setItem(LS_DONE, JSON.stringify([...done]));
   const saveSrs = () => localStorage.setItem(LS_SRS, JSON.stringify(srs));
 
-  // DATA arriva da data.js -> window.GRAMMAR = [{cat, icon, topics:[{id,title,lead,html,quiz}]}]
+  // DATA da data.js; TRADUZIONI da translations.js
   const DATA = window.GRAMMAR || [];
+  const TRANS = window.TRANSLATIONS || {};
   const flat = [];
-  DATA.forEach((c) => c.topics.forEach((t) => flat.push({ ...t, cat: c.cat, icon: c.icon })));
+  DATA.forEach((c) => c.topics.forEach((t) => flat.push({ ...t, cat: c.cat, icon: c.icon, trans: TRANS[t.id] || [] })));
   const byId = Object.fromEntries(flat.map((t) => [t.id, t]));
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -35,10 +36,16 @@
 
   function dueItems() {
     const now = Date.now(); const out = [];
-    flat.forEach((t) => (t.quiz || []).forEach((q, i) => {
-      const r = srs[`${t.id}:${i}`];
-      if (r && r.due <= now && r.box < BOX_DAYS.length - 1) out.push({ t, q, i });
-    }));
+    flat.forEach((t) => {
+      (t.quiz || []).forEach((q, i) => {
+        const r = srs[`${t.id}:${i}`];
+        if (r && r.due <= now && r.box < BOX_DAYS.length - 1) out.push({ kind: "quiz", t, q, i });
+      });
+      (t.trans || []).forEach((tr, i) => {
+        const r = srs[`tr:${t.id}:${i}`];
+        if (r && r.due <= now && r.box < BOX_DAYS.length - 1) out.push({ kind: "trans", t, tr, i });
+      });
+    });
     return out;
   }
 
@@ -76,6 +83,110 @@
     return b;
   }
 
+  /* ---------- Correttore traduzioni ---------- */
+  function normTrans(s, dExp) {
+    let x = s.toLowerCase().replace(/[’‘]/g, "'");
+    x = x.replace(/won't/g, "will not").replace(/can't/g, "can not").replace(/cannot/g, "can not").replace(/shan't/g, "shall not");
+    x = x.replace(/n't\b/g, " not");
+    x = x.replace(/'m\b/g, " am").replace(/'re\b/g, " are").replace(/'ll\b/g, " will").replace(/'ve\b/g, " have");
+    x = x.replace(/'d\b/g, " " + dExp);
+    x = x.replace(/'/g, "");
+    x = x.replace(/[.,!?;:"«»]/g, " ").replace(/\s+/g, " ").trim();
+    return x;
+  }
+
+  // Damerau-Levenshtein (l'inversione di due lettere adiacenti conta 1)
+  function lev(a, b) {
+    if (a === b) return 0;
+    const m = a.length, n = b.length;
+    if (!m) return n; if (!n) return m;
+    const d = Array.from({ length: m + 1 }, (_, i) => { const r = new Array(n + 1); r[0] = i; return r; });
+    for (let j = 0; j <= n; j++) d[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+          d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+        }
+      }
+    }
+    return d[m][n];
+  }
+
+  // → "correct" | "typo" (piccolo refuso, conta come giusta) | "almost" | "wrong"
+  function checkTranslation(tr, input) {
+    const userVars = [normTrans(input, "would"), normTrans(input, "had")];
+    let best = Infinity;
+    for (const acc of tr.en) {
+      for (const dExp of ["would", "had"]) {
+        const a = normTrans(acc, dExp);
+        for (const u of userVars) {
+          if (u === a) return "correct";
+          best = Math.min(best, lev(u, a));
+        }
+      }
+    }
+    if (best <= 1) return "typo";
+    const th = tr.en[0].length > 14 ? 3 : 2;
+    if (best <= th) return "almost";
+    return "wrong";
+  }
+
+  /* ---------- Blocco traduzione (usato nelle lezioni e nel ripasso) ---------- */
+  function transBlock(t, tr, i, opts = {}) {
+    const qid = `tr:${t.id}:${i}`;
+    const box = el("div", "q");
+    box.appendChild(el("div", "qtext", `${opts.number != null ? opts.number + ". " : ""}🇮🇹 ${tr.it}`));
+    const row = el("div", "trans-row");
+    const inp = el("input", "trans-input");
+    inp.type = "text"; inp.placeholder = "Scrivi la traduzione in inglese…";
+    inp.autocapitalize = "off"; inp.autocomplete = "off"; inp.spellcheck = false;
+    inp.setAttribute("lang", "en");
+    const go = el("button", "btn primary", "Verifica");
+    const fb = el("div", "qfb");
+    const submit = () => {
+      const val = inp.value.trim();
+      if (!val || inp.disabled) return;
+      inp.disabled = true; go.disabled = true;
+      const res = checkTranslation(tr, val);
+      const ok = res === "correct" || res === "typo";
+      const best = tr.en[0];
+      let msg;
+      if (res === "correct") msg = `<span class="ok">✅ Corretto!</span> <b>${best}</b>`;
+      else if (res === "typo") msg = `<span class="ok">✅ Giusta!</span> Occhio all'ortografia: <b>${best}</b>`;
+      else if (res === "almost") msg = `<span class="almost">≈ Ci sei quasi!</span> La forma corretta: <b>${best}</b>`;
+      else msg = `<span class="ko">✗ Non ancora.</span> Risposta: <b>${best}</b>`;
+      if (tr.en.length > 1) msg += `<br><small>Accettate anche: ${tr.en.slice(1).join(" · ")}</small>`;
+      if (tr.note) msg += `<br><small>💡 ${tr.note}</small>`;
+      fb.innerHTML = msg;
+      fb.prepend(speakBtn(best));
+      fb.classList.add("show");
+      updateSRS(qid, ok);
+      if (!ok && !opts.review) {
+        const retry = el("button", "btn retry-btn", "↻ Riprova");
+        retry.addEventListener("click", () => { inp.disabled = false; go.disabled = false; inp.value = ""; fb.classList.remove("show"); retry.remove(); inp.focus(); });
+        box.appendChild(retry);
+      }
+      if (opts.onDone) opts.onDone(ok, box);
+    };
+    go.addEventListener("click", submit);
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+    row.append(inp, go);
+    box.append(row, fb);
+    return box;
+  }
+
+  function renderTrans(t) {
+    const list = t.trans;
+    if (!list || !list.length) return null;
+    const wrap = el("div", "card");
+    wrap.appendChild(el("h3", null, "✍️ Traduci (risposta libera)"));
+    wrap.appendChild(el("p", "trans-hint", "Scrivi la traduzione e premi Invio. Maiuscole, punteggiatura e contrazioni (don't / do not) non contano."));
+    list.forEach((tr, i) => wrap.appendChild(transBlock(t, tr, i, { number: i + 1 })));
+    return wrap;
+  }
+
   /* ---------- Sidebar ---------- */
   function buildSidebar() {
     const nav = $("#nav");
@@ -111,7 +222,7 @@
     $("#plbl").textContent = `${done.size}/${flat.length} • ${pct}%`;
   }
 
-  /* ---------- Quiz rendering (nelle lezioni) ---------- */
+  /* ---------- Quiz a scelta multipla (nelle lezioni) ---------- */
   function renderQuiz(t) {
     const quiz = t.quiz;
     if (!quiz || !quiz.length) return "";
@@ -159,6 +270,8 @@
     c.appendChild(body);
     const quiz = renderQuiz(t);
     if (quiz) c.appendChild(quiz);
+    const trans = renderTrans(t);
+    if (trans) c.appendChild(trans);
 
     // actions
     const actions = el("div", "actions");
@@ -205,8 +318,8 @@
       c.appendChild(el("div", "card",
         `<h3>✅ Niente da ripassare adesso</h3>
          <p>${tracked
-            ? `Nel sistema di ripetizione ci sono <b>${tracked}</b> domande (${mastered} padroneggiate). Le altre torneranno qui alla scadenza: <b>1 → 3 → 7 → 14 → 30 giorni</b>. Se sbagli una domanda, riparte da zero e torna subito.`
-            : `Rispondi ai quiz nelle lezioni: ogni domanda entra nel sistema di ripetizione e viene riproposta qui al momento giusto (subito se l'hai sbagliata, a distanza crescente se l'hai azzeccata).`}</p>`));
+            ? `Nel sistema di ripetizione ci sono <b>${tracked}</b> esercizi (${mastered} padroneggiati). Gli altri torneranno qui alla scadenza: <b>1 → 3 → 7 → 14 → 30 giorni</b>. Se sbagli, l'esercizio riparte da zero e torna subito.`
+            : `Rispondi ai quiz e alle traduzioni nelle lezioni: ogni esercizio entra nel sistema di ripetizione e viene riproposto qui al momento giusto (subito se sbagliato, a distanza crescente se corretto).`}</p>`));
       const b = el("button", "btn primary", "← Torna all'indice");
       b.addEventListener("click", showHome);
       c.appendChild(b);
@@ -226,8 +339,8 @@
         box.innerHTML = "";
         box.appendChild(el("div", "card",
           `<h3>🎯 Risultato: ${score}/${items.length} (${pct}%)</h3>
-           <p>${pct >= 80 ? "Ottimo lavoro! Le domande corrette torneranno tra qualche giorno, a intervalli sempre più lunghi."
-             : pct >= 50 ? "Buon ripasso. Le domande sbagliate sono di nuovo in coda: torneranno subito."
+           <p>${pct >= 80 ? "Ottimo lavoro! Gli esercizi corretti torneranno tra qualche giorno, a intervalli sempre più lunghi."
+             : pct >= 50 ? "Buon ripasso. Gli errori sono di nuovo in coda: torneranno subito."
              : "Non mollare: gli errori verranno riproposti finché non li padroneggi. È così che funziona la memoria a lungo termine."}</p>`));
         const again = dueItems().length;
         const act = el("div", "actions");
@@ -242,32 +355,50 @@
         box.appendChild(act);
         return;
       }
-      const { t, q, i } = items[k];
-      meta.innerHTML = `Domanda <b>${k + 1}</b> di ${items.length} — dalla lezione: <b>${t.title}</b>`;
+      const item = items[k];
+      const t = item.t;
+      const label = item.kind === "trans" ? "traduzione" : "quiz";
+      meta.innerHTML = `Domanda <b>${k + 1}</b> di ${items.length} (${label}) — dalla lezione: <b>${t.title}</b>`;
       box.innerHTML = "";
-      const qc = el("div", "q");
-      qc.appendChild(el("div", "qtext", q.q));
-      const opts = el("div", "opts");
-      const fb = el("div", "qfb", q.explain || "");
-      q.options.forEach((opt, oi) => {
-        const b = el("button", "opt", opt);
-        b.addEventListener("click", () => {
-          [...opts.children].forEach((x) => (x.disabled = true));
-          const ok = oi === q.answer;
-          if (ok) { b.classList.add("correct"); score++; }
-          else { b.classList.add("wrong"); opts.children[q.answer].classList.add("correct"); }
-          updateSRS(`${t.id}:${i}`, ok);
-          fb.prepend(speakBtn(stripHtml(q.options[q.answer])));
-          fb.classList.add("show");
-          const nb = el("button", "btn primary", k < items.length - 1 ? "Avanti ›" : "Vedi risultato");
-          nb.style.marginTop = "10px";
-          nb.addEventListener("click", () => { k++; renderNext(); });
-          qc.appendChild(nb);
+
+      const goNext = () => {
+        const nb = el("button", "btn primary", k < items.length - 1 ? "Avanti ›" : "Vedi risultato");
+        nb.style.marginTop = "10px";
+        nb.addEventListener("click", () => { k++; renderNext(); });
+        return nb;
+      };
+
+      if (item.kind === "trans") {
+        const blk = transBlock(t, item.tr, item.i, {
+          review: true,
+          onDone: (ok, boxEl) => { if (ok) score++; boxEl.appendChild(goNext()); }
         });
-        opts.appendChild(b);
-      });
-      qc.append(opts, fb);
-      box.appendChild(qc);
+        box.appendChild(blk);
+        const inp = blk.querySelector(".trans-input");
+        if (inp) inp.focus();
+      } else {
+        const q = item.q, i = item.i;
+        const qc = el("div", "q");
+        qc.appendChild(el("div", "qtext", q.q));
+        const opts = el("div", "opts");
+        const fb = el("div", "qfb", q.explain || "");
+        q.options.forEach((opt, oi) => {
+          const b = el("button", "opt", opt);
+          b.addEventListener("click", () => {
+            [...opts.children].forEach((x) => (x.disabled = true));
+            const ok = oi === q.answer;
+            if (ok) { b.classList.add("correct"); score++; }
+            else { b.classList.add("wrong"); opts.children[q.answer].classList.add("correct"); }
+            updateSRS(`${t.id}:${i}`, ok);
+            fb.prepend(speakBtn(stripHtml(q.options[q.answer])));
+            fb.classList.add("show");
+            qc.appendChild(goNext());
+          });
+          opts.appendChild(b);
+        });
+        qc.append(opts, fb);
+        box.appendChild(qc);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     renderNext();
@@ -283,13 +414,13 @@
     const due = dueItems().length;
     const hero = el("div", "home-hero",
       `<div class="flag">🇺🇸</div><h2>Grammatica Inglese Americana</h2>
-       <p class="lead">${flat.length} lezioni · spiegazioni in italiano · esempi reali · quiz con ripetizione spaziata.<br>
+       <p class="lead">${flat.length} lezioni · quiz e traduzioni a risposta libera · ripetizione spaziata.<br>
        💡 Clicca su un esempio <i>in corsivo</i> per ascoltarne la pronuncia americana.</p>`);
     c.appendChild(hero);
 
     if (due) {
       const banner = el("div", "card review-banner",
-        `<h3>🔁 Hai <b>${due}</b> domand${due === 1 ? "a" : "e"} da ripassare</h3>
+        `<h3>🔁 Hai <b>${due}</b> esercizi${due === 1 ? "o" : ""} da ripassare</h3>
          <p>Il ripasso al momento giusto è il modo più efficace per fissare la grammatica nella memoria a lungo termine.</p>`);
       const b = el("button", "btn primary", "Inizia il ripasso ›");
       b.addEventListener("click", showReview);
