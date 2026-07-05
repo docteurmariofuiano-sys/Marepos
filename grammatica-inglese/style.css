@@ -36,6 +36,10 @@ a{color:var(--accent2)}
 .progress-fill{height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--good)); transition:width .4s}
 .progress-lbl{font-size:.72rem; color:var(--muted); text-align:right; margin-top:3px}
 .menu-btn{display:none; background:var(--chip); border:1px solid var(--line); color:var(--ink); border-radius:10px; padding:8px 10px; font-size:1rem; cursor:pointer}
+.review-btn{margin-left:auto; border:1px solid var(--line); background:var(--chip); color:var(--ink); border-radius:11px; padding:8px 12px; cursor:pointer; font-weight:600; font-size:.85rem; white-space:nowrap}
+.review-btn:hover{border-color:var(--accent)}
+.review-btn + .progress-wrap{margin-left:0}
+.due-badge{display:none; background:var(--bad); color:#fff; border-radius:99px; padding:1px 7px; font-size:.72rem; margin-left:6px}
 
 /* Layout */
 .layout{display:grid; grid-template-columns:300px 1fr; gap:0; max-width:1180px; margin:0 auto}
@@ -102,6 +106,15 @@ ul.clean li{margin:.25em 0}
 .qfb{margin-top:8px; font-size:.86rem; color:var(--muted); display:none}
 .qfb.show{display:block}
 
+/* Pronuncia + ripasso */
+.speak-btn{background:var(--chip); border:1px solid var(--line); border-radius:8px; cursor:pointer; font-size:.9rem; padding:2px 8px; margin-right:8px; vertical-align:middle}
+.speak-btn:hover{border-color:var(--accent)}
+.content .card i, .content .rule i, .content .err i, .content table.ex i{cursor:pointer}
+.content .card i:hover, .content .rule i:hover, .content .err i:hover, .content table.ex i:hover{text-decoration:underline dotted; color:var(--accent2)}
+.review-meta{color:var(--muted); font-size:.84rem; margin:4px 0 12px}
+.review-banner{border-left:3px solid var(--accent)}
+.reset-btn{margin:28px auto 0; display:block; font-size:.8rem; color:var(--muted)}
+
 /* Buttons */
 .actions{display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 8px}
 .btn{border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:11px; padding:10px 16px; font-size:.9rem; cursor:pointer; font-weight:600}
@@ -132,5 +145,7 @@ ul.clean li{margin:.25em 0}
   .menu-btn{display:inline-block}
   .sidebar{position:fixed; left:0; top:61px; width:290px; background:var(--bg2); z-index:30; transform:translateX(-105%); transition:transform .25s; box-shadow:var(--shadow)}
   .sidebar.open{transform:translateX(0)}
-  .progress-wrap{min-width:120px}
+  .progress-wrap{min-width:100px}
+  .review-btn{padding:7px 9px; font-size:.78rem}
+  .title small{display:none}
 }
