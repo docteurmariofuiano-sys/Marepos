@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammatica Inglese Americana — Corso completo</title>
+<meta name="description" content="Corso completo di grammatica inglese americana in italiano: sostantivi, verbi, tempi, modali, pronomi, aggettivi, avverbi, articoli, preposizioni, congiunzioni. Spiegazioni, esempi reali e quiz interattivi.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button id="menuBtn" class="menu-btn" aria-label="Menu">☰</button>
+    <div id="brand" class="logo" style="cursor:pointer" title="Indice">🇺🇸</div>
+    <div id="brand2" class="title" style="cursor:pointer">
+      <h1>Grammatica Inglese Americana</h1>
+      <small>Corso completo in italiano · esempi reali · quiz</small>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div id="pfill" class="progress-fill"></div></div>
+      <div id="plbl" class="progress-lbl">0/0 • 0%</div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar" class="sidebar">
+    <label class="search">
+      <span aria-hidden="true">🔎</span>
+      <input id="search" type="search" placeholder="Cerca un argomento…" autocomplete="off" aria-label="Cerca">
+    </label>
+    <nav id="nav"></nav>
+  </aside>
+  <main id="content" class="content"></main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
