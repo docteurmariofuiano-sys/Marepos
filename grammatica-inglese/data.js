@@ -47,8 +47,10 @@ window.GRAMMAR = [
     <tr><td><b>Preposition</b></td><td>relazione</td><td>in, on, at, to</td></tr>
     <tr><td><b>Conjunction</b></td><td>collega</td><td>and, but, because</td></tr>
     <tr><td><b>Determiner/Article</b></td><td>introduce il nome</td><td>a, the, this, my</td></tr>
+    <tr><td><b>Interjection</b> (interiezione)</td><td>emozione, esclamazione</td><td>Hi!, Oh no!, Ouch!</td></tr>
     </table></div>
     <div class="rule">💡 In inglese l'<b>ordine delle parole</b> è quasi sempre <b>SVO</b>: <span class="en">Soggetto → Verbo → Oggetto</span>. <i>I (S) love (V) you (O).</i></div>
+    <div class="rule">🔄 La stessa parola può cambiare categoria secondo la posizione: <i>Your <b>book</b> is in my bag</i> (nome) vs <i>Today you <b>book</b> everything online</i> (verbo = prenotare).</div>
     <div class="err"><b>Errore tipico:</b> in italiano puoi omettere il soggetto ("Vado a casa"), in inglese <b>NO</b>: <span class="no">Go home</span> → <span class="ok">I go home</span>. Il soggetto è quasi sempre obbligatorio.</div>`,
     quiz: [
       { q: "In <i>She sings <b>beautifully</b></i>, 'beautifully' è un…", options: ["aggettivo", "avverbio", "verbo"], answer: 1, explain: "Descrive il verbo 'sings' → avverbio (finisce in -ly)." },
@@ -63,7 +65,8 @@ window.GRAMMAR = [
     <tr><td>four, five, twelve</td><td>fourth, fifth, twelfth</td></tr>
     <tr><td>twenty, twenty-one</td><td>twentieth, twenty-first</td></tr>
     </table>
-    <p><b>Centinaia/migliaia:</b> <i>325 = three hundred <b>and</b> twenty-five</i> (in USA la "and" spesso si omette: <i>three hundred twenty-five</i>). <i>2,500 = two thousand five hundred</i>.</p></div>
+    <p><b>Centinaia/migliaia:</b> <i>325 = three hundred <b>and</b> twenty-five</i> (in USA la "and" spesso si omette: <i>three hundred twenty-five</i>). <i>2,500 = two thousand five hundred</i>.</p>
+    <div class="rule">⚠️ <b>hundred / thousand / million</b> restano <b>singolari</b> dopo un numero: <i>four hundred kilometers</i> (400 km). Prendono la -s solo con 'of': <i><b>hundreds of</b> kilometers</i> = centinaia di km. Lo zero ha più nomi: <b>zero</b>, <b>O</b> /oʊ/ (telefono: "five-O-two"), <b>nil</b> (sport).</div></div>
     <div class="card"><h3>🇺🇸 Le date (formato americano)</h3>
     <div class="rule">USA = <b>Mese / Giorno / Anno</b>. <i>07/04/2026</i> = <b>4 luglio</b> (non 7 aprile!).</div>
     <p>Si dice: <i>July <b>fourth</b>, twenty twenty-six</i> oppure <i>July 4th</i>. Il giorno è <b>ordinale</b>.</p>
@@ -74,7 +77,8 @@ window.GRAMMAR = [
     quiz: [
       { q: "Negli USA la data <b>03/08/2026</b> significa:", options: ["3 agosto", "8 marzo", "3 agosto o 8 marzo"], answer: 1, explain: "Mese/giorno/anno → 8 marzo (March 8th)." },
       { q: "L'ordinale di 'five' è:", options: ["fiveth", "fifth", "fifteenth"], answer: 1, explain: "five → fifth (irregolare)." },
-      { q: "2026 si legge spesso:", options: ["twenty twenty-six", "two zero two six", "two thousand and twenty-sixth"], answer: 0, explain: "'twenty twenty-six' è il modo più naturale." }
+      { q: "2026 si legge spesso:", options: ["twenty twenty-six", "two zero two six", "two thousand and twenty-sixth"], answer: 0, explain: "'twenty twenty-six' è il modo più naturale." },
+      { q: "\"Quattrocento chilometri\":", options: ["four hundreds kilometers", "four hundred kilometers", "four hundred of kilometers"], answer: 1, explain: "hundred resta singolare dopo un numero; 'hundreds of' solo per 'centinaia di'." }
     ] }
 ]},
 
@@ -91,13 +95,15 @@ window.GRAMMAR = [
     <tr><td>vocale + y</td><td>+ s</td><td>boy→boys, day→days</td></tr>
     <tr><td>-o (alcuni)</td><td>+ es</td><td>tomato→tomatoes, potato→potatoes</td></tr>
     <tr><td>-f / -fe (molti)</td><td>→ <b>ves</b></td><td>leaf→leaves, knife→knives</td></tr>
-    </table></div>
+    </table>
+    <div class="rule">⚠️ Eccezioni: molte parole in <b>-o</b> "moderne" o straniere prendono solo -s (<i>pianos, photos, kilos, radios, videos, zoos, studios</i>); e alcuni nomi in <b>-f</b> restano regolari: <i>roofs, chiefs, beliefs, cliffs, proofs</i>.</div></div>
     <div class="rule">🔊 <b>Pronuncia della -s finale:</b> /s/ dopo suono sordo (books), /z/ dopo suono sonoro (dogs), /ɪz/ dopo s/sh/ch/x (buses).</div>
     <div class="err"><b>Errore tipico:</b> <span class="no">citys, babys</span> → <span class="ok">cities, babies</span> (consonante + y → ies).</div>`,
     quiz: [
       { q: "Plurale di <b>city</b>:", options: ["citys", "cities", "cityes"], answer: 1, explain: "consonante + y → ies." },
       { q: "Plurale di <b>box</b>:", options: ["boxs", "boxes", "boxies"], answer: 1, explain: "finale in -x → +es." },
-      { q: "Plurale di <b>day</b>:", options: ["daies", "days", "dayes"], answer: 1, explain: "vocale + y → solo +s." }
+      { q: "Plurale di <b>day</b>:", options: ["daies", "days", "dayes"], answer: 1, explain: "vocale + y → solo +s." },
+      { q: "Plurale di <b>photo</b>:", options: ["photoes", "photos", "photoves"], answer: 1, explain: "parole moderne/straniere in -o → solo +s (pianos, kilos, videos…)." }
     ] },
 
   { id: "plurale-irregolare", title: "Plurale Irregolare", lead: "I nomi che non seguono la regola: vanno memorizzati.",
@@ -111,13 +117,17 @@ window.GRAMMAR = [
     <tr><td>tooth</td><td><b>teeth</b></td><td>dente/i</td></tr>
     <tr><td>mouse</td><td><b>mice</b></td><td>topo/i</td></tr>
     <tr><td>person</td><td><b>people</b></td><td>persona/persone</td></tr>
+    <tr><td>goose</td><td><b>geese</b></td><td>oca/oche</td></tr>
+    <tr><td>ox</td><td><b>oxen</b></td><td>bue/buoi</td></tr>
     </table>
-    <p><b>Uguali al singolare:</b> <i>fish, sheep, deer, aircraft, series, species</i>. <i>one sheep → two sheep</i>.</p></div>
+    <p><b>Uguali al singolare:</b> <i>fish, sheep, deer, aircraft, series, species</i>. <i>one sheep → two sheep</i>.</p>
+    <p><b>Plurali latini/greci</b> (frequenti in ambito tecnico-scientifico): <i>crisis→crises, phenomenon→phenomena, datum→data, medium→media, cactus→cacti, nucleus→nuclei</i>.</p></div>
     <div class="err"><b>Errore tipico:</b> <span class="no">persons, childs, foots</span> → <span class="ok">people, children, feet</span>. Inoltre <i>people</i> è già plurale: <span class="no">people is</span> → <span class="ok">people are</span>.</div>`,
     quiz: [
       { q: "Plurale di <b>child</b>:", options: ["childs", "childrens", "children"], answer: 2, explain: "children (irregolare)." },
       { q: "Plurale di <b>foot</b>:", options: ["foots", "feet", "feets"], answer: 1, explain: "foot → feet." },
-      { q: "'People' vuole il verbo:", options: ["is", "are", "was (sing.)"], answer: 1, explain: "people è plurale → are." }
+      { q: "'People' vuole il verbo:", options: ["is", "are", "was (sing.)"], answer: 1, explain: "people è plurale → are." },
+      { q: "Plurale di <b>goose</b>:", options: ["gooses", "geese", "goose"], answer: 1, explain: "goose → geese (come tooth → teeth)." }
     ] },
 
   { id: "numerabili", title: "Numerabili e Non Numerabili", lead: "Countable vs uncountable: some/any, much/many, a lot of.",
@@ -131,7 +141,7 @@ window.GRAMMAR = [
     <tr><td>un po'</td><td>a few</td><td>a little</td></tr>
     <tr><td>articolo 'a'</td><td>✔ a book</td><td>✘ → a piece of / a glass of</td></tr>
     </table>
-    <div class="rule">Per contare un uncountable si usa un contenitore/porzione: <i>a <b>glass of</b> water, a <b>piece of</b> advice, two <b>slices of</b> bread</i>.</div>
+    <div class="rule">Per contare un uncountable si usa un contenitore/porzione: <i>a <b>glass of</b> water, a <b>piece of</b> advice/information/furniture, a <b>bar of</b> chocolate, a <b>slice of</b> cake, two <b>loaves of</b> bread, a <b>cube of</b> ice, a <b>game of</b> cards</i>.</div>
     <div class="err"><b>Errori tipici (false friends grammaticali):</b> <span class="no">an information, informations</span> → <span class="ok">information / a piece of information</span>. Anche <b>news, advice, furniture, money, hair, work</b> sono uncountable: <span class="no">a news, many advices</span> → <span class="ok">a piece of news, a lot of advice</span>.</div>`,
     quiz: [
       { q: "Quale è corretto?", options: ["many informations", "much information", "a information"], answer: 1, explain: "information è uncountable → much / a piece of information." },
@@ -150,11 +160,13 @@ window.GRAMMAR = [
     <tr><td>due possessori</td><td>'s sull'ultimo</td><td>Tom and Amy's car (una sola)</td></tr>
     </table></div>
     <div class="rule">🇺🇸 Con <b>cose/oggetti</b> si preferisce <b>of</b>: <i>the roof <b>of</b> the house</i>, non "the house's roof". Con luoghi/tempo il 's è ok: <i>today's news, New York's museums</i>.</div>
+    <div class="rule">💡 <b>Genitivo ellittico</b> — si omette house/shop/restaurant: <i>She's going to <b>Bob's</b></i> (a casa di Bob), <i>at the <b>doctor's</b></i> (dal medico), <i>a table at <b>Mario's</b></i> (al ristorante). E confronta: <i>Tom <b>and</b> Amy's car</i> = una macchina in comune, vs <i>Tom<b>'s</b> and Amy<b>'s</b> cars</i> = una ciascuno.</div>
     <div class="err"><b>Errore tipico:</b> tradurre "la macchina di John" con <span class="no">the car of John</span> → <span class="ok">John's car</span>. E attenzione: <b>it's</b> = "it is", il possessivo è <b>its</b> (senza apostrofo!).</div>`,
     quiz: [
       { q: "\"La casa dei miei genitori\":", options: ["my parents's house", "my parents' house", "the house of my parents"], answer: 1, explain: "plurale in -s → solo apostrofo." },
       { q: "\"I giocattoli dei bambini\":", options: ["the childrens' toys", "the children's toys", "the toys of children"], answer: 1, explain: "plurale irregolare children → 's." },
-      { q: "Possessivo di 'it':", options: ["it's", "its", "its'"], answer: 1, explain: "its (senza apostrofo). it's = it is." }
+      { q: "Possessivo di 'it':", options: ["it's", "its", "its'"], answer: 1, explain: "its (senza apostrofo). it's = it is." },
+      { q: "\"Vado da Bob\" (a casa sua):", options: ["I'm going to Bob", "I'm going to Bob's", "I'm going at Bob"], answer: 1, explain: "genitivo ellittico: to Bob's (house)." }
     ] }
 ]},
 
@@ -171,7 +183,8 @@ window.GRAMMAR = [
     <tr><td>we/you/they are</td><td>we're</td><td>we aren't</td></tr>
     </table>
     <p><b>Interrogativa:</b> si <b>inverte</b> verbo e soggetto → <i>Are you ready? Is she a doctor?</i></p></div>
-    <div class="rule">💡 In inglese TO BE si usa dove l'italiano usa <b>AVERE</b>: età, fame, sete, paura, ragione. <i>I <b>am</b> 30 (years old), I <b>am</b> hungry, I <b>am</b> cold, I <b>am</b> right.</i></div>
+    <div class="rule">💡 In inglese TO BE si usa dove l'italiano usa <b>AVERE</b>: <i>I <b>am</b> 30 (ho 30 anni), I <b>am</b> hungry (ho fame), I <b>am</b> cold (ho freddo), I <b>am</b> sleepy (ho sonno), I <b>am</b> scared (ho paura), I <b>am</b> in a hurry (ho fretta), I <b>am</b> right (ho ragione).</i></div>
+    <div class="rule">📏 TO BE anche per <b>misure e distanze</b>: <i>How deep is the lake? It<b>'s</b> three meters deep. How far is the hotel? It<b>'s</b> four kilometers from here.</i></div>
     <div class="err"><b>Errori tipici:</b> <span class="no">I have 30 years</span> → <span class="ok">I am 30 years old</span>. <span class="no">I have hungry</span> → <span class="ok">I'm hungry</span>. <span class="no">I have right</span> → <span class="ok">I'm right</span>.</div>`,
     quiz: [
       { q: "\"Ho 25 anni\":", options: ["I have 25 years", "I am 25 years old", "I am 25 years"], answer: 1, explain: "età con TO BE: I am … years old." },
@@ -189,6 +202,7 @@ window.GRAMMAR = [
     <tr><td>domanda</td><td>Do you have…?</td><td>Have you got…?</td></tr>
     </table></div>
     <div class="rule">🇺🇸 Americano tipico: <b>Do you have…?</b> / <b>I don't have…</b> (con l'ausiliare DO). "Have got" è più britannico ma capito ovunque.</div>
+    <div class="rule">➡️ Quando <b>have (got)</b> è seguito da <b>to</b> significa <b>dovere</b>: <i>I've got to go</i> = devo andare (colloquiale USA: <i>I gotta go</i>). Approfondito nella lezione "To Have To e Must".</div>
     <div class="card"><h3>Have per attività (non possesso)</h3>
     <p><i>have breakfast/lunch, have a shower, have a party, have a good time</i> → qui NON si usa "got".</p></div>
     <div class="err"><b>Errore tipico:</b> <span class="no">Have you a car?</span> (arcaico) → <span class="ok">Do you have a car?</span></div>`,
@@ -243,13 +257,17 @@ window.GRAMMAR = [
     <tr><td>-e muta: togli e</td><td>make → making, write → writing</td></tr>
     <tr><td>1 vocale+1 cons. (accento)</td><td>run → running, sit → sitting</td></tr>
     <tr><td>-ie → ying</td><td>die → dying, lie → lying</td></tr>
+    <tr><td>-c → cking</td><td>picnic → picnicking, mimic → mimicking</td></tr>
+    <tr><td>-w / -x: NON raddoppiano</td><td>bow → bowing, box → boxing</td></tr>
     </table></div>
     <div class="rule">🕐 <b>Quando:</b> azione in corso ora (<i>I'm eating</i>), periodo temporaneo (<i>I'm living in Rome this year</i>), futuro programmato (<i>I'm meeting John tomorrow</i>). Spesso con <b>now, right now, at the moment, today</b>.</div>
+    <div class="rule">😤 <b>always + progressive</b> = lamentela/fastidio per un'abitudine: <i>She <b>is always complaining</b>!</i> (si lamenta in continuazione!), <i>He <b>is always losing</b> his keys!</i></div>
     <div class="err"><b>Errore tipico:</b> dimenticare il verbo <b>be</b> → <span class="no">I working now</span> → <span class="ok">I'm working now</span>. Serve SEMPRE am/is/are.</div>`,
     quiz: [
       { q: "Forma -ing di 'run':", options: ["runing", "running", "runnying"], answer: 1, explain: "raddoppia la n." },
       { q: "\"Sto scrivendo una mail\":", options: ["I writing an email", "I'm writing an email", "I write an email now"], answer: 1, explain: "am + writing." },
-      { q: "-ing di 'make':", options: ["makeing", "making", "makking"], answer: 1, explain: "-e muta cade." }
+      { q: "-ing di 'make':", options: ["makeing", "making", "makking"], answer: 1, explain: "-e muta cade." },
+      { q: "-ing di 'box':", options: ["boxxing", "boxing", "boxeing"], answer: 1, explain: "-w e -x non raddoppiano mai (bowing, boxing)." }
     ] },
 
   { id: "present-progressive-neg", title: "Present Progressive: interrogativa e negativa", lead: "Si usa solo be (niente do!).",
@@ -275,7 +293,7 @@ window.GRAMMAR = [
     <tr><td>I work in Milan</td><td>I'm working from home today</td></tr>
     <tr><td>He plays tennis (in generale)</td><td>He's playing tennis now</td></tr>
     </table></div>
-    <div class="rule">🚫 <b>Verbi di stato (stative):</b> NON si usano al progressive perché indicano stati, non azioni: <b>like, love, want, know, understand, believe, need, prefer, hate, seem, own, mean</b>. → <i>I <b>know</b> the answer</i> (non "I'm knowing").</div>
+    <div class="rule">🚫 <b>Verbi di stato (stative):</b> NON si usano al progressive perché indicano stati, non azioni: <b>like, love, want, know, understand, believe, need, prefer, hate, seem, own, mean</b>. → <i>I <b>know</b> the answer</i> (non "I'm knowing"). Con i verbi di percezione, per dire "adesso" si usa <b>can</b>: <i><b>Can</b> you hear me?</i> = mi senti / mi stai sentendo?</div>
     <div class="err"><b>Errore tipico:</b> <span class="no">I am wanting a coffee / I'm knowing him</span> → <span class="ok">I want a coffee / I know him</span>. (<i>"I'm loving it"</i> è pubblicità, non standard.)</div>`,
     quiz: [
       { q: "\"Capisco ora\":", options: ["I'm understanding now", "I understand now", "I understanding now"], answer: 1, explain: "understand è stativo → simple present." },
@@ -316,13 +334,15 @@ window.GRAMMAR = [
     <tr><td>eat</td><td>ate</td><td>eaten</td></tr>
     <tr><td>get</td><td>got</td><td>gotten (USA)</td></tr>
     <tr><td>buy</td><td>bought</td><td>bought</td></tr>
-    </table></div>
+    </table>
+    <p><b>3 famiglie per memorizzarli:</b> ① <b>invariabili</b>: cut-cut-cut, cost, hit, put; ② <b>cambio di vocale</b>: come→came, drink→drank, sit→sat, begin→began, win→won; ③ <b>cambio completo</b>: bring→brought, catch→caught, teach→taught, think→thought, find→found, tell→told, leave→left, feel→felt, choose→chose. Curiosità: <i>read→read→read</i> — si scrive uguale ma al passato si pronuncia "red"!</p></div>
     <div class="rule">🇺🇸 Il participio di <b>get</b> in America è <b>gotten</b> (UK: got). <i>I've gotten better.</i></div>
     <div class="err"><b>Errore tipico:</b> applicare -ed agli irregolari → <span class="no">goed, buyed, taked</span> → <span class="ok">went, bought, took</span>.</div>`,
     quiz: [
       { q: "Passato di 'go':", options: ["goed", "went", "gone"], answer: 1, explain: "went (gone è il participio)." },
       { q: "Passato di 'buy':", options: ["buyed", "bought", "brought"], answer: 1, explain: "bought (brought = bring)." },
-      { q: "Participio USA di 'get':", options: ["got", "getted", "gotten"], answer: 2, explain: "USA: gotten." }
+      { q: "Participio USA di 'get':", options: ["got", "getted", "gotten"], answer: 2, explain: "USA: gotten." },
+      { q: "Passato di 'teach':", options: ["teached", "taught", "tought"], answer: 1, explain: "teach → taught (famiglia -ought/-aught: bring→brought, catch→caught)." }
     ] },
 
   { id: "past-simple-neg", title: "Simple Past: interrogativa e negativa", lead: "L'ausiliare DID: il passato torna alla forma base.",
@@ -383,12 +403,15 @@ window.GRAMMAR = [
     <tr><td>already</td><td>già (afferm.)</td><td>I've <b>already</b> done it</td></tr>
     <tr><td>yet</td><td>ancora/già (neg./dom., a fine frase)</td><td>Have you finished <b>yet</b>? Not <b>yet</b>.</td></tr>
     <tr><td>for / since</td><td>durata / punto d'inizio</td><td>for 3 years / since Monday</td></tr>
+    <tr><td>still</td><td>ancora (neg., impazienza)</td><td>Mary <b>still</b> hasn't tidied her room!</td></tr>
     </table>
+    <div class="rule">✈️ <b>been vs gone</b> — distinzione classica: <i>He <b>has been</b> to Paris</i> = c'è stato (ed è tornato); <i>He <b>has gone</b> to Paris</i> = ci è andato (è ancora là). Utile anche: <i>It's the second time I<b>'ve visited</b> Paris.</i></div>
     <div class="err"><b>Errore tipico:</b> confondere <b>for</b> (durata: for two hours) e <b>since</b> (da un punto preciso: since 2020). <span class="no">since two hours</span> → <span class="ok">for two hours</span>.</div>`,
     quiz: [
       { q: "\"Vivo qui da 5 anni\":", options: ["I live here since 5 years", "I've lived here for 5 years", "I've lived here since 5 years"], answer: 1, explain: "durata → for; azione che continua → present perfect." },
       { q: "\"Hai mai mangiato sushi?\":", options: ["Did you ever eat sushi?", "Have you ever eaten sushi?", "Have you ever ate sushi?"], answer: 1, explain: "esperienza → present perfect + ever + participio (eaten)." },
-      { q: "'Not ___' = non ancora:", options: ["already", "yet", "just"], answer: 1, explain: "not yet." }
+      { q: "'Not ___' = non ancora:", options: ["already", "yet", "just"], answer: 1, explain: "not yet." },
+      { q: "\"Lisa è a casa ora. ___ in Australia\":", options: ["She has gone", "She has been", "She is been"], answer: 1, explain: "has been = c'è stata ed è tornata; has gone = è ancora là." }
     ] },
 
   { id: "past-vs-perfect", title: "Simple Past o Present Perfect?", lead: "La distinzione più difficile per gli italiani (che usano il passato prossimo per tutto).",
@@ -400,7 +423,8 @@ window.GRAMMAR = [
     <tr><td>I went to Paris <b>in 2019</b></td><td>I've been to Paris (nella vita)</td></tr>
     <tr><td>with: yesterday, ago, last week, in 2020, when</td><td>with: ever, never, just, already, yet, so far, recently</td></tr>
     </table></div>
-    <div class="rule">🔑 Se dici <b>QUANDO</b> (yesterday, last year, two hours ago) → <b>Simple Past</b>. Se il momento non è indicato o continua fino a ora → <b>Present Perfect</b>.</div>
+    <div class="rule">🔑 Se dici <b>QUANDO</b> (yesterday, last year, two hours ago) → <b>Simple Past</b>. Se il momento non è indicato o continua fino a ora → <b>Present Perfect</b>.<br>
+    Confronta: <i>Martin <b>has crashed</b> his car again</i> (notizia fresca, effetti ora) vs <i>Martin <b>crashed</b> his car last year</i> (fatto archiviato).</div>
     <div class="err"><b>Errore tipico italiano:</b> "Ieri ho mangiato" → l'italiano usa il passato prossimo, ma in inglese con "yesterday" serve il simple past: <span class="no">Yesterday I have eaten</span> → <span class="ok">Yesterday I ate</span>.</div>`,
     quiz: [
       { q: "\"L'ho vista ieri\":", options: ["I've seen her yesterday", "I saw her yesterday", "I seen her yesterday"], answer: 1, explain: "yesterday → simple past." },
@@ -416,6 +440,7 @@ window.GRAMMAR = [
     <tr><td>I've been studying <b>for 3 hours</b></td><td>durata dell'attività (ancora in corso)</td></tr>
     <tr><td>It's been raining all day</td><td>continuità</td></tr>
     <tr><td>You're sweaty — have you been running?</td><td>effetto visibile ora</td></tr>
+    <tr><td>Let's relax — we've been studying all day!</td><td>lamentela sulla durata</td></tr>
     </table></div>
     <div class="rule">Perfect Simple vs Progressive: <i>I've read this book</i> (risultato: finito) vs <i>I've been reading this book</i> (attività in corso, magari non finita).</div>
     <div class="err"><b>Ricorda:</b> i verbi stativi (know, be, like) NON vanno al progressive → <span class="no">I've been knowing…</span> → <span class="ok">I've known him for years</span>.</div>`,
@@ -448,13 +473,15 @@ window.GRAMMAR = [
     <tr><td>previsione con prove ora</td><td>Look at those clouds — it<b>'s going to</b> rain</td></tr>
     </table></div>
     <div class="rule">🇺🇸 Nel parlato "going to" diventa <b>"gonna"</b>: <i>I'm gonna call her.</i> (informale, solo orale).</div>
+    <div class="rule">🕰️ <b>was/were going to</b> = intenzione NON realizzata ("stavo per…"): <i>I <b>was going to</b> visit him, but my car broke down.</i> Pericolo imminente: <i>Run! The bomb<b>'s going to</b> explode!</i></div>
     <div class="card"><h3>Will vs Going to</h3>
     <p><b>Decisione ora</b> (will): <i>— I'm cold. — I'll close the window.</i><br>
     <b>Piano già fatto</b> (going to): <i>I'm going to visit Rome next month</i> (già deciso).</p></div>
     <div class="err"><b>Errore tipico:</b> <span class="no">I'm going to buy → dimenticare 'to'</span>: <span class="ok">going <b>to</b> + verbo base</span>.</div>`,
     quiz: [
       { q: "\"Ho deciso: stasera studio\":", options: ["I will study tonight (decisione ora)", "I'm going to study tonight", "I study tonight"], answer: 1, explain: "piano già deciso → going to." },
-      { q: "\"Guarda le nuvole, pioverà\":", options: ["it will rain", "it's going to rain", "it rains"], answer: 1, explain: "prova evidente ora → going to." }
+      { q: "\"Guarda le nuvole, pioverà\":", options: ["it will rain", "it's going to rain", "it rains"], answer: 1, explain: "prova evidente ora → going to." },
+      { q: "\"Stavo per chiamarti, ma…\":", options: ["I would call you, but…", "I was going to call you, but…", "I went to call you, but…"], answer: 1, explain: "was going to = intenzione non realizzata." }
     ] },
 
   { id: "futuro-4-modi", title: "Futuro: 4 Modi per esprimerlo", lead: "will, going to, present continuous, present simple: quando usarli.",
@@ -470,7 +497,8 @@ window.GRAMMAR = [
     <div class="err"><b>Errore tipico:</b> usare 'will' per un appuntamento già fissato → meglio <span class="ok">I'm having dinner with Sara tomorrow</span> (present continuous) che "I will have dinner…".</div>`,
     quiz: [
       { q: "\"Il film inizia alle 8\" (orario):", options: ["The movie will start at 8", "The movie starts at 8", "The movie is going to start at 8"], answer: 1, explain: "orario ufficiale → present simple." },
-      { q: "\"Domani vedo il dentista\" (appuntamento):", options: ["I'll see the dentist tomorrow", "I'm seeing the dentist tomorrow", "I see the dentist tomorrow"], answer: 1, explain: "appuntamento fissato → present continuous." }
+      { q: "\"Domani vedo il dentista\" (appuntamento):", options: ["I'll see the dentist tomorrow", "I'm seeing the dentist tomorrow", "I see the dentist tomorrow"], answer: 1, explain: "appuntamento fissato → present continuous." },
+      { q: "\"Voliamo a Parigi lunedì\" (già prenotato):", options: ["We fly to Paris on Monday (sempre)", "We're flying to Paris on Monday", "We will to fly to Paris on Monday"], answer: 1, explain: "programma personale fissato → present continuous." }
     ] },
 
   { id: "past-perfect", title: "Past Perfect", lead: "had + participio: il 'trapassato', un passato prima di un altro passato.",
@@ -482,7 +510,8 @@ window.GRAMMAR = [
     <div class="err"><b>Errore tipico:</b> usare due simple past quando serve chiarire l'ordine → <span class="no">When I arrived, the train left</span> (sembra dopo!) → <span class="ok">…the train had left</span> (era già partito).</div>`,
     quiz: [
       { q: "\"Quando arrivai, lui era già uscito\":", options: ["When I arrived, he already left", "When I arrived, he had already left", "When I had arrived, he left"], answer: 1, explain: "azione anteriore → past perfect (had left)." },
-      { q: "Forma corretta del past perfect:", options: ["I have gone", "I had gone", "I did gone"], answer: 1, explain: "had + participio." }
+      { q: "Forma corretta del past perfect:", options: ["I have gone", "I had gone", "I did gone"], answer: 1, explain: "had + participio." },
+      { q: "\"Quando Mark arrivò, Susan aveva già mangiato\":", options: ["Susan already ate when Mark arrived", "Susan had already eaten when Mark arrived", "Susan has already eaten when Mark arrived"], answer: 1, explain: "azione anteriore → had already eaten." }
     ] },
 
   { id: "past-perfect-progressive", title: "Past Perfect Progressive", lead: "had been + -ing: durata di un'azione fino a un punto del passato.",
@@ -701,12 +730,15 @@ window.GRAMMAR = [
     <tr><td><b>will</b></td><td>futuro, offerte, promesse</td><td>I'll help you</td></tr>
     <tr><td><b>shall</b></td><td>proposte (I/we), formale</td><td>Shall we go?</td></tr>
     </table></div>
-    <div class="rule">🇺🇸 In America <b>can I</b> è normale per chiedere permesso; <b>shall</b> è raro (solo "Shall we…?" per proposte). Per abilità passata: <b>could</b> o <b>was able to</b>.</div>
+    <div class="rule">🇺🇸 In America <b>can I</b> è normale per chiedere permesso; <b>shall</b> è raro (solo "Shall we…?" per proposte).</div>
+    <div class="rule">📊 <b>may</b> = probabile (~70%), <b>might</b> = più remoto (~40%): <i>It may rain / It might even snow.</i> Non confondere <b>may be</b> (verbo: <i>John <b>may be</b> ill</i>) con <b>maybe</b> (avverbio a inizio frase: <i><b>Maybe</b> John is ill</i>).</div>
+    <div class="rule">🔧 'can' non ha infinito né futuro → si usa <b>be able to</b>: <i>I'll <b>be able to</b> come.</i> Al passato: <b>could</b> = capacità generale (<i>I could run fast</i>), <b>was able to</b> = riuscita in un'occasione precisa (<i>I <b>was able to</b> win the race</i>).</div>
     <div class="err"><b>Errore tipico:</b> <span class="no">I can to swim / She cans swim / Can you to help?</span> → <span class="ok">I can swim / She can swim / Can you help?</span> (mai 'to', mai -s).</div>`,
     quiz: [
       { q: "\"So nuotare\":", options: ["I can to swim", "I can swim", "I cans swim"], answer: 1, explain: "can + base, senza to né -s." },
       { q: "Proposta \"Andiamo?\":", options: ["Shall we go?", "Will we go?", "Do we go?"], answer: 0, explain: "Shall we…? per proposte." },
-      { q: "Richiesta educata:", options: ["Can you helping me?", "Could you help me?", "Could you to help me?"], answer: 1, explain: "could + base." }
+      { q: "Richiesta educata:", options: ["Can you helping me?", "Could you help me?", "Could you to help me?"], answer: 1, explain: "could + base." },
+      { q: "\"Forse John è malato\":", options: ["John maybe ill", "Maybe John is ill", "John may ill"], answer: 1, explain: "maybe (avverbio) a inizio frase; equivalente: John may be ill." }
     ] },
 
   { id: "have-to-must", title: "To Have To e Must", lead: "Obbligo e necessità; e la trappola di mustn't vs don't have to.",
@@ -723,11 +755,13 @@ window.GRAMMAR = [
     <tr><td><b>don't have to</b></td><td>NON necessità: non è necessario (ma puoi)</td></tr>
     </table>
     <p><i>You <b>mustn't</b> smoke here</i> (vietato) ≠ <i>You <b>don't have to</b> come</i> (non sei obbligato).</p></div>
+    <div class="rule">🇺🇸 Colloquiale: <b>have got to / gotta</b> = have to → <i>It's late, I've got to go / I gotta go.</i> Passato in domanda: <i><b>Did</b> you <b>have to</b> pay? — No, we didn't have to. It was free!</i></div>
     <div class="err"><b>Errore tipico italiano:</b> tradurre "non devi" sempre con mustn't. "Non devi venire" (non è necessario) = <span class="ok">you don't have to come</span>, non "you mustn't come" (che significa "ti è vietato").</div>`,
     quiz: [
       { q: "\"Ho dovuto lavorare ieri\":", options: ["I must work yesterday", "I had to work yesterday", "I musted work yesterday"], answer: 1, explain: "must non ha passato → had to." },
       { q: "\"È vietato fumare qui\":", options: ["You don't have to smoke here", "You mustn't smoke here", "You haven't to smoke here"], answer: 1, explain: "divieto → mustn't." },
-      { q: "\"Non sei obbligato a venire\":", options: ["You mustn't come", "You don't have to come", "You can't come"], answer: 1, explain: "assenza di obbligo → don't have to." }
+      { q: "\"Non sei obbligato a venire\":", options: ["You mustn't come", "You don't have to come", "You can't come"], answer: 1, explain: "assenza di obbligo → don't have to." },
+      { q: "\"Hai dovuto pagare?\":", options: ["Must you pay?", "Did you have to pay?", "Had you to pay?"], answer: 1, explain: "passato di must → did you have to." }
     ] }
 ]},
 
@@ -746,10 +780,12 @@ window.GRAMMAR = [
     </table>
     <p>Soggetto <b>prima</b> del verbo (<i><b>She</b> loves him</i>); complemento <b>dopo</b> verbo o preposizione (<i>He loves <b>her</b>; give it to <b>me</b></i>).</p></div>
     <div class="rule">💡 <b>it</b> per cose, animali generici, tempo/meteo (<i>It's raining, It's 5 o'clock</i>). <b>they/them</b> ormai usato anche come singolare neutro (<i>Someone left <b>their</b> bag</i>).</div>
+    <div class="rule">📦 Con give/send/pass: se il complemento oggetto è un <b>pronome</b>, precede il destinatario con 'to': <i>I gave the flowers to her → I gave <b>them to her</b>.</i></div>
     <div class="err"><b>Errore tipico:</b> <span class="no">Me and John went / Between you and I</span> → <span class="ok">John and I went / between you and me</span> (dopo preposizione: complemento).</div>`,
     quiz: [
       { q: "\"Lei ama lui\":", options: ["Her loves he", "She loves him", "She loves he"], answer: 1, explain: "soggetto She, complemento him." },
-      { q: "\"Dallo a me\":", options: ["Give it to I", "Give it to me", "Give it me to"], answer: 1, explain: "dopo preposizione → me." }
+      { q: "\"Dallo a me\":", options: ["Give it to I", "Give it to me", "Give it me to"], answer: 1, explain: "dopo preposizione → me." },
+      { q: "\"Li ho dati a lei\":", options: ["I gave her them", "I gave them to her", "I gave to her them"], answer: 1, explain: "oggetto pronome prima del destinatario: them to her." }
     ] },
 
   { id: "pronomi-riflessivi", title: "Pronomi Riflessivi", lead: "myself, yourself…: quando l'azione ricade sul soggetto.",
@@ -795,7 +831,7 @@ window.GRAMMAR = [
     <tr><td>C'è / ci sono</td><td><b>There is / there are</b></td></tr>
     <tr><td>Piove / fa caldo</td><td><b>It</b>'s raining / It's hot</td></tr>
     </table></div>
-    <div class="rule">💬 <b>you</b> generico è il più naturale in USA. <b>one</b> è molto formale. Per esistenza: <b>there is/are</b>; per meteo/tempo: <b>it</b>.</div>
+    <div class="rule">💬 <b>you</b> generico è il più naturale in USA. <b>one</b> è molto formale. Per esistenza: <b>there is/are</b>; per meteo/tempo: <b>it</b>. Anche <b>we</b> generico quando ci si include: <i><b>We</b> eat a lot of pasta in Italy</i> (da noi si mangia molta pasta).</div>
     <div class="err"><b>Errore tipico:</b> tradurre "c'è" con "it is" → <span class="no">It is a problem</span> (= "è un problema") vs <span class="ok">There is a problem</span> (= "c'è un problema").</div>`,
     quiz: [
       { q: "\"C'è un errore\":", options: ["It is an error", "There is an error", "Is an error"], answer: 1, explain: "esistenza → there is." },
@@ -836,11 +872,13 @@ window.GRAMMAR = [
     </table>
     <p><i>This is <b>my</b> car → This car is <b>mine</b>.</i></p></div>
     <div class="rule">⚠️ Il possessivo <b>concorda con il possessore</b>, non con l'oggetto: <i><b>his</b> mother</i> (la madre di lui), <i><b>her</b> father</i> (il padre di lei). E NON si mette l'articolo: <span class="no">the my book</span>.</div>
+    <div class="rule">➕ <b>a friend of mine/yours</b> = un mio/tuo amico: <i>I saw a friend of <b>yours</b>.</i> <b>of one's own</b> = tutto proprio: <i>She has a car of her <b>own</b>.</i> Parafrasi equivalenti: <i>The car is <b>mine</b> = It's <b>my</b> car = The car <b>belongs to</b> me.</i></div>
     <div class="err"><b>Errori tipici:</b> <span class="no">the my car</span> → <span class="ok">my car</span>. <span class="no">her father = il padre di lei? spesso confuso con his</span>. E <b>its</b> (possessivo) ≠ <b>it's</b> (= it is).</div>`,
     quiz: [
       { q: "\"La mia macchina\":", options: ["the my car", "my car", "mine car"], answer: 1, explain: "niente articolo; 'mine' è pronome." },
       { q: "\"Questo libro è mio\":", options: ["This book is my", "This book is mine", "This is book mine"], answer: 1, explain: "pronome possessivo → mine." },
-      { q: "\"Il padre di lei\":", options: ["his father", "her father", "hers father"], answer: 1, explain: "possessore femminile → her." }
+      { q: "\"Il padre di lei\":", options: ["his father", "her father", "hers father"], answer: 1, explain: "possessore femminile → her." },
+      { q: "\"Un mio amico\":", options: ["a my friend", "a friend of mine", "one my friend"], answer: 1, explain: "doppio genitivo: a friend of mine/yours/hers." }
     ] },
 
   { id: "interrogativi", title: "Aggettivi e Pronomi Interrogativi", lead: "what, which, who, whose, whom.",
@@ -930,6 +968,9 @@ window.GRAMMAR = [
     <tr><td>quick</td><td>quick<b>ly</b></td></tr>
     <tr><td>easy</td><td>eas<b>ily</b> (y→ily)</td></tr>
     <tr><td>careful</td><td>careful<b>ly</b></td></tr>
+    <tr><td>possible (-le)</td><td>possib<b>ly</b>, terrib<b>ly</b></td></tr>
+    <tr><td>scientific (-ic)</td><td>scientific<b>ally</b></td></tr>
+    <tr><td>true (eccezione)</td><td>tru<b>ly</b> (anche whole → wholly)</td></tr>
     </table>
     <p><b>Irregolari:</b> good → <b>well</b>; fast → fast; hard → hard (hardly = a malapena!); late → late.</p></div>
     <div class="rule">💡 L'aggettivo descrive un <b>nome</b> (a <b>careful</b> driver); l'avverbio descrive un <b>verbo</b> (he drives <b>carefully</b>).</div>
@@ -937,7 +978,8 @@ window.GRAMMAR = [
     quiz: [
       { q: "\"Canta bene\":", options: ["She sings good", "She sings well", "She sings goodly"], answer: 1, explain: "avverbio di good → well." },
       { q: "Avverbio di 'easy':", options: ["easyly", "easily", "easly"], answer: 1, explain: "y → ily." },
-      { q: "\"Lavora duramente\":", options: ["He works hardly", "He works hard", "He works hardly-ly"], answer: 1, explain: "hard = duramente; hardly = a malapena." }
+      { q: "\"Lavora duramente\":", options: ["He works hardly", "He works hard", "He works hardly-ly"], answer: 1, explain: "hard = duramente; hardly = a malapena." },
+      { q: "Avverbio di 'possible':", options: ["possiblely", "possibly", "possibley"], answer: 1, explain: "-le → -ly: possibly, terribly." }
     ] },
 
   { id: "avverbi-frequenza", title: "Avverbi di Frequenza", lead: "always, usually, often, never: dove si mettono nella frase.",
@@ -949,6 +991,7 @@ window.GRAMMAR = [
     <i>I <b>always</b> drink coffee</i> (prima del verbo)<br>
     <i>She is <b>always</b> late</i> (dopo 'be')<br>
     <i>I have <b>never</b> been there</i> (dopo il primo ausiliare)</div></div>
+    <div class="rule">💡 <b>ever</b> non è negativo: si usa in domande e frasi tipo <i>the best movie I've <b>ever</b> seen</i>. <b>never</b> è già negativo e nei tempi composti va dopo il primo ausiliare: <i>I would <b>never</b> have done that!</i></div>
     <div class="err"><b>Errori tipici:</b> mettere l'avverbio a fine frase (all'italiana) → <span class="no">I drink always coffee / I go never</span> → <span class="ok">I always drink coffee / I never go</span>. <b>never</b> è già negativo: <span class="no">I don't never go</span> → <span class="ok">I never go</span>.</div>`,
     quiz: [
       { q: "\"Bevo sempre caffè\":", options: ["I drink always coffee", "I always drink coffee", "Always I drink coffee"], answer: 1, explain: "prima del verbo principale." },
@@ -982,7 +1025,7 @@ window.GRAMMAR = [
     <tr><td>concessione</td><td>although, even though, though</td><td><b>Although</b> it rained, we went</td></tr>
     <tr><td>condizione</td><td>if, unless, as long as</td><td>I'll help <b>unless</b> I'm busy</td></tr>
     </table></div>
-    <div class="rule">⚠️ Dopo <b>when/as soon as/until</b> riferiti al futuro → si usa il <b>presente</b> (non will): <i>I'll call you when I <b>arrive</b></i>. <b>unless</b> = "if not".</div>
+    <div class="rule">⚠️ Dopo <b>when/as soon as/until</b> riferiti al futuro → si usa il <b>presente</b> (non will): <i>I'll call you when I <b>arrive</b></i>. Per sottolineare che la prima azione sarà <b>conclusa</b>: present perfect → <i>When I <b>have finished</b>, I'll call you.</i> <b>unless</b> = "if not".</div>
     <div class="err"><b>Errori tipici:</b> <span class="no">When I will arrive…</span> → <span class="ok">When I arrive…</span>. E "although" + "but" insieme: <span class="no">Although it rained, but we went</span> → <span class="ok">Although it rained, we went</span> (uno solo).</div>`,
     quiz: [
       { q: "\"Ti chiamo quando arrivo\":", options: ["I'll call you when I'll arrive", "I'll call you when I arrive", "I call you when I arrive"], answer: 1, explain: "dopo 'when' futuro → presente." },
@@ -1005,11 +1048,13 @@ window.GRAMMAR = [
     <div class="card"><h3>∅ nessun articolo (zero article)</h3>
     <p>Con <b>plurali/uncountable in senso generale</b> e molti nomi: <i>I like <b>dogs</b>. <b>Water</b> is essential. <b>Breakfast</b> is ready. She's at <b>school/home/work</b>. I play <b>tennis</b>.</i></p></div>
     <div class="rule">🔑 Conta il <b>suono</b>, non la lettera: <i>an hour</i> (h muta), <i>a university</i> (suono /juː/), <i>an MBA</i> (em…).</div>
+    <div class="rule">➕ Altri usi: <b>the + cognome plurale</b> = la famiglia (<i><b>the Smiths</b> are moving</i> = gli Smith); niente articolo con le <b>lingue</b> (<i>Do you speak Italian?</i>) e con <b>church/school/bed</b> nella loro funzione (<i>I go to church</i> = a messa); <b>a + nome proprio</b> = "un certo" (<i><b>A</b> Mr. Brown called for you</i>).</div>
     <div class="err"><b>Errori tipici italiani:</b> <span class="no">I like the dogs</span> (generale) → <span class="ok">I like dogs</span>. <span class="no">I go to the bed / to the home</span> → <span class="ok">go to bed / go home</span>. <span class="no">She is doctor</span> → <span class="ok">She is <b>a</b> doctor</span> (professioni con a/an!).</div>`,
     quiz: [
       { q: "\"Mi piacciono i cani\" (in generale):", options: ["I like the dogs", "I like dogs", "I like a dogs"], answer: 1, explain: "plurale generale → nessun articolo." },
       { q: "Corretto:", options: ["a hour", "an hour", "the hour (sempre)"], answer: 1, explain: "h muta → suono vocalico → an." },
-      { q: "\"È un medico\":", options: ["She is doctor", "She is a doctor", "She is the doctor (generale)"], answer: 1, explain: "professioni → a/an." }
+      { q: "\"È un medico\":", options: ["She is doctor", "She is a doctor", "She is the doctor (generale)"], answer: 1, explain: "professioni → a/an." },
+      { q: "\"Gli Smith si trasferiscono\":", options: ["Smiths are moving", "The Smiths are moving", "The Smith are moving"], answer: 1, explain: "the + cognome al plurale = la famiglia." }
     ] }
 ]},
 
