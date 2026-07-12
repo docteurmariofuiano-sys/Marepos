@@ -281,6 +281,34 @@
       .summary-box { border: 0; min-height: auto; }
       body { background: #fff; color: #000; }
     }
+
+    /* ---------- ⑪ Exemple d'examen au cabinet (visionneuse) ---------- */
+    .atelier-viewer { margin-top: 14px; }
+    .atelier-stage { position: relative; display: flex; align-items: center; gap: 8px; }
+    .atelier-stage img {
+      flex: 1; min-width: 0; width: 100%; height: auto; display: block;
+      border: 1px solid var(--line, #d9e0e8); border-radius: 12px; cursor: pointer;
+      box-shadow: 0 6px 22px rgba(15, 30, 50, .10);
+    }
+    .atelier-stage button {
+      flex: none; width: 42px; height: 42px; border-radius: 50%;
+      border: 1px solid var(--line, #d9e0e8); background: var(--card, #fff);
+      color: inherit; font-size: 22px; line-height: 1; cursor: pointer;
+    }
+    .atelier-stage button:hover { border-color: var(--accent, #1f6feb); color: var(--accent, #1f6feb); }
+    .atelier-stage button:disabled { opacity: .35; cursor: default; }
+    .atelier-bar { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+    .atelier-bar #atelierCount { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .atelier-dots { display: flex; gap: 6px; }
+    .atelier-dots button {
+      width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line, #b9c4d0);
+      background: transparent; cursor: pointer; padding: 0;
+    }
+    .atelier-dots button.on { background: var(--accent, #1f6feb); border-color: var(--accent, #1f6feb); }
+    @media (max-width: 640px) {
+      .atelier-stage { gap: 5px; }
+      .atelier-stage button { width: 34px; height: 34px; font-size: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -542,6 +570,23 @@
               <button id="patientBtn2" type="button">Fiche patient</button>
             </div>
             <textarea id="summary" class="summary-box" readonly></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. EXEMPLE D'EXAMEN AU CABINET -->
+      <section class="step" id="step-atelier" data-title="Exemple d'examen au cabinet" data-subtitle="Examen neurologique devant un vertige : module visuel en 8 planches.">
+        <h2>⑪ Exemple d'examen au cabinet</h2>
+        <p class="step-intro">Examen neurologique devant un vertige — approche pratique pour distinguer atteinte périphérique et centrale : signes de gravité, paires crâniennes, HINTS+ dans le bon contexte, red flags. Parcourez les 8 planches (flèches ← → au clavier, ou cliquez sur l'image).</p>
+        <div class="atelier-viewer">
+          <div class="atelier-stage">
+            <button id="atelierPrev" type="button" aria-label="Planche précédente">‹</button>
+            <img id="atelierImg" src="img-vertiges-examen/examen-1.jpg" alt="Planche 1 du module Examen neurologique devant un vertige" loading="lazy">
+            <button id="atelierNext" type="button" aria-label="Planche suivante">›</button>
+          </div>
+          <div class="atelier-bar">
+            <span id="atelierCount">Planche 1 / 8</span>
+            <div class="atelier-dots" id="atelierDots" role="group" aria-label="Aller à une planche"></div>
           </div>
         </div>
       </section>
@@ -1075,8 +1120,8 @@
   /* ==========================================================================
      ÉTAPES
      ========================================================================== */
-  const stepIds = ["redflags", "identity", "complaint", "time", "triggers", "orl", "exam", "maneuvers", "tree", "results"];
-  const stepLabels = ["Drapeaux", "Identité", "Plainte", "Temporalité", "Déclencheurs", "ORL", "Examen", "Manœuvres", "Arbre", "Synthèse"];
+  const stepIds = ["redflags", "identity", "complaint", "time", "triggers", "orl", "exam", "maneuvers", "tree", "results", "atelier"];
+  const stepLabels = ["Drapeaux", "Identité", "Plainte", "Temporalité", "Déclencheurs", "ORL", "Examen", "Manœuvres", "Arbre", "Synthèse", "Examen type"];
   const expertSteps = new Set(["maneuvers"]); // masqués en mode rapide
   let activeStep = 0;
 
@@ -1963,7 +2008,9 @@
     byId("progressBar").style.width = `${(visIndex / vis.length) * 100}%`;
     byId("progressText").textContent = `Étape ${visIndex} / ${vis.length}`;
     byId("prevBtn").disabled = activeStep === 0;
-    byId("nextBtn").textContent = activeStep === stepIds.length - 1 ? "Actualiser la synthèse" : "Étape suivante";
+    byId("nextBtn").textContent =
+      stepIds[activeStep] === "results" ? "Exemple d'examen au cabinet" :
+      stepIds[activeStep] === "atelier" ? "Revenir à la synthèse" : "Étape suivante";
 
     if (stepIds[activeStep] === "results") renderResults();
     if (stepIds[activeStep] === "tree") renderTree();
@@ -2070,7 +2117,8 @@
 
     byId("prevBtn").addEventListener("click", () => setActiveStep(activeStep - 1));
     byId("nextBtn").addEventListener("click", () => {
-      if (activeStep === stepIds.length - 1) renderResults(); else setActiveStep(activeStep + 1);
+      if (stepIds[activeStep] === "atelier") setActiveStep(stepIds.indexOf("results"));
+      else setActiveStep(activeStep + 1);
     });
 
     byId("copyBtn").addEventListener("click", () => copySummary(byId("copyBtn")));
@@ -2124,6 +2172,41 @@
 
     setActiveStep(0);
     updateAll();
+    initAtelier();
+  }
+
+  /* ==========================================================================
+     ⑪ EXEMPLE D'EXAMEN AU CABINET — visionneuse des 8 planches
+     ========================================================================== */
+  function initAtelier() {
+    const N = 8;
+    let cur = 1;
+    const img = byId("atelierImg"), count = byId("atelierCount"), dots = byId("atelierDots");
+    if (!img) return;
+    dots.innerHTML = Array.from({ length: N }, (_, i) =>
+      `<button type="button" data-n="${i + 1}" aria-label="Planche ${i + 1}"></button>`).join("");
+    function show(n) {
+      cur = Math.max(1, Math.min(N, n));
+      img.src = `img-vertiges-examen/examen-${cur}.jpg`;
+      img.alt = `Planche ${cur} du module Examen neurologique devant un vertige`;
+      count.textContent = `Planche ${cur} / ${N}`;
+      byId("atelierPrev").disabled = cur === 1;
+      byId("atelierNext").disabled = cur === N;
+      dots.querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i + 1 === cur));
+    }
+    byId("atelierPrev").addEventListener("click", () => show(cur - 1));
+    byId("atelierNext").addEventListener("click", () => show(cur + 1));
+    img.addEventListener("click", () => show(cur === N ? 1 : cur + 1));
+    dots.addEventListener("click", e => {
+      const b = e.target.closest("button[data-n]");
+      if (b) show(+b.dataset.n);
+    });
+    document.addEventListener("keydown", e => {
+      if (stepIds[activeStep] !== "atelier") return;
+      if (e.key === "ArrowLeft") show(cur - 1);
+      if (e.key === "ArrowRight") show(cur + 1);
+    });
+    show(1);
   }
 
   init();
