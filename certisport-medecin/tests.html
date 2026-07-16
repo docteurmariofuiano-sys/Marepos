@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CertiSport Médecin — scénarios de validation</title>
+<link rel="stylesheet" href="certisport.css?v=1">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="back" href="index.html">← CertiSport Médecin</a>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🧾</div>
+      <div>
+        <h1>Scénarios de validation</h1>
+        <div class="tagline">Cas de test médico-réglementaires exécutés contre le moteur de règles. À rejouer après chaque mise à jour de la base réglementaire.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="margin-top:20px">
+  <div class="carte">
+    <h3>Résultat global</h3>
+    <p id="resume" style="font-size:15px;font-weight:800">Exécution…</p>
+    <p class="muted">Ces tests vérifient le comportement du moteur (cadre réglementaire, alertes, verrous), pas l'exactitude juridique des textes : celle-ci relève de la validation humaine de la base réglementaire (statut de chaque règle).</p>
+  </div>
+  <div id="resultats"></div>
+</main>
+
+<footer class="footer">
+  CertiSport Médecin — jeu de validation v<span id="v"></span>
+</footer>
+
+<script src="data.js?v=1"></script>
+<script src="moteur.js?v=1"></script>
+<script src="tests.js?v=1"></script>
+<script>
+'use strict';
+document.getElementById("v").textContent = CS_VERSION_BASE;
+const tous = [...CS_TESTS, ...CS_TESTS_SOCLE];
+let ok = 0, ko = 0;
+const frag = [];
+for (const t of tous) {
+  const echecs = [];
+  let assertions = 0;
+  const assert = (cond, msg) => { assertions++; if (!cond) echecs.push(msg); };
+  let erreur = null;
+  try { t.run(assert); } catch (e) { erreur = e; }
+  const succes = !erreur && echecs.length === 0;
+  if (succes) ok++; else ko++;
+  frag.push(`<div class="carte" style="border-left:5px solid ${succes ? "var(--vert)" : "var(--rouge)"}">
+    <h3>${succes ? "✅" : "❌"} ${t.nom}</h3>
+    <p class="muted">Attendu : ${t.attendu}</p>
+    <p style="font-size:12.5px;margin-top:6px">${assertions} assertion(s)${succes ? ", toutes vérifiées" : ""}</p>
+    ${erreur ? `<p style="color:var(--rouge);font-size:12.5px">Erreur d'exécution : ${String(erreur)}</p>` : ""}
+    ${echecs.map(m => `<p style="color:var(--rouge);font-size:12.5px">✗ ${m}</p>`).join("")}
+  </div>`);
+}
+document.getElementById("resultats").innerHTML = frag.join("");
+const r = document.getElementById("resume");
+r.textContent = `${ok}/${tous.length} scénarios validés` + (ko ? ` — ${ko} en échec` : " ✅");
+r.style.color = ko ? "var(--rouge)" : "var(--vert)";
+</script>
+</body>
+</html>

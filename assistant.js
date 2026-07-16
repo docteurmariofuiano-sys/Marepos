@@ -13,6 +13,7 @@ const DOMAINES = {
   "Gériatrie":     {c:"var(--d-geriatrie)", cb:"#dcf1ed"},
   "Gynécologie":  {c:"var(--d-gyneco)", cb:"#fdecf5"},
   "Médecine de la douleur": {c:"var(--d-douleur)", cb:"#fbeafe"},
+  "Médecine du sport": {c:"#0f8f88", cb:"#e6faf6"},
   "Neurologie":   {c:"var(--d-neuro)",  cb:"#eef0ff"},
   "ORL":          {c:"var(--d-orl)",    cb:"#e6faf6"},
   "Pédiatrie":     {c:"var(--d-pediatrie)", cb:"#ffe9d6"},
@@ -149,6 +150,9 @@ const APPS = [
   {t:"PediaDose MG", e:"⚖️", dom:"Pédiatrie",
    d:"Calcul des posologies pédiatriques au poids : doses, formes et présentations, avec garde-fous de prescription.",
    href:"pediadose-mg/index.html"},
+  {t:"CertiSport Médecin", e:"🏅", dom:"Médecine du sport",
+   d:"Consultation de non-contre-indication sportive : cadre réglementaire sourcé (disciplines à contraintes particulières, mineurs, fédérations), interrogatoire structuré, signaux d'alerte, certificats prudents et note de dossier.",
+   href:"certisport-medecin/index.html"},
   {t:"Sommeil MG", e:"🌙", dom:"Sommeil",
    d:"Aide à la décision devant un trouble du sommeil (adulte et enfant) : insomnie, SAHOS, SJSR, somnolence, sevrage BZD, troubles circadiens — mesures et orientation.",
    href:"sommeil-mg/index.html"}

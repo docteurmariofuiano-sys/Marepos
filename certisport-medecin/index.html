@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CertiSport Médecin — certificat de non-contre-indication sportive</title>
+<meta name="description" content="Assistant clinique, réglementaire et médico-légal pour la consultation préalable au certificat médical d'absence de contre-indication à la pratique sportive. Outil réservé aux médecins ; ne remplace pas le jugement clinique. Hors-ligne, aucune donnée stockée.">
+<link rel="stylesheet" href="certisport.css?v=1">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="back" href="../index.html">← Portail ASSISTANT MÉDICAL</a>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🏅</div>
+      <div>
+        <h1>CertiSport Médecin</h1>
+        <div class="tagline">Aide à la consultation de non-contre-indication à la pratique sportive : cadre réglementaire, interrogatoire structuré, signaux d'alerte, certificat prudent et note de dossier.</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="pill">👨‍⚕️ Réservé aux médecins</span>
+      <span class="pill">📴 Hors-ligne — traitement local</span>
+      <span class="pill">🔒 Aucune donnée patient stockée ni transmise</span>
+      <span class="pill">📚 Base réglementaire versionnée <span id="version-base"></span></span>
+    </div>
+  </div>
+</header>
+
+<!-- Bandeau d'urgence (injecté si besoin) -->
+<div class="bandeau no-print" id="bandeau-urgence" style="display:none">
+  <div class="bandeau-card bandeau-urgence">🚨 <span id="bandeau-urgence-texte"></span></div>
+</div>
+
+<div class="bandeau no-print">
+  <div class="bandeau-card bandeau-info" id="avertissement-general"></div>
+</div>
+
+<nav class="stepper no-print" aria-label="Étapes de la consultation">
+  <div class="stepper-card" id="stepper"></div>
+</nav>
+
+<main class="wrap">
+  <!-- 0. Tableau de bord -->
+  <section class="panel" id="panel-0"></section>
+  <!-- 1. Patient -->
+  <section class="panel" id="panel-1"></section>
+  <!-- 2. Sport -->
+  <section class="panel" id="panel-2"></section>
+  <!-- 3. Cadre réglementaire -->
+  <section class="panel" id="panel-3"></section>
+  <!-- 4. Questionnaire général -->
+  <section class="panel" id="panel-4"></section>
+  <!-- 5. Questionnaire spécifique -->
+  <section class="panel" id="panel-5"></section>
+  <!-- 6. Examen clinique -->
+  <section class="panel" id="panel-6"></section>
+  <!-- 7. Alertes -->
+  <section class="panel" id="panel-7"></section>
+  <!-- 8. Examens complémentaires -->
+  <section class="panel" id="panel-8"></section>
+  <!-- 9. Synthèse -->
+  <section class="panel" id="panel-9"></section>
+  <!-- 10. Décision -->
+  <section class="panel" id="panel-10"></section>
+  <!-- 11. Certificat -->
+  <section class="panel" id="panel-11"></section>
+  <!-- 12. Note dossier -->
+  <section class="panel" id="panel-12"></section>
+  <!-- 13. Base réglementaire (consultation) -->
+  <section class="panel" id="panel-13"></section>
+</main>
+
+<footer class="footer">
+  <strong>CertiSport Médecin</strong> — <span id="avertissement-footer"></span><br>
+  Base de connaissances v<span id="version-footer"></span> · Les données saisies restent dans le navigateur et sont perdues à la fermeture (aucun stockage). ·
+  <a href="tests.html">Scénarios de validation</a>
+</footer>
+
+<script src="data.js?v=1"></script>
+<script src="moteur.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
