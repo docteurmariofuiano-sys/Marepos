@@ -38,7 +38,7 @@ const AIDE = [/aidez[- ]moi/i, /appelez quelqu/i, /je veux (voir|parler)/i];
 
 /* ---------- État ---------- */
 let actif=false, rec=null, ecouteEnCours=false, qCourante=null,
-    dernieresOptions="", voixFr=null, derniereConsigne="", relances=0;
+    dernieresOptions="", voixFr=null, derniereConsigne="", relances=0, attenteReponse=false;
 
 /* ---------- Utilitaires ---------- */
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
@@ -75,29 +75,67 @@ let ttsKeepAlive=null;
 function startKeepAlive(){
   stopKeepAlive();
   ttsKeepAlive = setInterval(()=>{
-    if(speechSynthesis.speaking){ speechSynthesis.pause(); speechSynthesis.resume(); }
-    else stopKeepAlive();
-  }, 9000);
+    try{
+      if(speechSynthesis.speaking){ speechSynthesis.pause(); speechSynthesis.resume(); }
+      else stopKeepAlive();
+    }catch(e){ stopKeepAlive(); }
+  }, 8000);
 }
 function stopKeepAlive(){ if(ttsKeepAlive){ clearInterval(ttsKeepAlive); ttsKeepAlive=null; } }
 
+/* Découpage en segments courts : Chrome tronque les longs textes (fin jamais signalée).
+   On lit phrase par phrase (≤ ~170 caractères), la boucle ne peut plus mourir en route. */
+function decoupe(texte){
+  const t = String(texte).replace(/\s+/g," ").trim();
+  const phrases = t.split(/(?<=[.!?;:])\s+/);
+  const parts=[]; let cur="";
+  for(const ph of phrases){
+    if((cur+" "+ph).trim().length<=170){ cur=(cur+" "+ph).trim(); continue; }
+    if(cur) parts.push(cur);
+    if(ph.length<=170){ cur=ph; continue; }
+    let seg="";
+    for(const c of ph.split(/,\s*/)){
+      const cand = seg? seg+", "+c : c;
+      if(cand.length<=170) seg=cand; else { if(seg) parts.push(seg); seg=c; }
+    }
+    cur=seg;
+  }
+  if(cur) parts.push(cur);
+  return parts.length?parts:[t];
+}
+
+let parleGen=0;
 function dire(texte, fin){
   if(!("speechSynthesis" in window)){ if(fin) fin(); return; }
-  speechSynthesis.cancel(); stopKeepAlive();
-  setTimeout(()=>{
-    if(!voixFr) chargeVoix();
-    const u = new SpeechSynthesisUtterance(texte);
-    u.lang="fr-FR"; u.rate=CFG.debit;
-    try{ if(voixFr) u.voice = voixFr; }catch(e){ /* voix invalide : on garde la voix par défaut fr-FR */ }
-    let ok=false; const done=()=>{ if(!ok){ ok=true; stopKeepAlive(); if(fin) fin(); } };
-    u.onend=done; u.onerror=done;
-    /* filet : si la synthèse ne démarre pas (voix absente, autoplay bloqué), on continue */
-    setTimeout(()=>{ if(!speechSynthesis.speaking) done(); },1200);
-    /* filet long : jamais bloqué plus de 40 s sur une lecture */
-    setTimeout(done, 40000);
-    startKeepAlive();
-    speechSynthesis.speak(u);
-  },120);
+  const gen = ++parleGen;
+  try{ speechSynthesis.cancel(); }catch(e){}
+  stopKeepAlive();
+  const chunks = decoupe(texte); let i=0;
+  const suivant = ()=>{
+    if(gen!==parleGen) return;                       /* une nouvelle lecture a pris la main */
+    if(i>=chunks.length){ stopKeepAlive(); if(fin) fin(); return; }
+    const txt = chunks[i++];
+    setTimeout(()=>{
+      if(gen!==parleGen) return;
+      if(!voixFr) chargeVoix();
+      const u = new SpeechSynthesisUtterance(txt);
+      u.lang="fr-FR"; u.rate=CFG.debit;
+      try{ if(voixFr) u.voice = voixFr; }catch(e){}
+      let fini=false, demarre=false, startGuard=null, durGuard=null;
+      const next = ()=>{ if(fini) return; fini=true;
+        clearTimeout(startGuard); clearTimeout(durGuard); suivant(); };
+      u.onstart = ()=>{ demarre=true; };
+      u.onend = next; u.onerror = next;
+      /* la voix ne démarre jamais (autoplay bloqué, voix absente) → on continue sans bloquer */
+      startGuard = setTimeout(()=>{ if(!demarre && !speechSynthesis.speaking){
+        console.warn("[module-vocal] synthèse muette — on poursuit"); next(); } }, 3000);
+      /* filet de durée par segment : jamais bloqué même si onend est perdu */
+      durGuard = setTimeout(next, Math.max(7000, txt.length*120));
+      startKeepAlive();
+      try{ speechSynthesis.speak(u); }catch(e){ next(); }
+    }, 90);
+  };
+  suivant();
 }
 
 /* ---------- STT ---------- */
@@ -107,13 +145,26 @@ function initRec(){
   r.lang="fr-FR"; r.interimResults=false; r.maxAlternatives=3; r.continuous=false;
   r.onresult = e => {
     const t = e.results[0][0].transcript.trim();
-    relances = 0;
+    relances = 0; attenteReponse = false;
     setStatut("« "+t+" »");
     traite(t);
   };
-  r.onend = ()=>{ ecouteEnCours=false; majUI(); };
-  r.onerror = ev => {
+  r.onend = ()=>{
     ecouteEnCours=false; majUI();
+    /* l'écoute s'est terminée sans réponse ni erreur signalée → on relance
+       automatiquement (cause n°1 des « ça s'arrête » constatés sur le terrain) */
+    if(actif && attenteReponse){
+      attenteReponse=false;
+      if(relances < 2){
+        relances++;
+        dire(relances===1 ? "Je vous écoute." : "Dites votre réponse, ou touchez-la à l'écran.", ()=>ecoute());
+      } else {
+        setStatut("Je n'ai rien entendu — touchez le micro 🎙️ pour reprendre, ou répondez à l'écran.");
+      }
+    }
+  };
+  r.onerror = ev => {
+    ecouteEnCours=false; attenteReponse=false; majUI();
     switch(ev.error){
       case "not-allowed":
       case "service-not-allowed":
@@ -143,7 +194,7 @@ function initRec(){
   };
   return r;
 }
-function ecoute(){ if(!rec||!actif) return; try{ rec.start(); ecouteEnCours=true; }catch(e){} majUI(); }
+function ecoute(){ if(!rec||!actif) return; try{ rec.start(); ecouteEnCours=true; attenteReponse=true; }catch(e){} majUI(); }
 function stopEcoute(){ if(rec){ try{rec.stop();}catch(e){} } ecouteEnCours=false; majUI(); }
 
 /* ---------- Lecture du DOM : questions & options ---------- */
@@ -180,12 +231,15 @@ function poseQuestion(){
   qCourante.classList.add("vx-focus");
   const opts = optionsDe(qCourante);
   const sig = opts.map(o=>o.label).join("|");
-  let phrase = texteQuestion(qCourante);
-  if(CFG.lireOptionsPremiereQuestion && sig!==dernieresOptions){
-    phrase += ". Les réponses possibles sont : " + opts.map(o=>o.label).join(", ") + ".";
+  /* les réponses sont lues À CHAQUE question, numérotées : le patient peut dire
+     le libellé (« jamais ») ou le numéro (« deux »). */
+  const consigne = "Réponses possibles : " + opts.map((o,i)=>(i+1)+", "+o.label).join(". ") + ".";
+  let phrase = texteQuestion(qCourante) + ". " + consigne;
+  if(sig!==dernieresOptions){
+    phrase += " Dites la réponse, ou son numéro.";
     dernieresOptions = sig;
   }
-  derniereConsigne = texteQuestion(qCourante) + ". Les réponses possibles sont : " + opts.map(o=>o.label).join(", ") + ".";
+  derniereConsigne = texteQuestion(qCourante) + ". " + consigne;
   dire(phrase, ()=>ecoute());
 }
 
@@ -261,6 +315,9 @@ function injecteUI(){
     .vx-relire{position:fixed;right:16px;bottom:196px;z-index:60;display:none;
       background:#fff;border:1.5px solid #d8dfe8;border-radius:999px;
       padding:9px 14px;font:600 13px/1 inherit;color:#33415c;cursor:pointer}
+    .vx-stop{position:fixed;right:16px;bottom:248px;z-index:60;display:none;
+      background:#fff;border:1.5px solid #e3b9b9;border-radius:999px;
+      padding:9px 14px;font:600 13px/1 inherit;color:#a33f3f;cursor:pointer}
     .qcard.vx-focus{outline:3px solid #c47f2a;outline-offset:2px;border-radius:12px}
     #vx-escalade{display:none;position:fixed;inset:0;background:rgba(15,30,46,.96);
       z-index:200;flex-direction:column;align-items:center;justify-content:center;
@@ -275,7 +332,14 @@ function injecteUI(){
 
   const fab = document.createElement("button");
   fab.className="vx-fab"; fab.id="vx-fab"; fab.innerHTML="🎙️ <span>Mode vocal</span>";
-  fab.onclick = ()=> actif ? stopVocal() : startVocal();
+  fab.onclick = ()=>{
+    if(!actif){ startVocal(); return; }
+    if(ecouteEnCours){ stopEcoute(); attenteReponse=false; setStatut("En pause — touchez le micro pour reprendre."); return; }
+    /* reprise : on réécoute la question en cours (ou la suivante non répondue) */
+    relances = 0; setStatut("");
+    if(qCourante && !qCourante.querySelector(".opt.sel")) dire("Je vous écoute.", ()=>ecoute());
+    else poseQuestion();
+  };
   document.body.appendChild(fab);
 
   const st = document.createElement("div");
@@ -284,8 +348,13 @@ function injecteUI(){
 
   const rl = document.createElement("button");
   rl.className="vx-relire"; rl.id="vx-relire"; rl.textContent="🔊 Relire + réponses";
-  rl.onclick = ()=>{ stopEcoute(); dire(derniereConsigne, ()=>ecoute()); };
+  rl.onclick = ()=>{ stopEcoute(); attenteReponse=false; dire(derniereConsigne, ()=>ecoute()); };
   document.body.appendChild(rl);
+
+  const stp = document.createElement("button");
+  stp.className="vx-stop"; stp.id="vx-stop"; stp.textContent="✕ Quitter le mode vocal";
+  stp.onclick = ()=> stopVocal();
+  document.body.appendChild(stp);
 
   const ov = document.createElement("div");
   ov.id="vx-escalade";
@@ -313,8 +382,9 @@ function setStatut(txt){
 function majUI(){
   const fab = document.getElementById("vx-fab");
   fab.classList.toggle("on", actif && ecouteEnCours);
-  fab.querySelector("span").textContent = actif ? (ecouteEnCours?"J'écoute…":"Vocal actif") : "Mode vocal";
+  fab.querySelector("span").textContent = actif ? (ecouteEnCours?"J'écoute…":"Reprendre l'écoute") : "Mode vocal";
   document.getElementById("vx-relire").style.display = actif ? "block":"none";
+  document.getElementById("vx-stop").style.display = actif ? "block":"none";
 }
 function startVocal(){
   if(!SR){
@@ -329,7 +399,8 @@ function startVocal(){
   poseQuestion();
 }
 function stopVocal(annonce=true){
-  actif = false; stopEcoute(); speechSynthesis && speechSynthesis.cancel();
+  actif = false; relances = 0; attenteReponse = false;
+  stopEcoute(); parleGen++; speechSynthesis && speechSynthesis.cancel(); stopKeepAlive();
   qCourante && qCourante.classList.remove("vx-focus");
   qCourante = null; majUI();
   if(!annonce) return;
