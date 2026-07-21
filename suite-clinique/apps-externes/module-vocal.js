@@ -38,7 +38,7 @@ const AIDE = [/aidez[- ]moi/i, /appelez quelqu/i, /je veux (voir|parler)/i];
 
 /* ---------- État ---------- */
 let actif=false, rec=null, ecouteEnCours=false, qCourante=null,
-    dernieresOptions="", voixFr=null, derniereConsigne="";
+    dernieresOptions="", voixFr=null, derniereConsigne="", relances=0;
 
 /* ---------- Utilitaires ---------- */
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
@@ -50,26 +50,52 @@ const ORDINAUX = {"premiere":0,"premier":0,"un":0,"une":0,"1":0,
   "cinquieme":4,"cinq":4,"5":4,
   "sixieme":5,"six":5,"6":5,
   "septieme":6,"sept":6,"7":6,
-  "huitieme":7,"huit":7,"8":7};
+  "huitieme":7,"huit":7,"8":7,
+  "neuvieme":8,"neuf":8,"9":8,
+  "dixieme":9,"dix":9,"10":9};
 
 /* ---------- TTS robuste ---------- */
 function chargeVoix(){
   const vs = speechSynthesis.getVoices();
-  voixFr = vs.find(v=>/fr[-_]FR/i.test(v.lang)) || vs.find(v=>/^fr/i.test(v.lang)) || null;
+  /* préférence : voix fr-FR "naturelles" (Google/Microsoft/Amélie/Thomas), puis fr-FR, puis fr-* */
+  voixFr = vs.find(v=>/fr[-_]FR/i.test(v.lang) && /google|microsoft|amelie|amélie|thomas|denise|audrey/i.test(v.name))
+        || vs.find(v=>/fr[-_]FR/i.test(v.lang))
+        || vs.find(v=>/^fr/i.test(v.lang)) || null;
+  if(voixFr) console.log("[module-vocal] voix française :", voixFr.name, "("+voixFr.lang+")");
 }
-if("speechSynthesis" in window){ chargeVoix(); speechSynthesis.onvoiceschanged = chargeVoix; }
+if("speechSynthesis" in window){
+  chargeVoix();
+  speechSynthesis.onvoiceschanged = chargeVoix;
+  /* certains navigateurs ne peuplent les voix qu'après un premier appel */
+  setTimeout(chargeVoix, 400); setTimeout(chargeVoix, 1500);
+}
+
+/* Correctif Chrome desktop : la synthèse s'arrête après ~15 s sans resume() périodique */
+let ttsKeepAlive=null;
+function startKeepAlive(){
+  stopKeepAlive();
+  ttsKeepAlive = setInterval(()=>{
+    if(speechSynthesis.speaking){ speechSynthesis.pause(); speechSynthesis.resume(); }
+    else stopKeepAlive();
+  }, 9000);
+}
+function stopKeepAlive(){ if(ttsKeepAlive){ clearInterval(ttsKeepAlive); ttsKeepAlive=null; } }
 
 function dire(texte, fin){
   if(!("speechSynthesis" in window)){ if(fin) fin(); return; }
-  speechSynthesis.cancel();
+  speechSynthesis.cancel(); stopKeepAlive();
   setTimeout(()=>{
     if(!voixFr) chargeVoix();
     const u = new SpeechSynthesisUtterance(texte);
     u.lang="fr-FR"; u.rate=CFG.debit;
-    if(voixFr) u.voice = voixFr;
-    let ok=false; const done=()=>{ if(!ok){ ok=true; if(fin) fin(); } };
+    try{ if(voixFr) u.voice = voixFr; }catch(e){ /* voix invalide : on garde la voix par défaut fr-FR */ }
+    let ok=false; const done=()=>{ if(!ok){ ok=true; stopKeepAlive(); if(fin) fin(); } };
     u.onend=done; u.onerror=done;
+    /* filet : si la synthèse ne démarre pas (voix absente, autoplay bloqué), on continue */
     setTimeout(()=>{ if(!speechSynthesis.speaking) done(); },1200);
+    /* filet long : jamais bloqué plus de 40 s sur une lecture */
+    setTimeout(done, 40000);
+    startKeepAlive();
     speechSynthesis.speak(u);
   },120);
 }
@@ -81,15 +107,39 @@ function initRec(){
   r.lang="fr-FR"; r.interimResults=false; r.maxAlternatives=3; r.continuous=false;
   r.onresult = e => {
     const t = e.results[0][0].transcript.trim();
+    relances = 0;
     setStatut("« "+t+" »");
     traite(t);
   };
   r.onend = ()=>{ ecouteEnCours=false; majUI(); };
   r.onerror = ev => {
     ecouteEnCours=false; majUI();
-    if(ev.error==="not-allowed"||ev.error==="service-not-allowed"){
-      setStatut("Micro non autorisé"); stopVocal();
-    } else setStatut("Je n'ai pas entendu — touchez le micro");
+    switch(ev.error){
+      case "not-allowed":
+      case "service-not-allowed":
+        setStatut("🎙️ Micro non autorisé — cliquez sur l'icône 🔒/🎙️ dans la barre d'adresse, autorisez le micro, puis relancez le mode vocal.");
+        stopVocal(false);
+        break;
+      case "audio-capture":
+        setStatut("Aucun micro détecté sur cet appareil.");
+        stopVocal(false);
+        break;
+      case "network":
+        setStatut("Service de reconnaissance injoignable (connexion Internet requise). Réessayez, ou répondez à l'écran.");
+        break;
+      case "no-speech":
+        if(actif && relances < 2){
+          relances++;
+          dire(relances===1 ? "Je vous écoute." : "Dites votre réponse, ou touchez-la à l'écran.", ()=>ecoute());
+        } else {
+          setStatut("Je n'ai rien entendu — touchez le micro 🎙️ pour reprendre, ou répondez à l'écran.");
+        }
+        break;
+      case "aborted":
+        break; /* arrêt volontaire : silencieux */
+      default:
+        setStatut("Je n'ai pas entendu — touchez le micro pour réessayer.");
+    }
   };
   return r;
 }
@@ -119,6 +169,7 @@ function optionsDe(card){
 /* ---------- Boucle vocale ---------- */
 function poseQuestion(){
   if(!actif) return;
+  relances = 0;
   qCourante = prochaineQuestion();
   if(!qCourante){
     dire("Le questionnaire est terminé. Vous pouvez valider en bas de l'écran, ou rendre la tablette à l'accueil.");
